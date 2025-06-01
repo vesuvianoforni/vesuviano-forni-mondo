@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
@@ -7,6 +8,7 @@ import { toast } from "sonner";
 import { OvenType } from './OvenTypeSelector';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import * as THREE from 'three';
 
 interface ARVisualizerProps {
@@ -146,12 +148,15 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
   const [selectedMaterial, setSelectedMaterial] = useState("vernice");
   const [selectedColor, setSelectedColor] = useState("rosso");
   const [contactData, setContactData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
-    phone: ''
+    phone: '',
+    wantsContact: false
   });
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
 
   const selectedOven = ovenTypes.find(oven => oven.value === selectedOvenType);
@@ -170,11 +175,6 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
     { value: "blu", label: "Blu" }
   ];
 
-  // Touch gesture states
-  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
-  const [lastTouchDistance, setLastTouchDistance] = useState<number | null>(null);
-  const [isGesturing, setIsGesturing] = useState(false);
-
   useEffect(() => {
     return () => {
       if (stream) {
@@ -182,118 +182,6 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
       }
     };
   }, [stream]);
-
-  // Touch gesture handlers
-  const getTouchDistance = (touches: TouchList) => {
-    if (touches.length < 2) return null;
-    const touch1 = touches[0];
-    const touch2 = touches[1];
-    return Math.sqrt(
-      Math.pow(touch2.clientX - touch1.clientX, 2) + 
-      Math.pow(touch2.clientY - touch1.clientY, 2)
-    );
-  };
-
-  const handleTouchStart = (e: TouchEvent) => {
-    e.preventDefault();
-    setIsGesturing(true);
-    
-    if (e.touches.length === 1) {
-      // Single touch - prepare for drag
-      setTouchStart({
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY
-      });
-    } else if (e.touches.length === 2) {
-      // Two fingers - prepare for scale/rotate
-      const distance = getTouchDistance(e.touches);
-      setLastTouchDistance(distance);
-      setTouchStart(null);
-    }
-  };
-
-  const handleTouchMove = (e: TouchEvent) => {
-    e.preventDefault();
-    
-    if (!isGesturing) return;
-
-    if (e.touches.length === 1 && touchStart) {
-      // Single finger drag - move oven
-      const deltaX = e.touches[0].clientX - touchStart.x;
-      const deltaY = e.touches[0].clientY - touchStart.y;
-      
-      const moveScale = 0.01;
-      setOvenPosition(prev => [
-        prev[0] + deltaX * moveScale,
-        prev[1] - deltaY * moveScale, // Inverse Y for natural movement
-        prev[2]
-      ]);
-      
-      setTouchStart({
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY
-      });
-    } else if (e.touches.length === 2 && lastTouchDistance) {
-      // Two fingers - scale and rotate
-      const currentDistance = getTouchDistance(e.touches);
-      
-      if (currentDistance && lastTouchDistance) {
-        // Scale based on distance change
-        const scaleChange = currentDistance / lastTouchDistance;
-        setOvenScale(prev => {
-          const newScale = prev * scaleChange;
-          return Math.max(0.3, Math.min(3, newScale));
-        });
-        
-        // Rotate based on finger movement
-        const touch1 = e.touches[0];
-        const touch2 = e.touches[1];
-        const angle = Math.atan2(
-          touch2.clientY - touch1.clientY,
-          touch2.clientX - touch1.clientX
-        );
-        
-        setOvenRotation(prev => [
-          prev[0],
-          prev[1] + angle * 0.01, // Small rotation increment
-          prev[2]
-        ]);
-        
-        setLastTouchDistance(currentDistance);
-      }
-    }
-  };
-
-  const handleTouchEnd = (e: TouchEvent) => {
-    e.preventDefault();
-    setIsGesturing(false);
-    setTouchStart(null);
-    setLastTouchDistance(null);
-    
-    // Prevent double tap zoom
-    const now = new Date().getTime();
-    const timeSince = now - (window as any).lastTouchEnd;
-    if (timeSince < 300 && timeSince > 0) {
-      e.preventDefault();
-    }
-    (window as any).lastTouchEnd = now;
-  };
-
-  // Disabilita il doppio tap zoom e aggiungi gesture touch
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || !isARMode) return;
-
-    canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
-    canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
-    canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
-
-    return () => {
-      canvas.removeEventListener('touchstart', handleTouchStart);
-      canvas.removeEventListener('touchmove', handleTouchMove);
-      canvas.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [isARMode, touchStart, lastTouchDistance, isGesturing]);
 
   const startAR = async () => {
     try {
@@ -335,33 +223,58 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
     setIsARMode(false);
   };
 
-  const captureScreenshot = () => {
-    if (!canvasRef.current || !videoRef.current) return;
+  const captureScreenshot = async () => {
+    if (!containerRef.current || !isARMode) return;
 
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    try {
+      // Nascondi temporaneamente i controlli
+      const controlsElement = containerRef.current.querySelector('.ar-controls');
+      const headerElement = containerRef.current.querySelector('.ar-header');
+      
+      if (controlsElement) (controlsElement as HTMLElement).style.display = 'none';
+      if (headerElement) (headerElement as HTMLElement).style.display = 'none';
 
-    // Imposta le dimensioni del canvas
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
+      // Aspetta un frame per assicurarsi che i controlli siano nascosti
+      await new Promise(resolve => requestAnimationFrame(resolve));
 
-    // Disegna il video (non specchiato)
-    ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+      // Usa html2canvas per catturare l'intero contenuto
+      const html2canvas = (await import('html2canvas')).default;
+      
+      const canvas = await html2canvas(containerRef.current, {
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null,
+        scale: 1,
+        width: containerRef.current.offsetWidth,
+        height: containerRef.current.offsetHeight
+      });
 
-    // Converti in base64
-    const imageData = canvas.toDataURL('image/png');
-    setCapturedImage(imageData);
-    setShowContactForm(true);
-    
-    toast.success("Screenshot catturato! Inserisci i tuoi dati per scaricare");
+      // Ripristina i controlli
+      if (controlsElement) (controlsElement as HTMLElement).style.display = 'block';
+      if (headerElement) (headerElement as HTMLElement).style.display = 'flex';
+
+      const imageData = canvas.toDataURL('image/png');
+      setCapturedImage(imageData);
+      setShowContactForm(true);
+      
+      toast.success("Screenshot catturato! Inserisci i tuoi dati per scaricare");
+    } catch (error) {
+      console.error("Errore durante la cattura dello screenshot:", error);
+      toast.error("Errore durante la cattura dello screenshot");
+      
+      // Ripristina i controlli in caso di errore
+      const controlsElement = containerRef.current?.querySelector('.ar-controls');
+      const headerElement = containerRef.current?.querySelector('.ar-header');
+      if (controlsElement) (controlsElement as HTMLElement).style.display = 'block';
+      if (headerElement) (headerElement as HTMLElement).style.display = 'flex';
+    }
   };
 
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!contactData.name || !contactData.email) {
-      toast.error("Nome ed email sono obbligatori");
+    if (!contactData.firstName || !contactData.lastName || !contactData.email || !contactData.phone) {
+      toast.error("Tutti i campi sono obbligatori");
       return;
     }
 
@@ -373,10 +286,13 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
     link.href = capturedImage;
     link.click();
 
+    // Log dei dati di contatto (in un'applicazione reale, questi andrebbero salvati nel database)
+    console.log('Dati contatto:', contactData);
+
     // Reset
     setShowContactForm(false);
     setCapturedImage(null);
-    setContactData({ name: '', email: '', phone: '' });
+    setContactData({ firstName: '', lastName: '', email: '', phone: '', wantsContact: false });
     
     toast.success("Foto scaricata! Ti contatteremo presto per informazioni sui nostri forni");
   };
@@ -423,7 +339,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div ref={containerRef} className="fixed inset-0 z-50 overflow-hidden">
       {/* Video di sfondo per AR */}
       <video
         ref={videoRef}
@@ -482,22 +398,35 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
       {/* Modal per form contatto */}
       {showContactForm && (
         <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-20 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-bold mb-4">Inserisci i tuoi dati</h3>
             <p className="text-sm text-gray-600 mb-4">
               Per scaricare la foto del forno AR, inserisci i tuoi dati di contatto
             </p>
             
             <form onSubmit={handleContactSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Nome *</label>
-                <input
-                  type="text"
-                  value={contactData.name}
-                  onChange={(e) => setContactData(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  required
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Nome *</label>
+                  <input
+                    type="text"
+                    value={contactData.firstName}
+                    onChange={(e) => setContactData(prev => ({ ...prev, firstName: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Cognome *</label>
+                  <input
+                    type="text"
+                    value={contactData.lastName}
+                    onChange={(e) => setContactData(prev => ({ ...prev, lastName: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    required
+                  />
+                </div>
               </div>
               
               <div>
@@ -506,22 +435,38 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
                   type="email"
                   value={contactData.email}
                   onChange={(e) => setContactData(prev => ({ ...prev, email: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                   required
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-1">Telefono</label>
+                <label className="block text-sm font-medium mb-1">Numero di telefono *</label>
                 <input
                   type="tel"
                   value={contactData.phone}
                   onChange={(e) => setContactData(prev => ({ ...prev, phone: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  required
                 />
               </div>
               
-              <div className="flex gap-3">
+              <div className="flex items-start space-x-2">
+                <Checkbox
+                  id="contact-consent"
+                  checked={contactData.wantsContact}
+                  onCheckedChange={(checked) => 
+                    setContactData(prev => ({ ...prev, wantsContact: checked as boolean }))}
+                />
+                <label 
+                  htmlFor="contact-consent" 
+                  className="text-sm text-gray-700 leading-tight cursor-pointer"
+                >
+                  Desidero essere ricontattato per ricevere informazioni sui forni Vesuviano
+                </label>
+              </div>
+              
+              <div className="flex gap-3 pt-2">
                 <Button 
                   type="button"
                   variant="outline"
@@ -543,7 +488,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
       )}
 
       {/* Controlli UI */}
-      <div className="absolute top-4 left-4 right-4 z-10 pointer-events-auto">
+      <div className="ar-header absolute top-4 left-4 right-4 z-10 pointer-events-auto">
         <div className="flex justify-between items-center">
           <div className="bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm">
             <p className="text-sm font-medium">{selectedOven?.label}</p>
@@ -560,7 +505,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
       </div>
 
       {/* Controlli AR */}
-      <div className="absolute bottom-4 left-4 right-4 z-10 pointer-events-auto">
+      <div className="ar-controls absolute bottom-4 left-4 right-4 z-10 pointer-events-auto">
         <div className="bg-black/70 p-4 rounded-lg backdrop-blur-sm">
           {!isARMode ? (
             <div className="space-y-3">
