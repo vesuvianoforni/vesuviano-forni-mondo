@@ -7,6 +7,30 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Funzione per ridimensionare l'immagine
+async function resizeImage(imageBytes: Uint8Array): Promise<Uint8Array> {
+  // Crea un canvas per ridimensionare l'immagine
+  const canvas = new OffscreenCanvas(1024, 1024);
+  const ctx = canvas.getContext('2d');
+  
+  if (!ctx) {
+    throw new Error('Cannot get canvas context');
+  }
+  
+  // Crea un'immagine dal buffer
+  const blob = new Blob([imageBytes], { type: 'image/png' });
+  const imageBitmap = await createImageBitmap(blob);
+  
+  // Disegna l'immagine ridimensionata sul canvas
+  ctx.drawImage(imageBitmap, 0, 0, 1024, 1024);
+  
+  // Converti il canvas in blob e poi in Uint8Array
+  const resizedBlob = await canvas.convertToBlob({ type: 'image/png' });
+  const arrayBuffer = await resizedBlob.arrayBuffer();
+  
+  return new Uint8Array(arrayBuffer);
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -51,14 +75,20 @@ serve(async (req) => {
       
       // Converti base64 in Uint8Array
       const binaryString = atob(base64Data);
-      const bytes = new Uint8Array(binaryString.length);
+      const originalBytes = new Uint8Array(binaryString.length);
       for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
+        originalBytes[i] = binaryString.charCodeAt(i);
       }
+
+      console.log('Original image size:', originalBytes.length, 'bytes');
+      
+      // Ridimensiona l'immagine a 1024x1024
+      const resizedBytes = await resizeImage(originalBytes);
+      console.log('Resized image size:', resizedBytes.length, 'bytes');
 
       // Crea FormData
       const formData = new FormData();
-      formData.append('init_image', new File([bytes], 'image.png', { type: 'image/png' }));
+      formData.append('init_image', new File([resizedBytes], 'image.png', { type: 'image/png' }));
       formData.append('text_prompts[0][text]', prompt);
       formData.append('text_prompts[0][weight]', '1');
       formData.append('cfg_scale', '7');
