@@ -1,115 +1,121 @@
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Flame, Zap, Settings, RotateCcw } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Flame, Zap, RotateCcw, Settings } from "lucide-react";
 
 const ProductCategories = () => {
   const categories = [
     {
       title: "Forni a Legna",
-      description: "Tradizione e sapore autentico. I nostri forni a legna mantengono viva l'antica arte napoletana della cottura.",
-      icon: Flame,
-      features: ["Temperatura fino a 500°C", "Sapore affumicato naturale", "Design tradizionale", "Materiali refrattari di qualità"],
-      color: "from-orange-500 to-orange-700"
+      icon: <Flame className="text-orange-600" size={48} />,
+      description: "Tradizione autentica napoletana per il sapore unico che solo la legna può dare",
+      features: ["Cottura tradizionale", "Sapore autentico", "Alta temperatura", "Versatili"],
+      badge: "Tradizionale",
+      delay: "0s"
     },
     {
       title: "Forni a Gas",
-      description: "Praticità e controllo perfetto. Ideali per uso professionale con precisione nella gestione della temperatura.",
-      icon: Flame,
-      features: ["Controllo preciso temperatura", "Accensione istantanea", "Efficienza energetica", "Facile manutenzione"],
-      color: "from-gray-500 to-gray-700"
+      icon: <Zap className="text-blue-600" size={48} />,
+      description: "Controllo preciso della temperatura e facilità d'uso per professionisti",
+      features: ["Controllo preciso", "Accensione rapida", "Efficienza energetica", "Facile manutenzione"],
+      badge: "Professionale",
+      delay: "0.2s"
     },
     {
       title: "Forni Elettrici",
-      description: "Tecnologia moderna per risultati eccellenti. Perfetti per ambienti urbani e uso intensivo.",
-      icon: Zap,
-      features: ["Zero emissioni locali", "Controllo digitale", "Riscaldamento uniforme", "Silenziosità"],
-      color: "from-blue-500 to-blue-700"
+      icon: <Settings className="text-green-600" size={48} />,
+      description: "Tecnologia avanzata per cotture perfette e costanti ogni volta",
+      features: ["Temperatura costante", "Programmabile", "Eco-sostenibile", "Silenzioso"],
+      badge: "Innovativo",
+      delay: "0.4s"
     },
     {
       title: "Soluzioni Rotanti",
-      description: "Innovazione e uniformità. I forni rotanti garantiscono una cottura perfettamente omogenea.",
-      icon: RotateCcw,
-      features: ["Cottura uniforme", "Maggiore capacità", "Automazione avanzata", "Efficienza produttiva"],
-      color: "from-green-500 to-green-700"
+      icon: <RotateCcw className="text-purple-600" size={48} />,
+      description: "Massima efficienza produttiva con cottura uniforme su ogni superficie",
+      features: ["Cottura uniforme", "Alta produttività", "Risparmio energetico", "Automazione"],
+      badge: "Efficiente",
+      delay: "0.6s"
     }
   ];
 
   return (
-    <section id="products" className="py-20 bg-gray-50">
+    <section id="products" className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="font-playfair text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Le Nostre Categorie
-          </h2>
-          <p className="font-inter text-xl text-gray-600 max-w-3xl mx-auto">
-            Ogni forno è un capolavoro di artigianato napoletano, progettato per soddisfare 
-            le esigenze più diverse del mercato internazionale.
-          </p>
-        </div>
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="font-playfair text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Le Nostre <span className="text-orange-600">Categorie</span>
+            </h2>
+            <p className="font-inter text-xl text-gray-600 max-w-3xl mx-auto">
+              Soluzioni artigianali napoletane per ogni esigenza professionale, 
+              dalla tradizione all'innovazione più avanzata.
+            </p>
+          </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {categories.map((category, index) => {
-            const IconComponent = category.icon;
-            return (
-              <Card 
-                key={category.title} 
-                className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 animate-scale-in"
-                style={{ animationDelay: `${index * 0.2}s` }}
+          {/* Categories Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            {categories.map((category, index) => (
+              <div 
+                key={category.title}
+                className="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-500 hover:scale-105 animate-fade-in group border border-gray-100 hover:border-orange-200"
+                style={{ animationDelay: category.delay }}
               >
-                <CardContent className="p-6">
-                  <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${category.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <IconComponent className="text-white" size={32} />
+                <div className="text-center mb-4">
+                  <Badge className="mb-4 px-3 py-1 bg-gray-100 text-gray-700 group-hover:bg-orange-100 group-hover:text-orange-700 transition-colors duration-300">
+                    {category.badge}
+                  </Badge>
+                  <div className="mb-4 group-hover:scale-110 transition-transform duration-300 group-hover:animate-pulse">
+                    {category.icon}
                   </div>
-                  
-                  <h3 className="font-playfair text-2xl font-semibold text-gray-900 mb-3">
+                  <h3 className="font-playfair text-xl font-semibold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors duration-300">
                     {category.title}
                   </h3>
-                  
-                  <p className="font-inter text-gray-600 mb-4 leading-relaxed">
+                  <p className="text-gray-600 text-sm leading-relaxed mb-4">
                     {category.description}
                   </p>
+                </div>
 
-                  <ul className="space-y-2 mb-6">
-                    {category.features.map((feature, idx) => (
-                      <li key={idx} className="font-inter text-sm text-gray-500 flex items-center">
-                        <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
+                <ul className="space-y-2 mb-6">
+                  {category.features.map((feature, idx) => (
+                    <li 
+                      key={feature} 
+                      className="flex items-center text-sm text-gray-600 hover:text-orange-600 transition-colors duration-300 hover:translate-x-1"
+                      style={{ transitionDelay: `${idx * 0.1}s` }}
+                    >
+                      <div className="w-2 h-2 bg-orange-500 rounded-full mr-3 flex-shrink-0 group-hover:animate-pulse"></div>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
 
-                  <Button 
-                    variant="outline" 
-                    className="w-full border-orange-500 text-orange-700 hover:bg-orange-500 hover:text-white transition-all duration-300"
-                  >
-                    Scopri di Più
-                  </Button>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-
-        {/* Additional Info */}
-        <div className="mt-16 text-center">
-          <div className="bg-white rounded-lg shadow-lg p-8 max-w-4xl mx-auto">
-            <h3 className="font-playfair text-2xl font-semibold text-gray-900 mb-4">
-              Forni Fissi e Rotanti
-            </h3>
-            <p className="font-inter text-gray-600 mb-6">
-              Ogni categoria è disponibile sia in versione fissa che rotante, 
-              permettendo di scegliere la soluzione più adatta alle vostre esigenze produttive.
-            </p>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="text-left">
-                <h4 className="font-semibold text-orange-700 mb-2">Forni Fissi</h4>
-                <p className="text-sm text-gray-600">Ideali per pizzerie tradizionali e ristoranti che privilegiano l'autenticità e il controllo manuale della cottura.</p>
+                <Button 
+                  className="w-full bg-gray-100 text-gray-700 hover:bg-orange-600 hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                  onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  Scopri di più
+                </Button>
               </div>
-              <div className="text-left">
-                <h4 className="font-semibold text-orange-700 mb-2">Forni Rotanti</h4>
-                <p className="text-sm text-gray-600">Perfetti per produzioni intensive che richiedono uniformità e velocità, mantenendo alta la qualità.</p>
-              </div>
+            ))}
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="text-center animate-scale-in" style={{ animationDelay: '0.8s' }}>
+            <div className="bg-white rounded-xl shadow-lg p-8 max-w-3xl mx-auto border border-orange-200 hover:shadow-xl transition-all duration-500 hover:scale-105">
+              <h4 className="font-playfair text-2xl font-semibold text-gray-900 mb-4">
+                Non trovi quello che cerchi?
+              </h4>
+              <p className="text-gray-600 mb-6">
+                I nostri esperti sono pronti a creare la soluzione perfetta per le tue esigenze specifiche.
+              </p>
+              <Button 
+                size="lg"
+                className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                Consulenza Personalizzata
+              </Button>
             </div>
           </div>
         </div>
