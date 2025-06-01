@@ -52,7 +52,7 @@ const ClientsMap = () => {
       <div className="container mx-auto px-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-16 animate-fade-in">
+          <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4 text-vesuviano-600 border-vesuviano-200">
               {t('clientsMap.badge', 'Presenza Globale')}
             </Badge>
@@ -65,53 +65,50 @@ const ClientsMap = () => {
           </div>
 
           {/* Mappa Stilizzata */}
-          <div className="relative bg-white rounded-2xl shadow-2xl p-8 mb-12 overflow-hidden">
-            {/* Sfondo mappa stilizzata */}
-            <div className="relative h-96 md:h-[500px] bg-gradient-to-br from-blue-50 via-green-25 to-blue-25 rounded-xl overflow-hidden border-2 border-stone-200">
-              {/* Continenti stilizzati con colori più visibili */}
-              <div className="absolute inset-0">
-                {/* Europa/Italia - più prominente */}
-                <div className="absolute top-16 left-1/2 transform -translate-x-1/2 w-40 h-32 bg-green-300 rounded-lg opacity-40"></div>
+          <div className="relative bg-white rounded-2xl shadow-2xl p-8 mb-12">
+            {/* Contenitore mappa con altezza fissa */}
+            <div className="relative w-full h-96 md:h-[500px] bg-slate-100 rounded-xl border-2 border-stone-200 overflow-hidden">
+              {/* Continenti stilizzati - forme più semplici e statiche */}
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid slice">
+                {/* Europa */}
+                <ellipse cx="50" cy="25" rx="15" ry="8" fill="#e5e7eb" opacity="0.6"/>
                 {/* Nord America */}
-                <div className="absolute top-12 left-1/4 w-32 h-40 bg-blue-300 rounded-lg opacity-40"></div>
+                <ellipse cx="20" cy="20" rx="12" ry="15" fill="#e5e7eb" opacity="0.6"/>
                 {/* Asia */}
-                <div className="absolute top-8 right-1/4 w-44 h-36 bg-yellow-300 rounded-full opacity-40"></div>
+                <ellipse cx="75" cy="25" rx="18" ry="12" fill="#e5e7eb" opacity="0.6"/>
                 {/* Africa */}
-                <div className="absolute bottom-1/4 left-1/2 transform -translate-x-1/2 w-24 h-40 bg-orange-300 rounded-lg opacity-40"></div>
-              </div>
+                <ellipse cx="52" cy="45" rx="8" ry="12" fill="#e5e7eb" opacity="0.6"/>
+                {/* Sud America */}
+                <ellipse cx="25" cy="50" rx="6" ry="10" fill="#e5e7eb" opacity="0.6"/>
+              </svg>
 
-              {/* Markers dei clienti con posizionamento fisso */}
+              {/* Markers dei clienti */}
               {clients.map((client, index) => (
                 <div
                   key={index}
-                  className={`absolute transform -translate-x-1/2 -translate-y-1/2 ${getMarkerSize(client.count)} ${getMarkerColor(client.region)} rounded-full border-2 border-white shadow-lg cursor-pointer hover:scale-125 transition-all duration-300 z-10`}
+                  className={`absolute transform -translate-x-1/2 -translate-y-1/2 ${getMarkerSize(client.count)} ${getMarkerColor(client.region)} rounded-full border-2 border-white shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200 z-10 flex items-center justify-center`}
                   style={{ 
                     left: `${client.x}%`, 
                     top: `${client.y}%`,
                   }}
                   title={`${client.name}, ${client.country} - ${client.count} clienti`}
                 >
-                  <div className="w-full h-full flex items-center justify-center">
-                    <MapPin className="w-2 h-2 text-white" />
-                  </div>
+                  <MapPin className="w-2 h-2 md:w-3 md:h-3 text-white" />
                 </div>
               ))}
-
-              {/* Effetto overlay per migliorare la visibilità */}
-              <div className="absolute inset-0 bg-white bg-opacity-10 pointer-events-none"></div>
             </div>
 
-            {/* Legenda migliorata */}
+            {/* Legenda */}
             <div className="mt-8 flex flex-wrap justify-center gap-6">
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm border">
                 <div className="w-4 h-4 bg-vesuviano-500 rounded-full"></div>
                 <span className="text-sm font-medium text-stone-700">Italia ({clients.filter(c => c.region === 'italia').reduce((sum, c) => sum + c.count, 0)} clienti)</span>
               </div>
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm border">
                 <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
                 <span className="text-sm font-medium text-stone-700">Europa ({clients.filter(c => c.region === 'europa').reduce((sum, c) => sum + c.count, 0)} clienti)</span>
               </div>
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm border">
                 <div className="w-4 h-4 bg-green-500 rounded-full"></div>
                 <span className="text-sm font-medium text-stone-700">Mondo ({clients.filter(c => c.region === 'mondo').reduce((sum, c) => sum + c.count, 0)} clienti)</span>
               </div>
