@@ -7,48 +7,52 @@ const ProductCategories = () => {
   const categories = [
     {
       title: "Forni a Legna",
-      icon: <Flame className="text-orange-600" size={48} />,
+      icon: <Flame className="text-copper-600" size={48} />,
       description: "Tradizione autentica napoletana per il sapore unico che solo la legna può dare",
       features: ["Cottura tradizionale", "Sapore autentico", "Alta temperatura", "Versatili"],
       badge: "Tradizionale",
+      badgeColor: "bg-copper-100 text-copper-700",
       delay: "0s"
     },
     {
       title: "Forni a Gas",
-      icon: <Zap className="text-blue-600" size={48} />,
+      icon: <Zap className="text-stone-600" size={48} />,
       description: "Controllo preciso della temperatura e facilità d'uso per professionisti",
       features: ["Controllo preciso", "Accensione rapida", "Efficienza energetica", "Facile manutenzione"],
       badge: "Professionale",
+      badgeColor: "bg-stone-100 text-stone-700",
       delay: "0.2s"
     },
     {
       title: "Forni Elettrici",
-      icon: <Settings className="text-green-600" size={48} />,
+      icon: <Settings className="text-vesuviano-600" size={48} />,
       description: "Tecnologia avanzata per cotture perfette e costanti ogni volta",
       features: ["Temperatura costante", "Programmabile", "Eco-sostenibile", "Silenzioso"],
       badge: "Innovativo",
+      badgeColor: "bg-vesuviano-100 text-vesuviano-700",
       delay: "0.4s"
     },
     {
       title: "Soluzioni Rotanti",
-      icon: <RotateCcw className="text-purple-600" size={48} />,
+      icon: <RotateCcw className="text-charcoal-600" size={48} />,
       description: "Massima efficienza produttiva con cottura uniforme su ogni superficie",
       features: ["Cottura uniforme", "Alta produttività", "Risparmio energetico", "Automazione"],
       badge: "Efficiente",
+      badgeColor: "bg-charcoal-100 text-charcoal-700",
       delay: "0.6s"
     }
   ];
 
   return (
-    <section id="products" className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
+    <section id="products" className="py-20 bg-stone-50">
       <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16 animate-fade-in">
-            <h2 className="font-playfair text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Le Nostre <span className="text-orange-600">Categorie</span>
+            <h2 className="font-playfair text-4xl md:text-5xl font-bold text-charcoal-900 mb-6">
+              Le Nostre <span className="text-vesuviano-600">Categorie</span>
             </h2>
-            <p className="font-inter text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="font-inter text-xl text-stone-600 max-w-3xl mx-auto">
               Soluzioni artigianali napoletane per ogni esigenza professionale, 
               dalla tradizione all'innovazione più avanzata.
             </p>
@@ -59,20 +63,20 @@ const ProductCategories = () => {
             {categories.map((category, index) => (
               <div 
                 key={category.title}
-                className="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-500 hover:scale-105 animate-fade-in group border border-gray-100 hover:border-orange-200"
+                className="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-500 hover:scale-105 animate-fade-in group border border-stone-200 hover:border-vesuviano-300"
                 style={{ animationDelay: category.delay }}
               >
                 <div className="text-center mb-4">
-                  <Badge className="mb-4 px-3 py-1 bg-gray-100 text-gray-700 group-hover:bg-orange-100 group-hover:text-orange-700 transition-colors duration-300">
+                  <Badge className={`mb-4 px-3 py-1 ${category.badgeColor} transition-colors duration-300`}>
                     {category.badge}
                   </Badge>
-                  <div className="mb-4 group-hover:scale-110 transition-transform duration-300 group-hover:animate-pulse">
+                  <div className="mb-4 group-hover:scale-110 transition-transform duration-300">
                     {category.icon}
                   </div>
-                  <h3 className="font-playfair text-xl font-semibold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors duration-300">
+                  <h3 className="font-playfair text-xl font-semibold text-charcoal-900 mb-3 group-hover:text-vesuviano-600 transition-colors duration-300">
                     {category.title}
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                  <p className="text-stone-600 text-sm leading-relaxed mb-4">
                     {category.description}
                   </p>
                 </div>
@@ -81,17 +85,17 @@ const ProductCategories = () => {
                   {category.features.map((feature, idx) => (
                     <li 
                       key={feature} 
-                      className="flex items-center text-sm text-gray-600 hover:text-orange-600 transition-colors duration-300 hover:translate-x-1"
+                      className="flex items-center text-sm text-stone-600 hover:text-vesuviano-600 transition-colors duration-300 hover:translate-x-1"
                       style={{ transitionDelay: `${idx * 0.1}s` }}
                     >
-                      <div className="w-2 h-2 bg-orange-500 rounded-full mr-3 flex-shrink-0 group-hover:animate-pulse"></div>
+                      <div className="w-2 h-2 bg-vesuviano-500 rounded-full mr-3 flex-shrink-0"></div>
                       {feature}
                     </li>
                   ))}
                 </ul>
 
                 <Button 
-                  className="w-full bg-gray-100 text-gray-700 hover:bg-orange-600 hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                  className="w-full bg-stone-100 text-stone-700 hover:bg-vesuviano-500 hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
                   onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
                 >
                   Scopri di più
@@ -102,16 +106,16 @@ const ProductCategories = () => {
 
           {/* Bottom CTA */}
           <div className="text-center animate-scale-in" style={{ animationDelay: '0.8s' }}>
-            <div className="bg-white rounded-xl shadow-lg p-8 max-w-3xl mx-auto border border-orange-200 hover:shadow-xl transition-all duration-500 hover:scale-105">
-              <h4 className="font-playfair text-2xl font-semibold text-gray-900 mb-4">
+            <div className="bg-white rounded-xl shadow-lg p-8 max-w-3xl mx-auto border border-vesuviano-200 hover:shadow-xl transition-all duration-500 hover:scale-105">
+              <h4 className="font-playfair text-2xl font-semibold text-charcoal-900 mb-4">
                 Non trovi quello che cerchi?
               </h4>
-              <p className="text-gray-600 mb-6">
+              <p className="text-stone-600 mb-6">
                 I nostri esperti sono pronti a creare la soluzione perfetta per le tue esigenze specifiche.
               </p>
               <Button 
                 size="lg"
-                className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-3 transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 Consulenza Personalizzata

@@ -57,33 +57,59 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Vesuviano brand colors - keeping orange as primary brand color
-				// with gray as secondary brand color from the logo
+				// Vesuviano brand colors - palette pulita e professionale
 				vesuviano: {
-					50: '#fff7ed',
-					100: '#ffedd5',
-					200: '#fed7aa',
-					300: '#fdba74',
-					400: '#fb923c',
-					500: '#f97316', // Primary orange
-					600: '#ea580c',
-					700: '#c2410c',
-					800: '#9a3412',
-					900: '#7c2d12',
-					950: '#431407',
+					50: '#fef7f0',   // Crema molto chiaro
+					100: '#fdeee0',  // Beige chiaro
+					200: '#fbdcc4',  // Sabbia
+					300: '#f7c59b',  // Pesca tenue
+					400: '#f2a76a',  // Arancio tenue
+					500: '#e8823a',  // Arancio principale (brand)
+					600: '#d66d2a',  // Arancio scuro
+					700: '#b85520',  // Marrone arancio
+					800: '#944419',  // Marrone terra
+					900: '#7a3917',  // Marrone scuro
+					950: '#421c0a',  // Quasi nero
 				},
-				fire: {
-					50: '#fff7ed',
-					100: '#ffedd5',
-					200: '#fed7aa',
-					300: '#fdba74',
-					400: '#fb923c',
-					500: '#f97316',
-					600: '#ea580c',
-					700: '#c2410c',
-					800: '#9a3412',
-					900: '#7c2d12',
-					950: '#431407',
+				// Palette complementare neutra
+				stone: {
+					50: '#fafaf9',
+					100: '#f5f5f4',
+					200: '#e7e5e4',
+					300: '#d6d3d1',
+					400: '#a8a29e',
+					500: '#78716c',
+					600: '#57534e',
+					700: '#44403c',
+					800: '#292524',
+					900: '#1c1917',
+					950: '#0c0a09',
+				},
+				// Palette di supporto per i forni
+				copper: {
+					50: '#fdf4f3',
+					100: '#fce8e6',
+					200: '#f9d5d1',
+					300: '#f4b5ad',
+					400: '#ec8a7e',
+					500: '#e06450',
+					600: '#cd4830',
+					700: '#ac3924',
+					800: '#8f3022',
+					900: '#782d23',
+				},
+				charcoal: {
+					50: '#f6f6f6',
+					100: '#e7e7e7',
+					200: '#d1d1d1',
+					300: '#b0b0b0',
+					400: '#888888',
+					500: '#6d6d6d',
+					600: '#5d5d5d',
+					700: '#4f4f4f',
+					800: '#454545',
+					900: '#3d3d3d',
+					950: '#262626',
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
