@@ -172,33 +172,35 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
   };
 
   return (
-    <div className="fixed inset-0 bg-black z-50 overflow-hidden">
-      {/* Video AR Background - deve essere sotto il Canvas ma visibile */}
+    <div className="fixed inset-0 z-50 overflow-hidden" style={{ background: isARMode ? 'transparent' : '#f0f0f0' }}>
+      {/* Video AR Background - Layer più basso */}
       {isARMode && (
         <video
           ref={videoRef}
           autoPlay
           playsInline
           muted
-          className="absolute inset-0 w-full h-full object-cover z-10"
+          className="absolute inset-0 w-full h-full object-cover"
           style={{
-            transform: 'scaleX(-1)', // Mirror effect per un'esperienza più naturale
+            zIndex: 1,
+            transform: 'scaleX(-1)', // Mirror effect
           }}
         />
       )}
 
-      {/* Canvas 3D - deve essere sopra il video */}
-      <div className="absolute inset-0 z-20">
+      {/* Canvas 3D - Layer intermedio con trasparenza in AR */}
+      <div className="absolute inset-0" style={{ zIndex: 2 }}>
         <Canvas
           camera={{ position: [0, 2, 5], fov: 60 }}
           gl={{ 
             alpha: true, 
             premultipliedAlpha: false,
-            antialias: true 
+            antialias: true,
+            preserveDrawingBuffer: true
           }}
           style={{ 
-            background: isARMode ? 'transparent' : '#f0f0f0',
-            pointerEvents: isARMode ? 'none' : 'auto' // Disabilita interazione in AR
+            background: 'transparent',
+            pointerEvents: isARMode ? 'none' : 'auto'
           }}
         >
           <ambientLight intensity={0.6} />
@@ -223,8 +225,8 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
         </Canvas>
       </div>
 
-      {/* Controlli UI - devono essere sopra tutto */}
-      <div className="absolute top-4 left-4 right-4 z-30">
+      {/* Controlli UI - Layer superiore */}
+      <div className="absolute top-4 left-4 right-4" style={{ zIndex: 10 }}>
         <div className="flex justify-between items-center">
           <div className="bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm">
             <p className="text-sm font-medium">{selectedOven?.label}</p>
@@ -242,8 +244,8 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
         </div>
       </div>
 
-      {/* Controlli AR - devono essere sopra tutto */}
-      <div className="absolute bottom-4 left-4 right-4 z-30">
+      {/* Controlli AR - Layer superiore */}
+      <div className="absolute bottom-4 left-4 right-4" style={{ zIndex: 10 }}>
         <div className="bg-black/70 p-4 rounded-lg backdrop-blur-sm">
           {!isARMode ? (
             <div className="space-y-3">
