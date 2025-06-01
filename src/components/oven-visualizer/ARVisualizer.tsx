@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
@@ -108,9 +107,16 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
       
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
-        videoRef.current.play();
         setStream(mediaStream);
         setIsARMode(true);
+        
+        // Aspetta che il video sia caricato prima di farlo partire
+        videoRef.current.onloadedmetadata = () => {
+          if (videoRef.current) {
+            videoRef.current.play().catch(console.error);
+          }
+        };
+        
         toast.success("Modalità AR attivata! Muovi il forno con i controlli");
       }
     } catch (error) {
@@ -172,61 +178,61 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden" style={{ background: isARMode ? 'transparent' : '#f0f0f0' }}>
-      {/* Video AR Background - Layer più basso */}
-      {isARMode && (
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            zIndex: 1,
-            transform: 'scaleX(-1)', // Mirror effect
-          }}
-        />
-      )}
+    <div className="fixed inset-0 z-50 overflow-hidden">
+      {/* Video di sfondo per AR */}
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{
+          display: isARMode ? 'block' : 'none',
+          transform: 'scaleX(-1)', // Mirror effect
+        }}
+      />
 
-      {/* Canvas 3D - Layer intermedio con trasparenza in AR */}
-      <div className="absolute inset-0" style={{ zIndex: 2 }}>
-        <Canvas
-          camera={{ position: [0, 2, 5], fov: 60 }}
-          gl={{ 
-            alpha: true, 
-            premultipliedAlpha: false,
-            antialias: true,
-            preserveDrawingBuffer: true
-          }}
-          style={{ 
-            background: 'transparent',
-            pointerEvents: isARMode ? 'none' : 'auto'
-          }}
-        >
-          <ambientLight intensity={0.6} />
-          <directionalLight position={[10, 10, 5]} intensity={1} />
-          
-          {selectedOven && (
-            <OvenModel
-              ovenType={selectedOvenType}
-              position={ovenPosition}
-              rotation={ovenRotation}
-              scale={ovenScale}
-            />
-          )}
-          
-          {!isARMode && <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />}
-          {!isARMode && (
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
-              <planeGeometry args={[20, 20]} />
-              <meshStandardMaterial color="#e0e0e0" />
-            </mesh>
-          )}
-        </Canvas>
-      </div>
+      {/* Canvas 3D sovrapposto */}
+      <Canvas
+        camera={{ position: [0, 2, 5], fov: 60 }}
+        gl={{ 
+          alpha: true,
+          premultipliedAlpha: false,
+          antialias: true
+        }}
+        style={{ 
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: isARMode ? 'transparent' : '#f0f0f0',
+          pointerEvents: isARMode ? 'none' : 'auto'
+        }}
+      >
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[10, 10, 5]} intensity={1} />
+        
+        {selectedOven && (
+          <OvenModel
+            ovenType={selectedOvenType}
+            position={ovenPosition}
+            rotation={ovenRotation}
+            scale={ovenScale}
+          />
+        )}
+        
+        {!isARMode && <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />}
+        {!isARMode && (
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
+            <planeGeometry args={[20, 20]} />
+            <meshStandardMaterial color="#e0e0e0" />
+          </mesh>
+        )}
+      </Canvas>
 
-      {/* Controlli UI - Layer superiore */}
-      <div className="absolute top-4 left-4 right-4" style={{ zIndex: 10 }}>
+      {/* Controlli UI */}
+      <div className="absolute top-4 left-4 right-4 z-10 pointer-events-auto">
         <div className="flex justify-between items-center">
           <div className="bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm">
             <p className="text-sm font-medium">{selectedOven?.label}</p>
@@ -244,8 +250,8 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
         </div>
       </div>
 
-      {/* Controlli AR - Layer superiore */}
-      <div className="absolute bottom-4 left-4 right-4" style={{ zIndex: 10 }}>
+      {/* Controlli AR */}
+      <div className="absolute bottom-4 left-4 right-4 z-10 pointer-events-auto">
         <div className="bg-black/70 p-4 rounded-lg backdrop-blur-sm">
           {!isARMode ? (
             <div className="space-y-3">
