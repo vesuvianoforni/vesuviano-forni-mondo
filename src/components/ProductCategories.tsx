@@ -1,115 +1,126 @@
+
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
 const ProductCategories = () => {
   const categories = [
     {
-      title: "Forni a Legna",
-      description: "Tradizione autentica napoletana per il sapore unico che solo la legna può dare",
-      features: ["Cottura tradizionale", "Sapore autentico", "Alta temperatura", "Versatili"],
-      badge: "Tradizionale",
-      badgeColor: "bg-copper-100 text-copper-700",
-      delay: "0s"
+      title: "Forni Tradizionali",
+      subtitle: "Wood Fired Ovens",
+      description: "L'autentica tradizione napoletana per pizze dal sapore inconfondibile. Cottura a legna per il massimo del gusto.",
+      features: ["Cottura tradizionale a legna", "Temperatura fino a 500°C", "Sapore autentico napoletano", "Versatili per pizza e pane"],
+      image: "/lovable-uploads/83490d78-6935-41ab-bb12-49e6070f44db.png"
     },
     {
       title: "Forni a Gas",
-      description: "Controllo preciso della temperatura e facilità d'uso per professionisti",
-      features: ["Controllo preciso", "Accensione rapida", "Efficienza energetica", "Facile manutenzione"],
-      badge: "Professionale",
-      badgeColor: "bg-stone-100 text-stone-700",
-      delay: "0.2s"
+      subtitle: "Gas Fired Ovens", 
+      description: "Controllo preciso e facilità d'uso per professionisti che cercano efficienza e qualità costante.",
+      features: ["Controllo preciso temperatura", "Accensione istantanea", "Efficienza energetica", "Manutenzione semplificata"],
+      image: "/lovable-uploads/83490d78-6935-41ab-bb12-49e6070f44db.png"
     },
     {
       title: "Forni Elettrici",
-      description: "Tecnologia avanzata per cotture perfette e costanti ogni volta",
-      features: ["Temperatura costante", "Programmabile", "Eco-sostenibile", "Silenzioso"],
-      badge: "Innovativo",
-      badgeColor: "bg-vesuviano-100 text-vesuviano-700",
-      delay: "0.4s"
+      subtitle: "Electric Ovens",
+      description: "Tecnologia avanzata per cotture perfette, costanti e rispettose dell'ambiente.",
+      features: ["Temperatura costante", "Controllo digitale", "Eco-sostenibile", "Funzionamento silenzioso"],
+      image: "/lovable-uploads/83490d78-6935-41ab-bb12-49e6070f44db.png"
     },
     {
-      title: "Soluzioni Rotanti",
-      description: "Massima efficienza produttiva con cottura uniforme su ogni superficie",
-      features: ["Cottura uniforme", "Alta produttività", "Risparmio energetico", "Automazione"],
-      badge: "Efficiente",
-      badgeColor: "bg-charcoal-100 text-charcoal-700",
-      delay: "0.6s"
+      title: "Forni Rotanti",
+      subtitle: "Rotating Ovens",
+      description: "Massima produttività con cottura uniforme su ogni superficie. Ideali per alta produzione.",
+      features: ["Cottura uniforme", "Alta produttività", "Automazione avanzata", "Efficienza energetica"],
+      image: "/lovable-uploads/83490d78-6935-41ab-bb12-49e6070f44db.png"
     }
   ];
 
   return (
-    <section id="products" className="py-20 bg-stone-50">
+    <section id="products" className="py-20 bg-white">
       <div className="container mx-auto px-6">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16 animate-fade-in">
-            <h2 className="font-playfair text-4xl md:text-5xl font-bold text-charcoal-900 mb-6">
-              Le Nostre <span className="text-vesuviano-600">Categorie</span>
+            <h2 className="font-playfair text-4xl md:text-5xl font-bold text-charcoal-900 mb-4">
+              Le Nostre <span className="text-vesuviano-600">Soluzioni</span>
             </h2>
-            <p className="font-inter text-xl text-stone-600 max-w-3xl mx-auto">
-              Soluzioni artigianali napoletane per ogni esigenza professionale, 
-              dalla tradizione all'innovazione più avanzata.
+            <p className="font-inter text-lg text-stone-600 max-w-2xl mx-auto">
+              Forni artigianali napoletani per ogni esigenza professionale
             </p>
           </div>
 
           {/* Categories Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
             {categories.map((category, index) => (
-              <div 
+              <Card 
                 key={category.title}
-                className="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-500 hover:scale-105 animate-fade-in group border border-stone-200 hover:border-vesuviano-300"
-                style={{ animationDelay: category.delay }}
+                className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border border-stone-200 hover:border-vesuviano-300 animate-fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="text-center mb-4">
-                  <Badge className={`mb-4 px-3 py-1 ${category.badgeColor} transition-colors duration-300`}>
-                    {category.badge}
-                  </Badge>
-                  <h3 className="font-playfair text-xl font-semibold text-charcoal-900 mb-3 group-hover:text-vesuviano-600 transition-colors duration-300">
-                    {category.title}
-                  </h3>
-                  <p className="text-stone-600 text-sm leading-relaxed mb-4">
+                <div className="relative h-64 overflow-hidden">
+                  <img 
+                    src={category.image} 
+                    alt={category.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="font-playfair text-2xl font-bold mb-1">{category.title}</h3>
+                    <p className="text-sm opacity-90 font-inter">{category.subtitle}</p>
+                  </div>
+                </div>
+                
+                <CardContent className="p-6">
+                  <p className="text-stone-600 mb-4 leading-relaxed">
                     {category.description}
                   </p>
-                </div>
+                  
+                  <ul className="space-y-2 mb-6">
+                    {category.features.map((feature, idx) => (
+                      <li 
+                        key={feature}
+                        className="flex items-center text-sm text-stone-600 hover:text-vesuviano-600 transition-colors duration-300"
+                      >
+                        <div className="w-1.5 h-1.5 bg-vesuviano-500 rounded-full mr-3 flex-shrink-0"></div>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
 
-                <ul className="space-y-2 mb-6">
-                  {category.features.map((feature, idx) => (
-                    <li 
-                      key={feature} 
-                      className="flex items-center text-sm text-stone-600 hover:text-vesuviano-600 transition-colors duration-300 hover:translate-x-1"
-                      style={{ transitionDelay: `${idx * 0.1}s` }}
-                    >
-                      <div className="w-2 h-2 bg-vesuviano-500 rounded-full mr-3 flex-shrink-0"></div>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-
-                <Button 
-                  className="w-full bg-stone-100 text-stone-700 hover:bg-vesuviano-500 hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                  onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  Scopri di più
-                </Button>
-              </div>
+                  <Button 
+                    className="w-full bg-stone-100 text-stone-700 hover:bg-vesuviano-500 hover:text-white transition-all duration-300"
+                    onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    Scopri di più
+                  </Button>
+                </CardContent>
+              </Card>
             ))}
           </div>
 
-          {/* Bottom CTA */}
-          <div className="text-center animate-scale-in" style={{ animationDelay: '0.8s' }}>
-            <div className="bg-white rounded-xl shadow-lg p-8 max-w-3xl mx-auto border border-vesuviano-200 hover:shadow-xl transition-all duration-500 hover:scale-105">
-              <h4 className="font-playfair text-2xl font-semibold text-charcoal-900 mb-4">
-                Non trovi quello che cerchi?
-              </h4>
-              <p className="text-stone-600 mb-6">
-                I nostri esperti sono pronti a creare la soluzione perfetta per le tue esigenze specifiche.
-              </p>
+          {/* Bottom Section */}
+          <div className="text-center bg-stone-50 rounded-2xl p-8 animate-scale-in" style={{ animationDelay: '0.6s' }}>
+            <h3 className="font-playfair text-3xl font-bold text-charcoal-900 mb-4">
+              Soluzioni Su Misura
+            </h3>
+            <p className="text-stone-600 mb-6 max-w-2xl mx-auto">
+              Ogni forno Vesuviano è progettato per soddisfare le esigenze specifiche della tua attività. 
+              I nostri esperti ti aiuteranno a trovare la soluzione perfetta.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg"
-                className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-3 transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-3 transition-all duration-300 hover:scale-105"
                 onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                Consulenza Personalizzata
+                Consulenza Gratuita
+              </Button>
+              <Button 
+                size="lg"
+                variant="outline"
+                className="border-vesuviano-500 text-vesuviano-600 hover:bg-vesuviano-500 hover:text-white px-8 py-3 transition-all duration-300"
+                onClick={() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                Vedi Gallery
               </Button>
             </div>
           </div>
