@@ -2,59 +2,12 @@
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
-import { Loader } from '@googlemaps/js-api-loader';
-
-// Singleton per gestire il caricamento di Google Maps
-class GoogleMapsLoader {
-  private static instance: GoogleMapsLoader;
-  private loader: Loader | null = null;
-  private isLoaded = false;
-  private loadPromise: Promise<void> | null = null;
-
-  private constructor() {}
-
-  static getInstance(): GoogleMapsLoader {
-    if (!GoogleMapsLoader.instance) {
-      GoogleMapsLoader.instance = new GoogleMapsLoader();
-    }
-    return GoogleMapsLoader.instance;
-  }
-
-  async loadGoogleMaps(): Promise<void> {
-    if (this.isLoaded) return;
-    
-    if (this.loadPromise) {
-      return this.loadPromise;
-    }
-
-    this.loadPromise = new Promise(async (resolve, reject) => {
-      try {
-        if (!this.loader) {
-          this.loader = new Loader({
-            apiKey: 'AIzaSyBFw0Qbyq9zTFTd-tUY6dQTuuCC3F_DqFi',
-            version: 'weekly',
-            libraries: ['maps']
-          });
-        }
-
-        await this.loader.load();
-        this.isLoaded = true;
-        resolve();
-      } catch (error) {
-        console.error('Errore nel caricamento di Google Maps:', error);
-        reject(error);
-      }
-    });
-
-    return this.loadPromise;
-  }
-}
 
 const ClientsMap = () => {
   const { t } = useTranslation();
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+  const [mapError, setMapError] = useState(false);
 
   const clients = [
     // Italia - concentrazione principale
@@ -90,13 +43,51 @@ const ClientsMap = () => {
     }
   };
 
-  const initializeMap = async () => {
-    if (!mapRef.current) return;
+  const initializeMap = () => {
+    console.log("Initializing map...");
+    
+    if (!mapRef.current) {
+      console.log("Map ref not available");
+      return;
+    }
+
+    // Check if Google Maps is already loaded
+    if (window.google && window.google.maps) {
+      console.log("Google Maps already loaded, creating map...");
+      createMap();
+      return;
+    }
+
+    // Load Google Maps script
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dQTuuCC3F_DqFi&libraries=maps&callback=initMap`;
+    script.async = true;
+    script.defer = true;
+    
+    // Set up global callback
+    (window as any).initMap = () => {
+      console.log("Google Maps loaded via callback");
+      createMap();
+    };
+
+    script.onerror = () => {
+      console.error("Failed to load Google Maps script");
+      setMapError(true);
+      setMapLoaded(false);
+    };
+
+    document.head.appendChild(script);
+  };
+
+  const createMap = () => {
+    if (!mapRef.current || !window.google || !window.google.maps) {
+      console.log("Cannot create map - missing requirements");
+      return;
+    }
 
     try {
-      const mapsLoader = GoogleMapsLoader.getInstance();
-      await mapsLoader.loadGoogleMaps();
-
+      console.log("Creating Google Maps instance...");
+      
       const map = new google.maps.Map(mapRef.current, {
         center: { lat: 41.9028, lng: 12.4964 },
         zoom: 4,
@@ -123,10 +114,12 @@ const ClientsMap = () => {
         ]
       });
 
-      setMapInstance(map);
+      console.log("Map created, adding markers...");
 
-      // Aggiungi marker per ogni cliente
-      clients.forEach(client => {
+      // Add markers for each client
+      clients.forEach((client, index) => {
+        console.log(`Adding marker for ${client.name}`);
+        
         const marker = new google.maps.Marker({
           position: { lat: client.lat, lng: client.lng },
           map: map,
@@ -156,15 +149,20 @@ const ClientsMap = () => {
         });
       });
 
+      console.log("All markers added successfully");
       setMapLoaded(true);
+      setMapError(false);
     } catch (error) {
-      console.error('Errore nel caricamento della mappa:', error);
+      console.error('Error creating map:', error);
+      setMapError(true);
       setMapLoaded(false);
     }
   };
 
   useEffect(() => {
-    initializeMap();
+    console.log("Component mounted, initializing map...");
+    const timer = setTimeout(initializeMap, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -187,14 +185,33 @@ const ClientsMap = () => {
           {/* Google Maps */}
           <div className="relative bg-white rounded-2xl shadow-2xl p-8 mb-12">
             <div className="relative w-full h-96 md:h-[600px] bg-slate-100 rounded-xl border-2 border-stone-200 overflow-hidden">
-              {!mapLoaded && (
+              {!mapLoaded && !mapError && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
                   <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-vesuviano-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Caricamento mappa...</p>
+                    <p className="text-gray-600">Caricamento mappa Google Maps...</p>
                   </div>
                 </div>
               )}
+              
+              {mapError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
+                  <div className="text-center">
+                    <p className="text-red-600 mb-4">Errore nel caricamento della mappa</p>
+                    <button 
+                      onClick={() => {
+                        setMapError(false);
+                        setMapLoaded(false);
+                        initializeMap();
+                      }}
+                      className="px-4 py-2 bg-vesuviano-600 text-white rounded hover:bg-vesuviano-700"
+                    >
+                      Riprova
+                    </button>
+                  </div>
+                </div>
+              )}
+              
               <div ref={mapRef} className="w-full h-full rounded-xl" />
             </div>
 
