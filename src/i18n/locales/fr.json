@@ -1,0 +1,79 @@
+
+{
+  "hero": {
+    "subtitle": "Fours Artisanaux Napolitains",
+    "title": "d'Excellence Internationale",
+    "description": "Artisanat napolitain sélectionné pour le marché mondial. Fours à bois, gaz, électriques et la solution révolutionnaire {vesuvioBuono} zéro émission.",
+    "discoverOvens": "Découvrez Nos Fours",
+    "freeConsultation": "Consultation Gratuite"
+  },
+  "header": {
+    "tagline": "Fours Volcaniques Sélectionnés",
+    "products": "Produits",
+    "vesuviobuono": "VesuvioBuono",
+    "gallery": "Galerie",
+    "consultation": "Consultation",
+    "contact": "Contactez-nous"
+  },
+  "products": {
+    "title": "Nos",
+    "titleHighlight": "Solutions",
+    "subtitle": "Fours artisanaux napolitains pour tous les besoins professionnels",
+    "traditional": {
+      "title": "Fours Traditionnels",
+      "subtitle": "Fours à Bois",
+      "description": "Tradition napolitaine authentique pour des pizzas au goût incomparable. Cuisson au bois pour un maximum de saveur.",
+      "features": {
+        "woodFired": "Cuisson traditionnelle au bois",
+        "temperature": "Température jusqu'à 500°C",
+        "authentic": "Saveur napolitaine authentique",
+        "versatile": "Polyvalents pour pizza et pain"
+      }
+    },
+    "gas": {
+      "title": "Fours à Gaz",
+      "subtitle": "Fours à Gaz",
+      "description": "Contrôle précis et facilité d'utilisation pour les professionnels recherchant efficacité et qualité constante.",
+      "features": {
+        "preciseControl": "Contrôle précis de la température",
+        "instant": "Allumage instantané",
+        "efficient": "Efficacité énergétique",
+        "maintenance": "Maintenance simplifiée"
+      }
+    },
+    "electric": {
+      "title": "Fours Électriques",
+      "subtitle": "Fours Électriques",
+      "description": "Technologie avancée pour une cuisson parfaite, constante et respectueuse de l'environnement.",
+      "features": {
+        "constant": "Température constante",
+        "digital": "Contrôle numérique",
+        "eco": "Éco-durable",
+        "silent": "Fonctionnement silencieux"
+      }
+    },
+    "rotating": {
+      "title": "Fours Rotatifs",
+      "subtitle": "Fours Rotatifs",
+      "description": "Productivité maximale avec cuisson uniforme sur chaque surface. Idéaux pour haute production.",
+      "features": {
+        "uniform": "Cuisson uniforme",
+        "productivity": "Haute productivité",
+        "automation": "Automatisation avancée",
+        "efficiency": "Efficacité énergétique"
+      }
+    },
+    "learnMore": "En Savoir Plus",
+    "customSolutions": {
+      "title": "Solutions Sur Mesure",
+      "description": "Chaque four Vesuviano est conçu pour répondre aux besoins spécifiques de votre activité. Nos experts vous aideront à trouver la solution parfaite.",
+      "freeConsultation": "Consultation Gratuite",
+      "viewGallery": "Voir la Galerie"
+    }
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès"
+  }
+}

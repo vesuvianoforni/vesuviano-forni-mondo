@@ -1,0 +1,79 @@
+
+{
+  "hero": {
+    "subtitle": "Hornos Artesanales Napolitanos",
+    "title": "de Excelencia Internacional",
+    "description": "Artesanía napolitana seleccionada para el mercado mundial. Hornos de leña, gas, eléctricos y la revolucionaria solución {vesuvioBuono} de cero emisiones.",
+    "discoverOvens": "Descubre Nuestros Hornos",
+    "freeConsultation": "Consulta Gratuita"
+  },
+  "header": {
+    "tagline": "Hornos Volcánicos Seleccionados",
+    "products": "Productos",
+    "vesuviobuono": "VesuvioBuono",
+    "gallery": "Galería",
+    "consultation": "Consulta",
+    "contact": "Contáctanos"
+  },
+  "products": {
+    "title": "Nuestras",
+    "titleHighlight": "Soluciones",
+    "subtitle": "Hornos artesanales napolitanos para cada necesidad profesional",
+    "traditional": {
+      "title": "Hornos Tradicionales",
+      "subtitle": "Hornos de Leña",
+      "description": "Tradición napolitana auténtica para pizzas con sabor inconfundible. Cocción a leña para el máximo sabor.",
+      "features": {
+        "woodFired": "Cocción tradicional a leña",
+        "temperature": "Temperatura hasta 500°C",
+        "authentic": "Sabor napolitano auténtico",
+        "versatile": "Versátiles para pizza y pan"
+      }
+    },
+    "gas": {
+      "title": "Hornos de Gas",
+      "subtitle": "Hornos de Gas",
+      "description": "Control preciso y facilidad de uso para profesionales que buscan eficiencia y calidad constante.",
+      "features": {
+        "preciseControl": "Control preciso de temperatura",
+        "instant": "Encendido instantáneo",
+        "efficient": "Eficiencia energética",
+        "maintenance": "Mantenimiento simplificado"
+      }
+    },
+    "electric": {
+      "title": "Hornos Eléctricos",
+      "subtitle": "Hornos Eléctricos",
+      "description": "Tecnología avanzada para cocciones perfectas, constantes y respetuosas con el medio ambiente.",
+      "features": {
+        "constant": "Temperatura constante",
+        "digital": "Control digital",
+        "eco": "Eco-sostenible",
+        "silent": "Funcionamiento silencioso"
+      }
+    },
+    "rotating": {
+      "title": "Hornos Rotativos",
+      "subtitle": "Hornos Rotativos",
+      "description": "Máxima productividad con cocción uniforme en cada superficie. Ideales para alta producción.",
+      "features": {
+        "uniform": "Cocción uniforme",
+        "productivity": "Alta productividad",
+        "automation": "Automatización avanzada",
+        "efficiency": "Eficiencia energética"
+      }
+    },
+    "learnMore": "Saber Más",
+    "customSolutions": {
+      "title": "Soluciones a Medida",
+      "description": "Cada horno Vesuviano está diseñado para satisfacer las necesidades específicas de su negocio. Nuestros expertos le ayudarán a encontrar la solución perfecta.",
+      "freeConsultation": "Consulta Gratuita",
+      "viewGallery": "Ver Galería"
+    }
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito"
+  }
+}

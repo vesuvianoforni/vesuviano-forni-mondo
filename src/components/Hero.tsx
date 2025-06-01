@@ -1,9 +1,11 @@
 
-
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
+import { useTranslation, Trans } from 'react-i18next';
 
 const Hero = () => {
+  const { t } = useTranslation();
+
   const scrollToProducts = () => {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -33,14 +35,17 @@ const Hero = () => {
         </div>
         
         <h1 className="font-playfair text-3xl md:text-5xl font-bold mb-6 leading-tight animate-fade-in text-white">
-          <span className="block text-vesuviano-400 text-2xl md:text-3xl font-medium mb-2 animate-slide-in-left">Forni Artigianali Napoletani</span>
-          <span className="block animate-slide-in-right" style={{ animationDelay: '0.3s' }}>di Eccellenza Internazionale</span>
+          <span className="block text-vesuviano-400 text-2xl md:text-3xl font-medium mb-2 animate-slide-in-left">{t('hero.subtitle')}</span>
+          <span className="block animate-slide-in-right" style={{ animationDelay: '0.3s' }}>{t('hero.title')}</span>
         </h1>
         
         <p className="font-inter text-lg md:text-xl mb-8 max-w-3xl mx-auto leading-relaxed text-gray-200 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-          Artigianato napoletano selezionato per il mercato mondiale. 
-          Forni a legna, gas, elettrici e la rivoluzionaria soluzione 
-          <span className="text-vesuviano-400 font-semibold"> VesuvioBuono</span> a zero emissioni.
+          <Trans 
+            i18nKey="hero.description"
+            components={{
+              vesuvioBuono: <span className="text-vesuviano-400 font-semibold" />
+            }}
+          />
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 animate-scale-in" style={{ animationDelay: '0.9s' }}>
@@ -49,7 +54,7 @@ const Hero = () => {
             className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-3 text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
             onClick={scrollToProducts}
           >
-            Scopri i Nostri Forni
+            {t('hero.discoverOvens')}
           </Button>
           <Button 
             size="lg" 
@@ -57,7 +62,7 @@ const Hero = () => {
             className="border-2 border-vesuviano-500 text-vesuviano-500 hover:bg-vesuviano-500 hover:text-white px-8 py-3 text-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl"
             onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
           >
-            Consulenza Gratuita
+            {t('hero.freeConsultation')}
           </Button>
         </div>
 
@@ -78,4 +83,3 @@ const Hero = () => {
 };
 
 export default Hero;
-

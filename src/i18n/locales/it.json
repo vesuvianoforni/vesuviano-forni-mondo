@@ -1,0 +1,79 @@
+
+{
+  "hero": {
+    "subtitle": "Forni Artigianali Napoletani",
+    "title": "di Eccellenza Internazionale",
+    "description": "Artigianato napoletano selezionato per il mercato mondiale. Forni a legna, gas, elettrici e la rivoluzionaria soluzione {vesuvioBuono} a zero emissioni.",
+    "discoverOvens": "Scopri i Nostri Forni",
+    "freeConsultation": "Consulenza Gratuita"
+  },
+  "header": {
+    "tagline": "Forni Vulcanici Selezionati",
+    "products": "Prodotti",
+    "vesuviobuono": "VesuvioBuono",
+    "gallery": "Galleria",
+    "consultation": "Consulenza",
+    "contact": "Contattaci"
+  },
+  "products": {
+    "title": "Le Nostre",
+    "titleHighlight": "Soluzioni",
+    "subtitle": "Forni artigianali napoletani per ogni esigenza professionale",
+    "traditional": {
+      "title": "Forni Tradizionali",
+      "subtitle": "Wood Fired Ovens",
+      "description": "L'autentica tradizione napoletana per pizze dal sapore inconfondibile. Cottura a legna per il massimo del gusto.",
+      "features": {
+        "woodFired": "Cottura tradizionale a legna",
+        "temperature": "Temperatura fino a 500°C",
+        "authentic": "Sapore autentico napoletano",
+        "versatile": "Versatili per pizza e pane"
+      }
+    },
+    "gas": {
+      "title": "Forni a Gas",
+      "subtitle": "Gas Fired Ovens",
+      "description": "Controllo preciso e facilità d'uso per professionisti che cercano efficienza e qualità costante.",
+      "features": {
+        "preciseControl": "Controllo preciso temperatura",
+        "instant": "Accensione istantanea",
+        "efficient": "Efficienza energetica",
+        "maintenance": "Manutenzione semplificata"
+      }
+    },
+    "electric": {
+      "title": "Forni Elettrici",
+      "subtitle": "Electric Ovens",
+      "description": "Tecnologia avanzata per cotture perfette, costanti e rispettose dell'ambiente.",
+      "features": {
+        "constant": "Temperatura costante",
+        "digital": "Controllo digitale",
+        "eco": "Eco-sostenibile",
+        "silent": "Funzionamento silenzioso"
+      }
+    },
+    "rotating": {
+      "title": "Forni Rotanti",
+      "subtitle": "Rotating Ovens",
+      "description": "Massima produttività con cottura uniforme su ogni superficie. Ideali per alta produzione.",
+      "features": {
+        "uniform": "Cottura uniforme",
+        "productivity": "Alta produttività",
+        "automation": "Automazione avanzata",
+        "efficiency": "Efficienza energetica"
+      }
+    },
+    "learnMore": "Scopri di più",
+    "customSolutions": {
+      "title": "Soluzioni Su Misura",
+      "description": "Ogni forno Vesuviano è progettato per soddisfare le esigenze specifiche della tua attività. I nostri esperti ti aiuteranno a trovare la soluzione perfetta.",
+      "freeConsultation": "Consulenza Gratuita",
+      "viewGallery": "Vedi Gallery"
+    }
+  },
+  "common": {
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "success": "Successo"
+  }
+}

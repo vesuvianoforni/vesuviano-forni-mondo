@@ -1,0 +1,79 @@
+
+{
+  "hero": {
+    "subtitle": "Neapolitanische Handwerksöfen",
+    "title": "von Internationaler Exzellenz",
+    "description": "Ausgewähltes neapolitanisches Handwerk für den Weltmarkt. Holz-, Gas-, Elektroöfen und die revolutionäre {vesuvioBuono} Null-Emissions-Lösung.",
+    "discoverOvens": "Entdecken Sie Unsere Öfen",
+    "freeConsultation": "Kostenlose Beratung"
+  },
+  "header": {
+    "tagline": "Ausgewählte Vulkanöfen",
+    "products": "Produkte",
+    "vesuviobuono": "VesuvioBuono",
+    "gallery": "Galerie",
+    "consultation": "Beratung",
+    "contact": "Kontaktieren Sie Uns"
+  },
+  "products": {
+    "title": "Unsere",
+    "titleHighlight": "Lösungen",
+    "subtitle": "Neapolitanische Handwerksöfen für jeden professionellen Bedarf",
+    "traditional": {
+      "title": "Traditionelle Öfen",
+      "subtitle": "Holzöfen",
+      "description": "Authentische neapolitanische Tradition für Pizzen mit unverwechselbarem Geschmack. Holzfeuerung für maximalen Geschmack.",
+      "features": {
+        "woodFired": "Traditionelles Holzfeuer",
+        "temperature": "Temperatur bis zu 500°C",
+        "authentic": "Authentischer neapolitanischer Geschmack",
+        "versatile": "Vielseitig für Pizza und Brot"
+      }
+    },
+    "gas": {
+      "title": "Gasöfen",
+      "subtitle": "Gasöfen",
+      "description": "Präzise Kontrolle und Benutzerfreundlichkeit für Profis, die Effizienz und konstante Qualität suchen.",
+      "features": {
+        "preciseControl": "Präzise Temperaturkontrolle",
+        "instant": "Sofortige Zündung",
+        "efficient": "Energieeffizienz",
+        "maintenance": "Vereinfachte Wartung"
+      }
+    },
+    "electric": {
+      "title": "Elektroöfen",
+      "subtitle": "Elektroöfen",
+      "description": "Fortschrittliche Technologie für perfektes, konstantes und umweltfreundliches Kochen.",
+      "features": {
+        "constant": "Konstante Temperatur",
+        "digital": "Digitale Steuerung",
+        "eco": "Umweltfreundlich",
+        "silent": "Leiser Betrieb"
+      }
+    },
+    "rotating": {
+      "title": "Rotierende Öfen",
+      "subtitle": "Rotierende Öfen",
+      "description": "Maximale Produktivität mit gleichmäßigem Garen auf jeder Oberfläche. Ideal für hohe Produktion.",
+      "features": {
+        "uniform": "Gleichmäßiges Garen",
+        "productivity": "Hohe Produktivität",
+        "automation": "Erweiterte Automatisierung",
+        "efficiency": "Energieeffizienz"
+      }
+    },
+    "learnMore": "Mehr Erfahren",
+    "customSolutions": {
+      "title": "Maßgeschneiderte Lösungen",
+      "description": "Jeder Vesuviano-Ofen ist darauf ausgelegt, die spezifischen Bedürfnisse Ihres Unternehmens zu erfüllen. Unsere Experten helfen Ihnen dabei, die perfekte Lösung zu finden.",
+      "freeConsultation": "Kostenlose Beratung",
+      "viewGallery": "Galerie Ansehen"
+    }
+  },
+  "common": {
+    "loading": "Wird geladen...",
+    "error": "Fehler",
+    "success": "Erfolg"
+  }
+}

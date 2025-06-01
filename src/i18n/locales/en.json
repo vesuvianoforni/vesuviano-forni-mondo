@@ -1,0 +1,79 @@
+
+{
+  "hero": {
+    "subtitle": "Neapolitan Artisan Ovens",
+    "title": "of International Excellence",
+    "description": "Selected Neapolitan craftsmanship for the global market. Wood, gas, electric ovens and the revolutionary {vesuvioBuono} zero-emission solution.",
+    "discoverOvens": "Discover Our Ovens",
+    "freeConsultation": "Free Consultation"
+  },
+  "header": {
+    "tagline": "Selected Volcanic Ovens",
+    "products": "Products",
+    "vesuviobuono": "VesuvioBuono",
+    "gallery": "Gallery",
+    "consultation": "Consultation",
+    "contact": "Contact Us"
+  },
+  "products": {
+    "title": "Our",
+    "titleHighlight": "Solutions",
+    "subtitle": "Neapolitan artisan ovens for every professional need",
+    "traditional": {
+      "title": "Traditional Ovens",
+      "subtitle": "Wood Fired Ovens",
+      "description": "Authentic Neapolitan tradition for pizzas with unmistakable flavor. Wood-fired cooking for maximum taste.",
+      "features": {
+        "woodFired": "Traditional wood-fired cooking",
+        "temperature": "Temperature up to 500°C",
+        "authentic": "Authentic Neapolitan flavor",
+        "versatile": "Versatile for pizza and bread"
+      }
+    },
+    "gas": {
+      "title": "Gas Ovens",
+      "subtitle": "Gas Fired Ovens",
+      "description": "Precise control and ease of use for professionals seeking efficiency and consistent quality.",
+      "features": {
+        "preciseControl": "Precise temperature control",
+        "instant": "Instant ignition",
+        "efficient": "Energy efficiency",
+        "maintenance": "Simplified maintenance"
+      }
+    },
+    "electric": {
+      "title": "Electric Ovens",
+      "subtitle": "Electric Ovens",
+      "description": "Advanced technology for perfect, consistent and environmentally friendly cooking.",
+      "features": {
+        "constant": "Constant temperature",
+        "digital": "Digital control",
+        "eco": "Eco-sustainable",
+        "silent": "Silent operation"
+      }
+    },
+    "rotating": {
+      "title": "Rotating Ovens",
+      "subtitle": "Rotating Ovens",
+      "description": "Maximum productivity with uniform cooking on every surface. Ideal for high production.",
+      "features": {
+        "uniform": "Uniform cooking",
+        "productivity": "High productivity",
+        "automation": "Advanced automation",
+        "efficiency": "Energy efficiency"
+      }
+    },
+    "learnMore": "Learn More",
+    "customSolutions": {
+      "title": "Custom Solutions",
+      "description": "Every Vesuviano oven is designed to meet the specific needs of your business. Our experts will help you find the perfect solution.",
+      "freeConsultation": "Free Consultation",
+      "viewGallery": "View Gallery"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  }
+}
