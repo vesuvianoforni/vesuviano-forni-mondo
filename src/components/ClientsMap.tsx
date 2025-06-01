@@ -1,4 +1,3 @@
-
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
@@ -36,10 +35,10 @@ const ClientsMap = () => {
 
   const getMarkerColor = (region: string) => {
     switch (region) {
-      case "italia": return "#e11d48"; // vesuviano-500 equivalent
-      case "europa": return "#3b82f6"; // blue-500
-      case "mondo": return "#22c55e"; // green-500
-      default: return "#6b7280"; // gray-500
+      case "italia": return "#e11d48";
+      case "europa": return "#3b82f6";
+      case "mondo": return "#22c55e";
+      default: return "#6b7280";
     }
   };
 
@@ -48,15 +47,15 @@ const ClientsMap = () => {
 
     try {
       const loader = new Loader({
-        apiKey: 'AIzaSyBFw0Qbyq9zTFTd-tUY6dQTuuCC3F_DqFi', // Chiave pubblica di esempio - sostituire con la propria
+        apiKey: 'AIzaSyBFw0Qbyq9zTFTd-tUY6dQTuuCC3F_DqFi',
         version: 'weekly',
-        libraries: ['maps', 'marker']
+        libraries: ['maps']
       });
 
-      const { Map } = await loader.importLibrary('maps');
+      const { Map } = await loader.importLibrary('maps') as google.maps.MapsLibrary;
       
       const map = new Map(mapRef.current, {
-        center: { lat: 41.9028, lng: 12.4964 }, // Centrato su Roma
+        center: { lat: 41.9028, lng: 12.4964 },
         zoom: 4,
         styles: [
           {
