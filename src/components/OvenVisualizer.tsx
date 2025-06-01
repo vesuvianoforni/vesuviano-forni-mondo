@@ -16,10 +16,21 @@ const OvenVisualizer = () => {
   const [generatedImage, setGeneratedImage] = useState<string>("");
 
   const ovenTypes = [
-    { value: "traditional", label: "Forno Tradizionale a Legna" },
-    { value: "gas", label: "Forno a Gas" },
-    { value: "electric", label: "Forno Elettrico" },
-    { value: "rotating", label: "Forno Rotante" }
+    { 
+      value: "vesuviobuono", 
+      label: "VesuvioBuono - Mosaico Premium",
+      image: "/lovable-uploads/3127ebb1-b7dd-4e50-95a6-a5d9ea57fce2.png"
+    },
+    { 
+      value: "verniciato", 
+      label: "Forno Verniciato - Terracotta",
+      image: "/lovable-uploads/7c682e61-1ca7-4b06-9099-55b05bbff4db.png"
+    },
+    { 
+      value: "mosaicato", 
+      label: "Forno Mosaicato - Personalizzabile",
+      image: "/lovable-uploads/375da131-c387-490a-8372-89300626480e.png"
+    }
   ];
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,8 +56,11 @@ const OvenVisualizer = () => {
       // In produzione, qui integreresti l'API di Runware o simili
       await new Promise(resolve => setTimeout(resolve, 3000));
       
-      // Per ora usiamo un'immagine di esempio
-      setGeneratedImage("/lovable-uploads/83490d78-6935-41ab-bb12-49e6070f44db.png");
+      // Usa l'immagine del forno selezionato come risultato della simulazione
+      const selectedOven = ovenTypes.find(oven => oven.value === selectedOvenType);
+      if (selectedOven) {
+        setGeneratedImage(selectedOven.image);
+      }
       
       toast.success("Visualizzazione generata con successo!");
     } catch (error) {
@@ -55,6 +69,8 @@ const OvenVisualizer = () => {
       setIsGenerating(false);
     }
   };
+
+  const selectedOvenData = ovenTypes.find(oven => oven.value === selectedOvenType);
 
   return (
     <div className="bg-stone-50 py-16">
@@ -112,11 +128,11 @@ const OvenVisualizer = () => {
                 {/* Oven Type Selection */}
                 <div>
                   <Label htmlFor="oven-type" className="text-sm font-medium text-stone-700">
-                    Tipo di Forno
+                    Tipo di Forno Vesuviano
                   </Label>
                   <Select value={selectedOvenType} onValueChange={setSelectedOvenType}>
                     <SelectTrigger className="mt-2">
-                      <SelectValue placeholder="Seleziona il tipo di forno" />
+                      <SelectValue placeholder="Seleziona il modello di forno" />
                     </SelectTrigger>
                     <SelectContent>
                       {ovenTypes.map((oven) => (
@@ -126,6 +142,19 @@ const OvenVisualizer = () => {
                       ))}
                     </SelectContent>
                   </Select>
+                  
+                  {/* Preview del forno selezionato */}
+                  {selectedOvenData && (
+                    <div className="mt-4 p-4 bg-white rounded-lg border border-stone-200">
+                      <p className="text-sm font-medium text-stone-700 mb-2">Anteprima Forno Selezionato:</p>
+                      <img 
+                        src={selectedOvenData.image} 
+                        alt={selectedOvenData.label}
+                        className="w-full h-32 object-contain rounded-lg"
+                      />
+                      <p className="text-xs text-stone-500 mt-2 text-center">{selectedOvenData.label}</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Generate Button */}
@@ -142,7 +171,7 @@ const OvenVisualizer = () => {
                   ) : (
                     <>
                       <Eye className="w-4 h-4 mr-2" />
-                      Genera Visualizzazione
+                      Genera Visualizzazione AI
                     </>
                   )}
                 </Button>
@@ -178,6 +207,9 @@ const OvenVisualizer = () => {
                       <Loader2 className="w-12 h-12 mx-auto mb-4 animate-spin text-vesuviano-500" />
                       <p className="text-lg font-medium text-stone-700">Generazione in corso...</p>
                       <p className="text-sm text-stone-500">La nostra AI sta creando la tua visualizzazione personalizzata</p>
+                      <div className="mt-4 text-xs text-stone-400">
+                        Integrando il forno {selectedOvenData?.label} nella tua cucina...
+                      </div>
                     </div>
                   </div>
                 )}
@@ -187,8 +219,16 @@ const OvenVisualizer = () => {
                     <img 
                       src={generatedImage} 
                       alt="Forno visualizzato nella cucina" 
-                      className="w-full h-96 object-cover rounded-lg border border-stone-200"
+                      className="w-full h-96 object-contain rounded-lg border border-stone-200 bg-white"
                     />
+                    <div className="bg-vesuviano-50 p-4 rounded-lg">
+                      <p className="text-sm font-medium text-vesuviano-800 mb-1">
+                        Modello: {selectedOvenData?.label}
+                      </p>
+                      <p className="text-xs text-vesuviano-600">
+                        Simulazione AI completata - Questa è un'anteprima di come apparirà il tuo forno
+                      </p>
+                    </div>
                     <div className="flex gap-3">
                       <Button variant="outline" className="flex-1">
                         <Download className="w-4 h-4 mr-2" />
@@ -211,29 +251,35 @@ const OvenVisualizer = () => {
           <div className="mt-12 text-center">
             <div className="bg-white rounded-2xl p-8 border border-stone-200">
               <h3 className="font-playfair text-2xl font-bold text-charcoal-900 mb-4">
-                Come Funziona la Visualizzazione AI
+                I Nostri Modelli di Forno
               </h3>
               <div className="grid md:grid-cols-3 gap-6 mt-8">
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-vesuviano-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-vesuviano-600 font-bold">1</span>
-                  </div>
-                  <h4 className="font-semibold text-stone-900 mb-2">Carica la Foto</h4>
-                  <p className="text-sm text-stone-600">Scatta o carica una foto della tua cucina o spazio di lavoro</p>
+                  <img 
+                    src="/lovable-uploads/3127ebb1-b7dd-4e50-95a6-a5d9ea57fce2.png" 
+                    alt="VesuvioBuono" 
+                    className="w-24 h-24 object-contain mx-auto mb-4 rounded-lg border border-stone-200"
+                  />
+                  <h4 className="font-semibold text-stone-900 mb-2">VesuvioBuono</h4>
+                  <p className="text-sm text-stone-600">Rivestimento a mosaico premium con tecnologia avanzata</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-vesuviano-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-vesuviano-600 font-bold">2</span>
-                  </div>
-                  <h4 className="font-semibold text-stone-900 mb-2">Seleziona il Forno</h4>
-                  <p className="text-sm text-stone-600">Scegli il modello di forno Vesuviano che preferisci</p>
+                  <img 
+                    src="/lovable-uploads/7c682e61-1ca7-4b06-9099-55b05bbff4db.png" 
+                    alt="Verniciato" 
+                    className="w-24 h-24 object-contain mx-auto mb-4 rounded-lg border border-stone-200"
+                  />
+                  <h4 className="font-semibold text-stone-900 mb-2">Verniciato</h4>
+                  <p className="text-sm text-stone-600">Finitura verniciata tradizionale in terracotta</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-vesuviano-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-vesuviano-600 font-bold">3</span>
-                  </div>
-                  <h4 className="font-semibold text-stone-900 mb-2">Visualizza il Risultato</h4>
-                  <p className="text-sm text-stone-600">La nostra AI genera una simulazione realistica del forno nel tuo spazio</p>
+                  <img 
+                    src="/lovable-uploads/375da131-c387-490a-8372-89300626480e.png" 
+                    alt="Mosaicato" 
+                    className="w-24 h-24 object-contain mx-auto mb-4 rounded-lg border border-stone-200"
+                  />
+                  <h4 className="font-semibold text-stone-900 mb-2">Mosaicato</h4>
+                  <p className="text-sm text-stone-600">Rivestimento a mosaico personalizzabile</p>
                 </div>
               </div>
             </div>
