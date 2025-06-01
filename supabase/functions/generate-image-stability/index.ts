@@ -40,57 +40,66 @@ serve(async (req) => {
 
     console.log('Generating image with Stability AI, prompt:', prompt);
 
-    let requestBody;
-    let endpoint;
+    let response;
 
     if (imageBase64) {
-      // Image-to-image generation
-      endpoint = 'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/image-to-image';
+      // Image-to-image generation usando multipart/form-data
+      console.log('Using image-to-image generation');
       
       // Rimuovi il prefisso data:image se presente
       const base64Data = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
       
-      requestBody = JSON.stringify({
-        text_prompts: [
-          {
-            text: prompt,
-            weight: 1
-          }
-        ],
-        init_image: base64Data,
-        cfg_scale: 7,
-        image_strength: 0.4, // Mantiene più dell'immagine originale
-        steps: 30,
-        samples: 1,
+      // Converti base64 in Uint8Array
+      const binaryString = atob(base64Data);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+
+      // Crea FormData
+      const formData = new FormData();
+      formData.append('init_image', new File([bytes], 'image.png', { type: 'image/png' }));
+      formData.append('text_prompts[0][text]', prompt);
+      formData.append('text_prompts[0][weight]', '1');
+      formData.append('cfg_scale', '7');
+      formData.append('image_strength', '0.35'); // Permette più modifiche all'immagine originale
+      formData.append('steps', '30');
+      formData.append('samples', '1');
+
+      response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/image-to-image', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${stabilityApiKey}`,
+          'Accept': 'application/json',
+        },
+        body: formData,
       });
     } else {
       // Text-to-image generation (fallback)
-      endpoint = 'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image';
+      console.log('Using text-to-image generation');
       
-      requestBody = JSON.stringify({
-        text_prompts: [
-          {
-            text: prompt,
-            weight: 1
-          }
-        ],
-        cfg_scale: 7,
-        height: 1024,
-        width: 1024,
-        steps: 30,
-        samples: 1,
+      response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${stabilityApiKey}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          text_prompts: [
+            {
+              text: prompt,
+              weight: 1
+            }
+          ],
+          cfg_scale: 7,
+          height: 1024,
+          width: 1024,
+          steps: 30,
+          samples: 1,
+        }),
       });
     }
-
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${stabilityApiKey}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: requestBody,
-    });
 
     if (!response.ok) {
       const errorText = await response.text();

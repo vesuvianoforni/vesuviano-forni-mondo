@@ -60,14 +60,14 @@ const OvenVisualizer = () => {
         throw new Error("Tipo di forno non trovato");
       }
 
-      // Crea un prompt migliorato per l'integrazione del forno nell'immagine esistente
-      const prompt = `Integrate a beautiful ${selectedOven.label} wood-fired pizza oven into this existing kitchen. The oven should be seamlessly integrated into the space, positioned where it would naturally fit best. Maintain the original kitchen style and lighting. The oven should look professionally installed with proper ventilation and elegant stonework or tiles surrounding it. Keep the existing kitchen elements and only add the traditional Italian pizza oven as a natural part of the space. High quality, realistic integration, professional photography style.`;
+      // Prompt migliorato per l'integrazione del forno nell'immagine esistente
+      const prompt = `Seamlessly integrate and install a ${selectedOven.label} traditional Italian wood-fired pizza oven into this existing kitchen. The oven should be professionally built into the available wall space or corner area that makes the most architectural sense. Maintain the original kitchen design, colors, lighting, and all existing elements. Add proper ventilation hood, elegant stone or brick surround, and professional installation details. The oven should look like it was always part of this kitchen design. Photorealistic, high quality, architectural photography.`;
 
       console.log("Generazione AI in corso con immagine base, prompt:", prompt);
 
       const result = await stabilityService.generateImage({
         positivePrompt: prompt,
-        imageFile: selectedImage // Passa l'immagine caricata
+        imageFile: selectedImage
       });
       
       setGeneratedImage(result.imageURL);
