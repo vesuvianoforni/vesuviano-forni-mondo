@@ -4,12 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Eye } from "lucide-react";
 import { toast } from "sonner";
 import AlertNotice from './oven-visualizer/AlertNotice';
-import ApiKeyInput from './oven-visualizer/ApiKeyInput';
 import ImageUploadSection from './oven-visualizer/ImageUploadSection';
 import OvenTypeSelector, { OvenType } from './oven-visualizer/OvenTypeSelector';
 import ResultPreview from './oven-visualizer/ResultPreview';
 import OvenModelsInfo from './oven-visualizer/OvenModelsInfo';
-import { RunwareService } from '@/services/runwareService';
+import { StabilityService } from '@/services/stabilityService';
 
 const OvenVisualizer = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -17,8 +16,7 @@ const OvenVisualizer = () => {
   const [selectedOvenType, setSelectedOvenType] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string>("");
-  const [apiKey, setApiKey] = useState<string>("");
-  const [runwareService, setRunwareService] = useState<RunwareService | null>(null);
+  const [stabilityService] = useState<StabilityService>(new StabilityService());
 
   const ovenTypes: OvenType[] = [
     { 
@@ -38,20 +36,6 @@ const OvenVisualizer = () => {
     }
   ];
 
-  useEffect(() => {
-    const savedApiKey = localStorage.getItem('runware_api_key');
-    if (savedApiKey) {
-      setApiKey(savedApiKey);
-      setRunwareService(new RunwareService(savedApiKey));
-    }
-  }, []);
-
-  const handleApiKeySet = (newApiKey: string) => {
-    setApiKey(newApiKey);
-    setRunwareService(new RunwareService(newApiKey));
-    toast.success("Chiave API configurata con successo!");
-  };
-
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -68,11 +52,6 @@ const OvenVisualizer = () => {
       return;
     }
 
-    if (!runwareService) {
-      toast.error("Configura prima la chiave API Runware");
-      return;
-    }
-
     setIsGenerating(true);
     
     try {
@@ -81,25 +60,20 @@ const OvenVisualizer = () => {
         throw new Error("Tipo di forno non trovato");
       }
 
-      // Crea un prompt dettagliato per l'AI
+      // Crea un prompt dettagliato per Stability AI
       const prompt = `A beautiful ${selectedOven.label} wood-fired pizza oven integrated into a modern kitchen setting. The oven should be professionally installed with proper ventilation, surrounded by elegant stonework or tiles. High quality, realistic lighting, professional photography style, 4K resolution. The kitchen should look modern and inviting with the traditional Italian pizza oven as the centerpiece.`;
 
-      console.log("Generazione AI in corso con prompt:", prompt);
+      console.log("Generazione AI in corso con Stability AI, prompt:", prompt);
 
-      const result = await runwareService.generateImage({
+      const result = await stabilityService.generateImage({
         positivePrompt: prompt,
-        model: "runware:100@1",
-        numberResults: 1,
-        outputFormat: "WEBP",
-        CFGScale: 7,
-        scheduler: "FlowMatchEulerDiscreteScheduler",
       });
       
       setGeneratedImage(result.imageURL);
       toast.success("Visualizzazione AI generata con successo!");
     } catch (error) {
       console.error("Errore nella generazione AI:", error);
-      toast.error("Errore nella generazione AI. Verifica la chiave API e riprova.");
+      toast.error("Errore nella generazione AI. Riprova.");
       
       // Fallback alla simulazione in caso di errore
       const selectedOven = ovenTypes.find(oven => oven.value === selectedOvenType);
@@ -147,11 +121,7 @@ const OvenVisualizer = () => {
             </p>
           </div>
 
-          <AlertNotice hasApiKey={!!apiKey} />
-          
-          {!apiKey && (
-            <ApiKeyInput onApiKeySet={handleApiKeySet} isValid={!!runwareService} />
-          )}
+          <AlertNotice hasApiKey={true} />
 
           <div className="grid lg:grid-cols-2 gap-6 md:gap-8">
             {/* Upload Section */}
@@ -170,7 +140,7 @@ const OvenVisualizer = () => {
                 
                 <Button 
                   onClick={generateVisualization}
-                  disabled={!selectedImage || !selectedOvenType || isGenerating || !apiKey}
+                  disabled={!selectedImage || !selectedOvenType || isGenerating}
                   className="w-full mt-4 md:mt-6 bg-vesuviano-500 hover:bg-vesuviano-600 text-white text-sm md:text-base py-2 md:py-3"
                 >
                   {isGenerating ? (
@@ -181,16 +151,13 @@ const OvenVisualizer = () => {
                   ) : (
                     <>
                       <Eye className="w-4 h-4 mr-2" />
-                      {apiKey ? "Genera Visualizzazione AI" : "Configura API per iniziare"}
+                      Genera Visualizzazione AI
                     </>
                   )}
                 </Button>
 
                 <p className="text-xs text-stone-500 text-center px-2 mt-2">
-                  {apiKey 
-                    ? "La generazione AI richiede circa 30-60 secondi. L'immagine sarà ottimizzata per il tuo spazio."
-                    : "Inserisci la chiave API Runware per utilizzare l'AI reale."
-                  }
+                  La generazione AI richiede circa 30-60 secondi. L'immagine sarà ottimizzata per il tuo spazio.
                 </p>
               </div>
             </div>
