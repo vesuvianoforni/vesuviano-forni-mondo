@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
 
@@ -13,7 +12,7 @@ const Hero = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: 'url(/lovable-uploads/13ebea19-933b-434a-97fd-1823f1924a64.png)'
+          backgroundImage: 'url(/lovable-uploads/9d02a9c4-fce3-424c-a356-9db0dee4a293.png)'
         }}
       >
         {/* Dark Overlay for better text readability */}
