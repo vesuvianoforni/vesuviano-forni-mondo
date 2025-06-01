@@ -71,6 +71,57 @@
       "viewGallery": "Vedi Gallery"
     }
   },
+  "clientsMap": {
+    "badge": "Presenza Globale",
+    "title": "I Nostri",
+    "titleHighlight": "Clienti",
+    "subtitle": "Da Napoli al mondo intero: i forni Vesuviano portano il sapore autentico della tradizione napoletana in ogni angolo del pianeta."
+  },
+  "rivestimenti": {
+    "badge": "Personalizzazione",
+    "title": "Rivestimenti",
+    "titleHighlight": "Esclusivi",
+    "subtitle": "Ogni forno Vesuviano può essere personalizzato con rivestimenti di alta qualità che uniscono estetica e funzionalità, per integrarsi perfettamente nel tuo ambiente.",
+    "verniciato": {
+      "title": "Verniciato",
+      "description": "Finitura verniciata di alta qualità resistente al calore"
+    },
+    "mosaicato": {
+      "title": "Mosaicato", 
+      "description": "Rivestimento in mosaico tradizionale napoletano"
+    },
+    "ferro": {
+      "title": "Ferro",
+      "description": "Rivestimento in ferro lavorato artigianalmente"
+    },
+    "personalizzato": {
+      "title": "Personalizzato",
+      "description": "Soluzioni su misura per ogni esigenza"
+    },
+    "availableOptions": "Opzioni Disponibili",
+    "viewSamples": "Vedi Campioni",
+    "process": {
+      "title": "Processo di Personalizzazione",
+      "description": "Dal concept alla realizzazione, ti accompagniamo in ogni fase per creare il forno perfetto per te.",
+      "step1": {
+        "title": "Consulenza",
+        "desc": "Analisi delle tue esigenze"
+      },
+      "step2": {
+        "title": "Design", 
+        "desc": "Progettazione personalizzata"
+      },
+      "step3": {
+        "title": "Campioni",
+        "desc": "Selezione materiali"
+      },
+      "step4": {
+        "title": "Realizzazione",
+        "desc": "Produzione artigianale"
+      }
+    },
+    "startCustomization": "Inizia Personalizzazione"
+  },
   "common": {
     "loading": "Caricamento...",
     "error": "Errore",

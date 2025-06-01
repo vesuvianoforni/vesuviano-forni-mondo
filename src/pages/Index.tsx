@@ -6,6 +6,7 @@ import CraftsmanshipSection from "@/components/CraftsmanshipSection";
 import Services from "@/components/Services";
 import Rivestimenti from "@/components/Rivestimenti";
 import VesuvioBuono from "@/components/VesuvioBuono";
+import ClientsMap from "@/components/ClientsMap";
 import Gallery from "@/components/Gallery";
 import ConsultationForm from "@/components/ConsultationForm";
 
@@ -19,6 +20,7 @@ const Index = () => {
       <Services />
       <Rivestimenti />
       <VesuvioBuono />
+      <ClientsMap />
       <Gallery />
       <ConsultationForm />
       
