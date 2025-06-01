@@ -1,13 +1,10 @@
-
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Flame, Zap, RotateCcw, Settings } from "lucide-react";
 
 const ProductCategories = () => {
   const categories = [
     {
       title: "Forni a Legna",
-      icon: <Flame className="text-copper-600" size={48} />,
       description: "Tradizione autentica napoletana per il sapore unico che solo la legna può dare",
       features: ["Cottura tradizionale", "Sapore autentico", "Alta temperatura", "Versatili"],
       badge: "Tradizionale",
@@ -16,7 +13,6 @@ const ProductCategories = () => {
     },
     {
       title: "Forni a Gas",
-      icon: <Zap className="text-stone-600" size={48} />,
       description: "Controllo preciso della temperatura e facilità d'uso per professionisti",
       features: ["Controllo preciso", "Accensione rapida", "Efficienza energetica", "Facile manutenzione"],
       badge: "Professionale",
@@ -25,7 +21,6 @@ const ProductCategories = () => {
     },
     {
       title: "Forni Elettrici",
-      icon: <Settings className="text-vesuviano-600" size={48} />,
       description: "Tecnologia avanzata per cotture perfette e costanti ogni volta",
       features: ["Temperatura costante", "Programmabile", "Eco-sostenibile", "Silenzioso"],
       badge: "Innovativo",
@@ -34,7 +29,6 @@ const ProductCategories = () => {
     },
     {
       title: "Soluzioni Rotanti",
-      icon: <RotateCcw className="text-charcoal-600" size={48} />,
       description: "Massima efficienza produttiva con cottura uniforme su ogni superficie",
       features: ["Cottura uniforme", "Alta produttività", "Risparmio energetico", "Automazione"],
       badge: "Efficiente",
@@ -70,9 +64,6 @@ const ProductCategories = () => {
                   <Badge className={`mb-4 px-3 py-1 ${category.badgeColor} transition-colors duration-300`}>
                     {category.badge}
                   </Badge>
-                  <div className="mb-4 group-hover:scale-110 transition-transform duration-300">
-                    {category.icon}
-                  </div>
                   <h3 className="font-playfair text-xl font-semibold text-charcoal-900 mb-3 group-hover:text-vesuviano-600 transition-colors duration-300">
                     {category.title}
                   </h3>
