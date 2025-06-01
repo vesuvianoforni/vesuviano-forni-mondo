@@ -1,12 +1,60 @@
+
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 
+// Singleton per gestire il caricamento di Google Maps
+class GoogleMapsLoader {
+  private static instance: GoogleMapsLoader;
+  private loader: Loader | null = null;
+  private isLoaded = false;
+  private loadPromise: Promise<void> | null = null;
+
+  private constructor() {}
+
+  static getInstance(): GoogleMapsLoader {
+    if (!GoogleMapsLoader.instance) {
+      GoogleMapsLoader.instance = new GoogleMapsLoader();
+    }
+    return GoogleMapsLoader.instance;
+  }
+
+  async loadGoogleMaps(): Promise<void> {
+    if (this.isLoaded) return;
+    
+    if (this.loadPromise) {
+      return this.loadPromise;
+    }
+
+    this.loadPromise = new Promise(async (resolve, reject) => {
+      try {
+        if (!this.loader) {
+          this.loader = new Loader({
+            apiKey: 'AIzaSyBFw0Qbyq9zTFTd-tUY6dQTuuCC3F_DqFi',
+            version: 'weekly',
+            libraries: ['maps']
+          });
+        }
+
+        await this.loader.load();
+        this.isLoaded = true;
+        resolve();
+      } catch (error) {
+        console.error('Errore nel caricamento di Google Maps:', error);
+        reject(error);
+      }
+    });
+
+    return this.loadPromise;
+  }
+}
+
 const ClientsMap = () => {
   const { t } = useTranslation();
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
 
   const clients = [
     // Italia - concentrazione principale
@@ -46,17 +94,16 @@ const ClientsMap = () => {
     if (!mapRef.current) return;
 
     try {
-      const loader = new Loader({
-        apiKey: 'AIzaSyBFw0Qbyq9zTFTd-tUY6dQTuuCC3F_DqFi',
-        version: 'weekly',
-        libraries: ['maps']
-      });
+      const mapsLoader = GoogleMapsLoader.getInstance();
+      await mapsLoader.loadGoogleMaps();
 
-      const { Map } = await loader.importLibrary('maps') as google.maps.MapsLibrary;
-      
-      const map = new Map(mapRef.current, {
+      const map = new google.maps.Map(mapRef.current, {
         center: { lat: 41.9028, lng: 12.4964 },
         zoom: 4,
+        mapTypeControl: true,
+        streetViewControl: false,
+        fullscreenControl: true,
+        zoomControl: true,
         styles: [
           {
             featureType: 'water',
@@ -67,9 +114,16 @@ const ClientsMap = () => {
             featureType: 'landscape',
             elementType: 'geometry',
             stylers: [{ color: '#f5f5f5' }]
+          },
+          {
+            featureType: 'road',
+            elementType: 'geometry',
+            stylers: [{ color: '#ffffff' }]
           }
         ]
       });
+
+      setMapInstance(map);
 
       // Aggiungi marker per ogni cliente
       clients.forEach(client => {
@@ -79,7 +133,7 @@ const ClientsMap = () => {
           title: `${client.name}, ${client.country} - ${client.count} clienti`,
           icon: {
             path: google.maps.SymbolPath.CIRCLE,
-            scale: Math.max(6, client.count / 3),
+            scale: Math.max(8, client.count / 2),
             fillColor: getMarkerColor(client.region),
             fillOpacity: 0.8,
             strokeColor: '#ffffff',
@@ -89,10 +143,10 @@ const ClientsMap = () => {
 
         const infoWindow = new google.maps.InfoWindow({
           content: `
-            <div style="padding: 8px;">
-              <h3 style="margin: 0 0 4px 0; font-weight: bold;">${client.name}</h3>
-              <p style="margin: 0; color: #666;">${client.country}</p>
-              <p style="margin: 4px 0 0 0; font-weight: bold; color: ${getMarkerColor(client.region)};">${client.count} clienti</p>
+            <div style="padding: 12px; font-family: Arial, sans-serif;">
+              <h3 style="margin: 0 0 8px 0; font-weight: bold; color: #333;">${client.name}</h3>
+              <p style="margin: 0 0 4px 0; color: #666; font-size: 14px;">${client.country}</p>
+              <p style="margin: 0; font-weight: bold; color: ${getMarkerColor(client.region)}; font-size: 16px;">${client.count} clienti</p>
             </div>
           `
         });
@@ -105,6 +159,7 @@ const ClientsMap = () => {
       setMapLoaded(true);
     } catch (error) {
       console.error('Errore nel caricamento della mappa:', error);
+      setMapLoaded(false);
     }
   };
 
@@ -131,9 +186,9 @@ const ClientsMap = () => {
 
           {/* Google Maps */}
           <div className="relative bg-white rounded-2xl shadow-2xl p-8 mb-12">
-            <div className="relative w-full h-96 md:h-[500px] bg-slate-100 rounded-xl border-2 border-stone-200 overflow-hidden">
+            <div className="relative w-full h-96 md:h-[600px] bg-slate-100 rounded-xl border-2 border-stone-200 overflow-hidden">
               {!mapLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
                   <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-vesuviano-600 mx-auto mb-4"></div>
                     <p className="text-gray-600">Caricamento mappa...</p>
