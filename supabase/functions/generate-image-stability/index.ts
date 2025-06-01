@@ -1,4 +1,5 @@
 
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -6,30 +7,6 @@ const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
-
-// Funzione per ridimensionare l'immagine
-async function resizeImage(imageBytes: Uint8Array): Promise<Uint8Array> {
-  // Crea un canvas per ridimensionare l'immagine
-  const canvas = new OffscreenCanvas(1024, 1024);
-  const ctx = canvas.getContext('2d');
-  
-  if (!ctx) {
-    throw new Error('Cannot get canvas context');
-  }
-  
-  // Crea un'immagine dal buffer
-  const blob = new Blob([imageBytes], { type: 'image/png' });
-  const imageBitmap = await createImageBitmap(blob);
-  
-  // Disegna l'immagine ridimensionata sul canvas
-  ctx.drawImage(imageBitmap, 0, 0, 1024, 1024);
-  
-  // Converti il canvas in blob e poi in Uint8Array
-  const resizedBlob = await canvas.convertToBlob({ type: 'image/png' });
-  const arrayBuffer = await resizedBlob.arrayBuffer();
-  
-  return new Uint8Array(arrayBuffer);
-}
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -75,20 +52,16 @@ serve(async (req) => {
       
       // Converti base64 in Uint8Array
       const binaryString = atob(base64Data);
-      const originalBytes = new Uint8Array(binaryString.length);
+      const bytes = new Uint8Array(binaryString.length);
       for (let i = 0; i < binaryString.length; i++) {
-        originalBytes[i] = binaryString.charCodeAt(i);
+        bytes[i] = binaryString.charCodeAt(i);
       }
 
-      console.log('Original image size:', originalBytes.length, 'bytes');
-      
-      // Ridimensiona l'immagine a 1024x1024
-      const resizedBytes = await resizeImage(originalBytes);
-      console.log('Resized image size:', resizedBytes.length, 'bytes');
+      console.log('Original image size:', bytes.length, 'bytes');
 
       // Crea FormData
       const formData = new FormData();
-      formData.append('init_image', new File([resizedBytes], 'image.png', { type: 'image/png' }));
+      formData.append('init_image', new File([bytes], 'image.png', { type: 'image/png' }));
       formData.append('text_prompts[0][text]', prompt);
       formData.append('text_prompts[0][weight]', '1');
       formData.append('cfg_scale', '7');
@@ -172,3 +145,4 @@ serve(async (req) => {
     );
   }
 });
+
