@@ -59,7 +59,7 @@ const Gallery = () => {
     : images.filter(img => img.category === selectedCategory);
 
   return (
-    <section className="py-20 bg-white">
+    <section id="gallery" className="py-20 bg-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="font-playfair text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -78,8 +78,8 @@ const Gallery = () => {
                 variant={selectedCategory === category.id ? "default" : "outline"}
                 className={`cursor-pointer px-4 py-2 text-sm font-medium transition-all duration-300 ${
                   selectedCategory === category.id 
-                    ? "bg-vesuviano-600 text-white hover:bg-vesuviano-700" 
-                    : "text-vesuviano-700 border-vesuviano-300 hover:bg-vesuviano-50"
+                    ? "bg-orange-600 text-white hover:bg-orange-700" 
+                    : "text-orange-700 border-orange-300 hover:bg-orange-50"
                 }`}
                 onClick={() => setSelectedCategory(category.id)}
               >
@@ -100,12 +100,14 @@ const Gallery = () => {
               <CardContent className="p-0">
                 <div className="relative overflow-hidden">
                   {/* Placeholder for images */}
-                  <div className="w-full h-64 bg-gradient-to-br from-vesuviano-200 to-fire-200 flex items-center justify-center group-hover:scale-110 transition-transform duration-700">
+                  <div className="w-full h-64 bg-gradient-to-br from-orange-200 to-gray-200 flex items-center justify-center group-hover:scale-110 transition-transform duration-700">
                     <div className="text-center">
-                      <div className="w-16 h-16 bg-vesuviano-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span className="text-white font-bold text-xl">V</span>
-                      </div>
-                      <p className="text-vesuviano-700 font-semibold">Immagine del Forno</p>
+                      <img 
+                        src="/lovable-uploads/83490d78-6935-41ab-bb12-49e6070f44db.png" 
+                        alt="Vesuviano Logo" 
+                        className="w-16 h-16 mx-auto mb-4"
+                      />
+                      <p className="text-orange-700 font-semibold">Immagine del Forno</p>
                     </div>
                   </div>
                   
@@ -128,7 +130,7 @@ const Gallery = () => {
 
         {/* Call to Action */}
         <div className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-vesuviano-50 to-fire-50 rounded-xl p-8 max-w-3xl mx-auto">
+          <div className="bg-gradient-to-r from-orange-50 to-gray-50 rounded-xl p-8 max-w-3xl mx-auto">
             <h3 className="font-playfair text-2xl font-semibold text-gray-900 mb-4">
               Vuoi vedere i nostri forni dal vivo?
             </h3>
@@ -137,10 +139,10 @@ const Gallery = () => {
               ad alta fedeltà per mostrarvi il vostro forno prima della produzione.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-vesuviano-600 text-white px-6 py-3 rounded-lg hover:bg-vesuviano-700 transition-colors">
+              <button className="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 transition-colors">
                 Prenota Visita in Laboratorio
               </button>
-              <button className="border border-vesuviano-600 text-vesuviano-600 px-6 py-3 rounded-lg hover:bg-vesuviano-50 transition-colors">
+              <button className="border border-orange-600 text-orange-600 px-6 py-3 rounded-lg hover:bg-orange-50 transition-colors">
                 Richiedi Rendering 3D
               </button>
             </div>

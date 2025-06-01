@@ -1,4 +1,5 @@
 
+import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProductCategories from "@/components/ProductCategories";
 import VesuvioBuono from "@/components/VesuvioBuono";
@@ -8,6 +9,7 @@ import ConsultationForm from "@/components/ConsultationForm";
 const Index = () => {
   return (
     <div className="min-h-screen">
+      <Header />
       <Hero />
       <ProductCategories />
       <VesuvioBuono />
@@ -19,7 +21,14 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-8">
             <div>
-              <h3 className="font-playfair text-2xl font-bold mb-4">Vesuviano</h3>
+              <div className="flex items-center mb-4">
+                <img 
+                  src="/lovable-uploads/83490d78-6935-41ab-bb12-49e6070f44db.png" 
+                  alt="Vesuviano Logo" 
+                  className="h-8 w-auto mr-3"
+                />
+                <h3 className="font-playfair text-2xl font-bold">Vesuviano</h3>
+              </div>
               <p className="text-gray-400 mb-4">
                 Eccellenza artigianale napoletana che conquista il mondo. 
                 Forni tradizionali e innovativi per ogni esigenza.

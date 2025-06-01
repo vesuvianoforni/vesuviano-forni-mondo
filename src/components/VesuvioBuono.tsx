@@ -11,7 +11,7 @@ const VesuvioBuono = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-vesuviano-50 to-fire-50">
+    <section id="vesuviobuono" className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
       <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
@@ -21,7 +21,7 @@ const VesuvioBuono = () => {
               ESCLUSIVA MONDIALE
             </Badge>
             <h2 className="font-playfair text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Vesuvio<span className="text-vesuviano-600">Buono</span>
+              Vesuvio<span className="text-orange-600">Buono</span>
             </h2>
             <p className="font-inter text-xl text-gray-600 max-w-3xl mx-auto">
               Il primo forno al mondo a legna e combinato gas/legna che non emette fuliggine in atmosfera. 
@@ -44,7 +44,7 @@ const VesuvioBuono = () => {
                 </div>
 
                 <div className="space-y-6">
-                  <div className="border-l-4 border-vesuviano-500 pl-4">
+                  <div className="border-l-4 border-orange-500 pl-4">
                     <h4 className="font-semibold text-gray-900 mb-2">Tecnologia Brevettata</h4>
                     <p className="text-gray-600">Sistema di combustione completa che elimina il 99.9% delle particelle di fuliggine.</p>
                   </div>
@@ -64,7 +64,7 @@ const VesuvioBuono = () => {
 
             {/* Right Content */}
             <div className="animate-fade-in">
-              <div className="bg-gradient-to-br from-vesuviano-600 to-fire-600 text-white rounded-xl p-8">
+              <div className="bg-gradient-to-br from-orange-600 to-gray-600 text-white rounded-xl p-8">
                 <div className="flex items-center mb-6">
                   <Award className="mr-3" size={32} />
                   <h3 className="font-playfair text-2xl font-semibold">
@@ -74,23 +74,23 @@ const VesuvioBuono = () => {
 
                 <ul className="space-y-4 mb-8">
                   <li className="flex items-start">
-                    <div className="w-2 h-2 bg-fire-300 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <div className="w-2 h-2 bg-orange-300 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                     <span>Installazione in qualsiasi zona urbana senza restrizioni</span>
                   </li>
                   <li className="flex items-start">
-                    <div className="w-2 h-2 bg-fire-300 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <div className="w-2 h-2 bg-orange-300 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                     <span>Riduzione drastica dei costi di manutenzione camini</span>
                   </li>
                   <li className="flex items-start">
-                    <div className="w-2 h-2 bg-fire-300 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <div className="w-2 h-2 bg-orange-300 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                     <span>Mantenimento del sapore autentico della cottura a legna</span>
                   </li>
                   <li className="flex items-start">
-                    <div className="w-2 h-2 bg-fire-300 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <div className="w-2 h-2 bg-orange-300 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                     <span>Rispetto totale dell'ambiente e della comunità</span>
                   </li>
                   <li className="flex items-start">
-                    <div className="w-2 h-2 bg-fire-300 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <div className="w-2 h-2 bg-orange-300 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                     <span>Garanzia internazionale e supporto tecnico specializzato</span>
                   </li>
                 </ul>
@@ -98,14 +98,14 @@ const VesuvioBuono = () => {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button 
                     onClick={downloadPDF}
-                    className="bg-white text-vesuviano-700 hover:bg-gray-100 flex items-center justify-center"
+                    className="bg-white text-orange-700 hover:bg-gray-100 flex items-center justify-center"
                   >
                     <Download className="mr-2" size={20} />
                     Scarica Scheda Tecnica
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="border-white text-white hover:bg-white hover:text-vesuviano-700"
+                    className="border-white text-white hover:bg-white hover:text-orange-700"
                     onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
                   >
                     Richiedi Quotazione
@@ -118,7 +118,7 @@ const VesuvioBuono = () => {
           {/* Bottom CTA */}
           <div className="mt-16 text-center">
             <div className="bg-white rounded-xl shadow-lg p-8 max-w-3xl mx-auto">
-              <Flame className="mx-auto text-vesuviano-600 mb-4" size={48} />
+              <Flame className="mx-auto text-orange-600 mb-4" size={48} />
               <h4 className="font-playfair text-2xl font-semibold text-gray-900 mb-4">
                 Vuoi essere tra i primi al mondo?
               </h4>
@@ -128,7 +128,7 @@ const VesuvioBuono = () => {
               </p>
               <Button 
                 size="lg"
-                className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white px-8 py-3"
+                className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3"
                 onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 Diventa Partner Esclusivo

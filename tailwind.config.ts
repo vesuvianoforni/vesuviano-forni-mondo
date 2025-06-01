@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -57,18 +56,20 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// Vesuviano brand colors - keeping orange as primary brand color
+				// with gray as secondary brand color from the logo
 				vesuviano: {
-					50: '#fef7f0',
-					100: '#fdede0',
-					200: '#fad9c1',
-					300: '#f7c296',
-					400: '#f2a169',
-					500: '#ee8346',
-					600: '#e06b2b',
-					700: '#bb5424',
-					800: '#954325',
-					900: '#783822',
-					950: '#411b0f',
+					50: '#fff7ed',
+					100: '#ffedd5',
+					200: '#fed7aa',
+					300: '#fdba74',
+					400: '#fb923c',
+					500: '#f97316', // Primary orange
+					600: '#ea580c',
+					700: '#c2410c',
+					800: '#9a3412',
+					900: '#7c2d12',
+					950: '#431407',
 				},
 				fire: {
 					50: '#fff7ed',

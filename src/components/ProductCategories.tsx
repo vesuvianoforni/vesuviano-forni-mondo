@@ -10,21 +10,21 @@ const ProductCategories = () => {
       description: "Tradizione e sapore autentico. I nostri forni a legna mantengono viva l'antica arte napoletana della cottura.",
       icon: Flame,
       features: ["Temperatura fino a 500°C", "Sapore affumicato naturale", "Design tradizionale", "Materiali refrattari di qualità"],
-      color: "from-fire-500 to-fire-700"
+      color: "from-orange-500 to-orange-700"
     },
     {
       title: "Forni a Gas",
       description: "Praticità e controllo perfetto. Ideali per uso professionale con precisione nella gestione della temperatura.",
       icon: Flame,
       features: ["Controllo preciso temperatura", "Accensione istantanea", "Efficienza energetica", "Facile manutenzione"],
-      color: "from-blue-500 to-blue-700"
+      color: "from-gray-500 to-gray-700"
     },
     {
       title: "Forni Elettrici",
       description: "Tecnologia moderna per risultati eccellenti. Perfetti per ambienti urbani e uso intensivo.",
       icon: Zap,
       features: ["Zero emissioni locali", "Controllo digitale", "Riscaldamento uniforme", "Silenziosità"],
-      color: "from-purple-500 to-purple-700"
+      color: "from-blue-500 to-blue-700"
     },
     {
       title: "Soluzioni Rotanti",
@@ -73,7 +73,7 @@ const ProductCategories = () => {
                   <ul className="space-y-2 mb-6">
                     {category.features.map((feature, idx) => (
                       <li key={idx} className="font-inter text-sm text-gray-500 flex items-center">
-                        <div className="w-2 h-2 bg-vesuviano-500 rounded-full mr-3"></div>
+                        <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
                         {feature}
                       </li>
                     ))}
@@ -81,7 +81,7 @@ const ProductCategories = () => {
 
                   <Button 
                     variant="outline" 
-                    className="w-full border-vesuviano-500 text-vesuviano-700 hover:bg-vesuviano-500 hover:text-white transition-all duration-300"
+                    className="w-full border-orange-500 text-orange-700 hover:bg-orange-500 hover:text-white transition-all duration-300"
                   >
                     Scopri di Più
                   </Button>
@@ -103,11 +103,11 @@ const ProductCategories = () => {
             </p>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="text-left">
-                <h4 className="font-semibold text-vesuviano-700 mb-2">Forni Fissi</h4>
+                <h4 className="font-semibold text-orange-700 mb-2">Forni Fissi</h4>
                 <p className="text-sm text-gray-600">Ideali per pizzerie tradizionali e ristoranti che privilegiano l'autenticità e il controllo manuale della cottura.</p>
               </div>
               <div className="text-left">
-                <h4 className="font-semibold text-vesuviano-700 mb-2">Forni Rotanti</h4>
+                <h4 className="font-semibold text-orange-700 mb-2">Forni Rotanti</h4>
                 <p className="text-sm text-gray-600">Perfetti per produzioni intensive che richiedono uniformità e velocità, mantenendo alta la qualità.</p>
               </div>
             </div>
