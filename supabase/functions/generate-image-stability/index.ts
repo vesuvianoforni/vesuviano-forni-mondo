@@ -1,5 +1,6 @@
 
 
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -17,7 +18,12 @@ serve(async (req) => {
   try {
     const { prompt, imageBase64 } = await req.json();
     
+    console.log('=== INIZIO RICHIESTA ===');
+    console.log('Prompt ricevuto:', prompt ? 'Sì' : 'No');
+    console.log('Immagine ricevuta:', imageBase64 ? 'Sì' : 'No');
+    
     if (!prompt) {
+      console.log('ERRORE: Prompt mancante');
       return new Response(
         JSON.stringify({ error: 'Prompt is required' }),
         { 
@@ -30,6 +36,7 @@ serve(async (req) => {
     const stabilityApiKey = Deno.env.get('STABILITY_API_KEY');
     
     if (!stabilityApiKey) {
+      console.log('ERRORE: STABILITY_API_KEY non configurato');
       return new Response(
         JSON.stringify({ error: 'STABILITY_API_KEY not configured' }),
         { 
@@ -39,47 +46,58 @@ serve(async (req) => {
       );
     }
 
-    console.log('Generating image with Stability AI, prompt:', prompt);
+    console.log('API Key presente:', stabilityApiKey ? 'Sì' : 'No');
+    console.log('Generazione immagine con Stability AI, prompt:', prompt);
 
     let response;
 
     if (imageBase64) {
-      // Image-to-image generation usando multipart/form-data
-      console.log('Using image-to-image generation');
+      console.log('=== MODALITÀ IMAGE-TO-IMAGE ===');
       
-      // Rimuovi il prefisso data:image se presente
-      const base64Data = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
-      
-      // Converti base64 in Uint8Array
-      const binaryString = atob(base64Data);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
+      try {
+        // Rimuovi il prefisso data:image se presente
+        const base64Data = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
+        console.log('Base64 data length:', base64Data.length);
+        
+        // Converti base64 in Uint8Array
+        const binaryString = atob(base64Data);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        console.log('Immagine originale dimensione:', bytes.length, 'bytes');
+
+        // Crea FormData
+        const formData = new FormData();
+        formData.append('init_image', new File([bytes], 'image.png', { type: 'image/png' }));
+        formData.append('text_prompts[0][text]', prompt);
+        formData.append('text_prompts[0][weight]', '1');
+        formData.append('cfg_scale', '7');
+        formData.append('image_strength', '0.35');
+        formData.append('steps', '30');
+        formData.append('samples', '1');
+
+        console.log('FormData creato, invio richiesta a Stability AI...');
+
+        response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/image-to-image', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${stabilityApiKey}`,
+            'Accept': 'application/json',
+          },
+          body: formData,
+        });
+
+        console.log('Risposta Stability AI status:', response.status);
+        console.log('Risposta Stability AI headers:', Object.fromEntries(response.headers.entries()));
+
+      } catch (imageProcessingError) {
+        console.error('ERRORE nel processing dell\'immagine:', imageProcessingError);
+        throw new Error(`Errore processing immagine: ${imageProcessingError.message}`);
       }
-
-      console.log('Original image size:', bytes.length, 'bytes');
-
-      // Crea FormData
-      const formData = new FormData();
-      formData.append('init_image', new File([bytes], 'image.png', { type: 'image/png' }));
-      formData.append('text_prompts[0][text]', prompt);
-      formData.append('text_prompts[0][weight]', '1');
-      formData.append('cfg_scale', '7');
-      formData.append('image_strength', '0.35'); // Permette più modifiche all'immagine originale
-      formData.append('steps', '30');
-      formData.append('samples', '1');
-
-      response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/image-to-image', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${stabilityApiKey}`,
-          'Accept': 'application/json',
-        },
-        body: formData,
-      });
     } else {
-      // Text-to-image generation (fallback)
-      console.log('Using text-to-image generation');
+      console.log('=== MODALITÀ TEXT-TO-IMAGE ===');
       
       response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image', {
         method: 'POST',
@@ -102,24 +120,34 @@ serve(async (req) => {
           samples: 1,
         }),
       });
+
+      console.log('Risposta Stability AI status:', response.status);
     }
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Stability AI error:', errorText);
+      console.error('=== ERRORE STABILITY AI ===');
+      console.error('Status:', response.status);
+      console.error('Status text:', response.statusText);
+      console.error('Error body:', errorText);
       throw new Error(`Stability AI error: ${response.status} ${errorText}`);
     }
 
+    console.log('Risposta OK, parsing JSON...');
     const result = await response.json();
+    console.log('JSON parsato, checking artifacts...');
     
     if (!result.artifacts || result.artifacts.length === 0) {
+      console.error('ERRORE: Nessun artifact nell\'risultato');
+      console.error('Risultato completo:', JSON.stringify(result, null, 2));
       throw new Error('No image generated');
     }
 
     const imageBase64Result = result.artifacts[0].base64;
     const imageUrl = `data:image/png;base64,${imageBase64Result}`;
 
-    console.log('Image generated successfully');
+    console.log('=== SUCCESSO ===');
+    console.log('Immagine generata con successo, lunghezza base64:', imageBase64Result.length);
 
     return new Response(
       JSON.stringify({ 
@@ -132,7 +160,11 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Error in generate-image-stability function:', error);
+    console.error('=== ERRORE GENERALE ===');
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    console.error('Error details:', error);
+    
     return new Response(
       JSON.stringify({ 
         error: 'Failed to generate image', 
@@ -145,4 +177,5 @@ serve(async (req) => {
     );
   }
 });
+
 
