@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
 import { Button } from "@/components/ui/button";
-import { Camera, RotateCcw, Move, ZoomIn, ZoomOut } from "lucide-react";
+import { Camera, RotateCcw, Move, ZoomIn, ZoomOut, Download } from "lucide-react";
 import { toast } from "sonner";
 import { OvenType } from './OvenTypeSelector';
 import * as THREE from 'three';
@@ -82,7 +82,15 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
   const [ovenPosition, setOvenPosition] = useState<[number, number, number]>([0, 0, 0]);
   const [ovenRotation, setOvenRotation] = useState<[number, number, number]>([0, 0, 0]);
   const [ovenScale, setOvenScale] = useState(1);
+  const [showContactForm, setShowContactForm] = useState(false);
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [contactData, setContactData] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
 
   const selectedOven = ovenTypes.find(oven => oven.value === selectedOvenType);
@@ -94,6 +102,32 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
       }
     };
   }, [stream]);
+
+  // Disabilita il doppio tap zoom
+  useEffect(() => {
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const now = new Date().getTime();
+      const timeSince = now - (window as any).lastTouchEnd;
+      if (timeSince < 300 && timeSince > 0) {
+        e.preventDefault();
+      }
+      (window as any).lastTouchEnd = now;
+    };
+
+    document.addEventListener('touchstart', handleTouchStart, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, []);
 
   const startAR = async () => {
     try {
@@ -110,7 +144,6 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
         setStream(mediaStream);
         setIsARMode(true);
         
-        // Aspetta che il video sia caricato prima di farlo partire
         videoRef.current.onloadedmetadata = () => {
           if (videoRef.current) {
             videoRef.current.play().catch(console.error);
@@ -134,6 +167,52 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
       videoRef.current.srcObject = null;
     }
     setIsARMode(false);
+  };
+
+  const captureScreenshot = () => {
+    if (!canvasRef.current || !videoRef.current) return;
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Imposta le dimensioni del canvas
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+
+    // Disegna il video (non specchiato)
+    ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+    // Converti in base64
+    const imageData = canvas.toDataURL('image/png');
+    setCapturedImage(imageData);
+    setShowContactForm(true);
+    
+    toast.success("Screenshot catturato! Inserisci i tuoi dati per scaricare");
+  };
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!contactData.name || !contactData.email) {
+      toast.error("Nome ed email sono obbligatori");
+      return;
+    }
+
+    if (!capturedImage) return;
+
+    // Crea e scarica l'immagine
+    const link = document.createElement('a');
+    link.download = `vesuviano-ar-${Date.now()}.png`;
+    link.href = capturedImage;
+    link.click();
+
+    // Reset
+    setShowContactForm(false);
+    setCapturedImage(null);
+    setContactData({ name: '', email: '', phone: '' });
+    
+    toast.success("Foto scaricata! Ti contatteremo presto per informazioni sui nostri forni");
   };
 
   const resetPosition = () => {
@@ -188,16 +267,17 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
         className="absolute inset-0 w-full h-full object-cover"
         style={{
           display: isARMode ? 'block' : 'none',
-          transform: 'scaleX(-1)', // Mirror effect
+          transform: 'scaleX(1)', // Rimosso il mirror effect
         }}
       />
 
       {/* Canvas 3D sovrapposto */}
       <Canvas
+        ref={canvasRef}
         camera={{ position: [0, 2, 5], fov: 60 }}
         gl={{ 
           alpha: true,
-          premultipliedAlpha: false,
+          preserveDrawingBuffer: true,
           antialias: true
         }}
         style={{ 
@@ -207,7 +287,8 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
           width: '100%',
           height: '100%',
           background: isARMode ? 'transparent' : '#f0f0f0',
-          pointerEvents: isARMode ? 'none' : 'auto'
+          pointerEvents: isARMode ? 'none' : 'auto',
+          touchAction: 'none' // Previene il zoom su mobile
         }}
       >
         <ambientLight intensity={0.6} />
@@ -230,6 +311,69 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
           </mesh>
         )}
       </Canvas>
+
+      {/* Modal per form contatto */}
+      {showContactForm && (
+        <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-20 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-xl font-bold mb-4">Inserisci i tuoi dati</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Per scaricare la foto del forno AR, inserisci i tuoi dati di contatto
+            </p>
+            
+            <form onSubmit={handleContactSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Nome *</label>
+                <input
+                  type="text"
+                  value={contactData.name}
+                  onChange={(e) => setContactData(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-1">Email *</label>
+                <input
+                  type="email"
+                  value={contactData.email}
+                  onChange={(e) => setContactData(prev => ({ ...prev, email: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-1">Telefono</label>
+                <input
+                  type="tel"
+                  value={contactData.phone}
+                  onChange={(e) => setContactData(prev => ({ ...prev, phone: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+              </div>
+              
+              <div className="flex gap-3">
+                <Button 
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowContactForm(false)}
+                  className="flex-1"
+                >
+                  Annulla
+                </Button>
+                <Button 
+                  type="submit"
+                  className="flex-1 bg-vesuviano-500 hover:bg-vesuviano-600"
+                >
+                  Scarica Foto
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Controlli UI */}
       <div className="absolute top-4 left-4 right-4 z-10 pointer-events-auto">
@@ -268,13 +412,22 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
             </div>
           ) : (
             <div className="space-y-4">
-              <Button
-                onClick={stopAR}
-                variant="outline"
-                className="w-full bg-white/90 text-black hover:bg-white"
-              >
-                Ferma AR
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={stopAR}
+                  variant="outline"
+                  className="flex-1 bg-white/90 text-black hover:bg-white"
+                >
+                  Ferma AR
+                </Button>
+                <Button
+                  onClick={captureScreenshot}
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <Camera className="w-4 h-4 mr-2" />
+                  Fotografa
+                </Button>
+              </div>
               
               {/* Controlli movimento */}
               <div className="grid grid-cols-3 gap-2">
