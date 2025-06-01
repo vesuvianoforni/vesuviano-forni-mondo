@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Leaf, Award, Flame, Download, ExternalLink } from "lucide-react";
@@ -75,7 +74,6 @@ const VesuvioBuono = () => {
               <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-dashed border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
                 <div className="aspect-video bg-charcoal-700 rounded-lg flex items-center justify-center text-vesuviano-400">
                   <div className="text-center">
-                    <div className="text-4xl mb-2">📸</div>
                     <p className="text-sm">Forno in Azione</p>
                   </div>
                 </div>
@@ -85,7 +83,6 @@ const VesuvioBuono = () => {
               <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-dashed border-copper-400 hover:border-copper-300 transition-all duration-300 hover:scale-105">
                 <div className="aspect-video bg-charcoal-700 rounded-lg flex items-center justify-center text-copper-400">
                   <div className="text-center">
-                    <div className="text-4xl mb-2">🍕</div>
                     <p className="text-sm">Pizza Perfetta</p>
                   </div>
                 </div>
@@ -95,7 +92,6 @@ const VesuvioBuono = () => {
               <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-dashed border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
                 <div className="aspect-video bg-charcoal-700 rounded-lg flex items-center justify-center text-vesuviano-400">
                   <div className="text-center">
-                    <div className="text-4xl mb-2">🌱</div>
                     <p className="text-sm">Zero Emissioni</p>
                   </div>
                 </div>
@@ -139,7 +135,6 @@ const VesuvioBuono = () => {
                   <div className="bg-stone-100 rounded-lg p-3 border-2 border-dashed border-stone-300 hover:border-vesuviano-400 transition-all duration-300">
                     <div className="aspect-square bg-stone-50 rounded flex items-center justify-center text-stone-400">
                       <div className="text-center">
-                        <div className="text-2xl mb-1">🔧</div>
                         <p className="text-xs">Installazione</p>
                       </div>
                     </div>
@@ -147,7 +142,6 @@ const VesuvioBuono = () => {
                   <div className="bg-stone-100 rounded-lg p-3 border-2 border-dashed border-stone-300 hover:border-copper-400 transition-all duration-300">
                     <div className="aspect-square bg-stone-50 rounded flex items-center justify-center text-stone-400">
                       <div className="text-center">
-                        <div className="text-2xl mb-1">📋</div>
                         <p className="text-xs">Certificati</p>
                       </div>
                     </div>
@@ -211,7 +205,6 @@ const VesuvioBuono = () => {
                   <div className="bg-vesuviano-700 rounded-lg p-4 border-2 border-dashed border-vesuviano-300 hover:border-vesuviano-200 transition-all duration-300">
                     <div className="aspect-video bg-vesuviano-800 rounded flex items-center justify-center text-vesuviano-200">
                       <div className="text-center">
-                        <div className="text-4xl mb-2">🏭</div>
                         <p className="text-sm">Produzione Artigianale</p>
                       </div>
                     </div>
