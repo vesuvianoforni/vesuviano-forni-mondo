@@ -1,11 +1,12 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Text, Box, Cylinder } from '@react-three/drei';
+import { OrbitControls, Text } from '@react-three/drei';
 import { Button } from "@/components/ui/button";
 import { Camera, RotateCcw, Move, ZoomIn, ZoomOut } from "lucide-react";
 import { toast } from "sonner";
 import { OvenType } from './OvenTypeSelector';
+import * as THREE from 'three';
 
 interface ARVisualizerProps {
   selectedOvenType: string;
@@ -34,14 +35,16 @@ const OvenModel = ({ ovenType, position, rotation, scale }: {
   return (
     <group position={position} rotation={rotation} scale={scale}>
       {/* Base del forno */}
-      <Cylinder args={[1.2, 1.5, 0.3, 16]} position={[0, -0.8, 0]}>
+      <mesh position={[0, -0.8, 0]}>
+        <cylinderGeometry args={[1.2, 1.5, 0.3, 16]} />
         <meshStandardMaterial color="#654321" />
-      </Cylinder>
+      </mesh>
       
       {/* Corpo principale del forno */}
-      <Box args={[2.5, 1.5, 2]} position={[0, 0, 0]}>
+      <mesh position={[0, 0, 0]}>
+        <boxGeometry args={[2.5, 1.5, 2]} />
         <meshStandardMaterial color={ovenColor} />
-      </Box>
+      </mesh>
       
       {/* Cupola del forno */}
       <mesh position={[0, 0.75, 0]}>
@@ -50,14 +53,16 @@ const OvenModel = ({ ovenType, position, rotation, scale }: {
       </mesh>
       
       {/* Porta del forno */}
-      <Box args={[0.8, 1, 0.1]} position={[0, -0.2, 1.05]}>
+      <mesh position={[0, -0.2, 1.05]}>
+        <boxGeometry args={[0.8, 1, 0.1]} />
         <meshStandardMaterial color="#2C2C2C" />
-      </Box>
+      </mesh>
       
       {/* Camino */}
-      <Cylinder args={[0.2, 0.2, 1.5, 8]} position={[0, 1.8, -0.5]}>
+      <mesh position={[0, 1.8, -0.5]}>
+        <cylinderGeometry args={[0.2, 0.2, 1.5, 8]} />
         <meshStandardMaterial color="#2C2C2C" />
-      </Cylinder>
+      </mesh>
       
       {/* Testo identificativo */}
       <Text
