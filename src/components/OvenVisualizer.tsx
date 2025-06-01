@@ -60,17 +60,18 @@ const OvenVisualizer = () => {
         throw new Error("Tipo di forno non trovato");
       }
 
-      // Crea un prompt dettagliato per Stability AI
-      const prompt = `A beautiful ${selectedOven.label} wood-fired pizza oven integrated into a modern kitchen setting. The oven should be professionally installed with proper ventilation, surrounded by elegant stonework or tiles. High quality, realistic lighting, professional photography style, 4K resolution. The kitchen should look modern and inviting with the traditional Italian pizza oven as the centerpiece.`;
+      // Crea un prompt migliorato per l'integrazione del forno nell'immagine esistente
+      const prompt = `Integrate a beautiful ${selectedOven.label} wood-fired pizza oven into this existing kitchen. The oven should be seamlessly integrated into the space, positioned where it would naturally fit best. Maintain the original kitchen style and lighting. The oven should look professionally installed with proper ventilation and elegant stonework or tiles surrounding it. Keep the existing kitchen elements and only add the traditional Italian pizza oven as a natural part of the space. High quality, realistic integration, professional photography style.`;
 
-      console.log("Generazione AI in corso con Stability AI, prompt:", prompt);
+      console.log("Generazione AI in corso con immagine base, prompt:", prompt);
 
       const result = await stabilityService.generateImage({
         positivePrompt: prompt,
+        imageFile: selectedImage // Passa l'immagine caricata
       });
       
       setGeneratedImage(result.imageURL);
-      toast.success("Visualizzazione AI generata con successo!");
+      toast.success("Forno integrato con successo nella tua cucina!");
     } catch (error) {
       console.error("Errore nella generazione AI:", error);
       toast.error("Errore nella generazione AI. Riprova.");

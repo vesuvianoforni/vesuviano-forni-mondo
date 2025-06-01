@@ -14,7 +14,7 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt } = await req.json();
+    const { prompt, imageBase64 } = await req.json();
     
     if (!prompt) {
       return new Response(
@@ -40,14 +40,34 @@ serve(async (req) => {
 
     console.log('Generating image with Stability AI, prompt:', prompt);
 
-    const response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${stabilityApiKey}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
+    let requestBody;
+    let endpoint;
+
+    if (imageBase64) {
+      // Image-to-image generation
+      endpoint = 'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/image-to-image';
+      
+      // Rimuovi il prefisso data:image se presente
+      const base64Data = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
+      
+      requestBody = JSON.stringify({
+        text_prompts: [
+          {
+            text: prompt,
+            weight: 1
+          }
+        ],
+        init_image: base64Data,
+        cfg_scale: 7,
+        image_strength: 0.4, // Mantiene più dell'immagine originale
+        steps: 30,
+        samples: 1,
+      });
+    } else {
+      // Text-to-image generation (fallback)
+      endpoint = 'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image';
+      
+      requestBody = JSON.stringify({
         text_prompts: [
           {
             text: prompt,
@@ -59,7 +79,17 @@ serve(async (req) => {
         width: 1024,
         steps: 30,
         samples: 1,
-      }),
+      });
+    }
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${stabilityApiKey}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: requestBody,
     });
 
     if (!response.ok) {
@@ -74,8 +104,8 @@ serve(async (req) => {
       throw new Error('No image generated');
     }
 
-    const imageBase64 = result.artifacts[0].base64;
-    const imageUrl = `data:image/png;base64,${imageBase64}`;
+    const imageBase64Result = result.artifacts[0].base64;
+    const imageUrl = `data:image/png;base64,${imageBase64Result}`;
 
     console.log('Image generated successfully');
 
