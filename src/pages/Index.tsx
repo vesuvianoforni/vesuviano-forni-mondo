@@ -2,6 +2,7 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProductCategories from "@/components/ProductCategories";
+import OvenVisualizer from "@/components/OvenVisualizer";
 import CraftsmanshipSection from "@/components/CraftsmanshipSection";
 import Services from "@/components/Services";
 import Rivestimenti from "@/components/Rivestimenti";
@@ -16,6 +17,7 @@ const Index = () => {
       <Header />
       <Hero />
       <ProductCategories />
+      <OvenVisualizer />
       <CraftsmanshipSection />
       <Services />
       <Rivestimenti />
