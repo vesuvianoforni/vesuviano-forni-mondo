@@ -17,53 +17,47 @@ const Hero = () => {
         }}
       >
         {/* Dark Overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-black/50"></div>
       </div>
       
-      {/* Main Content with Flame-like Padding */}
+      {/* Main Content */}
       <div className="container mx-auto px-6 text-center z-10 relative">
-        {/* Flame-shaped container */}
-        <div className="relative bg-white/95 backdrop-blur-sm rounded-3xl p-8 md:p-12 flame-container animate-scale-in shadow-2xl">
-          {/* Custom flame border effect */}
-          <div className="absolute inset-0 rounded-3xl flame-border animate-float"></div>
-          
-          {/* Logo Section */}
-          <div className="mb-8 animate-scale-in">
-            <img 
-              src="/lovable-uploads/09675d10-6a80-4654-b66b-6547b522db56.png" 
-              alt="Vesuviano - Forni Vulcanici Selezionati" 
-              className="h-32 mx-auto mb-6 hover:scale-110 transition-transform duration-500"
-            />
-          </div>
-          
-          <h1 className="font-playfair text-3xl md:text-5xl font-bold mb-6 leading-tight animate-fade-in text-charcoal-900">
-            <span className="block text-vesuviano-500 text-2xl md:text-3xl font-medium mb-2 animate-slide-in-left">Forni Artigianali Napoletani</span>
-            <span className="block animate-slide-in-right" style={{ animationDelay: '0.3s' }}>di Eccellenza Internazionale</span>
-          </h1>
-          
-          <p className="font-inter text-lg md:text-xl mb-8 max-w-3xl mx-auto leading-relaxed text-charcoal-700 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            Artigianato napoletano selezionato per il mercato mondiale. 
-            Forni a legna, gas, elettrici e la rivoluzionaria soluzione 
-            <span className="text-vesuviano-500 font-semibold"> VesuvioBuono</span> a zero emissioni.
-          </p>
+        {/* Logo Section */}
+        <div className="mb-8 animate-scale-in">
+          <img 
+            src="/lovable-uploads/09675d10-6a80-4654-b66b-6547b522db56.png" 
+            alt="Vesuviano - Forni Vulcanici Selezionati" 
+            className="h-32 mx-auto mb-6 hover:scale-110 transition-transform duration-500"
+          />
+        </div>
+        
+        <h1 className="font-playfair text-3xl md:text-5xl font-bold mb-6 leading-tight animate-fade-in text-white">
+          <span className="block text-vesuviano-400 text-2xl md:text-3xl font-medium mb-2 animate-slide-in-left">Forni Artigianali Napoletani</span>
+          <span className="block animate-slide-in-right" style={{ animationDelay: '0.3s' }}>di Eccellenza Internazionale</span>
+        </h1>
+        
+        <p className="font-inter text-lg md:text-xl mb-8 max-w-3xl mx-auto leading-relaxed text-gray-200 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+          Artigianato napoletano selezionato per il mercato mondiale. 
+          Forni a legna, gas, elettrici e la rivoluzionaria soluzione 
+          <span className="text-vesuviano-400 font-semibold"> VesuvioBuono</span> a zero emissioni.
+        </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 animate-scale-in" style={{ animationDelay: '0.9s' }}>
-            <Button 
-              size="lg" 
-              className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-3 text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
-              onClick={scrollToProducts}
-            >
-              Scopri i Nostri Forni
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-2 border-vesuviano-500 text-vesuviano-500 hover:bg-vesuviano-500 hover:text-white px-8 py-3 text-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl"
-              onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              Consulenza Gratuita
-            </Button>
-          </div>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 animate-scale-in" style={{ animationDelay: '0.9s' }}>
+          <Button 
+            size="lg" 
+            className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-3 text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+            onClick={scrollToProducts}
+          >
+            Scopri i Nostri Forni
+          </Button>
+          <Button 
+            size="lg" 
+            variant="outline" 
+            className="border-2 border-vesuviano-500 text-vesuviano-500 hover:bg-vesuviano-500 hover:text-white px-8 py-3 text-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl"
+            onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            Consulenza Gratuita
+          </Button>
         </div>
 
         {/* Scroll Indicator */}
