@@ -16,11 +16,39 @@ const VesuvioBuono = () => {
 
   return (
     <section id="vesuviobuono" className="py-20 bg-charcoal-900 relative overflow-hidden">
-      {/* Subtle decorative elements */}
+      {/* Stylized Pizza Decorations */}
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-10 left-10 w-32 h-32 bg-vesuviano-500 rounded-full"></div>
-        <div className="absolute bottom-20 right-20 w-24 h-24 bg-copper-500 rounded-full"></div>
-        <div className="absolute top-1/2 left-1/3 w-16 h-16 bg-vesuviano-400 rounded-full"></div>
+        {/* Pizza 1 - Top Left */}
+        <div className="absolute top-10 left-10 w-32 h-32 animate-float">
+          <div className="w-full h-full bg-vesuviano-400 rounded-full relative">
+            {/* Pizza base */}
+            <div className="absolute inset-2 bg-vesuviano-300 rounded-full"></div>
+            {/* Pizza toppings */}
+            <div className="absolute top-4 left-6 w-3 h-3 bg-copper-500 rounded-full"></div>
+            <div className="absolute top-8 right-5 w-2 h-2 bg-vesuviano-600 rounded-full"></div>
+            <div className="absolute bottom-6 left-8 w-2 h-2 bg-copper-400 rounded-full"></div>
+            <div className="absolute bottom-8 right-7 w-3 h-3 bg-vesuviano-500 rounded-full"></div>
+          </div>
+        </div>
+        
+        {/* Pizza 2 - Bottom Right */}
+        <div className="absolute bottom-20 right-20 w-24 h-24 animate-float" style={{ animationDelay: '2s' }}>
+          <div className="w-full h-full bg-copper-400 rounded-full relative">
+            <div className="absolute inset-2 bg-copper-300 rounded-full"></div>
+            <div className="absolute top-3 left-4 w-2 h-2 bg-vesuviano-600 rounded-full"></div>
+            <div className="absolute top-6 right-3 w-2 h-2 bg-copper-600 rounded-full"></div>
+            <div className="absolute bottom-4 left-5 w-2 h-2 bg-vesuviano-500 rounded-full"></div>
+          </div>
+        </div>
+        
+        {/* Pizza 3 - Top Right */}
+        <div className="absolute top-1/3 right-1/4 w-20 h-20 animate-float" style={{ animationDelay: '4s' }}>
+          <div className="w-full h-full bg-vesuviano-500 rounded-full relative">
+            <div className="absolute inset-1 bg-vesuviano-400 rounded-full"></div>
+            <div className="absolute top-2 left-3 w-2 h-2 bg-copper-500 rounded-full"></div>
+            <div className="absolute bottom-3 right-3 w-2 h-2 bg-vesuviano-700 rounded-full"></div>
+          </div>
+        </div>
       </div>
       
       <div className="container mx-auto px-6 relative z-10">
@@ -38,6 +66,41 @@ const VesuvioBuono = () => {
               Il primo forno al mondo a legna e combinato gas/legna che non emette fuliggine in atmosfera. 
               Una rivoluzione per l'ambiente e la salute.
             </p>
+          </div>
+
+          {/* Photo Gallery Section */}
+          <div className="mb-16 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Photo Slot 1 */}
+              <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-dashed border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
+                <div className="aspect-video bg-charcoal-700 rounded-lg flex items-center justify-center text-vesuviano-400">
+                  <div className="text-center">
+                    <div className="text-4xl mb-2">📸</div>
+                    <p className="text-sm">Forno in Azione</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Photo Slot 2 */}
+              <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-dashed border-copper-400 hover:border-copper-300 transition-all duration-300 hover:scale-105">
+                <div className="aspect-video bg-charcoal-700 rounded-lg flex items-center justify-center text-copper-400">
+                  <div className="text-center">
+                    <div className="text-4xl mb-2">🍕</div>
+                    <p className="text-sm">Pizza Perfetta</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Photo Slot 3 */}
+              <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-dashed border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
+                <div className="aspect-video bg-charcoal-700 rounded-lg flex items-center justify-center text-vesuviano-400">
+                  <div className="text-center">
+                    <div className="text-4xl mb-2">🌱</div>
+                    <p className="text-sm">Zero Emissioni</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Main Content */}
@@ -68,6 +131,26 @@ const VesuvioBuono = () => {
                   <div className="border-l-4 border-vesuviano-400 pl-4 hover:border-l-8 transition-all duration-300">
                     <h4 className="font-semibold text-charcoal-900 mb-2">Doppia Alimentazione</h4>
                     <p className="text-stone-600">Funziona perfettamente sia a legna che con la combinazione gas/legna.</p>
+                  </div>
+                </div>
+
+                {/* Additional Photo Slots */}
+                <div className="mt-8 grid grid-cols-2 gap-4">
+                  <div className="bg-stone-100 rounded-lg p-3 border-2 border-dashed border-stone-300 hover:border-vesuviano-400 transition-all duration-300">
+                    <div className="aspect-square bg-stone-50 rounded flex items-center justify-center text-stone-400">
+                      <div className="text-center">
+                        <div className="text-2xl mb-1">🔧</div>
+                        <p className="text-xs">Installazione</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-stone-100 rounded-lg p-3 border-2 border-dashed border-stone-300 hover:border-copper-400 transition-all duration-300">
+                    <div className="aspect-square bg-stone-50 rounded flex items-center justify-center text-stone-400">
+                      <div className="text-center">
+                        <div className="text-2xl mb-1">📋</div>
+                        <p className="text-xs">Certificati</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -121,6 +204,18 @@ const VesuvioBuono = () => {
                     <ExternalLink className="mr-2" size={20} />
                     Visita il Sito
                   </Button>
+                </div>
+
+                {/* Additional Photo Slot in Right Column */}
+                <div className="mt-8">
+                  <div className="bg-vesuviano-700 rounded-lg p-4 border-2 border-dashed border-vesuviano-300 hover:border-vesuviano-200 transition-all duration-300">
+                    <div className="aspect-video bg-vesuviano-800 rounded flex items-center justify-center text-vesuviano-200">
+                      <div className="text-center">
+                        <div className="text-4xl mb-2">🏭</div>
+                        <p className="text-sm">Produzione Artigianale</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
