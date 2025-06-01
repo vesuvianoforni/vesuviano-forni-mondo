@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Loader2, Eye } from "lucide-react";
@@ -36,6 +35,20 @@ const OvenVisualizer = () => {
     }
   ];
 
+  // Funzione per ottenere la descrizione dettagliata del forno
+  const getOvenDescription = (ovenType: string) => {
+    switch (ovenType) {
+      case "vesuviobuono":
+        return "a traditional Neapolitan wood-fired pizza oven with elegant mosaic tile finish in warm terracotta and cream colors, featuring a classic dome shape with decorative mosaic patterns, black metal door with glass window, and professional brick chimney";
+      case "verniciato":
+        return "a rustic Italian wood-fired pizza oven with smooth terracotta painted finish, traditional dome-shaped design, black cast iron door, and classic brick construction with warm earth-tone colors";
+      case "mosaicato":
+        return "a customizable Italian wood-fired pizza oven with beautiful mosaic tile finish, featuring intricate decorative patterns in Mediterranean colors, dome-shaped structure, elegant metal door, and artistic tile work";
+      default:
+        return "a traditional Italian wood-fired pizza oven";
+    }
+  };
+
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -60,10 +73,13 @@ const OvenVisualizer = () => {
         throw new Error("Tipo di forno non trovato");
       }
 
-      // Prompt migliorato per massima integrazione realistica
-      const prompt = `Seamlessly integrate and install a ${selectedOven.label} traditional Italian wood-fired pizza oven into this exact kitchen scene. PRESERVE ALL: existing kitchen layout, cabinet colors, wall finishes, lighting fixtures, countertops, appliances, flooring patterns, and architectural details. The oven should be naturally built into the most logical available wall space, appearing as if it was originally designed for this kitchen. Add only: professional stone or brick surround matching kitchen style, proper ventilation hood that complements existing design, minimal necessary installation details. Maintain identical lighting, shadows, and perspective. Photorealistic architectural integration, high detail, same camera angle and lighting as original image.`;
+      const ovenDescription = getOvenDescription(selectedOvenType);
 
-      console.log("Generazione AI in corso con immagine base, prompt ottimizzato:", prompt);
+      // Prompt ottimizzato con descrizione dettagliata del forno specifico
+      const prompt = `Seamlessly integrate and install ${ovenDescription} into this exact kitchen scene. PRESERVE COMPLETELY: all existing kitchen elements including cabinets, countertops, wall colors, lighting fixtures, appliances, flooring, and architectural details. The oven must be naturally built into the most logical wall space or corner, appearing as an original part of the kitchen design. Add ONLY: appropriate stone or brick surround that matches the kitchen style, professional ventilation hood that complements existing cabinetry, and minimal installation details. Maintain identical lighting, shadows, camera angle, and perspective as the original photo. The oven should look professionally installed and integrated, not added on top. Photorealistic architectural visualization, high detail, perfect integration.`;
+
+      console.log("Generazione AI con descrizione dettagliata forno:", ovenDescription);
+      console.log("Prompt completo:", prompt);
 
       const result = await stabilityService.generateImage({
         positivePrompt: prompt,
