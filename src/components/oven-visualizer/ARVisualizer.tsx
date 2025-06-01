@@ -99,11 +99,16 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
   const startAR = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'environment' } 
+        video: { 
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        } 
       });
       
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
+        videoRef.current.play();
         setStream(mediaStream);
         setIsARMode(true);
         toast.success("Modalità AR attivata! Muovi il forno con i controlli");
@@ -118,6 +123,9 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
     if (stream) {
       stream.getTracks().forEach(track => track.stop());
       setStream(null);
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
     }
     setIsARMode(false);
   };
@@ -164,23 +172,34 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
   };
 
   return (
-    <div className="fixed inset-0 bg-black z-50">
-      {/* Video AR Background */}
+    <div className="fixed inset-0 bg-black z-50 overflow-hidden">
+      {/* Video AR Background - deve essere sotto il Canvas ma visibile */}
       {isARMode && (
         <video
           ref={videoRef}
           autoPlay
           playsInline
           muted
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover z-10"
+          style={{
+            transform: 'scaleX(-1)', // Mirror effect per un'esperienza più naturale
+          }}
         />
       )}
 
-      {/* Canvas 3D */}
-      <div className="absolute inset-0">
+      {/* Canvas 3D - deve essere sopra il video */}
+      <div className="absolute inset-0 z-20">
         <Canvas
           camera={{ position: [0, 2, 5], fov: 60 }}
-          style={{ background: isARMode ? 'transparent' : '#f0f0f0' }}
+          gl={{ 
+            alpha: true, 
+            premultipliedAlpha: false,
+            antialias: true 
+          }}
+          style={{ 
+            background: isARMode ? 'transparent' : '#f0f0f0',
+            pointerEvents: isARMode ? 'none' : 'auto' // Disabilita interazione in AR
+          }}
         >
           <ambientLight intensity={0.6} />
           <directionalLight position={[10, 10, 5]} intensity={1} />
@@ -194,7 +213,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
             />
           )}
           
-          {!isARMode && <OrbitControls />}
+          {!isARMode && <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />}
           {!isARMode && (
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
               <planeGeometry args={[20, 20]} />
@@ -204,65 +223,125 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
         </Canvas>
       </div>
 
-      {/* Controlli UI */}
-      <div className="absolute top-4 left-4 right-4 z-10">
+      {/* Controlli UI - devono essere sopra tutto */}
+      <div className="absolute top-4 left-4 right-4 z-30">
         <div className="flex justify-between items-center">
-          <div className="bg-black/70 text-white px-4 py-2 rounded-lg">
+          <div className="bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm">
             <p className="text-sm font-medium">{selectedOven?.label}</p>
+            {isARMode && (
+              <p className="text-xs text-gray-300">Modalità AR Attiva</p>
+            )}
           </div>
           <Button
             onClick={onClose}
             variant="outline"
-            className="bg-white/90 text-black"
+            className="bg-white/90 text-black hover:bg-white"
           >
             Chiudi AR
           </Button>
         </div>
       </div>
 
-      {/* Controlli AR */}
-      <div className="absolute bottom-4 left-4 right-4 z-10">
-        <div className="bg-black/70 p-4 rounded-lg">
+      {/* Controlli AR - devono essere sopra tutto */}
+      <div className="absolute bottom-4 left-4 right-4 z-30">
+        <div className="bg-black/70 p-4 rounded-lg backdrop-blur-sm">
           {!isARMode ? (
-            <Button
-              onClick={startAR}
-              className="w-full bg-vesuviano-500 hover:bg-vesuviano-600 text-white"
-            >
-              <Camera className="w-4 h-4 mr-2" />
-              Avvia Modalità AR
-            </Button>
+            <div className="space-y-3">
+              <Button
+                onClick={startAR}
+                className="w-full bg-vesuviano-500 hover:bg-vesuviano-600 text-white"
+              >
+                <Camera className="w-4 h-4 mr-2" />
+                Avvia Modalità AR
+              </Button>
+              <p className="text-white text-xs text-center">
+                Assicurati di consentire l'accesso alla fotocamera
+              </p>
+            </div>
           ) : (
             <div className="space-y-4">
               <Button
                 onClick={stopAR}
                 variant="outline"
-                className="w-full bg-white/90 text-black"
+                className="w-full bg-white/90 text-black hover:bg-white"
               >
                 Ferma AR
               </Button>
               
               {/* Controlli movimento */}
               <div className="grid grid-cols-3 gap-2">
-                <Button size="sm" onClick={() => moveOven('left')}>←</Button>
-                <Button size="sm" onClick={() => moveOven('up')}>↑</Button>
-                <Button size="sm" onClick={() => moveOven('right')}>→</Button>
-                <Button size="sm" onClick={() => moveOven('backward')}>⤴</Button>
-                <Button size="sm" onClick={() => moveOven('down')}>↓</Button>
-                <Button size="sm" onClick={() => moveOven('forward')}>⤵</Button>
+                <Button 
+                  size="sm" 
+                  onClick={() => moveOven('left')}
+                  className="bg-white/20 text-white hover:bg-white/30"
+                >
+                  ←
+                </Button>
+                <Button 
+                  size="sm" 
+                  onClick={() => moveOven('up')}
+                  className="bg-white/20 text-white hover:bg-white/30"
+                >
+                  ↑
+                </Button>
+                <Button 
+                  size="sm" 
+                  onClick={() => moveOven('right')}
+                  className="bg-white/20 text-white hover:bg-white/30"
+                >
+                  →
+                </Button>
+                <Button 
+                  size="sm" 
+                  onClick={() => moveOven('backward')}
+                  className="bg-white/20 text-white hover:bg-white/30"
+                >
+                  ⤴
+                </Button>
+                <Button 
+                  size="sm" 
+                  onClick={() => moveOven('down')}
+                  className="bg-white/20 text-white hover:bg-white/30"
+                >
+                  ↓
+                </Button>
+                <Button 
+                  size="sm" 
+                  onClick={() => moveOven('forward')}
+                  className="bg-white/20 text-white hover:bg-white/30"
+                >
+                  ⤵
+                </Button>
               </div>
               
               {/* Controlli rotazione e scala */}
               <div className="flex gap-2">
-                <Button size="sm" onClick={() => rotateOven('y')}>
+                <Button 
+                  size="sm" 
+                  onClick={() => rotateOven('y')}
+                  className="bg-white/20 text-white hover:bg-white/30"
+                >
                   <RotateCcw className="w-4 h-4" />
                 </Button>
-                <Button size="sm" onClick={() => scaleOven('down')}>
+                <Button 
+                  size="sm" 
+                  onClick={() => scaleOven('down')}
+                  className="bg-white/20 text-white hover:bg-white/30"
+                >
                   <ZoomOut className="w-4 h-4" />
                 </Button>
-                <Button size="sm" onClick={() => scaleOven('up')}>
+                <Button 
+                  size="sm" 
+                  onClick={() => scaleOven('up')}
+                  className="bg-white/20 text-white hover:bg-white/30"
+                >
                   <ZoomIn className="w-4 h-4" />
                 </Button>
-                <Button size="sm" onClick={resetPosition}>
+                <Button 
+                  size="sm" 
+                  onClick={resetPosition}
+                  className="bg-white/20 text-white hover:bg-white/30"
+                >
                   <Move className="w-4 h-4" />
                 </Button>
               </div>
