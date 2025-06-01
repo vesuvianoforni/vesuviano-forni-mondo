@@ -2,9 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
 import { Button } from "@/components/ui/button";
-import { Camera, RotateCcw, Move, ZoomIn, ZoomOut, Settings, ChevronUp, ChevronDown } from "lucide-react";
+import { Camera, RotateCcw, Move, ZoomIn, ZoomOut, Settings, ChevronUp, ChevronDown, Palette } from "lucide-react";
 import { toast } from "sonner";
 import { OvenType } from './OvenTypeSelector';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import * as THREE from 'three';
 
 interface ARVisualizerProps {
@@ -13,23 +15,78 @@ interface ARVisualizerProps {
   onClose: () => void;
 }
 
-// Componente 3D del forno semplificato
-const OvenModel = ({ ovenType, position, rotation, scale }: { 
+// Componente 3D del forno con materiali personalizzabili
+const OvenModel = ({ 
+  ovenType, 
+  position, 
+  rotation, 
+  scale, 
+  material, 
+  color 
+}: { 
   ovenType: string; 
   position: [number, number, number];
   rotation: [number, number, number];
   scale: number;
+  material: string;
+  color: string;
 }) => {
-  const getOvenColor = (type: string) => {
-    switch (type) {
-      case "vesuviobuono": return "#D2691E"; // Terracotta con mosaico
-      case "verniciato": return "#CD853F"; // Terracotta verniciata
-      case "mosaicato": return "#8B4513"; // Marrone mosaico
-      default: return "#D2691E";
+  const getOvenColor = (selectedColor: string, selectedMaterial: string) => {
+    const colors = {
+      nero: "#2C2C2C",
+      oro: "#FFD700",
+      rosso: "#DC143C",
+      bianco: "#F5F5F5",
+      blu: "#4169E1"
+    };
+    
+    let baseColor = colors[selectedColor as keyof typeof colors] || "#D2691E";
+    
+    // Modifica il colore base in base al materiale
+    if (selectedMaterial === "ferro") {
+      // Per il ferro, rendiamo i colori più metallici
+      switch (selectedColor) {
+        case "oro": return "#B8860B";
+        case "nero": return "#1C1C1C";
+        default: return baseColor;
+      }
+    }
+    
+    return baseColor;
+  };
+
+  const getMaterialProperties = (selectedMaterial: string, selectedColor: string) => {
+    const baseColor = getOvenColor(selectedColor, selectedMaterial);
+    
+    switch (selectedMaterial) {
+      case "vernice":
+        return {
+          color: baseColor,
+          roughness: 0.3,
+          metalness: 0.1
+        };
+      case "mosaico":
+        return {
+          color: baseColor,
+          roughness: 0.8,
+          metalness: 0.0
+        };
+      case "ferro":
+        return {
+          color: baseColor,
+          roughness: 0.2,
+          metalness: 0.8
+        };
+      default:
+        return {
+          color: baseColor,
+          roughness: 0.5,
+          metalness: 0.2
+        };
     }
   };
 
-  const ovenColor = getOvenColor(ovenType);
+  const materialProps = getMaterialProperties(material, color);
 
   return (
     <group position={position} rotation={rotation} scale={scale}>
@@ -42,13 +99,13 @@ const OvenModel = ({ ovenType, position, rotation, scale }: {
       {/* Corpo principale del forno */}
       <mesh position={[0, 0, 0]}>
         <boxGeometry args={[2.5, 1.5, 2]} />
-        <meshStandardMaterial color={ovenColor} />
+        <meshStandardMaterial {...materialProps} />
       </mesh>
       
       {/* Cupola del forno */}
       <mesh position={[0, 0.75, 0]}>
         <sphereGeometry args={[1.3, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2]} />
-        <meshStandardMaterial color={ovenColor} />
+        <meshStandardMaterial {...materialProps} />
       </mesh>
       
       {/* Porta del forno */}
@@ -71,7 +128,7 @@ const OvenModel = ({ ovenType, position, rotation, scale }: {
         anchorX="center"
         anchorY="middle"
       >
-        {ovenType.toUpperCase()}
+        {`${material.toUpperCase()} - ${color.toUpperCase()}`}
       </Text>
     </group>
   );
@@ -85,6 +142,9 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
   const [showContactForm, setShowContactForm] = useState(false);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [showControls, setShowControls] = useState(false);
+  const [showMaterialControls, setShowMaterialControls] = useState(false);
+  const [selectedMaterial, setSelectedMaterial] = useState("vernice");
+  const [selectedColor, setSelectedColor] = useState("rosso");
   const [contactData, setContactData] = useState({
     name: '',
     email: '',
@@ -93,13 +153,27 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
-  
+
+  const selectedOven = ovenTypes.find(oven => oven.value === selectedOvenType);
+
+  const materialOptions = [
+    { value: "vernice", label: "Vernice" },
+    { value: "mosaico", label: "Mosaico" },
+    { value: "ferro", label: "Ferro" }
+  ];
+
+  const colorOptions = [
+    { value: "nero", label: "Nero" },
+    { value: "oro", label: "Oro" },
+    { value: "rosso", label: "Rosso" },
+    { value: "bianco", label: "Bianco" },
+    { value: "blu", label: "Blu" }
+  ];
+
   // Touch gesture states
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
   const [lastTouchDistance, setLastTouchDistance] = useState<number | null>(null);
   const [isGesturing, setIsGesturing] = useState(false);
-
-  const selectedOven = ovenTypes.find(oven => oven.value === selectedOvenType);
 
   useEffect(() => {
     return () => {
@@ -379,8 +453,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
           width: '100%',
           height: '100%',
           background: isARMode ? 'transparent' : '#f0f0f0',
-          pointerEvents: isARMode ? 'none' : 'auto',
-          touchAction: 'none'
+          pointerEvents: 'auto'
         }}
       >
         <ambientLight intensity={0.6} />
@@ -392,6 +465,8 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
             position={ovenPosition}
             rotation={ovenRotation}
             scale={ovenScale}
+            material={selectedMaterial}
+            color={selectedColor}
           />
         )}
         
@@ -472,9 +547,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
         <div className="flex justify-between items-center">
           <div className="bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm">
             <p className="text-sm font-medium">{selectedOven?.label}</p>
-            {isARMode && (
-              <p className="text-xs text-gray-300">Modalità AR Attiva - Usa le dita per posizionare</p>
-            )}
+            <p className="text-xs text-gray-300">{selectedMaterial} - {selectedColor}</p>
           </div>
           <Button
             onClick={onClose}
@@ -522,25 +595,68 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
                 </Button>
               </div>
               
-              {/* Istruzioni touch */}
-              <div className="bg-white/10 p-3 rounded-lg">
-                <p className="text-white text-xs text-center mb-2 font-medium">
-                  Controlli Touch:
-                </p>
-                <div className="text-white text-xs space-y-1">
-                  <p>• Un dito: Sposta il forno</p>
-                  <p>• Due dita: Pizzica per ridimensionare e ruotare</p>
-                </div>
-              </div>
+              {/* Toggle per controlli materiali e colori */}
+              <Button
+                onClick={() => setShowMaterialControls(!showMaterialControls)}
+                className="w-full bg-white/20 text-white hover:bg-white/30 flex items-center justify-center gap-2"
+                size="sm"
+              >
+                <Palette className="w-4 h-4" />
+                Materiali e Colori
+                {showMaterialControls ? (
+                  <ChevronDown className="w-4 h-4" />
+                ) : (
+                  <ChevronUp className="w-4 h-4" />
+                )}
+              </Button>
               
-              {/* Toggle per controlli manuali (opzionali) */}
+              {/* Controlli materiali e colori */}
+              {showMaterialControls && (
+                <div className="space-y-3 animate-in slide-in-from-bottom-2 duration-200">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-white text-xs mb-1 block">Materiale</Label>
+                      <Select value={selectedMaterial} onValueChange={setSelectedMaterial}>
+                        <SelectTrigger className="h-8 text-xs bg-white/90">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {materialOptions.map((material) => (
+                            <SelectItem key={material.value} value={material.value}>
+                              {material.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <Label className="text-white text-xs mb-1 block">Colore</Label>
+                      <Select value={selectedColor} onValueChange={setSelectedColor}>
+                        <SelectTrigger className="h-8 text-xs bg-white/90">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {colorOptions.map((color) => (
+                            <SelectItem key={color.value} value={color.value}>
+                              {color.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Toggle per controlli di posizionamento */}
               <Button
                 onClick={() => setShowControls(!showControls)}
                 className="w-full bg-white/20 text-white hover:bg-white/30 flex items-center justify-center gap-2"
                 size="sm"
               >
                 <Settings className="w-4 h-4" />
-                Controlli Manuali
+                Controlli Posizione
                 {showControls ? (
                   <ChevronDown className="w-4 h-4" />
                 ) : (
@@ -548,39 +664,46 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
                 )}
               </Button>
               
-              {/* Controlli di posizionamento manuali (fallback) */}
+              {/* Controlli di posizionamento */}
               {showControls && (
                 <div className="space-y-3 animate-in slide-in-from-bottom-2 duration-200">
+                  {/* Controlli movimento */}
+                  <div className="grid grid-cols-3 gap-2">
+                    <Button size="sm" onClick={() => moveOven('left')} className="bg-white/20 text-white hover:bg-white/30 text-xs">
+                      ← Sinistra
+                    </Button>
+                    <Button size="sm" onClick={() => moveOven('up')} className="bg-white/20 text-white hover:bg-white/30 text-xs">
+                      ↑ Su
+                    </Button>
+                    <Button size="sm" onClick={() => moveOven('right')} className="bg-white/20 text-white hover:bg-white/30 text-xs">
+                      Destra →
+                    </Button>
+                    <Button size="sm" onClick={() => moveOven('backward')} className="bg-white/20 text-white hover:bg-white/30 text-xs">
+                      ↙ Indietro
+                    </Button>
+                    <Button size="sm" onClick={() => moveOven('down')} className="bg-white/20 text-white hover:bg-white/30 text-xs">
+                      ↓ Giù
+                    </Button>
+                    <Button size="sm" onClick={() => moveOven('forward')} className="bg-white/20 text-white hover:bg-white/30 text-xs">
+                      Avanti ↗
+                    </Button>
+                  </div>
+                  
+                  {/* Controlli scala e rotazione */}
                   <div className="grid grid-cols-2 gap-2">
-                    <Button 
-                      size="sm" 
-                      onClick={() => scaleOven('down')}
-                      className="bg-white/20 text-white hover:bg-white/30"
-                    >
+                    <Button size="sm" onClick={() => scaleOven('down')} className="bg-white/20 text-white hover:bg-white/30">
                       <ZoomOut className="w-4 h-4 mr-1" />
                       Riduci
                     </Button>
-                    <Button 
-                      size="sm" 
-                      onClick={() => scaleOven('up')}
-                      className="bg-white/20 text-white hover:bg-white/30"
-                    >
+                    <Button size="sm" onClick={() => scaleOven('up')} className="bg-white/20 text-white hover:bg-white/30">
                       <ZoomIn className="w-4 h-4 mr-1" />
                       Ingrandisci
                     </Button>
-                    <Button 
-                      size="sm" 
-                      onClick={() => rotateOven('y')}
-                      className="bg-white/20 text-white hover:bg-white/30"
-                    >
+                    <Button size="sm" onClick={() => rotateOven('y')} className="bg-white/20 text-white hover:bg-white/30">
                       <RotateCcw className="w-4 h-4 mr-1" />
                       Ruota
                     </Button>
-                    <Button 
-                      size="sm" 
-                      onClick={resetPosition}
-                      className="bg-white/20 text-white hover:bg-white/30"
-                    >
+                    <Button size="sm" onClick={resetPosition} className="bg-white/20 text-white hover:bg-white/30">
                       <Move className="w-4 h-4 mr-1" />
                       Reset
                     </Button>
