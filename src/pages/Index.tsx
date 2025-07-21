@@ -1,8 +1,10 @@
 
+import React from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProductCategories from "@/components/ProductCategories";
 import OvenVisualizer from "@/components/OvenVisualizer";
+import AR2Visualizer from "@/components/AR2Visualizer";
 import CraftsmanshipSection from "@/components/CraftsmanshipSection";
 import Services from "@/components/Services";
 import Rivestimenti from "@/components/Rivestimenti";
@@ -18,6 +20,21 @@ const Index = () => {
       <Hero />
       <ProductCategories />
       <OvenVisualizer />
+      
+      {/* Nuova sezione AR 2.0 */}
+      <section className="py-20 bg-gradient-to-b from-background to-muted/50">
+        <div className="container mx-auto px-6">
+          <h2 className="text-4xl font-playfair text-center mb-4">
+            AR Visualizer 2.0
+          </h2>
+          <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+            Sistema avanzato di caricamento e visualizzazione modelli 3D. 
+            Carica i tuoi file OBJ, FBX, GLTF direttamente dal tuo dispositivo.
+          </p>
+          <AR2Visualizer />
+        </div>
+      </section>
+      
       <CraftsmanshipSection />
       <Services />
       <Rivestimenti />
