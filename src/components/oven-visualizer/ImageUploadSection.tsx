@@ -22,13 +22,13 @@ const ImageUploadSection = ({ previewUrl, onImageUpload }: ImageUploadSectionPro
       <CardContent className="space-y-4 md:space-y-6">
         <div>
           <Label htmlFor="kitchen-image" className="text-sm font-medium text-stone-700">
-            Foto della Cucina
+            Foto della Cucina o Modello 3D
           </Label>
           <div className="mt-2">
             <Input
               id="kitchen-image"
               type="file"
-              accept="image/*"
+              accept="image/*,.obj,.mtl,.fbx,.glb,.gltf"
               onChange={onImageUpload}
               className="text-xs md:text-sm file:mr-2 md:file:mr-4 file:py-1 md:file:py-2 file:px-2 md:file:px-4 file:rounded-full file:border-0 file:text-xs md:file:text-sm file:font-semibold file:bg-vesuviano-50 file:text-vesuviano-700 hover:file:bg-vesuviano-100"
             />
