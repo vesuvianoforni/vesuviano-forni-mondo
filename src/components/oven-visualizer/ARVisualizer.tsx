@@ -467,7 +467,14 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
         <directionalLight position={[10, 10, 5]} intensity={1} />
         
         {selectedOven && (
-          uploadedModel ? (
+          selectedOven.modelFiles?.obj ? (
+            <Uploaded3DModel
+              modelUrl={selectedOven.modelFiles.obj}
+              position={ovenPosition}
+              rotation={ovenRotation}
+              scale={ovenScale}
+            />
+          ) : uploadedModel ? (
             <Uploaded3DModel
               modelUrl={uploadedModel.url}
               position={ovenPosition}
