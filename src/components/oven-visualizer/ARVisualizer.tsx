@@ -84,14 +84,15 @@ const Uploaded3DModel = ({
         setLoading(true);
         setError(null);
         
-        console.log('URL originale:', modelUrl);
+        console.log('🔄 Caricamento modello iniziato');
+        console.log('📁 URL originale:', modelUrl);
         
         // Converti l'URL di Google Drive in URL diretto per il download
         const directUrl = convertGoogleDriveUrl(modelUrl);
-        console.log('URL convertito per download:', directUrl);
+        console.log('🔗 URL convertito per download:', directUrl);
         
         const fileExtension = getFileExtensionFromUrl(modelUrl);
-        console.log('Estensione file rilevata:', fileExtension);
+        console.log('📄 Estensione file rilevata:', fileExtension);
         
         if (fileExtension === 'gltf' || fileExtension === 'glb') {
           const loader = new GLTFLoader();
@@ -450,6 +451,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
   console.log('ARVisualizer stato:', {
     selectedOvenType,
     selectedOven: selectedOven?.label,
+    selectedOvenModelUrl: selectedOven?.modelUrl,
     uploadedModel: uploadedModel ? { url: uploadedModel.url, name: uploadedModel.name } : null
   });
 
