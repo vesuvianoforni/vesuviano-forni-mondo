@@ -22,25 +22,25 @@ const OvenVisualizer = () => {
       value: "cabin_mosaic", 
       label: "VesuvioBuono - Cabin Mosaic",
       image: "/lovable-uploads/3127ebb1-b7dd-4e50-95a6-a5d9ea57fce2.png",
-      modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/cabin-mosaic.obj"
+      modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/cabin-mosaic.fbx"
     },
     { 
       value: "black_mosaic", 
       label: "Rivestimento Palladiana - Black Mosaic",
       image: "/lovable-uploads/7c682e61-1ca7-4b06-9099-55b05bbff4db.png",
-      modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/black-mosaic.obj"
+      modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/black-mosaic.fbx"
     },
     { 
       value: "mosaic", 
       label: "Rivestimento Mosaico - Classic",
       image: "/lovable-uploads/375da131-c387-490a-8372-89300626480e.png",
-      modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/mosaic.obj"
+      modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/mosaic.fbx"
     },
     { 
       value: "metal", 
       label: "Doghe Metalliche - Metal Design",
       image: "/lovable-uploads/9d02a9c4-fce3-424c-a356-9db0dee4a293.png",
-      modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/metal.obj"
+      modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/metal.fbx"
     }
   ];
 
