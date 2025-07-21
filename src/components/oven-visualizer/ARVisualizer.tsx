@@ -13,6 +13,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
+import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 
 interface ARVisualizerProps {
   selectedOvenType: string;
@@ -180,8 +181,52 @@ const Uploaded3DModel = ({
               }
             );
           }
+        } else if (fileExtension === 'fbx') {
+          const fbxLoader = new FBXLoader();
+          
+          fbxLoader.load(
+            modelUrl,
+            (fbx) => {
+              console.log('Modello FBX caricato:', fbx);
+              
+              // Aggiungi materiali se necessario
+              fbx.traverse((child) => {
+                if (child instanceof THREE.Mesh) {
+                  if (!child.material || (Array.isArray(child.material) && child.material.length === 0)) {
+                    child.material = new THREE.MeshStandardMaterial({ 
+                      color: 0xCC6600,
+                      roughness: 0.5,
+                      metalness: 0.2
+                    });
+                  }
+                }
+              });
+              
+              // Scala automatica del modello
+              const box = new THREE.Box3().setFromObject(fbx);
+              const size = box.getSize(new THREE.Vector3());
+              const maxSize = Math.max(size.x, size.y, size.z);
+              if (maxSize > 3) {
+                const scaleFactor = 2 / maxSize;
+                fbx.scale.multiplyScalar(scaleFactor);
+              }
+              
+              setModel(fbx);
+              setLoading(false);
+              toast.success('Modello FBX caricato!');
+            },
+            (progress) => {
+              console.log('Progresso caricamento FBX:', progress);
+            },
+            (error) => {
+              console.error('Errore caricamento FBX:', error);
+              setError('Errore nel caricamento del modello FBX');
+              setLoading(false);
+              toast.error('Errore nel caricamento del modello FBX');
+            }
+          );
         } else {
-          setError('Formato file non supportato. Supportati: GLB, GLTF, OBJ');
+          setError('Formato file non supportato. Supportati: GLB, GLTF, OBJ, FBX');
           setLoading(false);
           toast.error('Formato file non supportato');
         }
