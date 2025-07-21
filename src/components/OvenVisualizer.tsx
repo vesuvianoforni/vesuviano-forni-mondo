@@ -74,6 +74,7 @@ const OvenVisualizer = () => {
           selectedOvenType={selectedOvenType}
           ovenTypes={ovenTypes}
           onClose={() => setShowARVisualizer(false)}
+          uploadedModel={uploadedModel}
         />
       )}
       

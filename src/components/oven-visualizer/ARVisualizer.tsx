@@ -10,15 +10,130 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import * as THREE from 'three';
+import { supabase } from "@/integrations/supabase/client";
 
 interface ARVisualizerProps {
   selectedOvenType: string;
   ovenTypes: OvenType[];
   onClose: () => void;
+  uploadedModel?: {url: string, name: string} | null;
 }
 
-// Componente 3D del forno con materiali personalizzabili
-const OvenModel = ({ 
+// Componente per caricare modelli 3D reali
+const Uploaded3DModel = ({ 
+  modelUrl, 
+  position, 
+  rotation, 
+  scale 
+}: { 
+  modelUrl: string; 
+  position: [number, number, number];
+  rotation: [number, number, number];
+  scale: number;
+}) => {
+  const [model, setModel] = useState<THREE.Group | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadModel = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const fileExtension = modelUrl.split('.').pop()?.toLowerCase();
+        
+        if (fileExtension === 'gltf' || fileExtension === 'glb') {
+          // Uso diretto di THREE.GLTFLoader
+          const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
+          const loader = new GLTFLoader();
+          loader.load(
+            modelUrl,
+            (gltf) => {
+              setModel(gltf.scene);
+              setLoading(false);
+            },
+            undefined,
+            (error) => {
+              console.error('Errore caricamento GLTF:', error);
+              setError('Errore nel caricamento del modello GLTF');
+              setLoading(false);
+            }
+          );
+        } else if (fileExtension === 'obj') {
+          // Uso diretto di THREE.OBJLoader
+          const { OBJLoader } = await import('three/addons/loaders/OBJLoader.js');
+          const loader = new OBJLoader();
+          loader.load(
+            modelUrl,
+            (obj) => {
+              setModel(obj);
+              setLoading(false);
+            },
+            undefined,
+            (error) => {
+              console.error('Errore caricamento OBJ:', error);
+              setError('Errore nel caricamento del modello OBJ');
+              setLoading(false);
+            }
+          );
+        } else {
+          setError('Formato file non supportato');
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error('Errore generale:', err);
+        setError('Errore nel caricamento del modello');
+        setLoading(false);
+      }
+    };
+
+    if (modelUrl) {
+      loadModel();
+    }
+  }, [modelUrl]);
+
+  if (loading) {
+    return (
+      <group position={position}>
+        <Text
+          position={[0, 0, 0]}
+          fontSize={0.3}
+          color="yellow"
+          anchorX="center"
+          anchorY="middle"
+        >
+          Caricamento modello...
+        </Text>
+      </group>
+    );
+  }
+
+  if (error || !model) {
+    return (
+      <group position={position}>
+        <Text
+          position={[0, 0, 0]}
+          fontSize={0.2}
+          color="red"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {error || 'Modello non disponibile'}
+        </Text>
+      </group>
+    );
+  }
+
+  return (
+    <group position={position} rotation={rotation} scale={scale}>
+      <primitive object={model.clone()} />
+    </group>
+  );
+};
+
+// Componente 3D del forno con materiali personalizzabili (fallback)
+const DefaultOvenModel = ({ 
   ovenType, 
   position, 
   rotation, 
@@ -44,9 +159,7 @@ const OvenModel = ({
     
     let baseColor = colors[selectedColor as keyof typeof colors] || "#D2691E";
     
-    // Modifica il colore base in base al materiale
     if (selectedMaterial === "ferro") {
-      // Per il ferro, rendiamo i colori più metallici
       switch (selectedColor) {
         case "oro": return "#B8860B";
         case "nero": return "#1C1C1C";
@@ -62,29 +175,13 @@ const OvenModel = ({
     
     switch (selectedMaterial) {
       case "vernice":
-        return {
-          color: baseColor,
-          roughness: 0.3,
-          metalness: 0.1
-        };
+        return { color: baseColor, roughness: 0.3, metalness: 0.1 };
       case "mosaico":
-        return {
-          color: baseColor,
-          roughness: 0.8,
-          metalness: 0.0
-        };
+        return { color: baseColor, roughness: 0.8, metalness: 0.0 };
       case "ferro":
-        return {
-          color: baseColor,
-          roughness: 0.2,
-          metalness: 0.8
-        };
+        return { color: baseColor, roughness: 0.2, metalness: 0.8 };
       default:
-        return {
-          color: baseColor,
-          roughness: 0.5,
-          metalness: 0.2
-        };
+        return { color: baseColor, roughness: 0.5, metalness: 0.2 };
     }
   };
 
@@ -92,37 +189,31 @@ const OvenModel = ({
 
   return (
     <group position={position} rotation={rotation} scale={scale}>
-      {/* Base del forno */}
       <mesh position={[0, -0.8, 0]}>
         <cylinderGeometry args={[1.2, 1.5, 0.3, 16]} />
         <meshStandardMaterial color="#654321" />
       </mesh>
       
-      {/* Corpo principale del forno */}
       <mesh position={[0, 0, 0]}>
         <boxGeometry args={[2.5, 1.5, 2]} />
         <meshStandardMaterial {...materialProps} />
       </mesh>
       
-      {/* Cupola del forno */}
       <mesh position={[0, 0.75, 0]}>
         <sphereGeometry args={[1.3, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2]} />
         <meshStandardMaterial {...materialProps} />
       </mesh>
       
-      {/* Porta del forno */}
       <mesh position={[0, -0.2, 1.05]}>
         <boxGeometry args={[0.8, 1, 0.1]} />
         <meshStandardMaterial color="#2C2C2C" />
       </mesh>
       
-      {/* Camino */}
       <mesh position={[0, 1.8, -0.5]}>
         <cylinderGeometry args={[0.2, 0.2, 1.5, 8]} />
         <meshStandardMaterial color="#2C2C2C" />
       </mesh>
       
-      {/* Testo identificativo */}
       <Text
         position={[0, -1.5, 0]}
         fontSize={0.2}
@@ -136,7 +227,7 @@ const OvenModel = ({
   );
 };
 
-const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProps) => {
+const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: ARVisualizerProps) => {
   const [isARMode, setIsARMode] = useState(false);
   const [ovenPosition, setOvenPosition] = useState<[number, number, number]>([0, 0, 0]);
   const [ovenRotation, setOvenRotation] = useState<[number, number, number]>([0, 0, 0]);
@@ -376,14 +467,23 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose }: ARVisualizerProp
         <directionalLight position={[10, 10, 5]} intensity={1} />
         
         {selectedOven && (
-          <OvenModel
-            ovenType={selectedOvenType}
-            position={ovenPosition}
-            rotation={ovenRotation}
-            scale={ovenScale}
-            material={selectedMaterial}
-            color={selectedColor}
-          />
+          uploadedModel ? (
+            <Uploaded3DModel
+              modelUrl={uploadedModel.url}
+              position={ovenPosition}
+              rotation={ovenRotation}
+              scale={ovenScale}
+            />
+          ) : (
+            <DefaultOvenModel
+              ovenType={selectedOvenType}
+              position={ovenPosition}
+              rotation={ovenRotation}
+              scale={ovenScale}
+              material={selectedMaterial}
+              color={selectedColor}
+            />
+          )
         )}
         
         {!isARMode && <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />}
