@@ -22,6 +22,39 @@ interface ARVisualizerProps {
   uploadedModel?: {url: string, name: string} | null;
 }
 
+// Funzioni utility per gestire URL di Google Drive
+const convertGoogleDriveUrl = (url: string): string => {
+  console.log('Conversione URL Google Drive:', url);
+  
+  // Estrai l'ID del file dall'URL di Google Drive
+  const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/);
+  if (fileIdMatch) {
+    const fileId = fileIdMatch[1];
+    const directUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    console.log('URL convertito:', directUrl);
+    return directUrl;
+  }
+  
+  // Se è già un URL diretto, restituiscilo così com'è
+  return url;
+};
+
+const getFileExtensionFromUrl = (url: string): string => {
+  // Estrai l'estensione dall'URL originale o dal nome del file
+  const extensionMatch = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
+  if (extensionMatch) {
+    return extensionMatch[1].toLowerCase();
+  }
+  
+  // Fallback: cerca nell'URL originale
+  const urlParts = url.split('.');
+  if (urlParts.length > 1) {
+    return urlParts[urlParts.length - 1].toLowerCase();
+  }
+  
+  return '';
+};
+
 // Componente per caricare modelli 3D reali
 const Uploaded3DModel = ({ 
   modelUrl, 
@@ -44,16 +77,20 @@ const Uploaded3DModel = ({
         setLoading(true);
         setError(null);
         
-        console.log('Caricamento modello da URL:', modelUrl);
+        console.log('URL originale:', modelUrl);
         
-        const fileExtension = modelUrl.split('.').pop()?.toLowerCase();
+        // Converti l'URL di Google Drive in URL diretto per il download
+        const directUrl = convertGoogleDriveUrl(modelUrl);
+        console.log('URL convertito per download:', directUrl);
+        
+        const fileExtension = getFileExtensionFromUrl(modelUrl);
         console.log('Estensione file rilevata:', fileExtension);
         
         if (fileExtension === 'gltf' || fileExtension === 'glb') {
           const loader = new GLTFLoader();
           
           loader.load(
-            modelUrl,
+            directUrl,
             (gltf) => {
               console.log('Modello GLTF caricato con successo:', gltf);
               // Scala automatica del modello se necessario
@@ -99,7 +136,7 @@ const Uploaded3DModel = ({
                   objLoader.setMaterials(materials);
                   
                   objLoader.load(
-                    modelUrl,
+                    directUrl,
                     (obj) => {
                       console.log('Modello OBJ con materiali caricato:', obj);
                       // Scala automatica del modello
@@ -143,7 +180,7 @@ const Uploaded3DModel = ({
           
           function loadObjWithoutMaterials() {
             objLoader.load(
-              modelUrl,
+              directUrl,
               (obj) => {
                 console.log('Modello OBJ caricato senza materiali:', obj);
                 // Applica un materiale di default
@@ -185,7 +222,7 @@ const Uploaded3DModel = ({
           const fbxLoader = new FBXLoader();
           
           fbxLoader.load(
-            modelUrl,
+            directUrl,
             (fbx) => {
               console.log('Modello FBX caricato:', fbx);
               
