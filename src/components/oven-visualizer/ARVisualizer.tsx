@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Text } from '@react-three/drei';
+import { OrbitControls, Text, useLoader } from '@react-three/drei';
 import { Button } from "@/components/ui/button";
 import { Camera, RotateCcw, Move, ZoomIn, ZoomOut, Settings, ChevronUp, ChevronDown, Palette } from "lucide-react";
 import { toast } from "sonner";
@@ -10,7 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import * as THREE from 'three';
-import { supabase } from "@/integrations/supabase/client";
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 
 interface ARVisualizerProps {
   selectedOvenType: string;
@@ -41,50 +43,153 @@ const Uploaded3DModel = ({
         setLoading(true);
         setError(null);
         
+        console.log('Caricamento modello da URL:', modelUrl);
+        
         const fileExtension = modelUrl.split('.').pop()?.toLowerCase();
+        console.log('Estensione file rilevata:', fileExtension);
         
         if (fileExtension === 'gltf' || fileExtension === 'glb') {
-          // Uso diretto di THREE.GLTFLoader
-          const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
           const loader = new GLTFLoader();
+          
           loader.load(
             modelUrl,
             (gltf) => {
+              console.log('Modello GLTF caricato con successo:', gltf);
+              // Scala automatica del modello se necessario
+              const box = new THREE.Box3().setFromObject(gltf.scene);
+              const size = box.getSize(new THREE.Vector3());
+              const maxSize = Math.max(size.x, size.y, size.z);
+              if (maxSize > 3) {
+                const scaleFactor = 2 / maxSize;
+                gltf.scene.scale.multiplyScalar(scaleFactor);
+              }
+              
               setModel(gltf.scene);
               setLoading(false);
+              toast.success('Modello 3D caricato con successo!');
             },
-            undefined,
+            (progress) => {
+              console.log('Progresso caricamento GLTF:', progress);
+            },
             (error) => {
               console.error('Errore caricamento GLTF:', error);
               setError('Errore nel caricamento del modello GLTF');
               setLoading(false);
+              toast.error('Errore nel caricamento del modello GLTF');
             }
           );
         } else if (fileExtension === 'obj') {
-          // Uso diretto di THREE.OBJLoader
-          const { OBJLoader } = await import('three/addons/loaders/OBJLoader.js');
-          const loader = new OBJLoader();
-          loader.load(
-            modelUrl,
-            (obj) => {
-              setModel(obj);
-              setLoading(false);
-            },
-            undefined,
-            (error) => {
-              console.error('Errore caricamento OBJ:', error);
-              setError('Errore nel caricamento del modello OBJ');
-              setLoading(false);
+          // Prova a caricare il file MTL se disponibile
+          const mtlUrl = modelUrl.replace('.obj', '.mtl');
+          const objLoader = new OBJLoader();
+          
+          // Prova prima a caricare il materiale MTL
+          const mtlLoader = new MTLLoader();
+          
+          try {
+            // Carica prima il file MTL se esiste
+            const response = await fetch(mtlUrl, { method: 'HEAD' });
+            if (response.ok) {
+              mtlLoader.load(
+                mtlUrl,
+                (materials) => {
+                  console.log('Materiali MTL caricati:', materials);
+                  materials.preload();
+                  objLoader.setMaterials(materials);
+                  
+                  objLoader.load(
+                    modelUrl,
+                    (obj) => {
+                      console.log('Modello OBJ con materiali caricato:', obj);
+                      // Scala automatica del modello
+                      const box = new THREE.Box3().setFromObject(obj);
+                      const size = box.getSize(new THREE.Vector3());
+                      const maxSize = Math.max(size.x, size.y, size.z);
+                      if (maxSize > 3) {
+                        const scaleFactor = 2 / maxSize;
+                        obj.scale.multiplyScalar(scaleFactor);
+                      }
+                      
+                      setModel(obj);
+                      setLoading(false);
+                      toast.success('Modello OBJ con materiali caricato!');
+                    },
+                    (progress) => {
+                      console.log('Progresso caricamento OBJ:', progress);
+                    },
+                    (error) => {
+                      console.error('Errore caricamento OBJ con materiali:', error);
+                      // Fallback: carica solo OBJ senza materiali
+                      loadObjWithoutMaterials();
+                    }
+                  );
+                },
+                (progress) => {
+                  console.log('Progresso caricamento MTL:', progress);
+                },
+                (error) => {
+                  console.log('MTL non trovato, carico solo OBJ:', error);
+                  loadObjWithoutMaterials();
+                }
+              );
+            } else {
+              loadObjWithoutMaterials();
             }
-          );
+          } catch (err) {
+            console.log('MTL non disponibile, carico solo OBJ');
+            loadObjWithoutMaterials();
+          }
+          
+          function loadObjWithoutMaterials() {
+            objLoader.load(
+              modelUrl,
+              (obj) => {
+                console.log('Modello OBJ caricato senza materiali:', obj);
+                // Applica un materiale di default
+                obj.traverse((child) => {
+                  if (child instanceof THREE.Mesh) {
+                    child.material = new THREE.MeshStandardMaterial({ 
+                      color: 0xCC6600,
+                      roughness: 0.5,
+                      metalness: 0.2
+                    });
+                  }
+                });
+                
+                // Scala automatica del modello
+                const box = new THREE.Box3().setFromObject(obj);
+                const size = box.getSize(new THREE.Vector3());
+                const maxSize = Math.max(size.x, size.y, size.z);
+                if (maxSize > 3) {
+                  const scaleFactor = 2 / maxSize;
+                  obj.scale.multiplyScalar(scaleFactor);
+                }
+                
+                setModel(obj);
+                setLoading(false);
+                toast.success('Modello OBJ caricato!');
+              },
+              (progress) => {
+                console.log('Progresso caricamento OBJ:', progress);
+              },
+              (error) => {
+                console.error('Errore caricamento OBJ:', error);
+                setError('Errore nel caricamento del modello OBJ');
+                setLoading(false);
+                toast.error('Errore nel caricamento del modello OBJ');
+              }
+            );
+          }
         } else {
-          setError('Formato file non supportato');
+          setError('Formato file non supportato. Supportati: GLB, GLTF, OBJ');
           setLoading(false);
+          toast.error('Formato file non supportato');
         }
       } catch (err) {
-        console.error('Errore generale:', err);
+        console.error('Errore generale nel caricamento:', err);
         setError('Errore nel caricamento del modello');
         setLoading(false);
+        toast.error('Errore nel caricamento del modello');
       }
     };
 
@@ -466,24 +571,24 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
         <ambientLight intensity={0.6} />
         <directionalLight position={[10, 10, 5]} intensity={1} />
         
-        {selectedOven && (
-          uploadedModel ? (
-            <Uploaded3DModel
-              modelUrl={uploadedModel.url}
-              position={ovenPosition}
-              rotation={ovenRotation}
-              scale={ovenScale}
-            />
-          ) : (
-            <DefaultOvenModel
-              ovenType={selectedOvenType}
-              position={ovenPosition}
-              rotation={ovenRotation}
-              scale={ovenScale}
-              material={selectedMaterial}
-              color={selectedColor}
-            />
-          )
+        {selectedOven && uploadedModel && (
+          <Uploaded3DModel
+            modelUrl={uploadedModel.url}
+            position={ovenPosition}
+            rotation={ovenRotation}
+            scale={ovenScale}
+          />
+        )}
+        
+        {selectedOven && !uploadedModel && (
+          <DefaultOvenModel
+            ovenType={selectedOvenType}
+            position={ovenPosition}
+            rotation={ovenRotation}
+            scale={ovenScale}
+            material={selectedMaterial}
+            color={selectedColor}
+          />
         )}
         
         {!isARMode && <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />}
