@@ -21,42 +21,22 @@ const OvenVisualizer = () => {
     { 
       value: "cabin_mosaic", 
       label: "VesuvioBuono - Cabin Mosaic",
-      image: "/lovable-uploads/3127ebb1-b7dd-4e50-95a6-a5d9ea57fce2.png",
-      modelFiles: {
-        obj: "https://drive.google.com/uc?export=download&id=CABIN_MOSAIC_v001.obj",
-        mtl: "https://drive.google.com/uc?export=download&id=CABIN_MOSAIC_v001.mtl",
-        fbx: "https://drive.google.com/uc?export=download&id=CABIN_MOSAIC_v001.fbx"
-      }
+      image: "/lovable-uploads/3127ebb1-b7dd-4e50-95a6-a5d9ea57fce2.png"
     },
     { 
       value: "black_mosaic", 
       label: "Rivestimento Palladiana - Black Mosaic",
-      image: "/lovable-uploads/7c682e61-1ca7-4b06-9099-55b05bbff4db.png",
-      modelFiles: {
-        obj: "https://drive.google.com/uc?export=download&id=BLACK_MOSAIC_v001.obj",
-        mtl: "https://drive.google.com/uc?export=download&id=BLACK_MOSAIC_v001.mtl",
-        fbx: "https://drive.google.com/uc?export=download&id=BLACK_MOSAIC_v001.fbx"
-      }
+      image: "/lovable-uploads/7c682e61-1ca7-4b06-9099-55b05bbff4db.png"
     },
     { 
       value: "mosaic", 
       label: "Rivestimento Mosaico - Classic",
-      image: "/lovable-uploads/375da131-c387-490a-8372-89300626480e.png",
-      modelFiles: {
-        obj: "https://drive.google.com/uc?export=download&id=MOSAIC_v001.obj",
-        mtl: "https://drive.google.com/uc?export=download&id=MOSAIC_v001.mtl",
-        fbx: "https://drive.google.com/uc?export=download&id=MOSAIC_v001.fbx"
-      }
+      image: "/lovable-uploads/375da131-c387-490a-8372-89300626480e.png"
     },
     { 
       value: "metal", 
       label: "Doghe Metalliche - Metal Design",
-      image: "/lovable-uploads/9d02a9c4-fce3-424c-a356-9db0dee4a293.png",
-      modelFiles: {
-        obj: "https://drive.google.com/uc?export=download&id=METAL_v001.obj",
-        mtl: "https://drive.google.com/uc?export=download&id=METAL_v001.mtl",
-        fbx: "https://drive.google.com/uc?export=download&id=METAL_v001.fbx"
-      }
+      image: "/lovable-uploads/9d02a9c4-fce3-424c-a356-9db0dee4a293.png"
     }
   ];
 

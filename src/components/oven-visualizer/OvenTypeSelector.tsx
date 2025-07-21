@@ -7,11 +7,6 @@ export interface OvenType {
   value: string;
   label: string;
   image: string;
-  modelFiles?: {
-    obj: string;
-    mtl: string;
-    fbx: string;
-  };
 }
 
 interface OvenTypeSelectorProps {
