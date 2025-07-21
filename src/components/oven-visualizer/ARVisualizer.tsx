@@ -468,6 +468,8 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
   const [modelColor, setModelColor] = useState('#CC6600');
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPos, setTouchStartPos] = useState({ x: 0, y: 0 });
+  const [initialPinchDistance, setInitialPinchDistance] = useState(0);
+  const [initialScale, setInitialScale] = useState(1);
   const [contactData, setContactData] = useState({
     firstName: '',
     lastName: '',
@@ -505,12 +507,24 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
   ];
 
   useEffect(() => {
+    // Blocca lo scroll della pagina quando l'AR è attivo
+    if (isARMode) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+    }
+
     return () => {
       if (stream) {
         stream.getTracks().forEach(track => track.stop());
       }
+      // Ripristina lo scroll quando il componente viene smontato
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
     };
-  }, [stream]);
+  }, [stream, isARMode]);
 
   const startAR = async () => {
     try {
@@ -667,47 +681,84 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
     });
   };
 
-  // Gestione touch per movimento con due dita
+  // Gestione touch migliorata
+  const getTouchDistance = (touch1: React.Touch, touch2: React.Touch) => {
+    const dx = touch1.clientX - touch2.clientX;
+    const dy = touch1.clientY - touch2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
   const handleTouchStart = (e: React.TouchEvent) => {
-    if (e.touches.length === 2) {
+    e.preventDefault(); // Blocca lo scroll della pagina
+    
+    if (e.touches.length === 1) {
+      // Un dito - movimento
       setIsDragging(true);
-      const touch1 = e.touches[0];
-      const touch2 = e.touches[1];
       setTouchStartPos({
-        x: (touch1.clientX + touch2.clientX) / 2,
-        y: (touch1.clientY + touch2.clientY) / 2
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY
       });
+    } else if (e.touches.length === 2) {
+      // Due dita - zoom pinch
+      setIsDragging(false);
+      const distance = getTouchDistance(e.touches[0], e.touches[1]);
+      setInitialPinchDistance(distance);
+      setInitialScale(ovenScale);
     }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (isDragging && e.touches.length === 2) {
-      const touch1 = e.touches[0];
-      const touch2 = e.touches[1];
-      const currentX = (touch1.clientX + touch2.clientX) / 2;
-      const currentY = (touch1.clientY + touch2.clientY) / 2;
+    e.preventDefault(); // Blocca lo scroll della pagina
+    
+    if (e.touches.length === 1 && isDragging) {
+      // Un dito - movimento
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
       
       const deltaX = (currentX - touchStartPos.x) * 0.01;
       const deltaY = (currentY - touchStartPos.y) * 0.01;
       
       setOvenPosition(prev => [
         prev[0] + deltaX,
-        prev[1] - deltaY,
+        prev[1] - deltaY, // Inverti Y per movimento naturale
         prev[2]
       ]);
       
       setTouchStartPos({ x: currentX, y: currentY });
+    } else if (e.touches.length === 2) {
+      // Due dita - zoom pinch
+      const currentDistance = getTouchDistance(e.touches[0], e.touches[1]);
+      if (initialPinchDistance > 0) {
+        const scale = (currentDistance / initialPinchDistance) * initialScale;
+        const clampedScale = Math.max(0.3, Math.min(3, scale));
+        setOvenScale(clampedScale);
+      }
     }
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (e.touches.length < 2) {
+    e.preventDefault(); // Blocca lo scroll della pagina
+    
+    if (e.touches.length === 0) {
       setIsDragging(false);
+      setInitialPinchDistance(0);
+    } else if (e.touches.length === 1) {
+      // Se rimane un dito, continua il movimento
+      setTouchStartPos({
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY
+      });
+      setIsDragging(true);
+      setInitialPinchDistance(0);
     }
   };
 
   return (
-    <div ref={containerRef} className="fixed inset-0 z-50 overflow-hidden">
+    <div 
+      ref={containerRef} 
+      className="fixed inset-0 z-50 overflow-hidden"
+      style={{ touchAction: 'none' }} // Disabilita tutti i gesti touch del browser
+    >
       {/* Video di sfondo per AR */}
       <video
         ref={videoRef}
@@ -1033,9 +1084,9 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
               {/* Controlli di posizionamento */}
               {showControls && (
                 <div className="space-y-3 animate-in slide-in-from-bottom-2 duration-200">
-                  {/* Istruzioni touch */}
+                  {/* Istruzioni touch aggiornate */}
                   <div className="text-center text-white text-xs bg-white/10 p-2 rounded">
-                    📱 Usa due dita per spostare il forno
+                    👆 Un dito per spostare • 🤏 Due dita per zoom
                   </div>
                   
                   {/* Controlli scala e rotazione principali */}
