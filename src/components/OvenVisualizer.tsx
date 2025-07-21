@@ -15,6 +15,7 @@ const OvenVisualizer = () => {
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [selectedOvenType, setSelectedOvenType] = useState<string>("");
   const [showARVisualizer, setShowARVisualizer] = useState(false);
+  const [uploadedModel, setUploadedModel] = useState<{url: string, name: string} | null>(null);
 
   const ovenTypes: OvenType[] = [
     { 
@@ -41,6 +42,11 @@ const OvenVisualizer = () => {
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
     }
+  };
+
+  const handleModelUpload = (url: string, fileName: string) => {
+    setUploadedModel({ url, name: fileName });
+    toast.success(`Modello ${fileName} caricato e pronto per l'AR!`);
   };
 
   const startARVisualization = () => {
@@ -117,6 +123,7 @@ const OvenVisualizer = () => {
                 <ImageUploadSection 
                   previewUrl={previewUrl}
                   onImageUpload={handleImageUpload}
+                  onModelUpload={handleModelUpload}
                 />
               </div>
 
