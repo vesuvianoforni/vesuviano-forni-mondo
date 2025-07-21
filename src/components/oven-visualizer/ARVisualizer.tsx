@@ -357,6 +357,13 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
 
   const selectedOven = ovenTypes.find(oven => oven.value === selectedOvenType);
 
+  // Debug info
+  console.log('ARVisualizer stato:', {
+    selectedOvenType,
+    selectedOven: selectedOven?.label,
+    uploadedModel: uploadedModel ? { url: uploadedModel.url, name: uploadedModel.name } : null
+  });
+
   const materialOptions = [
     { value: "vernice", label: "Vernice" },
     { value: "mosaico", label: "Mosaico" },
@@ -571,16 +578,14 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
         <ambientLight intensity={0.6} />
         <directionalLight position={[10, 10, 5]} intensity={1} />
         
-        {selectedOven && uploadedModel && (
+        {uploadedModel ? (
           <Uploaded3DModel
             modelUrl={uploadedModel.url}
             position={ovenPosition}
             rotation={ovenRotation}
             scale={ovenScale}
           />
-        )}
-        
-        {selectedOven && !uploadedModel && (
+        ) : selectedOven ? (
           <DefaultOvenModel
             ovenType={selectedOvenType}
             position={ovenPosition}
@@ -589,6 +594,16 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
             material={selectedMaterial}
             color={selectedColor}
           />
+        ) : (
+          <Text
+            position={[0, 0, 0]}
+            fontSize={0.3}
+            color="white"
+            anchorX="center"
+            anchorY="middle"
+          >
+            Seleziona un tipo di forno
+          </Text>
         )}
         
         {!isARMode && <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />}
