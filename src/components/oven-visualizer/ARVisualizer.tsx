@@ -80,16 +80,22 @@ const Uploaded3DModel = ({
 
   useEffect(() => {
     const loadModel = async () => {
+      if (!modelUrl) {
+        console.log('❌ Nessun modelUrl fornito');
+        return;
+      }
+      
       try {
         setLoading(true);
         setError(null);
         
         console.log('🔄 Caricamento modello iniziato');
         console.log('📁 URL originale:', modelUrl);
+        console.log('🔍 Tentativo di accesso diretto al file...');
         
-        // Converti l'URL di Google Drive in URL diretto per il download
-        const directUrl = convertGoogleDriveUrl(modelUrl);
-        console.log('🔗 URL convertito per download:', directUrl);
+        // Per Supabase, usiamo l'URL diretto
+        const directUrl = modelUrl;
+        console.log('🔗 URL finale per download:', directUrl);
         
         const fileExtension = getFileExtensionFromUrl(modelUrl);
         console.log('📄 Estensione file rilevata:', fileExtension);
