@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Text, useLoader } from '@react-three/drei';
+import { Canvas, useLoader } from '@react-three/fiber';
+import { OrbitControls, Text } from '@react-three/drei';
 import { Button } from "@/components/ui/button";
 import { Camera, RotateCcw, Move, ZoomIn, ZoomOut, Settings, ChevronUp, ChevronDown, Palette } from "lucide-react";
 import { toast } from "sonner";
