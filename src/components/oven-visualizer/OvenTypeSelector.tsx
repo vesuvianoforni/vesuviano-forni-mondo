@@ -7,6 +7,7 @@ export interface OvenType {
   value: string;
   label: string;
   image: string;
+  modelUrl?: string;
 }
 
 interface OvenTypeSelectorProps {
