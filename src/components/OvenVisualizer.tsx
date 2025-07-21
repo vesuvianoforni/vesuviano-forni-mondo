@@ -109,7 +109,16 @@ const OvenVisualizer = () => {
               {/* Selection Section */}
               <div className="space-y-4 md:space-y-6">
                 <div className="bg-white p-4 md:p-6 rounded-lg border border-stone-200">
-                  <OvenTypeSelector 
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-lg mb-2 text-vesuviano-600">
+                      🔥 Seleziona il Tuo Forno Vesuviano
+                    </h3>
+                    <p className="text-sm text-stone-600">
+                      Scegli il modello per visualizzarlo in AR nel tuo spazio
+                    </p>
+                  </div>
+                  
+                  <OvenTypeSelector
                     ovenTypes={ovenTypes}
                     selectedOvenType={selectedOvenType}
                     onOvenTypeChange={setSelectedOvenType}
@@ -118,14 +127,14 @@ const OvenVisualizer = () => {
                   <Button 
                     onClick={startARVisualization}
                     disabled={!selectedOvenType}
-                    className="w-full mt-4 md:mt-6 bg-vesuviano-500 hover:bg-vesuviano-600 text-white text-sm md:text-base py-2 md:py-3"
+                    className="w-full mt-4 md:mt-6 bg-vesuviano-500 hover:bg-vesuviano-600 text-white text-sm md:text-base py-3 md:py-4"
                   >
-                    <Smartphone className="w-4 h-4 mr-2" />
-                    Avvia Visualizzazione AR
+                    <Smartphone className="w-5 h-5 mr-2" />
+                    🚀 Visualizza in AR - {selectedOvenData?.label.split(' - ')[0] || 'Seleziona Forno'}
                   </Button>
 
-                  <p className="text-xs text-stone-500 text-center px-2 mt-2">
-                    Richiede accesso alla fotocamera del dispositivo. Funziona meglio su mobile.
+                  <p className="text-xs text-stone-500 text-center px-2 mt-3">
+                    📱 Funziona meglio su smartphone • 📹 Richiede accesso alla fotocamera
                   </p>
                 </div>
 

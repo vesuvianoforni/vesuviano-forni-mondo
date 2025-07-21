@@ -227,16 +227,20 @@ const Uploaded3DModel = ({
             );
           }
         } else if (fileExtension === 'fbx') {
+          console.log('🎯 Caricamento FBX...');
           const fbxLoader = new FBXLoader();
           
           fbxLoader.load(
             directUrl,
             (fbx) => {
-              console.log('Modello FBX caricato:', fbx);
+              console.log('✅ Modello FBX caricato con successo:', fbx);
               
               // Aggiungi materiali se necessario
               fbx.traverse((child) => {
                 if (child instanceof THREE.Mesh) {
+                  child.castShadow = true;
+                  child.receiveShadow = true;
+                  
                   if (!child.material || (Array.isArray(child.material) && child.material.length === 0)) {
                     child.material = new THREE.MeshStandardMaterial({ 
                       color: 0xCC6600,
@@ -247,27 +251,33 @@ const Uploaded3DModel = ({
                 }
               });
               
-              // Scala automatica del modello
+              // Scala automatica del modello per AR (più piccolo)
               const box = new THREE.Box3().setFromObject(fbx);
               const size = box.getSize(new THREE.Vector3());
               const maxSize = Math.max(size.x, size.y, size.z);
-              if (maxSize > 3) {
-                const scaleFactor = 2 / maxSize;
-                fbx.scale.multiplyScalar(scaleFactor);
-              }
+              
+              // Scala per renderlo appropriato per AR (circa 1 metro)
+              const targetSize = 1.0;
+              const scaleFactor = targetSize / maxSize;
+              fbx.scale.setScalar(scaleFactor);
+              
+              // Centra il modello
+              box.setFromObject(fbx);
+              const center = box.getCenter(new THREE.Vector3());
+              fbx.position.sub(center);
               
               setModel(fbx);
               setLoading(false);
-              toast.success('Modello FBX caricato!');
+              toast.success('🔥 Forno caricato e pronto per AR!');
             },
             (progress) => {
-              console.log('Progresso caricamento FBX:', progress);
+              console.log('📊 Progress FBX:', (progress.loaded / progress.total * 100) + '%');
             },
             (error) => {
-              console.error('Errore caricamento FBX:', error);
+              console.error('❌ Errore caricamento FBX:', error);
               setError('Errore nel caricamento del modello FBX');
               setLoading(false);
-              toast.error('Errore nel caricamento del modello FBX');
+              toast.error('Errore nel caricamento del forno FBX');
             }
           );
         } else {
