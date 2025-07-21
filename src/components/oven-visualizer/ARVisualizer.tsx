@@ -26,16 +26,23 @@ interface ARVisualizerProps {
 const convertGoogleDriveUrl = (url: string): string => {
   console.log('Conversione URL Google Drive:', url);
   
-  // Estrai l'ID del file dall'URL di Google Drive
-  const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/);
+  // Gestisci formato: /file/d/ID/
+  let fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/);
+  
+  // Gestisci formato: open?id=ID
+  if (!fileIdMatch) {
+    fileIdMatch = url.match(/[?&]id=([a-zA-Z0-9-_]+)/);
+  }
+  
   if (fileIdMatch) {
     const fileId = fileIdMatch[1];
     const directUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    console.log('ID file estratto:', fileId);
     console.log('URL convertito:', directUrl);
     return directUrl;
   }
   
-  // Se è già un URL diretto, restituiscilo così com'è
+  console.log('URL non riconosciuto come Google Drive, uso URL originale');
   return url;
 };
 
