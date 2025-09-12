@@ -30,7 +30,7 @@ const Hero = () => {
           <img 
             src="/lovable-uploads/vesuviano-logo-bianco.png"
             alt="Vesuviano - Forni Vulcanici Selezionati" 
-            className="h-16 w-auto mx-auto hover:scale-105 transition-transform duration-500"
+            className="h-24 md:h-32 w-auto mx-auto hover:scale-105 transition-transform duration-500"
           />
         </div>
         
