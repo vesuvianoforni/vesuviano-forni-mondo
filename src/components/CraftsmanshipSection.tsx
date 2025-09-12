@@ -76,6 +76,36 @@ const CraftsmanshipSection = () => {
             </div>
           </div>
 
+          {/* Laboratory Section */}
+          <div className="mb-16 animate-fade-in" style={{ animationDelay: '0.8s' }}>
+            <div className="bg-white rounded-xl p-8 shadow-lg">
+              <div className="grid lg:grid-cols-2 gap-8 items-center">
+                <div>
+                  <h3 className="font-playfair text-3xl font-semibold text-charcoal-900 mb-4">
+                    Il Nostro Laboratorio
+                  </h3>
+                  <p className="text-stone-600 leading-relaxed mb-4">
+                    Nel cuore di Sant'Anastasia (NA), il nostro laboratorio artigianale è dove prendono vita 
+                    i forni Vesuviano. Uno spazio di 2000 mq dove tradizione e innovazione si incontrano, 
+                    dotato delle più moderne attrezzature ma guidato dalle mani esperte dei nostri maestri.
+                  </p>
+                  <div className="flex items-center text-sm text-stone-500">
+                    <div className="w-2 h-2 bg-vesuviano-500 rounded-full mr-2"></div>
+                    <span>Sant'Anastasia, Napoli - Italia</span>
+                  </div>
+                </div>
+                <div className="relative">
+                  <img 
+                    src="/lovable-uploads/laboratorio-sant-anastasia.png" 
+                    alt="Laboratorio artigianale Vesuviano a Sant'Anastasia, Napoli - produzione forni a legna"
+                    className="w-full rounded-lg shadow-md hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Bottom Section */}
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <div className="text-center group animate-fade-in" style={{ animationDelay: '0.2s' }}>
