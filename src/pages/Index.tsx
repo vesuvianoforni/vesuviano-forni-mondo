@@ -35,13 +35,12 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-8">
             <div>
-              <div className="flex items-center mb-4">
+              <div className="flex items-center mb-6">
                 <img 
-                  src="/lovable-uploads/f5dc8e32-7db6-41d6-b56a-feb7c40d917b.png" 
-                  alt="Vesuviano Logo" 
-                  className="h-8 w-auto mr-3"
+                  src="/lovable-uploads/vesuviano-logo-bianco.png" 
+                  alt="Vesuviano - Forni Vulcanici Selezionati" 
+                  className="h-12 w-auto"
                 />
-                <h3 className="font-playfair text-2xl font-bold">Vesuviano</h3>
               </div>
               <p className="text-gray-400 mb-4">
                 Eccellenza artigianale napoletana che conquista il mondo. 

@@ -14,13 +14,9 @@ const Header = () => {
           <div className="flex items-center space-x-4">
             <img 
               src="/lovable-uploads/255a7344-f5ab-411b-8b37-6ed61e01d472.png" 
-              alt="Vesuviano Logo" 
-              className="h-10 w-auto"
+              alt="Vesuviano - Forni Vulcanici Selezionati" 
+              className="h-12 w-auto"
             />
-            <div className="hidden sm:block">
-              <h1 className="font-playfair text-xl font-bold text-charcoal-900">Vesuviano</h1>
-              <p className="text-xs text-stone-600">{t('header.tagline')}</p>
-            </div>
           </div>
 
           {/* Navigation */}
