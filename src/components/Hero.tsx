@@ -24,22 +24,22 @@ const Hero = () => {
       </div>
       
       {/* Main Content */}
-      <div className="container mx-auto px-6 text-center z-10 relative">
+      <div className="container mx-auto px-3 sm:px-6 text-center z-10 relative max-w-full">
         {/* Logo Section */}
-        <div className="mb-8 animate-scale-in">
+        <div className="mb-6 sm:mb-8 animate-scale-in">
           <img 
             src="/lovable-uploads/vesuviano-logo-bianco.png"
             alt="Vesuviano - Forni Vulcanici Selezionati" 
-            className="h-24 md:h-32 w-auto mx-auto hover:scale-105 transition-transform duration-500"
+            className="h-16 sm:h-20 md:h-24 lg:h-32 w-auto mx-auto hover:scale-105 transition-transform duration-500"
           />
         </div>
         
-        <h1 className="font-playfair text-2xl sm:text-3xl lg:text-5xl font-bold mb-6 leading-tight animate-fade-in text-white px-4">
-          <span className="block text-vesuviano-400 text-lg sm:text-2xl lg:text-3xl font-medium mb-2 animate-slide-in-left">{t('hero.subtitle')}</span>
+        <h1 className="font-playfair text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold mb-4 sm:mb-6 leading-tight animate-fade-in text-white px-2 sm:px-4">
+          <span className="block text-vesuviano-400 text-base sm:text-lg md:text-2xl lg:text-3xl font-medium mb-1 sm:mb-2 animate-slide-in-left">{t('hero.subtitle')}</span>
           <span className="block animate-slide-in-right" style={{ animationDelay: '0.3s' }}>{t('hero.title')}</span>
         </h1>
         
-        <p className="font-inter text-base sm:text-lg lg:text-xl mb-8 max-w-3xl mx-auto leading-relaxed text-gray-200 animate-fade-in px-4" style={{ animationDelay: '0.6s' }}>
+        <p className="font-inter text-sm sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed text-gray-200 animate-fade-in px-2 sm:px-4" style={{ animationDelay: '0.6s' }}>
           <Trans 
             i18nKey="hero.description"
             components={{
@@ -51,10 +51,10 @@ const Hero = () => {
           />
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8 animate-scale-in px-4" style={{ animationDelay: '0.9s' }}>
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-6 sm:mb-8 animate-scale-in px-2 sm:px-4" style={{ animationDelay: '0.9s' }}>
           <Button 
             size="lg" 
-            className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-6 sm:px-8 py-3 text-base sm:text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl w-full sm:w-auto"
+            className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl w-full sm:w-auto"
             onClick={scrollToProducts}
           >
             {t('hero.discoverOvens')}
@@ -62,7 +62,7 @@ const Hero = () => {
           <Button 
             size="lg" 
             variant="outline" 
-            className="border-2 border-vesuviano-500 text-vesuviano-500 hover:bg-vesuviano-500 hover:text-white px-6 sm:px-8 py-3 text-base sm:text-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl w-full sm:w-auto"
+            className="border-2 border-vesuviano-500 text-vesuviano-500 hover:bg-vesuviano-500 hover:text-white px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl w-full sm:w-auto"
             onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
           >
             {t('hero.freeConsultation')}
@@ -70,10 +70,10 @@ const Hero = () => {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="mt-8 animate-bounce" style={{ animationDelay: '1.2s' }}>
+        <div className="mt-6 sm:mt-8 animate-bounce" style={{ animationDelay: '1.2s' }}>
           <ArrowDown 
             className="mx-auto text-white cursor-pointer hover:text-vesuviano-400 transition-colors hover:scale-125 duration-300 drop-shadow-lg" 
-            size={32}
+            size={24}
             onClick={scrollToProducts}
           />
         </div>
