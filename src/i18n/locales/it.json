@@ -3,7 +3,7 @@
   "hero": {
     "subtitle": "Forni Artigianali Napoletani",
     "title": "di Eccellenza Internazionale",
-    "description": "Artigianato napoletano selezionato per il mercato mondiale. Forni a legna, gas, elettrici e la rivoluzionaria soluzione {vesuvioBuono} a zero emissioni.",
+    "description": "Artigianato napoletano selezionato per il mercato mondiale. Forni a legna, gas, elettrici e la rivoluzionaria soluzione <vesuvioBuono>VesuvioBuono</vesuvioBuono> a zero emissioni.",
     "discoverOvens": "Scopri i Nostri Forni",
     "freeConsultation": "Consulenza Gratuita"
   },
