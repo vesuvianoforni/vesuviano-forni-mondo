@@ -9,12 +9,14 @@ import Services from "@/components/Services";
 import Rivestimenti from "@/components/Rivestimenti";
 import VesuvioBuono from "@/components/VesuvioBuono";
 import ClientsMap from "@/components/ClientsMap";
-import Gallery from "@/components/Gallery";
+import OvenGallery from "@/components/OvenGallery";
+import OvenDataInitializer from "@/components/OvenDataInitializer";
 import ConsultationForm from "@/components/ConsultationForm";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
+      <OvenDataInitializer />
       <Header />
       <Hero />
       <ProductCategories />
@@ -25,7 +27,7 @@ const Index = () => {
       <Rivestimenti />
       <VesuvioBuono />
       <ClientsMap />
-      <Gallery />
+      <OvenGallery />
       <ConsultationForm />
       
       {/* Footer */}
