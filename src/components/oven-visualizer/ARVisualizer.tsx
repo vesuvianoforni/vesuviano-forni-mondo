@@ -122,7 +122,6 @@ const Uploaded3DModel = ({
               
               setModel(gltf.scene);
               setLoading(false);
-              toast.success('Modello 3D caricato con successo!');
             },
             (progress) => {
               console.log('Progresso caricamento GLTF:', progress);
@@ -168,7 +167,6 @@ const Uploaded3DModel = ({
                       
                       setModel(obj);
                       setLoading(false);
-                      toast.success('Modello OBJ con materiali caricato!');
                     },
                     (progress) => {
                       console.log('Progresso caricamento OBJ:', progress);
@@ -223,7 +221,6 @@ const Uploaded3DModel = ({
                 
                 setModel(obj);
                 setLoading(false);
-                toast.success('Modello OBJ caricato!');
               },
               (progress) => {
                 console.log('Progresso caricamento OBJ:', progress);
@@ -289,7 +286,6 @@ const Uploaded3DModel = ({
               
               setModel(fbx);
               setLoading(false);
-              toast.success('🔥 Forno caricato e pronto per AR!');
             },
             (progress) => {
               console.log('📊 Progress FBX:', (progress.loaded / progress.total * 100) + '%');
@@ -298,7 +294,7 @@ const Uploaded3DModel = ({
               console.error('❌ Errore caricamento FBX:', error);
               setError('Errore nel caricamento del modello FBX');
               setLoading(false);
-              toast.error('Errore nel caricamento del forno FBX');
+              toast.error('Errore nel caricamento del modello');
             }
           );
         } else {
@@ -317,7 +313,7 @@ const Uploaded3DModel = ({
     if (modelUrl) {
       loadModel();
     }
-  }, [modelUrl]);
+  }, [modelUrl, materialColor]);
 
   if (loading) {
     return (
@@ -461,10 +457,6 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
   const [showContactForm, setShowContactForm] = useState(false);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [showControls, setShowControls] = useState(false);
-  const [showMaterialControls, setShowMaterialControls] = useState(false);
-  const [selectedMaterial, setSelectedMaterial] = useState("vernice");
-  const [selectedColor, setSelectedColor] = useState("rosso");
-  const [environmentSize, setEnvironmentSize] = useState<'small' | 'medium' | 'large'>('medium');
   const [modelColor, setModelColor] = useState('#CC6600');
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPos, setTouchStartPos] = useState({ x: 0, y: 0 });
@@ -492,18 +484,13 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
     uploadedModel: uploadedModel ? { url: uploadedModel.url, name: uploadedModel.name } : null
   });
 
-  const materialOptions = [
-    { value: "vernice", label: "Vernice" },
-    { value: "mosaico", label: "Mosaico" },
-    { value: "ferro", label: "Ferro" }
-  ];
-
   const colorOptions = [
-    { value: "nero", label: "Nero" },
-    { value: "oro", label: "Oro" },
-    { value: "rosso", label: "Rosso" },
-    { value: "bianco", label: "Bianco" },
-    { value: "blu", label: "Blu" }
+    { value: "#8B0000", label: "Rosso scuro", hex: "#8B0000" },
+    { value: "#2C2C2C", label: "Nero", hex: "#2C2C2C" },
+    { value: "#F5F5F5", label: "Bianco", hex: "#F5F5F5" },
+    { value: "#CC6600", label: "Arancione", hex: "#CC6600" },
+    { value: "#4A5D23", label: "Verde", hex: "#4A5D23" },
+    { value: "#B8860B", label: "Oro", hex: "#B8860B" }
   ];
 
   useEffect(() => {
@@ -547,7 +534,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
           }
         };
         
-        toast.success("Modalità AR attivata! Usa i controlli per posizionare il forno");
+        // AR avviata con successo
       }
     } catch (error) {
       console.error("Errore accesso fotocamera:", error);
@@ -804,7 +791,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
             rotation={ovenRotation}
             scale={ovenScale}
             materialColor={modelColor}
-            environmentSize={environmentSize}
+            environmentSize="medium"
           />
         ) : uploadedModel ? (
           <Uploaded3DModel
@@ -813,16 +800,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
             rotation={ovenRotation}
             scale={ovenScale}
             materialColor={modelColor}
-            environmentSize={environmentSize}
-          />
-        ) : selectedOven ? (
-          <DefaultOvenModel
-            ovenType={selectedOvenType}
-            position={ovenPosition}
-            rotation={ovenRotation}
-            scale={ovenScale}
-            material={selectedMaterial}
-            color={selectedColor}
+            environmentSize="medium"
           />
         ) : (
           <Text
@@ -942,15 +920,26 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
         <div className="flex justify-between items-center">
           <div className="bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm">
             <p className="text-sm font-medium">{selectedOven?.label}</p>
-            <p className="text-xs text-gray-300">{selectedMaterial} - {selectedColor}</p>
           </div>
-          <Button
-            onClick={onClose}
-            variant="outline"
-            className="bg-white/90 text-black hover:bg-white"
-          >
-            Chiudi AR
-          </Button>
+          <div className="flex gap-2">
+            {isARMode && (
+              <Button
+                onClick={captureScreenshot}
+                className="bg-green-600 hover:bg-green-700 text-white"
+                size="sm"
+              >
+                <Camera className="w-4 h-4" />
+              </Button>
+            )}
+            <Button
+              onClick={onClose}
+              variant="outline"
+              className="bg-white/90 text-black hover:bg-white"
+              size="sm"
+            >
+              ✕
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -971,100 +960,33 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {/* Controlli principali sempre visibili */}
-              <div className="flex gap-2">
-                <Button
-                  onClick={stopAR}
-                  variant="outline"
-                  className="flex-1 bg-white/90 text-black hover:bg-white"
-                >
-                  Ferma AR
-                </Button>
-                <Button
-                  onClick={captureScreenshot}
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-                >
-                  <Camera className="w-4 h-4 mr-2" />
-                  Fotografa
-                </Button>
-              </div>
-              
-              {/* Toggle per controlli materiali e colori */}
-              <Button
-                onClick={() => setShowMaterialControls(!showMaterialControls)}
-                className="w-full bg-white/20 text-white hover:bg-white/30 flex items-center justify-center gap-2"
-                size="sm"
-              >
-                <Palette className="w-4 h-4" />
-                Materiali e Colori
-                {showMaterialControls ? (
-                  <ChevronDown className="w-4 h-4" />
-                ) : (
-                  <ChevronUp className="w-4 h-4" />
-                )}
-              </Button>
-              
-              {/* Controlli materiali e colori */}
-              {showMaterialControls && (
-                <div className="space-y-3 animate-in slide-in-from-bottom-2 duration-200">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label className="text-white text-xs mb-1 block">Dimensioni Ambiente</Label>
-                      <Select value={environmentSize} onValueChange={(value) => setEnvironmentSize(value as 'small' | 'medium' | 'large')}>
-                        <SelectTrigger className="h-8 text-xs bg-white/90">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="small">Piccolo</SelectItem>
-                          <SelectItem value="medium">Medio</SelectItem>
-                          <SelectItem value="large">Grande</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div>
-                      <Label className="text-white text-xs mb-1 block">Colore Modello</Label>
-                      <div className="flex gap-1">
-                        <input
-                          type="color"
-                          value={modelColor}
-                          onChange={(e) => setModelColor(e.target.value)}
-                          className="w-8 h-8 rounded border border-white/20 bg-transparent cursor-pointer"
-                        />
-                        <Select value={selectedColor} onValueChange={setSelectedColor}>
-                          <SelectTrigger className="h-8 text-xs bg-white/90 flex-1">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {colorOptions.map((color) => (
-                              <SelectItem key={color.value} value={color.value}>
-                                {color.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label className="text-white text-xs mb-1 block">Materiale</Label>
-                    <Select value={selectedMaterial} onValueChange={setSelectedMaterial}>
-                      <SelectTrigger className="h-8 text-xs bg-white/90">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {materialOptions.map((material) => (
-                          <SelectItem key={material.value} value={material.value}>
-                            {material.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+            <div className="space-y-3">
+              {/* Controlli semplificati - Solo colore */}
+              <div className="bg-white/10 p-3 rounded space-y-3">
+                <Label className="text-white text-sm block">Scegli il colore del forno:</Label>
+                <div className="grid grid-cols-3 gap-2">
+                  {colorOptions.map((color) => (
+                    <button
+                      key={color.value}
+                      onClick={() => setModelColor(color.value)}
+                      className={`p-2 rounded text-xs text-white border-2 transition-all ${
+                        modelColor === color.value 
+                          ? 'border-white bg-white/20 scale-105' 
+                          : 'border-white/30 bg-white/10 hover:bg-white/20'
+                      }`}
+                      style={{
+                        backgroundColor: `${color.hex}40`
+                      }}
+                    >
+                      <div 
+                        className="w-4 h-4 rounded-full mx-auto mb-1 border border-white/50"
+                        style={{ backgroundColor: color.hex }}
+                      />
+                      {color.label}
+                    </button>
+                  ))}
                 </div>
-              )}
+              </div>
               
               {/* Toggle per controlli di posizionamento */}
               <Button
@@ -1073,7 +995,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
                 size="sm"
               >
                 <Settings className="w-4 h-4" />
-                Controlli Posizione
+                Posizionamento Forno
                 {showControls ? (
                   <ChevronDown className="w-4 h-4" />
                 ) : (
