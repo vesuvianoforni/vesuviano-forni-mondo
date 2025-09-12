@@ -20,7 +20,7 @@ const Rivestimenti = () => {
     },
     {
       key: 'ferro',
-      image: "/lovable-uploads/forno-metallo-nero.png",
+      image: "/lovable-uploads/forno-nero-metallico-nuovo.png",
       colors: ['Ferro Naturale', 'Ferro Ossidato', 'Ferro Spazzolato']
     },
     {
