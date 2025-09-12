@@ -477,6 +477,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, 
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [showControls, setShowControls] = useState(false);
   const [modelColor, setModelColor] = useState('#CC6600');
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartPos, setTouchStartPos] = useState({ x: 0, y: 0 });
   const [initialPinchDistance, setInitialPinchDistance] = useState(0);
@@ -503,14 +504,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, 
     uploadedModel: uploadedModel ? { url: uploadedModel.url, name: uploadedModel.name } : null
   });
 
-  const colorOptions = [
-    { value: "#8B0000", label: "Rosso scuro", hex: "#8B0000" },
-    { value: "#2C2C2C", label: "Nero", hex: "#2C2C2C" },
-    { value: "#F5F5F5", label: "Bianco", hex: "#F5F5F5" },
-    { value: "#CC6600", label: "Arancione", hex: "#CC6600" },
-    { value: "#4A5D23", label: "Verde", hex: "#4A5D23" },
-    { value: "#B8860B", label: "Oro", hex: "#B8860B" }
-  ];
+  // Colore disattivato: rimosse opzioni colore perché non applicabili al modello 3D
 
   useEffect(() => {
     // Blocca lo scroll della pagina quando l'AR è attivo
@@ -934,27 +928,27 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, 
           <div className="bg-black/50 text-white px-3 py-2 rounded-lg backdrop-blur-sm">
             <p className="text-sm font-medium">{selectedOven?.label}</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 items-center">
             {isARMode && (
               <Button
                 onClick={captureScreenshot}
-                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white shadow-lg transform hover:scale-105 transition-all duration-300 px-6 py-3 text-base font-semibold rounded-xl"
-                size="lg"
+                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white shadow-lg transform hover:scale-105 transition-all duration-300 px-5 py-2 text-sm font-semibold rounded-full"
+                size="sm"
               >
-                <Camera className="w-5 h-5 mr-2" />
-                📸 SCATTA FOTO
+                <Camera className="w-4 h-4 mr-2" />
+                Foto
               </Button>
             )}
             <Button
               onClick={onClose}
               variant="outline"
-              className="bg-white/90 text-black hover:bg-white"
-              size="sm"
+              className="bg-white/20 text-white hover:bg-white/30 border-white/40 rounded-full"
             >
-              ✕
+              ×
             </Button>
           </div>
         </div>
+      </div>
       </div>
 
       {/* Controlli AR - UI aggiornata */}
