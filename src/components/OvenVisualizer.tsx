@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Upload, Wand2, Smartphone, Camera, Sparkles, Zap, Brain, Eye, Image as ImageIcon, X } from "lucide-react";
+import { Upload, Wand2, Smartphone, Camera, Zap, Brain, Eye, Image as ImageIcon, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { StabilityService } from "@/services/stabilityService";
@@ -419,7 +419,7 @@ const OvenVisualizer = () => {
                       </div>
                     ) : (
                       <div className="flex items-center justify-center space-x-2">
-                        <Sparkles className="w-5 h-5" />
+                        <Wand2 className="w-5 h-5" />
                         <span>Genera Immagine AI</span>
                       </div>
                     )}
