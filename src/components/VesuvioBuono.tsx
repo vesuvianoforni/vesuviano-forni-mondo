@@ -98,7 +98,7 @@ const VesuvioBuono = () => {
               </h3>
               <div className="aspect-video rounded-lg overflow-hidden relative">
                 <VideoPlayer
-                  src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/videos/ENG%20-%20VIDEO%20PRESENTAZIONE%20VESUVIO%20BUONO_resized.mp4"
+                  src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/videos/ENG%20-%20VIDEO%20PRESENTAZIONE%20VESUVIO%20BUONO%20(1)%20-%20RESIZE%20-%20Videobolt.net.mp4"
                   poster="/lovable-uploads/vesuviobuono-forno-azione.jpg"
                   className="w-full h-full"
                 />
