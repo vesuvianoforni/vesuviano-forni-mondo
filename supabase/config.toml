@@ -2,3 +2,12 @@ project_id = "lgueucxznbqgvhpjzurf"
 
 [functions.sync-ovens]
 verify_jwt = false
+
+[functions.generate-oven-space]
+verify_jwt = false
+
+[functions.generate-image-stability]
+verify_jwt = false
+
+[functions.generate-image-openai]
+verify_jwt = false

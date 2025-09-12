@@ -107,6 +107,21 @@ const OvenVisualizer = () => {
         return;
       }
 
+      // 3) Fallback finale: OpenAI gpt-image-1
+      console.warn('Stability non riuscito, provo fallback OpenAI');
+      const { data: openaiData, error: openaiError } = await supabase.functions.invoke('generate-image-openai', {
+        body: {
+          prompt: promptText,
+          imageBase64: base64Image
+        }
+      });
+      if (openaiError) throw openaiError;
+      if (openaiData?.imageUrl || openaiData?.imageURL) {
+        setGeneratedImageUrl(openaiData.imageUrl || openaiData.imageURL);
+        toast.success("Immagine generata (fallback OpenAI)");
+        return;
+      }
+
       throw new Error(data?.error || 'Errore nella generazione');
     } catch (error: any) {
       console.error('Errore generazione:', error);
