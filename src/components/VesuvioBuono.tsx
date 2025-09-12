@@ -77,12 +77,14 @@ const VesuvioBuono = () => {
               <h3 className="font-playfair text-2xl font-semibold text-vesuviano-400 mb-4 text-center">
                 VesuvioBuono in Azione
               </h3>
-              <div className="aspect-video rounded-lg overflow-hidden">
+              <div className="aspect-video rounded-lg overflow-hidden relative">
                 <VideoPlayer
-                  src="/lovable-uploads/vesuviobuono-video.mp4"
+                  src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/videos/ENG%20-%20VIDEO%20PRESENTAZIONE%20VESUVIO%20BUONO_resized.mp4"
                   poster="/lovable-uploads/vesuviobuono-forno-azione.jpg"
                   className="w-full h-full"
                 />
+                {/* Overlay to hide watermark in bottom right */}
+                <div className="absolute bottom-0 right-0 w-32 h-16 bg-gradient-to-l from-charcoal-900 via-charcoal-900/80 to-transparent pointer-events-none"></div>
               </div>
               <p className="text-stone-300 text-center mt-4 text-sm">
                 Scopri come VesuvioBuono rivoluziona la cottura a legna senza emissioni
