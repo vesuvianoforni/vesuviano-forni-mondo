@@ -43,7 +43,10 @@ const Hero = () => {
           <Trans 
             i18nKey="hero.description"
             components={{
-              vesuvioBuono: <span className="text-vesuviano-400 font-semibold" />
+              vesuvioBuono: <span 
+                className="text-vesuviano-400 font-semibold cursor-pointer hover:text-vesuviano-300 hover:scale-105 transition-all duration-300 hover:drop-shadow-lg hover:brightness-125" 
+                onClick={() => document.getElementById('vesuviobuono')?.scrollIntoView({ behavior: 'smooth' })}
+              />
             }}
           />
         </p>
