@@ -135,6 +135,8 @@ const Index = () => {
                     Consulenza Tecnica
                   </a>
                 </li>
+                <li className="text-gray-400">Architetto AI</li>
+                <li className="text-gray-400">Realtà Aumentata</li>
                 <li className="text-gray-400">Rendering 3D Personalizzati</li>
                 <li className="text-gray-400">Logistica Internazionale</li>
                 <li className="text-gray-400">Assistenza Post-Vendita</li>
