@@ -16,16 +16,17 @@ serve(async (req) => {
     
     if (!spaceImage || !ovenType || !ovenModel) {
       return new Response(
-        JSON.stringify({ error: 'Parametri mancanti: spaceImage, ovenType e ovenModel sono richiesti' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+        JSON.stringify({ success: false, error: 'Parametri mancanti: spaceImage, ovenType e ovenModel sono richiesti' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
     const apiKey = Deno.env.get('NANOBANANA_API_KEY')
+    const baseUrl = Deno.env.get('NANOBANANA_API_BASE_URL') || 'https://api.nanobanana.com/v1/generate'
     if (!apiKey) {
       return new Response(
-        JSON.stringify({ error: 'API key di Nanobanana non configurata' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+        JSON.stringify({ success: false, error: 'API key di Nanobanana non configurata' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
@@ -34,21 +35,28 @@ serve(async (req) => {
 
     console.log('Generating image with prompt:', prompt)
 
-    const response = await fetch('https://api.nanobanana.com/v1/generate', {
+    const imageBase64 = typeof spaceImage === 'string' && spaceImage.startsWith('data:')
+      ? spaceImage.split(',')[1]
+      : spaceImage;
+
+    const response = await fetch(baseUrl, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        prompt: prompt,
-        image: spaceImage, // base64 image
+        prompt,
+        // Common parameter names used by providers
+        image: spaceImage,
+        image_base64: imageBase64,
+        init_image: imageBase64,
         model: 'flux-dev',
         width: 1024,
         height: 1024,
         steps: 20,
         guidance: 7.5,
-        strength: 0.7, // per preservare l'ambiente originale
+        strength: 0.7, // preserve original environment
       }),
     })
 
@@ -57,10 +65,11 @@ serve(async (req) => {
       console.error('Nanobanana API error:', response.status, errorText)
       return new Response(
         JSON.stringify({ 
+          success: false,
           error: 'Errore nella generazione dell\'immagine', 
           details: `Status: ${response.status}, Response: ${errorText}` 
         }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: response.status }
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
@@ -79,10 +88,11 @@ serve(async (req) => {
     console.error('Error in generate-oven-space function:', error)
     return new Response(
       JSON.stringify({ 
+        success: false,
         error: 'Errore interno del server', 
-        details: error.message 
+        details: error instanceof Error ? error.message : String(error)
       }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
 })
