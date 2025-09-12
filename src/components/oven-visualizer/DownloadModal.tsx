@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Download, User, Mail, MapPin, Phone, X } from 'lucide-react';
-import { toast } from "sonner";
+
 
 interface DownloadModalProps {
   isOpen: boolean;
@@ -46,7 +46,6 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
 
   const handleDownload = async () => {
     if (!isFormValid()) {
-      toast.error("Compila tutti i campi per procedere al download");
       return;
     }
 
@@ -64,7 +63,6 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
       link.click();
       document.body.removeChild(link);
       
-      toast.success("Immagine scaricata con successo! Grazie per aver scelto Vesuviano.");
       onClose();
       
       // Reset form
@@ -76,7 +74,7 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
         phone: ''
       });
     } catch (error) {
-      toast.error("Errore durante il download. Riprova.");
+      console.error("Errore durante il download:", error);
     } finally {
       setIsSubmitting(false);
     }

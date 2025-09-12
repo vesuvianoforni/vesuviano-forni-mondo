@@ -4,7 +4,6 @@ import { Canvas, useLoader } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
 import { Button } from "@/components/ui/button";
 import { Camera, RotateCcw, Move, ZoomIn, ZoomOut, Settings, ChevronUp, ChevronDown, Palette } from "lucide-react";
-import { toast } from "sonner";
 import { OvenType } from './OvenTypeSelector';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
@@ -130,7 +129,6 @@ const Uploaded3DModel = ({
               console.error('Errore caricamento GLTF:', error);
               setError('Errore nel caricamento del modello GLTF');
               setLoading(false);
-              toast.error('Errore nel caricamento del modello GLTF');
             }
           );
         } else if (fileExtension === 'obj') {
@@ -229,7 +227,6 @@ const Uploaded3DModel = ({
                 console.error('Errore caricamento OBJ:', error);
                 setError('Errore nel caricamento del modello OBJ');
                 setLoading(false);
-                toast.error('Errore nel caricamento del modello OBJ');
               }
             );
           }
@@ -294,19 +291,16 @@ const Uploaded3DModel = ({
               console.error('❌ Errore caricamento FBX:', error);
               setError('Errore nel caricamento del modello FBX');
               setLoading(false);
-              toast.error('Errore nel caricamento del modello');
             }
           );
         } else {
           setError('Formato file non supportato. Supportati: GLB, GLTF, OBJ, FBX');
           setLoading(false);
-          toast.error('Formato file non supportato');
         }
       } catch (err) {
         console.error('Errore generale nel caricamento:', err);
         setError('Errore nel caricamento del modello');
         setLoading(false);
-        toast.error('Errore nel caricamento del modello');
       }
     };
 
@@ -538,7 +532,6 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
       }
     } catch (error) {
       console.error("Errore accesso fotocamera:", error);
-      toast.error("Impossibile accedere alla fotocamera");
     }
   };
 
@@ -587,10 +580,9 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
       setCapturedImage(imageData);
       setShowContactForm(true);
       
-      toast.success("Screenshot catturato! Inserisci i tuoi dati per scaricare");
+      setShowContactForm(true);
     } catch (error) {
       console.error("Errore durante la cattura dello screenshot:", error);
-      toast.error("Errore durante la cattura dello screenshot");
       
       // Ripristina i controlli in caso di errore
       const controlsElement = containerRef.current?.querySelector('.ar-controls');
@@ -604,7 +596,6 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
     e.preventDefault();
     
     if (!contactData.firstName || !contactData.lastName || !contactData.email || !contactData.phone) {
-      toast.error("Tutti i campi sono obbligatori");
       return;
     }
 
@@ -623,15 +614,12 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
     setShowContactForm(false);
     setCapturedImage(null);
     setContactData({ firstName: '', lastName: '', email: '', phone: '', wantsContact: false });
-    
-    toast.success("Foto scaricata! Ti contatteremo presto per informazioni sui nostri forni");
   };
 
   const resetPosition = () => {
     setOvenPosition([0, 0, 0]);
     setOvenRotation([0, 0, 0]);
     setOvenScale(1);
-    toast.info("Posizione forno ripristinata");
   };
 
   const moveOven = (direction: string) => {

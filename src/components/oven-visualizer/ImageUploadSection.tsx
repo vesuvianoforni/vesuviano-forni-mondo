@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+
 
 interface ImageUploadSectionProps {
   previewUrl: string;
@@ -21,7 +21,7 @@ const ImageUploadSection = ({ previewUrl, onImageUpload }: ImageUploadSectionPro
     if (file.type.startsWith('image/')) {
       onImageUpload(event);
     } else {
-      toast.error('Per favore seleziona solo file immagine (JPG, PNG, etc.)');
+      console.warn('Seleziona solo file immagine');
     }
   };
 
