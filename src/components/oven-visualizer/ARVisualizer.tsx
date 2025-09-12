@@ -957,9 +957,9 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, 
         </div>
       </div>
 
-      {/* Controlli AR */}
+      {/* Controlli AR - UI aggiornata */}
       <div className="ar-controls absolute bottom-4 left-4 right-4 z-10 pointer-events-auto">
-        <div className="bg-black/70 p-4 rounded-lg backdrop-blur-sm">
+        <div className="bg-black/30 p-4 rounded-lg backdrop-blur-sm border border-white/20">
           {!isARMode ? (
             <div className="space-y-3">
               <Button
