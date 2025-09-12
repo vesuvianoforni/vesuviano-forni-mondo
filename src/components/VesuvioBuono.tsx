@@ -144,7 +144,7 @@ const VesuvioBuono = () => {
                   <div className="bg-stone-100 rounded-lg p-3 hover:scale-105 transition-all duration-300">
                     <div className="aspect-square rounded overflow-hidden">
                       <img 
-                        src="/lovable-uploads/vesuviobuono-marrone-aperto.jpg" 
+                        src="/lovable-uploads/vesuviobuono-forno-legna.jpg" 
                         alt="Installazione VesuvioBuono" 
                         className="w-full h-full object-cover"
                       />
