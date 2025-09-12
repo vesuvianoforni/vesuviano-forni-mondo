@@ -240,7 +240,7 @@ const OvenVisualizer = () => {
       )}
       
       {/* Main Section */}
-      <section className="min-h-screen bg-gradient-to-b from-stone-50 to-stone-100 py-16">
+      <section id="ai-architect" className="min-h-screen bg-gradient-to-b from-stone-50 to-stone-100 py-16">
         <div className="max-w-6xl mx-auto px-4 md:px-6">
           {/* Header */}
           <div className="text-center mb-12">

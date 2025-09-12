@@ -82,14 +82,26 @@ const Index = () => {
                 </li>
                 <li>
                   <a 
-                    href="#rivestimenti" 
+                    href="#ai-architect" 
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                     onClick={(e) => {
                       e.preventDefault();
-                      document.getElementById('rivestimenti')?.scrollIntoView({ behavior: 'smooth' });
+                      document.getElementById('ai-architect')?.scrollIntoView({ behavior: 'smooth' });
                     }}
                   >
-                    Rivestimenti
+                    Architetto AI
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="#ai-architect" 
+                    className="text-gray-400 hover:text-white transition-colors cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById('ai-architect')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    Realtà Aumentata
                   </a>
                 </li>
                 <li>
@@ -135,8 +147,6 @@ const Index = () => {
                     Consulenza Tecnica
                   </a>
                 </li>
-                <li className="text-gray-400">Architetto AI</li>
-                <li className="text-gray-400">Realtà Aumentata</li>
                 <li className="text-gray-400">Rendering 3D Personalizzati</li>
                 <li className="text-gray-400">Logistica Internazionale</li>
                 <li className="text-gray-400">Assistenza Post-Vendita</li>
