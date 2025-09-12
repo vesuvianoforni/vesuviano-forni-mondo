@@ -235,6 +235,7 @@ const OvenVisualizer = () => {
           selectedOvenType={selectedOvenType}
           ovenTypes={ovenTypes}
           onClose={() => setShowARVisualizer(false)}
+          onOvenTypeChange={setSelectedOvenType}
           uploadedModel={null}
         />
       )}

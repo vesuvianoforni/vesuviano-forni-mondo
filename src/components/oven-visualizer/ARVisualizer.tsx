@@ -18,6 +18,7 @@ interface ARVisualizerProps {
   selectedOvenType: string;
   ovenTypes: OvenType[];
   onClose: () => void;
+  onOvenTypeChange: (value: string) => void;
   uploadedModel?: {url: string, name: string} | null;
 }
 
@@ -80,6 +81,30 @@ const Uploaded3DModel = ({
   const [model, setModel] = useState<THREE.Group | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastMaterialColor, setLastMaterialColor] = useState<string>('');
+
+  // Effetto separato per aggiornare i colori del modello caricato
+  useEffect(() => {
+    if (model && materialColor !== lastMaterialColor) {
+      console.log('🎨 Aggiornamento colore modello:', materialColor);
+      model.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          if (child.material instanceof THREE.MeshStandardMaterial) {
+            child.material.color = new THREE.Color(materialColor);
+            child.material.needsUpdate = true;
+          } else if (Array.isArray(child.material)) {
+            child.material.forEach(mat => {
+              if (mat instanceof THREE.MeshStandardMaterial) {
+                mat.color = new THREE.Color(materialColor);
+                mat.needsUpdate = true;
+              }
+            });
+          }
+        }
+      });
+      setLastMaterialColor(materialColor);
+    }
+  }, [model, materialColor, lastMaterialColor]);
 
   useEffect(() => {
     const loadModel = async () => {
@@ -307,7 +332,7 @@ const Uploaded3DModel = ({
     if (modelUrl) {
       loadModel();
     }
-  }, [modelUrl, materialColor]);
+  }, [modelUrl]);
 
   if (loading) {
     return (
@@ -443,7 +468,7 @@ const DefaultOvenModel = ({
   );
 };
 
-const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: ARVisualizerProps) => {
+const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, uploadedModel }: ARVisualizerProps) => {
   const [isARMode, setIsARMode] = useState(false);
   const [ovenPosition, setOvenPosition] = useState<[number, number, number]>([0, 0, 0]);
   const [ovenRotation, setOvenRotation] = useState<[number, number, number]>([0, 0, 0]);
@@ -906,17 +931,18 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
       {/* Controlli UI */}
       <div className="ar-header absolute top-4 left-4 right-4 z-10 pointer-events-auto">
         <div className="flex justify-between items-center">
-          <div className="bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm">
+          <div className="bg-black/50 text-white px-3 py-2 rounded-lg backdrop-blur-sm">
             <p className="text-sm font-medium">{selectedOven?.label}</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             {isARMode && (
               <Button
                 onClick={captureScreenshot}
-                className="bg-green-600 hover:bg-green-700 text-white"
-                size="sm"
+                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white shadow-lg transform hover:scale-105 transition-all duration-300 px-6 py-3 text-base font-semibold rounded-xl"
+                size="lg"
               >
-                <Camera className="w-4 h-4" />
+                <Camera className="w-5 h-5 mr-2" />
+                📸 SCATTA FOTO
               </Button>
             )}
             <Button
@@ -948,42 +974,73 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
               </p>
             </div>
           ) : (
-            <div className="space-y-3">
-              {/* Controlli semplificati - Solo colore */}
-              <div className="bg-white/10 p-3 rounded space-y-3">
-                <Label className="text-white text-sm block">Scegli il colore del forno:</Label>
+            <div className="space-y-4">
+              {/* Selezione modello forno */}
+              <div className="bg-white/20 backdrop-blur-sm p-3 rounded-lg border border-white/30">
+                <Label className="text-white text-sm block mb-3 font-medium">Seleziona il modello:</Label>
                 <div className="grid grid-cols-3 gap-2">
-                  {colorOptions.map((color) => (
+                  {ovenTypes.map((oven) => (
                     <button
-                      key={color.value}
-                      onClick={() => setModelColor(color.value)}
-                      className={`p-2 rounded text-xs text-white border-2 transition-all ${
-                        modelColor === color.value 
-                          ? 'border-white bg-white/20 scale-105' 
-                          : 'border-white/30 bg-white/10 hover:bg-white/20'
-                      }`}
-                      style={{
-                        backgroundColor: `${color.hex}40`
+                      key={oven.value}
+                      onClick={() => {
+                        console.log('🔧 Cambio modello:', oven.value);
+                        onOvenTypeChange(oven.value);
                       }}
+                      className={`p-2 rounded-lg text-xs text-white border-2 transition-all duration-200 ${
+                        selectedOvenType === oven.value 
+                          ? 'border-white bg-white/30 scale-105' 
+                          : 'border-white/50 bg-white/10 hover:bg-white/20'
+                      }`}
                     >
-                      <div 
-                        className="w-4 h-4 rounded-full mx-auto mb-1 border border-white/50"
-                        style={{ backgroundColor: color.hex }}
+                      <img 
+                        src={oven.image} 
+                        alt={oven.label}
+                        className="w-full h-8 object-cover rounded mb-1"
                       />
-                      {color.label}
+                      <span className="text-xs">{oven.label.split(' ')[0]}</span>
                     </button>
                   ))}
                 </div>
               </div>
               
-              {/* Toggle per controlli di posizionamento */}
+              {/* Controlli semplificati - Solo colore - sempre visibili */}
+              <div className="bg-white/20 backdrop-blur-sm p-3 rounded-lg border border-white/30">
+                <Label className="text-white text-sm block mb-3 font-medium">Personalizza il colore del forno:</Label>
+                <div className="grid grid-cols-3 gap-2">
+                  {colorOptions.map((color) => (
+                    <button
+                      key={color.value}
+                      onClick={() => {
+                        console.log('🎨 Cambio colore selezionato:', color.value);
+                        setModelColor(color.value);
+                      }}
+                      className={`p-3 rounded-lg text-xs text-white border-2 transition-all duration-200 ${
+                        modelColor === color.value 
+                          ? 'border-white bg-white/30 scale-105 ring-2 ring-white/50' 
+                          : 'border-white/50 bg-white/10 hover:bg-white/20 hover:scale-102'
+                      }`}
+                      style={{
+                        backgroundColor: `${color.hex}30`
+                      }}
+                    >
+                      <div 
+                        className="w-5 h-5 rounded-full mx-auto mb-2 border-2 border-white/70 shadow-lg"
+                        style={{ backgroundColor: color.hex }}
+                      />
+                      <span className="font-medium">{color.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Toggle per controlli di posizionamento - collassabile */}
               <Button
                 onClick={() => setShowControls(!showControls)}
-                className="w-full bg-white/20 text-white hover:bg-white/30 flex items-center justify-center gap-2"
+                className="w-full bg-white/15 text-white hover:bg-white/25 flex items-center justify-center gap-2 backdrop-blur-sm border border-white/20"
                 size="sm"
               >
                 <Settings className="w-4 h-4" />
-                Posizionamento Forno
+                {showControls ? 'Nascondi Controlli' : 'Mostra Controlli Posizione'}
                 {showControls ? (
                   <ChevronDown className="w-4 h-4" />
                 ) : (
