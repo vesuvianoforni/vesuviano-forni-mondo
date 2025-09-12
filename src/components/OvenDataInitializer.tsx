@@ -8,6 +8,8 @@ const OvenDataInitializer = () => {
       try {
         await ovenService.initializeDefaultOvens();
         console.log('Oven data initialized successfully');
+        // Notify listeners (e.g., OvenGallery) to refetch data
+        window.dispatchEvent(new CustomEvent('ovens-updated'));
       } catch (error) {
         console.error('Error initializing oven data:', error);
       }

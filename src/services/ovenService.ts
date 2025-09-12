@@ -253,22 +253,27 @@ export const ovenService = {
       }
     ];
 
-    // Check if ovens already exist
-    const { data: existingOvens } = await supabase
+    // Ensure defaults exist (idempotent)
+    const { data: existing } = await supabase
       .from('ovens')
-      .select('id')
-      .limit(1);
+      .select('name');
 
-    if (existingOvens && existingOvens.length === 0) {
-      const { data, error } = await supabase
+    const existingNames = (existing || []).map((o: any) => o.name);
+    const missing = defaultOvens.filter((d) => !existingNames.includes(d.name));
+
+    if (missing.length > 0) {
+      const { error } = await supabase
         .from('ovens')
-        .insert(defaultOvens)
-        .select();
-
+        .insert(missing);
       if (error) throw error;
-      return data;
     }
 
-    return existingOvens;
+    // Return full, updated list
+    const { data: all } = await supabase
+      .from('ovens')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    return all || [];
   }
 };

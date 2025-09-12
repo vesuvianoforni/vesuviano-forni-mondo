@@ -43,6 +43,10 @@ const OvenGallery = () => {
 
   useEffect(() => {
     fetchOvens();
+
+    const handleUpdated = () => fetchOvens();
+    window.addEventListener('ovens-updated' as any, handleUpdated as any);
+    return () => window.removeEventListener('ovens-updated' as any, handleUpdated as any);
   }, []);
 
   const fetchOvens = async () => {
