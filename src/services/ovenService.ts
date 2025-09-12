@@ -283,20 +283,11 @@ export const ovenService = {
       }
     ];
 
-    // Ensure defaults exist (idempotent)
-    const { data: existing } = await supabase
-      .from('ovens')
-      .select('name');
-
-    const existingNames = (existing || []).map((o: any) => o.name);
-    const missing = defaultOvens.filter((d) => !existingNames.includes(d.name));
-
-    if (missing.length > 0) {
-      const { error } = await supabase
-        .from('ovens')
-        .insert(missing);
-      if (error) throw error;
-    }
+    // Sync defaults via Edge Function (runs with service role)
+    const { error } = await supabase.functions.invoke('sync-ovens', {
+      body: { ovens: defaultOvens }
+    });
+    if (error) throw error;
 
     // Return full, updated list
     const { data: all } = await supabase
