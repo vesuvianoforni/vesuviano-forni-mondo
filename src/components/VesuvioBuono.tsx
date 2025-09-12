@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Leaf, Award, Flame, Download, ExternalLink } from "lucide-react";
+import VideoPlayer from "./VideoPlayer";
 
 const VesuvioBuono = () => {
   const downloadPDF = () => {
@@ -70,8 +71,27 @@ const VesuvioBuono = () => {
             </p>
           </div>
 
-          {/* Photo Gallery Section */}
+          {/* Video Section */}
           <div className="mb-16 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <div className="max-w-4xl mx-auto bg-charcoal-800 rounded-xl p-6 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300">
+              <h3 className="font-playfair text-2xl font-semibold text-vesuviano-400 mb-4 text-center">
+                VesuvioBuono in Azione
+              </h3>
+              <div className="aspect-video rounded-lg overflow-hidden">
+                <VideoPlayer
+                  src="/lovable-uploads/vesuviobuono-video.mp4"
+                  poster="/lovable-uploads/vesuviobuono-forno-azione.jpg"
+                  className="w-full h-full"
+                />
+              </div>
+              <p className="text-stone-300 text-center mt-4 text-sm">
+                Scopri come VesuvioBuono rivoluziona la cottura a legna senza emissioni
+              </p>
+            </div>
+          </div>
+
+          {/* Photo Gallery Section */}
+          <div className="mb-16 animate-fade-in" style={{ animationDelay: '0.6s' }}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Photo Slot 1 */}
               <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
@@ -114,7 +134,7 @@ const VesuvioBuono = () => {
           {/* Main Content */}
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
-            <div className="animate-slide-in-left" style={{ animationDelay: '0.5s' }}>
+            <div className="animate-slide-in-left" style={{ animationDelay: '0.7s' }}>
               <div className="bg-white rounded-xl shadow-2xl p-8 border border-vesuviano-200 hover:shadow-vesuviano-500/20 transition-all duration-500 hover:scale-105">
                 <div className="flex items-center mb-6">
                   <div className="w-14 h-14 bg-vesuviano-500 rounded-full flex items-center justify-center mr-4">
@@ -169,7 +189,7 @@ const VesuvioBuono = () => {
             </div>
 
             {/* Right Content */}
-            <div className="animate-slide-in-right" style={{ animationDelay: '0.7s' }}>
+            <div className="animate-slide-in-right" style={{ animationDelay: '0.9s' }}>
               <div className="bg-vesuviano-600 text-white rounded-xl p-8 shadow-2xl border border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-500 hover:scale-105">
                 <div className="flex items-center mb-6">
                   <Award className="mr-3" size={36} />
