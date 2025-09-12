@@ -117,11 +117,11 @@ const OvenGallery = () => {
                   className="group hover:shadow-xl transition-all duration-300 border-stone-200 hover:border-vesuviano-300"
                 >
                   <CardHeader className="p-0">
-                    <div className="relative overflow-hidden rounded-t-lg aspect-square">
+                    <div className="relative overflow-hidden rounded-t-lg aspect-square bg-white">
                       <img
                         src={oven.image_url}
                         alt={oven.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 bg-white"
                       />
                       <div className="absolute top-3 left-3">
                         <Badge className={categoryInfo.color}>
