@@ -63,7 +63,7 @@ const VesuvioBuono = () => {
               ESCLUSIVA MONDIALE
             </Badge>
             <h2 className="font-playfair text-5xl md:text-7xl font-bold text-white mb-6 animate-slide-in-left">
-              Vesuvio<span className="text-vesuviano-400">Buono</span>
+              Vesuvio<span className="text-vesuviano-500 font-extrabold">Buono</span>
             </h2>
             <p className="font-inter text-xl text-stone-300 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.3s' }}>
               Il primo forno al mondo a legna e combinato gas/legna che non emette fuliggine in atmosfera. 

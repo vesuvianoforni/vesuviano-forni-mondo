@@ -57,58 +57,58 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Vesuviano brand colors - nuova palette aziendale
+				// Vesuviano brand colors - palette con migliore contrasto
 				vesuviano: {
-					50: '#fafafa',   // Quasi bianco
-					100: '#ffffff',  // Bianco puro (#FFFFFF)
-					200: '#f5f5f5',  // Grigio chiarissimo
-					300: '#e5e5e5',  // Grigio chiaro
-					400: '#a3a3a3',  // Grigio medio
-					500: '#6a7f4d',  // Verde aziendale (#6A7F4D)
-					600: '#5a6d40',  // Verde scuro
-					700: '#4a5a35',  // Verde più scuro
-					800: '#6e4b3a',  // Marrone aziendale (#6E4B3A)
-					900: '#232323',  // Nero aziendale (#232323)
-					950: '#1a1a1a',  // Nero più scuro
+					50: 'hsl(13, 100%, 96%)',   // Molto chiaro
+					100: 'hsl(13, 92%, 89%)',   // Chiaro  
+					200: 'hsl(14, 89%, 81%)',   // Chiaro medio
+					300: 'hsl(14, 88%, 71%)',   // Medio chiaro
+					400: 'hsl(14, 89%, 62%)',   // Arancione visibile su scuro
+					500: 'hsl(14, 91%, 54%)',   // Arancione principale
+					600: 'hsl(14, 91%, 48%)',   // Arancione scuro
+					700: 'hsl(14, 84%, 40%)',   // Scuro
+					800: 'hsl(14, 78%, 33%)',   // Molto scuro
+					900: 'hsl(14, 69%, 28%)',   // Scurissimo
+					950: 'hsl(14, 80%, 15%)',   // Quasi nero
 				},
-				// Palette complementare neutra
-				stone: {
-					50: '#fafafa',
-					100: '#ffffff', 
-					200: '#e7e7e7',
-					300: '#d1d1d1',
-					400: '#a8a8a8',
-					500: '#6e4b3a',  // Marrone aziendale
-					600: '#5a3d2e',
-					700: '#4a3125',
-					800: '#232323',  // Nero aziendale
-					900: '#1a1a1a',
-					950: '#0c0c0c',
+				// Charcoal palette per sfondi scuri
+				charcoal: {
+					50: 'hsl(60, 9%, 98%)',
+					100: 'hsl(60, 5%, 96%)', 
+					200: 'hsl(20, 6%, 90%)',
+					300: 'hsl(24, 6%, 83%)',
+					400: 'hsl(24, 5%, 64%)',
+					500: 'hsl(25, 5%, 45%)',
+					600: 'hsl(33, 5%, 32%)',
+					700: 'hsl(30, 6%, 25%)',
+					800: 'hsl(12, 6%, 15%)',
+					900: 'hsl(24, 10%, 10%)',
+					950: 'hsl(20, 14%, 4%)',
 				},
 				// Palette di supporto
 				earth: {
-					50: '#f9f7f4',
-					100: '#f3efe8',
-					200: '#e7ddd0',
-					300: '#d8c7b0',
-					400: '#c7ae8e',
-					500: '#6e4b3a',  // Marrone principale
-					600: '#5e3f30',
-					700: '#4e3427',
-					800: '#3e2a1f',
-					900: '#2e2017',
+					50: 'hsl(33, 100%, 96%)',
+					100: 'hsl(34, 57%, 88%)',
+					200: 'hsl(32, 47%, 80%)',
+					300: 'hsl(31, 42%, 70%)',
+					400: 'hsl(30, 38%, 59%)',
+					500: 'hsl(28, 33%, 49%)',
+					600: 'hsl(26, 28%, 40%)',
+					700: 'hsl(24, 24%, 32%)',
+					800: 'hsl(23, 20%, 25%)',
+					900: 'hsl(22, 17%, 19%)',
 				},
 				sage: {
-					50: '#f6f8f4',
-					100: '#edf1e8',
-					200: '#dbe3d2',
-					300: '#c3d0b3',
-					400: '#a8bc8f',
-					500: '#6a7f4d',  // Verde principale
-					600: '#5a6d42',
-					700: '#4a5a37',
-					800: '#3a472b',
-					900: '#2a341f',
+					50: 'hsl(138, 25%, 96%)',
+					100: 'hsl(138, 15%, 88%)',
+					200: 'hsl(138, 13%, 79%)',
+					300: 'hsl(138, 12%, 68%)',
+					400: 'hsl(138, 10%, 56%)',
+					500: 'hsl(138, 9%, 45%)',
+					600: 'hsl(138, 9%, 36%)',
+					700: 'hsl(138, 10%, 28%)',
+					800: 'hsl(138, 11%, 22%)',
+					900: 'hsl(138, 12%, 18%)',
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
