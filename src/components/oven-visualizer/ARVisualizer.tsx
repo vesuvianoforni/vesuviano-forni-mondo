@@ -949,7 +949,6 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, 
           </div>
         </div>
       </div>
-      </div>
 
       {/* Controlli AR - UI aggiornata */}
       <div className="ar-controls absolute bottom-4 left-4 right-4 z-10 pointer-events-auto">
@@ -992,36 +991,6 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, 
                         className="w-full h-8 object-cover rounded mb-1"
                       />
                       <span className="text-xs">{oven.label.split(' ')[0]}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Controlli semplificati - Solo colore - sempre visibili */}
-              <div className="bg-white/20 backdrop-blur-sm p-3 rounded-lg border border-white/30">
-                <Label className="text-white text-sm block mb-3 font-medium">Personalizza il colore del forno:</Label>
-                <div className="grid grid-cols-3 gap-2">
-                  {colorOptions.map((color) => (
-                    <button
-                      key={color.value}
-                      onClick={() => {
-                        console.log('🎨 Cambio colore selezionato:', color.value);
-                        setModelColor(color.value);
-                      }}
-                      className={`p-3 rounded-lg text-xs text-white border-2 transition-all duration-200 ${
-                        modelColor === color.value 
-                          ? 'border-white bg-white/30 scale-105 ring-2 ring-white/50' 
-                          : 'border-white/50 bg-white/10 hover:bg-white/20 hover:scale-102'
-                      }`}
-                      style={{
-                        backgroundColor: `${color.hex}30`
-                      }}
-                    >
-                      <div 
-                        className="w-5 h-5 rounded-full mx-auto mb-2 border-2 border-white/70 shadow-lg"
-                        style={{ backgroundColor: color.hex }}
-                      />
-                      <span className="font-medium">{color.label}</span>
                     </button>
                   ))}
                 </div>
