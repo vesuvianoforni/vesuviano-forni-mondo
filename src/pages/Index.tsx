@@ -12,6 +12,7 @@ import ClientsMap from "@/components/ClientsMap";
 import OvenGallery from "@/components/OvenGallery";
 import OvenDataInitializer from "@/components/OvenDataInitializer";
 import ConsultationForm from "@/components/ConsultationForm";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const Index = () => {
   return (
@@ -20,13 +21,17 @@ const Index = () => {
       <Header />
       <Hero />
       <ProductCategories />
-      <OvenVisualizer />
+      <ErrorBoundary fallback={<div className="container mx-auto px-6 py-8">Sezione AR temporaneamente non disponibile.</div>}>
+        <OvenVisualizer />
+      </ErrorBoundary>
       
       <CraftsmanshipSection />
       <Services />
       <Rivestimenti />
       <VesuvioBuono />
-      <ClientsMap />
+      <ErrorBoundary fallback={<div className="container mx-auto px-6 py-8">Mappa temporaneamente non disponibile.</div>}>
+        <ClientsMap />
+      </ErrorBoundary>
       <OvenGallery />
       <ConsultationForm />
       
