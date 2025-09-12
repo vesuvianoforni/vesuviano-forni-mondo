@@ -101,6 +101,37 @@ const Services = () => {
           </div>
         </div>
       </div>
+      
+      {/* Logistics Photo Section */}
+      <div className="container mx-auto px-6 relative z-10 mt-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <h3 className="font-playfair text-2xl md:text-3xl font-semibold text-charcoal-900 mb-4">
+              La Nostra <span className="text-vesuviano-600">Efficacia Logistica</span>
+            </h3>
+            <p className="text-stone-600 text-lg">
+              Consegne in tutto il mondo, anche nelle metropoli più complesse come New York
+            </p>
+          </div>
+          
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl group">
+            <img 
+              src="/lovable-uploads/logistica-internazionale-nyc.png"
+              alt="Consegna forno Vesuviano a New York - Logistica internazionale efficace"
+              className="w-full h-64 md:h-96 object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-vesuviano-900/60 via-transparent to-transparent opacity-80"></div>
+            <div className="absolute bottom-6 left-6 right-6 text-white">
+              <h4 className="font-playfair text-xl md:text-2xl font-semibold mb-2">
+                Forno Vesuviano in consegna a Manhattan
+              </h4>
+              <p className="text-stone-200 text-sm md:text-base">
+                La nostra logistica specializzata garantisce consegne sicure anche nei centri urbani più impegnativi
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 };
