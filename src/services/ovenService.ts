@@ -140,6 +140,19 @@ export const ovenService = {
           max_temperature: '500°C',
           fuel_type: 'Legna'
         }
+      },
+      {
+        name: 'Terra del Gusto Arancione',
+        category: 'gas',
+        subcategory: 'Verniciato Premium',
+        image_url: '/lovable-uploads/forno-arancione-terra-del-gusto.png',
+        description: 'Forno verniciato arancione con design moderno "Terra del Gusto", perfetto per gas e legna',
+        specifications: {
+          diameter: '120cm',
+          cooking_surface: 'Pietra refrattaria',
+          max_temperature: '480°C',
+          fuel_type: 'Gas/Legna'
+        }
       }
     ];
 
