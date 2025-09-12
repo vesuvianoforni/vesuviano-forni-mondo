@@ -25,12 +25,20 @@ const OvenGallery = () => {
   const [ovens, setOvens] = useState<Oven[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCoating, setSelectedCoating] = useState<string>('all');
 
   const categories = [
     { value: 'all', label: 'Tutti i Forni', color: 'bg-stone-100 text-stone-800' },
     { value: 'mosaico', label: 'Forni Mosaico', color: 'bg-vesuviano-100 text-vesuviano-800' },
     { value: 'gas', label: 'Forni a Gas', color: 'bg-blue-100 text-blue-800' },
     { value: 'legna', label: 'Forni a Legna', color: 'bg-green-100 text-green-800' }
+  ];
+
+  const coatingTypes = [
+    { value: 'all', label: 'Tutti i Rivestimenti', color: 'bg-gray-100 text-gray-800' },
+    { value: 'mosaico', label: 'Rivestimento Mosaico', color: 'bg-amber-100 text-amber-800' },
+    { value: 'verniciato', label: 'Rivestimento Verniciato', color: 'bg-orange-100 text-orange-800' },
+    { value: 'metallico', label: 'Rivestimento Metallico', color: 'bg-slate-100 text-slate-800' }
   ];
 
   useEffect(() => {
@@ -54,9 +62,11 @@ const OvenGallery = () => {
     }
   };
 
-  const filteredOvens = selectedCategory === 'all' 
-    ? ovens 
-    : ovens.filter(oven => oven.category === selectedCategory);
+  const filteredOvens = ovens.filter(oven => {
+    const categoryMatch = selectedCategory === 'all' || oven.category === selectedCategory;
+    const coatingMatch = selectedCoating === 'all' || oven.coating_type === selectedCoating;
+    return categoryMatch && coatingMatch;
+  });
 
   const getCategoryInfo = (category: string) => {
     return categories.find(cat => cat.value === category) || categories[0];
@@ -83,24 +93,51 @@ const OvenGallery = () => {
         </div>
 
         {/* Category Filters */}
-        <div className="flex flex-wrap justify-center gap-3 mb-8">
-          {categories.map((category) => (
-            <Button
-              key={category.value}
-              variant={selectedCategory === category.value ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedCategory(category.value)}
-              className="transition-all duration-300"
-            >
-              {category.label}
-              <Badge 
-                variant="secondary" 
-                className="ml-2 bg-white/20"
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-stone-700 mb-3 text-center">Filtra per Combustibile</h3>
+          <div className="flex flex-wrap justify-center gap-3">
+            {categories.map((category) => (
+              <Button
+                key={category.value}
+                variant={selectedCategory === category.value ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCategory(category.value)}
+                className="transition-all duration-300"
               >
-                {category.value === 'all' ? ovens.length : ovens.filter(o => o.category === category.value).length}
-              </Badge>
-            </Button>
-          ))}
+                {category.label}
+                <Badge 
+                  variant="secondary" 
+                  className="ml-2 bg-white/20"
+                >
+                  {category.value === 'all' ? ovens.length : ovens.filter(o => o.category === category.value).length}
+                </Badge>
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Coating Type Filters */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-stone-700 mb-3 text-center">Filtra per Rivestimento</h3>
+          <div className="flex flex-wrap justify-center gap-3">
+            {coatingTypes.map((coating) => (
+              <Button
+                key={coating.value}
+                variant={selectedCoating === coating.value ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCoating(coating.value)}
+                className="transition-all duration-300"
+              >
+                {coating.label}
+                <Badge 
+                  variant="secondary" 
+                  className="ml-2 bg-white/20"
+                >
+                  {coating.value === 'all' ? ovens.length : ovens.filter(o => o.coating_type === coating.value).length}
+                </Badge>
+              </Button>
+            ))}
+          </div>
         </div>
 
         {/* Ovens Grid */}
