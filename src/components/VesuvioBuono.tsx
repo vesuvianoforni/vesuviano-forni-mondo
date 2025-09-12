@@ -18,7 +18,7 @@ const VesuvioBuono = () => {
   };
 
   return (
-    <section id="vesuviobuono" className="py-20 bg-charcoal-900 relative overflow-hidden">
+    <section id="vesuviobuono" className="py-20 bg-vesuviano-900 relative overflow-hidden">
       {/* Stylized Pizza Decorations */}
       <div className="absolute inset-0 opacity-10">
         {/* Pizza 1 - Top Left */}
@@ -73,7 +73,7 @@ const VesuvioBuono = () => {
 
           {/* Video Section */}
           <div className="mb-16 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            <div className="max-w-4xl mx-auto bg-charcoal-800 rounded-xl p-6 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300">
+            <div className="max-w-4xl mx-auto bg-stone-900 rounded-xl p-6 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300">
               <h3 className="font-playfair text-2xl font-semibold text-vesuviano-100 mb-4 text-center">
                 VesuvioBuono in Azione
               </h3>
@@ -84,7 +84,7 @@ const VesuvioBuono = () => {
                   className="w-full h-full"
                 />
                 {/* Overlay to hide watermark in bottom right */}
-                <div className="absolute bottom-0 right-0 w-32 h-16 bg-gradient-to-l from-charcoal-900 via-charcoal-900/80 to-transparent pointer-events-none"></div>
+                <div className="absolute bottom-0 right-0 w-32 h-16 bg-gradient-to-l from-vesuviano-900 via-vesuviano-900/80 to-transparent pointer-events-none"></div>
               </div>
               <p className="text-vesuviano-200 text-center mt-4 text-sm">
                 Scopri come VesuvioBuono rivoluziona la cottura a legna senza emissioni
@@ -96,7 +96,7 @@ const VesuvioBuono = () => {
           <div className="mb-16 animate-fade-in" style={{ animationDelay: '0.6s' }}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Photo Slot 1 */}
-              <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
+              <div className="bg-stone-900 rounded-xl p-4 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
                 <div className="aspect-video rounded-lg overflow-hidden">
                   <img 
                     src="/lovable-uploads/vesuviobuono-forno-azione.jpg" 
@@ -108,7 +108,7 @@ const VesuvioBuono = () => {
               </div>
               
               {/* Photo Slot 2 */}
-              <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-copper-400 hover:border-copper-300 transition-all duration-300 hover:scale-105">
+              <div className="bg-stone-900 rounded-xl p-4 border-2 border-copper-400 hover:border-copper-300 transition-all duration-300 hover:scale-105">
                 <div className="aspect-video rounded-lg overflow-hidden">
                   <img 
                     src="/lovable-uploads/vesuviobuono-pizza-perfetta.jpg" 
@@ -120,7 +120,7 @@ const VesuvioBuono = () => {
               </div>
               
               {/* Photo Slot 3 */}
-              <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
+              <div className="bg-stone-900 rounded-xl p-4 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
                 <div className="aspect-video rounded-lg overflow-hidden">
                   <img 
                     src="/lovable-uploads/vesuviobuono-zero-emissioni.jpg" 
