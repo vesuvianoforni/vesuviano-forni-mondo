@@ -186,8 +186,6 @@ const OvenGallery = () => {
                         src={oven.image_url}
                         alt={oven.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 bg-white"
-                        loading="lazy"
-                        decoding="async"
                       />
                       <div className="absolute top-3 left-3 flex flex-col gap-1">
                         {oven.coating_type && (
