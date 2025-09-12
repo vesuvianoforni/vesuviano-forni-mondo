@@ -367,7 +367,7 @@ const OvenVisualizer = () => {
             <div className="max-w-2xl mx-auto">
               <div className="bg-white rounded-2xl shadow-lg border border-stone-200 p-8">
                 <div className="text-center mb-8">
-                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <Wand2 className="w-8 h-8 text-white" />
                   </div>
                   <h2 className="text-2xl font-bold text-stone-900 mb-2">Architetto AI</h2>
