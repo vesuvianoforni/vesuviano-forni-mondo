@@ -287,7 +287,7 @@ const OvenVisualizer = () => {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-semibold text-stone-900 mb-2">
-                      Generazione AI
+                      Architetto AI
                     </h3>
                     <p className="text-stone-600 text-sm mb-3">
                       Carica una foto del tuo spazio e l'AI integrerà fotorealisticamente il forno selezionato
@@ -370,7 +370,7 @@ const OvenVisualizer = () => {
                   <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <Brain className="w-8 h-8 text-white" />
                   </div>
-                  <h2 className="text-2xl font-bold text-stone-900 mb-2">Generazione AI</h2>
+                  <h2 className="text-2xl font-bold text-stone-900 mb-2">Architetto AI</h2>
                   <p className="text-stone-600">Integrazione automatica fotorealistica</p>
                 </div>
 
