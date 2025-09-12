@@ -11,10 +11,12 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { href: "#products", label: t('header.products') },
-    { href: "#vesuviobuono", label: t('header.vesuviobuono') },
-    { href: "#gallery", label: t('header.gallery') },
-    { href: "#consultation", label: t('header.consultation') }
+    { href: "#products", label: "Prodotti" },
+    { href: "#oven-gallery", label: "Collezione Forni" },
+    { href: "#rivestimenti", label: "Rivestimenti" },
+    { href: "#vesuviobuono", label: "VesuvioBuono" },
+    { href: "#clients-map", label: "Clienti nel Mondo" },
+    { href: "#consultation", label: "Contatti" }
   ];
 
   const handleNavClick = (href: string) => {
@@ -27,21 +29,21 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <img 
               src="/lovable-uploads/255a7344-f5ab-411b-8b37-6ed61e01d472.png" 
               alt="Vesuviano - Forni Vulcanici Selezionati" 
-              className="h-10 sm:h-12 w-auto"
+              className="h-10 sm:h-12 w-auto hover:scale-105 transition-transform duration-300"
             />
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
+          <nav className="hidden lg:flex items-center space-x-6">
             {navItems.map((item) => (
               <a 
                 key={item.href}
                 href={item.href} 
-                className="text-stone-700 hover:text-vesuviano-600 transition-colors"
+                className="text-stone-700 hover:text-vesuviano-600 transition-colors font-medium text-sm xl:text-base relative after:absolute after:w-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-vesuviano-600 after:transition-all after:duration-300 hover:after:w-full"
                 onClick={(e) => {
                   e.preventDefault();
                   handleNavClick(item.href);
@@ -56,10 +58,10 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-4">
             <LanguageSelector />
             <Button 
-              className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white"
+              className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
               onClick={() => handleNavClick('#consultation')}
             >
-              {t('header.contact')}
+              Richiedi Preventivo
             </Button>
           </div>
 
@@ -91,7 +93,7 @@ const Header = () => {
                     className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white w-full mt-6"
                     onClick={() => handleNavClick('#consultation')}
                   >
-                    {t('header.contact')}
+                    Richiedi Preventivo
                   </Button>
                 </nav>
               </SheetContent>
