@@ -212,10 +212,6 @@ const OvenVisualizer = () => {
               <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
             </div>
             
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-primary rounded-2xl mb-6">
-              <Wand2 className="w-6 h-6 text-white" />
-            </div>
-            
             <h1 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
               Visualizzatore Forni
             </h1>
