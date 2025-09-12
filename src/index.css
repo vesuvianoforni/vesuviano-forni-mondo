@@ -1,6 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Apple-style gradient animations */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) }
+  50% { transform: translateY(-20px) }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.33) }
+  40%, 50% { opacity: 1 }
+  100% { opacity: 0; transform: scale(1) }
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.8) }
+  50% { transform: scale(1) }
+  100% { transform: scale(0.8) }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) }
+  100% { transform: translateX(100%) }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3) }
+  50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6), 0 0 60px rgba(59, 130, 246, 0.4) }
+}
+
+.gradient-bg {
+  background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+  background-size: 400% 400%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.apple-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.loading-dots::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #3b82f6;
+  animation: pulse-dot 1.5s ease-in-out infinite;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 14%;
+    --primary: 23 31% 34%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 83 22% 40%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 23 31% 34%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+    --vesuviano-50: 24 100% 97%;
+    --vesuviano-100: 24 100% 93%;
+    --vesuviano-200: 24 100% 87%;
+    --vesuviano-300: 24 100% 76%;
+    --vesuviano-400: 24 100% 63%;
+    --vesuviano-500: 24 100% 50%;
+    --vesuviano-600: 24 100% 40%;
+    --vesuviano-700: 24 84% 32%;
+    --vesuviano-800: 24 74% 26%;
+    --vesuviano-900: 24 65% 22%;
+    --vesuviano-950: 24 80% 11%;
+    --charcoal-50: 210 8% 97%;
+    --charcoal-100: 210 8% 93%;
+    --charcoal-200: 210 8% 87%;
+    --charcoal-300: 210 8% 76%;
+    --charcoal-400: 210 8% 63%;
+    --charcoal-500: 210 8% 50%;
+    --charcoal-600: 210 8% 40%;
+    --charcoal-700: 210 8% 32%;
+    --charcoal-800: 210 8% 26%;
+    --charcoal-900: 210 8% 22%;
+    --charcoal-950: 210 8% 11%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-pulse-ring {
+    animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+}
 
 @layer base {
   :root {
