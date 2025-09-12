@@ -336,8 +336,61 @@ const VesuvioBuono = () => {
             </div>
           </div>
 
+          {/* Abbattitore di Fuliggine Section */}
+          <div className="mt-16 animate-fade-in" style={{ animationDelay: '1.1s' }}>
+            <div className="bg-gradient-to-r from-stone-800 to-stone-900 rounded-xl shadow-2xl p-8 border border-vesuviano-400/30 hover:border-vesuviano-400/50 transition-all duration-500">
+              <div className="grid lg:grid-cols-2 gap-8 items-center">
+                <div>
+                  <div className="flex items-center mb-6">
+                    <div className="w-12 h-12 bg-vesuviano-500 rounded-full flex items-center justify-center mr-4">
+                      <Leaf className="text-white" size={24} />
+                    </div>
+                    <h3 className="font-playfair text-2xl md:text-3xl font-semibold text-white">
+                      Abbattitore di Fuliggine ad Acqua
+                    </h3>
+                  </div>
+                  <div className="space-y-4">
+                    <p className="text-vesuviano-200 text-lg leading-relaxed">
+                      Sistema innovativo prodotto e realizzato in collaborazione con l'azienda leader del settore, 
+                      che garantisce <strong className="text-vesuviano-400">zero problemi di vicinato e normative</strong>.
+                    </p>
+                    <div className="bg-vesuviano-600/20 border border-vesuviano-400/30 rounded-lg p-4">
+                      <h4 className="font-semibold text-vesuviano-300 mb-2">Vantaggi Tecnici:</h4>
+                      <ul className="text-vesuviano-200 space-y-2 text-sm">
+                        <li className="flex items-center">
+                          <div className="w-2 h-2 bg-vesuviano-400 rounded-full mr-3"></div>
+                          Eliminazione completa delle particelle nocive
+                        </li>
+                        <li className="flex items-center">
+                          <div className="w-2 h-2 bg-vesuviano-400 rounded-full mr-3"></div>
+                          Conformità a tutte le normative ambientali
+                        </li>
+                        <li className="flex items-center">
+                          <div className="w-2 h-2 bg-vesuviano-400 rounded-full mr-3"></div>
+                          Installazione possibile in qualsiasi contesto urbano
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-stone-700/50 rounded-lg p-4 border border-vesuviano-400/20">
+                  <div className="aspect-video rounded-lg overflow-hidden">
+                    <img 
+                      src="/lovable-uploads/abbattitore-fuliggine-acqua.png" 
+                      alt="Abbattitore di Fuliggine ad Acqua - Sistema interno" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <p className="text-vesuviano-300 text-center mt-3 text-sm font-medium">
+                    Sistema Interno Abbattitore Fuliggine
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Bottom CTA */}
-          <div className="mt-16 text-center animate-fade-in" style={{ animationDelay: '1s' }}>
+          <div className="mt-16 text-center animate-fade-in" style={{ animationDelay: '1.2s' }}>
             <div className="bg-white rounded-xl shadow-2xl p-8 max-w-3xl mx-auto border border-vesuviano-200 hover:shadow-vesuviano-500/30 transition-all duration-500 hover:scale-105">
               <Flame className="mx-auto text-vesuviano-600 mb-4" size={48} />
               <h4 className="font-playfair text-3xl font-semibold text-charcoal-900 mb-4">
