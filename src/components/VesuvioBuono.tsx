@@ -79,7 +79,7 @@ const VesuvioBuono = () => {
                   <img 
                     src="/lovable-uploads/vesuviobuono-forno-azione.jpg" 
                     alt="Forno VesuvioBuono in azione" 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transform scale-125 object-center"
                   />
                 </div>
                 <p className="text-vesuviano-400 text-center mt-2 text-sm">Forno in Azione</p>
