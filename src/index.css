@@ -252,11 +252,39 @@
   .container {
     @apply mx-auto px-4 sm:px-6 lg:px-8;
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   /* Mobile-first responsive padding */
   section {
     @apply px-4 sm:px-6;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Prevent horizontal scroll */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Specific mobile layout fixes */
+  @media (max-width: 768px) {
+    .container {
+      @apply px-3;
+    }
+    
+    section {
+      @apply px-3;
+    }
+    
+    /* Force text wrapping */
+    h1, h2, h3, h4, h5, h6, p {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
   }
 
   /* Button consistency */
