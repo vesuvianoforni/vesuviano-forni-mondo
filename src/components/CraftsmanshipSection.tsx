@@ -63,8 +63,8 @@ const CraftsmanshipSection = () => {
             <div className="animate-slide-in-right">
               <div className="relative">
                 <img 
-                  src="/lovable-uploads/83490d78-6935-41ab-bb12-49e6070f44db.png" 
-                  alt="Artigiani napoletani al lavoro"
+                  src="/lovable-uploads/vesuviobuono-verde-dettaglio.jpg" 
+                  alt="Dettaglio forno artigianale napoletano"
                   className="w-full rounded-xl shadow-lg hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-xl"></div>

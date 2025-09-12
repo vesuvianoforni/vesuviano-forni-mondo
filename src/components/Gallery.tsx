@@ -103,9 +103,9 @@ const Gallery = () => {
                   <div className="w-full h-64 bg-stone-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-700">
                     <div className="text-center">
                       <img 
-                        src="/lovable-uploads/f5dc8e32-7db6-41d6-b56a-feb7c40d917b.png" 
-                        alt="Vesuviano Logo" 
-                        className="w-16 h-16 mx-auto mb-4"
+                        src="/lovable-uploads/vesuviobuono-verde-dettaglio.jpg" 
+                        alt="Forno Vesuviano" 
+                        className="w-16 h-16 mx-auto mb-4 object-cover rounded"
                       />
                       <p className="text-vesuviano-700 font-semibold">Immagine del Forno</p>
                     </div>

@@ -16,7 +16,7 @@ const Hero = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: 'url(/lovable-uploads/9d02a9c4-fce3-424c-a356-9db0dee4a293.png)'
+          backgroundImage: 'url(/lovable-uploads/vesuviobuono-dettaglio-bocca.jpg)'
         }}
       >
         {/* Dark Overlay for better text readability */}

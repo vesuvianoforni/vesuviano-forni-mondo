@@ -9,19 +9,19 @@ const ProductCategories = () => {
   const categories = [
     {
       key: 'traditional',
-      image: "/lovable-uploads/83490d78-6935-41ab-bb12-49e6070f44db.png"
+      image: "/lovable-uploads/vesuviobuono-verde-mosaico.jpg"
     },
     {
       key: 'gas',
-      image: "/lovable-uploads/83490d78-6935-41ab-bb12-49e6070f44db.png"
+      image: "/lovable-uploads/forno-arancione-terra-del-gusto.png"
     },
     {
       key: 'electric',
-      image: "/lovable-uploads/83490d78-6935-41ab-bb12-49e6070f44db.png"
+      image: "/lovable-uploads/vesuviobuono-marrone-completo.jpg"
     },
     {
       key: 'rotating',
-      image: "/lovable-uploads/83490d78-6935-41ab-bb12-49e6070f44db.png"
+      image: "/lovable-uploads/vesuviobuono-osteria-pizza.jpg"
     }
   ];
 

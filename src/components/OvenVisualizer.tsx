@@ -21,25 +21,25 @@ const OvenVisualizer = () => {
     { 
       value: "cabin_mosaic", 
       label: "VesuvioBuono - Cabin Mosaic",
-      image: "/lovable-uploads/3127ebb1-b7dd-4e50-95a6-a5d9ea57fce2.png",
+      image: "/lovable-uploads/vesuviobuono-marrone-completo.jpg",
       modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/CABIN_MOSAIC_v001.fbx"
     },
     { 
       value: "black_mosaic", 
       label: "Rivestimento Palladiana - Black Mosaic",
-      image: "/lovable-uploads/7c682e61-1ca7-4b06-9099-55b05bbff4db.png",
+      image: "/lovable-uploads/vesuviobuono-verde-mosaico.jpg",
       modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/BLACK_MOSAIC_v001.fbx"
     },
     { 
       value: "mosaic", 
       label: "Rivestimento Mosaico - Classic",
-      image: "/lovable-uploads/375da131-c387-490a-8372-89300626480e.png",
+      image: "/lovable-uploads/vesuviobuono-osteria-pizza.jpg",
       modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/MOSAIC_v001.fbx"
     },
     { 
       value: "metal", 
       label: "Doghe Metalliche - Metal Design",
-      image: "/lovable-uploads/9d02a9c4-fce3-424c-a356-9db0dee4a293.png",
+      image: "/lovable-uploads/forno-metallo-nero.png",
       modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/METAL_v001.fbx"
     }
   ];

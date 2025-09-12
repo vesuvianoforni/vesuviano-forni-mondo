@@ -11,27 +11,27 @@ const OvenModelsInfo = () => {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mt-6 md:mt-8">
           <div className="text-center">
             <img 
-              src="/lovable-uploads/3127ebb1-b7dd-4e50-95a6-a5d9ea57fce2.png" 
+              src="/lovable-uploads/vesuviobuono-marrone-completo.jpg" 
               alt="VesuvioBuono" 
-              className="w-16 h-16 md:w-24 md:h-24 object-contain mx-auto mb-3 md:mb-4 rounded-lg border border-stone-200"
+              className="w-16 h-16 md:w-24 md:h-24 object-cover mx-auto mb-3 md:mb-4 rounded-lg border border-stone-200"
             />
             <h4 className="font-semibold text-stone-900 mb-1 md:mb-2 text-sm md:text-base">VesuvioBuono</h4>
             <p className="text-xs md:text-sm text-stone-600">Rivestimento a mosaico premium con tecnologia avanzata</p>
           </div>
           <div className="text-center">
             <img 
-              src="/lovable-uploads/7c682e61-1ca7-4b06-9099-55b05bbff4db.png" 
+              src="/lovable-uploads/forno-arancione-terra-del-gusto.png" 
               alt="Verniciato" 
-              className="w-16 h-16 md:w-24 md:h-24 object-contain mx-auto mb-3 md:mb-4 rounded-lg border border-stone-200"
+              className="w-16 h-16 md:w-24 md:h-24 object-cover mx-auto mb-3 md:mb-4 rounded-lg border border-stone-200"
             />
             <h4 className="font-semibold text-stone-900 mb-1 md:mb-2 text-sm md:text-base">Verniciato</h4>
             <p className="text-xs md:text-sm text-stone-600">Finitura verniciata tradizionale in terracotta</p>
           </div>
           <div className="text-center">
             <img 
-              src="/lovable-uploads/375da131-c387-490a-8372-89300626480e.png" 
+              src="/lovable-uploads/vesuviobuono-verde-mosaico.jpg" 
               alt="Mosaicato" 
-              className="w-16 h-16 md:w-24 md:h-24 object-contain mx-auto mb-3 md:mb-4 rounded-lg border border-stone-200"
+              className="w-16 h-16 md:w-24 md:h-24 object-cover mx-auto mb-3 md:mb-4 rounded-lg border border-stone-200"
             />
             <h4 className="font-semibold text-stone-900 mb-1 md:mb-2 text-sm md:text-base">Mosaicato</h4>
             <p className="text-xs md:text-sm text-stone-600">Rivestimento a mosaico personalizzabile</p>
