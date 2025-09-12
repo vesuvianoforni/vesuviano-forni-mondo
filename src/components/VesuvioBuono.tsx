@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Leaf, Award, Flame, Download, Shield, CheckCircle, Sparkles } from "lucide-react";
+import { Leaf, Award, Flame, Download, Shield, CheckCircle } from "lucide-react";
 import VideoPlayer from "./VideoPlayer";
 import { useState } from "react";
 
@@ -402,105 +402,6 @@ const VesuvioBuono = () => {
                   <p className="text-vesuviano-300 text-center mt-3 text-sm font-medium">
                     Sistema Interno Abbattitore Fuliggine
                   </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Forni Mosaicati Section */}
-          <div className="mt-16 animate-fade-in" style={{ animationDelay: '1.3s' }}>
-            <div className="text-center mb-12">
-              <div className="flex items-center justify-center mb-6">
-                <Sparkles className="text-vesuviano-400 mr-3" size={32} />
-                <h3 className="font-playfair text-4xl font-bold text-white">
-                  Forni Mosaicati
-                </h3>
-                <Sparkles className="text-vesuviano-400 ml-3" size={32} />
-              </div>
-              <p className="text-vesuviano-200 text-lg max-w-3xl mx-auto">
-                Eleganti forni per legna e gas con rivestimenti a mosaico artigianali, 
-                che uniscono funzionalità e design esclusivo.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* Forno Mosaico Rosso */}
-              <div className="bg-gradient-to-br from-stone-800 to-stone-900 rounded-xl shadow-2xl p-6 border border-vesuviano-400/30 hover:border-vesuviano-400/50 transition-all duration-500 hover:scale-105">
-                <div className="aspect-square rounded-lg overflow-hidden mb-6">
-                  <img 
-                    src="/lovable-uploads/forno-mosaico-rosso.jpg" 
-                    alt="Forno a legna/gas con rivestimento mosaico rosso" 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="text-center">
-                  <h4 className="font-playfair text-2xl font-semibold text-white mb-3">
-                    Mosaico Rosso Elegante
-                  </h4>
-                  <div className="flex justify-center mb-4">
-                    <Badge className="bg-red-600 text-white px-4 py-2 border-none">
-                      LEGNA & GAS
-                    </Badge>
-                  </div>
-                  <p className="text-vesuviano-200 text-sm leading-relaxed">
-                    Rivestimento a mosaico rosso che dona carattere e calore all'ambiente. 
-                    Perfetto per ristoranti e location di prestigio.
-                  </p>
-                </div>
-              </div>
-
-              {/* Forno Mosaico Nero/Beige */}
-              <div className="bg-gradient-to-br from-stone-800 to-stone-900 rounded-xl shadow-2xl p-6 border border-vesuviano-400/30 hover:border-vesuviano-400/50 transition-all duration-500 hover:scale-105">
-                <div className="aspect-square rounded-lg overflow-hidden mb-6">
-                  <img 
-                    src="/lovable-uploads/forno-mosaico-nero-beige.jpg" 
-                    alt="Forno a legna/gas con rivestimento mosaico nero e beige" 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="text-center">
-                  <h4 className="font-playfair text-2xl font-semibold text-white mb-3">
-                    Mosaico Nero & Beige
-                  </h4>
-                  <div className="flex justify-center mb-4">
-                    <Badge className="bg-stone-600 text-white px-4 py-2 border-none">
-                      LEGNA & GAS
-                    </Badge>
-                  </div>
-                  <p className="text-vesuviano-200 text-sm leading-relaxed">
-                    Design sofisticato con mosaico nero e beige, ideale per ambienti 
-                    contemporanei e di alta classe.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Caratteristiche Forni Mosaicati */}
-            <div className="mt-12 bg-vesuviano-600/20 border border-vesuviano-400/30 rounded-xl p-8">
-              <h4 className="font-playfair text-2xl font-semibold text-white text-center mb-8">
-                Caratteristiche dei Forni Mosaicati
-              </h4>
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-vesuviano-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Sparkles className="text-white" size={28} />
-                  </div>
-                  <h5 className="font-semibold text-vesuviano-300 mb-2">Design Artigianale</h5>
-                  <p className="text-vesuviano-200 text-sm">Ogni mosaico è realizzato a mano da maestri artigiani</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-vesuviano-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Flame className="text-white" size={28} />
-                  </div>
-                  <h5 className="font-semibold text-vesuviano-300 mb-2">Doppia Alimentazione</h5>
-                  <p className="text-vesuviano-200 text-sm">Funzionano perfettamente sia a legna che a gas</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-vesuviano-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Shield className="text-white" size={28} />
-                  </div>
-                  <h5 className="font-semibold text-vesuviano-300 mb-2">Materiali Premium</h5>
-                  <p className="text-vesuviano-200 text-sm">Mosaici resistenti alle alte temperature</p>
                 </div>
               </div>
             </div>

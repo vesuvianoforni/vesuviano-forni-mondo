@@ -220,6 +220,36 @@ export const ovenService = {
           max_temperature: '520°C',
           fuel_type: 'Legna'
         }
+      },
+      {
+        name: 'Forno Mosaico Rosso Premium',
+        category: 'mosaico',
+        subcategory: 'Doppia Alimentazione',
+        image_url: '/lovable-uploads/forno-mosaico-rosso.jpg',
+        description: 'Elegante forno con rivestimento a mosaico rosso, perfetto per ristoranti e location di prestigio. Doppia alimentazione legna e gas.',
+        fuel_type: 'gas',
+        coating_type: 'mosaico',
+        specifications: {
+          diameter: '120cm',
+          cooking_surface: 'Pietra refrattaria',
+          max_temperature: '480°C',
+          fuel_type: 'Gas/Legna'
+        }
+      },
+      {
+        name: 'Forno Mosaico Nero & Beige',
+        category: 'mosaico', 
+        subcategory: 'Design Contemporaneo',
+        image_url: '/lovable-uploads/forno-mosaico-nero-beige.jpg',
+        description: 'Design sofisticato con mosaico nero e beige, ideale per ambienti contemporanei e di alta classe. Versatile per legna e gas.',
+        fuel_type: 'gas',
+        coating_type: 'mosaico',
+        specifications: {
+          diameter: '110cm',
+          cooking_surface: 'Pietra refrattaria',
+          max_temperature: '470°C',
+          fuel_type: 'Gas/Legna'
+        }
       }
     ];
 
