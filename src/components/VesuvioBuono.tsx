@@ -149,7 +149,7 @@ const VesuvioBuono = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <p className="text-stone-600 text-center mt-2 text-xs">Installazione</p>
+                    <p className="text-stone-600 text-center mt-2 text-xs">Forno a legna</p>
                   </div>
                   <div className="bg-stone-100 rounded-lg p-3 hover:scale-105 transition-all duration-300">
                     <div className="aspect-square rounded overflow-hidden">
@@ -159,7 +159,7 @@ const VesuvioBuono = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <p className="text-stone-600 text-center mt-2 text-xs">Certificati</p>
+                    <p className="text-stone-600 text-center mt-2 text-xs">Depuratore fumi</p>
                   </div>
                 </div>
               </div>
