@@ -73,7 +73,6 @@
     "three": "^0.158.0",
     "three-gltf-loader": "^1.111.0",
     "vaul": "^0.9.3",
-    "vite-imagetools": "^8.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
