@@ -12,6 +12,7 @@ const Header = () => {
 
   const navItems = [
     { href: "#products", label: "Prodotti" },
+    { href: "#ai-architect", label: "Architetto AI" },
     { href: "#oven-gallery", label: "Collezione Forni" },
     { href: "#rivestimenti", label: "Rivestimenti" },
     { href: "#vesuviobuono", label: "VesuvioBuono" },
