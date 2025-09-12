@@ -283,7 +283,7 @@ const OvenVisualizer = () => {
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
                     selectedMode === 'ai' ? 'bg-blue-500' : 'bg-stone-100'
                   }`}>
-                    <Brain className={`w-6 h-6 ${selectedMode === 'ai' ? 'text-white' : 'text-stone-600'}`} />
+                    <Wand2 className={`w-6 h-6 ${selectedMode === 'ai' ? 'text-white' : 'text-stone-600'}`} />
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-semibold text-stone-900 mb-2">
@@ -368,7 +368,7 @@ const OvenVisualizer = () => {
               <div className="bg-white rounded-2xl shadow-lg border border-stone-200 p-8">
                 <div className="text-center mb-8">
                   <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Brain className="w-8 h-8 text-white" />
+                    <Wand2 className="w-8 h-8 text-white" />
                   </div>
                   <h2 className="text-2xl font-bold text-stone-900 mb-2">Architetto AI</h2>
                   <p className="text-stone-600">Integrazione automatica fotorealistica</p>
