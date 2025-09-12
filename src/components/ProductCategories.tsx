@@ -2,27 +2,23 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
+// @ts-ignore - handled by vite-imagetools
+import picTraditional from '@/assets/vesuviobuono-verde-mosaico.jpg?w=480;768;1024&format=avif;webp;jpg&as=picture';
+// @ts-ignore - handled by vite-imagetools
+import picGas from '@/assets/forno-arancione-terra-del-gusto.png?w=480;768;1024&format=avif;webp;png&as=picture';
+// @ts-ignore - handled by vite-imagetools
+import picElectric from '@/assets/forno-metallo-bianco-nuovo.png?w=480;768;1024&format=avif;webp;png&as=picture';
+// @ts-ignore - handled by vite-imagetools
+import picRotating from '@/assets/vesuviobuono-osteria-pizza.jpg?w=480;768;1024&format=avif;webp;jpg&as=picture';
 
 const ProductCategories = () => {
   const { t } = useTranslation();
 
   const categories = [
-    {
-      key: 'traditional',
-      image: "/lovable-uploads/vesuviobuono-verde-mosaico.jpg"
-    },
-    {
-      key: 'gas',
-      image: "/lovable-uploads/forno-arancione-terra-del-gusto.png"
-    },
-    {
-      key: 'electric',
-      image: "/lovable-uploads/forno-metallo-bianco-nuovo.png"
-    },
-    {
-      key: 'rotating',
-      image: "/lovable-uploads/vesuviobuono-osteria-pizza.jpg"
-    }
+    { key: 'traditional', picture: picTraditional },
+    { key: 'gas',          picture: picGas },
+    { key: 'electric',     picture: picElectric },
+    { key: 'rotating',     picture: picRotating },
   ];
 
   return (
@@ -48,11 +44,19 @@ const ProductCategories = () => {
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
-                  <img 
-                    src={category.image} 
-                    alt={t(`products.${category.key}.title`)}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
+                  <picture>
+                    {category.picture.sources.map((source: any) => (
+                      <source key={source.type} srcSet={source.srcset} type={source.type} sizes="(min-width: 640px) 50vw, 100vw" />
+                    ))}
+                    <img
+                      {...(category.picture as any).img}
+                      alt={t(`products.${category.key}.title`)}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
+                    />
+                  </picture>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                   <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 text-white">
                     <h3 className="font-playfair text-lg sm:text-xl md:text-2xl font-bold mb-1">{t(`products.${category.key}.title`)}</h3>

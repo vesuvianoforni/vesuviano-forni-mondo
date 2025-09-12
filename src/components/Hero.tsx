@@ -2,6 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
 import { useTranslation, Trans } from 'react-i18next';
+// @ts-ignore - handled by vite-imagetools at build time
+import heroPicture from '@/assets/mattoni-refrattari-hero.jpg?w=480;768;1024;1280;1600;1920&format=avif;webp;jpg&as=picture';
 
 const Hero = () => {
   const { t } = useTranslation();
@@ -13,12 +15,20 @@ const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden pt-20">
       {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: 'url(/lovable-uploads/mattoni-refrattari-hero.jpg)'
-        }}
-      >
+      <div className="absolute inset-0 overflow-hidden">
+        <picture>
+          {heroPicture.sources.map((source: any) => (
+            <source key={source.type} srcSet={source.srcset} type={source.type} sizes="100vw" />
+          ))}
+          <img
+            {...(heroPicture as any).img}
+            alt="Mattoni refrattari Vesuviano - sfondo hero forno artigianale"
+            className="w-full h-full object-cover"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+          />
+        </picture>
         {/* Dark Overlay for better text readability */}
         <div className="absolute inset-0 bg-black/50"></div>
       </div>
