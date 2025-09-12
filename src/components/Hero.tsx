@@ -27,11 +27,18 @@ const Hero = () => {
       <div className="container mx-auto px-6 text-center z-10 relative">
         {/* Logo Section */}
         <div className="mb-8 animate-scale-in">
-          <img 
-            src="/lovable-uploads/90618b42-d829-400f-826a-d21d3b3189a6.png"
-            alt="Vesuviano - Forni Vulcanici Selezionati" 
-            className="h-32 mx-auto mb-6 hover:scale-110 transition-transform duration-500"
-          />
+          <div className="flex flex-col items-center space-y-4">
+            <img 
+              src="/lovable-uploads/b4ca6b86-e259-4d60-be56-a602cfb75449.png"
+              alt="Vesuviano Icon" 
+              className="h-20 w-auto hover:scale-110 transition-transform duration-500"
+            />
+            <img 
+              src="/lovable-uploads/90618b42-d829-400f-826a-d21d3b3189a6.png"
+              alt="Vesuviano - Forni Vulcanici Selezionati" 
+              className="h-16 w-auto hover:scale-105 transition-transform duration-500"
+            />
+          </div>
         </div>
         
         <h1 className="font-playfair text-3xl md:text-5xl font-bold mb-6 leading-tight animate-fade-in text-white">
