@@ -7,6 +7,8 @@ export interface OvenData {
   image_url: string;
   description?: string;
   specifications?: any;
+  fuel_type?: 'gas' | 'legna' | 'elettrico';
+  coating_type?: 'mosaico' | 'verniciato' | 'metallico';
 }
 
 export const ovenService = {

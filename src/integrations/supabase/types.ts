@@ -17,8 +17,10 @@ export type Database = {
       ovens: {
         Row: {
           category: string
+          coating_type: string | null
           created_at: string
           description: string | null
+          fuel_type: string | null
           id: string
           image_url: string
           name: string
@@ -28,8 +30,10 @@ export type Database = {
         }
         Insert: {
           category: string
+          coating_type?: string | null
           created_at?: string
           description?: string | null
+          fuel_type?: string | null
           id?: string
           image_url: string
           name: string
@@ -39,8 +43,10 @@ export type Database = {
         }
         Update: {
           category?: string
+          coating_type?: string | null
           created_at?: string
           description?: string | null
+          fuel_type?: string | null
           id?: string
           image_url?: string
           name?: string

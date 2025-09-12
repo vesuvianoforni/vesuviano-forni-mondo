@@ -14,6 +14,8 @@ interface Oven {
   image_url: string;
   description?: string | null;
   specifications?: any;
+  fuel_type?: string | null;
+  coating_type?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -123,10 +125,17 @@ const OvenGallery = () => {
                         alt={oven.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 bg-white"
                       />
-                      <div className="absolute top-3 left-3">
-                        <Badge className={categoryInfo.color}>
-                          {categoryInfo.label.replace('Forni ', '')}
-                        </Badge>
+                      <div className="absolute top-3 left-3 flex flex-col gap-1">
+                        {oven.fuel_type && (
+                          <Badge className="bg-blue-500 text-white text-xs">
+                            a {oven.fuel_type.charAt(0).toUpperCase() + oven.fuel_type.slice(1)}
+                          </Badge>
+                        )}
+                        {oven.coating_type && (
+                          <Badge className="bg-amber-500 text-white text-xs">
+                            {oven.coating_type.charAt(0).toUpperCase() + oven.coating_type.slice(1)}
+                          </Badge>
+                        )}
                       </div>
                     </div>
                   </CardHeader>
