@@ -2,12 +2,17 @@
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import { supabase } from "@/integrations/supabase/client";
 
 const ClientsMap = () => {
   const { t } = useTranslation();
-  const mapRef = useRef<HTMLDivElement>(null);
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const map = useRef<mapboxgl.Map | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [mapError, setMapError] = useState(false);
+  const [mapboxToken, setMapboxToken] = useState<string>('');
 
   const clients = [
     // Italia - concentrazione principale
@@ -43,126 +48,112 @@ const ClientsMap = () => {
     }
   };
 
-  const initializeMap = () => {
-    console.log("Initializing map...");
-    
-    if (!mapRef.current) {
-      console.log("Map ref not available");
-      return;
-    }
-
-    // Check if Google Maps is already loaded
-    if (window.google && window.google.maps) {
-      console.log("Google Maps already loaded, creating map...");
-      createMap();
-      return;
-    }
-
-    // Load Google Maps script
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dQTuuCC3F_DqFi&libraries=maps&callback=initMap`;
-    script.async = true;
-    script.defer = true;
-    
-    // Set up global callback
-    (window as any).initMap = () => {
-      console.log("Google Maps loaded via callback");
-      createMap();
-    };
-
-    script.onerror = () => {
-      console.error("Failed to load Google Maps script");
+  // Fetch Mapbox token from Supabase Edge Function
+  const fetchMapboxToken = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('get-mapbox-token');
+      if (error) throw error;
+      
+      if (data?.token) {
+        setMapboxToken(data.token);
+        return data.token;
+      }
+    } catch (error) {
+      console.error('Error fetching Mapbox token:', error);
       setMapError(true);
-      setMapLoaded(false);
-    };
-
-    document.head.appendChild(script);
+    }
+    return null;
   };
 
-  const createMap = () => {
-    if (!mapRef.current || !window.google || !window.google.maps) {
-      console.log("Cannot create map - missing requirements");
-      return;
-    }
-
+  const initializeMap = async () => {
+    if (!mapContainer.current) return;
+    
     try {
-      console.log("Creating Google Maps instance...");
+      // Get Mapbox token
+      let token = mapboxToken;
+      if (!token) {
+        token = await fetchMapboxToken();
+        if (!token) return;
+      }
+
+      // Initialize Mapbox
+      mapboxgl.accessToken = token;
       
-      const map = new google.maps.Map(mapRef.current, {
-        center: { lat: 41.9028, lng: 12.4964 },
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: 'mapbox://styles/mapbox/light-v11',
+        center: [12.4964, 41.9028], // Rome, Italy
         zoom: 4,
-        mapTypeControl: true,
-        streetViewControl: false,
-        fullscreenControl: true,
-        zoomControl: true,
-        styles: [
-          {
-            featureType: 'water',
-            elementType: 'geometry',
-            stylers: [{ color: '#e9e9e9' }]
-          },
-          {
-            featureType: 'landscape',
-            elementType: 'geometry',
-            stylers: [{ color: '#f5f5f5' }]
-          },
-          {
-            featureType: 'road',
-            elementType: 'geometry',
-            stylers: [{ color: '#ffffff' }]
-          }
-        ]
+        projection: 'globe' as any
       });
 
-      console.log("Map created, adding markers...");
+      // Add navigation controls
+      map.current.addControl(
+        new mapboxgl.NavigationControl({
+          visualizePitch: true,
+        }),
+        'top-right'
+      );
 
-      // Add markers for each client
-      clients.forEach((client, index) => {
-        console.log(`Adding marker for ${client.name}`);
-        
-        const marker = new google.maps.Marker({
-          position: { lat: client.lat, lng: client.lng },
-          map: map,
-          title: `${client.name}, ${client.country} - ${client.count} clienti`,
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: Math.max(8, client.count / 2),
-            fillColor: getMarkerColor(client.region),
-            fillOpacity: 0.8,
-            strokeColor: '#ffffff',
-            strokeWeight: 2,
-          }
-        });
-
-        const infoWindow = new google.maps.InfoWindow({
-          content: `
-            <div style="padding: 12px; font-family: Arial, sans-serif;">
-              <h3 style="margin: 0 0 8px 0; font-weight: bold; color: #333;">${client.name}</h3>
-              <p style="margin: 0 0 4px 0; color: #666; font-size: 14px;">${client.country}</p>
-              <p style="margin: 0; font-weight: bold; color: ${getMarkerColor(client.region)}; font-size: 16px;">${client.count} clienti</p>
-            </div>
-          `
-        });
-
-        marker.addListener('click', () => {
-          infoWindow.open(map, marker);
+      // Add atmosphere and fog effects
+      map.current.on('style.load', () => {
+        map.current?.setFog({
+          color: 'rgb(255, 255, 255)',
+          'high-color': 'rgb(200, 200, 225)',
+          'horizon-blend': 0.2,
         });
       });
 
-      console.log("All markers added successfully");
-      setMapLoaded(true);
-      setMapError(false);
+      // Add markers for each client after map loads
+      map.current.on('load', () => {
+        clients.forEach((client) => {
+          // Create marker element
+          const markerElement = document.createElement('div');
+          markerElement.className = 'custom-marker';
+          markerElement.style.width = `${Math.max(16, client.count)}px`;
+          markerElement.style.height = `${Math.max(16, client.count)}px`;
+          markerElement.style.backgroundColor = getMarkerColor(client.region);
+          markerElement.style.border = '2px solid white';
+          markerElement.style.borderRadius = '50%';
+          markerElement.style.cursor = 'pointer';
+          markerElement.style.opacity = '0.9';
+          markerElement.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+
+          // Create popup
+          const popup = new mapboxgl.Popup({ offset: 25 })
+            .setHTML(`
+              <div style="padding: 12px; font-family: Arial, sans-serif;">
+                <h3 style="margin: 0 0 8px 0; font-weight: bold; color: #333;">${client.name}</h3>
+                <p style="margin: 0 0 4px 0; color: #666; font-size: 14px;">${client.country}</p>
+                <p style="margin: 0; font-weight: bold; color: ${getMarkerColor(client.region)}; font-size: 16px;">${client.count} clienti</p>
+              </div>
+            `);
+
+          // Add marker to map
+          new mapboxgl.Marker(markerElement)
+            .setLngLat([client.lng, client.lat])
+            .setPopup(popup)
+            .addTo(map.current!);
+        });
+
+        setMapLoaded(true);
+        setMapError(false);
+      });
+
     } catch (error) {
-      console.error('Error creating map:', error);
+      console.error('Error initializing Mapbox:', error);
       setMapError(true);
       setMapLoaded(false);
     }
   };
 
   useEffect(() => {
-    console.log("Component mounted, initializing map...");
-    const timer = setTimeout(initializeMap, 100);
-    return () => clearTimeout(timer);
+    initializeMap();
+    
+    // Cleanup
+    return () => {
+      map.current?.remove();
+    };
   }, []);
 
   return (
@@ -182,14 +173,14 @@ const ClientsMap = () => {
             </p>
           </div>
 
-          {/* Google Maps */}
+          {/* Mapbox Map */}
           <div className="relative bg-white rounded-2xl shadow-2xl p-8 mb-12">
             <div className="relative w-full h-96 md:h-[600px] bg-slate-100 rounded-xl border-2 border-stone-200 overflow-hidden">
               {!mapLoaded && !mapError && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
                   <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-vesuviano-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Caricamento mappa Google Maps...</p>
+                    <p className="text-gray-600">Caricamento mappa Mapbox...</p>
                   </div>
                 </div>
               )}
@@ -212,7 +203,7 @@ const ClientsMap = () => {
                 </div>
               )}
               
-              <div ref={mapRef} className="w-full h-full rounded-xl" />
+              <div ref={mapContainer} className="w-full h-full rounded-xl" />
             </div>
 
             {/* Legenda */}
