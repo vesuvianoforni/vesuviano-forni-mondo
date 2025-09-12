@@ -26,6 +26,7 @@ const OvenGallery = () => {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedCoating, setSelectedCoating] = useState<string>('all');
+  const [displayCount, setDisplayCount] = useState(3);
 
   const categories = [
     { value: 'all', label: 'Tutti i Forni', color: 'bg-stone-100 text-stone-800' },
@@ -72,6 +73,17 @@ const OvenGallery = () => {
     return categoryMatch && coatingMatch;
   });
 
+  const displayedOvens = filteredOvens.slice(0, displayCount);
+  const hasMoreOvens = filteredOvens.length > displayCount;
+
+  const handleShowMore = () => {
+    setDisplayCount(prev => prev + 3);
+  };
+
+  const handleFilterChange = () => {
+    setDisplayCount(3); // Reset display count when filters change
+  };
+
   const getCategoryInfo = (category: string) => {
     return categories.find(cat => cat.value === category) || categories[0];
   };
@@ -107,7 +119,10 @@ const OvenGallery = () => {
                   key={category.value}
                   variant={selectedCategory === category.value ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedCategory(category.value)}
+                  onClick={() => {
+                    setSelectedCategory(category.value);
+                    handleFilterChange();
+                  }}
                   className="text-xs sm:text-sm transition-all duration-300 min-w-0 px-2 sm:px-3"
                 >
                   <span className="truncate">{category.label}</span>
@@ -131,7 +146,10 @@ const OvenGallery = () => {
                   key={coating.value}
                   variant={selectedCoating === coating.value ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedCoating(coating.value)}
+                  onClick={() => {
+                    setSelectedCoating(coating.value);
+                    handleFilterChange();
+                  }}
                   className="text-xs sm:text-sm transition-all duration-300 min-w-0 px-2 sm:px-3"
                 >
                   <span className="truncate">{coating.label}</span>
@@ -154,7 +172,7 @@ const OvenGallery = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredOvens.map((oven) => {
+            {displayedOvens.map((oven) => {
               const categoryInfo = getCategoryInfo(oven.category);
               
               return (
@@ -210,6 +228,20 @@ const OvenGallery = () => {
                 </Card>
               );
             })}
+          </div>
+        )}
+
+        {/* Show More Button */}
+        {hasMoreOvens && (
+          <div className="text-center mt-8">
+            <Button 
+              onClick={handleShowMore}
+              variant="outline"
+              size="lg"
+              className="bg-white hover:bg-vesuviano-50 border-vesuviano-200 text-vesuviano-700 hover:text-vesuviano-800 px-8"
+            >
+              Mostra Altri Forni ({filteredOvens.length - displayCount} rimanenti)
+            </Button>
           </div>
         )}
 
