@@ -2,12 +2,12 @@ import { supabase } from '@/integrations/supabase/client';
 
 export interface OvenData {
   name: string;
-  category: 'mosaico' | 'gas' | 'legna';
+  category: 'mosaico' | 'misto' | 'legna';
   subcategory?: string;
   image_url: string;
   description?: string;
   specifications?: any;
-  fuel_type?: 'gas' | 'legna' | 'elettrico';
+  fuel_type?: 'gas/legna' | 'gas/legna/elettrico';
   coating_type?: 'mosaico' | 'verniciato' | 'metallico';
 }
 
@@ -143,45 +143,51 @@ export const ovenService = {
           fuel_type: 'Legna'
         }
       },
-      {
-        name: 'Terra del Gusto Arancione',
-        category: 'gas',
-        subcategory: 'Verniciato Premium',
-        image_url: '/lovable-uploads/forno-arancione-terra-del-gusto.png',
-        description: 'Forno verniciato arancione con design moderno "Terra del Gusto", perfetto per gas e legna',
-        specifications: {
-          diameter: '120cm',
-          cooking_surface: 'Pietra refrattaria',
-          max_temperature: '480°C',
-          fuel_type: 'Gas/Legna'
-        }
-      },
-      {
-        name: 'Forno Metallo Nero Professional',
-        category: 'gas',
-        subcategory: 'Rivestimento Metallo',
-        image_url: '/lovable-uploads/forno-metallo-nero.png',
-        description: 'Forno professionale con rivestimento in metallo nero, ideale per gas, legna ed elettrico',
-        specifications: {
-          diameter: '110cm',
-          cooking_surface: 'Pietra refrattaria',
-          max_temperature: '500°C',
-          fuel_type: 'Gas/Legna/Elettrico'
-        }
-      },
-      {
-        name: 'Forno Metallo Bianco Design',
-        category: 'gas',
-        subcategory: 'Rivestimento Metallo',
-        image_url: '/lovable-uploads/forno-metallo-bianco.png',
-        description: 'Forno dal design elegante con rivestimento metallico bianco, versatile per ogni combustibile',
-        specifications: {
-          diameter: '100cm',
-          cooking_surface: 'Pietra refrattaria',
-          max_temperature: '480°C',
-          fuel_type: 'Gas/Legna/Elettrico'
-        }
-      },
+        {
+          name: 'Terra del Gusto Arancione',
+          category: 'misto',
+          subcategory: 'Verniciato Premium',
+          image_url: '/lovable-uploads/forno-arancione-terra-del-gusto.png',
+          description: 'Forno verniciato arancione con design moderno "Terra del Gusto", perfetto per gas e legna',
+          fuel_type: 'gas/legna',
+          coating_type: 'verniciato',
+          specifications: {
+            diameter: '120cm',
+            cooking_surface: 'Pietra refrattaria',
+            max_temperature: '480°C',
+            fuel_type: 'Gas/Legna'
+          }
+        },
+        {
+          name: 'Forno Metallo Nero Professional',
+          category: 'misto',
+          subcategory: 'Rivestimento Metallo',
+          image_url: '/lovable-uploads/forno-metallo-nero.png',
+          description: 'Forno professionale con rivestimento in metallo nero, ideale per gas, legna ed elettrico',
+          fuel_type: 'gas/legna/elettrico',
+          coating_type: 'metallico',
+          specifications: {
+            diameter: '110cm',
+            cooking_surface: 'Pietra refrattaria',
+            max_temperature: '500°C',
+            fuel_type: 'Gas/Legna/Elettrico'
+          }
+        },
+        {
+          name: 'Forno Metallo Bianco Design',
+          category: 'misto',
+          subcategory: 'Rivestimento Metallo',
+          image_url: '/lovable-uploads/forno-metallo-bianco.png',
+          description: 'Forno dal design elegante con rivestimento metallico bianco, versatile per ogni combustibile',
+          fuel_type: 'gas/legna/elettrico',
+          coating_type: 'metallico',
+          specifications: {
+            diameter: '100cm',
+            cooking_surface: 'Pietra refrattaria',
+            max_temperature: '480°C',
+            fuel_type: 'Gas/Legna/Elettrico'
+          }
+        },
       {
         name: 'VesuvioBuono Mosaico Verde',
         category: 'legna',
@@ -221,66 +227,66 @@ export const ovenService = {
           fuel_type: 'Legna'
         }
       },
-      {
-        name: 'Forno Mosaico Rosso Premium',
-        category: 'mosaico',
-        subcategory: 'Doppia Alimentazione',
-        image_url: '/lovable-uploads/forno-mosaico-rosso.jpg',
-        description: 'Elegante forno con rivestimento a mosaico rosso, perfetto per ristoranti e location di prestigio. Doppia alimentazione legna e gas.',
-        fuel_type: 'gas',
-        coating_type: 'mosaico',
-        specifications: {
-          diameter: '120cm',
-          cooking_surface: 'Pietra refrattaria',
-          max_temperature: '480°C',
-          fuel_type: 'Gas/Legna'
+        {
+          name: 'Forno Mosaico Rosso Premium',
+          category: 'mosaico',
+          subcategory: 'Doppia Alimentazione',
+          image_url: '/lovable-uploads/forno-mosaico-rosso.jpg',
+          description: 'Elegante forno con rivestimento a mosaico rosso, perfetto per ristoranti e location di prestigio. Doppia alimentazione legna e gas.',
+          fuel_type: 'gas/legna',
+          coating_type: 'mosaico',
+          specifications: {
+            diameter: '120cm',
+            cooking_surface: 'Pietra refrattaria',
+            max_temperature: '480°C',
+            fuel_type: 'Gas/Legna'
+          }
+        },
+        {
+          name: 'Forno Mosaico Nero & Beige',
+          category: 'mosaico',
+          subcategory: 'Design Contemporaneo',
+          image_url: '/lovable-uploads/forno-mosaico-nero-beige.jpg',
+          description: 'Design sofisticato con mosaico nero e beige, ideale per ambienti contemporanei e di alta classe. Versatile per legna e gas.',
+          fuel_type: 'gas/legna',
+          coating_type: 'mosaico',
+          specifications: {
+            diameter: '110cm',
+            cooking_surface: 'Pietra refrattaria',
+            max_temperature: '470°C',
+            fuel_type: 'Gas/Legna'
+          }
+        },
+        {
+          name: 'Forno Mosaico Grigio & Nero',
+          category: 'mosaico',
+          subcategory: 'Design Moderno',
+          image_url: '/lovable-uploads/forno-mosaico-grigio-nero.jpg',
+          description: 'Forno dal design moderno con mosaico grigio e nero, perfetto per ambienti contemporanei. Doppia alimentazione legna e gas.',
+          fuel_type: 'gas/legna',
+          coating_type: 'mosaico',
+          specifications: {
+            diameter: '100cm',
+            cooking_surface: 'Pietra refrattaria',
+            max_temperature: '460°C',
+            fuel_type: 'Gas/Legna'
+          }
+        },
+        {
+          name: 'Forno Mosaico Bianco Elegante',
+          category: 'mosaico',
+          subcategory: 'Stile Classico',
+          image_url: '/lovable-uploads/forno-mosaico-bianco.jpg',
+          description: 'Elegante forno con rivestimento a mosaico bianco, ideale per ogni ambiente. Versatile per legna e gas.',
+          fuel_type: 'gas/legna',
+          coating_type: 'mosaico',
+          specifications: {
+            diameter: '110cm',
+            cooking_surface: 'Pietra refrattaria',
+            max_temperature: '470°C',
+            fuel_type: 'Gas/Legna'
+          }
         }
-      },
-      {
-        name: 'Forno Mosaico Nero & Beige',
-        category: 'mosaico', 
-        subcategory: 'Design Contemporaneo',
-        image_url: '/lovable-uploads/forno-mosaico-nero-beige.jpg',
-        description: 'Design sofisticato con mosaico nero e beige, ideale per ambienti contemporanei e di alta classe. Versatile per legna e gas.',
-        fuel_type: 'gas',
-        coating_type: 'mosaico',
-        specifications: {
-          diameter: '110cm',
-          cooking_surface: 'Pietra refrattaria',
-          max_temperature: '470°C',
-          fuel_type: 'Gas/Legna'
-        }
-      },
-      {
-        name: 'Forno Mosaico Grigio & Nero',
-        category: 'mosaico', 
-        subcategory: 'Design Moderno',
-        image_url: '/lovable-uploads/forno-mosaico-grigio-nero.jpg',
-        description: 'Forno dal design moderno con mosaico grigio e nero, perfetto per ambienti contemporanei. Doppia alimentazione legna e gas.',
-        fuel_type: 'gas',
-        coating_type: 'mosaico',
-        specifications: {
-          diameter: '100cm',
-          cooking_surface: 'Pietra refrattaria',
-          max_temperature: '460°C',
-          fuel_type: 'Gas/Legna'
-        }
-      },
-      {
-        name: 'Forno Mosaico Bianco Elegante',
-        category: 'mosaico',
-        subcategory: 'Stile Classico',
-        image_url: '/lovable-uploads/forno-mosaico-bianco.jpg',
-        description: 'Elegante forno con rivestimento a mosaico bianco, ideale per ogni ambiente. Versatile per legna e gas.',
-        fuel_type: 'gas',
-        coating_type: 'mosaico',
-        specifications: {
-          diameter: '110cm',
-          cooking_surface: 'Pietra refrattaria',
-          max_temperature: '470°C',
-          fuel_type: 'Gas/Legna'
-        }
-      }
     ];
 
     // Sync defaults via Edge Function (runs with service role)
