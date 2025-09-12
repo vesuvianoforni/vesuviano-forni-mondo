@@ -19,6 +19,7 @@ const OvenVisualizer = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
   const [showDownloadModal, setShowDownloadModal] = useState(false);
+  const [selectedMode, setSelectedMode] = useState<'ai' | 'ar' | null>(null);
 
   const ovenTypes: OvenType[] = [
     { 
@@ -200,11 +201,11 @@ const OvenVisualizer = () => {
         />
       )}
       
-      {/* Main Section - Clean & Professional */}
+      {/* Main Section */}
       <section className="min-h-screen bg-gradient-to-b from-stone-50 to-stone-100 py-16">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          {/* Clean Header */}
-          <div className="text-center mb-16">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          {/* Header */}
+          <div className="text-center mb-12">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-primary rounded-2xl mb-6">
               <Wand2 className="w-6 h-6 text-white" />
             </div>
@@ -212,30 +213,119 @@ const OvenVisualizer = () => {
             <h1 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
               Visualizzatore Forni
             </h1>
-            <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-              Tecnologia avanzata per integrare i nostri forni nel vostro spazio
+            <p className="text-xl text-stone-600 max-w-2xl mx-auto mb-8">
+              Scegli come visualizzare il tuo forno Vesuviano
             </p>
-          </div>
 
-          {/* Two Column Layout */}
-          <div className="grid lg:grid-cols-2 gap-12 mb-16">
-            {/* AI Generation Section */}
-            <div className="bg-white rounded-2xl shadow-lg border border-stone-200 overflow-hidden">
-              <div className="p-8">
-                {/* Header */}
-                <div className="flex items-center mb-6">
-                  <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center mr-4">
-                    <Brain className="w-5 h-5 text-white" />
+            {/* Mode Selection */}
+            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12">
+              {/* AI Mode Card */}
+              <button
+                onClick={() => setSelectedMode('ai')}
+                className={`relative p-6 rounded-2xl border-2 transition-all duration-300 text-left ${
+                  selectedMode === 'ai'
+                    ? 'border-blue-500 bg-blue-50 shadow-lg transform scale-105'
+                    : 'border-stone-200 bg-white hover:border-stone-300 hover:shadow-md'
+                }`}
+              >
+                <div className="flex items-start space-x-4">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                    selectedMode === 'ai' ? 'bg-blue-500' : 'bg-stone-100'
+                  }`}>
+                    <Brain className={`w-6 h-6 ${selectedMode === 'ai' ? 'text-white' : 'text-stone-600'}`} />
                   </div>
-                  <div>
-                    <h2 className="text-xl font-semibold text-stone-900">Generazione AI</h2>
-                    <p className="text-sm text-stone-600">Integrazione automatica nel vostro spazio</p>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-semibold text-stone-900 mb-2">
+                      Generazione AI
+                    </h3>
+                    <p className="text-stone-600 text-sm mb-3">
+                      Carica una foto del tuo spazio e l'AI integrerà fotorealisticamente il forno selezionato
+                    </p>
+                    <div className="space-y-2 text-xs text-stone-500">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                        <span>Risultato fotorealistico professionale</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                        <span>Integrazione perfetta con illuminazione</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                        <span>Immagine scaricabile ad alta risoluzione</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
+                {selectedMode === 'ai' && (
+                  <div className="absolute top-3 right-3 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                  </div>
+                )}
+              </button>
 
-                {/* Image Upload */}
+              {/* AR Mode Card */}
+              <button
+                onClick={() => setSelectedMode('ar')}
+                className={`relative p-6 rounded-2xl border-2 transition-all duration-300 text-left ${
+                  selectedMode === 'ar'
+                    ? 'border-emerald-500 bg-emerald-50 shadow-lg transform scale-105'
+                    : 'border-stone-200 bg-white hover:border-stone-300 hover:shadow-md'
+                }`}
+              >
+                <div className="flex items-start space-x-4">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                    selectedMode === 'ar' ? 'bg-emerald-500' : 'bg-stone-100'
+                  }`}>
+                    <Eye className={`w-6 h-6 ${selectedMode === 'ar' ? 'text-white' : 'text-stone-600'}`} />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-semibold text-stone-900 mb-2">
+                      Realtà Aumentata
+                    </h3>
+                    <p className="text-stone-600 text-sm mb-3">
+                      Usa la fotocamera del tuo dispositivo per vedere il forno 3D nel tuo spazio in tempo reale
+                    </p>
+                    <div className="space-y-2 text-xs text-stone-500">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                        <span>Visualizzazione 3D interattiva</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                        <span>Posizionamento e rotazione in tempo reale</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                        <span>Compatibile con smartphone moderni</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {selectedMode === 'ar' && (
+                  <div className="absolute top-3 right-3 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Content Based on Selected Mode */}
+          {selectedMode === 'ai' && (
+            <div className="max-w-2xl mx-auto">
+              <div className="bg-white rounded-2xl shadow-lg border border-stone-200 p-8">
+                <div className="text-center mb-8">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Brain className="w-8 h-8 text-white" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-stone-900 mb-2">Generazione AI</h2>
+                  <p className="text-stone-600">Integrazione automatica fotorealistica</p>
+                </div>
+
                 <div className="space-y-6">
-                  <div className="border-2 border-dashed border-stone-300 rounded-xl p-6 text-center hover:border-primary/50 transition-colors">
+                  {/* Image Upload */}
+                  <div className="border-2 border-dashed border-stone-300 rounded-xl p-6 text-center hover:border-blue-400 hover:bg-blue-50/30 transition-all">
                     <input
                       type="file"
                       accept="image/*"
@@ -245,7 +335,7 @@ const OvenVisualizer = () => {
                       id="image-upload"
                     />
                     <label htmlFor="image-upload" className="cursor-pointer">
-                      <Upload className="w-8 h-8 text-stone-400 mx-auto mb-3" />
+                      <Upload className="w-10 h-10 text-stone-400 mx-auto mb-3" />
                       <p className="font-medium text-stone-900 mb-1">Carica foto del tuo spazio</p>
                       <p className="text-sm text-stone-600">Fino a 3 immagini • JPG, PNG</p>
                     </label>
@@ -259,11 +349,11 @@ const OvenVisualizer = () => {
                           <img
                             src={URL.createObjectURL(image)}
                             alt={`Upload ${index + 1}`}
-                            className="w-full h-20 object-cover rounded-lg"
+                            className="w-full h-24 object-cover rounded-lg"
                           />
                           <button
                             onClick={() => removeImage(index)}
-                            className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
                           >
                             <X className="w-3 h-3" />
                           </button>
@@ -274,7 +364,7 @@ const OvenVisualizer = () => {
 
                   {/* Oven Selection */}
                   <div>
-                    <h3 className="font-medium text-stone-900 mb-3">Scegli il forno</h3>
+                    <h3 className="font-semibold text-stone-900 mb-4">Scegli il forno</h3>
                     <div className="grid grid-cols-2 gap-3">
                       {ovenTypes.map((oven) => (
                         <button
@@ -282,14 +372,14 @@ const OvenVisualizer = () => {
                           onClick={() => setSelectedOvenType(oven.value)}
                           className={`relative overflow-hidden rounded-lg border-2 transition-all ${
                             selectedOvenType === oven.value
-                              ? 'border-primary ring-2 ring-primary/20'
+                              ? 'border-blue-500 ring-2 ring-blue-200'
                               : 'border-stone-200 hover:border-stone-300'
                           }`}
                         >
                           <img
                             src={oven.image}
                             alt={oven.label}
-                            className="w-full h-16 object-cover"
+                            className="w-full h-20 object-cover"
                           />
                           <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                             <p className="text-white text-xs font-medium text-center px-2">
@@ -297,7 +387,7 @@ const OvenVisualizer = () => {
                             </p>
                           </div>
                           {selectedOvenType === oven.value && (
-                            <div className="absolute top-1 right-1 w-3 h-3 bg-primary rounded-full"></div>
+                            <div className="absolute top-2 right-2 w-4 h-4 bg-blue-500 rounded-full"></div>
                           )}
                         </button>
                       ))}
@@ -308,131 +398,124 @@ const OvenVisualizer = () => {
                   <Button
                     onClick={generateOvenInSpace}
                     disabled={selectedImages.length === 0 || !selectedOvenType || isGenerating}
-                    className="w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-lg font-medium transition-colors"
+                    className={`w-full py-4 font-semibold rounded-xl transition-all duration-300 ${
+                      isGenerating
+                        ? 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-pulse'
+                        : 'bg-primary hover:bg-primary/90 text-white'
+                    }`}
                   >
                     {isGenerating ? (
-                      <div className="flex items-center justify-center space-x-2">
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>Generando...</span>
+                      <div className="flex items-center justify-center space-x-3">
+                        <div className="relative">
+                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        </div>
+                        <span className="text-white">Generando con AI...</span>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center space-x-2">
-                        <Wand2 className="w-4 h-4" />
-                        <span>Genera Immagine</span>
+                        <Sparkles className="w-5 h-5" />
+                        <span>Genera Immagine AI</span>
                       </div>
                     )}
                   </Button>
                 </div>
               </div>
             </div>
+          )}
 
-            {/* AR Section */}
-            <div className="bg-white rounded-2xl shadow-lg border border-stone-200 overflow-hidden">
-              <div className="p-8">
-                {/* Header */}
-                <div className="flex items-center mb-6">
-                  <div className="w-10 h-10 bg-secondary rounded-xl flex items-center justify-center mr-4">
-                    <Eye className="w-5 h-5 text-white" />
+          {selectedMode === 'ar' && (
+            <div className="max-w-2xl mx-auto">
+              <div className="bg-white rounded-2xl shadow-lg border border-stone-200 p-8">
+                <div className="text-center mb-8">
+                  <div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Eye className="w-8 h-8 text-white" />
                   </div>
+                  <h2 className="text-2xl font-bold text-stone-900 mb-2">Realtà Aumentata</h2>
+                  <p className="text-stone-600">Visualizzazione 3D in tempo reale</p>
+                </div>
+
+                <div className="space-y-6">
+                  {/* Oven Selection for AR */}
                   <div>
-                    <h2 className="text-xl font-semibold text-stone-900">Realtà Aumentata</h2>
-                    <p className="text-sm text-stone-600">Visualizzazione 3D in tempo reale</p>
+                    <h3 className="font-semibold text-stone-900 mb-4">Scegli il forno per l'AR</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {ovenTypes.map((oven) => (
+                        <button
+                          key={oven.value}
+                          onClick={() => setSelectedOvenType(oven.value)}
+                          className={`relative overflow-hidden rounded-lg border-2 transition-all ${
+                            selectedOvenType === oven.value
+                              ? 'border-emerald-500 ring-2 ring-emerald-200'
+                              : 'border-stone-200 hover:border-stone-300'
+                          }`}
+                        >
+                          <img
+                            src={oven.image}
+                            alt={oven.label}
+                            className="w-full h-20 object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                            <p className="text-white text-xs font-medium text-center px-2">
+                              {oven.label.split(' - ')[0]}
+                            </p>
+                          </div>
+                          {selectedOvenType === oven.value && (
+                            <div className="absolute top-2 right-2 w-4 h-4 bg-emerald-500 rounded-full"></div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                {/* AR Features */}
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-stone-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Camera className="w-4 h-4 text-stone-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-stone-900">Fotocamera live</p>
-                      <p className="text-sm text-stone-600">Utilizza la fotocamera del dispositivo</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-stone-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Smartphone className="w-4 h-4 text-stone-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-stone-900">Controlli touch</p>
-                      <p className="text-sm text-stone-600">Posiziona e ruota il modello 3D</p>
+                  {/* AR Features */}
+                  <div className="bg-stone-50 rounded-xl p-6">
+                    <h4 className="font-medium text-stone-900 mb-4">Cosa puoi fare con l'AR:</h4>
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3">
+                        <Camera className="w-5 h-5 text-emerald-600" />
+                        <span className="text-sm text-stone-700">Usa la fotocamera per vedere il forno nel tuo spazio</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <Smartphone className="w-5 h-5 text-emerald-600" />
+                        <span className="text-sm text-stone-700">Tocca e trascina per posizionare il forno</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <Zap className="w-5 h-5 text-emerald-600" />
+                        <span className="text-sm text-stone-700">Ruota e ridimensiona in tempo reale</span>
+                      </div>
                     </div>
                   </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-stone-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Zap className="w-4 h-4 text-stone-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-stone-900">Rendering real-time</p>
-                      <p className="text-sm text-stone-600">Visualizzazione istantanea</p>
-                    </div>
-                  </div>
-                </div>
 
-                {/* Oven Selection for AR */}
-                {!selectedOvenType && (
-                  <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-                    <p className="text-sm text-amber-800">
-                      Seleziona un forno dalla sezione AI per attivare l'AR
+                  {/* AR Button */}
+                  <Button
+                    onClick={startARVisualization}
+                    disabled={!selectedOvenType}
+                    className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white py-4 font-semibold rounded-xl transition-all duration-300"
+                  >
+                    <div className="flex items-center justify-center space-x-2">
+                      <Camera className="w-5 h-5" />
+                      <span>Avvia Modalità AR</span>
+                    </div>
+                  </Button>
+
+                  <div className="text-center">
+                    <p className="text-xs text-stone-500">
+                      Richiede fotocamera e dispositivo iOS/Android moderno
                     </p>
                   </div>
-                )}
-
-                {/* AR Button */}
-                <Button
-                  onClick={startARVisualization}
-                  disabled={!selectedOvenType}
-                  className="w-full bg-secondary hover:bg-secondary/90 text-white py-3 rounded-lg font-medium transition-colors"
-                >
-                  <div className="flex items-center justify-center space-x-2">
-                    <Camera className="w-4 h-4" />
-                    <span>Avvia AR</span>
-                  </div>
-                </Button>
-
-                <p className="text-xs text-stone-500 text-center mt-3">
-                  Compatibile con dispositivi iOS/Android moderni
-                </p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
-          {/* Bottom Features */}
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-stone-200">
-              <div className="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="w-6 h-6 text-stone-600" />
-              </div>
-              <h3 className="font-semibold text-stone-900 mb-2">Fotorealismo AI</h3>
-              <p className="text-stone-600 text-sm">
-                Integrazione perfetta con illuminazione naturale
+          {/* Bottom Info */}
+          {!selectedMode && (
+            <div className="text-center">
+              <p className="text-stone-500">
+                Seleziona una modalità per iniziare la visualizzazione del tuo forno
               </p>
             </div>
-            
-            <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-stone-200">
-              <div className="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <ImageIcon className="w-6 h-6 text-stone-600" />
-              </div>
-              <h3 className="font-semibold text-stone-900 mb-2">Alta Qualità</h3>
-              <p className="text-stone-600 text-sm">
-                Immagini professionali ad alta risoluzione
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-stone-200">
-              <div className="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Zap className="w-6 h-6 text-stone-600" />
-              </div>
-              <h3 className="font-semibold text-stone-900 mb-2">Veloce</h3>
-              <p className="text-stone-600 text-sm">
-                Risultati in pochi secondi
-              </p>
-            </div>
-          </div>
+          )}
         </div>
       </section>
     </>
