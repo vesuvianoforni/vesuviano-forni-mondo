@@ -20,32 +20,39 @@ export class StabilityService {
       const img = new Image();
       
       img.onload = () => {
-        // Calcola le nuove dimensioni mantenendo le proporzioni
+        // Calcola le nuove dimensioni mantenendo le proporzioni e adattandole ai formati SDXL consentiti
         let { width, height } = img;
-        
-        if (width > height) {
-          if (width > maxSize) {
-            height = (height * maxSize) / width;
-            width = maxSize;
-          }
-        } else {
-          if (height > maxSize) {
-            width = (width * maxSize) / height;
-            height = maxSize;
+
+        // Formati consentiti da SDXL
+        const allowed = [
+          { w: 1024, h: 1024 },
+          { w: 1152, h: 896 },
+          { w: 1216, h: 832 },
+          { w: 1344, h: 768 },
+          { w: 1536, h: 640 },
+          { w: 640, h: 1536 },
+          { w: 768, h: 1344 },
+          { w: 832, h: 1216 },
+          { w: 896, h: 1152 },
+        ];
+
+        const ar = width / height;
+        const orientation = width >= height ? 'landscape' : 'portrait';
+        const candidates = allowed.filter(s => (orientation === 'landscape' ? s.w >= s.h : s.h > s.w));
+
+        // Scegli il formato con aspect ratio più vicino
+        let target = candidates[0];
+        let bestDiff = Infinity;
+        for (const s of candidates) {
+          const diff = Math.abs((s.w / s.h) - ar);
+          if (diff < bestDiff) {
+            bestDiff = diff;
+            target = s;
           }
         }
 
-        // Assicurati che le dimensioni siano almeno 320px
-        if (width < 320) {
-          const scale = 320 / width;
-          width = 320;
-          height = height * scale;
-        }
-        if (height < 320) {
-          const scale = 320 / height;
-          height = 320;
-          width = width * scale;
-        }
+        width = target.w;
+        height = target.h;
 
         canvas.width = width;
         canvas.height = height;

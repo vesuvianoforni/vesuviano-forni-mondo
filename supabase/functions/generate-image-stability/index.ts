@@ -104,6 +104,9 @@ serve(async (req) => {
         formData.append('text_prompts[0][weight]', '1');
         formData.append('cfg_scale', '6');
         formData.append('image_strength', '0.4');
+        // SDXL richiede dimensioni consentite: forziamo 1024x1024 per compatibilità
+        formData.append('width', '1024');
+        formData.append('height', '1024');
         formData.append('steps', '30');
         formData.append('samples', '1');
         
