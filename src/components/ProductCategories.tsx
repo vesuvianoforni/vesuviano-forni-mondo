@@ -17,7 +17,7 @@ const ProductCategories = () => {
     },
     {
       key: 'electric',
-      image: "/lovable-uploads/vesuviobuono-marrone-completo.jpg"
+      image: "/lovable-uploads/forno-metallo-bianco-nuovo.png"
     },
     {
       key: 'rotating',
