@@ -179,6 +179,45 @@ export const ovenService = {
           max_temperature: '480°C',
           fuel_type: 'Gas/Legna/Elettrico'
         }
+      },
+      {
+        name: 'VesuvioBuono Mosaico Verde',
+        category: 'legna',
+        subcategory: 'VesuvioBuono Professional',
+        image_url: '/lovable-uploads/vesuviobuono-verde-mosaico.jpg',
+        description: 'Forno professionale VesuvioBuono con rivestimento a mosaico verde, ideale per pizzerie e ristoranti',
+        specifications: {
+          diameter: '120cm',
+          cooking_surface: 'Pietra refrattaria',
+          max_temperature: '500°C',
+          fuel_type: 'Legna'
+        }
+      },
+      {
+        name: 'VesuvioBuono Mosaico Marrone',
+        category: 'legna',
+        subcategory: 'VesuvioBuono Professional',
+        image_url: '/lovable-uploads/vesuviobuono-marrone-completo.jpg',
+        description: 'Forno VesuvioBuono con elegante mosaico marrone, dotato di sistema di combustione avanzato',
+        specifications: {
+          diameter: '130cm',
+          cooking_surface: 'Pietra refrattaria',
+          max_temperature: '500°C',
+          fuel_type: 'Legna'
+        }
+      },
+      {
+        name: 'VesuvioBuono Osteria Pizza',
+        category: 'legna',
+        subcategory: 'Linea Osteria',
+        image_url: '/lovable-uploads/vesuviobuono-osteria-pizza.jpg',
+        description: 'Forno della linea Osteria con mosaico sfumato, perfetto per l\'uso commerciale intensivo',
+        specifications: {
+          diameter: '140cm',
+          cooking_surface: 'Pietra vulcanica',
+          max_temperature: '520°C',
+          fuel_type: 'Legna'
+        }
       }
     ];
 
