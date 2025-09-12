@@ -250,6 +250,36 @@ export const ovenService = {
           max_temperature: '470°C',
           fuel_type: 'Gas/Legna'
         }
+      },
+      {
+        name: 'Forno Mosaico Grigio & Nero',
+        category: 'mosaico', 
+        subcategory: 'Design Moderno',
+        image_url: '/lovable-uploads/forno-mosaico-grigio-nero.jpg',
+        description: 'Forno dal design moderno con mosaico grigio e nero, perfetto per ambienti contemporanei. Doppia alimentazione legna e gas.',
+        fuel_type: 'gas',
+        coating_type: 'mosaico',
+        specifications: {
+          diameter: '100cm',
+          cooking_surface: 'Pietra refrattaria',
+          max_temperature: '460°C',
+          fuel_type: 'Gas/Legna'
+        }
+      },
+      {
+        name: 'Forno Mosaico Bianco Elegante',
+        category: 'mosaico',
+        subcategory: 'Stile Classico',
+        image_url: '/lovable-uploads/forno-mosaico-bianco.jpg',
+        description: 'Elegante forno con rivestimento a mosaico bianco, ideale per ogni ambiente. Versatile per legna e gas.',
+        fuel_type: 'gas',
+        coating_type: 'mosaico',
+        specifications: {
+          diameter: '110cm',
+          cooking_surface: 'Pietra refrattaria',
+          max_temperature: '470°C',
+          fuel_type: 'Gas/Legna'
+        }
       }
     ];
 
