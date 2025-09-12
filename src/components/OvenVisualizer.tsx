@@ -222,7 +222,7 @@ const OvenVisualizer = () => {
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
                 Visualizza il Tuo
                 <br />
-                <span className="bg-gradient-to-r from-yellow-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-slate-200 via-white to-slate-300 bg-clip-text text-transparent">
                   Forno Perfetto
                 </span>
               </h1>
@@ -239,10 +239,10 @@ const OvenVisualizer = () => {
               <Card className="apple-card rounded-3xl overflow-hidden border-0 shadow-2xl">
                 <CardContent className="p-8">
                   <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-4 animate-glow">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-slate-600 to-charcoal-700 rounded-2xl mb-4">
                       <Brain className="w-8 h-8 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-700 to-charcoal-800 bg-clip-text text-transparent mb-2">
                       Generazione AI
                     </h2>
                     <p className="text-gray-600">
@@ -337,7 +337,7 @@ const OvenVisualizer = () => {
                     <Button
                       onClick={generateOvenInSpace}
                       disabled={selectedImages.length === 0 || !selectedOvenType || isGenerating}
-                      className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white font-bold py-4 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                      className="w-full bg-gradient-to-r from-slate-600 via-charcoal-700 to-slate-800 hover:from-slate-500 hover:via-charcoal-600 hover:to-slate-700 text-white font-bold py-4 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
                     >
                       <Wand2 className="w-6 h-6 mr-2" />
                       {isGenerating ? 'Magia in corso...' : '✨ Genera Immagine AI'}
@@ -350,10 +350,10 @@ const OvenVisualizer = () => {
               <Card className="apple-card rounded-3xl overflow-hidden border-0 shadow-2xl">
                 <CardContent className="p-8">
                   <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-pink-500 to-orange-500 rounded-2xl mb-4 animate-pulse">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-charcoal-600 to-slate-700 rounded-2xl mb-4">
                       <Eye className="w-8 h-8 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-orange-600 bg-clip-text text-transparent mb-2">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-charcoal-700 to-slate-800 bg-clip-text text-transparent mb-2">
                       Realtà Aumentata
                     </h2>
                     <p className="text-gray-600">
@@ -364,24 +364,24 @@ const OvenVisualizer = () => {
                   <div className="space-y-6">
                     {/* AR Features */}
                     <div className="space-y-4">
-                      <div className="flex items-center space-x-3 p-3 bg-pink-50 rounded-xl">
-                        <Camera className="w-6 h-6 text-pink-600" />
-                        <span className="text-sm font-medium text-pink-800">
-                          Utilizza la fotocamera in tempo reale
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-3 p-3 bg-orange-50 rounded-xl">
-                        <Smartphone className="w-6 h-6 text-orange-600" />
-                        <span className="text-sm font-medium text-orange-800">
-                          Posiziona e ruota il forno 3D
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-xl">
-                        <Zap className="w-6 h-6 text-purple-600" />
-                        <span className="text-sm font-medium text-purple-800">
-                          Visualizzazione istantanea
-                        </span>
-                      </div>
+                       <div className="flex items-center space-x-3 p-3 bg-slate-50 rounded-xl">
+                         <Camera className="w-6 h-6 text-slate-600" />
+                         <span className="text-sm font-medium text-slate-800">
+                           Utilizza la fotocamera in tempo reale
+                         </span>
+                       </div>
+                       <div className="flex items-center space-x-3 p-3 bg-charcoal-50 rounded-xl">
+                         <Smartphone className="w-6 h-6 text-charcoal-600" />
+                         <span className="text-sm font-medium text-charcoal-800">
+                           Posiziona e ruota il forno 3D
+                         </span>
+                       </div>
+                       <div className="flex items-center space-x-3 p-3 bg-slate-100 rounded-xl">
+                         <Zap className="w-6 h-6 text-slate-700" />
+                         <span className="text-sm font-medium text-slate-800">
+                           Visualizzazione istantanea
+                         </span>
+                       </div>
                     </div>
 
                     {/* Oven Selection for AR */}
@@ -397,7 +397,7 @@ const OvenVisualizer = () => {
                     <Button
                       onClick={startARVisualization}
                       disabled={!selectedOvenType}
-                      className="w-full bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 text-white font-bold py-4 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                      className="w-full bg-gradient-to-r from-charcoal-600 to-slate-700 hover:from-charcoal-500 hover:to-slate-600 text-white font-bold py-4 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
                     >
                       <Smartphone className="w-6 h-6 mr-2" />
                       🥽 Avvia Modalità AR
@@ -416,7 +416,7 @@ const OvenVisualizer = () => {
             {/* Features Grid */}
             <div className="grid md:grid-cols-3 gap-6">
               <div className="glass-effect rounded-2xl p-6 text-center text-white">
-                <Sparkles className="w-10 h-10 mx-auto mb-4 text-yellow-300" />
+                <Sparkles className="w-10 h-10 mx-auto mb-4 text-slate-300" />
                 <h3 className="font-bold text-lg mb-2">AI Fotorealistica</h3>
                 <p className="text-white/80 text-sm">
                   Integrazione perfetta con illuminazione e prospettiva naturali
@@ -424,7 +424,7 @@ const OvenVisualizer = () => {
               </div>
               
               <div className="glass-effect rounded-2xl p-6 text-center text-white">
-                <ImageIcon className="w-10 h-10 mx-auto mb-4 text-cyan-300" />
+                <ImageIcon className="w-10 h-10 mx-auto mb-4 text-slate-300" />
                 <h3 className="font-bold text-lg mb-2">Alta Risoluzione</h3>
                 <p className="text-white/80 text-sm">
                   Immagini di qualità professionale pronte per ogni uso
@@ -432,7 +432,7 @@ const OvenVisualizer = () => {
               </div>
               
               <div className="glass-effect rounded-2xl p-6 text-center text-white">
-                <Zap className="w-10 h-10 mx-auto mb-4 text-pink-300" />
+                <Zap className="w-10 h-10 mx-auto mb-4 text-slate-300" />
                 <h3 className="font-bold text-lg mb-2">Risultati Istantanei</h3>
                 <p className="text-white/80 text-sm">
                   Generazione in pochi secondi con tecnologia avanzata
