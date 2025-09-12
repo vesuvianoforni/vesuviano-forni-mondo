@@ -201,9 +201,10 @@ const OvenGallery = () => {
                     <Button 
                       variant="outline" 
                       size="sm" 
+                      onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
                       className="w-full group-hover:bg-vesuviano-600 group-hover:text-white group-hover:border-vesuviano-600 transition-all"
                     >
-                      Dettagli Tecnici
+                      Richiedi Informazioni
                     </Button>
                   </CardContent>
                 </Card>
