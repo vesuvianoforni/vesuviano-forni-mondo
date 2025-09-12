@@ -103,7 +103,7 @@ const Gallery = () => {
                   <div className="w-full h-64 bg-stone-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-700">
                     <div className="text-center">
                       <img 
-                        src="/lovable-uploads/83490d78-6935-41ab-bb12-49e6070f44db.png" 
+                        src="/lovable-uploads/f5dc8e32-7db6-41d6-b56a-feb7c40d917b.png" 
                         alt="Vesuviano Logo" 
                         className="w-16 h-16 mx-auto mb-4"
                       />

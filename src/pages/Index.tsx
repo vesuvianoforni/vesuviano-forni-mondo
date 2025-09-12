@@ -35,7 +35,7 @@ const Index = () => {
             <div>
               <div className="flex items-center mb-4">
                 <img 
-                  src="/lovable-uploads/83490d78-6935-41ab-bb12-49e6070f44db.png" 
+                  src="/lovable-uploads/f5dc8e32-7db6-41d6-b56a-feb7c40d917b.png" 
                   alt="Vesuviano Logo" 
                   className="h-8 w-auto mr-3"
                 />

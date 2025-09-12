@@ -28,7 +28,7 @@ const Hero = () => {
         {/* Logo Section */}
         <div className="mb-8 animate-scale-in">
           <img 
-            src="/lovable-uploads/09675d10-6a80-4654-b66b-6547b522db56.png" 
+            src="/lovable-uploads/367de46a-0ee6-4941-8be0-b956921c9ff8.png"
             alt="Vesuviano - Forni Vulcanici Selezionati" 
             className="h-32 mx-auto mb-6 hover:scale-110 transition-transform duration-500"
           />

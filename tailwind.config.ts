@@ -57,59 +57,58 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Vesuviano brand colors - palette pulita e professionale
+				// Vesuviano brand colors - nuova palette aziendale
 				vesuviano: {
-					50: '#fef7f0',   // Crema molto chiaro
-					100: '#fdeee0',  // Beige chiaro
-					200: '#fbdcc4',  // Sabbia
-					300: '#f7c59b',  // Pesca tenue
-					400: '#f2a76a',  // Arancio tenue
-					500: '#e8823a',  // Arancio principale (brand)
-					600: '#d66d2a',  // Arancio scuro
-					700: '#b85520',  // Marrone arancio
-					800: '#944419',  // Marrone terra
-					900: '#7a3917',  // Marrone scuro
-					950: '#421c0a',  // Quasi nero
+					50: '#fafafa',   // Quasi bianco
+					100: '#ffffff',  // Bianco puro (#FFFFFF)
+					200: '#f5f5f5',  // Grigio chiarissimo
+					300: '#e5e5e5',  // Grigio chiaro
+					400: '#a3a3a3',  // Grigio medio
+					500: '#6a7f4d',  // Verde aziendale (#6A7F4D)
+					600: '#5a6d40',  // Verde scuro
+					700: '#4a5a35',  // Verde più scuro
+					800: '#6e4b3a',  // Marrone aziendale (#6E4B3A)
+					900: '#232323',  // Nero aziendale (#232323)
+					950: '#1a1a1a',  // Nero più scuro
 				},
 				// Palette complementare neutra
 				stone: {
-					50: '#fafaf9',
-					100: '#f5f5f4',
-					200: '#e7e5e4',
-					300: '#d6d3d1',
-					400: '#a8a29e',
-					500: '#78716c',
-					600: '#57534e',
-					700: '#44403c',
-					800: '#292524',
-					900: '#1c1917',
-					950: '#0c0a09',
+					50: '#fafafa',
+					100: '#ffffff', 
+					200: '#e7e7e7',
+					300: '#d1d1d1',
+					400: '#a8a8a8',
+					500: '#6e4b3a',  // Marrone aziendale
+					600: '#5a3d2e',
+					700: '#4a3125',
+					800: '#232323',  // Nero aziendale
+					900: '#1a1a1a',
+					950: '#0c0c0c',
 				},
-				// Palette di supporto per i forni
-				copper: {
-					50: '#fdf4f3',
-					100: '#fce8e6',
-					200: '#f9d5d1',
-					300: '#f4b5ad',
-					400: '#ec8a7e',
-					500: '#e06450',
-					600: '#cd4830',
-					700: '#ac3924',
-					800: '#8f3022',
-					900: '#782d23',
+				// Palette di supporto
+				earth: {
+					50: '#f9f7f4',
+					100: '#f3efe8',
+					200: '#e7ddd0',
+					300: '#d8c7b0',
+					400: '#c7ae8e',
+					500: '#6e4b3a',  // Marrone principale
+					600: '#5e3f30',
+					700: '#4e3427',
+					800: '#3e2a1f',
+					900: '#2e2017',
 				},
-				charcoal: {
-					50: '#f6f6f6',
-					100: '#e7e7e7',
-					200: '#d1d1d1',
-					300: '#b0b0b0',
-					400: '#888888',
-					500: '#6d6d6d',
-					600: '#5d5d5d',
-					700: '#4f4f4f',
-					800: '#454545',
-					900: '#3d3d3d',
-					950: '#262626',
+				sage: {
+					50: '#f6f8f4',
+					100: '#edf1e8',
+					200: '#dbe3d2',
+					300: '#c3d0b3',
+					400: '#a8bc8f',
+					500: '#6a7f4d',  // Verde principale
+					600: '#5a6d42',
+					700: '#4a5a37',
+					800: '#3a472b',
+					900: '#2a341f',
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
