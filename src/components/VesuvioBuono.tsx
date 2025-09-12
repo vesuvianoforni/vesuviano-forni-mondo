@@ -101,7 +101,7 @@ const VesuvioBuono = () => {
               <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
                 <div className="aspect-video rounded-lg overflow-hidden">
                   <img 
-                    src="/lovable-uploads/vesuviobuono-marrone-completo.jpg" 
+                    src="/lovable-uploads/vesuviobuono-zero-emissioni.jpg" 
                     alt="Forno VesuvioBuono zero emissioni" 
                     className="w-full h-full object-cover"
                   />
