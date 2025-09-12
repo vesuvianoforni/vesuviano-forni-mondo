@@ -8,6 +8,7 @@ import ImageUploadSection from './oven-visualizer/ImageUploadSection';
 import OvenTypeSelector, { OvenType } from './oven-visualizer/OvenTypeSelector';
 import ResultPreview from './oven-visualizer/ResultPreview';
 import { supabase } from "@/integrations/supabase/client";
+import { StabilityService } from "@/services/stabilityService";
 
 import ARVisualizer from './oven-visualizer/ARVisualizer';
 
@@ -77,7 +78,9 @@ const OvenVisualizer = () => {
     try {
       const base64Image = await convertFileToBase64(selectedImage);
       const selectedOvenData = ovenTypes.find(oven => oven.value === selectedOvenType);
+      const promptText = `Inserisci il forno selezionato "${selectedOvenData?.label || 'forno a legna'}" nella foto caricata in fotorealismo, senza alterare la foto caricata, semplicemente inserendo il forno in modo equilibrato e naturale. Il forno deve integrarsi perfettamente nell'ambiente rispettando prospettiva, illuminazione e ombre.`;
       
+      // 1) Prova con Gemini (edge function)
       const { data, error } = await supabase.functions.invoke('generate-oven-space', {
         body: {
           spaceImage: base64Image,
@@ -91,12 +94,24 @@ const OvenVisualizer = () => {
       if (data?.success && data?.imageUrl) {
         setGeneratedImageUrl(data.imageUrl);
         toast.success("Immagine generata con successo!");
-      } else {
-        throw new Error(data?.error || 'Errore nella generazione');
+        return;
       }
-    } catch (error) {
+
+      // 2) Fallback automatico a Stability AI (se Gemini fallisce o ha quota esaurita)
+      console.warn('Gemini non ha generato l\'immagine, faccio fallback su Stability. Dettagli:', data);
+      const stability = new StabilityService();
+      const result = await stability.generateImage({ positivePrompt: promptText, imageFile: selectedImage });
+      if (result?.success) {
+        setGeneratedImageUrl(result.imageURL);
+        toast.success("Immagine generata (fallback Stability)");
+        return;
+      }
+
+      throw new Error(data?.error || 'Errore nella generazione');
+    } catch (error: any) {
       console.error('Errore generazione:', error);
-      toast.error(`Errore nella generazione: ${error.message}`);
+      const msg = error?.message || 'Errore sconosciuto';
+      toast.error(`Errore nella generazione: ${msg}`);
     } finally {
       setIsGenerating(false);
     }
