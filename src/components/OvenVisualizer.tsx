@@ -67,6 +67,16 @@ const OvenVisualizer = () => {
     });
   };
 
+  const fetchUrlToBase64 = async (url: string): Promise<string> => {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    return await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
   const generateOvenInSpace = async () => {
     if (!selectedImage || !selectedOvenType) {
       toast.error("Seleziona un'immagine dello spazio e un tipo di forno");
@@ -78,6 +88,9 @@ const OvenVisualizer = () => {
     try {
       const base64Image = await convertFileToBase64(selectedImage);
       const selectedOvenData = ovenTypes.find(oven => oven.value === selectedOvenType);
+      // Usa l'immagine del modello come riferimento per Gemini (fallback se non forni trasparenze)
+      const ovenRefUrl = selectedOvenData?.image || '';
+      const ovenImageBase64 = ovenRefUrl ? await fetchUrlToBase64(ovenRefUrl) : undefined;
       const promptText = `Inserisci il forno selezionato "${selectedOvenData?.label || 'forno a legna'}" nella foto caricata in fotorealismo, senza alterare la foto caricata, semplicemente inserendo il forno in modo equilibrato e naturale. Il forno deve integrarsi perfettamente nell'ambiente rispettando prospettiva, illuminazione e ombre.`;
       
       // 1) Prova con Gemini (edge function)
@@ -85,7 +98,8 @@ const OvenVisualizer = () => {
         body: {
           spaceImage: base64Image,
           ovenType: selectedOvenType,
-          ovenModel: selectedOvenData?.label || 'forno a legna'
+          ovenModel: selectedOvenData?.label || 'forno a legna',
+          ovenImage: ovenImageBase64
         }
       });
 

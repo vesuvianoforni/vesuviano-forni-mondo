@@ -17,7 +17,7 @@ serve(async (req) => {
   }
 
   try {
-    const { spaceImage, ovenType, ovenModel } = await req.json()
+    const { spaceImage, ovenType, ovenModel, ovenImage } = await req.json()
 
     if (!spaceImage || !ovenType || !ovenModel) {
       return new Response(
@@ -44,6 +44,31 @@ serve(async (req) => {
     console.log('Generating image with Gemini. Prompt:', prompt);
 
     // Call Gemini API for image editing (text-and-image-to-image)
+    const contentsParts: any[] = [];
+    // Order: space image -> instruction -> oven image (if provided) -> extra guidance
+    contentsParts.push({
+      inlineData: {
+        mimeType: mimeType,
+        data: base64Image,
+      },
+    });
+    contentsParts.push({ text: prompt });
+
+    if (ovenImage) {
+      // support data URL or pure base64
+      const ovenB64 = ovenImage.includes(',') ? dataUrlToBase64(ovenImage) : ovenImage;
+      const ovenMime = ovenImage.startsWith('data:image/png') ? 'image/png' : 'image/jpeg';
+      contentsParts.push({
+        inlineData: {
+          mimeType: ovenMime,
+          data: ovenB64,
+        },
+      });
+      contentsParts.push({
+        text: 'Integra il forno nella scena rispettando prospettiva, scala, luce e ombre. Non rimuovere o alterare elementi esistenti.'
+      });
+    }
+
     const response = await fetch(
       'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent',
       {
@@ -53,17 +78,7 @@ serve(async (req) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          contents: [{
-            parts: [
-              { text: prompt },
-              {
-                inline_data: {
-                  mime_type: mimeType,
-                  data: base64Image
-                }
-              }
-            ]
-          }]
+          contents: [{ parts: contentsParts }],
         }),
       }
     )
@@ -89,6 +104,10 @@ serve(async (req) => {
     
     if (result.candidates && result.candidates[0] && result.candidates[0].content && result.candidates[0].content.parts) {
       for (const part of result.candidates[0].content.parts) {
+        if (part.inlineData && part.inlineData.data) {
+          generatedImageData = part.inlineData.data;
+          break;
+        }
         if (part.inline_data && part.inline_data.data) {
           generatedImageData = part.inline_data.data;
           break;
