@@ -1,9 +1,56 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Leaf, Award, Flame, Download, ExternalLink } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Leaf, Award, Flame, Download } from "lucide-react";
 import VideoPlayer from "./VideoPlayer";
+import { useState } from "react";
 
 const VesuvioBuono = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    city: '',
+    phone: ''
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleDownloadPDF = () => {
+    // Validate form
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.city || !formData.phone) {
+      alert('Per favore compila tutti i campi');
+      return;
+    }
+    
+    // Close dialog and download PDF
+    setIsDialogOpen(false);
+    const link = document.createElement('a');
+    link.href = '/lovable-uploads/vesuviobuono-scheda-tecnica.pdf';
+    link.download = 'VesuvioBuono_Scheda_Tecnica.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Reset form
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      city: '',
+      phone: ''
+    });
+  };
+
   const downloadPDF = () => {
     const link = document.createElement('a');
     link.href = '/lovable-uploads/vesuviobuono-scheda-tecnica.pdf';
@@ -190,20 +237,86 @@ const VesuvioBuono = () => {
                 </ul>
 
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button 
-                    onClick={downloadPDF}
-                    className="bg-white text-vesuviano-700 hover:bg-stone-100 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                  >
-                    <Download className="mr-2" size={20} />
-                    Scarica Scheda Tecnica
-                  </Button>
-                  <Button 
-                    onClick={visitWebsite}
-                    className="bg-copper-600 hover:bg-copper-700 text-white flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                  >
-                    <ExternalLink className="mr-2" size={20} />
-                    Visita il Sito
-                  </Button>
+                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="bg-white text-vesuviano-700 hover:bg-stone-100 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-lg">
+                        <Download className="mr-2" size={20} />
+                        Scarica Scheda Tecnica
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle className="text-vesuviano-800">Scarica Scheda Tecnica</DialogTitle>
+                        <DialogDescription>
+                          Compila i tuoi dati per scaricare la scheda tecnica di VesuvioBuono
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="firstName">Nome</Label>
+                            <Input
+                              id="firstName"
+                              name="firstName"
+                              value={formData.firstName}
+                              onChange={handleInputChange}
+                              required
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="lastName">Cognome</Label>
+                            <Input
+                              id="lastName"
+                              name="lastName"
+                              value={formData.lastName}
+                              onChange={handleInputChange}
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="email">Email</Label>
+                          <Input
+                            id="email"
+                            name="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="city">Città</Label>
+                          <Input
+                            id="city"
+                            name="city"
+                            value={formData.city}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="phone">Numero di telefono</Label>
+                          <Input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                          Annulla
+                        </Button>
+                        <Button onClick={handleDownloadPDF} className="bg-vesuviano-600 hover:bg-vesuviano-700">
+                          Scarica PDF
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
 
                 {/* Additional Photo Slot in Right Column */}
