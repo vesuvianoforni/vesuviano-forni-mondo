@@ -223,7 +223,7 @@ const VesuvioBuono = () => {
                   <div className="bg-vesuviano-700 rounded-lg p-4 hover:scale-105 transition-all duration-300">
                     <div className="aspect-video rounded overflow-hidden">
                       <img 
-                        src="/lovable-uploads/vesuviobuono-osteria-pizza.jpg" 
+                        src="/lovable-uploads/artigiano-lavorazione.jpg" 
                         alt="Produzione artigianale VesuvioBuono" 
                         className="w-full h-full object-cover"
                       />
