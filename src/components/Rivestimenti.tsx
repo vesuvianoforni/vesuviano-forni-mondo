@@ -93,7 +93,7 @@ const Rivestimenti = () => {
                   <Button 
                     size="sm"
                     className="w-full bg-stone-100 text-stone-700 hover:bg-vesuviano-500 hover:text-white transition-all duration-300 text-xs"
-                    onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
+                    onClick={() => document.getElementById('oven-gallery')?.scrollIntoView({ behavior: 'smooth' })}
                   >
                     {t('rivestimenti.viewSamples', 'Vedi Campioni')}
                   </Button>

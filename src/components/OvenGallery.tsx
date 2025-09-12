@@ -85,7 +85,7 @@ const OvenGallery = () => {
   }
 
   return (
-    <section className="py-16 bg-gradient-to-b from-stone-50 to-white">
+    <section id="oven-gallery" className="py-16 bg-gradient-to-b from-stone-50 to-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="font-playfair text-3xl md:text-4xl font-bold text-stone-800 mb-4">
