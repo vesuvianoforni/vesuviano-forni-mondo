@@ -102,14 +102,14 @@ serve(async (req) => {
         formData.append('init_image', new File([bytes], 'image.png', { type: 'image/png' }));
         formData.append('text_prompts[0][text]', prompt);
         formData.append('text_prompts[0][weight]', '1');
-        formData.append('cfg_scale', '7');
-        formData.append('image_strength', '0.35');
+        formData.append('cfg_scale', '6');
+        formData.append('image_strength', '0.4');
         formData.append('steps', '30');
         formData.append('samples', '1');
         
         console.log('FormData creato, invio richiesta a Stability AI...');
 
-        response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-v1-6/image-to-image', {
+        response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/image-to-image', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${stabilityApiKey}`,
@@ -127,7 +127,7 @@ serve(async (req) => {
     } else {
       console.log('=== MODALITÀ TEXT-TO-IMAGE ===');
       
-      response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-v1-6/text-to-image', {
+      response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${stabilityApiKey}`,
@@ -142,8 +142,8 @@ serve(async (req) => {
             }
           ],
           cfg_scale: 7,
-          height: 512,
-          width: 512,
+          height: 1024,
+          width: 1024,
           steps: 30,
           samples: 1,
         }),
