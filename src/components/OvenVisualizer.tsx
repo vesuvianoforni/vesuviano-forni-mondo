@@ -58,36 +58,25 @@ const OvenVisualizer = () => {
     loadOvens();
   }, []);
 
-  // Fallback to hardcoded ovens if no data from Supabase
-  const ovenTypes: OvenType[] = ovens.length > 0 ? ovens.map(oven => ({
-    value: oven.id,
-    label: oven.name,
-    image: oven.image_url,
-    modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/CABIN_MOSAIC_v001.fbx" // Default model
-  })) : [
+  // AR-specific oven types for visualization
+  const ovenTypes: OvenType[] = [
     { 
-      value: "cabin_mosaic", 
-      label: "VesuvioBuono - Cabin Mosaic",
-      image: "/lovable-uploads/vesuviobuono-marrone-completo.jpg",
-      modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/CABIN_MOSAIC_v001.fbx"
+      value: "vesuviobuono", 
+      label: "VesuvioBuono (Con depuratore fumi)",
+      image: "/lovable-uploads/vesuviobuono-ar.jpg",
+      modelKey: "cabin-mosaic"
     },
     { 
-      value: "black_mosaic", 
-      label: "Rivestimento Palladiana - Black Mosaic",
-      image: "/lovable-uploads/vesuviobuono-verde-mosaico.jpg",
-      modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/BLACK_MOSAIC_v001.fbx"
+      value: "tradizionale", 
+      label: "Tradizionale a cupola",
+      image: "/lovable-uploads/tradizionale-cupola-ar.jpg",
+      modelKey: "black-mosaic"
     },
     { 
-      value: "mosaic", 
-      label: "Rivestimento Mosaico - Classic",
-      image: "/lovable-uploads/vesuviobuono-osteria-pizza.jpg",
-      modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/MOSAIC_v001.fbx"
-    },
-    { 
-      value: "metal", 
-      label: "Doghe Metalliche - Metal Design",
-      image: "/lovable-uploads/forno-metallo-nero.png",
-      modelUrl: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/METAL_v001.fbx"
+      value: "metallico", 
+      label: "Metallico di design",
+      image: "/lovable-uploads/metallico-design-ar.jpg",
+      modelKey: "metal"
     }
   ];
 

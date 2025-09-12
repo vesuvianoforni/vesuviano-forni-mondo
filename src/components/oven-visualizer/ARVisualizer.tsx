@@ -488,7 +488,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
   console.log('ARVisualizer stato:', {
     selectedOvenType,
     selectedOven: selectedOven?.label,
-    selectedOvenModelUrl: selectedOven?.modelUrl,
+    selectedOvenModelKey: selectedOven?.modelKey,
     uploadedModel: uploadedModel ? { url: uploadedModel.url, name: uploadedModel.name } : null
   });
 
@@ -797,9 +797,9 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, uploadedModel }: A
         <ambientLight intensity={0.6} />
         <directionalLight position={[10, 10, 5]} intensity={1} />
         
-        {selectedOven?.modelUrl ? (
+        {selectedOven?.modelKey ? (
           <Uploaded3DModel
-            modelUrl={selectedOven.modelUrl}
+            modelUrl={`https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/3d-models/${selectedOven.modelKey}.fbx`}
             position={ovenPosition}
             rotation={ovenRotation}
             scale={ovenScale}
