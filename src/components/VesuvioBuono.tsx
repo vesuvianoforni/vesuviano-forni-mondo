@@ -71,30 +71,39 @@ const VesuvioBuono = () => {
           <div className="mb-16 animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Photo Slot 1 */}
-              <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-dashed border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
-                <div className="aspect-video bg-charcoal-700 rounded-lg flex items-center justify-center text-vesuviano-400">
-                  <div className="text-center">
-                    <p className="text-sm">Forno in Azione</p>
-                  </div>
+              <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
+                <div className="aspect-video rounded-lg overflow-hidden">
+                  <img 
+                    src="/lovable-uploads/vesuviobuono-verde-mosaico.jpg" 
+                    alt="Forno VesuvioBuono in azione" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
+                <p className="text-vesuviano-400 text-center mt-2 text-sm">Forno in Azione</p>
               </div>
               
               {/* Photo Slot 2 */}
-              <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-dashed border-copper-400 hover:border-copper-300 transition-all duration-300 hover:scale-105">
-                <div className="aspect-video bg-charcoal-700 rounded-lg flex items-center justify-center text-copper-400">
-                  <div className="text-center">
-                    <p className="text-sm">Pizza Perfetta</p>
-                  </div>
+              <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-copper-400 hover:border-copper-300 transition-all duration-300 hover:scale-105">
+                <div className="aspect-video rounded-lg overflow-hidden">
+                  <img 
+                    src="/lovable-uploads/vesuviobuono-dettaglio-bocca.jpg" 
+                    alt="Pizza perfetta nel forno VesuvioBuono" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
+                <p className="text-copper-400 text-center mt-2 text-sm">Pizza Perfetta</p>
               </div>
               
               {/* Photo Slot 3 */}
-              <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-dashed border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
-                <div className="aspect-video bg-charcoal-700 rounded-lg flex items-center justify-center text-vesuviano-400">
-                  <div className="text-center">
-                    <p className="text-sm">Zero Emissioni</p>
-                  </div>
+              <div className="bg-charcoal-800 rounded-xl p-4 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
+                <div className="aspect-video rounded-lg overflow-hidden">
+                  <img 
+                    src="/lovable-uploads/vesuviobuono-marrone-completo.jpg" 
+                    alt="Forno VesuvioBuono zero emissioni" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
+                <p className="text-vesuviano-400 text-center mt-2 text-sm">Zero Emissioni</p>
               </div>
             </div>
           </div>
@@ -132,19 +141,25 @@ const VesuvioBuono = () => {
 
                 {/* Additional Photo Slots */}
                 <div className="mt-8 grid grid-cols-2 gap-4">
-                  <div className="bg-stone-100 rounded-lg p-3 border-2 border-dashed border-stone-300 hover:border-vesuviano-400 transition-all duration-300">
-                    <div className="aspect-square bg-stone-50 rounded flex items-center justify-center text-stone-400">
-                      <div className="text-center">
-                        <p className="text-xs">Installazione</p>
-                      </div>
+                  <div className="bg-stone-100 rounded-lg p-3 hover:scale-105 transition-all duration-300">
+                    <div className="aspect-square rounded overflow-hidden">
+                      <img 
+                        src="/lovable-uploads/vesuviobuono-marrone-aperto.jpg" 
+                        alt="Installazione VesuvioBuono" 
+                        className="w-full h-full object-cover"
+                      />
                     </div>
+                    <p className="text-stone-600 text-center mt-2 text-xs">Installazione</p>
                   </div>
-                  <div className="bg-stone-100 rounded-lg p-3 border-2 border-dashed border-stone-300 hover:border-copper-400 transition-all duration-300">
-                    <div className="aspect-square bg-stone-50 rounded flex items-center justify-center text-stone-400">
-                      <div className="text-center">
-                        <p className="text-xs">Certificati</p>
-                      </div>
+                  <div className="bg-stone-100 rounded-lg p-3 hover:scale-105 transition-all duration-300">
+                    <div className="aspect-square rounded overflow-hidden">
+                      <img 
+                        src="/lovable-uploads/vesuviobuono-ostepizza-aperto.jpg" 
+                        alt="Certificazioni VesuvioBuono" 
+                        className="w-full h-full object-cover"
+                      />
                     </div>
+                    <p className="text-stone-600 text-center mt-2 text-xs">Certificati</p>
                   </div>
                 </div>
               </div>
@@ -202,12 +217,15 @@ const VesuvioBuono = () => {
 
                 {/* Additional Photo Slot in Right Column */}
                 <div className="mt-8">
-                  <div className="bg-vesuviano-700 rounded-lg p-4 border-2 border-dashed border-vesuviano-300 hover:border-vesuviano-200 transition-all duration-300">
-                    <div className="aspect-video bg-vesuviano-800 rounded flex items-center justify-center text-vesuviano-200">
-                      <div className="text-center">
-                        <p className="text-sm">Produzione Artigianale</p>
-                      </div>
+                  <div className="bg-vesuviano-700 rounded-lg p-4 hover:scale-105 transition-all duration-300">
+                    <div className="aspect-video rounded overflow-hidden">
+                      <img 
+                        src="/lovable-uploads/vesuviobuono-osteria-pizza.jpg" 
+                        alt="Produzione artigianale VesuvioBuono" 
+                        className="w-full h-full object-cover"
+                      />
                     </div>
+                    <p className="text-vesuviano-200 text-center mt-2 text-sm">Produzione Artigianale</p>
                   </div>
                 </div>
               </div>
