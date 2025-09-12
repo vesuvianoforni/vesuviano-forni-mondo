@@ -153,6 +153,32 @@ export const ovenService = {
           max_temperature: '480°C',
           fuel_type: 'Gas/Legna'
         }
+      },
+      {
+        name: 'Forno Metallo Nero Professional',
+        category: 'gas',
+        subcategory: 'Rivestimento Metallo',
+        image_url: '/lovable-uploads/forno-metallo-nero.png',
+        description: 'Forno professionale con rivestimento in metallo nero, ideale per gas, legna ed elettrico',
+        specifications: {
+          diameter: '110cm',
+          cooking_surface: 'Pietra refrattaria',
+          max_temperature: '500°C',
+          fuel_type: 'Gas/Legna/Elettrico'
+        }
+      },
+      {
+        name: 'Forno Metallo Bianco Design',
+        category: 'gas',
+        subcategory: 'Rivestimento Metallo',
+        image_url: '/lovable-uploads/forno-metallo-bianco.png',
+        description: 'Forno dal design elegante con rivestimento metallico bianco, versatile per ogni combustibile',
+        specifications: {
+          diameter: '100cm',
+          cooking_surface: 'Pietra refrattaria',
+          max_temperature: '480°C',
+          fuel_type: 'Gas/Legna/Elettrico'
+        }
       }
     ];
 
