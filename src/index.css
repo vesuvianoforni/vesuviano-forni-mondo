@@ -98,6 +98,54 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Mobile optimization and layout stability */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Prevent layout shifts */
+  img {
+    height: auto;
+    max-width: 100%;
+  }
+
+  /* Ensure containers don't shift */
+  .container {
+    @apply mx-auto px-4 sm:px-6 lg:px-8;
+    width: 100%;
+  }
+
+  /* Mobile-first responsive padding */
+  section {
+    @apply px-4 sm:px-6;
+  }
+
+  /* Button consistency */
+  button {
+    @apply transition-all duration-200;
+  }
+
+  /* Image loading stability */
+  .loading-placeholder {
+    @apply bg-stone-200 animate-pulse;
+    min-height: 200px;
+  }
+
+  /* Map container stabilization */
+  .mapboxgl-canvas-container,
+  .mapboxgl-canvas {
+    position: relative !important;
+  }
+
+  /* Responsive text utilities */
+  .text-responsive {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+
+  .heading-responsive {
+    @apply text-lg sm:text-xl lg:text-2xl;
+  }
 }
 
 .flame-container {

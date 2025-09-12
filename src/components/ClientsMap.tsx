@@ -173,29 +173,29 @@ const ClientsMap = () => {
             </p>
           </div>
 
-          {/* Mapbox Map */}
-          <div className="relative bg-white rounded-2xl shadow-2xl p-8 mb-12">
-            <div className="relative w-full h-96 md:h-[600px] bg-slate-100 rounded-xl border-2 border-stone-200 overflow-hidden">
+          {/* Mapbox Map - Mobile Optimized */}
+          <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-8 mb-12">
+            <div className="relative w-full h-64 sm:h-96 lg:h-[600px] bg-slate-100 rounded-lg sm:rounded-xl border-2 border-stone-200 overflow-hidden">
               {!mapLoaded && !mapError && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
-                  <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-vesuviano-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Caricamento mappa Mapbox...</p>
+                  <div className="text-center px-4">
+                    <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-vesuviano-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600 text-sm sm:text-base">Caricamento mappa...</p>
                   </div>
                 </div>
               )}
               
               {mapError && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
-                  <div className="text-center">
-                    <p className="text-red-600 mb-4">Errore nel caricamento della mappa</p>
+                  <div className="text-center px-4">
+                    <p className="text-red-600 mb-4 text-sm sm:text-base">Errore caricamento mappa</p>
                     <button 
                       onClick={() => {
                         setMapError(false);
                         setMapLoaded(false);
                         initializeMap();
                       }}
-                      className="px-4 py-2 bg-vesuviano-600 text-white rounded hover:bg-vesuviano-700"
+                      className="px-3 py-2 sm:px-4 text-sm sm:text-base bg-vesuviano-600 text-white rounded hover:bg-vesuviano-700 transition-colors"
                     >
                       Riprova
                     </button>
@@ -203,22 +203,22 @@ const ClientsMap = () => {
                 </div>
               )}
               
-              <div ref={mapContainer} className="w-full h-full rounded-xl" />
+              <div ref={mapContainer} className="w-full h-full rounded-lg sm:rounded-xl" />
             </div>
 
-            {/* Legenda */}
-            <div className="mt-8 flex flex-wrap justify-center gap-6">
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm border">
-                <div className="w-4 h-4 bg-vesuviano-500 rounded-full"></div>
-                <span className="text-sm font-medium text-stone-700">Italia ({clients.filter(c => c.region === 'italia').reduce((sum, c) => sum + c.count, 0)} clienti)</span>
+            {/* Legend - Mobile Optimized */}
+            <div className="mt-4 sm:mt-8 grid grid-cols-1 sm:flex sm:flex-wrap justify-center gap-3 sm:gap-6">
+              <div className="flex items-center gap-2 bg-white px-3 py-2 sm:px-4 rounded-lg shadow-sm border">
+                <div className="w-3 h-3 sm:w-4 sm:h-4 bg-vesuviano-500 rounded-full flex-shrink-0"></div>
+                <span className="text-xs sm:text-sm font-medium text-stone-700">Italia ({clients.filter(c => c.region === 'italia').reduce((sum, c) => sum + c.count, 0)} clienti)</span>
               </div>
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm border">
-                <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
-                <span className="text-sm font-medium text-stone-700">Europa ({clients.filter(c => c.region === 'europa').reduce((sum, c) => sum + c.count, 0)} clienti)</span>
+              <div className="flex items-center gap-2 bg-white px-3 py-2 sm:px-4 rounded-lg shadow-sm border">
+                <div className="w-3 h-3 sm:w-4 sm:h-4 bg-blue-500 rounded-full flex-shrink-0"></div>
+                <span className="text-xs sm:text-sm font-medium text-stone-700">Europa ({clients.filter(c => c.region === 'europa').reduce((sum, c) => sum + c.count, 0)} clienti)</span>
               </div>
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm border">
-                <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-                <span className="text-sm font-medium text-stone-700">Mondo ({clients.filter(c => c.region === 'mondo').reduce((sum, c) => sum + c.count, 0)} clienti)</span>
+              <div className="flex items-center gap-2 bg-white px-3 py-2 sm:px-4 rounded-lg shadow-sm border">
+                <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full flex-shrink-0"></div>
+                <span className="text-xs sm:text-sm font-medium text-stone-700">Mondo ({clients.filter(c => c.region === 'mondo').reduce((sum, c) => sum + c.count, 0)} clienti)</span>
               </div>
             </div>
           </div>
