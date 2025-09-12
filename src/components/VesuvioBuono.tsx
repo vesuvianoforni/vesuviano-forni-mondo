@@ -4,9 +4,12 @@ import { Leaf, Award, Flame, Download, ExternalLink } from "lucide-react";
 
 const VesuvioBuono = () => {
   const downloadPDF = () => {
-    // Simulated PDF download
-    console.log("Downloading VesuvioBuono PDF...");
-    alert("PDF scaricato! (Simulazione)");
+    const link = document.createElement('a');
+    link.href = '/lovable-uploads/vesuviobuono-scheda-tecnica.pdf';
+    link.download = 'VesuvioBuono_Scheda_Tecnica.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const visitWebsite = () => {
