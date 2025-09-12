@@ -23,8 +23,16 @@ const Hero = () => {
         <div className="absolute inset-0 bg-black/50"></div>
       </div>
       
-        {/* Main Content */}
-        <div className="container mx-auto px-6 text-center z-10 relative">
+      {/* Main Content */}
+      <div className="container mx-auto px-6 text-center z-10 relative">
+        {/* Logo Section */}
+        <div className="mb-8 animate-scale-in">
+          <img 
+            src="/lovable-uploads/90618b42-d829-400f-826a-d21d3b3189a6.png"
+            alt="Vesuviano - Forni Vulcanici Selezionati" 
+            className="h-16 w-auto mx-auto hover:scale-105 transition-transform duration-500"
+          />
+        </div>
         
         <h1 className="font-playfair text-3xl md:text-5xl font-bold mb-6 leading-tight animate-fade-in text-white">
           <span className="block text-vesuviano-400 text-2xl md:text-3xl font-medium mb-2 animate-slide-in-left">{t('hero.subtitle')}</span>
