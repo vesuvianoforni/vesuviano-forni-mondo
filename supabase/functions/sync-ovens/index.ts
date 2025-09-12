@@ -12,12 +12,23 @@ const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { persistSession: false },
 });
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Content-Type": "application/json",
+};
+
 serve(async (req) => {
+  // CORS preflight
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
   try {
     if (req.method !== "POST") {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
-        headers: { "Content-Type": "application/json" },
+        headers: corsHeaders,
       });
     }
 
@@ -25,9 +36,11 @@ serve(async (req) => {
     if (!Array.isArray(ovens)) {
       return new Response(JSON.stringify({ error: "Invalid payload" }), {
         status: 400,
-        headers: { "Content-Type": "application/json" },
+        headers: corsHeaders,
       });
     }
+
+    console.log("sync-ovens invoked with", ovens.length, "items");
 
     // Fetch existing oven names
     const { data: existing, error: selErr } = await supabase
@@ -66,13 +79,14 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({ inserted: missing.length, total: all?.length || 0 }),
-      { headers: { "Content-Type": "application/json" } }
+      { headers: corsHeaders }
     );
   } catch (e) {
     const message = (e as any)?.message || "Unknown error";
+    console.error("sync-ovens error:", message);
     return new Response(JSON.stringify({ error: message }), {
       status: 500,
-      headers: { "Content-Type": "application/json" },
+      headers: corsHeaders,
     });
   }
 });

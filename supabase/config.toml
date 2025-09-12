@@ -1,1 +1,4 @@
 project_id = "lgueucxznbqgvhpjzurf"
+
+[functions.sync-ovens]
+verify_jwt = false
