@@ -7,7 +7,7 @@ import AlertNotice from './oven-visualizer/AlertNotice';
 import ImageUploadSection from './oven-visualizer/ImageUploadSection';
 import OvenTypeSelector, { OvenType } from './oven-visualizer/OvenTypeSelector';
 import ResultPreview from './oven-visualizer/ResultPreview';
-import OvenModelsInfo from './oven-visualizer/OvenModelsInfo';
+
 import ARVisualizer from './oven-visualizer/ARVisualizer';
 
 const OvenVisualizer = () => {
@@ -180,7 +180,7 @@ const OvenVisualizer = () => {
               </div>
             </div>
 
-            <OvenModelsInfo />
+            
           </div>
         </div>
       </div>
