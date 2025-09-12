@@ -19,40 +19,6 @@ const VesuvioBuono = () => {
 
   return (
     <section id="vesuviobuono" className="py-20 bg-vesuviano-900 relative overflow-hidden">
-      {/* Stylized Pizza Decorations */}
-      <div className="absolute inset-0 opacity-10">
-        {/* Pizza 1 - Top Left */}
-        <div className="absolute top-10 left-10 w-32 h-32 animate-float">
-          <div className="w-full h-full bg-vesuviano-400 rounded-full relative">
-            {/* Pizza base */}
-            <div className="absolute inset-2 bg-vesuviano-300 rounded-full"></div>
-            {/* Pizza toppings */}
-            <div className="absolute top-4 left-6 w-3 h-3 bg-copper-500 rounded-full"></div>
-            <div className="absolute top-8 right-5 w-2 h-2 bg-vesuviano-600 rounded-full"></div>
-            <div className="absolute bottom-6 left-8 w-2 h-2 bg-copper-400 rounded-full"></div>
-            <div className="absolute bottom-8 right-7 w-3 h-3 bg-vesuviano-500 rounded-full"></div>
-          </div>
-        </div>
-        
-        {/* Pizza 2 - Bottom Right */}
-        <div className="absolute bottom-20 right-20 w-24 h-24 animate-float" style={{ animationDelay: '2s' }}>
-          <div className="w-full h-full bg-copper-400 rounded-full relative">
-            <div className="absolute inset-2 bg-copper-300 rounded-full"></div>
-            <div className="absolute top-3 left-4 w-2 h-2 bg-vesuviano-600 rounded-full"></div>
-            <div className="absolute top-6 right-3 w-2 h-2 bg-copper-600 rounded-full"></div>
-            <div className="absolute bottom-4 left-5 w-2 h-2 bg-vesuviano-500 rounded-full"></div>
-          </div>
-        </div>
-        
-        {/* Pizza 3 - Top Right */}
-        <div className="absolute top-1/3 right-1/4 w-20 h-20 animate-float" style={{ animationDelay: '4s' }}>
-          <div className="w-full h-full bg-vesuviano-500 rounded-full relative">
-            <div className="absolute inset-1 bg-vesuviano-400 rounded-full"></div>
-            <div className="absolute top-2 left-3 w-2 h-2 bg-copper-500 rounded-full"></div>
-            <div className="absolute bottom-3 right-3 w-2 h-2 bg-vesuviano-700 rounded-full"></div>
-          </div>
-        </div>
-      </div>
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-6xl mx-auto">
