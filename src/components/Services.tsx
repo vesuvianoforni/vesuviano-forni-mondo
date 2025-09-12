@@ -26,17 +26,8 @@ const Services = () => {
   ];
 
   return (
-    <section className="py-20 relative overflow-hidden">
-      {/* Background Image with Fade Effect */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center opacity-15 transition-opacity duration-1000 hover:opacity-25"
-        style={{
-          backgroundImage: 'url(/lovable-uploads/logistica-internazionale-nyc.png)'
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-white/90 to-stone-50/95" />
-      
-      <div className="container mx-auto px-6 relative z-10">
+    <section className="py-20 bg-white">      
+      <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16 animate-fade-in">
@@ -54,7 +45,7 @@ const Services = () => {
             {services.map((service, index) => (
               <div 
                 key={service.title}
-                className="bg-white/80 backdrop-blur-sm rounded-xl p-8 hover:shadow-lg transition-all duration-500 hover:scale-105 animate-fade-in group border border-stone-200 hover:border-vesuviano-300 hover:bg-white/95"
+                className="bg-stone-50 rounded-xl p-8 hover:shadow-lg transition-all duration-500 hover:scale-105 animate-fade-in group border border-stone-200 hover:border-vesuviano-300"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
                 <h3 className="font-playfair text-2xl font-semibold text-charcoal-900 mb-4 group-hover:text-vesuviano-600 transition-colors duration-300">
@@ -82,7 +73,7 @@ const Services = () => {
 
           {/* Bottom CTA */}
           <div className="text-center animate-scale-in" style={{ animationDelay: '0.8s' }}>
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-8 max-w-3xl mx-auto border border-vesuviano-200 hover:shadow-xl transition-all duration-500 hover:scale-105 hover:bg-white/95">
+            <div className="bg-vesuviano-50 rounded-xl p-8 max-w-3xl mx-auto border border-vesuviano-200 hover:shadow-xl transition-all duration-500 hover:scale-105">
               <h4 className="font-playfair text-2xl font-semibold text-charcoal-900 mb-4">
                 Hai bisogno di supporto personalizzato?
               </h4>
@@ -102,31 +93,31 @@ const Services = () => {
         </div>
       </div>
       
-      {/* Logistics Photo Section */}
-      <div className="container mx-auto px-6 relative z-10 mt-16">
+      {/* Quality Photo Section */}
+      <div className="container mx-auto px-6 mt-16">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <h3 className="font-playfair text-2xl md:text-3xl font-semibold text-charcoal-900 mb-4">
-              La Nostra <span className="text-vesuviano-600">Efficacia Logistica</span>
+              La Nostra <span className="text-vesuviano-600">Qualità Artigianale</span>
             </h3>
             <p className="text-stone-600 text-lg">
-              Consegne in tutto il mondo, anche nelle metropoli più complesse come New York
+              Forni realizzati con materiali di eccellenza e finiture impeccabili
             </p>
           </div>
           
           <div className="relative rounded-2xl overflow-hidden shadow-2xl group">
             <img 
-              src="/lovable-uploads/logistica-internazionale-nyc.png"
-              alt="Consegna forno Vesuviano a New York - Logistica internazionale efficace"
+              src="/lovable-uploads/forno-nero-elegante.png"
+              alt="Forno Vesuviano con rivestimento metallico nero - Qualità artigianale italiana"
               className="w-full h-64 md:h-96 object-cover transition-transform duration-700 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-vesuviano-900/60 via-transparent to-transparent opacity-80"></div>
             <div className="absolute bottom-6 left-6 right-6 text-white">
               <h4 className="font-playfair text-xl md:text-2xl font-semibold mb-2">
-                Forno Vesuviano in consegna a Manhattan
+                Forno Artigianale con Rivestimento Metallico
               </h4>
               <p className="text-stone-200 text-sm md:text-base">
-                La nostra logistica specializzata garantisce consegne sicure anche nei centri urbani più impegnativi
+                La qualità e l'eleganza dei nostri forni rappresentano l'eccellenza dell'artigianato italiano
               </p>
             </div>
           </div>
