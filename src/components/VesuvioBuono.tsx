@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Leaf, Award, Flame, Download } from "lucide-react";
+import { Leaf, Award, Flame, Download, Shield, CheckCircle } from "lucide-react";
 import VideoPlayer from "./VideoPlayer";
 import { useState } from "react";
 
@@ -71,10 +71,16 @@ const VesuvioBuono = () => {
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16 animate-fade-in">
-            <Badge className="bg-vesuviano-500 text-white px-6 py-3 text-xl font-bold mb-6 animate-scale-in border-none">
-              <Leaf className="mr-3" size={24} />
-              ESCLUSIVA MONDIALE
-            </Badge>
+            <div className="flex flex-wrap justify-center gap-4 mb-6">
+              <Badge className="bg-vesuviano-500 text-white px-6 py-3 text-xl font-bold animate-scale-in border-none">
+                <Leaf className="mr-3" size={24} />
+                ESCLUSIVA MONDIALE
+              </Badge>
+              <Badge className="bg-amber-600 text-white px-6 py-3 text-xl font-bold animate-scale-in border-none" style={{ animationDelay: '0.1s' }}>
+                <Shield className="mr-3" size={24} />
+                BREVETTATO
+              </Badge>
+            </div>
             <h2 className="font-playfair text-5xl md:text-7xl font-bold text-white mb-6 animate-slide-in-left">
               Vesuvio<span className="text-vesuviano-500 drop-shadow-lg">Buono</span>
             </h2>
@@ -161,8 +167,14 @@ const VesuvioBuono = () => {
                 </div>
 
                 <div className="space-y-6">
-                  <div className="border-l-4 border-vesuviano-500 pl-4 hover:border-l-8 transition-all duration-300">
-                    <h4 className="font-semibold text-charcoal-900 mb-2">Tecnologia Brevettata</h4>
+                  <div className="border-l-4 border-vesuviano-500 pl-4 hover:border-l-8 transition-all duration-300 relative">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-semibold text-stone-900">Tecnologia Brevettata</h4>
+                      <Badge className="bg-amber-100 text-amber-800 px-2 py-1 text-xs border-amber-200">
+                        <CheckCircle className="mr-1" size={12} />
+                        PATENT
+                      </Badge>
+                    </div>
                     <p className="text-stone-600">Sistema di combustione completa che elimina il 99.9% delle particelle di fuliggine.</p>
                   </div>
 
@@ -341,13 +353,19 @@ const VesuvioBuono = () => {
             <div className="bg-gradient-to-r from-stone-800 to-stone-900 rounded-xl shadow-2xl p-8 border border-vesuviano-400/30 hover:border-vesuviano-400/50 transition-all duration-500">
               <div className="grid lg:grid-cols-2 gap-8 items-center">
                 <div>
-                  <div className="flex items-center mb-6">
-                    <div className="w-12 h-12 bg-vesuviano-500 rounded-full flex items-center justify-center mr-4">
-                      <Leaf className="text-white" size={24} />
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center">
+                      <div className="w-12 h-12 bg-vesuviano-500 rounded-full flex items-center justify-center mr-4">
+                        <Leaf className="text-white" size={24} />
+                      </div>
+                      <h3 className="font-playfair text-2xl md:text-3xl font-semibold text-white">
+                        Abbattitore di Fuliggine ad Acqua
+                      </h3>
                     </div>
-                    <h3 className="font-playfair text-2xl md:text-3xl font-semibold text-white">
-                      Abbattitore di Fuliggine ad Acqua
-                    </h3>
+                    <Badge className="bg-amber-600 text-white px-3 py-2 text-sm font-bold border-none">
+                      <Shield className="mr-2" size={16} />
+                      BREVETTATO
+                    </Badge>
                   </div>
                   <div className="space-y-4">
                     <p className="text-vesuviano-200 text-lg leading-relaxed">
