@@ -26,8 +26,17 @@ const Services = () => {
   ];
 
   return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto px-6">
+    <section className="py-20 relative overflow-hidden">
+      {/* Background Image with Fade Effect */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center opacity-15 transition-opacity duration-1000 hover:opacity-25"
+        style={{
+          backgroundImage: 'url(/lovable-uploads/logistica-internazionale-nyc.png)'
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-white/90 to-stone-50/95" />
+      
+      <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16 animate-fade-in">
@@ -45,70 +54,35 @@ const Services = () => {
             {services.map((service, index) => (
               <div 
                 key={service.title}
-                className={`${
-                  service.title === "Logistica Internazionale" 
-                    ? "relative bg-gradient-to-br from-stone-900/90 to-stone-800/95 text-white overflow-hidden" 
-                    : "bg-stone-50 border border-stone-200 hover:border-vesuviano-300"
-                } rounded-xl p-8 hover:shadow-lg transition-all duration-500 hover:scale-105 animate-fade-in group`}
+                className="bg-white/80 backdrop-blur-sm rounded-xl p-8 hover:shadow-lg transition-all duration-500 hover:scale-105 animate-fade-in group border border-stone-200 hover:border-vesuviano-300 hover:bg-white/95"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
-                {/* Background image for Logistica Internazionale */}
-                {service.title === "Logistica Internazionale" && (
-                  <>
-                    <div 
-                      className="absolute inset-0 bg-cover bg-center opacity-30 transition-opacity duration-700 group-hover:opacity-50"
-                      style={{
-                        backgroundImage: 'url(/lovable-uploads/logistica-internazionale-nyc.png)'
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-br from-vesuviano-900/80 to-stone-900/90" />
-                  </>
-                )}
-                
-                <div className="relative z-10">
-                  <h3 className={`font-playfair text-2xl font-semibold mb-4 transition-colors duration-300 ${
-                    service.title === "Logistica Internazionale" 
-                      ? "text-white group-hover:text-vesuviano-300" 
-                      : "text-charcoal-900 group-hover:text-vesuviano-600"
-                  }`}>
-                    {service.title}
-                  </h3>
-                  <p className={`leading-relaxed mb-6 ${
-                    service.title === "Logistica Internazionale" 
-                      ? "text-stone-200" 
-                      : "text-stone-600"
-                  }`}>
-                    {service.description}
-                  </p>
+                <h3 className="font-playfair text-2xl font-semibold text-charcoal-900 mb-4 group-hover:text-vesuviano-600 transition-colors duration-300">
+                  {service.title}
+                </h3>
+                <p className="text-stone-600 leading-relaxed mb-6">
+                  {service.description}
+                </p>
 
-                  <ul className="space-y-3">
-                    {service.features.map((feature, idx) => (
-                      <li 
-                        key={feature} 
-                        className={`flex items-center text-sm transition-colors duration-300 hover:translate-x-1 ${
-                          service.title === "Logistica Internazionale"
-                            ? "text-stone-300 hover:text-vesuviano-300"
-                            : "text-stone-600 hover:text-vesuviano-600"
-                        }`}
-                        style={{ transitionDelay: `${idx * 0.1}s` }}
-                      >
-                        <div className={`w-2 h-2 rounded-full mr-3 flex-shrink-0 ${
-                          service.title === "Logistica Internazionale" 
-                            ? "bg-vesuviano-400" 
-                            : "bg-vesuviano-500"
-                        }`}></div>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <ul className="space-y-3">
+                  {service.features.map((feature, idx) => (
+                    <li 
+                      key={feature} 
+                      className="flex items-center text-sm text-stone-600 hover:text-vesuviano-600 transition-colors duration-300 hover:translate-x-1"
+                      style={{ transitionDelay: `${idx * 0.1}s` }}
+                    >
+                      <div className="w-2 h-2 bg-vesuviano-500 rounded-full mr-3 flex-shrink-0"></div>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
 
           {/* Bottom CTA */}
           <div className="text-center animate-scale-in" style={{ animationDelay: '0.8s' }}>
-            <div className="bg-vesuviano-50 rounded-xl p-8 max-w-3xl mx-auto border border-vesuviano-200 hover:shadow-xl transition-all duration-500 hover:scale-105">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-8 max-w-3xl mx-auto border border-vesuviano-200 hover:shadow-xl transition-all duration-500 hover:scale-105 hover:bg-white/95">
               <h4 className="font-playfair text-2xl font-semibold text-charcoal-900 mb-4">
                 Hai bisogno di supporto personalizzato?
               </h4>
