@@ -121,6 +121,8 @@ const VesuvioBuono = () => {
                     src="/lovable-uploads/vesuviobuono-forno-azione.jpg" 
                     alt="Forno VesuvioBuono in azione" 
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
                 <p className="text-vesuviano-400 text-center mt-2 text-sm">Forno in Azione</p>

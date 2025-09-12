@@ -2,6 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
 import { useTranslation, Trans } from 'react-i18next';
+import heroBgOptimized from "@/assets/hero-bg-optimized.webp";
+import vesuvianoLogoOpt from "@/assets/vesuviano-logo-white-opt.webp";
 
 const Hero = () => {
   const { t } = useTranslation();
@@ -16,7 +18,7 @@ const Hero = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: 'url(/lovable-uploads/mattoni-refrattari-hero.jpg)'
+          backgroundImage: `url(${heroBgOptimized})`
         }}
       >
         {/* Dark Overlay for better text readability */}
@@ -28,9 +30,10 @@ const Hero = () => {
         {/* Logo Section */}
         <div className="mb-6 sm:mb-8 animate-scale-in">
           <img 
-            src="/lovable-uploads/vesuviano-logo-bianco.png"
+            src={vesuvianoLogoOpt}
             alt="Vesuviano - Forni Vulcanici Selezionati" 
             className="h-16 sm:h-20 md:h-24 lg:h-32 w-auto mx-auto hover:scale-105 transition-transform duration-500"
+            loading="eager"
           />
         </div>
         

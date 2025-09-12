@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
+import terraGustoOpt from "@/assets/terra-gusto-optimized.webp";
 
 const ProductCategories = () => {
   const { t } = useTranslation();
@@ -13,7 +14,7 @@ const ProductCategories = () => {
     },
     {
       key: 'gas',
-      image: "/lovable-uploads/forno-arancione-terra-del-gusto.png"
+      image: terraGustoOpt
     },
     {
       key: 'electric',
@@ -52,6 +53,8 @@ const ProductCategories = () => {
                     src={category.image} 
                     alt={t(`products.${category.key}.title`)}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                   <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 text-white">
