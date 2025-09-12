@@ -208,7 +208,6 @@ const OvenVisualizer = () => {
           <div className="text-center mb-12">
             {/* New Badge */}
             <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 animate-pulse">
-              <Sparkles className="w-4 h-4" />
               <span>Novità assoluta AI</span>
               <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
             </div>
