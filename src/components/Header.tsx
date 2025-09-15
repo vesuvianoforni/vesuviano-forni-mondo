@@ -5,6 +5,7 @@ import LanguageSelector from './LanguageSelector';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { useState } from 'react';
+import LazyImage from './LazyImage';
 
 const Header = () => {
   const { t } = useTranslation();
@@ -31,10 +32,11 @@ const Header = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <img 
+            <LazyImage 
               src="/lovable-uploads/255a7344-f5ab-411b-8b37-6ed61e01d472.png" 
               alt="Vesuviano - Forni artigianali napoletani, produttori di forni a legna e a zero emissioni" 
               className="h-10 sm:h-12 w-auto hover:scale-105 transition-transform duration-300"
+              priority={true}
             />
           </div>
 
