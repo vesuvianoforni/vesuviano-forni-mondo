@@ -19,21 +19,50 @@ const Index = () => {
     <div className="min-h-screen w-full overflow-x-hidden">
       <OvenDataInitializer />
       <Header />
-      <Hero />
-      <ProductCategories />
-      <ErrorBoundary fallback={<div className="container mx-auto px-6 py-8">Sezione AR temporaneamente non disponibile.</div>}>
-        <OvenVisualizer />
-      </ErrorBoundary>
       
-      <CraftsmanshipSection />
-      <Services />
-      <Rivestimenti />
-      <VesuvioBuono />
-      <ErrorBoundary fallback={<div className="container mx-auto px-6 py-8">Mappa temporaneamente non disponibile.</div>}>
-        <ClientsMap />
-      </ErrorBoundary>
-      <OvenGallery />
-      <ConsultationForm />
+      <main>
+        <Hero />
+        
+        <section id="products" aria-label="Categorie prodotti">
+          <ProductCategories />
+        </section>
+        
+        <section id="ai-architect" aria-label="Visualizzatore 3D">
+          <ErrorBoundary fallback={<div className="container mx-auto px-6 py-8">Sezione AR temporaneamente non disponibile.</div>}>
+            <OvenVisualizer />
+          </ErrorBoundary>
+        </section>
+        
+        <section id="craftsmanship" aria-label="Artigianato napoletano">
+          <CraftsmanshipSection />
+        </section>
+        
+        <section id="services" aria-label="Servizi offerti">
+          <Services />
+        </section>
+        
+        <section id="rivestimenti" aria-label="Rivestimenti forni">
+          <Rivestimenti />
+        </section>
+        
+        <section id="vesuviobuono" aria-label="VesuvioBuono zero emissioni">
+          <VesuvioBuono />
+        </section>
+        
+        <section id="clients-map" aria-label="Clienti nel mondo">
+          <ErrorBoundary fallback={<div className="container mx-auto px-6 py-8">Mappa temporaneamente non disponibile.</div>}>
+            <ClientsMap />
+          </ErrorBoundary>
+        </section>
+        
+        <section id="oven-gallery" aria-label="Galleria forni">
+          <OvenGallery />
+        </section>
+        
+        <section id="consultation" aria-label="Modulo contatti">
+          <ConsultationForm />
+        </section>
+      </main>
       
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-16">

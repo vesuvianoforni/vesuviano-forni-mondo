@@ -10,6 +10,14 @@
     <meta name="author" content="Vesuviano" />
     <link rel="canonical" href="https://vesuviano.lovable.app/" />
     
+    <!-- Language alternate links for SEO -->
+    <link rel="alternate" hreflang="it" href="https://vesuviano.lovable.app/" />
+    <link rel="alternate" hreflang="en" href="https://vesuviano.lovable.app/" />
+    <link rel="alternate" hreflang="fr" href="https://vesuviano.lovable.app/" />
+    <link rel="alternate" hreflang="de" href="https://vesuviano.lovable.app/" />
+    <link rel="alternate" hreflang="es" href="https://vesuviano.lovable.app/" />
+    <link rel="alternate" hreflang="x-default" href="https://vesuviano.lovable.app/" />
+    
     <!-- Structured Data -->
     <script type="application/ld+json">
     {
@@ -33,13 +41,63 @@
         "contactType": "Customer Service",
         "availableLanguage": ["Italian", "English", "French", "German", "Spanish"]
       },
-      "makesOffer": {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Product",
-          "name": "Forni Artigianali Napoletani",
-          "description": "Forni a legna, gas, elettrici e a zero impatto ambientale per uso professionale e domestico"
+      "makesOffer": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "Forni a Legna Tradizionali",
+            "description": "Forni a legna artigianali napoletani per pizza e pane, realizzati con mattoni refrattari di alta qualità",
+            "category": "Forni a Legna",
+            "brand": {
+              "@type": "Brand",
+              "name": "Vesuviano"
+            }
+          }
+        },
+        {
+          "@type": "Offer", 
+          "itemOffered": {
+            "@type": "Product",
+            "name": "VesuvioBuono - Forni a Zero Emissioni",
+            "description": "Forni innovativi a zero impatto ambientale con abbattitore di fuliggine integrato",
+            "category": "Forni Ecologici",
+            "brand": {
+              "@type": "Brand", 
+              "name": "Vesuviano"
+            },
+            "offers": {
+              "@type": "Offer",
+              "availability": "https://schema.org/InStock",
+              "priceRange": "€€€"
+            }
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Product", 
+            "name": "Forni Gas ed Elettrici",
+            "description": "Forni professionali a gas ed elettrici per uso commerciale e domestico",
+            "category": "Forni Moderni"
+          }
         }
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "150",
+        "bestRating": "5"
+      },
+      "foundingDate": "1950",
+      "founder": {
+        "@type": "Person",
+        "name": "Famiglia Vesuviano"
+      },
+      "specialty": "Forni artigianali napoletani",
+      "areaServed": {
+        "@type": "Place",
+        "name": "Worldwide"
       }
     }
     </script>

@@ -29,15 +29,15 @@ const Hero = () => {
         <div className="mb-6 sm:mb-8 animate-scale-in">
           <img 
             src="/lovable-uploads/vesuviano-logo-bianco.png"
-            alt="Vesuviano - Forni Vulcanici Selezionati" 
+            alt="Vesuviano - Forni artigianali napoletani di alta qualità, specializzati in forni a legna, gas ed elettrici" 
             className="h-16 sm:h-20 md:h-24 lg:h-32 w-auto mx-auto hover:scale-105 transition-transform duration-500"
           />
         </div>
         
-        <h1 className="font-playfair text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold mb-4 sm:mb-6 leading-tight animate-fade-in text-white px-2 sm:px-4">
-          <span className="block text-vesuviano-400 text-base sm:text-lg md:text-2xl lg:text-3xl font-medium mb-1 sm:mb-2 animate-slide-in-left">{t('hero.subtitle')}</span>
-          <span className="block animate-slide-in-right" style={{ animationDelay: '0.3s' }}>{t('hero.title')}</span>
-        </h1>
+        <div className="font-playfair text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold mb-4 sm:mb-6 leading-tight animate-fade-in text-white px-2 sm:px-4">
+          <p className="block text-vesuviano-400 text-base sm:text-lg md:text-2xl lg:text-3xl font-medium mb-1 sm:mb-2 animate-slide-in-left">{t('hero.subtitle')}</p>
+          <h1 className="block animate-slide-in-right" style={{ animationDelay: '0.3s' }}>{t('hero.title')}</h1>
+        </div>
         
         <p className="font-inter text-sm sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed text-gray-200 animate-fade-in px-2 sm:px-4" style={{ animationDelay: '0.6s' }}>
           <Trans 
