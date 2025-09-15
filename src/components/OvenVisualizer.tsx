@@ -405,16 +405,16 @@ const OvenVisualizer = () => {
                         </div>
                       )}
 
-                      {/* Oven Selection - Limitato ai 3 forni AR */}
+                      {/* Oven Selection - Tutti i forni in collezione per AI */}
                       <div>
                         <h3 className="font-semibold text-stone-900 mb-3 text-sm">Scegli il forno</h3>
                         <div className="grid grid-cols-1 gap-3">
-                          {ovenTypes.map((oven) => (
+                          {ovens.map((oven) => (
                             <button
-                              key={oven.value}
-                              onClick={() => setSelectedOvenType(oven.value)}
+                              key={oven.id}
+                              onClick={() => setSelectedOvenType(oven.id)}
                               className={`relative overflow-hidden rounded-lg border-2 transition-all group ${
-                                selectedOvenType === oven.value
+                                selectedOvenType === oven.id
                                   ? 'border-blue-500 ring-2 ring-blue-200 transform scale-[1.02]'
                                   : 'border-stone-200 hover:border-stone-300 hover:shadow-sm'
                               }`}
@@ -422,20 +422,20 @@ const OvenVisualizer = () => {
                               <div className="flex items-center p-3">
                                 <div className="w-16 h-16 rounded-lg overflow-hidden mr-3 flex-shrink-0">
                                   <img
-                                    src={oven.image}
-                                    alt={oven.label}
+                                    src={oven.image_url}
+                                    alt={oven.name}
                                     className="w-full h-full object-cover"
                                   />
                                 </div>
                                 <div className="flex-1 text-left">
                                   <h4 className="font-medium text-sm text-stone-900 mb-1">
-                                    {oven.label.split(' (')[0]}
+                                    {oven.name}
                                   </h4>
                                   <p className="text-xs text-stone-600">
-                                    {oven.label.includes('(') ? oven.label.split('(')[1]?.replace(')', '') : 'Forno tradizionale'}
+                                    {oven.description ? oven.description.substring(0, 50) + '...' : oven.category}
                                   </p>
                                 </div>
-                                {selectedOvenType === oven.value && (
+                                {selectedOvenType === oven.id && (
                                   <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
                                     <div className="w-2 h-2 bg-white rounded-full"></div>
                                   </div>
