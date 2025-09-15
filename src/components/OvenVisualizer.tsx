@@ -352,300 +352,222 @@ const OvenVisualizer = () => {
             </div>
           </div>
 
-          {/* Content Based on Selected Mode */}
-          {selectedMode === 'ai' && (
-            <div className="max-w-2xl mx-auto">
-              <div className="bg-white rounded-2xl shadow-lg border border-stone-200 p-8">
-                <div className="text-center mb-8">
-                  <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Wand2 className="w-8 h-8 text-white" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-stone-900 mb-2">Architetto AI</h2>
-                  <p className="text-stone-600">Integrazione automatica fotorealistica</p>
-                </div>
-
-                <div className="space-y-6">
-                  {/* Image Upload */}
-                  <div className="border-2 border-dashed border-stone-300 rounded-xl p-6 text-center hover:border-blue-400 hover:bg-blue-50/30 transition-all">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleImageUpload}
-                      className="hidden"
-                      id="image-upload"
-                    />
-                    <label htmlFor="image-upload" className="cursor-pointer">
-                      <Upload className="w-10 h-10 text-stone-400 mx-auto mb-3" />
-                      <p className="font-medium text-stone-900 mb-1">Carica foto del tuo spazio</p>
-                      <p className="text-sm text-stone-600">Fino a 3 immagini • JPG, PNG</p>
-                    </label>
-                  </div>
-
-                  {/* Image Preview */}
-                  {selectedImages.length > 0 && (
-                    <div className="grid grid-cols-3 gap-3">
-                      {selectedImages.map((image, index) => (
-                        <div key={index} className="relative group">
-                          <img
-                            src={URL.createObjectURL(image)}
-                            alt={`Upload ${index + 1}`}
-                            className="w-full h-24 object-cover rounded-lg"
-                          />
-                          <button
-                            onClick={() => removeImage(index)}
-                            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <X className="w-3 h-3" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Oven Selection with Better Visibility */}
-                  <div>
-                    <h3 className="font-semibold text-stone-900 mb-4">Scegli il forno</h3>
-                    
-                    {loading ? (
-                      <div className="text-center py-8">
-                        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                        <p className="text-stone-600">Caricamento forni...</p>
+          {/* Content sections that appear below selected mode */}
+          {selectedMode && (
+            <div className="mt-8">
+              {selectedMode === 'ai' && (
+                <div className="max-w-2xl mx-auto animate-in slide-in-from-bottom-4 duration-300">
+                  <div className="bg-white rounded-2xl shadow-lg border border-stone-200 p-6 md:p-8">
+                    <div className="text-center mb-6">
+                      <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <Wand2 className="w-6 h-6 text-white" />
                       </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {(showAllOvens ? ovenTypes : ovenTypes.slice(0, 8)).map((oven) => {
-                            const ovenData = ovens.find(o => o.id === oven.value);
-                            return (
+                      <h2 className="text-xl font-bold text-stone-900 mb-1">Architetto AI</h2>
+                      <p className="text-stone-600 text-sm">Integrazione automatica fotorealistica</p>
+                    </div>
+
+                    <div className="space-y-6">
+                      {/* Image Upload */}
+                      <div className="border-2 border-dashed border-stone-300 rounded-xl p-4 md:p-6 text-center hover:border-blue-400 hover:bg-blue-50/30 transition-all">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          onChange={handleImageUpload}
+                          className="hidden"
+                          id="image-upload"
+                        />
+                        <label htmlFor="image-upload" className="cursor-pointer">
+                          <Upload className="w-8 h-8 text-stone-400 mx-auto mb-2" />
+                          <p className="font-medium text-stone-900 text-sm mb-1">Carica foto del tuo spazio</p>
+                          <p className="text-xs text-stone-600">Fino a 3 immagini • JPG, PNG</p>
+                        </label>
+                      </div>
+
+                      {/* Image Preview */}
+                      {selectedImages.length > 0 && (
+                        <div className="grid grid-cols-3 gap-2">
+                          {selectedImages.map((image, index) => (
+                            <div key={index} className="relative group">
+                              <img
+                                src={URL.createObjectURL(image)}
+                                alt={`Upload ${index + 1}`}
+                                className="w-full h-20 object-cover rounded-lg"
+                              />
                               <button
-                                key={oven.value}
-                                onClick={() => setSelectedOvenType(oven.value)}
-                                className={`relative overflow-hidden rounded-xl border-2 transition-all group ${
-                                  selectedOvenType === oven.value
-                                    ? 'border-blue-500 ring-2 ring-blue-200 transform scale-105'
-                                    : 'border-stone-200 hover:border-stone-300 hover:shadow-md'
-                                }`}
+                                onClick={() => removeImage(index)}
+                                className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
                               >
-                                <div className="aspect-[4/3] relative">
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Oven Selection - Limitato ai 3 forni AR */}
+                      <div>
+                        <h3 className="font-semibold text-stone-900 mb-3 text-sm">Scegli il forno</h3>
+                        <div className="grid grid-cols-1 gap-3">
+                          {ovenTypes.map((oven) => (
+                            <button
+                              key={oven.value}
+                              onClick={() => setSelectedOvenType(oven.value)}
+                              className={`relative overflow-hidden rounded-lg border-2 transition-all group ${
+                                selectedOvenType === oven.value
+                                  ? 'border-blue-500 ring-2 ring-blue-200 transform scale-[1.02]'
+                                  : 'border-stone-200 hover:border-stone-300 hover:shadow-sm'
+                              }`}
+                            >
+                              <div className="flex items-center p-3">
+                                <div className="w-16 h-16 rounded-lg overflow-hidden mr-3 flex-shrink-0">
                                   <img
                                     src={oven.image}
                                     alt={oven.label}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    className="w-full h-full object-cover"
                                   />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                                  
-                                  {/* Oven Info Overlay */}
-                                  <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-                                    <h4 className="font-semibold text-sm mb-1 truncate">
-                                      {ovenData?.name || oven.label.split(' - ')[0]}
-                                    </h4>
-                                    <div className="flex items-center space-x-2 text-xs">
-                                      {ovenData?.category && (
-                                        <span className="bg-white/20 px-2 py-1 rounded-full">
-                                          {ovenData.category}
-                                        </span>
-                                      )}
-                                      {ovenData?.coating_type && (
-                                        <span className="bg-white/20 px-2 py-1 rounded-full">
-                                          {ovenData.coating_type}
-                                        </span>
-                                      )}
-                                    </div>
-                                  </div>
-
-                                  {/* Selection Indicator */}
-                                  {selectedOvenType === oven.value && (
-                                    <div className="absolute top-2 right-2 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                                    </div>
-                                  )}
                                 </div>
-                              </button>
-                            );
-                          })}
-                        </div>
-                        
-                        {/* Show More Button */}
-                        {ovenTypes.length > 8 && (
-                          <div className="text-center pt-4">
-                            <button
-                              onClick={() => setShowAllOvens(!showAllOvens)}
-                              className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center space-x-2 mx-auto"
-                            >
-                              <span>{showAllOvens ? 'Mostra meno modelli' : 'Altri modelli'}</span>
-                              <div className={`transform transition-transform ${showAllOvens ? 'rotate-180' : ''}`}>
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                </svg>
+                                <div className="flex-1 text-left">
+                                  <h4 className="font-medium text-sm text-stone-900 mb-1">
+                                    {oven.label.split(' (')[0]}
+                                  </h4>
+                                  <p className="text-xs text-stone-600">
+                                    {oven.label.includes('(') ? oven.label.split('(')[1]?.replace(')', '') : 'Forno tradizionale'}
+                                  </p>
+                                </div>
+                                {selectedOvenType === oven.value && (
+                                  <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                                  </div>
+                                )}
                               </div>
                             </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Generate Button */}
+                      <Button
+                        onClick={generateOvenInSpace}
+                        disabled={selectedImages.length === 0 || !selectedOvenType || isGenerating}
+                        className={`w-full py-3 font-semibold rounded-xl transition-all duration-300 ${
+                          isGenerating
+                            ? 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-pulse'
+                            : 'bg-primary hover:bg-primary/90 text-white'
+                        }`}
+                      >
+                        {isGenerating ? (
+                          <div className="flex items-center justify-center space-x-3">
+                            <div className="relative">
+                              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            </div>
+                            <span className="text-white text-sm">Generando con AI...</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center space-x-2">
+                            <Wand2 className="w-4 h-4" />
+                            <span className="text-sm">Genera Immagine AI</span>
                           </div>
                         )}
-                      </div>
-                    )}
+                      </Button>
+                    </div>
                   </div>
-
-                  {/* Generate Button */}
-                  <Button
-                    onClick={generateOvenInSpace}
-                    disabled={selectedImages.length === 0 || !selectedOvenType || isGenerating}
-                    className={`w-full py-4 font-semibold rounded-xl transition-all duration-300 ${
-                      isGenerating
-                        ? 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-pulse'
-                        : 'bg-primary hover:bg-primary/90 text-white'
-                    }`}
-                  >
-                    {isGenerating ? (
-                      <div className="flex items-center justify-center space-x-3">
-                        <div className="relative">
-                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        </div>
-                        <span className="text-white">Generando con AI...</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center space-x-2">
-                        <Wand2 className="w-5 h-5" />
-                        <span>Genera Immagine AI</span>
-                      </div>
-                    )}
-                  </Button>
                 </div>
-              </div>
-            </div>
-          )}
+              )}
 
-          {selectedMode === 'ar' && (
-            <div className="max-w-2xl mx-auto">
-              <div className="bg-white rounded-2xl shadow-lg border border-stone-200 p-8">
-                <div className="text-center mb-8">
-                  <div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Eye className="w-8 h-8 text-white" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-stone-900 mb-2">Realtà Aumentata</h2>
-                  <p className="text-stone-600">Visualizzazione 3D in tempo reale</p>
-                </div>
-
-                <div className="space-y-6">
-                  {/* Oven Selection for AR */}
-                  <div>
-                    <h3 className="font-semibold text-stone-900 mb-4">Scegli il forno per l'AR</h3>
-                    
-                    {loading ? (
-                      <div className="text-center py-8">
-                        <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                        <p className="text-stone-600">Caricamento forni...</p>
+              {selectedMode === 'ar' && (
+                <div className="max-w-2xl mx-auto animate-in slide-in-from-bottom-4 duration-300">
+                  <div className="bg-white rounded-2xl shadow-lg border border-stone-200 p-6 md:p-8">
+                    <div className="text-center mb-6">
+                      <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <Eye className="w-6 h-6 text-white" />
                       </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {(showAllOvens ? ovenTypes : ovenTypes.slice(0, 4)).map((oven) => {
-                            const ovenData = ovens.find(o => o.id === oven.value);
-                            return (
-                              <button
-                                key={oven.value}
-                                onClick={() => setSelectedOvenType(oven.value)}
-                                className={`relative overflow-hidden rounded-xl border-2 transition-all group ${
-                                  selectedOvenType === oven.value
-                                    ? 'border-emerald-500 ring-2 ring-emerald-200 transform scale-105'
-                                    : 'border-stone-200 hover:border-stone-300 hover:shadow-md'
-                                }`}
-                              >
-                                <div className="aspect-[4/3] relative">
+                      <h2 className="text-xl font-bold text-stone-900 mb-1">Realtà Aumentata</h2>
+                      <p className="text-stone-600 text-sm">Visualizzazione 3D in tempo reale</p>
+                    </div>
+
+                    <div className="space-y-6">
+                      {/* Oven Selection for AR - Solo i 3 modelli AR */}
+                      <div>
+                        <h3 className="font-semibold text-stone-900 mb-3 text-sm">Scegli il forno per l'AR</h3>
+                        <div className="grid grid-cols-1 gap-3">
+                          {ovenTypes.map((oven) => (
+                            <button
+                              key={oven.value}
+                              onClick={() => setSelectedOvenType(oven.value)}
+                              className={`relative overflow-hidden rounded-lg border-2 transition-all group ${
+                                selectedOvenType === oven.value
+                                  ? 'border-emerald-500 ring-2 ring-emerald-200 transform scale-[1.02]'
+                                  : 'border-stone-200 hover:border-stone-300 hover:shadow-sm'
+                              }`}
+                            >
+                              <div className="flex items-center p-3">
+                                <div className="w-16 h-16 rounded-lg overflow-hidden mr-3 flex-shrink-0">
                                   <img
                                     src={oven.image}
                                     alt={oven.label}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    className="w-full h-full object-cover"
                                   />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                                  
-                                  <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
-                                    <h4 className="font-semibold text-sm mb-1 truncate">
-                                      {ovenData?.name || oven.label.split(' - ')[0]}
-                                    </h4>
-                                    <div className="flex items-center space-x-2 text-xs">
-                                      {ovenData?.category && (
-                                        <span className="bg-white/20 px-2 py-1 rounded-full">
-                                          {ovenData.category}
-                                        </span>
-                                      )}
-                                      {ovenData?.coating_type && (
-                                        <span className="bg-white/20 px-2 py-1 rounded-full">
-                                          {ovenData.coating_type}
-                                        </span>
-                                      )}
-                                    </div>
-                                  </div>
-
-                                  {selectedOvenType === oven.value && (
-                                    <div className="absolute top-2 right-2 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
-                                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                                    </div>
-                                  )}
                                 </div>
-                              </button>
-                            );
-                          })}
-                        </div>
-                        
-                        {/* Show More Button for AR */}
-                        {ovenTypes.length > 4 && (
-                          <div className="text-center pt-4">
-                            <button
-                              onClick={() => setShowAllOvens(!showAllOvens)}
-                              className="text-emerald-600 hover:text-emerald-700 font-medium text-sm flex items-center space-x-2 mx-auto"
-                            >
-                              <span>{showAllOvens ? 'Mostra meno modelli' : 'Altri modelli'}</span>
-                              <div className={`transform transition-transform ${showAllOvens ? 'rotate-180' : ''}`}>
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                </svg>
+                                <div className="flex-1 text-left">
+                                  <h4 className="font-medium text-sm text-stone-900 mb-1">
+                                    {oven.label.split(' (')[0]}
+                                  </h4>
+                                  <p className="text-xs text-stone-600">
+                                    {oven.label.includes('(') ? oven.label.split('(')[1]?.replace(')', '') : 'Forno tradizionale'}
+                                  </p>
+                                </div>
+                                {selectedOvenType === oven.value && (
+                                  <div className="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                                  </div>
+                                )}
                               </div>
                             </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* AR Features */}
+                      <div className="bg-stone-50 rounded-xl p-4">
+                        <h4 className="font-medium text-stone-900 mb-3 text-sm">Cosa puoi fare con l'AR:</h4>
+                        <div className="space-y-2">
+                          <div className="flex items-center space-x-3">
+                            <Camera className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                            <span className="text-xs text-stone-700">Usa la fotocamera per vedere il forno nel tuo spazio</span>
                           </div>
-                        )}
+                          <div className="flex items-center space-x-3">
+                            <Smartphone className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                            <span className="text-xs text-stone-700">Tocca e trascina per posizionare il forno</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <Zap className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                            <span className="text-xs text-stone-700">Ruota e ridimensiona in tempo reale</span>
+                          </div>
+                        </div>
                       </div>
-                    )}
-                  </div>
 
-                  {/* AR Features */}
-                  <div className="bg-stone-50 rounded-xl p-6">
-                    <h4 className="font-medium text-stone-900 mb-4">Cosa puoi fare con l'AR:</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-center space-x-3">
-                        <Camera className="w-5 h-5 text-emerald-600" />
-                        <span className="text-sm text-stone-700">Usa la fotocamera per vedere il forno nel tuo spazio</span>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <Smartphone className="w-5 h-5 text-emerald-600" />
-                        <span className="text-sm text-stone-700">Tocca e trascina per posizionare il forno</span>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <Zap className="w-5 h-5 text-emerald-600" />
-                        <span className="text-sm text-stone-700">Ruota e ridimensiona in tempo reale</span>
+                      {/* AR Button */}
+                      <Button
+                        onClick={startARVisualization}
+                        disabled={!selectedOvenType}
+                        className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white py-3 font-semibold rounded-xl transition-all duration-300"
+                      >
+                        <div className="flex items-center justify-center space-x-2">
+                          <Camera className="w-4 h-4" />
+                          <span className="text-sm">Avvia Modalità AR</span>
+                        </div>
+                      </Button>
+
+                      <div className="text-center">
+                        <p className="text-xs text-stone-500">
+                          Richiede fotocamera e dispositivo iOS/Android moderno
+                        </p>
                       </div>
                     </div>
-                  </div>
-
-                  {/* AR Button */}
-                  <Button
-                    onClick={startARVisualization}
-                    disabled={!selectedOvenType}
-                    className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white py-4 font-semibold rounded-xl transition-all duration-300"
-                  >
-                    <div className="flex items-center justify-center space-x-2">
-                      <Camera className="w-5 h-5" />
-                      <span>Avvia Modalità AR</span>
-                    </div>
-                  </Button>
-
-                  <div className="text-center">
-                    <p className="text-xs text-stone-500">
-                      Richiede fotocamera e dispositivo iOS/Android moderno
-                    </p>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
 
