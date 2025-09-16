@@ -13,6 +13,7 @@ import OvenGallery from "@/components/OvenGallery";
 import OvenDataInitializer from "@/components/OvenDataInitializer";
 import ConsultationForm from "@/components/ConsultationForm";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import ArchitettoAIPopup from "@/components/ArchitettoAIPopup";
 
 const Index = () => {
   return (
@@ -213,6 +214,9 @@ const Index = () => {
           </div>
         </div>
       </footer>
+      
+      {/* Architetto AI Popup */}
+      <ArchitettoAIPopup />
     </div>
   );
 };
