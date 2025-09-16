@@ -11,10 +11,6 @@ const Hero = () => {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const scrollToArchitettoAI = () => {
-    document.getElementById('ai-architect')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
     <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden pt-20">
       {/* Background Image */}
@@ -73,14 +69,6 @@ const Hero = () => {
             onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
           >
             {t('hero.freeConsultation')}
-          </Button>
-          <Button 
-            size="lg" 
-            className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl w-full sm:w-auto relative overflow-hidden"
-            onClick={scrollToArchitettoAI}
-          >
-            <span className="relative z-10">🆕 Architetto AI</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
           </Button>
         </div>
 
