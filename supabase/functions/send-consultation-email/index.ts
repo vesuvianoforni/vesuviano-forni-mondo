@@ -166,7 +166,7 @@ serve(async (req) => {
               <div class="contact-info">
                 <div class="contact-item">
                   <strong>📞 Telefono</strong><br>
-                  +39 081 123 4567
+                  +39 350 928 6941
                 </div>
                 <div class="contact-item">
                   <strong>✉️ Email</strong><br>

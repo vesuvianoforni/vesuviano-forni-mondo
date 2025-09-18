@@ -96,7 +96,7 @@ const ConsultationForm = () => {
       console.error("Errore invio consulenza:", error);
       toast({
         title: "Errore nell'Invio",
-        description: "Si è verificato un problema. Riprova o contattaci direttamente al +39 081 123 4567",
+        description: "Si è verificato un problema. Riprova o contattaci direttamente al +39 350 928 6941",
         variant: "destructive",
       });
     } finally {
@@ -166,14 +166,14 @@ const ConsultationForm = () => {
                     <Phone className="text-vesuviano-600" size={20} />
                     <div>
                       <p className="font-semibold">Telefono</p>
-                      <p className="text-sm text-gray-600">+39 081 123 4567</p>
+                      <p className="text-sm text-gray-600">+39 350 928 6941</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
                     <Mail className="text-vesuviano-600" size={20} />
                     <div>
                       <p className="font-semibold">Email</p>
-                      <p className="text-sm text-gray-600">info@vesuviano.com</p>
+                      <p className="text-sm text-gray-600">info@vesuvianoforni.com</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
