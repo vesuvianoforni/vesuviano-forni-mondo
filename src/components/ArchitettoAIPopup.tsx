@@ -8,13 +8,13 @@ const ArchitettoAIPopup = () => {
   const [hasShown, setHasShown] = useState(false);
 
   useEffect(() => {
-    // Mostra il popup dopo 3 secondi, solo se non è già stato mostrato
+    // Mostra il popup dopo 5 secondi, solo se non è già stato mostrato
     const timer = setTimeout(() => {
       if (!hasShown) {
         setIsVisible(true);
         setHasShown(true);
       }
-    }, 3000);
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, [hasShown]);
