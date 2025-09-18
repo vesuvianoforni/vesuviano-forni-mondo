@@ -12,13 +12,13 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { href: "#products", label: "Prodotti" },
+    { href: "#products", label: t('header.products') },
     { href: "#ai-architect", label: "Architetto AI" },
-    { href: "#oven-gallery", label: "Collezione Forni" },
+    { href: "#oven-gallery", label: t('header.gallery') },
     { href: "#rivestimenti", label: "Rivestimenti" },
-    { href: "#vesuviobuono", label: "VesuvioBuono" },
-    { href: "#clients-map", label: "Clienti nel Mondo" },
-    { href: "#consultation", label: "Contatti" }
+    { href: "#vesuviobuono", label: t('header.vesuviobuono') },
+    { href: "#clients-map", label: "Clienti" },
+    { href: "#consultation", label: t('header.contact') }
   ];
 
   const handleNavClick = (href: string) => {
@@ -64,7 +64,7 @@ const Header = () => {
               className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
               onClick={() => handleNavClick('#consultation')}
             >
-              Richiedi Preventivo
+              {t('header.consultation')}
             </Button>
           </div>
 
@@ -96,7 +96,7 @@ const Header = () => {
                     className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white w-full mt-6"
                     onClick={() => handleNavClick('#consultation')}
                   >
-                    Richiedi Preventivo
+                    {t('header.consultation')}
                   </Button>
                 </nav>
               </SheetContent>

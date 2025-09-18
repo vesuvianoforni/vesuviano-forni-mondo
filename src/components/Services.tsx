@@ -1,7 +1,9 @@
 
 import { Button } from "@/components/ui/button";
+import { useTranslation } from 'react-i18next';
 
 const Services = () => {
+  const { t } = useTranslation();
   const services = [
     {
       title: "Consulenza Tecnica Specializzata",
