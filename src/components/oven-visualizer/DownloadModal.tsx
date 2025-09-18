@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Download, User, Mail, MapPin, Phone, X } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
+import { supabase } from "@/integrations/supabase/client";
 
 
 interface DownloadModalProps {
@@ -19,6 +21,8 @@ interface FormData {
   city: string;
   email: string;
   phone: string;
+  company?: string;
+  website?: string;
 }
 
 const DownloadModal: React.FC<DownloadModalProps> = ({
@@ -32,7 +36,9 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
     lastName: '',
     city: '',
     email: '',
-    phone: ''
+    phone: '',
+    company: '',
+    website: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -41,20 +47,33 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
   };
 
   const isFormValid = () => {
-    return Object.values(formData).every(value => value.trim() !== '');
+    return formData.firstName.trim() !== '' && 
+           formData.lastName.trim() !== '' && 
+           formData.email.trim() !== '' && 
+           formData.city.trim() !== '';
   };
 
   const handleDownload = async () => {
     if (!isFormValid()) {
+      toast({
+        title: "Campi mancanti",
+        description: "Compila tutti i campi obbligatori per procedere al download.",
+        variant: "destructive"
+      });
       return;
     }
 
     setIsSubmitting(true);
     
     try {
-      // Simula invio dati al server (qui potresti salvare i dati lead)
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      // Send form data to our notification system
+      await supabase.functions.invoke('send-form-data', {
+        body: {
+          formType: 'download-modal',
+          data: formData
+        }
+      });
+
       // Procedi con il download
       const link = document.createElement('a');
       link.href = imageUrl;
@@ -71,10 +90,23 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
         lastName: '',
         city: '',
         email: '',
-        phone: ''
+        phone: '',
+        company: '',
+        website: ''
       });
+
+      toast({
+        title: "Download completato!",
+        description: "L'immagine è stata scaricata con successo.",
+      });
+
     } catch (error) {
       console.error("Errore durante il download:", error);
+      toast({
+        title: "Errore download",
+        description: "Si è verificato un errore durante il download. Riprova.",
+        variant: "destructive"
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -190,6 +222,34 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
                 placeholder="+39 123 456 7890"
+                className="mt-1"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="company" className="flex items-center space-x-1">
+                <User className="w-4 h-4" />
+                <span>Azienda (opzionale)</span>
+              </Label>
+              <Input
+                id="company"
+                value={formData.company || ''}
+                onChange={(e) => handleInputChange('company', e.target.value)}
+                placeholder="Nome azienda"
+                className="mt-1"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="website" className="flex items-center space-x-1">
+                <Mail className="w-4 h-4" />
+                <span>Sito Web (opzionale)</span>
+              </Label>
+              <Input
+                id="website"
+                value={formData.website || ''}
+                onChange={(e) => handleInputChange('website', e.target.value)}
+                placeholder="www.esempio.com"
                 className="mt-1"
               />
             </div>

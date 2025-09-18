@@ -13,6 +13,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+import { supabase } from "@/integrations/supabase/client";
 
 interface ARVisualizerProps {
   selectedOvenType: string;
@@ -611,7 +612,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, 
     }
   };
 
-  const handleContactSubmit = (e: React.FormEvent) => {
+  const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!contactData.firstName || !contactData.lastName || !contactData.email || !contactData.phone) {
@@ -620,19 +621,39 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, 
 
     if (!capturedImage) return;
 
-    // Crea e scarica l'immagine
-    const link = document.createElement('a');
-    link.download = `vesuviano-ar-${Date.now()}.png`;
-    link.href = capturedImage;
-    link.click();
+    try {
+      // Send form data to our notification system
+      await supabase.functions.invoke('send-form-data', {
+        body: {
+          formType: 'ar-contact',
+          data: contactData
+        }
+      });
 
-    // Log dei dati di contatto (in un'applicazione reale, questi andrebbero salvati nel database)
-    console.log('Dati contatto:', contactData);
+      // Crea e scarica l'immagine
+      const link = document.createElement('a');
+      link.download = `vesuviano-ar-${Date.now()}.png`;
+      link.href = capturedImage;
+      link.click();
 
-    // Reset
-    setShowContactForm(false);
-    setCapturedImage(null);
-    setContactData({ firstName: '', lastName: '', email: '', phone: '', wantsContact: false });
+      // Reset
+      setShowContactForm(false);
+      setCapturedImage(null);
+      setContactData({ firstName: '', lastName: '', email: '', phone: '', wantsContact: false });
+
+    } catch (error) {
+      console.error('Errore invio dati contatto:', error);
+      
+      // Procedi comunque con il download
+      const link = document.createElement('a');
+      link.download = `vesuviano-ar-${Date.now()}.png`;
+      link.href = capturedImage;
+      link.click();
+
+      setShowContactForm(false);
+      setCapturedImage(null);
+      setContactData({ firstName: '', lastName: '', email: '', phone: '', wantsContact: false });
+    }
   };
 
   const resetPosition = () => {

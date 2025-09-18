@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Leaf, Award, Flame, Download, Shield, CheckCircle } from "lucide-react";
 import VideoPlayer from "./VideoPlayer";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 const VesuvioBuono = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -25,30 +27,57 @@ const VesuvioBuono = () => {
     }));
   };
 
-  const handleDownloadPDF = () => {
+  const handleDownloadPDF = async () => {
     // Validate form
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.city || !formData.phone) {
-      alert('Per favore compila tutti i campi');
+      toast({
+        title: "Errore",
+        description: "Per favore compila tutti i campi",
+        variant: "destructive"
+      });
       return;
     }
-    
-    // Close dialog and download PDF
-    setIsDialogOpen(false);
-    const link = document.createElement('a');
-    link.href = '/lovable-uploads/vesuviobuono-scheda-tecnica.pdf';
-    link.download = 'VesuvioBuono_Scheda_Tecnica.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    // Reset form
-    setFormData({
-      firstName: '',
-      lastName: '',
-      email: '',
-      city: '',
-      phone: ''
-    });
+
+    try {
+      // Send form data to our notification system
+      await supabase.functions.invoke('send-form-data', {
+        body: {
+          formType: 'vesuvio-buono',
+          data: formData
+        }
+      });
+
+      // Close dialog and download PDF
+      setIsDialogOpen(false);
+      const link = document.createElement('a');
+      link.href = '/lovable-uploads/vesuviobuono-scheda-tecnica.pdf';
+      link.download = 'VesuvioBuono_Scheda_Tecnica.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Reset form
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        city: '',
+        phone: ''
+      });
+
+      toast({
+        title: "Download completato!",
+        description: "La scheda tecnica è stata scaricata con successo.",
+      });
+
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Errore",
+        description: "Si è verificato un errore. Riprova più tardi.",
+        variant: "destructive"
+      });
+    }
   };
 
   const downloadPDF = () => {
