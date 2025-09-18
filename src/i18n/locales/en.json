@@ -71,6 +71,236 @@
       "viewGallery": "View Gallery"
     }
   },
+  "clientsMap": {
+    "badge": "Global Presence",
+    "title": "Our",
+    "titleHighlight": "Clients",
+    "subtitle": "From Naples to the whole world: Vesuviano ovens bring the authentic flavor of Neapolitan tradition to every corner of the planet."
+  },
+  "rivestimenti": {
+    "badge": "Customization",
+    "title": "Exclusive",
+    "titleHighlight": "Coatings",
+    "subtitle": "Choose from a wide range of premium coatings to customize your oven according to your unique style.",
+    "options": {
+      "verniciato": "Painted",
+      "mosaicato": "Mosaic",
+      "mattoni": "Exposed Brick"
+    },
+    "colors": {
+      "available": "available colors",
+      "viewSamples": "View Samples"
+    },
+    "process": {
+      "title": "Customization Process",
+      "step1": {
+        "title": "Consultation",
+        "description": "We help you choose"
+      },
+      "step2": {
+        "title": "Design",
+        "description": "We create the perfect design"
+      },
+      "step3": {
+        "title": "Realization",
+        "description": "We build your oven"
+      }
+    },
+    "startCustomization": "Start Customization"
+  },
+  "craftsmanship": {
+    "title": "Neapolitan",
+    "titleHighlight": "Craftsmanship",
+    "subtitle": "Every Vesuviano oven is born from the skilled hands of Neapolitan master craftsmen, guardians of a millenary tradition that combines passion, technique and innovation.",
+    "traditionLives": {
+      "title": "Living Tradition",
+      "description": "In the heart of Naples, our master craftsmen pass down from generation to generation the secrets of oven manufacturing. Each piece is handmade with selected materials and techniques refined over centuries.",
+      "features": {
+        "manual": {
+          "title": "Completely Manual Manufacturing",
+          "description": "Every detail is crafted by the expert hands of our artisans"
+        },
+        "materials": {
+          "title": "Traditional Materials",
+          "description": "Refractory clay and selected materials from Neapolitan tradition"
+        },
+        "expertise": {
+          "title": "Generational Expertise",
+          "description": "Techniques passed down from father to son for over a century"
+        }
+      }
+    },
+    "laboratory": {
+      "title": "Our Laboratory",
+      "description": "In the heart of Sant'Anastasia (NA), our artisan laboratory is where Vesuviano ovens come to life. A 2000 sqm space where tradition and innovation meet, equipped with the most modern equipment but guided by the expert hands of our masters.",
+      "location": "Sant'Anastasia, Naples - Italy"
+    },
+    "stats": {
+      "years": "Years of Tradition",
+      "yearsDescription": "A century of Neapolitan artisan experience",
+      "masters": "Master Craftsmen",
+      "mastersDescription": "Experts selected for their mastery",
+      "passion": "Infinite Passion",
+      "passionDescription": "Love for art that knows no limits"
+    },
+    "cta": {
+      "title": "Discover the Difference of Craftsmanship",
+      "description": "Every oven tells a story of passion, tradition and mastery. Discover how Neapolitan craftsmanship can transform your culinary experience.",
+      "button": "Request Information"
+    }
+  },
+  "services": {
+    "title": "Our",
+    "titleHighlight": "Services",
+    "subtitle": "Complete support from initial consultation to after-sales assistance, to guarantee you maximum success with our artisan ovens.",
+    "technical": {
+      "title": "Specialized Technical Consulting",
+      "description": "Our experts guide you in choosing the perfect oven for your specific needs, considering space, production volume and type of cuisine.",
+      "features": {
+        "analysis": "Needs analysis",
+        "advice": "Personalized advice",
+        "support": "Support in choosing",
+        "evaluation": "Technical evaluation"
+      }
+    },
+    "design": {
+      "title": "3D Rendering and Design",
+      "description": "Visualize your oven in the context of your kitchen before purchase with our photorealistic 3D renders.",
+      "features": {
+        "photorealistic": "Photorealistic renders",
+        "integration": "Environmental integration",
+        "modifications": "Design modifications",
+        "preview": "Realistic preview"
+      }
+    },
+    "logistics": {
+      "title": "International Logistics",
+      "description": "We completely manage the shipment and installation of your ovens worldwide with maximum safety.",
+      "features": {
+        "worldwide": "Worldwide shipping",
+        "packaging": "Safe packaging",
+        "tracking": "Complete tracking",
+        "delivery": "Guaranteed delivery"
+      }
+    },
+    "training": {
+      "title": "Training and Assistance",
+      "description": "Training courses to make the best use of your oven and dedicated after-sales assistance for every need.",
+      "features": {
+        "practical": "Practical courses",
+        "technical": "Technical assistance",
+        "maintenance": "Maintenance",
+        "support": "Continuous support"
+      }
+    },
+    "cta": {
+      "title": "Need personalized support?",
+      "description": "Our team is always available to offer you the best assistance and find together the ideal solution for your business.",
+      "button": "Contact Us Now"
+    },
+    "logisticsSection": {
+      "title": "Our",
+      "titleHighlight": "Logistic Efficiency",
+      "subtitle": "Deliveries worldwide, even in the most complex metropolises like New York",
+      "caption": "Vesuviano oven delivery in Manhattan",
+      "description": "Our specialized logistics guarantees safe deliveries even in the most challenging urban centers"
+    }
+  },
+  "vesuvioBuono": {
+    "badges": {
+      "exclusive": "WORLD EXCLUSIVE",
+      "patented": "PATENTED"
+    },
+    "title": "VesuvioBuono",
+    "subtitle": "The world's first wood-fired and combined gas/wood oven that does not emit soot into the atmosphere. A revolution for the environment and health.",
+    "video": {
+      "title": "VesuvioBuono in Action",
+      "description": "Discover how VesuvioBuono revolutionizes wood-fired cooking without emissions"
+    },
+    "gallery": {
+      "action": "Oven in Action",
+      "pizza": "Perfect Pizza",
+      "emissions": "Zero Emissions",
+      "wood": "Wood-fired oven",
+      "purifier": "Smoke purifier"
+    },
+    "zeroEmissions": {
+      "title": "Zero Emissions",
+      "patented": {
+        "title": "Patented Technology",
+        "description": "Complete combustion system that eliminates 99.9% of soot particles."
+      },
+      "certifications": {
+        "title": "Environmental Certifications",
+        "description": "Compliant with the strictest European and international emission standards."
+      },
+      "dualFuel": {
+        "title": "Dual Fuel",
+        "description": "Works perfectly with both wood and gas/wood combination."
+      }
+    },
+    "advantages": {
+      "title": "Exclusive Advantages",
+      "features": {
+        "installation": "Installation in any urban area without restrictions",
+        "maintenance": "Drastic reduction in chimney maintenance costs",
+        "flavor": "Maintaining the authentic flavor of wood-fired cooking",
+        "environment": "Total respect for the environment and community",
+        "warranty": "International warranty and specialized technical support"
+      }
+    },
+    "actions": {
+      "downloadSpec": "Download Spec Sheet",
+      "visitWebsite": "Visit Website"
+    },
+    "modal": {
+      "title": "Download Spec Sheet",
+      "description": "Fill in your details to download the VesuvioBuono spec sheet",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "city": "City",
+      "phone": "Phone Number",
+      "cancel": "Cancel",
+      "download": "Download PDF"
+    },
+    "messages": {
+      "fillFields": "Please fill in all fields",
+      "downloadComplete": "Download completed!",
+      "downloadSuccess": "The spec sheet has been downloaded successfully.",
+      "error": "An error occurred. Please try again later."
+    }
+  },
+  "consultation": {
+    "title": "Free",
+    "titleHighlight": "Consultation",
+    "subtitle": "Our experts are ready to help you find the perfect solution for your business",
+    "form": {
+      "firstName": "Full Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "company": "Company",
+      "message": "Message",
+      "submit": "Send Request"
+    },
+    "contact": {
+      "title": "Contact Information",
+      "phone": "Phone: +39 350 928 6941",
+      "email": "Email: info@vesuvianoforni.com",
+      "address": "Sant'Anastasia, Naples - Italy"
+    },
+    "messages": {
+      "fillFields": "Please fill in all required fields",
+      "success": "Request sent successfully!",
+      "successDescription": "We will contact you as soon as possible to provide you with all the information you need.",
+      "error": "An error occurred while sending the request.",
+      "errorDescription": "Please try again later or contact us directly at +39 350 928 6941"
+    }
+  },
+  "whatsapp": {
+    "tooltip": "Contact us on WhatsApp"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

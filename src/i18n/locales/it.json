@@ -3,7 +3,7 @@
   "hero": {
     "subtitle": "Forni Artigianali Napoletani",
     "title": "di Eccellenza Internazionale",
-    "description": "Artigianato napoletano selezionato per il mercato mondiale. Forni a legna, gas, elettrici e la rivoluzionaria soluzione <vesuvioBuono>VesuvioBuono</vesuvioBuono> a zero emissioni.",
+    "description": "Artigianalità napoletana selezionata per il mercato globale. Forni a legna, gas, elettrici e la rivoluzionaria soluzione {vesuvioBuono} a zero emissioni.",
     "discoverOvens": "Scopri i Nostri Forni",
     "freeConsultation": "Consulenza Gratuita"
   },
@@ -21,21 +21,21 @@
     "subtitle": "Forni artigianali napoletani per ogni esigenza professionale",
     "traditional": {
       "title": "Forni Tradizionali",
-      "subtitle": "Wood Fired Ovens",
-      "description": "L'autentica tradizione napoletana per pizze dal sapore inconfondibile. Cottura a legna per il massimo del gusto.",
+      "subtitle": "Forni a Legna",
+      "description": "Autentica tradizione napoletana per pizze dal sapore inconfondibile. Cottura a legna per il massimo del gusto.",
       "features": {
         "woodFired": "Cottura tradizionale a legna",
         "temperature": "Temperatura fino a 500°C",
         "authentic": "Sapore autentico napoletano",
-        "versatile": "Versatili per pizza e pane"
+        "versatile": "Versatile per pizza e pane"
       }
     },
     "gas": {
       "title": "Forni a Gas",
-      "subtitle": "Gas Fired Ovens",
+      "subtitle": "Forni a Gas",
       "description": "Controllo preciso e facilità d'uso per professionisti che cercano efficienza e qualità costante.",
       "features": {
-        "preciseControl": "Controllo preciso temperatura",
+        "preciseControl": "Controllo preciso della temperatura",
         "instant": "Accensione istantanea",
         "efficient": "Efficienza energetica",
         "maintenance": "Manutenzione semplificata"
@@ -43,8 +43,8 @@
     },
     "electric": {
       "title": "Forni Elettrici",
-      "subtitle": "Electric Ovens",
-      "description": "Tecnologia avanzata per cotture perfette, costanti e rispettose dell'ambiente.",
+      "subtitle": "Forni Elettrici",
+      "description": "Tecnologia avanzata per una cottura perfetta, costante e rispettosa dell'ambiente.",
       "features": {
         "constant": "Temperatura costante",
         "digital": "Controllo digitale",
@@ -53,8 +53,8 @@
       }
     },
     "rotating": {
-      "title": "Forni Rotanti",
-      "subtitle": "Rotating Ovens",
+      "title": "Forni Rotativi",
+      "subtitle": "Forni Rotativi",
       "description": "Massima produttività con cottura uniforme su ogni superficie. Ideali per alta produzione.",
       "features": {
         "uniform": "Cottura uniforme",
@@ -63,12 +63,12 @@
         "efficiency": "Efficienza energetica"
       }
     },
-    "learnMore": "Scopri di più",
+    "learnMore": "Scopri di Più",
     "customSolutions": {
-      "title": "Soluzioni Su Misura",
+      "title": "Soluzioni Personalizzate",
       "description": "Ogni forno Vesuviano è progettato per soddisfare le esigenze specifiche della tua attività. I nostri esperti ti aiuteranno a trovare la soluzione perfetta.",
       "freeConsultation": "Consulenza Gratuita",
-      "viewGallery": "Vedi Gallery"
+      "viewGallery": "Vedi Galleria"
     }
   },
   "clientsMap": {
@@ -81,46 +81,257 @@
     "badge": "Personalizzazione",
     "title": "Rivestimenti",
     "titleHighlight": "Esclusivi",
-    "subtitle": "Ogni forno Vesuviano può essere personalizzato con rivestimenti di alta qualità che uniscono estetica e funzionalità, per integrarsi perfettamente nel tuo ambiente.",
-    "verniciato": {
-      "title": "Verniciato",
-      "description": "Finitura verniciata di alta qualità resistente al calore"
+    "subtitle": "Scegli tra una vasta gamma di rivestimenti premium per personalizzare il tuo forno secondo il tuo stile unico.",
+    "options": {
+      "verniciato": "Verniciato",
+      "mosaicato": "Mosaicato",  
+      "mattoni": "Mattoni a Vista"
     },
-    "mosaicato": {
-      "title": "Mosaicato", 
-      "description": "Rivestimento in mosaico tradizionale napoletano"
+    "colors": {
+      "available": "colori disponibili",
+      "viewSamples": "Vedi Campioni"
     },
-    "ferro": {
-      "title": "Ferro",
-      "description": "Rivestimento in ferro lavorato artigianalmente"
-    },
-    "personalizzato": {
-      "title": "Personalizzato",
-      "description": "Soluzioni su misura per ogni esigenza"
-    },
-    "availableOptions": "Opzioni Disponibili",
-    "viewSamples": "Vedi Campioni",
     "process": {
       "title": "Processo di Personalizzazione",
-      "description": "Dal concept alla realizzazione, ti accompagniamo in ogni fase per creare il forno perfetto per te.",
       "step1": {
         "title": "Consulenza",
-        "desc": "Analisi delle tue esigenze"
+        "description": "Ti aiutiamo a scegliere"
       },
       "step2": {
-        "title": "Design", 
-        "desc": "Progettazione personalizzata"
+        "title": "Progettazione",
+        "description": "Creiamo il design perfetto"
       },
       "step3": {
-        "title": "Campioni",
-        "desc": "Selezione materiali"
-      },
-      "step4": {
         "title": "Realizzazione",
-        "desc": "Produzione artigianale"
+        "description": "Realizziamo il tuo forno"
       }
     },
     "startCustomization": "Inizia Personalizzazione"
+  },
+  "craftsmanship": {
+    "title": "Artigianalità",
+    "titleHighlight": "Napoletana",
+    "subtitle": "Ogni forno Vesuviano nasce dalle mani esperte di maestri artigiani napoletani, custodi di una tradizione millenaria che unisce passione, tecnica e innovazione.",
+    "traditionLives": {
+      "title": "Tradizione che Vive",
+      "description": "Nel cuore di Napoli, i nostri maestri artigiani tramandano di generazione in generazione i segreti della lavorazione dei forni. Ogni pezzo è realizzato a mano con materiali selezionati e tecniche affinate nei secoli.",
+      "features": {
+        "manual": {
+          "title": "Lavorazione Completamente Manuale",
+          "description": "Ogni dettaglio è curato dalle mani esperte dei nostri artigiani"
+        },
+        "materials": {
+          "title": "Materiali Tradizionali",
+          "description": "Argilla refrattaria e materiali selezionati della tradizione napoletana"
+        },
+        "expertise": {
+          "title": "Expertise Generazionale",
+          "description": "Tecniche tramandate di padre in figlio per oltre un secolo"
+        }
+      }
+    },
+    "laboratory": {
+      "title": "Il Nostro Laboratorio",
+      "description": "Nel cuore di Sant'Anastasia (NA), il nostro laboratorio artigianale è dove prendono vita i forni Vesuviano. Uno spazio di 2000 mq dove tradizione e innovazione si incontrano, dotato delle più moderne attrezzature ma guidato dalle mani esperte dei nostri maestri.",
+      "location": "Sant'Anastasia, Napoli - Italia"
+    },
+    "stats": {
+      "years": "Anni di Tradizione",
+      "yearsDescription": "Un secolo di esperienza artigianale napoletana",
+      "masters": "Maestri Artigiani",
+      "mastersDescription": "Esperti selezionati per la loro maestria",
+      "passion": "Passione Infinita",
+      "passionDescription": "Amore per l'arte che non ha limiti"
+    },
+    "cta": {
+      "title": "Scopri la Differenza dell'Artigianalità",
+      "description": "Ogni forno racconta una storia di passione, tradizione e maestria. Scopri come l'artigianalità napoletana può trasformare la tua esperienza culinaria.",
+      "button": "Richiedi Informazioni"
+    }
+  },
+  "services": {
+    "title": "I Nostri",
+    "titleHighlight": "Servizi",
+    "subtitle": "Un supporto completo dalla consulenza iniziale all'assistenza post-vendita, per garantirti il massimo successo con i nostri forni artigianali.",
+    "technical": {
+      "title": "Consulenza Tecnica Specializzata",
+      "description": "I nostri esperti ti guidano nella scelta del forno perfetto per le tue esigenze specifiche, considerando spazio, volume di produzione e tipo di cucina.",
+      "features": {
+        "analysis": "Analisi delle esigenze",
+        "advice": "Consigli personalizzati",
+        "support": "Supporto nella scelta",
+        "evaluation": "Valutazione tecnica"
+      }
+    },
+    "design": {
+      "title": "Rendering 3D e Progettazione",
+      "description": "Visualizza il tuo forno nel contesto della tua cucina prima dell'acquisto con i nostri render fotorealistici 3D.",
+      "features": {
+        "photorealistic": "Render fotorealistici",
+        "integration": "Integrazione ambientale",
+        "modifications": "Modifiche progettuali",
+        "preview": "Anteprima realistica"
+      }
+    },
+    "logistics": {
+      "title": "Logistica Internazionale",
+      "description": "Gestiamo completamente la spedizione e l'installazione dei tuoi forni in tutto il mondo con massima sicurezza.",
+      "features": {
+        "worldwide": "Spedizioni mondiali",
+        "packaging": "Imballaggio sicuro",
+        "tracking": "Tracking completo",
+        "delivery": "Consegna garantita"
+      }
+    },
+    "training": {
+      "title": "Formazione e Assistenza",
+      "description": "Corsi di formazione per utilizzare al meglio il tuo forno e assistenza post-vendita dedicata per ogni necessità.",
+      "features": {
+        "practical": "Corsi pratici",
+        "technical": "Assistenza tecnica",
+        "maintenance": "Manutenzione",
+        "support": "Supporto continuo"
+      }
+    },
+    "cta": {
+      "title": "Hai bisogno di supporto personalizzato?",
+      "description": "Il nostro team è sempre disponibile per offrirti la migliore assistenza e trovare insieme la soluzione ideale per la tua attività.",
+      "button": "Contattaci Ora"
+    },
+    "logisticsSection": {
+      "title": "La Nostra",
+      "titleHighlight": "Efficacia Logistica",
+      "subtitle": "Consegne in tutto il mondo, anche nelle metropoli più complesse come New York",
+      "caption": "Forno Vesuviano in consegna a Manhattan",
+      "description": "La nostra logistica specializzata garantisce consegne sicure anche nei centri urbani più impegnativi"
+    }
+  },
+  "vesuvioBuono": {
+    "badges": {
+      "exclusive": "ESCLUSIVA MONDIALE",
+      "patented": "BREVETTATO"
+    },
+    "title": "VesuvioBuono",
+    "subtitle": "Il primo forno al mondo a legna e combinato gas/legna che non emette fuliggine in atmosfera. Una rivoluzione per l'ambiente e la salute.",
+    "video": {
+      "title": "VesuvioBuono in Azione",
+      "description": "Scopri come VesuvioBuono rivoluziona la cottura a legna senza emissioni"
+    },
+    "gallery": {
+      "action": "Forno in Azione",
+      "pizza": "Pizza Perfetta",
+      "emissions": "Zero Emissioni",
+      "wood": "Forno a legna",
+      "purifier": "Depuratore fumi"
+    },
+    "zeroEmissions": {
+      "title": "Zero Emissioni",
+      "patented": {
+        "title": "Tecnologia Brevettata",
+        "description": "Sistema di combustione completa che elimina il 99.9% delle particelle di fuliggine."
+      },
+      "certifications": {
+        "title": "Certificazioni Ambientali",
+        "description": "Conforme alle più severe normative europee e internazionali sulle emissioni."
+      },
+      "dualFuel": {
+        "title": "Doppia Alimentazione",
+        "description": "Funziona perfettamente sia a legna che con la combinazione gas/legna."
+      }
+    },
+    "advantages": {
+      "title": "Vantaggi Esclusivi",
+      "features": {
+        "installation": "Installazione in qualsiasi zona urbana senza restrizioni",
+        "maintenance": "Riduzione drastica dei costi di manutenzione camini",
+        "flavor": "Mantenimento del sapore autentico della cottura a legna",
+        "environment": "Rispetto totale dell'ambiente e della comunità",
+        "warranty": "Garanzia internazionale e supporto tecnico specializzato"
+      }
+    },
+    "actions": {
+      "downloadSpec": "Scarica Scheda Tecnica",
+      "visitWebsite": "Visita il Sito Web"
+    },
+    "modal": {
+      "title": "Scarica Scheda Tecnica",
+      "description": "Compila i tuoi dati per scaricare la scheda tecnica di VesuvioBuono",
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "email": "Email",
+      "city": "Città",
+      "phone": "Numero di telefono",
+      "cancel": "Annulla",
+      "download": "Scarica PDF"
+    },
+    "messages": {
+      "fillFields": "Per favore compila tutti i campi",
+      "downloadComplete": "Download completato!",
+      "downloadSuccess": "La scheda tecnica è stata scaricata con successo.",
+      "error": "Si è verificato un errore. Riprova più tardi."
+    }
+  },
+  "consultation": {
+    "title": "Consulenza",
+    "titleHighlight": "Gratuita",
+    "subtitle": "I nostri esperti sono pronti ad aiutarti a trovare la soluzione perfetta per la tua attività",
+    "form": {
+      "fullName": "Nome Completo",
+      "email": "Email",
+      "phone": "Telefono",  
+      "company": "Azienda/Ristorante",
+      "country": "Paese di Destinazione",
+      "ovenType": "Tipo di Forno",
+      "capacity": "Capacità Richiesta",
+      "budget": "Budget Orientativo",
+      "services": "Servizi Richiesti",
+      "message": "Messaggio",
+      "submit": "Invia Richiesta Consulenza Gratuita",
+      "submitting": "Invio in corso..."
+    },
+    "services": {
+      "identification": "Identificazione migliore soluzione",
+      "quotation": "Quotazione personalizzata",
+      "rendering": "Rendering 3D alta fedeltà",
+      "logistics": "Organizzazione logistica e export"
+    },
+    "ovenTypes": {
+      "woodFixed": "Forno a Legna Fisso",
+      "woodRotating": "Forno a Legna Rotante",
+      "gasFixed": "Forno a Gas Fisso",
+      "gasRotating": "Forno a Gas Rotante", 
+      "electricFixed": "Forno Elettrico Fisso",
+      "electricRotating": "Forno Elettrico Rotante",
+      "vesuvioWood": "VesuvioBuono a Legna",
+      "vesuvioCombi": "VesuvioBuono Combinato Gas/Legna",
+      "unsure": "Non sono sicuro - necessito consulenza"
+    },
+    "contact": {
+      "title": "I Nostri Servizi",
+      "directTitle": "Contatti Diretti",
+      "phone": "Telefono",
+      "phoneNumber": "+39 350 928 6941",
+      "email": "Email",
+      "emailAddress": "info@vesuvianoforni.com",
+      "laboratory": "Laboratorio",
+      "location": "Napoli, Italia",
+      "downloadCatalog": "Scarica Catalogo Completo"
+    },
+    "messages": {
+      "requiredFields": "Campi Obbligatori",
+      "fillRequired": "Nome e Email sono richiesti per inviare la richiesta.",
+      "success": "🔥 Richiesta Inviata con Successo!",
+      "successDescription": "Ti abbiamo inviato una email di conferma. Ti contatteremo entro 24 ore per la tua consulenza gratuita.",
+      "error": "Errore nell'Invio",
+      "errorDescription": "Si è verificato un problema. Riprova o contattaci direttamente al +39 350 928 6941",
+      "privacy": "Ti contatteremo entro 24 ore. I tuoi dati sono protetti e non saranno condivisi con terzi.",
+      "catalogDownloaded": "Catalogo Scaricato!",
+      "catalogSuccess": "Il catalogo completo è stato scaricato sul tuo dispositivo."
+    }
+  },
+  "whatsapp": {
+    "tooltip": "Contattaci su WhatsApp",
+    "message": "Ciao, vorrei informazioni sui vostri forni professionali 🔥"
   },
   "common": {
     "loading": "Caricamento...",
