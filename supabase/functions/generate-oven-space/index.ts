@@ -39,7 +39,7 @@ serve(async (req) => {
     const mimeType = spaceImage.startsWith('data:image/png') ? 'image/png' : 'image/jpeg';
 
     // Create prompt in Italian as per user's example
-    const prompt = `Inserisci il forno selezionato "${ovenModel}" nella foto caricata in fotorealismo, senza alterare la foto caricata, semplicemente inserendo il forno in modo equilibrato e naturale. Il forno deve integrarsi perfettamente nell'ambiente rispettando prospettiva, illuminazione e ombre.`;
+    const prompt = `Inserisci il forno selezionato "${ovenModel}" nella foto caricata in fotorealismo, senza alterare la foto caricata, semplicemente inserendo il forno in modo equilibrato e naturale. Qualora ci sia già un altro forno presente nell'immagine, sostituiscilo completamente con il nostro forno selezionato. Il forno deve integrarsi perfettamente nell'ambiente rispettando prospettiva, illuminazione e ombre.`;
 
     console.log('Generating image with Gemini. Prompt:', prompt);
 
@@ -65,7 +65,7 @@ serve(async (req) => {
         },
       });
       contentsParts.push({
-        text: 'Integra il forno nella scena rispettando prospettiva, scala, luce e ombre. Non rimuovere o alterare elementi esistenti.'
+        text: 'Integra il forno nella scena rispettando prospettiva, scala, luce e ombre. Se presente un altro forno, sostituiscilo completamente con quello selezionato.'
       });
     }
 
