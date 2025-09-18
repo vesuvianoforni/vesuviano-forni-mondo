@@ -8,8 +8,10 @@ import VideoPlayer from "./VideoPlayer";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { useTranslation } from 'react-i18next';
 
 const VesuvioBuono = () => {
+  const { t } = useTranslation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -31,8 +33,8 @@ const VesuvioBuono = () => {
     // Validate form
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.city || !formData.phone) {
       toast({
-        title: "Errore",
-        description: "Per favore compila tutti i campi",
+        title: t('vesuvioBuono.error'),
+        description: t('vesuvioBuono.fillAllFields'),
         variant: "destructive"
       });
       return;
@@ -66,15 +68,15 @@ const VesuvioBuono = () => {
       });
 
       toast({
-        title: "Download completato!",
-        description: "La scheda tecnica è stata scaricata con successo.",
+        title: t('vesuvioBuono.downloadComplete'),
+        description: t('vesuvioBuono.downloadCompleteDesc'),
       });
 
     } catch (error) {
       console.error('Error:', error);
       toast({
-        title: "Errore",
-        description: "Si è verificato un errore. Riprova più tardi.",
+        title: t('vesuvioBuono.error'),
+        description: t('vesuvioBuono.errorDesc'),
         variant: "destructive"
       });
     }

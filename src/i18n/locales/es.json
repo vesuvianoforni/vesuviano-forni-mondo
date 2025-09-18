@@ -71,6 +71,247 @@
       "viewGallery": "Ver Galería"
     }
   },
+  "clientsMap": {
+    "badge": "Presencia Global",
+    "title": "Nuestros",
+    "titleHighlight": "Clientes",
+    "subtitle": "Desde Nápoles hasta el mundo entero: los hornos Vesuviano llevan el sabor auténtico de la tradición napolitana a cada rincón del planeta."
+  },
+  "rivestimenti": {
+    "badge": "Personalización",
+    "title": "Revestimientos",
+    "titleHighlight": "Exclusivos",
+    "subtitle": "Cada horno Vesuviano puede ser personalizado con revestimientos de alta calidad que unen estética y funcionalidad, para integrarse perfectamente en tu ambiente.",
+    "verniciato": {
+      "title": "Pintado",
+      "description": "Acabado pintado de calidad superior, resistente a altas temperaturas"
+    },
+    "mosaicato": {
+      "title": "Mosaico",
+      "description": "Revestimiento de mosaico artesanal, cada pieza es única"
+    },
+    "ferro": {
+      "title": "Hierro",
+      "description": "Estilo industrial moderno con acabado en hierro natural"
+    },
+    "personalizzato": {
+      "title": "Personalizado",
+      "description": "Diseño a medida según tus especificaciones exactas"
+    },
+    "availableOptions": "Opciones Disponibles",
+    "viewSamples": "Ver Muestras",
+    "process": {
+      "title": "Proceso de Personalización",
+      "description": "Del concepto a la realización, te acompañamos en cada fase para crear el horno perfecto para ti.",
+      "step1": {
+        "title": "Consulta",
+        "desc": "Análisis de tus necesidades"
+      },
+      "step2": {
+        "title": "Diseño",
+        "desc": "Proyectación personalizada"
+      },
+      "step3": {
+        "title": "Muestras",
+        "desc": "Selección de materiales"
+      },
+      "step4": {
+        "title": "Realización",
+        "desc": "Producción artesanal"
+      }
+    },
+    "startCustomization": "Iniciar Personalización"
+  },
+  "craftsmanship": {
+    "badge": "Artesanía Tradicional",
+    "title": "Artesanía",
+    "titleHighlight": "Napolitana",
+    "subtitle": "Cada horno Vesuviano nace de manos expertas que perpetúan una tradición milenaria, uniendo técnicas ancestrales e innovaciones modernas.",
+    "traditionTitle": "La Tradición del Fuego",
+    "traditionDesc": "Desde generaciones, los maestros artesanos napolitanos transmiten el arte de construir verdaderos hornos de pizza. Cada horno Vesuviano lleva en sí esta historia secular.",
+    "processTitle": "Proceso Artesanal",
+    "processDesc": "Desde la selección de los materiales refractarios hasta el ensamblaje final, cada paso se realiza a mano con la precisión y el amor que caracterizan la auténtica artesanía napolitana.",
+    "qualityTitle": "Calidad Garantizada",
+    "qualityDesc": "Utilizamos exclusivamente ladrillos refractarios de Sorrento y materiales de la más alta calidad, garantizando rendimiento y durabilidad en el tiempo.",
+    "labTitle": "Nuestro Laboratorio",
+    "labDesc": "En Sant'Anastasia, a los pies del Vesubio, nuestro laboratorio artesanal une tradición e innovación. Aquí nacen los hornos que conquistan el mundo.",
+    "experience": "Años de Experiencia",
+    "clients": "Clientes Satisfechos",
+    "countries": "Países Atendidos"
+  },
+  "services": {
+    "badge": "Servicios Profesionales", 
+    "title": "Nuestros",
+    "titleHighlight": "Servicios",
+    "subtitle": "Un acompañamiento completo desde el diseño hasta la instalación, para garantizar el éxito de tu proyecto.",
+    "consulting": {
+      "title": "Consulta Técnica",
+      "description": "Análisis de necesidades e identificación de la solución óptima para tu actividad."
+    },
+    "design": {
+      "title": "Diseño y Personalización",
+      "description": "Diseño a medida y rendering 3D de alta fidelidad para visualizar tu horno."
+    },
+    "logistics": {
+      "title": "Logística Internacional",
+      "description": "Organización del transporte y entrega en todo el mundo con asistencia aduanera."
+    },
+    "training": {
+      "title": "Formación y Asistencia",
+      "description": "Formación completa sobre uso y mantenimiento, con soporte técnico continuo."
+    },
+    "freeConsultation": "Consulta Gratuita"
+  },
+  "vesuvioBuono": {
+    "worldExclusive": "EXCLUSIVA MUNDIAL",
+    "patented": "PATENTADO",
+    "title": "VesuvioBuono",
+    "subtitle": "El primer horno del mundo a leña y combinado gas/leña que no emite hollín en la atmósfera. Una revolución para el ambiente y la salud.",
+    "videoTitle": "VesuvioBuono en Acción",
+    "videoDesc": "Descubre cómo VesuvioBuono revoluciona la cocción a leña sin emisiones",
+    "photoSlots": {
+      "ovenInAction": "Horno en Acción",
+      "perfectPizza": "Pizza Perfecta",
+      "zeroEmissions": "Cero Emisiones",
+      "woodFired": "Horno a leña",
+      "smokeFilter": "Filtro de humo"
+    },
+    "zeroEmissions": "Cero Emisiones",
+    "patentedTech": "Tecnología Patentada",
+    "patentedTechDesc": "Sistema de combustión completa que elimina el 99.9% de las partículas de hollín.",
+    "envCertifications": "Certificaciones Ambientales",
+    "envCertificationsDesc": "Conforme a las más severas normativas europeas e internacionales sobre emisiones.",
+    "dualFuel": "Doble Alimentación",
+    "dualFuelDesc": "Funciona perfectamente tanto a leña como con la combinación gas/leña.",
+    "exclusiveAdvantages": "Ventajas Exclusivas",
+    "advantages": {
+      "installation": "Instalación en cualquier zona urbana sin restricciones",
+      "maintenance": "Reducción drástica de los costos de mantenimiento de chimeneas",
+      "flavor": "Mantiene el sabor auténtico de la cocción a leña",
+      "environment": "Respeto total del ambiente y la comunidad",
+      "warranty": "Garantía internacional y soporte técnico especializado"
+    },
+    "downloadTechSheet": "Descargar Ficha Técnica",
+    "downloadTechSheetTitle": "Descargar Ficha Técnica",
+    "downloadTechSheetDesc": "Completa tus datos para descargar la ficha técnica de VesuvioBuono",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Email",
+    "city": "Ciudad",
+    "phone": "Número de teléfono",
+    "cancel": "Cancelar",
+    "downloadPDF": "Descargar PDF",
+    "downloadComplete": "¡Descarga completada!",
+    "downloadCompleteDesc": "La ficha técnica ha sido descargada con éxito.",
+    "error": "Error",
+    "errorDesc": "Se ha verificado un error. Reintenta más tarde.",
+    "fillAllFields": "Por favor completa todos los campos",
+    "visitWebsite": "Visitar Sitio Web",
+    "exclusivePartnership": "Asociación Exclusiva",
+    "exclusivePartnershipDesc": "Vesuviano es el distribuidor oficial exclusivo de la tecnología VesuvioBuono en Europa y en el mundo."
+  },
+  "gallery": {
+    "title": "Galería de Nuestros Hornos",
+    "subtitle": "Cada imagen cuenta una historia de pasión, tradición e innovación. Descubre la artesanía napolitana que conquista el mundo.",
+    "filters": {
+      "all": "Todos los Hornos",
+      "wood": "A Leña",
+      "gas": "A Gas",
+      "electric": "Eléctricos",
+      "rotating": "Rotativos",
+      "vesuviobuono": "VesuvioBuono"
+    },
+    "items": {
+      "traditional": "Horno Tradicional Napolitano",
+      "traditionalDesc": "Artesanía secular para la pizza perfecta",
+      "gas": "Horno Profesional a Gas",
+      "gasDesc": "Control preciso para restaurantes modernos",
+      "electric": "Horno Eléctrico de Diseño",
+      "electricDesc": "Tecnología avanzada para ambientes urbanos",
+      "rotating": "Horno Rotativo Industrial",
+      "rotatingDesc": "Producción continua de alta eficiencia",
+      "vesuviobuono": "VesuvioBuono - Cero Emisiones",
+      "vesuviobuonoDesc": "El futuro de la cocción sostenible",
+      "international": "Instalación Internacional",
+      "internationalDesc": "Nuestros hornos en el mundo"
+    },
+    "ctaTitle": "¿Quieres ver nuestros hornos en vivo?",
+    "ctaDesc": "Organizamos visitas a nuestro laboratorio en Nápoles o realizamos renderings 3D de alta fidelidad para mostrarte tu horno antes de la producción.",
+    "bookVisit": "Reservar Visita al Laboratorio",
+    "request3D": "Solicitar Rendering 3D"
+  },
+  "consultation": {
+    "badge": "CONSULTA GRATUITA",
+    "title": "Inicia Tu Proyecto",
+    "subtitle": "Nuestros expertos te guiarán en la elección de la solución perfecta, desde el diseño hasta el transporte internacional.",
+    "ourServices": "Nuestros Servicios",
+    "services": {
+      "identification": "Identificación de la mejor solución",
+      "quotation": "Cotización personalizada",
+      "rendering": "Rendering 3D alta fidelidad",
+      "logistics": "Organización logística y export"
+    },
+    "directContacts": "Contactos Directos",
+    "phone": "Teléfono",
+    "email": "Email",
+    "laboratory": "Laboratorio",
+    "downloadCatalog": "Descargar Catálogo Completo",
+    "requestConsultation": "Solicitud de Consulta",
+    "fullName": "Nombre Completo",
+    "yourName": "Tu nombre",
+    "yourEmail": "tu-email@ejemplo.com",
+    "company": "Empresa/Restaurante",
+    "companyPlaceholder": "Nombre de tu actividad",
+    "destinationCountry": "País de Destino",
+    "countryPlaceholder": "Ej. Francia, Alemania, USA...",
+    "ovenType": "Tipo de Horno",
+    "selectType": "Seleccionar tipo",
+    "ovenTypes": {
+      "woodFixed": "Horno a Leña Fijo",
+      "woodRotating": "Horno a Leña Rotativo",
+      "gasFixed": "Horno a Gas Fijo",
+      "gasRotating": "Horno a Gas Rotativo",
+      "electricFixed": "Horno Eléctrico Fijo",
+      "electricRotating": "Horno Eléctrico Rotativo",
+      "vesuviobuonoWood": "VesuvioBuono a Leña",
+      "vesuviobuonoCombined": "VesuvioBuono Combinado Gas/Leña",
+      "unsure": "No estoy seguro - necesito consulta"
+    },
+    "capacity": "Capacidad Solicitada",
+    "capacityPlaceholder": "Ej. 100 pizzas/hora, 50 cm diámetro...",
+    "budget": "Presupuesto Orientativo",
+    "budgetPlaceholder": "Ej. €5.000 - €15.000",
+    "servicesRequested": "Servicios Solicitados:",
+    "message": "Mensaje",
+    "messagePlaceholder": "Descríbenos tu proyecto, tus necesidades específicas o cualquier pregunta...",
+    "sendRequest": "Enviar Solicitud Consulta Gratuita",
+    "sending": "Enviando...",
+    "requiredFields": "Campos Obligatorios",
+    "requiredFieldsDesc": "Nombre y Email son requeridos para enviar la solicitud.",
+    "requestSent": "🔥 ¡Solicitud Enviada con Éxito!",
+    "requestSentDesc": "Te hemos enviado un email de confirmación. Te contactaremos dentro de 24 horas para tu consulta gratuita.",
+    "sendError": "Error en el Envío",
+    "sendErrorDesc": "Se ha verificado un problema. Reintenta o contáctanos directamente al +39 350 928 6941",
+    "catalogDownloaded": "¡Catálogo Descargado!",
+    "catalogDownloadedDesc": "El catálogo completo ha sido descargado en tu dispositivo.",
+    "privacyNote": "Te contactaremos dentro de 24 horas. Tus datos están protegidos y no serán compartidos con terceros."
+  },
+  "whatsapp": {
+    "tooltip": "Contáctanos en WhatsApp",
+    "message": "Hola, quisiera información sobre sus hornos profesionales 🔥"
+  },
+  "architectAI": {
+    "badge": "NOVEDAD",
+    "title": "Arquitecto AI",
+    "subtitle": "Visualiza tu horno en tu espacio",
+    "steps": {
+      "photo": "Toma una foto de tu local",
+      "choose": "Elige el modelo de horno Vesuviano",
+      "visualize": "Visualiza el resultado en tiempo real"
+    },
+    "tryNow": "Probar Arquitecto AI",
+    "later": "Más tarde"
+  },
   "common": {
     "loading": "Cargando...",
     "error": "Error",

@@ -71,6 +71,247 @@
       "viewGallery": "Galerie Ansehen"
     }
   },
+  "clientsMap": {
+    "badge": "Globale Präsenz",
+    "title": "Unsere",
+    "titleHighlight": "Kunden",
+    "subtitle": "Von Neapel in die ganze Welt: Vesuviano-Öfen bringen den authentischen Geschmack der neapolitanischen Tradition in jeden Winkel der Erde."
+  },
+  "rivestimenti": {
+    "badge": "Personalisierung",
+    "title": "Verkleidungen",
+    "titleHighlight": "Exklusiv",
+    "subtitle": "Jeder Vesuviano-Ofen kann mit hochwertigen Verkleidungen personalisiert werden, die Ästhetik und Funktionalität verbinden, um sich perfekt in Ihre Umgebung zu integrieren.",
+    "verniciato": {
+      "title": "Lackiert",
+      "description": "Hochwertige Lackierung, beständig gegen hohe Temperaturen"
+    },
+    "mosaicato": {
+      "title": "Mosaik",
+      "description": "Kunsthandwerkliche Mosaikverkleidung, jedes Stück ist einzigartig"
+    },
+    "ferro": {
+      "title": "Eisen",
+      "description": "Moderner Industriestil mit natürlicher Eisenoberfläche"
+    },
+    "personalizzato": {
+      "title": "Personalisiert",
+      "description": "Maßgeschneidertes Design nach Ihren genauen Spezifikationen"
+    },
+    "availableOptions": "Verfügbare Optionen",
+    "viewSamples": "Muster Ansehen",
+    "process": {
+      "title": "Personalisierungsprozess",
+      "description": "Vom Konzept bis zur Realisierung begleiten wir Sie bei jedem Schritt, um den perfekten Ofen für Sie zu schaffen.",
+      "step1": {
+        "title": "Beratung",
+        "desc": "Analyse Ihrer Bedürfnisse"
+      },
+      "step2": {
+        "title": "Design",
+        "desc": "Personalisierte Planung"
+      },
+      "step3": {
+        "title": "Muster",
+        "desc": "Materialauswahl"
+      },
+      "step4": {
+        "title": "Realisierung",
+        "desc": "Handwerkliche Produktion"
+      }
+    },
+    "startCustomization": "Personalisierung Beginnen"
+  },
+  "craftsmanship": {
+    "badge": "Traditionelles Handwerk",
+    "title": "Neapolitanisches",
+    "titleHighlight": "Handwerk",
+    "subtitle": "Jeder Vesuviano-Ofen entsteht aus erfahrenen Händen, die eine jahrtausendealte Tradition fortführen und dabei uralte Techniken mit modernen Innovationen verbinden.",
+    "traditionTitle": "Die Tradition des Feuers",
+    "traditionDesc": "Seit Generationen geben neapolitanische Meisterhandwerker die Kunst weiter, echte Pizzaöfen zu bauen. Jeder Vesuviano-Ofen trägt diese jahrhundertealte Geschichte in sich.",
+    "processTitle": "Handwerklicher Prozess",
+    "processDesc": "Von der Auswahl der feuerfesten Materialien bis zur endgültigen Montage wird jeder Schritt von Hand mit der Präzision und Liebe ausgeführt, die das authentische neapolitanische Handwerk auszeichnet.",
+    "qualityTitle": "Garantierte Qualität",
+    "qualityDesc": "Wir verwenden ausschließlich feuerfeste Ziegel aus Sorrent und Materialien höchster Qualität, die Leistung und Langlebigkeit über die Zeit garantieren.",
+    "labTitle": "Unser Labor",
+    "labDesc": "In Sant'Anastasia, am Fuße des Vesuvs, vereint unser handwerkliches Labor Tradition und Innovation. Hier entstehen die Öfen, die die Welt erobern.",
+    "experience": "Jahre Erfahrung",
+    "clients": "Zufriedene Kunden",
+    "countries": "Bediente Länder"
+  },
+  "services": {
+    "badge": "Professionelle Dienstleistungen",
+    "title": "Unsere",
+    "titleHighlight": "Dienstleistungen",
+    "subtitle": "Eine vollständige Begleitung von der Planung bis zur Installation, um den Erfolg Ihres Projekts zu garantieren.",
+    "consulting": {
+      "title": "Technische Beratung",
+      "description": "Bedarfsanalyse und Identifizierung der optimalen Lösung für Ihr Unternehmen."
+    },
+    "design": {
+      "title": "Design und Personalisierung",
+      "description": "Maßgeschneiderte Planung und 3D-Rendering in hoher Qualität zur Visualisierung Ihres Ofens."
+    },
+    "logistics": {
+      "title": "Internationale Logistik",
+      "description": "Transportorganisation und weltweite Lieferung mit Zollabwicklung."
+    },
+    "training": {
+      "title": "Schulung und Unterstützung",
+      "description": "Vollständige Schulung zu Nutzung und Wartung mit kontinuierlichem technischen Support."
+    },
+    "freeConsultation": "Kostenlose Beratung"
+  },
+  "vesuvioBuono": {
+    "worldExclusive": "WELTEXKLUSIVITÄT",
+    "patented": "PATENTIERT",
+    "title": "VesuvioBuono",
+    "subtitle": "Der erste Ofen der Welt, der mit Holz und kombiniert Gas/Holz betrieben wird und keinen Ruß in die Atmosphäre abgibt. Eine Revolution für Umwelt und Gesundheit.",
+    "videoTitle": "VesuvioBuono in Aktion",
+    "videoDesc": "Entdecken Sie, wie VesuvioBuono das Kochen mit Holz ohne Emissionen revolutioniert",
+    "photoSlots": {
+      "ovenInAction": "Ofen in Aktion",
+      "perfectPizza": "Perfekte Pizza",
+      "zeroEmissions": "Null Emissionen",
+      "woodFired": "Holzofen",
+      "smokeFilter": "Rauchfilter"
+    },
+    "zeroEmissions": "Null Emissionen",
+    "patentedTech": "Patentierte Technologie",
+    "patentedTechDesc": "Vollständiges Verbrennungssystem, das 99,9% der Rußpartikel eliminiert.",
+    "envCertifications": "Umweltzertifizierungen",
+    "envCertificationsDesc": "Entspricht den strengsten europäischen und internationalen Emissionsnormen.",
+    "dualFuel": "Doppelte Versorgung",
+    "dualFuelDesc": "Funktioniert perfekt sowohl mit Holz als auch mit der Gas/Holz-Kombinatio.",
+    "exclusiveAdvantages": "Exklusive Vorteile",
+    "advantages": {
+      "installation": "Installation in jeder städtischen Zone ohne Einschränkungen",
+      "maintenance": "Drastische Reduzierung der Schornstein-Wartungskosten",
+      "flavor": "Beibehaltung des authentischen Geschmacks des Holzkochens",
+      "environment": "Vollständiger Respekt für Umwelt und Gemeinschaft",
+      "warranty": "Internationale Garantie und spezialisierter technischer Support"
+    },
+    "downloadTechSheet": "Technisches Datenblatt Herunterladen",
+    "downloadTechSheetTitle": "Technisches Datenblatt Herunterladen",
+    "downloadTechSheetDesc": "Füllen Sie Ihre Daten aus, um das technische Datenblatt von VesuvioBuono herunterzuladen",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail",
+    "city": "Stadt",
+    "phone": "Telefonnummer",
+    "cancel": "Abbrechen",
+    "downloadPDF": "PDF Herunterladen",
+    "downloadComplete": "Download abgeschlossen!",
+    "downloadCompleteDesc": "Das technische Datenblatt wurde erfolgreich heruntergeladen.",
+    "error": "Fehler",
+    "errorDesc": "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+    "fillAllFields": "Bitte füllen Sie alle Felder aus",
+    "visitWebsite": "Website Besuchen",
+    "exclusivePartnership": "Exklusive Partnerschaft",
+    "exclusivePartnershipDesc": "Vesuviano ist der offizielle Exklusivvertreiber der VesuvioBuono-Technologie in Europa und weltweit."
+  },
+  "gallery": {
+    "title": "Galerie Unserer Öfen",
+    "subtitle": "Jedes Bild erzählt eine Geschichte von Leidenschaft, Tradition und Innovation. Entdecken Sie das neapolitanische Handwerk, das die Welt erobert.",
+    "filters": {
+      "all": "Alle Öfen",
+      "wood": "Holzöfen",
+      "gas": "Gasöfen",
+      "electric": "Elektroöfen",
+      "rotating": "Rotierende Öfen",
+      "vesuviobuono": "VesuvioBuono"
+    },
+    "items": {
+      "traditional": "Traditioneller Neapolitanischer Ofen",
+      "traditionalDesc": "Jahrhundertealtes Handwerk für die perfekte Pizza",
+      "gas": "Professioneller Gasofen",
+      "gasDesc": "Präzise Kontrolle für moderne Restaurants",
+      "electric": "Elektrischer Design-Ofen",
+      "electricDesc": "Fortschrittliche Technologie für urbane Umgebungen",
+      "rotating": "Industrieller Rotierender Ofen",
+      "rotatingDesc": "Kontinuierliche Produktion mit hoher Effizienz",
+      "vesuviobuono": "VesuvioBuono - Null Emissionen",
+      "vesuviobuonoDesc": "Die Zukunft des nachhaltigen Kochens",
+      "international": "Internationale Installation",
+      "internationalDesc": "Unsere Öfen in der Welt"
+    },
+    "ctaTitle": "Möchten Sie unsere Öfen live sehen?",
+    "ctaDesc": "Wir organisieren Besuche in unserem Labor in Neapel oder erstellen hochauflösende 3D-Renderings, um Ihnen Ihren Ofen vor der Produktion zu zeigen.",
+    "bookVisit": "Laborbesuch Buchen",
+    "request3D": "3D-Rendering Anfordern"
+  },
+  "consultation": {
+    "badge": "KOSTENLOSE BERATUNG",
+    "title": "Starten Sie Ihr Projekt",
+    "subtitle": "Unsere Experten führen Sie bei der Auswahl der perfekten Lösung, von der Planung bis zum internationalen Transport.",
+    "ourServices": "Unsere Dienstleistungen",
+    "services": {
+      "identification": "Identifizierung der besten Lösung",
+      "quotation": "Personalisiertes Angebot",
+      "rendering": "3D-Rendering hoher Qualität",
+      "logistics": "Logistische Organisation und Export"
+    },
+    "directContacts": "Direkte Kontakte",
+    "phone": "Telefon",
+    "email": "E-Mail",
+    "laboratory": "Labor",
+    "downloadCatalog": "Vollständigen Katalog Herunterladen",
+    "requestConsultation": "Beratungsanfrage",
+    "fullName": "Vollständiger Name",
+    "yourName": "Ihr Name",
+    "yourEmail": "ihre-email@beispiel.com",
+    "company": "Unternehmen/Restaurant",
+    "companyPlaceholder": "Name Ihres Unternehmens",
+    "destinationCountry": "Zielland",
+    "countryPlaceholder": "Z.B. Frankreich, Deutschland, USA...",
+    "ovenType": "Ofentyp",
+    "selectType": "Typ auswählen",
+    "ovenTypes": {
+      "woodFixed": "Fester Holzofen",
+      "woodRotating": "Rotierender Holzofen",
+      "gasFixed": "Fester Gasofen",
+      "gasRotating": "Rotierender Gasofen",
+      "electricFixed": "Fester Elektroofen",
+      "electricRotating": "Rotierender Elektroofen",
+      "vesuviobuonoWood": "VesuvioBuono Holzofen",
+      "vesuviobuonoCombined": "VesuvioBuono Kombiniert Gas/Holz",
+      "unsure": "Ich bin mir nicht sicher - ich brauche Beratung"
+    },
+    "capacity": "Gewünschte Kapazität",
+    "capacityPlaceholder": "Z.B. 100 Pizzen/Stunde, 50 cm Durchmesser...",
+    "budget": "Ungefähriges Budget",
+    "budgetPlaceholder": "Z.B. €5.000 - €15.000",
+    "servicesRequested": "Gewünschte Dienstleistungen:",
+    "message": "Nachricht",
+    "messagePlaceholder": "Beschreiben Sie uns Ihr Projekt, Ihre spezifischen Bedürfnisse oder alle Fragen...",
+    "sendRequest": "Anfrage für Kostenlose Beratung Senden",
+    "sending": "Wird gesendet...",
+    "requiredFields": "Pflichtfelder",
+    "requiredFieldsDesc": "Name und E-Mail sind erforderlich, um die Anfrage zu senden.",
+    "requestSent": "🔥 Anfrage Erfolgreich Gesendet!",
+    "requestSentDesc": "Wir haben Ihnen eine Bestätigungs-E-Mail gesendet. Wir werden Sie innerhalb von 24 Stunden für Ihre kostenlose Beratung kontaktieren.",
+    "sendError": "Fehler beim Senden",
+    "sendErrorDesc": "Es ist ein Problem aufgetreten. Versuchen Sie es erneut oder kontaktieren Sie uns direkt unter +39 350 928 6941",
+    "catalogDownloaded": "Katalog Heruntergeladen!",
+    "catalogDownloadedDesc": "Der vollständige Katalog wurde auf Ihr Gerät heruntergeladen.",
+    "privacyNote": "Wir werden Sie innerhalb von 24 Stunden kontaktieren. Ihre Daten sind geschützt und werden nicht an Dritte weitergegeben."
+  },
+  "whatsapp": {
+    "tooltip": "Kontaktieren Sie uns auf WhatsApp",
+    "message": "Hallo, ich hätte gerne Informationen über Ihre professionellen Öfen 🔥"
+  },
+  "architectAI": {
+    "badge": "NEUHEIT",
+    "title": "Architekt AI",
+    "subtitle": "Visualisieren Sie Ihren Ofen in Ihrem Raum",
+    "steps": {
+      "photo": "Machen Sie ein Foto von Ihrem Lokal",
+      "choose": "Wählen Sie das Vesuviano-Ofenmodell",
+      "visualize": "Visualisieren Sie das Ergebnis in Echtzeit"
+    },
+    "tryNow": "Architekt AI Ausprobieren",
+    "later": "Später"
+  },
   "common": {
     "loading": "Wird geladen...",
     "error": "Fehler",
