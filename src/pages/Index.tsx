@@ -14,6 +14,7 @@ import OvenDataInitializer from "@/components/OvenDataInitializer";
 import ConsultationForm from "@/components/ConsultationForm";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ArchitettoAIPopup from "@/components/ArchitettoAIPopup";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Index = () => {
   return (
@@ -68,7 +69,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-16">
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
             {/* Brand Section */}
             <div className="lg:col-span-2">
               <div className="flex items-center mb-6">
@@ -188,6 +189,42 @@ const Index = () => {
                 <li className="text-gray-400">Formazione Uso Forni</li>
               </ul>
             </div>
+            
+            {/* Contatti */}
+            <div>
+              <h4 className="font-semibold mb-4 text-vesuviano-400">Contatti</h4>
+              <ul className="space-y-3 text-sm">
+                <li>
+                  <a 
+                    href="mailto:info@vesuvianoforni.com" 
+                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
+                  >
+                    <span>📧</span>
+                    info@vesuvianoforni.com
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="tel:+393509286941" 
+                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
+                  >
+                    <span>📞</span>
+                    +39 350 928 6941
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="https://wa.me/393509286941?text=Ciao,%20vorrei%20informazioni%20sui%20vostri%20forni%20professionali" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-green-400 hover:text-green-300 transition-colors flex items-center gap-2 font-medium"
+                  >
+                    <span>💬</span>
+                    Contattaci su WhatsApp
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
           
           {/* Bottom Section */}
@@ -217,6 +254,9 @@ const Index = () => {
       
       {/* Architetto AI Popup */}
       <ArchitettoAIPopup />
+      
+      {/* WhatsApp Button */}
+      <WhatsAppButton />
     </div>
   );
 };
