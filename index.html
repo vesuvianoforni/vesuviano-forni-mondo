@@ -1,14 +1,23 @@
 
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vesuviano - Forni Artigianali Napoletani di Alta Qualità</title>
-    <meta name="description" content="Forni a legna, gas, elettrici e a zero impatto ambientale. Artigianato napoletano di eccellenza per il mercato internazionale con VesuvioBuono, la soluzione senza emissioni.">
-    <meta name="keywords" content="forni a legna, forni napoletani, forni pizza, VesuvioBuono, zero emissioni, forni artigianali, Napoli, forno tradizionale, forno gas, forno elettrico">
-    <meta name="author" content="Vesuviano" />
+    <title>Vesuviano Forni | Forni Artigianali Napoletani a Legna, Gas e Zero Emissioni</title>
+    <meta name="description" content="🔥 Vesuviano Forni dal 1950: forni artigianali napoletani a legna, gas, elettrici e VesuvioBuono a zero emissioni. Tradizione e innovazione per pizza, pane e cucina professionale. Consegne in tutto il mondo.">
+    <meta name="keywords" content="vesuviano forni, forni a legna napoletani, forni pizza professionali, VesuvioBuono zero emissioni, forni artigianali Napoli, forno tradizionale italiano, forni per ristoranti, forni domestici, mattoni refrattari, forni ecologici">
+    <meta name="author" content="Vesuviano Forni" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="bingbot" content="index, follow" />
     <link rel="canonical" href="https://vesuviano.lovable.app/" />
+    
+    <!-- Business Information -->
+    <meta name="geo.region" content="IT-NA" />
+    <meta name="geo.placename" content="Napoli" />
+    <meta name="geo.position" content="40.8518;14.2681" />
+    <meta name="ICBM" content="40.8518, 14.2681" />
     
     <!-- Language alternate links for SEO -->
     <link rel="alternate" hreflang="it" href="https://vesuviano.lovable.app/" />
@@ -18,68 +27,106 @@
     <link rel="alternate" hreflang="es" href="https://vesuviano.lovable.app/" />
     <link rel="alternate" hreflang="x-default" href="https://vesuviano.lovable.app/" />
     
-    <!-- Structured Data -->
+    <!-- Structured Data - Organization -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
-      "name": "Vesuviano",
-      "description": "Forni artigianali napoletani di alta qualità - forni a legna, gas, elettrici e a zero impatto ambientale",
+      "name": "Vesuviano Forni",
+      "alternateName": "Vesuviano",
+      "description": "Produttore di forni artigianali napoletani dal 1950. Specializzati in forni a legna tradizionali, forni a gas/elettrici moderni e la rivoluzionaria linea VesuvioBuono a zero emissioni.",
       "url": "https://vesuviano.lovable.app",
-      "logo": "https://vesuviano.lovable.app/lovable-uploads/vesuviano-logo-bianco.png",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://vesuviano.lovable.app/lovable-uploads/vesuviano-logo-bianco.png",
+        "width": 400,
+        "height": 400
+      },
+      "image": "https://vesuviano.lovable.app/lovable-uploads/vesuviano-social-banner.jpg",
       "sameAs": [
         "https://www.facebook.com/vesuviano",
-        "https://www.instagram.com/vesuviano"
+        "https://www.instagram.com/vesuviano",
+        "https://www.linkedin.com/company/vesuviano-forni"
       ],
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Napoli",
-        "addressCountry": "IT"
+        "addressRegion": "Campania",
+        "addressCountry": "IT",
+        "postalCode": "80100"
       },
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "contactType": "Customer Service",
-        "availableLanguage": ["Italian", "English", "French", "German", "Spanish"]
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 40.8518,
+        "longitude": 14.2681
       },
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "Customer Service",
+          "availableLanguage": ["Italian", "English", "French", "German", "Spanish"],
+          "areaServed": "Worldwide"
+        },
+        {
+          "@type": "ContactPoint",
+          "contactType": "Sales",
+          "availableLanguage": ["Italian", "English"],
+          "areaServed": "Europe"
+        }
+      ],
+      "foundingDate": "1950",
+      "founder": {
+        "@type": "Person",
+        "name": "Famiglia Vesuviano"
+      },
+      "numberOfEmployees": {
+        "@type": "QuantitativeValue",
+        "value": "20-50"
+      },
+      "knowsAbout": [
+        "Forni a legna",
+        "Forni tradizionali napoletani",
+        "Forni pizza",
+        "Tecnologie a zero emissioni",
+        "Artigianato italiano",
+        "Mattoni refrattari"
+      ],
       "makesOffer": [
         {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Product",
-            "name": "Forni a Legna Tradizionali",
-            "description": "Forni a legna artigianali napoletani per pizza e pane, realizzati con mattoni refrattari di alta qualità",
-            "category": "Forni a Legna",
-            "brand": {
-              "@type": "Brand",
-              "name": "Vesuviano"
-            }
+          "@type": "Product",
+          "name": "Forni a Legna Tradizionali",
+          "description": "Forni a legna artigianali napoletani per pizza e pane, realizzati con mattoni refrattari di alta qualità",
+          "category": "Forni a Legna",
+          "brand": {
+            "@type": "Brand",
+            "name": "Vesuviano"
+          },
+          "manufacturer": {
+            "@type": "Organization",
+            "name": "Vesuviano Forni"
           }
         },
         {
-          "@type": "Offer", 
-          "itemOffered": {
-            "@type": "Product",
-            "name": "VesuvioBuono - Forni a Zero Emissioni",
-            "description": "Forni innovativi a zero impatto ambientale con abbattitore di fuliggine integrato",
-            "category": "Forni Ecologici",
-            "brand": {
-              "@type": "Brand", 
-              "name": "Vesuviano"
-            },
-            "offers": {
-              "@type": "Offer",
-              "availability": "https://schema.org/InStock",
-              "priceRange": "€€€"
+          "@type": "Product",
+          "name": "VesuvioBuono - Forni a Zero Emissioni",
+          "description": "Forni innovativi a zero impatto ambientale con abbattitore di fuliggine integrato, per un futuro sostenibile",
+          "category": "Forni Ecologici",
+          "brand": {
+            "@type": "Brand", 
+            "name": "VesuvioBuono"
+          },
+          "manufacturer": {
+            "@type": "Organization",
+            "name": "Vesuviano Forni"
+          },
+          "offers": {
+            "@type": "Offer",
+            "availability": "https://schema.org/InStock",
+            "priceRange": "€€€",
+            "seller": {
+              "@type": "Organization",
+              "name": "Vesuviano Forni"
             }
-          }
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Product", 
-            "name": "Forni Gas ed Elettrici",
-            "description": "Forni professionali a gas ed elettrici per uso commerciale e domestico",
-            "category": "Forni Moderni"
           }
         }
       ],
@@ -87,31 +134,78 @@
         "@type": "AggregateRating",
         "ratingValue": "4.9",
         "reviewCount": "150",
-        "bestRating": "5"
+        "bestRating": "5",
+        "worstRating": "1"
       },
-      "foundingDate": "1950",
-      "founder": {
-        "@type": "Person",
-        "name": "Famiglia Vesuviano"
-      },
-      "specialty": "Forni artigianali napoletani",
       "areaServed": {
         "@type": "Place",
         "name": "Worldwide"
-      }
+      },
+      "slogan": "Tradizione e innovazione dal 1950"
+    }
+    </script>
+    
+    <!-- Structured Data - WebSite -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Vesuviano Forni",
+      "alternateName": "Vesuviano",
+      "url": "https://vesuviano.lovable.app",
+      "description": "Sito ufficiale di Vesuviano Forni - produttore di forni artigianali napoletani dal 1950",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Vesuviano Forni"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://vesuviano.lovable.app/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "inLanguage": ["it-IT", "en-US", "fr-FR", "de-DE", "es-ES"]
     }
     </script>
 
-    <meta property="og:title" content="Vesuviano - Forni Artigianali Napoletani" />
-    <meta property="og:description" content="Forni a legna, gas, elettrici e a zero impatto ambientale. Artigianato napoletano di eccellenza per il mercato internazionale." />
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/IT0cHvIBdifMaNbCYNmRTPmEyi83/social-images/social-1757717503194-Screenshot 2025-09-13 alle 00.51.37.png">
+    <meta property="og:url" content="https://vesuviano.lovable.app/" />
+    <meta property="og:title" content="Vesuviano Forni | Forni Artigianali Napoletani dal 1950" />
+    <meta property="og:description" content="🔥 Scopri i nostri forni artigianali napoletani: tradizionali a legna, moderni a gas/elettrici e VesuvioBuono a zero emissioni. Tradizione e innovazione dal 1950." />
+    <meta property="og:image" content="https://vesuviano.lovable.app/lovable-uploads/vesuviano-social-banner.jpg" />
+    <meta property="og:image:alt" content="Vesuviano Forni - Forni artigianali napoletani dal 1950" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Vesuviano Forni" />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale:alternate" content="fr_FR" />
+    <meta property="og:locale:alternate" content="de_DE" />
+    <meta property="og:locale:alternate" content="es_ES" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://vesuviano.lovable.app/" />
+    <meta name="twitter:title" content="Vesuviano Forni | Forni Artigianali Napoletani dal 1950" />
+    <meta name="twitter:description" content="🔥 Scopri i nostri forni artigianali napoletani: tradizionali a legna, moderni a gas/elettrici e VesuvioBuono a zero emissioni. Tradizione e innovazione dal 1950." />
+    <meta name="twitter:image" content="https://vesuviano.lovable.app/lovable-uploads/vesuviano-social-banner.jpg" />
+    <meta name="twitter:image:alt" content="Vesuviano Forni - Forni artigianali napoletani dal 1950" />
+    <meta name="twitter:creator" content="@vesuviano" />
     <meta name="twitter:site" content="@vesuviano" />
-    <meta name="twitter:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/IT0cHvIBdifMaNbCYNmRTPmEyi83/social-images/social-1757717503194-Screenshot 2025-09-13 alle 00.51.37.png">
     
-    <link rel="icon" href="/lovable-uploads/vesuviano-logo-bianco.png" type="image/png">
+    <!-- Favicons and Touch Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/lovable-uploads/vesuviano-logo-bianco.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/lovable-uploads/vesuviano-logo-bianco.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/lovable-uploads/vesuviano-logo-bianco.png" />
+    <link rel="mask-icon" href="/lovable-uploads/vesuviano-logo-bianco.png" color="#d4631a" />
+    <meta name="msapplication-TileColor" content="#d4631a" />
+    <meta name="theme-color" content="#d4631a" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
     
     <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

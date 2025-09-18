@@ -1,12 +1,36 @@
 User-agent: *
 Allow: /
 
-# Sitemap
+# Important pages for indexing
+Allow: /lovable-uploads/
+Allow: /src/assets/
+
+# Sitemap location
 Sitemap: https://vesuviano.lovable.app/sitemap.xml
 
-# Crawl-delay for bots
+# Crawl-delay for bots (respectful crawling)
 Crawl-delay: 1
 
-# Block access to sensitive areas (if any)
+# Block access to sensitive areas
 Disallow: /api/
 Disallow: /admin/
+Disallow: /_next/
+Disallow: /node_modules/
+Disallow: /src/components/
+Disallow: /src/hooks/
+Disallow: /src/lib/
+Disallow: /src/services/
+
+# Block search engines from indexing temporary or development files
+Disallow: *.tmp
+Disallow: *.log
+Disallow: /tmp/
+Disallow: /cache/
+
+# Google-specific directives
+User-agent: Googlebot
+Crawl-delay: 0
+
+# Bing-specific directives  
+User-agent: Bingbot
+Crawl-delay: 1

@@ -1,0 +1,39 @@
+{
+  "name": "Vesuviano Forni - Forni Artigianali Napoletani",
+  "short_name": "Vesuviano",
+  "description": "Forni artigianali napoletani dal 1950: tradizionali a legna, moderni a gas/elettrici e VesuvioBuono a zero emissioni",
+  "lang": "it",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#d4631a",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/lovable-uploads/vesuviano-logo-bianco.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/lovable-uploads/vesuviano-logo-bianco.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "business",
+    "shopping",
+    "lifestyle"
+  ],
+  "screenshots": [
+    {
+      "src": "/lovable-uploads/vesuviobuono-osteria-pizza.jpg",
+      "sizes": "1200x630",
+      "type": "image/jpeg",
+      "form_factor": "wide"
+    }
+  ]
+}

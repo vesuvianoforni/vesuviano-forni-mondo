@@ -1,9 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Homepage -->
   <url>
     <loc>https://vesuviano.lovable.app/</loc>
-    <lastmod>2025-09-15</lastmod>
+    <lastmod>2025-09-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vesuviano.lovable.app/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vesuviano.lovable.app/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vesuviano.lovable.app/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://vesuviano.lovable.app/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://vesuviano.lovable.app/" />
+    <image:image>
+      <image:loc>https://vesuviano.lovable.app/lovable-uploads/vesuviano-logo-bianco.png</image:loc>
+      <image:title>Logo Vesuviano Forni</image:title>
+      <image:caption>Logo ufficiale di Vesuviano Forni, produttore di forni artigianali napoletani dal 1950</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vesuviano.lovable.app/lovable-uploads/vesuviobuono-osteria-pizza.jpg</image:loc>
+      <image:title>Forno VesuvioBuono in azione</image:title>
+      <image:caption>Forno VesuvioBuono a zero emissioni per pizza napoletana autentica</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vesuviano.lovable.app/src/assets/mattoni-refrattari-hero.jpg</image:loc>
+      <image:title>Mattoni refrattari di qualità</image:title>
+      <image:caption>Mattoni refrattari utilizzati per la costruzione dei forni artigianali Vesuviano</image:caption>
+    </image:image>
   </url>
+  
 </urlset>
