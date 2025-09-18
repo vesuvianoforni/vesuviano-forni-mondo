@@ -113,7 +113,12 @@ const OvenVisualizer = () => {
   };
 
   const generateOvenInSpace = async () => {
+    console.log("🔧 Inizio generazione AI - Architetto AI");
+    console.log("📸 Immagini selezionate:", selectedImages.length);
+    console.log("🏺 Forno selezionato:", selectedOvenType);
+    
     if (selectedImages.length === 0 || !selectedOvenType) {
+      console.error("❌ Validazione fallita - mancano immagini o forno");
       toast.error("Carica almeno un'immagine e seleziona un forno");
       return;
     }
@@ -121,19 +126,35 @@ const OvenVisualizer = () => {
     setIsGenerating(true);
     
     try {
+      console.log("🖼️ Conversione immagine principale...");
       const mainImage = selectedImages[0]; // Use first image as main
       const base64Image = await convertFileToBase64(mainImage);
+      console.log("✅ Immagine convertita in base64, dimensione:", base64Image.length);
       
       // Get selected oven data from Supabase or fallback
+      console.log("🔍 Cerco dati forno...");
       const selectedOvenData = ovens.find(oven => oven.id === selectedOvenType) || 
                                ovenTypes.find(oven => oven.value === selectedOvenType);
+      console.log("📋 Dati forno trovati:", selectedOvenData);
       
-      const ovenRefUrl = ('image_url' in selectedOvenData! ? selectedOvenData.image_url : selectedOvenData!.image) || '';
+      if (!selectedOvenData) {
+        throw new Error("Dati del forno selezionato non trovati");
+      }
+      
+      const ovenRefUrl = ('image_url' in selectedOvenData ? selectedOvenData.image_url : selectedOvenData.image) || '';
+      console.log("🏺 URL immagine forno:", ovenRefUrl);
+      
       const ovenImageBase64 = ovenRefUrl ? await fetchUrlToBase64(ovenRefUrl) : undefined;
-      const ovenName = ('name' in selectedOvenData! ? selectedOvenData.name : selectedOvenData!.label) || 'forno a legna';
+      console.log("🏺 Immagine forno convertita:", !!ovenImageBase64);
+      
+      const ovenName = ('name' in selectedOvenData ? selectedOvenData.name : selectedOvenData.label) || 'forno a legna';
+      console.log("📝 Nome forno:", ovenName);
+      
       const promptText = `Inserisci il forno selezionato "${ovenName}" nella foto caricata in fotorealismo, senza alterare la foto caricata, semplicemente inserendo il forno in modo equilibrato e naturale. Il forno deve integrarsi perfettamente nell'ambiente rispettando prospettiva, illuminazione e ombre.`;
+      console.log("💬 Prompt generato:", promptText);
       
       // 1) Prova con Gemini (edge function)
+      console.log("🚀 Chiamata a Gemini via Supabase function...");
       const { data, error } = await supabase.functions.invoke('generate-oven-space', {
         body: {
           spaceImage: base64Image,
@@ -142,6 +163,9 @@ const OvenVisualizer = () => {
           ovenImage: ovenImageBase64
         }
       });
+      
+      console.log("📞 Risposta Gemini - error:", error);
+      console.log("📞 Risposta Gemini - data:", data);
 
       if (error) throw error;
 
