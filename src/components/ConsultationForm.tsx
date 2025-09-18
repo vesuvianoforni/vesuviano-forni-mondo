@@ -7,11 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Phone, Mail, MapPin, Download, CheckCircle } from "lucide-react";
+import { Phone, Mail, MapPin, Download, CheckCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const ConsultationForm = () => {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -44,13 +46,62 @@ const ConsultationForm = () => {
     "Non sono sicuro - necessito consulenza"
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    toast({
-      title: "Richiesta Inviata!",
-      description: "Ti contatteremo entro 24 ore per la tua consulenza gratuita.",
-    });
+    
+    if (!formData.name || !formData.email) {
+      toast({
+        title: "Campi Obbligatori",
+        description: "Nome e Email sono richiesti per inviare la richiesta.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      console.log("Invio richiesta consulenza:", formData);
+      
+      const { data, error } = await supabase.functions.invoke('send-consultation-email', {
+        body: formData
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      console.log("Risposta email service:", data);
+      
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        country: "",
+        ovenType: "",
+        capacity: "",
+        budget: "",
+        message: "",
+        services: []
+      });
+
+      toast({
+        title: "🔥 Richiesta Inviata con Successo!",
+        description: "Ti abbiamo inviato una email di conferma. Ti contatteremo entro 24 ore per la tua consulenza gratuita.",
+      });
+
+    } catch (error) {
+      console.error("Errore invio consulenza:", error);
+      toast({
+        title: "Errore nell'Invio",
+        description: "Si è verificato un problema. Riprova o contattaci direttamente al +39 081 123 4567",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const downloadCatalog = () => {
@@ -276,9 +327,17 @@ const ConsultationForm = () => {
                     <Button 
                       type="submit" 
                       size="lg"
-                      className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-lg py-3"
+                      disabled={isSubmitting}
+                      className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 disabled:opacity-50 text-white text-lg py-3"
                     >
-                      Invia Richiesta Consulenza Gratuita
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          Invio in corso...
+                        </>
+                      ) : (
+                        "Invia Richiesta Consulenza Gratuita"
+                      )}
                     </Button>
 
                     <p className="text-xs text-gray-500 text-center">
