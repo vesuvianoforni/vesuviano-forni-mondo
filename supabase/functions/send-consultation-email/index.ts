@@ -156,8 +156,8 @@ serve(async (req) => {
               <p>Nel frattempo, puoi esplorare i nostri forni e soluzioni sul nostro sito web:</p>
               
               <div style="text-align: center; margin: 30px 0;">
-                <a href="https://vesuviano.com" class="btn">Esplora i Nostri Forni</a>
-                <a href="https://vesuviano.com/catalogo" class="btn" style="background: #059669;">Scarica il Catalogo</a>
+                <a href="https://vesuvianoforni.com" class="btn">Esplora i Nostri Forni</a>
+                <a href="https://vesuvianoforni.com/catalogo" class="btn" style="background: #059669;">Scarica il Catalogo</a>
               </div>
             </div>
 
@@ -170,7 +170,7 @@ serve(async (req) => {
                 </div>
                 <div class="contact-item">
                   <strong>✉️ Email</strong><br>
-                  info@vesuviano.com
+                  info@vesuvianoforni.com
                 </div>
                 <div class="contact-item">
                   <strong>📍 Laboratorio</strong><br>
@@ -299,7 +299,7 @@ serve(async (req) => {
 
     // Invia email al cliente
     const customerEmailResult = await resend.emails.send({
-      from: 'Vesuviano Forni <noreply@vesuviano.com>',
+      from: 'Vesuviano Forni <noreply@vesuvianoforni.com>',
       to: [formData.email],
       subject: '🔥 Conferma richiesta consulenza gratuita - Vesuviano Forni',
       html: customerEmailHtml,
@@ -309,8 +309,8 @@ serve(async (req) => {
 
     // Invia email all'azienda
     const companyEmailResult = await resend.emails.send({
-      from: 'Sistema Consulenze <system@vesuviano.com>',
-      to: ['info@vesuviano.com'], // Email aziendale principale
+      from: 'Sistema Consulenze <system@vesuvianoforni.com>',
+      to: ['info@vesuvianoforni.com'], // Email aziendale principale
       subject: `🔔 Nuova Consulenza: ${formData.name} - ${formData.ovenType || 'Tipo non specificato'}`,
       html: companyEmailHtml,
     })
