@@ -242,6 +242,7 @@ const OvenVisualizer = () => {
         imageUrl={generatedImageUrl}
         ovenModel={selectedOvenData ? ('name' in selectedOvenData ? selectedOvenData.name : selectedOvenData.label) : ''}
         onDownload={() => {
+          console.log("🔽 Apertura Download Modal...");
           setShowResultModal(false);
           setShowDownloadModal(true);
         }}
@@ -250,7 +251,10 @@ const OvenVisualizer = () => {
       {/* Download Modal */}
       <DownloadModal
         isOpen={showDownloadModal}
-        onClose={() => setShowDownloadModal(false)}
+        onClose={() => {
+          console.log("🔄 Chiusura Download Modal...");
+          setShowDownloadModal(false);
+        }}
         imageUrl={generatedImageUrl}
         ovenModel={selectedOvenData ? ('name' in selectedOvenData ? selectedOvenData.name : selectedOvenData.label) : ''}
       />
