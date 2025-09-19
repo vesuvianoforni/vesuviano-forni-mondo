@@ -284,10 +284,7 @@
       "mosaicato": {
         "title": "Mosaicato",
         "description": "Four artistique avec revêtement en mosaïque"
-      },
-      "vesuviobuono": "Revêtement en mosaïque premium avec technologie avancée",
-      "verniciato": "Finition peinte traditionnelle en terre cuite",
-      "mosaicato": "Revêtement en mosaïque personnalisable"
+      }
     },
     "ovenTypes": {
       "traditional": "Four Traditionnel",
