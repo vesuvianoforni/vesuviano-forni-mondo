@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Upload, Wand2, Smartphone, Camera, Zap, Brain, Eye, Image as ImageIcon, X } from "lucide-react";
+import { Upload, Wand2, Smartphone, Camera, Zap, Brain, Eye, Image as ImageIcon, X, Plus, Minus } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { StabilityService } from "@/services/stabilityService";
@@ -435,11 +435,11 @@ const OvenVisualizer = () => {
                         </div>
                       )}
 
-                      {/* Oven Selection - Tutti i forni in collezione per AI */}
+                      {/* Oven Selection - Limita forni mostrati su mobile */}
                       <div>
                         <h3 className="font-semibold text-stone-900 mb-3 text-sm">Scegli il forno</h3>
                         <div className="grid grid-cols-1 gap-3">
-                          {ovens.map((oven) => (
+                          {(showAllOvens ? ovens : ovens.slice(0, 4)).map((oven) => (
                             <button
                               key={oven.id}
                               onClick={() => setSelectedOvenType(oven.id)}
@@ -474,6 +474,36 @@ const OvenVisualizer = () => {
                             </button>
                           ))}
                         </div>
+                        
+                        {/* Mostra più modelli button */}
+                        {!showAllOvens && ovens.length > 4 && (
+                          <div className="mt-3 text-center">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setShowAllOvens(true)}
+                              className="text-blue-600 border-blue-200 hover:bg-blue-50 hover:border-blue-300"
+                            >
+                              <Plus className="w-4 h-4 mr-1" />
+                              Mostra più modelli ({ovens.length - 4})
+                            </Button>
+                          </div>
+                        )}
+                        
+                        {/* Mostra meno modelli button */}
+                        {showAllOvens && ovens.length > 4 && (
+                          <div className="mt-3 text-center">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setShowAllOvens(false)}
+                              className="text-stone-600 border-stone-200 hover:bg-stone-50 hover:border-stone-300"
+                            >
+                              <Minus className="w-4 h-4 mr-1" />
+                              Mostra meno modelli
+                            </Button>
+                          </div>
+                        )}
                       </div>
 
                       {/* Generate Button */}
