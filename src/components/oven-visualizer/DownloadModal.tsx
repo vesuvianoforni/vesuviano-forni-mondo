@@ -70,7 +70,8 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
       await supabase.functions.invoke('send-form-data', {
         body: {
           formType: 'download-modal',
-          data: formData
+          data: formData,
+          imageUrl: imageUrl // Aggiungo l'URL dell'immagine
         }
       });
 
