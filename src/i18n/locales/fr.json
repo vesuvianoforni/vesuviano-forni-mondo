@@ -519,5 +519,163 @@
       "description": "Installation professionnelle et formation complète à l'utilisation et à la maintenance.",
       "features": ["Installation certifiée", "Formation pratique", "Support technique"]
     }
+  },
+  "consultationForm": {
+    "badge": "Service Gratuit",
+    "title": "Consultation Technique Gratuite",
+    "subtitle": "Nos experts vous aident à choisir le four parfait pour vos besoins professionnels",
+    "services": {
+      "title": "Nos Services", 
+      "identification": "Identification du four optimal",
+      "quotation": "Devis détaillé et transport",
+      "rendering": "Rendu 3D de l'installation", 
+      "logistics": "Logistique et installation"
+    },
+    "directContacts": "Contacts Directs",
+    "phone": "Téléphone",
+    "email": "Email",
+    "laboratory": "Laboratoire",
+    "downloadCatalog": "Télécharger le Catalogue",
+    "requestTitle": "Demande de Consultation",
+    "form": {
+      "nameRequired": "Nom *",
+      "namePlaceholder": "Votre nom complet",
+      "emailRequired": "Email *", 
+      "emailPlaceholder": "votre@email.com",
+      "phone": "Téléphone",
+      "phonePlaceholder": "+33 1 23 45 67 89",
+      "company": "Entreprise",
+      "companyPlaceholder": "Nom de votre entreprise",
+      "country": "Pays",
+      "countryPlaceholder": "France",
+      "ovenType": "Type de Four",
+      "ovenTypePlaceholder": "Sélectionnez le type",
+      "capacity": "Capacité Requise", 
+      "capacityPlaceholder": "Ex: 50 pizzas/heure",
+      "budget": "Budget Approximatif",
+      "budgetPlaceholder": "Ex: 15.000-25.000€",
+      "servicesRequested": "Services Demandés",
+      "message": "Message",
+      "messagePlaceholder": "Décrivez votre projet et vos besoins spécifiques...",
+      "submit": "Envoyer la Demande",
+      "submitting": "Envoi en cours...",
+      "privacy": "Vos données sont protégées et ne seront utilisées que pour cette consultation."
+    },
+    "ovenTypes": {
+      "woodFixed": "Four à Bois Fixe",
+      "woodRotating": "Four à Bois Rotatif", 
+      "gasFixed": "Four à Gaz Fixe",
+      "gasRotating": "Four à Gaz Rotatif",
+      "electricFixed": "Four Électrique Fixe",
+      "electricRotating": "Four Électrique Rotatif",
+      "vesuvioBuonoWood": "VesuvioBuono à Bois",
+      "vesuvioBuonoCombined": "VesuvioBuono Combiné",
+      "needConsultation": "J'ai besoin d'une consultation"
+    },
+    "messages": {
+      "requiredFields": "Champs Obligatoires",
+      "requiredFieldsDesc": "Nom et Email sont requis pour envoyer la demande.",
+      "success": "🔥 Demande Envoyée avec Succès !",
+      "successDesc": "Nous vous avons envoyé un email de confirmation. Nous vous contacterons dans les 24 heures pour votre consultation gratuite.",
+      "error": "Erreur d'Envoi",
+      "errorDesc": "Un problème s'est produit. Réessayez ou contactez-nous directement au +39 350 928 6941",
+      "catalogDownloaded": "Catalogue Téléchargé !",
+      "catalogDesc": "Le catalogue complet a été téléchargé sur votre appareil."
+    }
+  },
+  "whatsapp": {
+    "tooltip": "Contactez-nous sur WhatsApp", 
+    "message": "Bonjour, je souhaiterais des informations sur vos fours professionnels 🔥"
+  },
+  "gallery": {
+    "logisticsSection": {
+      "title": "Notre",
+      "titleHighlight": "Efficacité Logistique",
+      "subtitle": "Livraisons dans le monde entier, même dans les métropoles les plus complexes comme New York",
+      "caption": "Four Vésuvien en livraison à Manhattan",
+      "description": "Notre logistique spécialisée garantit des livraisons sécurisées même dans les centres urbains les plus exigeants"
+    }
+  },
+  "ovenVisualizer": {
+    "title": "Visualisateur de Fours AR",
+    "subtitle": "Voyez votre four dans votre espace réel",
+    "alerts": {
+      "arTechActivated": "🚀 Technologie AR Activée",
+      "arDescription": "Utilisez la caméra de votre appareil pour voir le four dans votre environnement réel"
+    },
+    "upload": {
+      "title": "1. Téléchargez votre espace", 
+      "description": "Sélectionnez une photo de l'espace où vous souhaitez installer le four"
+    },
+    "selectModel": {
+      "title": "2. Choisissez le modèle de four",
+      "description": "Sélectionnez le type de four que vous préférez"
+    },
+    "generate": {
+      "title": "3. Générez la visualisation",
+      "button": "Créer la Visualisation AR",
+      "loading": "Génération de votre visualisation personnalisée..."
+    },
+    "result": {
+      "title": "Votre Four Visualisé",
+      "download": "Télécharger l'Image",
+      "newVisualization": "Nouvelle Visualisation"
+    },
+    "models": {
+      "title": "Nos Modèles de Fours",
+      "vesuvioBuono": {
+        "title": "VesuvioBuono", 
+        "description": "Four révolutionnaire à zéro émissions"
+      },
+      "verniciato": {
+        "title": "Verniciato",
+        "description": "Four traditionnel avec finition peinte élégante"
+      },
+      "mosaicato": {
+        "title": "Mosaicato",
+        "description": "Four artistique avec revêtement en mosaïque"
+      }
+    },
+    "ovenTypes": {
+      "traditional": "Four Traditionnel",
+      "gas": "Four à Gaz",
+      "electric": "Four Électrique", 
+      "vesuvioBuono": "VesuvioBuono"
+    },
+    "apiKey": {
+      "title": "Configuration Clé API",
+      "description": "Entrez votre clé API Stability AI pour activer la génération d'images",
+      "placeholder": "Entrez votre clé API...",
+      "submit": "Enregistrer la Clé",
+      "success": "✅ Clé API valide et enregistrée",
+      "info": "Vous pouvez obtenir votre clé API gratuite sur platform.stability.ai"
+    },
+    "loader": {
+      "creating": "Création de votre visualisation...",
+      "analyzing": "Analyse de votre espace...",
+      "rendering": "Rendu du four sélectionné...",
+      "finalizing": "Finalisation de l'image..."
+    },
+    "models": {
+      "vesuviobuono": "Revêtement en mosaïque premium avec technologie avancée",
+      "verniciato": "Finition peinte traditionnelle en terre cuite",
+      "mosaicato": "Revêtement en mosaïque personnalisable"
+    },
+    "ovenTypeSelector": {
+      "label": "Type de Four Vésuvien",
+      "placeholder": "Sélectionnez le modèle de four",
+      "previewLabel": "Aperçu du Four Sélectionné:"
+    },
+    "imageUploadSection": {
+      "title": "Téléchargez Votre Espace",
+      "label": "Photo de l'Espace d'Installation du Four", 
+      "description": "Téléchargez une photo de l'espace (cuisine, jardin, terrasse) où vous souhaitez installer le four",
+      "preview": "Aperçu de l'espace"
+    }
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès"
   }
 }

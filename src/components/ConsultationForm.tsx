@@ -13,7 +13,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from 'react-i18next';
 
 const ConsultationForm = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  console.log('[ConsultationForm] Current language:', i18n.language);
+  console.log('[ConsultationForm] Testing translation:', t('consultationForm.title'));
+  
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
