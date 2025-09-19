@@ -310,7 +310,7 @@ serve(async (req) => {
     // Invia email all'azienda
     const companyEmailResult = await resend.emails.send({
       from: 'Sistema Consulenze <system@vesuvianoforni.com>',
-      to: ['info@vesuvianoforni.com'], // Email aziendale principale
+      to: ['info@vesuvianoforni.com', 'info@abbattitorizapper.it'], // Email aziendale principale
       subject: `🔔 Nuova Consulenza: ${formData.name} - ${formData.ovenType || 'Tipo non specificato'}`,
       html: companyEmailHtml,
     })
