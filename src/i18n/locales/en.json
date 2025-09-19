@@ -301,6 +301,129 @@
   "whatsapp": {
     "tooltip": "Contact us on WhatsApp"
   },
+  "ovenVisualizer": {
+    "badge": "Absolute AI Novelty",
+    "title": "Oven Visualizer", 
+    "subtitle": "Choose how to visualize your Vesuviano oven",
+    "aiMode": {
+      "title": "AI Architect",
+      "description": "Upload a photo of your space and AI will photorealistically integrate the selected oven",
+      "features": {
+        "photorealistic": "Professional photorealistic result",
+        "lighting": "Perfect integration with lighting", 
+        "highRes": "Downloadable high resolution image"
+      },
+      "uploadTitle": "Upload photo of your space",
+      "uploadSubtitle": "Up to 3 images • JPG, PNG",
+      "uploadDescription": "Automatic photorealistic integration",
+      "generateButton": "Generate AI Visualization"
+    },
+    "arMode": {
+      "title": "Augmented Reality",
+      "description": "Use your device's camera to see the 3D oven in your space in real time",
+      "features": {
+        "interactive": "Interactive 3D visualization",
+        "realtime": "Real-time positioning and rotation",
+        "compatible": "Compatible with modern smartphones"
+      },
+      "startButton": "Start AR Visualization"
+    },
+    "ovenSelection": {
+      "title": "Select the Oven",
+      "allOvens": "All available ovens",
+      "showAll": "Show all",
+      "showLess": "Show less",
+      "noSelection": "No oven selected"
+    },
+    "alerts": {
+      "arTechActivated": "AR Technology Activated",
+      "arDescription": "Augmented Reality system ready. Position the oven directly in your environment using the device camera.",
+      "uploadImages": "Upload at least one image and select an oven",
+      "selectOven": "Select an oven type before starting AR",
+      "cameraNotSupported": "Your device does not support camera access",
+      "arStarted": "AR mode started! Point the camera where you want to position the oven",
+      "imagesUploaded": "image(s) uploaded successfully!",
+      "selectImageFiles": "Select only image files"
+    },
+    "apiConfig": {
+      "title": "Runware API Configuration",
+      "label": "Runware API Key",
+      "placeholder": "Enter your Runware API key",
+      "configButton": "Configure API",
+      "howToGet": "How to get the API key:",
+      "step1": "Go to runware.ai",
+      "step2": "Create an account or log in",
+      "step3": "Find the API key in the \"API Keys\" section of the dashboard",
+      "configured": "API configured correctly"
+    },
+    "loader": {
+      "title": "AI in Action",
+      "defaultMessage": "AI is creating your personalized image...",
+      "steps": {
+        "analysis": "Space analysis",
+        "integration": "Oven integration", 
+        "finalization": "Image finalization"
+      }
+    },
+    "resultModal": {
+      "title": "Image Created Successfully!",
+      "subtitle": "has been perfectly integrated into your space",
+      "downloadButton": "Download HD Image",
+      "enlargeHint": "Click to enlarge",
+      "shareTitle": "My personalized Vesuviano oven",
+      "shareText": "See how my new oven will look!",
+      "infoCards": {
+        "ai": "Generated with Artificial Intelligence",
+        "hd": "High Resolution Quality",
+        "design": "Photorealistic Design"
+      },
+      "generatedIn": "Image generated in {seconds} seconds with advanced AI technology"
+    },
+    "downloadModal": {
+      "title": "Download Your Image",
+      "preview": "Preview",
+      "ovenIn": "in your personalized space",
+      "formTitle": "Your data for download",
+      "formDescription": "Enter your data to receive the high resolution image",
+      "firstName": "First Name",
+      "lastName": "Last Name", 
+      "email": "Email",
+      "city": "City",
+      "phone": "Phone",
+      "company": "Company (optional)",
+      "website": "Website (optional)",
+      "downloadButton": "Download HD Image",
+      "downloading": "Downloading...",
+      "downloadComplete": "Download completed!",
+      "downloadSuccess": "The image has been downloaded successfully.",
+      "downloadError": "An error occurred during download. Please try again.",
+      "missingFields": "Missing fields",
+      "missingFieldsDesc": "Fill in all required fields to proceed with download.",
+      "infoText": "You will also receive information about our Vesuviano ovens"
+    },
+    "arVisualization": {
+      "loadingModel": "Loading model...",
+      "modelNotAvailable": "Model not available", 
+      "unsupportedFormat": "File format not supported. Supported: GLB, GLTF, OBJ, FBX"
+    },
+    "ovenModels": {
+      "title": "Our Oven Models",
+      "vesuviobuono": "Premium mosaic coating with advanced technology",
+      "verniciato": "Traditional painted terracotta finish",
+      "mosaicato": "Customizable mosaic coating"
+    },
+    "ovenTypeSelector": {
+      "label": "Vesuviano Oven Type",
+      "placeholder": "Select oven model",
+      "previewLabel": "Selected Oven Preview:"
+    },
+    "imageUploadSection": {
+      "title": "Upload Your Space",
+      "label": "Photo of the Space where to Install the Oven",
+      "description": "Upload a photo of the space (kitchen, garden, terrace) where you would like to install the oven",
+      "preview": "Space preview"
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

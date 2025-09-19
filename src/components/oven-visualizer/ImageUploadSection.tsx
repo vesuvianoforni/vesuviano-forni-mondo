@@ -1,11 +1,11 @@
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Upload } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-
 
 interface ImageUploadSectionProps {
   previewUrl: string;
@@ -13,6 +13,8 @@ interface ImageUploadSectionProps {
 }
 
 const ImageUploadSection = ({ previewUrl, onImageUpload }: ImageUploadSectionProps) => {
+  const { t } = useTranslation();
+  
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -21,7 +23,7 @@ const ImageUploadSection = ({ previewUrl, onImageUpload }: ImageUploadSectionPro
     if (file.type.startsWith('image/')) {
       onImageUpload(event);
     } else {
-      console.warn('Seleziona solo file immagine');
+      console.warn(t('ovenVisualizer.alerts.selectImageFiles'));
     }
   };
 
@@ -30,13 +32,13 @@ const ImageUploadSection = ({ previewUrl, onImageUpload }: ImageUploadSectionPro
       <CardHeader className="pb-4">
         <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
           <Upload className="w-4 h-4 md:w-5 md:h-5 text-vesuviano-500 flex-shrink-0" />
-          Carica il Tuo Spazio
+          {t('ovenVisualizer.imageUploadSection.title')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 md:space-y-6">
         <div>
           <Label htmlFor="space-image" className="text-sm font-medium text-stone-700">
-            Foto dello Spazio dove Installare il Forno
+            {t('ovenVisualizer.imageUploadSection.label')}
           </Label>
           <div className="mt-2">
             <Input
@@ -48,13 +50,13 @@ const ImageUploadSection = ({ previewUrl, onImageUpload }: ImageUploadSectionPro
             />
           </div>
           <p className="text-xs text-stone-500 mt-2">
-            Carica una foto dello spazio (cucina, giardino, terrazza) dove vorresti installare il forno
+            {t('ovenVisualizer.imageUploadSection.description')}
           </p>
           {previewUrl && (
             <div className="mt-3 md:mt-4">
               <img 
                 src={previewUrl} 
-                alt="Preview dello spazio" 
+                alt={t('ovenVisualizer.imageUploadSection.preview')}
                 className="w-full h-32 md:h-48 object-cover rounded-lg border border-stone-200"
               />
             </div>

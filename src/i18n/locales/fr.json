@@ -71,6 +71,129 @@
       "viewGallery": "Voir la Galerie"
     }
   },
+  "ovenVisualizer": {
+    "badge": "Nouveauté Absolue IA",
+    "title": "Visualisateur de Fours", 
+    "subtitle": "Choisissez comment visualiser votre four Vesuviano",
+    "aiMode": {
+      "title": "Architecte IA",
+      "description": "Téléchargez une photo de votre espace et l'IA intégrera de manière photoréaliste le four sélectionné",
+      "features": {
+        "photorealistic": "Résultat photoréaliste professionnel",
+        "lighting": "Intégration parfaite avec l'éclairage", 
+        "highRes": "Image téléchargeable haute résolution"
+      },
+      "uploadTitle": "Téléchargez une photo de votre espace",
+      "uploadSubtitle": "Jusqu'à 3 images • JPG, PNG",
+      "uploadDescription": "Intégration photoréaliste automatique",
+      "generateButton": "Générer Visualisation IA"
+    },
+    "arMode": {
+      "title": "Réalité Augmentée",
+      "description": "Utilisez la caméra de votre appareil pour voir le four 3D dans votre espace en temps réel",
+      "features": {
+        "interactive": "Visualisation 3D interactive",
+        "realtime": "Positionnement et rotation en temps réel",
+        "compatible": "Compatible avec les smartphones modernes"
+      },
+      "startButton": "Démarrer Visualisation AR"
+    },
+    "ovenSelection": {
+      "title": "Sélectionnez le Four",
+      "allOvens": "Tous les fours disponibles",
+      "showAll": "Tout afficher",
+      "showLess": "Afficher moins",
+      "noSelection": "Aucun four sélectionné"
+    },
+    "alerts": {
+      "arTechActivated": "Technologie AR Activée",
+      "arDescription": "Système de Réalité Augmentée prêt. Positionnez le four directement dans votre environnement en utilisant la caméra de l'appareil.",
+      "uploadImages": "Téléchargez au moins une image et sélectionnez un four",
+      "selectOven": "Sélectionnez un type de four avant de démarrer l'AR",
+      "cameraNotSupported": "Votre appareil ne supporte pas l'accès à la caméra",
+      "arStarted": "Mode AR démarré ! Pointez la caméra où vous voulez positionner le four",
+      "imagesUploaded": "image(s) téléchargée(s) avec succès !",
+      "selectImageFiles": "Sélectionnez uniquement des fichiers image"
+    },
+    "apiConfig": {
+      "title": "Configuration API Runware",
+      "label": "Clé API Runware",
+      "placeholder": "Entrez votre clé API Runware",
+      "configButton": "Configurer API",
+      "howToGet": "Comment obtenir la clé API :",
+      "step1": "Allez sur runware.ai",
+      "step2": "Créez un compte ou connectez-vous",
+      "step3": "Trouvez la clé API dans la section \"API Keys\" du tableau de bord",
+      "configured": "API configurée correctement"
+    },
+    "loader": {
+      "title": "IA en Action",
+      "defaultMessage": "L'IA crée votre image personnalisée...",
+      "steps": {
+        "analysis": "Analyse de l'espace",
+        "integration": "Intégration du four", 
+        "finalization": "Finalisation de l'image"
+      }
+    },
+    "resultModal": {
+      "title": "Image Créée avec Succès !",
+      "subtitle": "a été parfaitement intégré dans votre espace",
+      "downloadButton": "Télécharger Image HD",
+      "enlargeHint": "Cliquez pour agrandir",
+      "shareTitle": "Mon four Vesuviano personnalisé",
+      "shareText": "Regardez à quoi ressemblera mon nouveau four !",
+      "infoCards": {
+        "ai": "Généré avec Intelligence Artificielle",
+        "hd": "Qualité Haute Résolution",
+        "design": "Design Photoréaliste"
+      },
+      "generatedIn": "Image générée en {seconds} secondes avec technologie IA avancée"
+    },
+    "downloadModal": {
+      "title": "Téléchargez Votre Image",
+      "preview": "Aperçu",
+      "ovenIn": "dans votre espace personnalisé",
+      "formTitle": "Vos données pour le téléchargement",
+      "formDescription": "Entrez vos données pour recevoir l'image haute résolution",
+      "firstName": "Prénom",
+      "lastName": "Nom", 
+      "email": "Email",
+      "city": "Ville",
+      "phone": "Téléphone",
+      "company": "Entreprise (optionnel)",
+      "website": "Site Web (optionnel)",
+      "downloadButton": "Télécharger Image HD",
+      "downloading": "Téléchargement...",
+      "downloadComplete": "Téléchargement terminé !",
+      "downloadSuccess": "L'image a été téléchargée avec succès.",
+      "downloadError": "Une erreur s'est produite pendant le téléchargement. Réessayez.",
+      "missingFields": "Champs manquants",
+      "missingFieldsDesc": "Remplissez tous les champs obligatoires pour procéder au téléchargement.",
+      "infoText": "Vous recevrez également des informations sur nos fours Vesuviano"
+    },
+    "arVisualization": {
+      "loadingModel": "Chargement du modèle...",
+      "modelNotAvailable": "Modèle non disponible", 
+      "unsupportedFormat": "Format de fichier non supporté. Supportés : GLB, GLTF, OBJ, FBX"
+    },
+    "ovenModels": {
+      "title": "Nos Modèles de Four",
+      "vesuviobuono": "Revêtement mosaïque premium avec technologie avancée",
+      "verniciato": "Finition peinte traditionnelle en terre cuite",
+      "mosaicato": "Revêtement mosaïque personnalisable"
+    },
+    "ovenTypeSelector": {
+      "label": "Type de Four Vesuviano",
+      "placeholder": "Sélectionnez le modèle de four",
+      "previewLabel": "Aperçu du Four Sélectionné :"
+    },
+    "imageUploadSection": {
+      "title": "Téléchargez Votre Espace",
+      "label": "Photo de l'Espace où Installer le Four",
+      "description": "Téléchargez une photo de l'espace (cuisine, jardin, terrasse) où vous aimeriez installer le four",
+      "preview": "Aperçu de l'espace"
+    }
+  },
   "common": {
     "loading": "Chargement...",
     "error": "Erreur",

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Wand2, Sparkles, Cpu, Zap } from 'lucide-react';
 
 interface CreativeLoaderProps {
@@ -6,8 +7,11 @@ interface CreativeLoaderProps {
 }
 
 const CreativeLoader: React.FC<CreativeLoaderProps> = ({ 
-  message = "L'AI sta creando la tua immagine personalizzata..." 
+  message 
 }) => {
+  const { t } = useTranslation();
+  const displayMessage = message || t('ovenVisualizer.loader.defaultMessage');
+  
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
       <div className="bg-white rounded-3xl p-8 text-center max-w-md mx-4 shadow-2xl">
@@ -41,11 +45,11 @@ const CreativeLoader: React.FC<CreativeLoaderProps> = ({
 
         {/* Loading Text with Gradient */}
         <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
-          AI in Azione
+          {t('ovenVisualizer.loader.title')}
         </h3>
         
         <p className="text-stone-600 mb-6 leading-relaxed">
-          {message}
+          {displayMessage}
         </p>
 
         {/* Colorful Progress Bar */}
@@ -57,15 +61,15 @@ const CreativeLoader: React.FC<CreativeLoaderProps> = ({
         <div className="space-y-2 text-sm">
           <div className="flex items-center justify-center space-x-2 text-blue-600">
             <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
-            <span>Analisi dello spazio</span>
+            <span>{t('ovenVisualizer.loader.steps.analysis')}</span>
           </div>
           <div className="flex items-center justify-center space-x-2 text-purple-600" style={{ animationDelay: '0.5s' }}>
             <div className="w-2 h-2 bg-purple-600 rounded-full animate-pulse"></div>
-            <span>Integrazione del forno</span>
+            <span>{t('ovenVisualizer.loader.steps.integration')}</span>
           </div>
           <div className="flex items-center justify-center space-x-2 text-pink-600" style={{ animationDelay: '1s' }}>
             <div className="w-2 h-2 bg-pink-600 rounded-full animate-pulse"></div>
-            <span>Finalizzazione dell'immagine</span>
+            <span>{t('ovenVisualizer.loader.steps.finalization')}</span>
           </div>
         </div>
       </div>

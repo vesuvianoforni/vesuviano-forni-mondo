@@ -312,6 +312,129 @@
     "tryNow": "Architekt AI Ausprobieren",
     "later": "Später"
   },
+  "ovenVisualizer": {
+    "badge": "Absolutes KI-Novum",
+    "title": "Ofen-Visualisierer", 
+    "subtitle": "Wählen Sie, wie Sie Ihren Vesuviano-Ofen visualisieren möchten",
+    "aiMode": {
+      "title": "KI-Architekt",
+      "description": "Laden Sie ein Foto Ihres Raums hoch und die KI wird den ausgewählten Ofen fotorealistisch integrieren",
+      "features": {
+        "photorealistic": "Professionelles fotorealistisches Ergebnis",
+        "lighting": "Perfekte Integration mit Beleuchtung", 
+        "highRes": "Herunterladbares hochauflösendes Bild"
+      },
+      "uploadTitle": "Foto Ihres Raums hochladen",
+      "uploadSubtitle": "Bis zu 3 Bilder • JPG, PNG",
+      "uploadDescription": "Automatische fotorealistische Integration",
+      "generateButton": "KI-Visualisierung generieren"
+    },
+    "arMode": {
+      "title": "Erweiterte Realität",
+      "description": "Verwenden Sie die Kamera Ihres Geräts, um den 3D-Ofen in Echtzeit in Ihrem Raum zu sehen",
+      "features": {
+        "interactive": "Interaktive 3D-Visualisierung",
+        "realtime": "Echtzeit-Positionierung und -Rotation",
+        "compatible": "Kompatibel mit modernen Smartphones"
+      },
+      "startButton": "AR-Visualisierung starten"
+    },
+    "ovenSelection": {
+      "title": "Ofen auswählen",
+      "allOvens": "Alle verfügbaren Öfen",
+      "showAll": "Alle anzeigen",
+      "showLess": "Weniger anzeigen",
+      "noSelection": "Kein Ofen ausgewählt"
+    },
+    "alerts": {
+      "arTechActivated": "AR-Technologie aktiviert",
+      "arDescription": "Augmented-Reality-System bereit. Positionieren Sie den Ofen direkt in Ihrer Umgebung mit der Gerätekamera.",
+      "uploadImages": "Laden Sie mindestens ein Bild hoch und wählen Sie einen Ofen",
+      "selectOven": "Wählen Sie einen Ofentyp aus, bevor Sie AR starten",
+      "cameraNotSupported": "Ihr Gerät unterstützt keinen Kamerazugang",
+      "arStarted": "AR-Modus gestartet! Richten Sie die Kamera dorthin, wo Sie den Ofen positionieren möchten",
+      "imagesUploaded": "Bild(er) erfolgreich hochgeladen!",
+      "selectImageFiles": "Wählen Sie nur Bilddateien aus"
+    },
+    "apiConfig": {
+      "title": "Runware API-Konfiguration",
+      "label": "Runware API-Schlüssel",
+      "placeholder": "Geben Sie Ihren Runware API-Schlüssel ein",
+      "configButton": "API konfigurieren",
+      "howToGet": "So erhalten Sie den API-Schlüssel:",
+      "step1": "Gehen Sie zu runware.ai",
+      "step2": "Erstellen Sie ein Konto oder melden Sie sich an",
+      "step3": "Finden Sie den API-Schlüssel im Bereich \"API Keys\" des Dashboards",
+      "configured": "API korrekt konfiguriert"
+    },
+    "loader": {
+      "title": "KI in Aktion",
+      "defaultMessage": "Die KI erstellt Ihr personalisiertes Bild...",
+      "steps": {
+        "analysis": "Raumanalyse",
+        "integration": "Ofenintegration", 
+        "finalization": "Bildfinalisierung"
+      }
+    },
+    "resultModal": {
+      "title": "Bild erfolgreich erstellt!",
+      "subtitle": "wurde perfekt in Ihren Raum integriert",
+      "downloadButton": "HD-Bild herunterladen",
+      "enlargeHint": "Zum Vergrößern klicken",
+      "shareTitle": "Mein personalisierter Vesuviano-Ofen",
+      "shareText": "Sehen Sie, wie mein neuer Ofen aussehen wird!",
+      "infoCards": {
+        "ai": "Mit Künstlicher Intelligenz generiert",
+        "hd": "Hochauflösende Qualität",
+        "design": "Fotorealistisches Design"
+      },
+      "generatedIn": "Bild in {seconds} Sekunden mit fortschrittlicher KI-Technologie generiert"
+    },
+    "downloadModal": {
+      "title": "Ihr Bild herunterladen",
+      "preview": "Vorschau",
+      "ovenIn": "in Ihrem personalisierten Raum",
+      "formTitle": "Ihre Daten für den Download",
+      "formDescription": "Geben Sie Ihre Daten ein, um das hochauflösende Bild zu erhalten",
+      "firstName": "Vorname",
+      "lastName": "Nachname", 
+      "email": "E-Mail",
+      "city": "Stadt",
+      "phone": "Telefon",
+      "company": "Unternehmen (optional)",
+      "website": "Website (optional)",
+      "downloadButton": "HD-Bild herunterladen",
+      "downloading": "Wird heruntergeladen...",
+      "downloadComplete": "Download abgeschlossen!",
+      "downloadSuccess": "Das Bild wurde erfolgreich heruntergeladen.",
+      "downloadError": "Ein Fehler ist beim Download aufgetreten. Bitte versuchen Sie es erneut.",
+      "missingFields": "Fehlende Felder",
+      "missingFieldsDesc": "Füllen Sie alle Pflichtfelder aus, um mit dem Download fortzufahren.",
+      "infoText": "Sie erhalten auch Informationen über unsere Vesuviano-Öfen"
+    },
+    "arVisualization": {
+      "loadingModel": "Modell wird geladen...",
+      "modelNotAvailable": "Modell nicht verfügbar", 
+      "unsupportedFormat": "Dateiformat nicht unterstützt. Unterstützt: GLB, GLTF, OBJ, FBX"
+    },
+    "ovenModels": {
+      "title": "Unsere Ofenmodelle",
+      "vesuviobuono": "Premium-Mosaikbeschichtung mit fortschrittlicher Technologie",
+      "verniciato": "Traditionelle lackierte Terrakotta-Oberfläche",
+      "mosaicato": "Anpassbare Mosaikbeschichtung"
+    },
+    "ovenTypeSelector": {
+      "label": "Vesuviano Ofentyp",
+      "placeholder": "Ofenmodell auswählen",
+      "previewLabel": "Vorschau des ausgewählten Ofens:"
+    },
+    "imageUploadSection": {
+      "title": "Ihren Raum hochladen",
+      "label": "Foto des Raums, in dem der Ofen installiert werden soll",
+      "description": "Laden Sie ein Foto des Raums (Küche, Garten, Terrasse) hoch, in dem Sie den Ofen installieren möchten",
+      "preview": "Raumvorschau"
+    }
+  },
   "common": {
     "loading": "Wird geladen...",
     "error": "Fehler",

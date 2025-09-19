@@ -312,6 +312,129 @@
     "tryNow": "Probar Arquitecto AI",
     "later": "Más tarde"
   },
+  "ovenVisualizer": {
+    "badge": "Novedad Absoluta IA",
+    "title": "Visualizador de Hornos", 
+    "subtitle": "Elige cómo visualizar tu horno Vesuviano",
+    "aiMode": {
+      "title": "Arquitecto IA",
+      "description": "Sube una foto de tu espacio y la IA integrará fotorealisticamente el horno seleccionado",
+      "features": {
+        "photorealistic": "Resultado fotorrealista profesional",
+        "lighting": "Integración perfecta con iluminación", 
+        "highRes": "Imagen descargable de alta resolución"
+      },
+      "uploadTitle": "Sube foto de tu espacio",
+      "uploadSubtitle": "Hasta 3 imágenes • JPG, PNG",
+      "uploadDescription": "Integración fotorrealista automática",
+      "generateButton": "Generar Visualización IA"
+    },
+    "arMode": {
+      "title": "Realidad Aumentada",
+      "description": "Usa la cámara de tu dispositivo para ver el horno 3D en tu espacio en tiempo real",
+      "features": {
+        "interactive": "Visualización 3D interactiva",
+        "realtime": "Posicionamiento y rotación en tiempo real",
+        "compatible": "Compatible con smartphones modernos"
+      },
+      "startButton": "Iniciar Visualización AR"
+    },
+    "ovenSelection": {
+      "title": "Seleccionar el Horno",
+      "allOvens": "Todos los hornos disponibles",
+      "showAll": "Mostrar todos",
+      "showLess": "Mostrar menos",
+      "noSelection": "Ningún horno seleccionado"
+    },
+    "alerts": {
+      "arTechActivated": "Tecnología AR Activada",
+      "arDescription": "Sistema de Realidad Aumentada listo. Posiciona el horno directamente en tu ambiente usando la cámara del dispositivo.",
+      "uploadImages": "Sube al menos una imagen y selecciona un horno",
+      "selectOven": "Selecciona un tipo de horno antes de iniciar AR",
+      "cameraNotSupported": "Tu dispositivo no soporta acceso a la cámara",
+      "arStarted": "¡Modo AR iniciado! Apunta la cámara donde quieres posicionar el horno",
+      "imagesUploaded": "imagen(es) subida(s) con éxito!",
+      "selectImageFiles": "Selecciona solo archivos de imagen"
+    },
+    "apiConfig": {
+      "title": "Configuración API Runware",
+      "label": "Clave API Runware",
+      "placeholder": "Ingresa tu clave API Runware",
+      "configButton": "Configurar API",
+      "howToGet": "Cómo obtener la clave API:",
+      "step1": "Ve a runware.ai",
+      "step2": "Crea una cuenta o inicia sesión",
+      "step3": "Encuentra la clave API en la sección \"API Keys\" del panel",
+      "configured": "API configurada correctamente"
+    },
+    "loader": {
+      "title": "IA en Acción",
+      "defaultMessage": "La IA está creando tu imagen personalizada...",
+      "steps": {
+        "analysis": "Análisis del espacio",
+        "integration": "Integración del horno", 
+        "finalization": "Finalización de la imagen"
+      }
+    },
+    "resultModal": {
+      "title": "¡Imagen Creada con Éxito!",
+      "subtitle": "ha sido integrado perfectamente en tu espacio",
+      "downloadButton": "Descargar Imagen HD",
+      "enlargeHint": "Haz clic para ampliar",
+      "shareTitle": "Mi horno Vesuviano personalizado",
+      "shareText": "¡Mira cómo se verá mi nuevo horno!",
+      "infoCards": {
+        "ai": "Generado con Inteligencia Artificial",
+        "hd": "Calidad Alta Resolución",
+        "design": "Diseño Fotorrealista"
+      },
+      "generatedIn": "Imagen generada en {seconds} segundos con tecnología IA avanzada"
+    },
+    "downloadModal": {
+      "title": "Descarga Tu Imagen",
+      "preview": "Vista previa",
+      "ovenIn": "en tu espacio personalizado",
+      "formTitle": "Tus datos para la descarga",
+      "formDescription": "Ingresa tus datos para recibir la imagen de alta resolución",
+      "firstName": "Nombre",
+      "lastName": "Apellido", 
+      "email": "Email",
+      "city": "Ciudad",
+      "phone": "Teléfono",
+      "company": "Empresa (opcional)",
+      "website": "Sitio Web (opcional)",
+      "downloadButton": "Descargar Imagen HD",
+      "downloading": "Descargando...",
+      "downloadComplete": "¡Descarga completada!",
+      "downloadSuccess": "La imagen se ha descargado con éxito.",
+      "downloadError": "Ocurrió un error durante la descarga. Inténtalo de nuevo.",
+      "missingFields": "Campos faltantes",
+      "missingFieldsDesc": "Completa todos los campos obligatorios para proceder con la descarga.",
+      "infoText": "También recibirás información sobre nuestros hornos Vesuviano"
+    },
+    "arVisualization": {
+      "loadingModel": "Cargando modelo...",
+      "modelNotAvailable": "Modelo no disponible", 
+      "unsupportedFormat": "Formato de archivo no soportado. Soportados: GLB, GLTF, OBJ, FBX"
+    },
+    "ovenModels": {
+      "title": "Nuestros Modelos de Horno",
+      "vesuviobuono": "Revestimiento de mosaico premium con tecnología avanzada",
+      "verniciato": "Acabado pintado tradicional en terracota",
+      "mosaicato": "Revestimiento de mosaico personalizable"
+    },
+    "ovenTypeSelector": {
+      "label": "Tipo de Horno Vesuviano",
+      "placeholder": "Selecciona modelo de horno",
+      "previewLabel": "Vista Previa del Horno Seleccionado:"
+    },
+    "imageUploadSection": {
+      "title": "Sube Tu Espacio",
+      "label": "Foto del Espacio donde Instalar el Horno",
+      "description": "Sube una foto del espacio (cocina, jardín, terraza) donde te gustaría instalar el horno",
+      "preview": "Vista previa del espacio"
+    }
+  },
   "common": {
     "loading": "Cargando...",
     "error": "Error",

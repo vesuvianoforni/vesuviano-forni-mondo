@@ -333,6 +333,129 @@
     "tooltip": "Contattaci su WhatsApp",
     "message": "Ciao, vorrei informazioni sui vostri forni professionali 🔥"
   },
+  "ovenVisualizer": {
+    "badge": "Novità assoluta AI",
+    "title": "Visualizzatore Forni", 
+    "subtitle": "Scegli come visualizzare il tuo forno Vesuviano",
+    "aiMode": {
+      "title": "Architetto AI",
+      "description": "Carica una foto del tuo spazio e l'AI integrerà fotorealisticamente il forno selezionato",
+      "features": {
+        "photorealistic": "Risultato fotorealistico professionale",
+        "lighting": "Integrazione perfetta con illuminazione", 
+        "highRes": "Immagine scaricabile ad alta risoluzione"
+      },
+      "uploadTitle": "Carica foto del tuo spazio",
+      "uploadSubtitle": "Fino a 3 immagini • JPG, PNG",
+      "uploadDescription": "Integrazione automatica fotorealistica",
+      "generateButton": "Genera Visualizzazione AI"
+    },
+    "arMode": {
+      "title": "Realtà Aumentata",
+      "description": "Usa la fotocamera del tuo dispositivo per vedere il forno 3D nel tuo spazio in tempo reale",
+      "features": {
+        "interactive": "Visualizzazione 3D interattiva",
+        "realtime": "Posizionamento e rotazione in tempo reale",
+        "compatible": "Compatibile con smartphone moderni"
+      },
+      "startButton": "Avvia Visualizzazione AR"
+    },
+    "ovenSelection": {
+      "title": "Seleziona il Forno",
+      "allOvens": "Tutti i forni disponibili",
+      "showAll": "Mostra tutti",
+      "showLess": "Mostra meno",
+      "noSelection": "Nessun forno selezionato"
+    },
+    "alerts": {
+      "arTechActivated": "Tecnologia AR Attivata",
+      "arDescription": "Sistema di Realtà Aumentata pronto. Posiziona il forno direttamente nel tuo ambiente usando la fotocamera del dispositivo.",
+      "uploadImages": "Carica almeno un'immagine e seleziona un forno",
+      "selectOven": "Seleziona un tipo di forno prima di avviare l'AR",
+      "cameraNotSupported": "Il tuo dispositivo non supporta l'accesso alla fotocamera",
+      "arStarted": "Modalità AR avviata! Punta la fotocamera dove vuoi posizionare il forno",
+      "imagesUploaded": "immagine/i caricate con successo!",
+      "selectImageFiles": "Seleziona solo file immagine"
+    },
+    "apiConfig": {
+      "title": "Configurazione API Runware",
+      "label": "Chiave API Runware",
+      "placeholder": "Inserisci la tua chiave API Runware",
+      "configButton": "Configura API",
+      "howToGet": "Come ottenere la chiave API:",
+      "step1": "Vai su runware.ai",
+      "step2": "Crea un account o accedi",
+      "step3": "Trova la chiave API nella sezione \"API Keys\" del dashboard",
+      "configured": "API configurata correttamente"
+    },
+    "loader": {
+      "title": "AI in Azione",
+      "defaultMessage": "L'AI sta creando la tua immagine personalizzata...",
+      "steps": {
+        "analysis": "Analisi dello spazio",
+        "integration": "Integrazione del forno", 
+        "finalization": "Finalizzazione dell'immagine"
+      }
+    },
+    "resultModal": {
+      "title": "Immagine Creata con Successo!",
+      "subtitle": "è stato integrato perfettamente nel tuo spazio",
+      "downloadButton": "Scarica Immagine HD",
+      "enlargeHint": "Clicca per ingrandire",
+      "shareTitle": "Il mio forno Vesuviano personalizzato",
+      "shareText": "Guarda come apparirà il mio nuovo forno!",
+      "infoCards": {
+        "ai": "Generato con Intelligenza Artificiale",
+        "hd": "Qualità Alta Risoluzione",
+        "design": "Design Fotorealistico"
+      },
+      "generatedIn": "Immagine generata in {seconds} secondi con tecnologia AI avanzata"
+    },
+    "downloadModal": {
+      "title": "Scarica la Tua Immagine",
+      "preview": "Anteprima",
+      "ovenIn": "nel tuo spazio personalizzato",
+      "formTitle": "I tuoi dati per il download",
+      "formDescription": "Inserisci i tuoi dati per ricevere l'immagine ad alta risoluzione",
+      "firstName": "Nome",
+      "lastName": "Cognome", 
+      "email": "Email",
+      "city": "Città",
+      "phone": "Telefono",
+      "company": "Azienda (opzionale)",
+      "website": "Sito Web (opzionale)",
+      "downloadButton": "Scarica Immagine HD",
+      "downloading": "Download...",
+      "downloadComplete": "Download completato!",
+      "downloadSuccess": "L'immagine è stata scaricata con successo.",
+      "downloadError": "Si è verificato un errore durante il download. Riprova.",
+      "missingFields": "Campi mancanti",
+      "missingFieldsDesc": "Compila tutti i campi obbligatori per procedere al download.",
+      "infoText": "Riceverai anche informazioni sui nostri forni Vesuviano"
+    },
+    "arVisualization": {
+      "loadingModel": "Caricamento modello...",
+      "modelNotAvailable": "Modello non disponibile", 
+      "unsupportedFormat": "Formato file non supportato. Supportati: GLB, GLTF, OBJ, FBX"
+    },
+    "ovenModels": {
+      "title": "I Nostri Modelli di Forno",
+      "vesuviobuono": "Rivestimento a mosaico premium con tecnologia avanzata",
+      "verniciato": "Finitura verniciata tradizionale in terracotta",
+      "mosaicato": "Rivestimento a mosaico personalizzabile"
+    },
+    "ovenTypeSelector": {
+      "label": "Tipo di Forno Vesuviano",
+      "placeholder": "Seleziona il modello di forno",
+      "previewLabel": "Anteprima Forno Selezionato:"
+    },
+    "imageUploadSection": {
+      "title": "Carica il Tuo Spazio",
+      "label": "Foto dello Spazio dove Installare il Forno",
+      "description": "Carica una foto dello spazio (cucina, giardino, terrazza) dove vorresti installare il forno",
+      "preview": "Preview dello spazio"
+    }
+  },
   "common": {
     "loading": "Caricamento...",
     "error": "Errore",

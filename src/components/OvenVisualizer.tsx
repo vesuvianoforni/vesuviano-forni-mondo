@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Upload, Wand2, Smartphone, Camera, Zap, Brain, Eye, Image as ImageIcon, X } from "lucide-react";
@@ -23,6 +24,7 @@ interface OvenData {
 }
 
 const OvenVisualizer = () => {
+  const { t } = useTranslation();
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [selectedOvenType, setSelectedOvenType] = useState<string>("");
   const [showARVisualizer, setShowARVisualizer] = useState(false);
@@ -49,7 +51,7 @@ const OvenVisualizer = () => {
         setOvens(data || []);
       } catch (error) {
         console.error('Error loading ovens:', error);
-        toast.error('Errore nel caricamento dei forni');
+        toast.error(t('common.error'));
       } finally {
         setLoading(false);
       }
@@ -84,7 +86,7 @@ const OvenVisualizer = () => {
     const files = Array.from(event.target.files || []);
     if (files.length > 0) {
       setSelectedImages(prev => [...prev, ...files].slice(0, 3)); // Max 3 images
-      toast.success(`${files.length} immagine/i caricate con successo!`);
+      toast.success(`${files.length} ${t('ovenVisualizer.alerts.imagesUploaded')}`);
     }
   };
 
@@ -119,7 +121,7 @@ const OvenVisualizer = () => {
     
     if (selectedImages.length === 0 || !selectedOvenType) {
       console.error("❌ Validazione fallita - mancano immagini o forno");
-      toast.error("Carica almeno un'immagine e seleziona un forno");
+      toast.error(t('ovenVisualizer.alerts.uploadImages'));
       return;
     }
 
@@ -212,17 +214,17 @@ const OvenVisualizer = () => {
 
   const startARVisualization = () => {
     if (!selectedOvenType) {
-      toast.error("Seleziona un tipo di forno prima di avviare l'AR");
+      toast.error(t('ovenVisualizer.alerts.selectOven'));
       return;
     }
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      toast.error("Il tuo dispositivo non supporta l'accesso alla fotocamera");
+      toast.error(t('ovenVisualizer.alerts.cameraNotSupported'));
       return;
     }
 
     setShowARVisualizer(true);
-    toast.success("Modalità AR avviata! Punta la fotocamera dove vuoi posizionare il forno");
+    toast.success(t('ovenVisualizer.alerts.arStarted'));
   };
 
   const selectedOvenData = ovens.find(oven => oven.id === selectedOvenType) || 
@@ -271,15 +273,15 @@ const OvenVisualizer = () => {
           <div className="text-center mb-12">
             {/* New Badge */}
             <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 animate-pulse">
-              <span>Novità assoluta AI</span>
+              <span>{t('ovenVisualizer.badge')}</span>
               <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
             </div>
             
             <h1 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
-              Visualizzatore Forni
+              {t('ovenVisualizer.title')}
             </h1>
             <p className="text-xl text-stone-600 max-w-2xl mx-auto mb-8">
-              Scegli come visualizzare il tuo forno Vesuviano
+              {t('ovenVisualizer.subtitle')}
             </p>
 
             {/* Mode Selection */}
@@ -301,23 +303,23 @@ const OvenVisualizer = () => {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-semibold text-stone-900 mb-2">
-                      Architetto AI
+                      {t('ovenVisualizer.aiMode.title')}
                     </h3>
                     <p className="text-stone-600 text-sm mb-3">
-                      Carica una foto del tuo spazio e l'AI integrerà fotorealisticamente il forno selezionato
+                      {t('ovenVisualizer.aiMode.description')}
                     </p>
                     <div className="space-y-2 text-xs text-stone-500">
                       <div className="flex items-center space-x-2">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                        <span>Risultato fotorealistico professionale</span>
+                        <span>{t('ovenVisualizer.aiMode.features.photorealistic')}</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                        <span>Integrazione perfetta con illuminazione</span>
+                        <span>{t('ovenVisualizer.aiMode.features.lighting')}</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                        <span>Immagine scaricabile ad alta risoluzione</span>
+                        <span>{t('ovenVisualizer.aiMode.features.highRes')}</span>
                       </div>
                     </div>
                   </div>
@@ -346,23 +348,23 @@ const OvenVisualizer = () => {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-semibold text-stone-900 mb-2">
-                      Realtà Aumentata
+                      {t('ovenVisualizer.arMode.title')}
                     </h3>
                     <p className="text-stone-600 text-sm mb-3">
-                      Usa la fotocamera del tuo dispositivo per vedere il forno 3D nel tuo spazio in tempo reale
+                      {t('ovenVisualizer.arMode.description')}
                     </p>
                     <div className="space-y-2 text-xs text-stone-500">
                       <div className="flex items-center space-x-2">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                        <span>Visualizzazione 3D interattiva</span>
+                        <span>{t('ovenVisualizer.arMode.features.interactive')}</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                        <span>Posizionamento e rotazione in tempo reale</span>
+                        <span>{t('ovenVisualizer.arMode.features.realtime')}</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                        <span>Compatibile con smartphone moderni</span>
+                        <span>{t('ovenVisualizer.arMode.features.compatible')}</span>
                       </div>
                     </div>
                   </div>
@@ -386,8 +388,8 @@ const OvenVisualizer = () => {
                       <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-3">
                         <Wand2 className="w-6 h-6 text-white" />
                       </div>
-                      <h2 className="text-xl font-bold text-stone-900 mb-1">Architetto AI</h2>
-                      <p className="text-stone-600 text-sm">Integrazione automatica fotorealistica</p>
+                      <h2 className="text-xl font-bold text-stone-900 mb-1">{t('ovenVisualizer.aiMode.title')}</h2>
+                      <p className="text-stone-600 text-sm">{t('ovenVisualizer.aiMode.uploadDescription')}</p>
                     </div>
 
                     <div className="space-y-6">
@@ -403,8 +405,8 @@ const OvenVisualizer = () => {
                         />
                         <label htmlFor="image-upload" className="cursor-pointer">
                           <Upload className="w-8 h-8 text-stone-400 mx-auto mb-2" />
-                          <p className="font-medium text-stone-900 text-sm mb-1">Carica foto del tuo spazio</p>
-                          <p className="text-xs text-stone-600">Fino a 3 immagini • JPG, PNG</p>
+                          <p className="font-medium text-stone-900 text-sm mb-1">{t('ovenVisualizer.aiMode.uploadTitle')}</p>
+                          <p className="text-xs text-stone-600">{t('ovenVisualizer.aiMode.uploadSubtitle')}</p>
                         </label>
                       </div>
 
