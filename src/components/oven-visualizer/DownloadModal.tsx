@@ -114,7 +114,7 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2 text-xl">
             <Download className="w-6 h-6 text-vesuviano-600" />
@@ -122,7 +122,7 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-6 pb-4">
           {/* Preview Image */}
           <div className="space-y-4">
             <div className="relative">
@@ -254,7 +254,7 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
               />
             </div>
 
-            <div className="pt-4 space-y-3">
+            <div className="pt-4 space-y-3 sticky bottom-0 bg-white">
               <Button
                 onClick={handleDownload}
                 disabled={!isFormValid() || isSubmitting}
