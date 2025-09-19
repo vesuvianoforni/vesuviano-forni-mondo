@@ -10,8 +10,6 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const { i18n } = useTranslation();
-  console.log('[App] Current language:', i18n.language);
   console.log('[App] Rendering root application');
   
   return (
