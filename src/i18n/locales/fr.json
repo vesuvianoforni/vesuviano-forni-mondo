@@ -194,6 +194,139 @@
       "preview": "Aperçu de l'espace"
     }
   },
+  "gallery": {
+    "title": "Galerie de Nos Fours",
+    "subtitle": "Chaque image raconte une histoire de passion, de tradition et d'innovation. Découvrez l'artisanat napolitain qui conquiert le monde.",
+    "categories": {
+      "all": "Tous les Fours",
+      "wood": "À Bois", 
+      "gas": "À Gaz",
+      "electric": "Électriques",
+      "rotating": "Rotatifs",
+      "vesuviobuono": "VesuvioBuono"
+    },
+    "ovenImage": "Image du Four",
+    "cta": {
+      "title": "Vous voulez voir nos fours en personne ?",
+      "description": "Nous organisons des visites de notre laboratoire à Naples ou créons des rendus 3D haute fidélité pour vous montrer votre four avant la production.",
+      "visitLab": "Réserver Visite Laboratoire",
+      "request3D": "Demander Rendu 3D"
+    }
+  },
+  "rivestimenti": {
+    "badge": "Personnalisation",
+    "title": "Revêtements",
+    "titleHighlight": "Exclusifs", 
+    "subtitle": "Chaque four Vesuviano peut être personnalisé avec des revêtements de haute qualité qui allient esthétique et fonctionnalité, pour s'intégrer parfaitement dans votre environnement.",
+    "verniciato": {
+      "title": "Peint",
+      "description": "Revêtement peint traditionnel en terre cuite de haute qualité"
+    },
+    "mosaicato": {
+      "title": "Mosaïque", 
+      "description": "Revêtement mosaïque personnalisable avec motifs artistiques"
+    },
+    "ferro": {
+      "title": "Fer",
+      "description": "Finition en fer naturel pour un look industriel moderne"
+    },
+    "personalizzato": {
+      "title": "Personnalisé",
+      "description": "Solutions sur mesure pour projets exclusifs"
+    },
+    "availableOptions": "Options Disponibles",
+    "viewSamples": "Voir Échantillons",
+    "process": {
+      "title": "Processus de Personnalisation",
+      "description": "Du concept à la réalisation, nous vous accompagnons à chaque étape pour créer le four parfait pour vous.",
+      "step1": {
+        "title": "Consultation",
+        "desc": "Analyse de vos besoins"
+      },
+      "step2": {
+        "title": "Design", 
+        "desc": "Conception personnalisée"
+      },
+      "step3": {
+        "title": "Échantillons",
+        "desc": "Sélection des matériaux"
+      },
+      "step4": {
+        "title": "Réalisation",
+        "desc": "Production artisanale"
+      }
+    },
+    "startCustomization": "Commencer Personnalisation"
+  },
+  "consultationForm": {
+    "badge": "CONSULTATION GRATUITE",
+    "title": "Commencez Votre Projet",
+    "subtitle": "Nos experts vous guideront dans le choix de la solution parfaite, de la conception à l'expédition internationale.",
+    "services": {
+      "title": "Nos Services",
+      "identification": "Identification de la meilleure solution",
+      "quotation": "Devis personnalisé", 
+      "rendering": "Rendu 3D haute fidélité",
+      "logistics": "Organisation logistique et export"
+    },
+    "directContacts": "Contacts Directs",
+    "phone": "Téléphone",
+    "email": "Email",
+    "laboratory": "Laboratoire",
+    "downloadCatalog": "Télécharger Catalogue Complet",
+    "requestTitle": "Demande de Consultation",
+    "form": {
+      "name": "Nom Complet",
+      "nameRequired": "Nom Complet *",
+      "namePlaceholder": "Votre nom",
+      "email": "Email",
+      "emailRequired": "Email *", 
+      "emailPlaceholder": "votre-email@exemple.com",
+      "phone": "Téléphone",
+      "phonePlaceholder": "+33 1 23 45 67 89",
+      "company": "Entreprise/Restaurant",
+      "companyPlaceholder": "Nom de votre activité",
+      "country": "Pays de Destination",
+      "countryPlaceholder": "Ex. France, Allemagne, USA...",
+      "ovenType": "Type de Four",
+      "ovenTypePlaceholder": "Sélectionner le type",
+      "capacity": "Capacité Requise",
+      "capacityPlaceholder": "Ex. 100 pizzas/heure, 50 cm diamètre...",
+      "budget": "Budget Orientatif",
+      "budgetPlaceholder": "Ex. €5.000 - €15.000",
+      "servicesRequested": "Services Demandés :",
+      "message": "Message", 
+      "messagePlaceholder": "Décrivez votre projet, vos besoins spécifiques ou toute question...",
+      "submit": "Envoyer Demande de Consultation Gratuite",
+      "submitting": "Envoi en cours...",
+      "privacy": "Nous vous contacterons dans les 24 heures. Vos données sont protégées et ne seront pas partagées avec des tiers."
+    },
+    "ovenTypes": {
+      "woodFixed": "Four à Bois Fixe",
+      "woodRotating": "Four à Bois Rotatif",
+      "gasFixed": "Four à Gaz Fixe", 
+      "gasRotating": "Four à Gaz Rotatif",
+      "electricFixed": "Four Électrique Fixe",
+      "electricRotating": "Four Électrique Rotatif",
+      "vesuvioBuonoWood": "VesuvioBuono à Bois",
+      "vesuvioBuonoCombined": "VesuvioBuono Combiné Gaz/Bois",
+      "needConsultation": "Pas sûr - besoin de consultation"
+    },
+    "messages": {
+      "requiredFields": "Champs Obligatoires",
+      "requiredFieldsDesc": "Nom et Email sont requis pour envoyer la demande.",
+      "success": "🔥 Demande Envoyée avec Succès !",
+      "successDesc": "Nous vous avons envoyé un email de confirmation. Nous vous contacterons dans les 24 heures pour votre consultation gratuite.",
+      "error": "Erreur d'Envoi", 
+      "errorDesc": "Un problème s'est produit. Réessayez ou contactez-nous directement au +39 350 928 6941",
+      "catalogDownloaded": "Catalogue Téléchargé !",
+      "catalogDesc": "Le catalogue complet a été téléchargé sur votre appareil."
+    }
+  },
+  "whatsapp": {
+    "tooltip": "Contactez-nous sur WhatsApp",
+    "message": "Bonjour, je souhaiterais des informations sur vos fours professionnels 🔥"
+  },
   "common": {
     "loading": "Chargement...",
     "error": "Erreur",

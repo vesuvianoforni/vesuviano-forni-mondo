@@ -2,8 +2,10 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from 'react-i18next';
 
 const Gallery = () => {
+  const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState("tutti");
 
   const images = [
@@ -46,12 +48,12 @@ const Gallery = () => {
   ];
 
   const categories = [
-    { id: "tutti", label: "Tutti i Forni" },
-    { id: "legna", label: "A Legna" },
-    { id: "gas", label: "A Gas" },
-    { id: "elettrico", label: "Elettrici" },
-    { id: "rotante", label: "Rotanti" },
-    { id: "vesuviobuono", label: "VesuvioBuono" }
+    { id: "tutti", label: t('gallery.categories.all') },
+    { id: "legna", label: t('gallery.categories.wood') },
+    { id: "gas", label: t('gallery.categories.gas') },
+    { id: "elettrico", label: t('gallery.categories.electric') },
+    { id: "rotante", label: t('gallery.categories.rotating') },
+    { id: "vesuviobuono", label: t('gallery.categories.vesuviobuono') }
   ];
 
   const filteredImages = selectedCategory === "tutti" 
@@ -63,11 +65,10 @@ const Gallery = () => {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="font-playfair text-4xl md:text-5xl font-bold text-charcoal-900 mb-6">
-            Galleria dei Nostri Forni
+            {t('gallery.title')}
           </h2>
           <p className="font-inter text-xl text-stone-600 max-w-3xl mx-auto mb-8">
-            Ogni immagine racconta una storia di passione, tradizione e innovazione. 
-            Scopri l'artigianato napoletano che conquista il mondo.
+            {t('gallery.subtitle')}
           </p>
 
           {/* Category Filters */}
@@ -107,7 +108,7 @@ const Gallery = () => {
                         alt="Forno Vesuviano" 
                         className="w-16 h-16 mx-auto mb-4 object-cover rounded"
                       />
-                      <p className="text-vesuviano-700 font-semibold">Immagine del Forno</p>
+                      <p className="text-vesuviano-700 font-semibold">{t('gallery.ovenImage')}</p>
                     </div>
                   </div>
                   
@@ -132,18 +133,17 @@ const Gallery = () => {
         <div className="mt-16 text-center">
           <div className="bg-stone-50 rounded-xl p-8 max-w-3xl mx-auto border border-stone-200">
             <h3 className="font-playfair text-2xl font-semibold text-charcoal-900 mb-4">
-              Vuoi vedere i nostri forni dal vivo?
+              {t('gallery.cta.title')}
             </h3>
             <p className="text-stone-600 mb-6">
-              Organizziamo visite al nostro laboratorio a Napoli o realizziamo rendering 3D 
-              ad alta fedeltà per mostrarvi il vostro forno prima della produzione.
+              {t('gallery.cta.description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="bg-vesuviano-500 text-white px-6 py-3 rounded-lg hover:bg-vesuviano-600 transition-colors">
-                Prenota Visita in Laboratorio
+                {t('gallery.cta.visitLab')}
               </button>
               <button className="border border-vesuviano-500 text-vesuviano-600 px-6 py-3 rounded-lg hover:bg-vesuviano-50 transition-colors">
-                Richiedi Rendering 3D
+                {t('gallery.cta.request3D')}
               </button>
             </div>
           </div>

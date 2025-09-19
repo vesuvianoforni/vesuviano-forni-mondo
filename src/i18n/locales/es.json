@@ -190,7 +190,140 @@
       "flavor": "Mantiene el sabor auténtico de la cocción a leña",
       "environment": "Respeto total del ambiente y la comunidad",
       "warranty": "Garantía internacional y soporte técnico especializado"
+  },
+  "gallery": {
+    "title": "Galería de Nuestros Hornos",
+    "subtitle": "Cada imagen cuenta una historia de pasión, tradición e innovación. Descubre la artesanía napolitana que conquista el mundo.",
+    "categories": {
+      "all": "Todos los Hornos",
+      "wood": "A Leña", 
+      "gas": "A Gas",
+      "electric": "Eléctricos",
+      "rotating": "Rotativos",
+      "vesuviobuono": "VesuvioBuono"
     },
+    "ovenImage": "Imagen del Horno",
+    "cta": {
+      "title": "¿Quieres ver nuestros hornos en persona?",
+      "description": "Organizamos visitas a nuestro laboratorio en Nápoles o creamos renders 3D de alta fidelidad para mostrarte tu horno antes de la producción.",
+      "visitLab": "Reservar Visita al Laboratorio",
+      "request3D": "Solicitar Render 3D"
+    }
+  },
+  "rivestimenti": {
+    "badge": "Personalización",
+    "title": "Revestimientos",
+    "titleHighlight": "Exclusivos", 
+    "subtitle": "Cada horno Vesuviano puede ser personalizado con revestimientos de alta calidad que combinan estética y funcionalidad, para integrarse perfectamente en tu ambiente.",
+    "verniciato": {
+      "title": "Pintado",
+      "description": "Revestimiento pintado tradicional en terracota de alta calidad"
+    },
+    "mosaicato": {
+      "title": "Mosaico", 
+      "description": "Revestimiento de mosaico personalizable con patrones artísticos"
+    },
+    "ferro": {
+      "title": "Hierro",
+      "description": "Acabado en hierro natural para un look industrial moderno"
+    },
+    "personalizzato": {
+      "title": "Personalizado",
+      "description": "Soluciones a medida para proyectos exclusivos"
+    },
+    "availableOptions": "Opciones Disponibles",
+    "viewSamples": "Ver Muestras",
+    "process": {
+      "title": "Proceso de Personalización",
+      "description": "Desde el concepto hasta la realización, te acompañamos en cada fase para crear el horno perfecto para ti.",
+      "step1": {
+        "title": "Consultoría",
+        "desc": "Análisis de tus necesidades"
+      },
+      "step2": {
+        "title": "Diseño", 
+        "desc": "Diseño personalizado"
+      },
+      "step3": {
+        "title": "Muestras",
+        "desc": "Selección de materiales"
+      },
+      "step4": {
+        "title": "Realización",
+        "desc": "Producción artesanal"
+      }
+    },
+    "startCustomization": "Iniciar Personalización"
+  },
+  "consultationForm": {
+    "badge": "CONSULTORÍA GRATUITA",
+    "title": "Inicia Tu Proyecto",
+    "subtitle": "Nuestros expertos te guiarán en la elección de la solución perfecta, desde el diseño hasta el envío internacional.",
+    "services": {
+      "title": "Nuestros Servicios",
+      "identification": "Identificación de la mejor solución",
+      "quotation": "Cotización personalizada", 
+      "rendering": "Render 3D de alta fidelidad",
+      "logistics": "Organización logística y exportación"
+    },
+    "directContacts": "Contactos Directos",
+    "phone": "Teléfono",
+    "email": "Email",
+    "laboratory": "Laboratorio",
+    "downloadCatalog": "Descargar Catálogo Completo",
+    "requestTitle": "Solicitud de Consultoría",
+    "form": {
+      "name": "Nombre Completo",
+      "nameRequired": "Nombre Completo *",
+      "namePlaceholder": "Tu nombre",
+      "email": "Email",
+      "emailRequired": "Email *", 
+      "emailPlaceholder": "tu-email@ejemplo.com",
+      "phone": "Teléfono",
+      "phonePlaceholder": "+34 123 456 789",
+      "company": "Empresa/Restaurante",
+      "companyPlaceholder": "Nombre de tu negocio",
+      "country": "País de Destino",
+      "countryPlaceholder": "Ej. Francia, Alemania, USA...",
+      "ovenType": "Tipo de Horno",
+      "ovenTypePlaceholder": "Seleccionar tipo",
+      "capacity": "Capacidad Requerida",
+      "capacityPlaceholder": "Ej. 100 pizzas/hora, 50 cm diámetro...",
+      "budget": "Presupuesto Orientativo",
+      "budgetPlaceholder": "Ej. €5.000 - €15.000",
+      "servicesRequested": "Servicios Solicitados:",
+      "message": "Mensaje", 
+      "messagePlaceholder": "Describe tu proyecto, tus necesidades específicas o cualquier pregunta...",
+      "submit": "Enviar Solicitud de Consultoría Gratuita",
+      "submitting": "Enviando...",
+      "privacy": "Te contactaremos en 24 horas. Tus datos están protegidos y no serán compartidos con terceros."
+    },
+    "ovenTypes": {
+      "woodFixed": "Horno a Leña Fijo",
+      "woodRotating": "Horno a Leña Rotativo",
+      "gasFixed": "Horno a Gas Fijo", 
+      "gasRotating": "Horno a Gas Rotativo",
+      "electricFixed": "Horno Eléctrico Fijo",
+      "electricRotating": "Horno Eléctrico Rotativo",
+      "vesuvioBuonoWood": "VesuvioBuono a Leña",
+      "vesuvioBuonoCombined": "VesuvioBuono Combinado Gas/Leña",
+      "needConsultation": "No estoy seguro - necesito consultoría"
+    },
+    "messages": {
+      "requiredFields": "Campos Obligatorios",
+      "requiredFieldsDesc": "Nombre y Email son requeridos para enviar la solicitud.",
+      "success": "🔥 ¡Solicitud Enviada con Éxito!",
+      "successDesc": "Te hemos enviado un email de confirmación. Te contactaremos en 24 horas para tu consultoría gratuita.",
+      "error": "Error de Envío", 
+      "errorDesc": "Ocurrió un problema. Inténtalo de nuevo o contáctanos directamente al +39 350 928 6941",
+      "catalogDownloaded": "¡Catálogo Descargado!",
+      "catalogDesc": "El catálogo completo ha sido descargado en tu dispositivo."
+    }
+  },
+  "whatsapp": {
+    "tooltip": "Contáctanos en WhatsApp",
+    "message": "Hola, me gustaría información sobre sus hornos profesionales 🔥"
+  },
     "downloadTechSheet": "Descargar Ficha Técnica",
     "downloadTechSheetTitle": "Descargar Ficha Técnica",
     "downloadTechSheetDesc": "Completa tus datos para descargar la ficha técnica de VesuvioBuono",

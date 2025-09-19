@@ -190,7 +190,140 @@
       "flavor": "Beibehaltung des authentischen Geschmacks des Holzkochens",
       "environment": "Vollständiger Respekt für Umwelt und Gemeinschaft",
       "warranty": "Internationale Garantie und spezialisierter technischer Support"
+  },
+  "gallery": {
+    "title": "Galerie Unserer Öfen",
+    "subtitle": "Jedes Bild erzählt eine Geschichte von Leidenschaft, Tradition und Innovation. Entdecken Sie die neapolitanische Handwerkskunst, die die Welt erobert.",
+    "categories": {
+      "all": "Alle Öfen",
+      "wood": "Holzofenbetrieben", 
+      "gas": "Gasbetrieben",
+      "electric": "Elektrisch",
+      "rotating": "Rotierend",
+      "vesuviobuono": "VesuvioBuono"
     },
+    "ovenImage": "Ofenbild",
+    "cta": {
+      "title": "Möchten Sie unsere Öfen persönlich sehen?",
+      "description": "Wir organisieren Besuche in unserem Labor in Neapel oder erstellen hochauflösende 3D-Renderings, um Ihnen Ihren Ofen vor der Produktion zu zeigen.",
+      "visitLab": "Laborbesuch buchen",
+      "request3D": "3D-Rendering anfordern"
+    }
+  },
+  "rivestimenti": {
+    "badge": "Anpassung",
+    "title": "Exklusive",
+    "titleHighlight": "Beschichtungen", 
+    "subtitle": "Jeder Vesuviano-Ofen kann mit hochwertigen Beschichtungen angepasst werden, die Ästhetik und Funktionalität vereinen, um sich perfekt in Ihre Umgebung zu integrieren.",
+    "verniciato": {
+      "title": "Lackiert",
+      "description": "Traditionelle lackierte Beschichtung aus hochwertiger Terrakotta"
+    },
+    "mosaicato": {
+      "title": "Mosaik", 
+      "description": "Anpassbare Mosaikbeschichtung mit künstlerischen Mustern"
+    },
+    "ferro": {
+      "title": "Eisen",
+      "description": "Natürliches Eisenfinish für einen modernen industriellen Look"
+    },
+    "personalizzato": {
+      "title": "Maßgeschneidert",
+      "description": "Maßgeschneiderte Lösungen für exklusive Projekte"
+    },
+    "availableOptions": "Verfügbare Optionen",
+    "viewSamples": "Muster ansehen",
+    "process": {
+      "title": "Anpassungsprozess",
+      "description": "Vom Konzept bis zur Realisierung begleiten wir Sie durch jede Phase, um den perfekten Ofen für Sie zu schaffen.",
+      "step1": {
+        "title": "Beratung",
+        "desc": "Analyse Ihrer Bedürfnisse"
+      },
+      "step2": {
+        "title": "Design", 
+        "desc": "Personalisiertes Design"
+      },
+      "step3": {
+        "title": "Muster",
+        "desc": "Materialauswahl"
+      },
+      "step4": {
+        "title": "Realisierung",
+        "desc": "Handwerkliche Produktion"
+      }
+    },
+    "startCustomization": "Anpassung starten"
+  },
+  "consultationForm": {
+    "badge": "KOSTENLOSE BERATUNG",
+    "title": "Starten Sie Ihr Projekt",
+    "subtitle": "Unsere Experten führen Sie bei der Auswahl der perfekten Lösung, vom Design bis zum internationalen Versand.",
+    "services": {
+      "title": "Unsere Dienstleistungen",
+      "identification": "Identifikation der besten Lösung",
+      "quotation": "Personalisiertes Angebot", 
+      "rendering": "Hochauflösendes 3D-Rendering",
+      "logistics": "Logistik- und Exportorganisation"
+    },
+    "directContacts": "Direkte Kontakte",
+    "phone": "Telefon",
+    "email": "Email",
+    "laboratory": "Labor",
+    "downloadCatalog": "Vollständigen Katalog herunterladen",
+    "requestTitle": "Beratungsanfrage",
+    "form": {
+      "name": "Vollständiger Name",
+      "nameRequired": "Vollständiger Name *",
+      "namePlaceholder": "Ihr Name",
+      "email": "Email",
+      "emailRequired": "Email *", 
+      "emailPlaceholder": "ihre-email@beispiel.com",
+      "phone": "Telefon",
+      "phonePlaceholder": "+49 123 456 789",
+      "company": "Unternehmen/Restaurant",
+      "companyPlaceholder": "Name Ihres Geschäfts",
+      "country": "Bestimmungsland",
+      "countryPlaceholder": "Z.B. Frankreich, Deutschland, USA...",
+      "ovenType": "Ofentyp",
+      "ovenTypePlaceholder": "Typ auswählen",
+      "capacity": "Erforderliche Kapazität",
+      "capacityPlaceholder": "Z.B. 100 Pizzas/Stunde, 50 cm Durchmesser...",
+      "budget": "Richtbudget",
+      "budgetPlaceholder": "Z.B. €5.000 - €15.000",
+      "servicesRequested": "Angeforderte Dienstleistungen:",
+      "message": "Nachricht", 
+      "messagePlaceholder": "Beschreiben Sie Ihr Projekt, Ihre spezifischen Bedürfnisse oder Fragen...",
+      "submit": "Kostenlose Beratungsanfrage senden",
+      "submitting": "Senden...",
+      "privacy": "Wir kontaktieren Sie innerhalb von 24 Stunden. Ihre Daten sind geschützt und werden nicht an Dritte weitergegeben."
+    },
+    "ovenTypes": {
+      "woodFixed": "Fester Holzofen",
+      "woodRotating": "Rotierender Holzofen",
+      "gasFixed": "Fester Gasofen", 
+      "gasRotating": "Rotierender Gasofen",
+      "electricFixed": "Fester Elektroofen",
+      "electricRotating": "Rotierender Elektroofen",
+      "vesuvioBuonoWood": "VesuvioBuono Holz",
+      "vesuvioBuonoCombined": "VesuvioBuono Kombiniert Gas/Holz",
+      "needConsultation": "Unsicher - benötige Beratung"
+    },
+    "messages": {
+      "requiredFields": "Pflichtfelder",
+      "requiredFieldsDesc": "Name und Email sind erforderlich, um die Anfrage zu senden.",
+      "success": "🔥 Anfrage erfolgreich gesendet!",
+      "successDesc": "Wir haben Ihnen eine Bestätigungs-E-Mail gesendet. Wir kontaktieren Sie innerhalb von 24 Stunden für Ihre kostenlose Beratung.",
+      "error": "Sendefehler", 
+      "errorDesc": "Ein Problem ist aufgetreten. Versuchen Sie es erneut oder kontaktieren Sie uns direkt unter +39 350 928 6941",
+      "catalogDownloaded": "Katalog heruntergeladen!",
+      "catalogDesc": "Der vollständige Katalog wurde auf Ihr Gerät heruntergeladen."
+    }
+  },
+  "whatsapp": {
+    "tooltip": "Kontaktieren Sie uns auf WhatsApp",
+    "message": "Hallo, ich hätte gerne Informationen über Ihre professionellen Öfen 🔥"
+  },
     "downloadTechSheet": "Technisches Datenblatt Herunterladen",
     "downloadTechSheetTitle": "Technisches Datenblatt Herunterladen",
     "downloadTechSheetDesc": "Füllen Sie Ihre Daten aus, um das technische Datenblatt von VesuvioBuono herunterzuladen",

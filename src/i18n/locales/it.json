@@ -197,7 +197,140 @@
       "title": "Hai bisogno di supporto personalizzato?",
       "description": "Il nostro team è sempre disponibile per offrirti la migliore assistenza e trovare insieme la soluzione ideale per la tua attività.",
       "button": "Contattaci Ora"
+  },
+  "gallery": {
+    "title": "Galleria dei Nostri Forni",
+    "subtitle": "Ogni immagine racconta una storia di passione, tradizione e innovazione. Scopri l'artigianato napoletano che conquista il mondo.",
+    "categories": {
+      "all": "Tutti i Forni",
+      "wood": "A Legna", 
+      "gas": "A Gas",
+      "electric": "Elettrici",
+      "rotating": "Rotanti",
+      "vesuviobuono": "VesuvioBuono"
     },
+    "ovenImage": "Immagine del Forno",
+    "cta": {
+      "title": "Vuoi vedere i nostri forni dal vivo?",
+      "description": "Organizziamo visite al nostro laboratorio a Napoli o realizziamo rendering 3D ad alta fedeltà per mostrarvi il vostro forno prima della produzione.",
+      "visitLab": "Prenota Visita in Laboratorio",
+      "request3D": "Richiedi Rendering 3D"
+    }
+  },
+  "rivestimenti": {
+    "badge": "Personalizzazione",
+    "title": "Rivestimenti",
+    "titleHighlight": "Esclusivi", 
+    "subtitle": "Ogni forno Vesuviano può essere personalizzato con rivestimenti di alta qualità che uniscono estetica e funzionalità, per integrarsi perfettamente nel tuo ambiente.",
+    "verniciato": {
+      "title": "Verniciato",
+      "description": "Rivestimento verniciato tradizionale in terra cotta di alta qualità"
+    },
+    "mosaicato": {
+      "title": "Mosaicato", 
+      "description": "Rivestimento in mosaico personalizzabile con pattern artistici"
+    },
+    "ferro": {
+      "title": "Ferro",
+      "description": "Finitura in ferro naturale per un look industriale moderno"
+    },
+    "personalizzato": {
+      "title": "Personalizzato",
+      "description": "Soluzioni su misura per progetti esclusivi"
+    },
+    "availableOptions": "Opzioni Disponibili",
+    "viewSamples": "Vedi Campioni",
+    "process": {
+      "title": "Processo di Personalizzazione",
+      "description": "Dal concept alla realizzazione, ti accompagniamo in ogni fase per creare il forno perfetto per te.",
+      "step1": {
+        "title": "Consulenza",
+        "desc": "Analisi delle tue esigenze"
+      },
+      "step2": {
+        "title": "Design", 
+        "desc": "Progettazione personalizzata"
+      },
+      "step3": {
+        "title": "Campioni",
+        "desc": "Selezione materiali"
+      },
+      "step4": {
+        "title": "Realizzazione",
+        "desc": "Produzione artigianale"
+      }
+    },
+    "startCustomization": "Inizia Personalizzazione"
+  },
+  "consultationForm": {
+    "badge": "CONSULENZA GRATUITA",
+    "title": "Inizia il Tuo Progetto",
+    "subtitle": "I nostri esperti ti guideranno nella scelta della soluzione perfetta, dalla progettazione al trasporto internazionale.",
+    "services": {
+      "title": "I Nostri Servizi",
+      "identification": "Identificazione migliore soluzione",
+      "quotation": "Quotazione personalizzata", 
+      "rendering": "Rendering 3D alta fedeltà",
+      "logistics": "Organizzazione logistica e export"
+    },
+    "directContacts": "Contatti Diretti",
+    "phone": "Telefono",
+    "email": "Email",
+    "laboratory": "Laboratorio",
+    "downloadCatalog": "Scarica Catalogo Completo",
+    "requestTitle": "Richiesta Consulenza",
+    "form": {
+      "name": "Nome Completo",
+      "nameRequired": "Nome Completo *",
+      "namePlaceholder": "Il tuo nome",
+      "email": "Email",
+      "emailRequired": "Email *", 
+      "emailPlaceholder": "la-tua-email@esempio.com",
+      "phone": "Telefono",
+      "phonePlaceholder": "+39 123 456 7890",
+      "company": "Azienda/Ristorante",
+      "companyPlaceholder": "Nome della tua attività",
+      "country": "Paese di Destinazione",
+      "countryPlaceholder": "Es. Francia, Germania, USA...",
+      "ovenType": "Tipo di Forno",
+      "ovenTypePlaceholder": "Seleziona il tipo",
+      "capacity": "Capacità Richiesta",
+      "capacityPlaceholder": "Es. 100 pizze/ora, 50 cm diametro...",
+      "budget": "Budget Orientativo",
+      "budgetPlaceholder": "Es. €5.000 - €15.000",
+      "servicesRequested": "Servizi Richiesti:",
+      "message": "Messaggio", 
+      "messagePlaceholder": "Descrivici il tuo progetto, le tue esigenze specifiche o qualsiasi domanda...",
+      "submit": "Invia Richiesta Consulenza Gratuita",
+      "submitting": "Invio in corso...",
+      "privacy": "Ti contatteremo entro 24 ore. I tuoi dati sono protetti e non saranno condivisi con terzi."
+    },
+    "ovenTypes": {
+      "woodFixed": "Forno a Legna Fisso",
+      "woodRotating": "Forno a Legna Rotante",
+      "gasFixed": "Forno a Gas Fisso", 
+      "gasRotating": "Forno a Gas Rotante",
+      "electricFixed": "Forno Elettrico Fisso",
+      "electricRotating": "Forno Elettrico Rotante",
+      "vesuvioBuonoWood": "VesuvioBuono a Legna",
+      "vesuvioBuonoCombined": "VesuvioBuono Combinato Gas/Legna",
+      "needConsultation": "Non sono sicuro - necessito consulenza"
+    },
+    "messages": {
+      "requiredFields": "Campi Obbligatori",
+      "requiredFieldsDesc": "Nome e Email sono richiesti per inviare la richiesta.",
+      "success": "🔥 Richiesta Inviata con Successo!",
+      "successDesc": "Ti abbiamo inviato una email di conferma. Ti contatteremo entro 24 ore per la tua consulenza gratuita.",
+      "error": "Errore nell'Invio", 
+      "errorDesc": "Si è verificato un problema. Riprova o contattaci direttamente al +39 350 928 6941",
+      "catalogDownloaded": "Catalogo Scaricato!",
+      "catalogDesc": "Il catalogo completo è stato scaricato sul tuo dispositivo."
+    }
+  },
+  "whatsapp": {
+    "tooltip": "Contattaci su WhatsApp",
+    "message": "Ciao, vorrei informazioni sui vostri forni professionali 🔥"
+  },
     "logisticsSection": {
       "title": "La Nostra",
       "titleHighlight": "Efficacia Logistica",
