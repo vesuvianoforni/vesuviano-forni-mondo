@@ -1,3 +1,4 @@
+
 {
   "hero": {
     "subtitle": "Fours Artisanaux Napolitains",
@@ -17,16 +18,16 @@
   "products": {
     "title": "Nos",
     "titleHighlight": "Solutions",
-    "subtitle": "Fours artisanaux napolitains pour chaque besoin professionnel",
+    "subtitle": "Fours artisanaux napolitains pour tous les besoins professionnels",
     "traditional": {
       "title": "Fours Traditionnels",
       "subtitle": "Fours à Bois",
-      "description": "Tradition napolitaine authentique pour des pizzas au goût inimitable. Cuisson au bois pour un maximum de saveur.",
+      "description": "Tradition napolitaine authentique pour des pizzas au goût incomparable. Cuisson au bois pour un maximum de saveur.",
       "features": {
         "woodFired": "Cuisson traditionnelle au bois",
         "temperature": "Température jusqu'à 500°C",
-        "authentic": "Goût napolitain authentique",
-        "versatile": "Polyvalent pour pizza et pain"
+        "authentic": "Saveur napolitaine authentique",
+        "versatile": "Polyvalents pour pizza et pain"
       }
     },
     "gas": {
@@ -47,274 +48,149 @@
       "features": {
         "constant": "Température constante",
         "digital": "Contrôle numérique",
-        "eco": "Respectueux de l'environnement",
-        "precise": "Cuisson de précision"
-      }
-    }
-  },
-  "craftsmanship": {
-    "title": "L'Art de la",
-    "titleHighlight": "Fabrication",
-    "subtitle": "Chaque four naît des mains expertes de nos maîtres artisans à Sant'Anastasia, au cœur de la tradition napolitaine.",
-    "features": {
-      "handcrafted": {
-        "title": "Travail Artisanal",
-        "description": "Chaque four est créé à la main par nos maîtres artisans avec des techniques transmises de génération en génération."
-      },
-      "materials": {
-        "title": "Matériaux d'Excellence", 
-        "description": "Briques réfractaires sélectionnées, aciers spéciaux et matériaux naturels de la plus haute qualité."
-      },
-      "tradition": {
-        "title": "Tradition Séculaire",
-        "description": "L'art de la construction de fours napolitains préservé et perfectionné au fil du temps."
-      }
-    }
-  },
-  "rivestimenti": {
-    "title": "Revêtements",
-    "titleHighlight": "d'Excellence", 
-    "subtitle": "Chaque four peut être personnalisé avec des finitions exclusives qui allient esthétique et performance",
-    "types": {
-      "mosaico": {
-        "title": "Mosaïque Artisanale",
-        "description": "Créations uniques avec mosaïques en céramique, pierre naturelle ou matériaux précieux. Chaque four devient une œuvre d'art sur mesure."
-      },
-      "verniciatura": {
-        "title": "Peinture Spécialisée",
-        "description": "Finitions peintes avec des couleurs exclusives résistantes aux hautes températures. Personnalisation totale selon vos goûts."
-      }
-    }
-  },
-  "services": {
-    "title": "Nos Services",
-    "titleHighlight": "Professionnels",
-    "subtitle": "Un accompagnement complet de la conception à l'installation",
-    "consultation": {
-      "title": "Consultation Technique",
-      "description": "Analyse personnalisée de vos besoins avec nos experts pour identifier la solution parfaite.",
-      "features": ["Évaluation de l'espace", "Conseils techniques", "Devis détaillé"]
-    },
-    "customization": {
-      "title": "Personnalisation",
-      "description": "Conception sur mesure avec choix de matériaux, dimensions et finitions exclusives.",
-      "features": ["Design personnalisé", "Matériaux premium", "Finitions artistiques"]
-    },
-    "installation": {
-      "title": "Installation et Formation",
-      "description": "Installation professionnelle et formation complète à l'utilisation et à la maintenance.",
-      "features": ["Installation certifiée", "Formation pratique", "Support technique"]
-    }
-  },
-  "consultationForm": {
-    "badge": "CONSULTATION GRATUITE",
-    "title": "Commencez Votre Projet",
-    "subtitle": "Nos experts vous guideront dans le choix de la solution parfaite, de la conception à l'expédition internationale.",
-    "services": {
-      "title": "Nos Services",
-      "identification": "Identification de la meilleure solution",
-      "quotation": "Devis personnalisé", 
-      "rendering": "Rendu 3D haute fidélité",
-      "logistics": "Organisation logistique et export"
-    },
-    "directContacts": "Contacts Directs",
-    "phone": "Téléphone",
-    "email": "Email",
-    "laboratory": "Laboratoire",
-    "downloadCatalog": "Télécharger Catalogue Complet",
-    "requestTitle": "Demande de Consultation",
-    "form": {
-      "nameRequired": "Nom Complet *",
-      "namePlaceholder": "Votre nom complet",
-      "emailRequired": "Email *", 
-      "emailPlaceholder": "votre@email.com",
-      "phone": "Téléphone",
-      "phonePlaceholder": "+33 1 23 45 67 89",
-      "company": "Entreprise",
-      "companyPlaceholder": "Nom de votre entreprise",
-      "country": "Pays",
-      "countryPlaceholder": "France",
-      "ovenType": "Type de Four",
-      "ovenTypePlaceholder": "Sélectionnez le type",
-      "capacity": "Capacité Requise", 
-      "capacityPlaceholder": "Ex: 50 pizzas/heure",
-      "budget": "Budget Approximatif",
-      "budgetPlaceholder": "Ex: 15.000-25.000€",
-      "servicesRequested": "Services Demandés",
-      "message": "Message",
-      "messagePlaceholder": "Décrivez votre projet et vos besoins spécifiques...",
-      "submit": "Envoyer la Demande",
-      "submitting": "Envoi en cours...",
-      "privacy": "Vos données sont protégées et ne seront utilisées que pour cette consultation."
-    },
-    "ovenTypes": {
-      "woodFixed": "Four à Bois Fixe",
-      "woodRotating": "Four à Bois Rotatif", 
-      "gasFixed": "Four à Gaz Fixe",
-      "gasRotating": "Four à Gaz Rotatif",
-      "electricFixed": "Four Électrique Fixe",
-      "electricRotating": "Four Électrique Rotatif",
-      "vesuvioBuonoWood": "VesuvioBuono à Bois",
-      "vesuvioBuonoCombined": "VesuvioBuono Combiné",
-      "needConsultation": "J'ai besoin d'une consultation"
-    },
-    "messages": {
-      "requiredFields": "Champs Obligatoires",
-      "requiredFieldsDesc": "Nom et Email sont requis pour envoyer la demande.",
-      "success": "🔥 Demande Envoyée avec Succès !",
-      "successDesc": "Nous vous avons envoyé un email de confirmation. Nous vous contacterons dans les 24 heures pour votre consultation gratuite.",
-      "error": "Erreur d'Envoi",
-      "errorDesc": "Un problème s'est produit. Réessayez ou contactez-nous directement au +39 350 928 6941",
-      "catalogDownloaded": "Catalogue Téléchargé !",
-      "catalogDesc": "Le catalogue complet a été téléchargé sur votre appareil."
-    }
-  },
-  "whatsapp": {
-    "tooltip": "Contactez-nous sur WhatsApp", 
-    "message": "Bonjour, je souhaiterais des informations sur vos fours professionnels 🔥"
-  },
-  "gallery": {
-    "logisticsSection": {
-      "title": "Notre",
-      "titleHighlight": "Efficacité Logistique",
-      "subtitle": "Livraisons dans le monde entier, même dans les métropoles les plus complexes comme New York",
-      "caption": "Four Vésuvien en livraison à Manhattan",
-      "description": "Notre logistique spécialisée garantit des livraisons sécurisées même dans les centres urbains les plus exigeants"
-    }
-  },
-  "vesuvioBuono": {
-    "badges": {
-      "exclusive": "EXCLUSIVITÉ MONDIALE",
-      "patented": "BREVETÉ"
-    },
-    "title": "VesuvioBuono",
-    "subtitle": "Le premier four au monde à bois et combiné gaz/bois qui n'émet pas de suie dans l'atmosphère. Une révolution pour l'environnement et la santé.",
-    "video": {
-      "title": "VesuvioBuono en Action",
-      "description": "Découvrez comment VesuvioBuono révolutionne la cuisson au bois sans émissions"
-    },
-    "gallery": {
-      "action": "Four en Action",
-      "pizza": "Pizza Parfaite",
-      "emissions": "Zéro Émissions",
-      "wood": "Four à bois",
-      "purifier": "Purificateur de fumées"
-    },
-    "zeroEmissions": {
-      "title": "Zéro Émissions",
-      "patented": {
-        "title": "Technologie Brevetée",
-        "description": "Système de combustion complète qui élimine 99,9% des particules de suie."
-      },
-      "certifications": {
-        "title": "Certifications Environnementales",
-        "description": "Conforme aux normes européennes et internationales les plus strictes sur les émissions."
-      },
-      "dualFuel": {
-        "title": "Double Alimentation",
-        "description": "Fonctionne parfaitement aussi bien au bois qu'avec la combinaison gaz/bois."
+        "eco": "Éco-durable",
+        "silent": "Fonctionnement silencieux"
       }
     },
-    "advantages": {
-      "title": "Avantages Exclusifs",
+    "rotating": {
+      "title": "Fours Rotatifs",
+      "subtitle": "Fours Rotatifs",
+      "description": "Productivité maximale avec cuisson uniforme sur chaque surface. Idéaux pour haute production.",
       "features": {
-        "installation": "Installation en zone urbaine sans restrictions",
-        "maintenance": "Réduction drastique des coûts de maintenance des cheminées",
-        "flavor": "Conservation du goût authentique de la cuisson au bois",
-        "environment": "Respect total de l'environnement et de la communauté",
-        "warranty": "Garantie internationale et support technique spécialisé"
+        "uniform": "Cuisson uniforme",
+        "productivity": "Haute productivité",
+        "automation": "Automatisation avancée",
+        "efficiency": "Efficacité énergétique"
       }
     },
-    "actions": {
-      "downloadSpec": "Télécharger la Fiche Technique",
-      "visitWebsite": "Visiter le Site Web"
-    },
-    "modal": {
-      "title": "Télécharger la Fiche Technique",
-      "description": "Complétez vos informations pour télécharger la fiche technique de VesuvioBuono",
-      "firstName": "Prénom",
-      "lastName": "Nom",
-      "email": "Email",
-      "city": "Ville",
-      "phone": "Numéro de téléphone",
-      "cancel": "Annuler",
-      "download": "Télécharger le PDF"
-    },
-    "messages": {
-      "success": "Fiche technique téléchargée avec succès !",
-      "error": "Erreur lors du téléchargement. Veuillez réessayer.",
-      "emailSent": "Nous vous avons également envoyé la fiche technique par email."
+    "learnMore": "En Savoir Plus",
+    "customSolutions": {
+      "title": "Solutions Sur Mesure",
+      "description": "Chaque four Vesuviano est conçu pour répondre aux besoins spécifiques de votre activité. Nos experts vous aideront à trouver la solution parfaite.",
+      "freeConsultation": "Consultation Gratuite",
+      "viewGallery": "Voir la Galerie"
     }
   },
   "ovenVisualizer": {
-    "title": "Visualisateur de Fours AR",
-    "subtitle": "Voyez votre four dans votre espace réel",
+    "badge": "Nouveauté Absolue IA",
+    "title": "Visualisateur de Fours", 
+    "subtitle": "Choisissez comment visualiser votre four Vesuviano",
+    "aiMode": {
+      "title": "Architecte IA",
+      "description": "Téléchargez une photo de votre espace et l'IA intégrera de manière photoréaliste le four sélectionné",
+      "features": {
+        "photorealistic": "Résultat photoréaliste professionnel",
+        "lighting": "Intégration parfaite avec l'éclairage", 
+        "highRes": "Image téléchargeable haute résolution"
+      },
+      "uploadTitle": "Téléchargez une photo de votre espace",
+      "uploadSubtitle": "Jusqu'à 3 images • JPG, PNG",
+      "uploadDescription": "Intégration photoréaliste automatique",
+      "generateButton": "Générer Visualisation IA"
+    },
+    "arMode": {
+      "title": "Réalité Augmentée",
+      "description": "Utilisez la caméra de votre appareil pour voir le four 3D dans votre espace en temps réel",
+      "features": {
+        "interactive": "Visualisation 3D interactive",
+        "realtime": "Positionnement et rotation en temps réel",
+        "compatible": "Compatible avec les smartphones modernes"
+      },
+      "startButton": "Démarrer Visualisation AR"
+    },
+    "ovenSelection": {
+      "title": "Sélectionnez le Four",
+      "allOvens": "Tous les fours disponibles",
+      "showAll": "Tout afficher",
+      "showLess": "Afficher moins",
+      "noSelection": "Aucun four sélectionné"
+    },
     "alerts": {
-      "arTechActivated": "🚀 Technologie AR Activée",
-      "arDescription": "Utilisez la caméra de votre appareil pour voir le four dans votre environnement réel"
+      "arTechActivated": "Technologie AR Activée",
+      "arDescription": "Système de Réalité Augmentée prêt. Positionnez le four directement dans votre environnement en utilisant la caméra de l'appareil.",
+      "uploadImages": "Téléchargez au moins une image et sélectionnez un four",
+      "selectOven": "Sélectionnez un type de four avant de démarrer l'AR",
+      "cameraNotSupported": "Votre appareil ne supporte pas l'accès à la caméra",
+      "arStarted": "Mode AR démarré ! Pointez la caméra où vous voulez positionner le four",
+      "imagesUploaded": "image(s) téléchargée(s) avec succès !",
+      "selectImageFiles": "Sélectionnez uniquement des fichiers image"
     },
-    "upload": {
-      "title": "1. Téléchargez votre espace", 
-      "description": "Sélectionnez une photo de l'espace où vous souhaitez installer le four"
-    },
-    "selectModel": {
-      "title": "2. Choisissez le modèle de four",
-      "description": "Sélectionnez le type de four que vous préférez"
-    },
-    "generate": {
-      "title": "3. Générez la visualisation",
-      "button": "Créer la Visualisation AR",
-      "loading": "Génération de votre visualisation personnalisée..."
-    },
-    "result": {
-      "title": "Votre Four Visualisé",
-      "download": "Télécharger l'Image",
-      "newVisualization": "Nouvelle Visualisation"
-    },
-    "models": {
-      "title": "Nos Modèles de Fours",
-      "vesuvioBuono": {
-        "title": "VesuvioBuono", 
-        "description": "Four révolutionnaire à zéro émissions"
-      },
-      "verniciato": {
-        "title": "Verniciato",
-        "description": "Four traditionnel avec finition peinte élégante"
-      },
-      "mosaicato": {
-        "title": "Mosaicato",
-        "description": "Four artistique avec revêtement en mosaïque"
-      }
-    },
-    "ovenTypes": {
-      "traditional": "Four Traditionnel",
-      "gas": "Four à Gaz",
-      "electric": "Four Électrique", 
-      "vesuvioBuono": "VesuvioBuono"
-    },
-    "apiKey": {
-      "title": "Configuration Clé API",
-      "description": "Entrez votre clé API Stability AI pour activer la génération d'images",
-      "placeholder": "Entrez votre clé API...",
-      "submit": "Enregistrer la Clé",
-      "success": "✅ Clé API valide et enregistrée",
-      "info": "Vous pouvez obtenir votre clé API gratuite sur platform.stability.ai"
+    "apiConfig": {
+      "title": "Configuration API Runware",
+      "label": "Clé API Runware",
+      "placeholder": "Entrez votre clé API Runware",
+      "configButton": "Configurer API",
+      "howToGet": "Comment obtenir la clé API :",
+      "step1": "Allez sur runware.ai",
+      "step2": "Créez un compte ou connectez-vous",
+      "step3": "Trouvez la clé API dans la section \"API Keys\" du tableau de bord",
+      "configured": "API configurée correctement"
     },
     "loader": {
-      "creating": "Création de votre visualisation...",
-      "analyzing": "Analyse de votre espace...",
-      "rendering": "Rendu du four sélectionné...",
-      "finalizing": "Finalisation de l'image..."
+      "title": "IA en Action",
+      "defaultMessage": "L'IA crée votre image personnalisée...",
+      "steps": {
+        "analysis": "Analyse de l'espace",
+        "integration": "Intégration du four", 
+        "finalization": "Finalisation de l'image"
+      }
+    },
+    "resultModal": {
+      "title": "Image Créée avec Succès !",
+      "subtitle": "a été parfaitement intégré dans votre espace",
+      "downloadButton": "Télécharger Image HD",
+      "enlargeHint": "Cliquez pour agrandir",
+      "shareTitle": "Mon four Vesuviano personnalisé",
+      "shareText": "Regardez à quoi ressemblera mon nouveau four !",
+      "infoCards": {
+        "ai": "Généré avec Intelligence Artificielle",
+        "hd": "Qualité Haute Résolution",
+        "design": "Design Photoréaliste"
+      },
+      "generatedIn": "Image générée en {seconds} secondes avec technologie IA avancée"
+    },
+    "downloadModal": {
+      "title": "Téléchargez Votre Image",
+      "preview": "Aperçu",
+      "ovenIn": "dans votre espace personnalisé",
+      "formTitle": "Vos données pour le téléchargement",
+      "formDescription": "Entrez vos données pour recevoir l'image haute résolution",
+      "firstName": "Prénom",
+      "lastName": "Nom", 
+      "email": "Email",
+      "city": "Ville",
+      "phone": "Téléphone",
+      "company": "Entreprise (optionnel)",
+      "website": "Site Web (optionnel)",
+      "downloadButton": "Télécharger Image HD",
+      "downloading": "Téléchargement...",
+      "downloadComplete": "Téléchargement terminé !",
+      "downloadSuccess": "L'image a été téléchargée avec succès.",
+      "downloadError": "Une erreur s'est produite pendant le téléchargement. Réessayez.",
+      "missingFields": "Champs manquants",
+      "missingFieldsDesc": "Remplissez tous les champs obligatoires pour procéder au téléchargement.",
+      "infoText": "Vous recevrez également des informations sur nos fours Vesuviano"
+    },
+    "arVisualization": {
+      "loadingModel": "Chargement du modèle...",
+      "modelNotAvailable": "Modèle non disponible", 
+      "unsupportedFormat": "Format de fichier non supporté. Supportés : GLB, GLTF, OBJ, FBX"
+    },
+    "ovenModels": {
+      "title": "Nos Modèles de Four",
+      "vesuviobuono": "Revêtement mosaïque premium avec technologie avancée",
+      "verniciato": "Finition peinte traditionnelle en terre cuite",
+      "mosaicato": "Revêtement mosaïque personnalisable"
     },
     "ovenTypeSelector": {
-      "label": "Type de Four Vésuvien",
+      "label": "Type de Four Vesuviano",
       "placeholder": "Sélectionnez le modèle de four",
-      "previewLabel": "Aperçu du Four Sélectionné:"
+      "previewLabel": "Aperçu du Four Sélectionné :"
     },
     "imageUploadSection": {
       "title": "Téléchargez Votre Espace",
-      "label": "Photo de l'Espace d'Installation du Four", 
-      "description": "Téléchargez une photo de l'espace (cuisine, jardin, terrasse) où vous souhaitez installer le four",
+      "label": "Photo de l'Espace où Installer le Four",
+      "description": "Téléchargez une photo de l'espace (cuisine, jardin, terrasse) où vous aimeriez installer le four",
       "preview": "Aperçu de l'espace"
     }
   },
