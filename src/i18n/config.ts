@@ -24,7 +24,6 @@ i18n
   .init({
     resources,
     fallbackLng: 'it',
-    lng: 'it', // Forza l'italiano come lingua iniziale
     debug: false,
     interpolation: {
       escapeValue: false
