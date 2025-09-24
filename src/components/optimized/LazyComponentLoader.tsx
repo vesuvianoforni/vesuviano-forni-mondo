@@ -31,7 +31,7 @@ const LazyComponentLoader: React.FC<LazyComponentLoaderProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { ref, isIntersecting } = useIntersectionObserver({
+  const { ref, isIntersecting } = useIntersectionObserver<HTMLDivElement>({
     threshold,
     rootMargin,
     triggerOnce: true,

@@ -6,7 +6,7 @@ interface UseIntersectionObserverOptions {
   triggerOnce?: boolean;
 }
 
-export const useIntersectionObserver = (
+export const useIntersectionObserver = <T extends HTMLElement = HTMLElement>(
   options: UseIntersectionObserverOptions = {}
 ) => {
   const {
@@ -17,7 +17,7 @@ export const useIntersectionObserver = (
 
   const [isIntersecting, setIsIntersecting] = useState(false);
   const [hasIntersected, setHasIntersected] = useState(false);
-  const elementRef = useRef<HTMLElement>(null);
+  const elementRef = useRef<T | null>(null);
 
   useEffect(() => {
     const element = elementRef.current;
