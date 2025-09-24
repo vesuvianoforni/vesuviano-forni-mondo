@@ -21,20 +21,62 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-select', '@radix-ui/react-tabs'],
-          'three-vendor': ['three', '@react-three/fiber', '@react-three/drei']
+        manualChunks: (id) => {
+          // React core
+          if (id.includes('react') || id.includes('react-dom')) {
+            return 'react-vendor';
+          }
+          
+          // Three.js and related
+          if (id.includes('three') || id.includes('@react-three') || id.includes('fiber') || id.includes('drei')) {
+            return 'three-vendor';
+          }
+          
+          // Mapbox
+          if (id.includes('mapbox-gl')) {
+            return 'mapbox-vendor';
+          }
+          
+          // UI components
+          if (id.includes('@radix-ui') || id.includes('lucide-react')) {
+            return 'ui-vendor';
+          }
+          
+          // Heavy components
+          if (id.includes('OvenVisualizer') || id.includes('ARVisualizer')) {
+            return 'visualizer-chunk';
+          }
+          
+          // Map component
+          if (id.includes('ClientsMap')) {
+            return 'map-chunk';
+          }
+          
+          // Gallery
+          if (id.includes('OvenGallery') || id.includes('Gallery')) {
+            return 'gallery-chunk';
+          }
+          
+          // Utils and services
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
         }
       }
     },
     sourcemap: false,
     minify: mode === 'production' ? 'terser' : false,
+    chunkSizeWarningLimit: 1000,
     ...(mode === 'production' && {
       terserOptions: {
         compress: {
           drop_console: true,
-          drop_debugger: true
+          drop_debugger: true,
+          pure_funcs: ['console.log', 'console.debug'],
+          passes: 2
+        },
+        mangle: {
+          safari10: true
         }
       }
     })

@@ -1,20 +1,22 @@
 
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProductCategories from "@/components/ProductCategories";
-import OvenVisualizer from "@/components/OvenVisualizer";
 import CraftsmanshipSection from "@/components/CraftsmanshipSection";
 import Services from "@/components/Services";
 import Rivestimenti from "@/components/Rivestimenti";
 import VesuvioBuono from "@/components/VesuvioBuono";
-import ClientsMap from "@/components/ClientsMap";
-import OvenGallery from "@/components/OvenGallery";
 import OvenDataInitializer from "@/components/OvenDataInitializer";
 import ConsultationForm from "@/components/ConsultationForm";
 import ErrorBoundary from "@/components/ErrorBoundary";
-
+import LazySection from "@/components/LazySection";
 import WhatsAppButton from "@/components/WhatsAppButton";
+
+// Lazy load heavy components
+const OvenVisualizer = lazy(() => import("@/components/OvenVisualizer"));
+const ClientsMap = lazy(() => import("@/components/ClientsMap"));
+const OvenGallery = lazy(() => import("@/components/OvenGallery"));
 
 const Index = () => {
   return (
@@ -29,11 +31,29 @@ const Index = () => {
           <ProductCategories />
         </section>
         
-        <section id="ai-architect" aria-label="Visualizzatore 3D">
+        <LazySection 
+          id="ai-architect" 
+          aria-label="Visualizzatore 3D"
+          minHeight="600px"
+          fallback={
+            <div className="min-h-screen bg-gradient-to-b from-stone-50 to-stone-100 py-16">
+              <div className="max-w-6xl mx-auto px-4 md:px-6 text-center">
+                <div className="animate-pulse">
+                  <div className="h-8 bg-stone-200 rounded w-64 mx-auto mb-4"></div>
+                  <div className="h-6 bg-stone-200 rounded w-96 mx-auto mb-8"></div>
+                  <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    <div className="h-48 bg-stone-200 rounded-2xl"></div>
+                    <div className="h-48 bg-stone-200 rounded-2xl"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        >
           <ErrorBoundary fallback={<div className="container mx-auto px-6 py-8">Sezione AR temporaneamente non disponibile.</div>}>
             <OvenVisualizer />
           </ErrorBoundary>
-        </section>
+        </LazySection>
         
         <section id="craftsmanship" aria-label="Artigianato napoletano">
           <CraftsmanshipSection />
@@ -51,15 +71,59 @@ const Index = () => {
           <VesuvioBuono />
         </section>
         
-        <section id="clients-map" aria-label="Clienti nel mondo">
+        <LazySection 
+          id="clients-map" 
+          aria-label="Clienti nel mondo"
+          minHeight="500px"
+          fallback={
+            <div className="py-20 bg-gradient-to-br from-gray-50 to-stone-100">
+              <div className="container mx-auto px-6">
+                <div className="max-w-7xl mx-auto animate-pulse">
+                  <div className="text-center mb-16">
+                    <div className="h-6 bg-stone-200 rounded w-32 mx-auto mb-4"></div>
+                    <div className="h-8 bg-stone-200 rounded w-64 mx-auto mb-4"></div>
+                    <div className="h-6 bg-stone-200 rounded w-96 mx-auto"></div>
+                  </div>
+                  <div className="bg-white rounded-2xl shadow-2xl p-8 mb-12">
+                    <div className="h-96 bg-stone-200 rounded-xl"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        >
           <ErrorBoundary fallback={<div className="container mx-auto px-6 py-8">Mappa temporaneamente non disponibile.</div>}>
             <ClientsMap />
           </ErrorBoundary>
-        </section>
+        </LazySection>
         
-        <section id="oven-gallery" aria-label="Galleria forni">
+        <LazySection 
+          id="oven-gallery" 
+          aria-label="Galleria forni"
+          minHeight="400px"
+          fallback={
+            <div className="py-20 bg-white">
+              <div className="container mx-auto px-6 animate-pulse">
+                <div className="text-center mb-16">
+                  <div className="h-8 bg-stone-200 rounded w-72 mx-auto mb-6"></div>
+                  <div className="h-6 bg-stone-200 rounded w-96 mx-auto mb-8"></div>
+                  <div className="flex justify-center gap-4 mb-12">
+                    {[1,2,3,4].map(i => (
+                      <div key={i} className="h-8 bg-stone-200 rounded w-24"></div>
+                    ))}
+                  </div>
+                </div>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {[1,2,3,4,5,6].map(i => (
+                    <div key={i} className="bg-stone-200 rounded-2xl h-64"></div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          }
+        >
           <OvenGallery />
-        </section>
+        </LazySection>
         
         <section id="consultation" aria-label="Modulo contatti">
           <ConsultationForm />

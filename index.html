@@ -229,12 +229,23 @@
     <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://lgueucxznbqgvhpjzurf.supabase.co">
+    <link rel="preconnect" href="https://api.mapbox.com">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
     
-    <!-- Preload critical images -->
+    <!-- Preload critical images with responsive sizes -->
     <link rel="preload" href="/lovable-uploads/vesuviano-logo-bianco.png" as="image" type="image/png">
-    <link rel="preload" href="/src/assets/mattoni-refrattari-hero.jpg" as="image" type="image/jpeg">
+    <link rel="preload" href="/src/assets/mattoni-refrattari-hero.jpg" as="image" type="image/jpeg" media="(min-width: 768px)">
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//api.mapbox.com">
+    <link rel="dns-prefetch" href="//lgueucxznbqgvhpjzurf.supabase.co">
+    
+    <!-- Resource hints for modules -->
+    <link rel="modulepreload" href="/src/main.tsx">
+    <link rel="modulepreload" href="/src/App.tsx">
     
   </head>
 
