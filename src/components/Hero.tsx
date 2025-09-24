@@ -2,37 +2,24 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
 import { useTranslation, Trans } from 'react-i18next';
-import OptimizedImage from './optimized/OptimizedImage';
-import { usePerformanceMonitor, reportCustomMetric } from '@/hooks/usePerformanceMonitor';
-import heroImage from '@/assets/mattoni-refrattari-hero.jpg';
-import logoImage from '@/assets/vesuviano-logo-bianco.png';
+import LazyImage from './LazyImage';
 
 const Hero = () => {
   const { t } = useTranslation();
-  
-  // Monitor performance
-  usePerformanceMonitor();
-  
-  const startTime = performance.now();
 
   const scrollToProducts = () => {
-    const startTime = performance.now();
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
-    const endTime = performance.now();
-    reportCustomMetric('scroll_to_products', endTime - startTime, 'ms');
   };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden pt-20">
       {/* Background Image */}
       <div className="absolute inset-0">
-        <OptimizedImage
-          src={heroImage}
+        <LazyImage
+          src="/lovable-uploads/mattoni-refrattari-hero.jpg"
           alt="Mattoni refrattari per forni a legna - Materiali di alta qualità per la costruzione di forni tradizionali napoletani"
           className="w-full h-full object-cover object-center"
           priority={true}
-          sizes="100vw"
-          onLoad={() => reportCustomMetric('hero_image_load', performance.now() - startTime)}
         />
         {/* Dark Overlay for better text readability */}
         <div className="absolute inset-0 bg-black/50"></div>
@@ -42,13 +29,11 @@ const Hero = () => {
       <div className="container mx-auto px-3 sm:px-6 text-center z-10 relative max-w-full">
         {/* Logo Section */}
         <div className="mb-6 sm:mb-8 animate-scale-in">
-          <OptimizedImage 
-            src={logoImage}
+          <LazyImage 
+            src="/lovable-uploads/vesuviano-logo-bianco.png"
             alt="Vesuviano - Forni artigianali napoletani di alta qualità, specializzati in forni a legna, gas ed elettrici" 
             className="h-16 sm:h-20 md:h-24 lg:h-32 w-auto mx-auto hover:scale-105 transition-transform duration-500"
             priority={true}
-            width={128}
-            height={128}
           />
         </div>
         
