@@ -13,7 +13,7 @@ import OvenGallery from "@/components/OvenGallery";
 import OvenDataInitializer from "@/components/OvenDataInitializer";
 import ConsultationForm from "@/components/ConsultationForm";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import ArchitettoAIPopup from "@/components/ArchitettoAIPopup";
+
 import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Index = () => {
@@ -252,8 +252,6 @@ const Index = () => {
         </div>
       </footer>
       
-      {/* Architetto AI Popup */}
-      <ArchitettoAIPopup />
       
       {/* WhatsApp Button */}
       <WhatsAppButton />
