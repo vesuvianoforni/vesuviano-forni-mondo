@@ -60,11 +60,14 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   // Generate srcset for responsive images
   const generateSrcSet = (baseSrc: string) => {
-    const formats = ['webp', 'jpg'];
-    const sizes = [320, 640, 768, 1024, 1280, 1920];
+    // Create responsive breakpoints
+    const breakpoints = [480, 768, 1024, 1280, 1920];
     
-    // For now, return the original src
-    // In a real implementation, you'd generate different sizes
+    // For assets, create a basic responsive set
+    if (baseSrc.includes('/src/assets/') || baseSrc.startsWith('/lovable-uploads/')) {
+      return `${baseSrc} 1x`;
+    }
+    
     return `${baseSrc} 1x`;
   };
 

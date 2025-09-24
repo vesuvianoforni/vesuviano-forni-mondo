@@ -1,35 +1,62 @@
-// Service Worker for Vesuviano Forni
-const CACHE_NAME = 'vesuviano-v1';
-const STATIC_CACHE = 'vesuviano-static-v1';
-const DYNAMIC_CACHE = 'vesuviano-dynamic-v1';
-const IMAGE_CACHE = 'vesuviano-images-v1';
+// Service Worker for Vesuviano Forni - Optimized v2.1
+const CACHE_NAME = 'vesuviano-v2.1';
+const STATIC_CACHE = 'vesuviano-static-v2.1';
+const DYNAMIC_CACHE = 'vesuviano-dynamic-v2.1';
+const IMAGE_CACHE = 'vesuviano-images-v2.1';
+const CACHE_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-// Assets to cache immediately
-const STATIC_ASSETS = [
+// Critical assets to cache immediately
+const CRITICAL_ASSETS = [
   '/',
   '/src/main.tsx',
   '/src/index.css',
-  '/lovable-uploads/vesuviano-logo-bianco.png',
   '/src/assets/mattoni-refrattari-hero.jpg',
+  '/src/assets/vesuviano-logo-bianco.png'
+];
+
+// External resources
+const EXTERNAL_FONTS = [
   'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap'
 ];
 
-// Install event - cache static assets
+// Install event - aggressive caching of critical assets
 self.addEventListener('install', (event) => {
-  console.log('[SW] Installing service worker');
+  console.log('[SW] Installing optimized service worker v2.1');
+  
   event.waitUntil(
-    caches.open(STATIC_CACHE)
-      .then((cache) => {
-        console.log('[SW] Caching static assets');
-        return cache.addAll(STATIC_ASSETS);
+    Promise.all([
+      // Cache critical assets
+      caches.open(STATIC_CACHE).then((cache) => {
+        console.log('[SW] Caching critical assets');
+        return cache.addAll(CRITICAL_ASSETS).catch((error) => {
+          console.warn('[SW] Some critical assets failed to cache:', error);
+          // Continue anyway - don't fail the entire installation
+        });
+      }),
+      
+      // Cache external fonts separately
+      caches.open(DYNAMIC_CACHE).then((cache) => {
+        console.log('[SW] Caching external fonts');
+        return Promise.allSettled(
+          EXTERNAL_FONTS.map(url => 
+            fetch(url).then(response => {
+              if (response.ok) {
+                cache.put(url, response);
+              }
+            }).catch(() => {
+              console.warn('[SW] Failed to cache font:', url);
+            })
+          )
+        );
       })
-      .then(() => {
-        console.log('[SW] Static assets cached');
-        return self.skipWaiting();
-      })
-      .catch((error) => {
-        console.error('[SW] Failed to cache static assets:', error);
-      })
+    ])
+    .then(() => {
+      console.log('[SW] Installation complete, taking control');
+      return self.skipWaiting();
+    })
+    .catch((error) => {
+      console.error('[SW] Installation failed:', error);
+    })
   );
 });
 

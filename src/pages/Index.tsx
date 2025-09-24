@@ -12,6 +12,8 @@ import ConsultationForm from "@/components/ConsultationForm";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import LazySection from "@/components/LazySection";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import CriticalCSS from "@/components/CriticalCSS";
+import LazilyLoadedApp from "@/components/LazilyLoadedApp";
 
 // Lazy load heavy components
 const OvenVisualizer = lazy(() => import("@/components/OvenVisualizer"));
@@ -20,9 +22,11 @@ const OvenGallery = lazy(() => import("@/components/OvenGallery"));
 
 const Index = () => {
   return (
-    <div className="min-h-screen w-full overflow-x-hidden">
-      <OvenDataInitializer />
-      <Header />
+    <LazilyLoadedApp>
+      <div className="min-h-screen w-full overflow-x-hidden">
+        <CriticalCSS />
+        <OvenDataInitializer />
+        <Header />
       
       <main>
         <Hero />
@@ -319,7 +323,8 @@ const Index = () => {
       
       {/* WhatsApp Button */}
       <WhatsAppButton />
-    </div>
+      </div>
+    </LazilyLoadedApp>
   );
 };
 

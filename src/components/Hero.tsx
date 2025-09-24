@@ -4,12 +4,16 @@ import { ArrowDown } from "lucide-react";
 import { useTranslation, Trans } from 'react-i18next';
 import OptimizedImage from './optimized/OptimizedImage';
 import { usePerformanceMonitor, reportCustomMetric } from '@/hooks/usePerformanceMonitor';
+import heroImage from '@/assets/mattoni-refrattari-hero.jpg';
+import logoImage from '@/assets/vesuviano-logo-bianco.png';
 
 const Hero = () => {
   const { t } = useTranslation();
   
   // Monitor performance
   usePerformanceMonitor();
+  
+  const startTime = performance.now();
 
   const scrollToProducts = () => {
     const startTime = performance.now();
@@ -23,12 +27,12 @@ const Hero = () => {
       {/* Background Image */}
       <div className="absolute inset-0">
         <OptimizedImage
-          src="/src/assets/mattoni-refrattari-hero.jpg"
+          src={heroImage}
           alt="Mattoni refrattari per forni a legna - Materiali di alta qualità per la costruzione di forni tradizionali napoletani"
           className="w-full h-full object-cover object-center"
           priority={true}
           sizes="100vw"
-          onLoad={() => reportCustomMetric('hero_image_load', performance.now())}
+          onLoad={() => reportCustomMetric('hero_image_load', performance.now() - startTime)}
         />
         {/* Dark Overlay for better text readability */}
         <div className="absolute inset-0 bg-black/50"></div>
@@ -39,7 +43,7 @@ const Hero = () => {
         {/* Logo Section */}
         <div className="mb-6 sm:mb-8 animate-scale-in">
           <OptimizedImage 
-            src="/lovable-uploads/vesuviano-logo-bianco.png"
+            src={logoImage}
             alt="Vesuviano - Forni artigianali napoletani di alta qualità, specializzati in forni a legna, gas ed elettrici" 
             className="h-16 sm:h-20 md:h-24 lg:h-32 w-auto mx-auto hover:scale-105 transition-transform duration-500"
             priority={true}
