@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from 'react-i18next';
 import { Loader2 } from "lucide-react";
+import ImageZoomModal from "./ImageZoomModal";
 
 interface Oven {
   id: string;
@@ -27,6 +28,11 @@ const OvenGallery = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedCoating, setSelectedCoating] = useState<string>('all');
   const [displayCount, setDisplayCount] = useState(3);
+  const [zoomedImage, setZoomedImage] = useState<{
+    url: string;
+    alt: string;
+    title: string;
+  } | null>(null);
 
   const categories = [
     { value: 'all', label: 'Tutti i Forni', color: 'bg-stone-100 text-stone-800' },
@@ -181,7 +187,14 @@ const OvenGallery = () => {
                   className="group hover:shadow-xl transition-all duration-300 border-stone-200 hover:border-vesuviano-300"
                 >
                   <CardHeader className="p-0">
-                    <div className="relative overflow-hidden rounded-t-lg aspect-square bg-white">
+                    <div 
+                      className="relative overflow-hidden rounded-t-lg aspect-square bg-white cursor-zoom-in"
+                      onClick={() => setZoomedImage({
+                        url: oven.image_url,
+                        alt: oven.name,
+                        title: oven.name
+                      })}
+                    >
                       <img
                         src={oven.image_url}
                         alt={oven.name}
@@ -257,6 +270,17 @@ const OvenGallery = () => {
             Contatta un Esperto
           </Button>
         </div>
+
+        {/* Image Zoom Modal */}
+        {zoomedImage && (
+          <ImageZoomModal
+            isOpen={!!zoomedImage}
+            onClose={() => setZoomedImage(null)}
+            imageUrl={zoomedImage.url}
+            imageAlt={zoomedImage.alt}
+            title={zoomedImage.title}
+          />
+        )}
       </div>
     </section>
   );

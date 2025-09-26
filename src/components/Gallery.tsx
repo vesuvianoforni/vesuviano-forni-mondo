@@ -2,9 +2,15 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import ImageZoomModal from "./ImageZoomModal";
 
 const Gallery = () => {
   const [selectedCategory, setSelectedCategory] = useState("tutti");
+  const [zoomedImage, setZoomedImage] = useState<{
+    url: string;
+    alt: string;
+    title: string;
+  } | null>(null);
 
   const images = [
     {
@@ -98,7 +104,14 @@ const Gallery = () => {
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <CardContent className="p-0">
-                <div className="relative overflow-hidden">
+                  <div 
+                    className="relative overflow-hidden cursor-zoom-in"
+                    onClick={() => setZoomedImage({
+                      url: "/lovable-uploads/vesuviobuono-verde-dettaglio.jpg",
+                      alt: image.title,
+                      title: image.title
+                    })}
+                  >
                   {/* Placeholder for images */}
                   <div className="w-full h-64 bg-stone-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-700">
                     <div className="text-center">
@@ -148,6 +161,17 @@ const Gallery = () => {
             </div>
           </div>
         </div>
+
+        {/* Image Zoom Modal */}
+        {zoomedImage && (
+          <ImageZoomModal
+            isOpen={!!zoomedImage}
+            onClose={() => setZoomedImage(null)}
+            imageUrl={zoomedImage.url}
+            imageAlt={zoomedImage.alt}
+            title={zoomedImage.title}
+          />
+        )}
       </div>
     </section>
   );
