@@ -2,9 +2,16 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
+import ImageZoomModal from './ImageZoomModal';
 
 const ProductCategories = () => {
   const { t } = useTranslation();
+  const [zoomedImage, setZoomedImage] = useState<{
+    url: string;
+    alt: string;
+    title: string;
+  } | null>(null);
 
   const categories = [
     {
@@ -47,7 +54,12 @@ const ProductCategories = () => {
                 className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border border-stone-200 hover:border-vesuviano-300 animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
+                <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden cursor-zoom-in"
+                     onClick={() => setZoomedImage({
+                       url: category.image,
+                       alt: t(`products.${category.key}.title`),
+                       title: t(`products.${category.key}.title`)
+                     })}>
                   <img 
                     src={category.image} 
                     alt={t(`products.${category.key}.title`)}
@@ -115,6 +127,17 @@ const ProductCategories = () => {
             </div>
           </div>
         </div>
+
+        {/* Image Zoom Modal */}
+        {zoomedImage && (
+          <ImageZoomModal
+            isOpen={!!zoomedImage}
+            onClose={() => setZoomedImage(null)}
+            imageUrl={zoomedImage.url}
+            imageAlt={zoomedImage.alt}
+            title={zoomedImage.title}
+          />
+        )}
       </div>
     </section>
   );
