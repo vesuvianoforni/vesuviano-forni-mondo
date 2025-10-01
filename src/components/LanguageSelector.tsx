@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { 
   DropdownMenu, 
@@ -12,6 +13,8 @@ import { Globe } from 'lucide-react';
 
 const LanguageSelector = () => {
   const { i18n } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
   const languages = [
@@ -25,7 +28,18 @@ const LanguageSelector = () => {
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
 
   const changeLanguage = (languageCode: string) => {
-    i18n.changeLanguage(languageCode);
+    const currentPath = location.pathname;
+    const currentLangMatch = currentPath.match(/^\/(it|en|fr|de|es)/);
+    
+    // Get the path without the language prefix
+    let pathWithoutLang = currentPath;
+    if (currentLangMatch) {
+      pathWithoutLang = currentPath.substring(currentLangMatch[0].length) || '/';
+    }
+    
+    // Navigate to the new language route
+    const newPath = `/${languageCode}${pathWithoutLang === '/' ? '' : pathWithoutLang}`;
+    navigate(newPath);
     setIsOpen(false);
   };
 

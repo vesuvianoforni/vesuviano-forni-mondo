@@ -5,7 +5,8 @@ import OvenVisualizer from '@/components/OvenVisualizer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 
 const ArchitettoAI = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -42,27 +43,27 @@ const ArchitettoAI = () => {
               <h4 className="font-semibold mb-4 text-vesuviano-400">Navigazione</h4>
               <ul className="space-y-3 text-sm">
                 <li>
-                  <Link to="/#products" className="text-gray-400 hover:text-white transition-colors">
+                  <Link to={`/${currentLang}#products`} className="text-gray-400 hover:text-white transition-colors">
                     Categorie Prodotti
                   </Link>
                 </li>
                 <li>
-                  <Link to="/#oven-gallery" className="text-gray-400 hover:text-white transition-colors">
+                  <Link to={`/${currentLang}#oven-gallery`} className="text-gray-400 hover:text-white transition-colors">
                     Collezione Forni
                   </Link>
                 </li>
                 <li>
-                  <Link to="/architettoai" className="text-gray-400 hover:text-white transition-colors">
+                  <Link to={`/${currentLang}/architettoai`} className="text-gray-400 hover:text-white transition-colors">
                     Architetto AI
                   </Link>
                 </li>
                 <li>
-                  <Link to="/#vesuviobuono" className="text-gray-400 hover:text-white transition-colors">
+                  <Link to={`/${currentLang}#vesuviobuono`} className="text-gray-400 hover:text-white transition-colors">
                     VesuvioBuono
                   </Link>
                 </li>
                 <li>
-                  <Link to="/#clients-map" className="text-gray-400 hover:text-white transition-colors">
+                  <Link to={`/${currentLang}#clients-map`} className="text-gray-400 hover:text-white transition-colors">
                     Clienti nel Mondo
                   </Link>
                 </li>
@@ -74,7 +75,7 @@ const ArchitettoAI = () => {
               <h4 className="font-semibold mb-4 text-vesuviano-400">Servizi</h4>
               <ul className="space-y-3 text-sm">
                 <li>
-                  <Link to="/#consultation" className="text-gray-400 hover:text-white transition-colors">
+                  <Link to={`/${currentLang}#consultation`} className="text-gray-400 hover:text-white transition-colors">
                     Consulenza Tecnica
                   </Link>
                 </li>
@@ -131,7 +132,7 @@ const ArchitettoAI = () => {
               <div className="flex space-x-6 text-sm">
                 <a href="#" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
                 <a href="#" className="text-gray-400 hover:text-white transition-colors">Termini di Servizio</a>
-                <Link to="/#consultation" className="text-vesuviano-400 hover:text-vesuviano-300 transition-colors font-medium">
+                <Link to={`/${currentLang}#consultation`} className="text-vesuviano-400 hover:text-vesuviano-300 transition-colors font-medium">
                   Contattaci
                 </Link>
               </div>

@@ -21,7 +21,10 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  
+  // Extract current language from location
+  const currentLang = i18n.language;
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -131,7 +134,7 @@ const Index = () => {
             {/* CTA Button */}
             <div className="text-center">
               <Button 
-                onClick={() => navigate('/architettoai')}
+                onClick={() => navigate(`/${currentLang}/architettoai`)}
                 size="lg"
                 className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
@@ -201,7 +204,7 @@ const Index = () => {
               <ul className="space-y-3 text-sm">
                 <li>
                   <a 
-                    href="#products" 
+                    href={`/${currentLang}#products`}
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                     onClick={(e) => handleNavClick(e, 'products')}
                   >
@@ -210,7 +213,7 @@ const Index = () => {
                 </li>
                 <li>
                   <a 
-                    href="#oven-gallery" 
+                    href={`/${currentLang}#oven-gallery`}
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                     onClick={(e) => handleNavClick(e, 'oven-gallery')}
                   >
@@ -219,7 +222,7 @@ const Index = () => {
                 </li>
                 <li>
                   <a 
-                    href="#ai-architect" 
+                    href={`/${currentLang}#ai-architect`}
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                     onClick={(e) => handleNavClick(e, 'ai-architect')}
                   >
@@ -228,7 +231,7 @@ const Index = () => {
                 </li>
                 <li>
                   <a 
-                    href="#ai-architect" 
+                    href={`/${currentLang}#ai-architect`}
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                     onClick={(e) => handleNavClick(e, 'ai-architect')}
                   >
@@ -237,7 +240,7 @@ const Index = () => {
                 </li>
                 <li>
                   <a 
-                    href="#vesuviobuono" 
+                    href={`/${currentLang}#vesuviobuono`}
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                     onClick={(e) => handleNavClick(e, 'vesuviobuono')}
                   >
@@ -246,7 +249,7 @@ const Index = () => {
                 </li>
                 <li>
                   <a 
-                    href="#clients-map" 
+                    href={`/${currentLang}#clients-map`}
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                     onClick={(e) => handleNavClick(e, 'clients-map')}
                   >
@@ -262,7 +265,7 @@ const Index = () => {
               <ul className="space-y-3 text-sm">
                 <li>
                   <a 
-                    href="#consultation" 
+                    href={`/${currentLang}#consultation`}
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                     onClick={(e) => handleNavClick(e, 'consultation')}
                   >
@@ -323,7 +326,7 @@ const Index = () => {
                 <a href="#" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
                 <a href="#" className="text-gray-400 hover:text-white transition-colors">Termini di Servizio</a>
                 <a 
-                  href="#consultation" 
+                  href={`/${currentLang}#consultation`}
                   className="text-vesuviano-400 hover:text-vesuviano-300 transition-colors font-medium cursor-pointer"
                   onClick={(e) => handleNavClick(e, 'consultation')}
                 >

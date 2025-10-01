@@ -9,10 +9,18 @@ import { useState } from 'react';
 import LazyImage from './LazyImage';
 
 const Header = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  
+  // Extract current language from path
+  const getCurrentLang = () => {
+    const match = location.pathname.match(/^\/(it|en|fr|de|es)/);
+    return match ? match[1] : i18n.language;
+  };
+  
+  const currentLang = getCurrentLang();
 
   const navItems = [
     { href: "#products", label: t('header.products') },
@@ -26,10 +34,11 @@ const Header = () => {
 
   const handleNavClick = (href: string) => {
     const sectionId = href.replace('#', '');
+    const homePath = `/${currentLang}`;
     
-    // Se siamo su una pagina diversa dalla home, naviga prima alla home
-    if (location.pathname !== '/') {
-      navigate('/');
+    // Se siamo su una pagina diversa dalla home localizzata, naviga prima alla home
+    if (location.pathname !== homePath) {
+      navigate(homePath);
       // Aspetta che la navigazione sia completa prima di scrollare
       setTimeout(() => {
         scrollToSection(sectionId);
@@ -56,8 +65,9 @@ const Header = () => {
   };
 
   const handleLogoClick = () => {
-    if (location.pathname !== '/') {
-      navigate('/');
+    const homePath = `/${currentLang}`;
+    if (location.pathname !== homePath) {
+      navigate(homePath);
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
