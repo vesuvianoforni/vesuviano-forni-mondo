@@ -15,6 +15,22 @@
     "consultation": "Consultation",
     "contact": "Contactez-nous"
   },
+  "nav": {
+    "home": "Accueil",
+    "products": "Produits",
+    "craftsmanship": "Artisanat",
+    "gallery": "Galerie",
+    "contact": "Contact"
+  },
+  "footer": {
+    "company": "Entreprise",
+    "description": "Excellence artisanale napolitaine qui conquiert le monde. Fours traditionnels et innovants pour toute exigence culinaire professionnelle.",
+    "quickLinks": "Liens Rapides",
+    "contact": "Contact",
+    "address": "Adresse",
+    "phone": "Téléphone",
+    "rights": "Tous droits réservés."
+  },
   "products": {
     "title": "Nos",
     "titleHighlight": "Solutions",
@@ -71,16 +87,283 @@
       "viewGallery": "Voir la Galerie"
     }
   },
+  "clientsMap": {
+    "badge": "Présence Mondiale",
+    "title": "Nos",
+    "titleHighlight": "Clients",
+    "subtitle": "De Naples au monde entier : les fours Vesuviano apportent la saveur authentique de la tradition napolitaine dans tous les coins de la planète."
+  },
+  "rivestimenti": {
+    "badge": "Personnalisation",
+    "title": "Revêtements",
+    "titleHighlight": "Exclusifs",
+    "subtitle": "Choisissez parmi une large gamme de revêtements premium pour personnaliser votre four selon votre style unique.",
+    "options": {
+      "verniciato": "Peint",
+      "mosaicato": "Mosaïque",
+      "mattoni": "Briques Apparentes"
+    },
+    "colors": {
+      "available": "couleurs disponibles",
+      "viewSamples": "Voir les Échantillons"
+    },
+    "process": {
+      "title": "Processus de Personnalisation",
+      "step1": {
+        "title": "Consultation",
+        "description": "Nous vous aidons à choisir"
+      },
+      "step2": {
+        "title": "Conception",
+        "description": "Nous créons le design parfait"
+      },
+      "step3": {
+        "title": "Réalisation",
+        "description": "Nous réalisons votre four"
+      }
+    },
+    "startCustomization": "Commencer la Personnalisation"
+  },
+  "craftsmanship": {
+    "title": "Artisanat",
+    "titleHighlight": "Napolitain",
+    "subtitle": "Chaque four Vesuviano naît des mains expertes de maîtres artisans napolitains, gardiens d'une tradition millénaire qui unit passion, technique et innovation.",
+    "traditionLives": {
+      "title": "Tradition Vivante",
+      "description": "Au cœur de Naples, nos maîtres artisans transmettent de génération en génération les secrets de la fabrication des fours. Chaque pièce est réalisée à la main avec des matériaux sélectionnés et des techniques affinées au fil des siècles.",
+      "features": {
+        "manual": {
+          "title": "Fabrication Entièrement Manuelle",
+          "description": "Chaque détail est soigné par les mains expertes de nos artisans"
+        },
+        "materials": {
+          "title": "Matériaux Traditionnels",
+          "description": "Argile réfractaire et matériaux sélectionnés de la tradition napolitaine"
+        },
+        "expertise": {
+          "title": "Expertise Générationnelle",
+          "description": "Techniques transmises de père en fils depuis plus d'un siècle"
+        }
+      }
+    },
+    "laboratory": {
+      "title": "Notre Laboratoire",
+      "description": "Au cœur de Sant'Anastasia (NA), notre laboratoire artisanal est où les fours Vesuviano prennent vie. Un espace de 2000 m² où tradition et innovation se rencontrent, équipé des équipements les plus modernes mais guidé par les mains expertes de nos maîtres.",
+      "location": "Sant'Anastasia, Naples - Italie"
+    },
+    "stats": {
+      "years": "Années de Tradition",
+      "yearsDescription": "Un siècle d'expérience artisanale napolitaine",
+      "masters": "Maîtres Artisans",
+      "mastersDescription": "Experts sélectionnés pour leur maîtrise",
+      "passion": "Passion Infinie",
+      "passionDescription": "Amour pour l'art qui n'a pas de limites"
+    },
+    "cta": {
+      "title": "Découvrez la Différence de l'Artisanat",
+      "description": "Chaque four raconte une histoire de passion, tradition et maîtrise. Découvrez comment l'artisanat napolitain peut transformer votre expérience culinaire.",
+      "button": "Demander des Informations"
+    }
+  },
+  "services": {
+    "title": "Nos",
+    "titleHighlight": "Services",
+    "subtitle": "Un support complet de la consultation initiale à l'assistance après-vente, pour vous garantir le maximum de succès avec nos fours artisanaux.",
+    "technical": {
+      "title": "Consultation Technique Spécialisée",
+      "description": "Nos experts vous guident dans le choix du four parfait pour vos besoins spécifiques, en tenant compte de l'espace, du volume de production et du type de cuisine.",
+      "features": {
+        "analysis": "Analyse des besoins",
+        "advice": "Conseils personnalisés",
+        "support": "Support dans le choix",
+        "evaluation": "Évaluation technique"
+      }
+    },
+    "design": {
+      "title": "Rendu 3D et Conception",
+      "description": "Visualisez votre four dans le contexte de votre cuisine avant l'achat avec nos rendus photoréalistes 3D.",
+      "features": {
+        "photorealistic": "Rendus photoréalistes",
+        "integration": "Intégration environnementale",
+        "modifications": "Modifications de conception",
+        "preview": "Aperçu réaliste"
+      }
+    },
+    "logistics": {
+      "title": "Logistique Internationale",
+      "description": "Nous gérons complètement l'expédition et l'installation de vos fours dans le monde entier avec une sécurité maximale.",
+      "features": {
+        "worldwide": "Expéditions mondiales",
+        "packaging": "Emballage sécurisé",
+        "tracking": "Suivi complet",
+        "delivery": "Livraison garantie"
+      }
+    },
+    "training": {
+      "title": "Formation et Assistance",
+      "description": "Cours de formation pour utiliser au mieux votre four et assistance après-vente dédiée pour tous les besoins.",
+      "features": {
+        "practical": "Cours pratiques",
+        "technical": "Assistance technique",
+        "maintenance": "Maintenance",
+        "support": "Support continu"
+      }
+    },
+    "cta": {
+      "title": "Besoin d'un support personnalisé?",
+      "description": "Notre équipe est toujours disponible pour vous offrir la meilleure assistance et trouver ensemble la solution idéale pour votre activité.",
+      "button": "Contactez-nous Maintenant"
+    },
+    "logisticsSection": {
+      "title": "Notre",
+      "titleHighlight": "Efficacité Logistique",
+      "subtitle": "Livraisons dans le monde entier, même dans les métropoles les plus complexes comme New York",
+      "caption": "Four Vesuviano en livraison à Manhattan",
+      "description": "Notre logistique spécialisée garantit des livraisons sûres même dans les centres urbains les plus exigeants"
+    }
+  },
+  "vesuvioBuono": {
+    "badges": {
+      "exclusive": "EXCLUSIVITÉ MONDIALE",
+      "patented": "BREVETÉ"
+    },
+    "title": "VesuvioBuono",
+    "subtitle": "Le premier four au monde à bois et combiné gaz/bois qui n'émet pas de suie dans l'atmosphère. Une révolution pour l'environnement et la santé.",
+    "video": {
+      "title": "VesuvioBuono en Action",
+      "description": "Découvrez comment VesuvioBuono révolutionne la cuisson au bois sans émissions"
+    },
+    "gallery": {
+      "action": "Four en Action",
+      "pizza": "Pizza Parfaite",
+      "emissions": "Zéro Émission",
+      "wood": "Four à bois",
+      "purifier": "Épurateur de fumées"
+    },
+    "zeroEmissions": {
+      "title": "Zéro Émission",
+      "patented": {
+        "title": "Technologie Brevetée",
+        "description": "Système de combustion complète qui élimine 99,9% des particules de suie."
+      },
+      "certifications": {
+        "title": "Certifications Environnementales",
+        "description": "Conforme aux normes européennes et internationales les plus strictes sur les émissions."
+      },
+      "dualFuel": {
+        "title": "Double Alimentation",
+        "description": "Fonctionne parfaitement aussi bien au bois qu'avec la combinaison gaz/bois."
+      }
+    },
+    "advantages": {
+      "title": "Avantages Exclusifs",
+      "features": {
+        "installation": "Installation dans n'importe quelle zone urbaine sans restrictions",
+        "maintenance": "Réduction drastique des coûts de maintenance des cheminées",
+        "flavor": "Maintien de la saveur authentique de la cuisson au bois",
+        "environment": "Respect total de l'environnement et de la communauté",
+        "warranty": "Garantie internationale et support technique spécialisé"
+      }
+    },
+    "actions": {
+      "downloadSpec": "Télécharger Fiche Technique",
+      "visitWebsite": "Visiter le Site Web"
+    },
+    "modal": {
+      "title": "Télécharger Fiche Technique",
+      "description": "Remplissez vos données pour télécharger la fiche technique de VesuvioBuono",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "city": "Ville",
+      "phone": "Numéro de téléphone",
+      "cancel": "Annuler",
+      "download": "Télécharger PDF"
+    },
+    "messages": {
+      "fillFields": "Veuillez remplir tous les champs",
+      "downloadComplete": "Téléchargement terminé!",
+      "downloadSuccess": "La fiche technique a été téléchargée avec succès.",
+      "error": "Une erreur s'est produite. Réessayez plus tard."
+    }
+  },
+  "consultation": {
+    "title": "Consultation",
+    "titleHighlight": "Gratuite",
+    "subtitle": "Nos experts sont prêts à vous aider à trouver la solution parfaite pour votre activité",
+    "form": {
+      "fullName": "Nom Complet",
+      "email": "Email",
+      "phone": "Téléphone",
+      "company": "Entreprise/Restaurant",
+      "country": "Pays de Destination",
+      "ovenType": "Type de Four",
+      "capacity": "Capacité Requise",
+      "budget": "Budget Indicatif",
+      "services": "Services Demandés",
+      "message": "Message",
+      "submit": "Envoyer Demande de Consultation Gratuite",
+      "submitting": "Envoi en cours..."
+    },
+    "services": {
+      "identification": "Identification de la meilleure solution",
+      "quotation": "Devis personnalisé",
+      "rendering": "Rendu 3D haute fidélité",
+      "logistics": "Organisation logistique et export"
+    },
+    "ovenTypes": {
+      "woodFixed": "Four à Bois Fixe",
+      "woodRotating": "Four à Bois Rotatif",
+      "gasFixed": "Four à Gaz Fixe",
+      "gasRotating": "Four à Gaz Rotatif",
+      "electricFixed": "Four Électrique Fixe",
+      "electricRotating": "Four Électrique Rotatif",
+      "vesuvioWood": "VesuvioBuono à Bois",
+      "vesuvioCombi": "VesuvioBuono Combiné Gaz/Bois",
+      "unsure": "Je ne suis pas sûr - j'ai besoin de conseils"
+    },
+    "contact": {
+      "title": "Nos Services",
+      "directTitle": "Contacts Directs",
+      "phone": "Téléphone",
+      "phoneNumber": "+39 350 928 6941",
+      "email": "Email",
+      "emailAddress": "info@vesuvianoforni.com",
+      "laboratory": "Laboratoire",
+      "location": "Naples, Italie",
+      "downloadCatalog": "Télécharger Catalogue Complet"
+    },
+    "messages": {
+      "requiredFields": "Champs Obligatoires",
+      "fillRequired": "Le Nom et l'Email sont requis pour envoyer la demande.",
+      "success": "🔥 Demande Envoyée avec Succès!",
+      "successDescription": "Nous vous avons envoyé un email de confirmation. Nous vous contacterons dans les 24 heures pour votre consultation gratuite.",
+      "error": "Erreur d'Envoi",
+      "errorDescription": "Un problème s'est produit. Réessayez ou contactez-nous directement au +39 350 928 6941",
+      "privacy": "Nous vous contacterons dans les 24 heures. Vos données sont protégées et ne seront pas partagées avec des tiers.",
+      "catalogDownloaded": "Catalogue Téléchargé!",
+      "catalogSuccess": "Le catalogue complet a été téléchargé sur votre appareil."
+    }
+  },
+  "gallery": {
+    "title": "Notre",
+    "titleHighlight": "Collection",
+    "subtitle": "Découvrez nos créations uniques pour chaque exigence professionnelle"
+  },
+  "whatsapp": {
+    "tooltip": "Contactez-nous sur WhatsApp",
+    "message": "Bonjour, je voudrais des informations sur vos fours professionnels 🔥"
+  },
   "ovenVisualizer": {
     "badge": "Nouveauté Absolue IA",
-    "title": "Visualisateur de Fours", 
+    "title": "Visualisateur de Fours",
     "subtitle": "Choisissez comment visualiser votre four Vesuviano",
     "aiMode": {
       "title": "Architecte IA",
       "description": "Téléchargez une photo de votre espace et l'IA intégrera de manière photoréaliste le four sélectionné",
       "features": {
         "photorealistic": "Résultat photoréaliste professionnel",
-        "lighting": "Intégration parfaite avec l'éclairage", 
+        "lighting": "Intégration parfaite avec l'éclairage",
         "highRes": "Image téléchargeable haute résolution"
       },
       "uploadTitle": "Téléchargez une photo de votre espace",
@@ -134,7 +417,7 @@
       "defaultMessage": "L'IA crée votre image personnalisée...",
       "steps": {
         "analysis": "Analyse de l'espace",
-        "integration": "Intégration du four", 
+        "integration": "Intégration du four",
         "finalization": "Finalisation de l'image"
       }
     },
@@ -159,7 +442,7 @@
       "formTitle": "Vos données pour le téléchargement",
       "formDescription": "Entrez vos données pour recevoir l'image haute résolution",
       "firstName": "Prénom",
-      "lastName": "Nom", 
+      "lastName": "Nom",
       "email": "Email",
       "city": "Ville",
       "phone": "Téléphone",
@@ -176,7 +459,7 @@
     },
     "arVisualization": {
       "loadingModel": "Chargement du modèle...",
-      "modelNotAvailable": "Modèle non disponible", 
+      "modelNotAvailable": "Modèle non disponible",
       "unsupportedFormat": "Format de fichier non supporté. Supportés : GLB, GLTF, OBJ, FBX"
     },
     "ovenModels": {
