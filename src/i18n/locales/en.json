@@ -335,6 +335,9 @@
       "showLess": "Show less",
       "noSelection": "No oven selected"
     },
+    "cta": {
+      "start": "Start Now"
+    },
     "alerts": {
       "arTechActivated": "AR Technology Activated",
       "arDescription": "Augmented Reality system ready. Position the oven directly in your environment using the device camera.",

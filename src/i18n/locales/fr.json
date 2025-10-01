@@ -105,6 +105,9 @@
       "showLess": "Afficher moins",
       "noSelection": "Aucun four sélectionné"
     },
+    "cta": {
+      "start": "Commencer Maintenant"
+    },
     "alerts": {
       "arTechActivated": "Technologie AR Activée",
       "arDescription": "Système de Réalité Augmentée prêt. Positionnez le four directement dans votre environnement en utilisant la caméra de l'appareil.",

@@ -346,6 +346,9 @@
       "showLess": "Mostrar menos",
       "noSelection": "Ningún horno seleccionado"
     },
+    "cta": {
+      "start": "Empezar Ahora"
+    },
     "alerts": {
       "arTechActivated": "Tecnología AR Activada",
       "arDescription": "Sistema de Realidad Aumentada listo. Posiciona el horno directamente en tu ambiente usando la cámara del dispositivo.",

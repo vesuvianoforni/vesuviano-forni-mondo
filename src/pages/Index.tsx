@@ -1,9 +1,12 @@
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
+import { Button } from "@/components/ui/button";
+import { Wand2, Eye, ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProductCategories from "@/components/ProductCategories";
-import OvenVisualizer from "@/components/OvenVisualizer";
 import CraftsmanshipSection from "@/components/CraftsmanshipSection";
 import Services from "@/components/Services";
 import Rivestimenti from "@/components/Rivestimenti";
@@ -17,6 +20,9 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Index = () => {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
       <OvenDataInitializer />
@@ -29,10 +35,92 @@ const Index = () => {
           <ProductCategories />
         </section>
         
-        <section id="ai-architect" aria-label="Visualizzatore 3D">
-          <ErrorBoundary fallback={<div className="container mx-auto px-6 py-8">Sezione AR temporaneamente non disponibile.</div>}>
-            <OvenVisualizer />
-          </ErrorBoundary>
+        <section id="ai-architect" aria-label="Architetto AI" className="py-16 md:py-24 bg-gradient-to-b from-stone-50 to-stone-100">
+          <div className="max-w-6xl mx-auto px-4 md:px-6">
+            {/* Header */}
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 animate-pulse">
+                <span>{t('ovenVisualizer.badge')}</span>
+                <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
+              </div>
+              
+              <h2 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
+                {t('ovenVisualizer.title')}
+              </h2>
+              <p className="text-xl text-stone-600 max-w-2xl mx-auto mb-12">
+                {t('ovenVisualizer.subtitle')}
+              </p>
+            </div>
+
+            {/* Feature Cards */}
+            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12">
+              {/* AI Mode Preview */}
+              <div className="bg-white rounded-2xl border-2 border-stone-200 p-6 hover:border-blue-300 hover:shadow-lg transition-all duration-300">
+                <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mb-4">
+                  <Wand2 className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-stone-900 mb-2">
+                  {t('ovenVisualizer.aiMode.title')}
+                </h3>
+                <p className="text-stone-600 text-sm mb-4">
+                  {t('ovenVisualizer.aiMode.description')}
+                </p>
+                <div className="space-y-2 text-xs text-stone-500">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                    <span>{t('ovenVisualizer.aiMode.features.photorealistic')}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                    <span>{t('ovenVisualizer.aiMode.features.lighting')}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                    <span>{t('ovenVisualizer.aiMode.features.highRes')}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* AR Mode Preview */}
+              <div className="bg-white rounded-2xl border-2 border-stone-200 p-6 hover:border-emerald-300 hover:shadow-lg transition-all duration-300">
+                <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center mb-4">
+                  <Eye className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-stone-900 mb-2">
+                  {t('ovenVisualizer.arMode.title')}
+                </h3>
+                <p className="text-stone-600 text-sm mb-4">
+                  {t('ovenVisualizer.arMode.description')}
+                </p>
+                <div className="space-y-2 text-xs text-stone-500">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                    <span>{t('ovenVisualizer.arMode.features.interactive')}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                    <span>{t('ovenVisualizer.arMode.features.realtime')}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                    <span>{t('ovenVisualizer.arMode.features.compatible')}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <div className="text-center">
+              <Button 
+                onClick={() => navigate('/architettoai')}
+                size="lg"
+                className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+                {t('ovenVisualizer.cta.start')}
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </div>
+          </div>
         </section>
         
         <section id="craftsmanship" aria-label="Artigianato napoletano">

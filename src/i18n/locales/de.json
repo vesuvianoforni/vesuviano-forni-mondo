@@ -346,6 +346,9 @@
       "showLess": "Weniger anzeigen",
       "noSelection": "Kein Ofen ausgewählt"
     },
+    "cta": {
+      "start": "Jetzt Starten"
+    },
     "alerts": {
       "arTechActivated": "AR-Technologie aktiviert",
       "arDescription": "Augmented-Reality-System bereit. Positionieren Sie den Ofen direkt in Ihrer Umgebung mit der Gerätekamera.",

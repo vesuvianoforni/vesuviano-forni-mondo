@@ -367,6 +367,9 @@
       "showLess": "Mostra meno",
       "noSelection": "Nessun forno selezionato"
     },
+    "cta": {
+      "start": "Inizia Ora"
+    },
     "alerts": {
       "arTechActivated": "Tecnologia AR Attivata",
       "arDescription": "Sistema di Realtà Aumentata pronto. Posiziona il forno direttamente nel tuo ambiente usando la fotocamera del dispositivo.",
