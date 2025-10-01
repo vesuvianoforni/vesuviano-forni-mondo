@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import OvenVisualizer from '@/components/OvenVisualizer';
 import WhatsAppButton from '@/components/WhatsAppButton';
@@ -25,11 +26,11 @@ const ArchitettoAI = () => {
             <div>
               <h3 className="text-xl font-bold text-white mb-4">{t('footer.quickLinks')}</h3>
               <ul className="space-y-2 text-sm">
-                <li><a href="/" className="hover:text-white transition-colors">{t('nav.home')}</a></li>
-                <li><a href="/#products" className="hover:text-white transition-colors">{t('nav.products')}</a></li>
-                <li><a href="/#craftsmanship" className="hover:text-white transition-colors">{t('nav.craftsmanship')}</a></li>
-                <li><a href="/#gallery" className="hover:text-white transition-colors">{t('nav.gallery')}</a></li>
-                <li><a href="/#contact" className="hover:text-white transition-colors">{t('nav.contact')}</a></li>
+                <li><Link to="/" className="hover:text-white transition-colors">{t('nav.home')}</Link></li>
+                <li><Link to="/#products" className="hover:text-white transition-colors">{t('nav.products')}</Link></li>
+                <li><Link to="/#craftsmanship" className="hover:text-white transition-colors">{t('nav.craftsmanship')}</Link></li>
+                <li><Link to="/#gallery" className="hover:text-white transition-colors">{t('nav.gallery')}</Link></li>
+                <li><Link to="/#contact" className="hover:text-white transition-colors">{t('nav.contact')}</Link></li>
               </ul>
             </div>
             <div>

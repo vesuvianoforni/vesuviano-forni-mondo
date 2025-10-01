@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useLocation } from 'react-router-dom';
 import LanguageSelector from './LanguageSelector';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
@@ -9,6 +10,8 @@ import LazyImage from './LazyImage';
 
 const Header = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
@@ -22,8 +25,42 @@ const Header = () => {
   ];
 
   const handleNavClick = (href: string) => {
-    document.getElementById(href.replace('#', ''))?.scrollIntoView({ behavior: 'smooth' });
+    const sectionId = href.replace('#', '');
+    
+    // Se siamo su una pagina diversa dalla home, naviga prima alla home
+    if (location.pathname !== '/') {
+      navigate('/');
+      // Aspetta che la navigazione sia completa prima di scrollare
+      setTimeout(() => {
+        scrollToSection(sectionId);
+      }, 100);
+    } else {
+      scrollToSection(sectionId);
+    }
+    
     setIsOpen(false);
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const headerOffset = 80; // Altezza header fisso
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const handleLogoClick = () => {
+    if (location.pathname !== '/') {
+      navigate('/');
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -31,7 +68,7 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <div className="flex items-center cursor-pointer" onClick={handleLogoClick}>
             <LazyImage 
               src="/lovable-uploads/255a7344-f5ab-411b-8b37-6ed61e01d472.png" 
               alt="Vesuviano - Forni artigianali napoletani, produttori di forni a legna e a zero emissioni" 

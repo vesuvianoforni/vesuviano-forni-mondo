@@ -23,6 +23,25 @@ const Index = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const headerOffset = 80; // Altezza header fisso
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    e.preventDefault();
+    scrollToSection(sectionId);
+  };
+
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
       <OvenDataInitializer />
@@ -184,10 +203,7 @@ const Index = () => {
                   <a 
                     href="#products" 
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
+                    onClick={(e) => handleNavClick(e, 'products')}
                   >
                     Categorie Prodotti
                   </a>
@@ -196,10 +212,7 @@ const Index = () => {
                   <a 
                     href="#oven-gallery" 
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.getElementById('oven-gallery')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
+                    onClick={(e) => handleNavClick(e, 'oven-gallery')}
                   >
                     Collezione Forni
                   </a>
@@ -208,10 +221,7 @@ const Index = () => {
                   <a 
                     href="#ai-architect" 
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.getElementById('ai-architect')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
+                    onClick={(e) => handleNavClick(e, 'ai-architect')}
                   >
                     Architetto AI
                   </a>
@@ -220,10 +230,7 @@ const Index = () => {
                   <a 
                     href="#ai-architect" 
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.getElementById('ai-architect')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
+                    onClick={(e) => handleNavClick(e, 'ai-architect')}
                   >
                     Realtà Aumentata
                   </a>
@@ -232,10 +239,7 @@ const Index = () => {
                   <a 
                     href="#vesuviobuono" 
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.getElementById('vesuviobuono')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
+                    onClick={(e) => handleNavClick(e, 'vesuviobuono')}
                   >
                     VesuvioBuono
                   </a>
@@ -244,10 +248,7 @@ const Index = () => {
                   <a 
                     href="#clients-map" 
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.getElementById('clients-map')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
+                    onClick={(e) => handleNavClick(e, 'clients-map')}
                   >
                     Clienti nel Mondo
                   </a>
@@ -263,10 +264,7 @@ const Index = () => {
                   <a 
                     href="#consultation" 
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
+                    onClick={(e) => handleNavClick(e, 'consultation')}
                   >
                     Consulenza Tecnica
                   </a>
@@ -327,10 +325,7 @@ const Index = () => {
                 <a 
                   href="#consultation" 
                   className="text-vesuviano-400 hover:text-vesuviano-300 transition-colors font-medium cursor-pointer"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={(e) => handleNavClick(e, 'consultation')}
                 >
                   Contattaci
                 </a>
