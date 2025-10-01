@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LocalizedIndex from "./pages/LocalizedIndex";
 import LocalizedArchitettoAI from "./pages/LocalizedArchitettoAI";
 import LanguageRedirect from "./pages/LanguageRedirect";
+import ArchitettoAIRedirect from "./pages/ArchitettoAIRedirect";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LanguageRedirect />} />
+            <Route path="/architettoai" element={<ArchitettoAIRedirect />} />
             
             {/* Italian Routes */}
             <Route path="/it" element={<LocalizedIndex lang="it" />} />
