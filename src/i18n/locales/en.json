@@ -495,6 +495,17 @@
       "preview": "Space preview"
     }
   },
+  "thankYou": {
+    "title": "Thank You for Your Request!",
+    "subtitle": "We have received your free consultation request and sent you a confirmation email.",
+    "nextSteps": "What happens next:",
+    "step1": "You will receive a confirmation email at the address provided",
+    "step2": "One of our experts will contact you within 24 business hours",
+    "step3": "We will discuss together the perfect solution for your needs",
+    "phone": "Phone",
+    "email": "Email",
+    "backHome": "Back to Home"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

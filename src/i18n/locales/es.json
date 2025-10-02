@@ -438,6 +438,17 @@
       "preview": "Vista previa del espacio"
     }
   },
+  "thankYou": {
+    "title": "¡Gracias por Tu Solicitud!",
+    "subtitle": "Hemos recibido tu solicitud de consulta gratuita y te hemos enviado un email de confirmación.",
+    "nextSteps": "Qué sucede ahora:",
+    "step1": "Recibirás un email de confirmación en la dirección proporcionada",
+    "step2": "Uno de nuestros expertos te contactará dentro de 24 horas laborables",
+    "step3": "Discutiremos juntos la solución perfecta para tus necesidades",
+    "phone": "Teléfono",
+    "email": "Email",
+    "backHome": "Volver al Inicio"
+  },
   "common": {
     "loading": "Cargando...",
     "error": "Error",

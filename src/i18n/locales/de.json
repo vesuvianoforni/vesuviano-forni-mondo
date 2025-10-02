@@ -438,6 +438,17 @@
       "preview": "Raumvorschau"
     }
   },
+  "thankYou": {
+    "title": "Vielen Dank für Ihre Anfrage!",
+    "subtitle": "Wir haben Ihre Anfrage für eine kostenlose Beratung erhalten und Ihnen eine Bestätigungs-E-Mail gesendet.",
+    "nextSteps": "Was passiert als Nächstes:",
+    "step1": "Sie erhalten eine Bestätigungs-E-Mail an die angegebene Adresse",
+    "step2": "Einer unserer Experten wird Sie innerhalb von 24 Werktagen kontaktieren",
+    "step3": "Wir werden gemeinsam die perfekte Lösung für Ihre Bedürfnisse besprechen",
+    "phone": "Telefon",
+    "email": "E-Mail",
+    "backHome": "Zurück zur Startseite"
+  },
   "common": {
     "loading": "Wird geladen...",
     "error": "Fehler",

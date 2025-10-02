@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,6 +14,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 const ConsultationForm = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { i18n } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -72,24 +76,17 @@ const ConsultationForm = () => {
 
       console.log("Risposta email service:", data);
       
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        company: "",
-        country: "",
-        ovenType: "",
-        capacity: "",
-        budget: "",
-        message: "",
-        services: []
-      });
-
-      toast({
-        title: "🔥 Richiesta Inviata con Successo!",
-        description: "Ti abbiamo inviato una email di conferma. Ti contatteremo entro 24 ore per la tua consulenza gratuita.",
-      });
+      // Redirect to thank you page based on current language
+      const currentLang = i18n.language || 'it';
+      const thankYouRoutes: Record<string, string> = {
+        'it': '/it/grazie',
+        'en': '/en/thank-you',
+        'fr': '/fr/merci',
+        'es': '/es/gracias',
+        'de': '/de/danke'
+      };
+      
+      navigate(thankYouRoutes[currentLang] || '/it/grazie');
 
     } catch (error) {
       console.error("Errore invio consulenza:", error);
