@@ -76,17 +76,8 @@ const ConsultationForm = () => {
 
       console.log("Risposta email service:", data);
       
-      // Redirect to thank you page based on current language
-      const currentLang = i18n.language || 'it';
-      const thankYouRoutes: Record<string, string> = {
-        'it': '/it/grazie',
-        'en': '/en/thank-you',
-        'fr': '/fr/merci',
-        'es': '/es/gracias',
-        'de': '/de/danke'
-      };
-      
-      navigate(thankYouRoutes[currentLang] || '/it/grazie');
+      // Redirect to single thank you page for GTM tracking
+      navigate('/grazie');
 
     } catch (error) {
       console.error("Errore invio consulenza:", error);
