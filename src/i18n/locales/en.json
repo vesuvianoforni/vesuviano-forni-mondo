@@ -218,14 +218,16 @@
       "description": "Discover how VesuvioBuono revolutionizes wood-fired cooking without emissions"
     },
     "gallery": {
-      "action": "Oven in Action",
-      "pizza": "Perfect Pizza",
-      "emissions": "Zero Emissions",
-      "wood": "Wood-fired oven",
-      "purifier": "Smoke purifier"
+      "ovenInAction": "Oven in Action",
+      "perfectPizza": "Perfect Pizza",
+      "zeroEmissions": "Zero Emissions",
+      "woodOven": "Wood-fired oven",
+      "smokePurifier": "Smoke purifier"
     },
-    "zeroEmissions": {
-      "title": "Zero Emissions",
+    "features": {
+      "zeroEmissions": {
+        "title": "Zero Emissions"
+      },
       "patented": {
         "title": "Patented Technology",
         "description": "Complete combustion system that eliminates 99.9% of soot particles."
@@ -239,20 +241,19 @@
         "description": "Works perfectly with both wood and gas/wood combination."
       }
     },
+    "videoTitle": "VesuvioBuono in Action",
+    "videoDescription": "Discover how VesuvioBuono revolutionizes wood-fired cooking without emissions",
     "advantages": {
       "title": "Exclusive Advantages",
-      "features": {
-        "installation": "Installation in any urban area without restrictions",
-        "maintenance": "Drastic reduction in chimney maintenance costs",
-        "flavor": "Maintaining the authentic flavor of wood-fired cooking",
-        "environment": "Total respect for the environment and community",
-        "warranty": "International warranty and specialized technical support"
-      }
+      "list": [
+        "Installation in any urban area without restrictions",
+        "Drastic reduction in chimney maintenance costs",
+        "Maintaining the authentic flavor of wood-fired cooking",
+        "Total respect for the environment and community",
+        "International warranty and specialized technical support"
+      ]
     },
-    "actions": {
-      "downloadSpec": "Download Spec Sheet",
-      "visitWebsite": "Visit Website"
-    },
+    "downloadSheet": "Download Spec Sheet",
     "modal": {
       "title": "Download Spec Sheet",
       "description": "Fill in your details to download the VesuvioBuono spec sheet",
@@ -264,12 +265,11 @@
       "cancel": "Cancel",
       "download": "Download PDF"
     },
-    "messages": {
-      "fillFields": "Please fill in all fields",
-      "downloadComplete": "Download completed!",
-      "downloadSuccess": "The spec sheet has been downloaded successfully.",
-      "error": "An error occurred. Please try again later."
-    }
+    "fillAllFields": "Please fill in all fields",
+    "downloadComplete": "Download completed!",
+    "downloadCompleteDesc": "The spec sheet has been downloaded successfully.",
+    "error": "Error",
+    "errorDesc": "An error occurred. Please try again later."
   },
   "consultation": {
     "title": "Free",

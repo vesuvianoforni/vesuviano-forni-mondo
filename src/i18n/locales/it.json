@@ -218,41 +218,40 @@
       "description": "Scopri come VesuvioBuono rivoluziona la cottura a legna senza emissioni"
     },
     "gallery": {
-      "action": "Forno in Azione",
-      "pizza": "Pizza Perfetta",
-      "emissions": "Zero Emissioni",
-      "wood": "Forno a legna",
-      "purifier": "Depuratore fumi"
+      "ovenInAction": "Forno in Azione",
+      "perfectPizza": "Pizza Perfetta",
+      "zeroEmissions": "Zero Emissioni",
+      "woodOven": "Forno a legna",
+      "smokePurifier": "Depuratore fumi"
     },
-    "zeroEmissions": {
-      "title": "Zero Emissioni",
+    "features": {
+      "zeroEmissions": {
+        "title": "Zero Emissioni"
+      },
       "patented": {
         "title": "Tecnologia Brevettata",
-        "description": "Sistema di combustione completa che elimina il 99.9% delle particelle di fuliggine."
+        "description": "Sistema di combustione completa che elimina il 99,9% delle particelle di fuliggine."
       },
       "certifications": {
         "title": "Certificazioni Ambientali",
-        "description": "Conforme alle più severe normative europee e internazionali sulle emissioni."
+        "description": "Conforme ai più rigidi standard europei e internazionali sulle emissioni."
       },
       "dualFuel": {
         "title": "Doppia Alimentazione",
-        "description": "Funziona perfettamente sia a legna che con la combinazione gas/legna."
+        "description": "Funziona perfettamente sia a legna che in combinazione gas/legna."
       }
     },
     "advantages": {
       "title": "Vantaggi Esclusivi",
-      "features": {
-        "installation": "Installazione in qualsiasi zona urbana senza restrizioni",
-        "maintenance": "Riduzione drastica dei costi di manutenzione camini",
-        "flavor": "Mantenimento del sapore autentico della cottura a legna",
-        "environment": "Rispetto totale dell'ambiente e della comunità",
-        "warranty": "Garanzia internazionale e supporto tecnico specializzato"
-      }
+      "list": [
+        "Installazione in qualsiasi area urbana senza vincoli",
+        "Drastica riduzione dei costi di manutenzione della canna fumaria",
+        "Mantenimento del sapore autentico della cottura a legna",
+        "Rispetto totale per l'ambiente e la comunità",
+        "Garanzia internazionale e supporto tecnico specializzato"
+      ]
     },
-    "actions": {
-      "downloadSpec": "Scarica Scheda Tecnica",
-      "visitWebsite": "Visita il Sito Web"
-    },
+    "downloadSheet": "Scarica Scheda Tecnica",
     "modal": {
       "title": "Scarica Scheda Tecnica",
       "description": "Compila i tuoi dati per scaricare la scheda tecnica di VesuvioBuono",
@@ -264,12 +263,11 @@
       "cancel": "Annulla",
       "download": "Scarica PDF"
     },
-    "messages": {
-      "fillFields": "Per favore compila tutti i campi",
-      "downloadComplete": "Download completato!",
-      "downloadSuccess": "La scheda tecnica è stata scaricata con successo.",
-      "error": "Si è verificato un errore. Riprova più tardi."
-    }
+    "fillAllFields": "Si prega di compilare tutti i campi",
+    "downloadComplete": "Download completato!",
+    "downloadCompleteDesc": "La scheda tecnica è stata scaricata con successo.",
+    "error": "Errore",
+    "errorDesc": "Si è verificato un errore. Riprova più tardi."
   },
   "consultation": {
     "title": "Consulenza",
