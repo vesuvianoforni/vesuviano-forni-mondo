@@ -272,20 +272,36 @@
     "errorDesc": "An error occurred. Please try again later."
   },
   "consultation": {
+    "badge": "Free Consultation",
     "title": "Free",
     "titleHighlight": "Consultation",
     "subtitle": "Our experts are ready to help you find the perfect solution for your business",
+    "header": {
+      "title": "Start Your Project",
+      "subtitle": "Our experts will guide you in choosing the perfect solution, from design to international shipping."
+    },
     "form": {
+      "title": "Consultation Request",
       "fullName": "Full Name",
+      "fullNamePlaceholder": "Your name",
       "email": "Email",
+      "emailPlaceholder": "your-email@example.com",
       "phone": "Phone",
+      "phonePlaceholder": "+39 123 456 7890",
       "company": "Company/Restaurant",
+      "companyPlaceholder": "Your business name",
       "country": "Destination Country",
+      "countryPlaceholder": "E.g. France, Germany, USA...",
       "ovenType": "Oven Type",
+      "ovenTypePlaceholder": "Select type",
       "capacity": "Required Capacity",
+      "capacityPlaceholder": "E.g. 100 pizzas/hour, 50 cm diameter...",
       "budget": "Indicative Budget",
+      "budgetPlaceholder": "E.g. €5,000 - €15,000",
       "services": "Required Services",
+      "servicesLabel": "Required Services:",
       "message": "Message",
+      "messagePlaceholder": "Describe your project, specific needs or any questions...",
       "submit": "Send Free Consultation Request",
       "submitting": "Sending..."
     },

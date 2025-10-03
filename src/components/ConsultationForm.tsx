@@ -15,7 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 const ConsultationForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -31,22 +31,22 @@ const ConsultationForm = () => {
   });
 
   const services = [
-    { id: "identification", label: "Identificazione migliore soluzione" },
-    { id: "quotation", label: "Quotazione personalizzata" },
-    { id: "rendering", label: "Rendering 3D alta fedeltà" },
-    { id: "logistics", label: "Organizzazione logistica e export" }
+    { id: "identification", label: t('consultation.services.identification') },
+    { id: "quotation", label: t('consultation.services.quotation') },
+    { id: "rendering", label: t('consultation.services.rendering') },
+    { id: "logistics", label: t('consultation.services.logistics') }
   ];
 
   const ovenTypes = [
-    "Forno a Legna Fisso",
-    "Forno a Legna Rotante", 
-    "Forno a Gas Fisso",
-    "Forno a Gas Rotante",
-    "Forno Elettrico Fisso",
-    "Forno Elettrico Rotante",
-    "VesuvioBuono a Legna",
-    "VesuvioBuono Combinato Gas/Legna",
-    "Non sono sicuro - necessito consulenza"
+    t('consultation.ovenTypes.woodFixed'),
+    t('consultation.ovenTypes.woodRotating'),
+    t('consultation.ovenTypes.gasFixed'),
+    t('consultation.ovenTypes.gasRotating'),
+    t('consultation.ovenTypes.electricFixed'),
+    t('consultation.ovenTypes.electricRotating'),
+    t('consultation.ovenTypes.vesuvioWood'),
+    t('consultation.ovenTypes.vesuvioCombi'),
+    t('consultation.ovenTypes.unsure')
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,8 +54,8 @@ const ConsultationForm = () => {
     
     if (!formData.name || !formData.email) {
       toast({
-        title: "Campi Obbligatori",
-        description: "Nome e Email sono richiesti per inviare la richiesta.",
+        title: t('consultation.messages.requiredFields'),
+        description: t('consultation.messages.fillRequired'),
         variant: "destructive",
       });
       return;
@@ -91,8 +91,8 @@ const ConsultationForm = () => {
     } catch (error) {
       console.error("Errore invio consulenza:", error);
       toast({
-        title: "Errore nell'Invio",
-        description: "Si è verificato un problema. Riprova o contattaci direttamente al +39 350 928 6941",
+        title: t('consultation.messages.error'),
+        description: t('consultation.messages.errorDescription'),
         variant: "destructive",
       });
     } finally {
@@ -103,8 +103,8 @@ const ConsultationForm = () => {
   const downloadCatalog = () => {
     console.log("Downloading catalog...");
     toast({
-      title: "Catalogo Scaricato!",
-      description: "Il catalogo completo è stato scaricato sul tuo dispositivo.",
+      title: t('consultation.messages.catalogDownloaded'),
+      description: t('consultation.messages.catalogSuccess'),
     });
   };
 
@@ -125,14 +125,13 @@ const ConsultationForm = () => {
           <div className="text-center mb-12 md:mb-16">
             <Badge className="bg-green-100 text-green-800 px-4 py-2 text-base md:text-lg font-semibold mb-4">
               <CheckCircle className="mr-2" size={20} />
-              CONSULENZA GRATUITA
+              {t('consultation.badge').toUpperCase()}
             </Badge>
             <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 md:mb-6">
-              Inizia il Tuo Progetto
+              {t('consultation.header.title')}
             </h2>
             <p className="font-inter text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-              I nostri esperti ti guideranno nella scelta della soluzione perfetta, 
-              dalla progettazione al trasporto internazionale.
+              {t('consultation.header.subtitle')}
             </p>
           </div>
 
@@ -141,31 +140,31 @@ const ConsultationForm = () => {
             <div className="order-1 lg:order-2 lg:col-span-2">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-playfair text-xl md:text-2xl">Richiesta Consulenza</CardTitle>
+                  <CardTitle className="font-playfair text-xl md:text-2xl">{t('consultation.form.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                     {/* Basic Info */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                       <div>
-                        <label className="block text-sm font-medium mb-2">Nome Completo *</label>
+                        <label className="block text-sm font-medium mb-2">{t('consultation.form.fullName')}</label>
                         <Input
                           type="text"
                           value={formData.name}
                           onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                           required
-                          placeholder="Il tuo nome"
+                          placeholder={t('consultation.form.fullNamePlaceholder')}
                           className="w-full"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-2">Email *</label>
+                        <label className="block text-sm font-medium mb-2">{t('consultation.form.email')}</label>
                         <Input
                           type="email"
                           value={formData.email}
                           onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                           required
-                          placeholder="la-tua-email@esempio.com"
+                          placeholder={t('consultation.form.emailPlaceholder')}
                           className="w-full"
                         />
                       </div>
@@ -173,22 +172,22 @@ const ConsultationForm = () => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                       <div>
-                        <label className="block text-sm font-medium mb-2">Telefono</label>
+                        <label className="block text-sm font-medium mb-2">{t('consultation.form.phone')}</label>
                         <Input
                           type="tel"
                           value={formData.phone}
                           onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                          placeholder="+39 123 456 7890"
+                          placeholder={t('consultation.form.phonePlaceholder')}
                           className="w-full"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-2">Azienda/Ristorante</label>
+                        <label className="block text-sm font-medium mb-2">{t('consultation.form.company')}</label>
                         <Input
                           type="text"
                           value={formData.company}
                           onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
-                          placeholder="Nome della tua attività"
+                          placeholder={t('consultation.form.companyPlaceholder')}
                           className="w-full"
                         />
                       </div>
@@ -196,20 +195,20 @@ const ConsultationForm = () => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                       <div>
-                        <label className="block text-sm font-medium mb-2">Paese di Destinazione</label>
+                        <label className="block text-sm font-medium mb-2">{t('consultation.form.country')}</label>
                         <Input
                           type="text"
                           value={formData.country}
                           onChange={(e) => setFormData(prev => ({ ...prev, country: e.target.value }))}
-                          placeholder="Es. Francia, Germania, USA..."
+                          placeholder={t('consultation.form.countryPlaceholder')}
                           className="w-full"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-2">Tipo di Forno</label>
+                        <label className="block text-sm font-medium mb-2">{t('consultation.form.ovenType')}</label>
                         <Select onValueChange={(value) => setFormData(prev => ({ ...prev, ovenType: value }))}>
                           <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Seleziona il tipo" />
+                            <SelectValue placeholder={t('consultation.form.ovenTypePlaceholder')} />
                           </SelectTrigger>
                           <SelectContent>
                             {ovenTypes.map((type) => (
@@ -222,22 +221,22 @@ const ConsultationForm = () => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                       <div>
-                        <label className="block text-sm font-medium mb-2">Capacità Richiesta</label>
+                        <label className="block text-sm font-medium mb-2">{t('consultation.form.capacity')}</label>
                         <Input
                           type="text"
                           value={formData.capacity}
                           onChange={(e) => setFormData(prev => ({ ...prev, capacity: e.target.value }))}
-                          placeholder="Es. 100 pizze/ora, 50 cm diametro..."
+                          placeholder={t('consultation.form.capacityPlaceholder')}
                           className="w-full"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-2">Budget Orientativo</label>
+                        <label className="block text-sm font-medium mb-2">{t('consultation.form.budget')}</label>
                         <Input
                           type="text"
                           value={formData.budget}
                           onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
-                          placeholder="Es. €5.000 - €15.000"
+                          placeholder={t('consultation.form.budgetPlaceholder')}
                           className="w-full"
                         />
                       </div>
@@ -245,7 +244,7 @@ const ConsultationForm = () => {
 
                     {/* Services */}
                     <div>
-                      <label className="block text-sm font-medium mb-3 md:mb-4">Servizi Richiesti:</label>
+                      <label className="block text-sm font-medium mb-3 md:mb-4">{t('consultation.form.servicesLabel')}</label>
                       <div className="grid grid-cols-1 gap-3">
                         {services.map((service) => (
                           <div key={service.id} className="flex items-start space-x-3">
@@ -265,11 +264,11 @@ const ConsultationForm = () => {
 
                     {/* Message */}
                     <div>
-                      <label className="block text-sm font-medium mb-2">Messaggio</label>
+                      <label className="block text-sm font-medium mb-2">{t('consultation.form.message')}</label>
                       <Textarea
                         value={formData.message}
                         onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
-                        placeholder="Descrivici il tuo progetto, le tue esigenze specifiche o qualsiasi domanda..."
+                        placeholder={t('consultation.form.messagePlaceholder')}
                         rows={4}
                         className="w-full resize-none"
                       />
@@ -284,15 +283,15 @@ const ConsultationForm = () => {
                       {isSubmitting ? (
                         <>
                           <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                          Invio in corso...
+                          {t('consultation.form.submitting')}
                         </>
                       ) : (
-                        "Invia Richiesta Consulenza Gratuita"
+                        t('consultation.form.submit')
                       )}
                     </Button>
 
                     <p className="text-xs text-gray-500 text-center leading-relaxed">
-                      Ti contatteremo entro 24 ore. I tuoi dati sono protetti e non saranno condivisi con terzi.
+                      {t('consultation.messages.privacy')}
                     </p>
                   </form>
                 </CardContent>
@@ -303,7 +302,7 @@ const ConsultationForm = () => {
             <div className="order-2 lg:order-1 lg:col-span-1 space-y-4 md:space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-playfair text-xl md:text-2xl">I Nostri Servizi</CardTitle>
+                  <CardTitle className="font-playfair text-xl md:text-2xl">{t('consultation.contact.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 md:space-y-4">
                   {services.map((service) => (
@@ -317,28 +316,28 @@ const ConsultationForm = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-playfair text-xl md:text-2xl">Contatti Diretti</CardTitle>
+                  <CardTitle className="font-playfair text-xl md:text-2xl">{t('consultation.contact.directTitle')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 md:space-y-5">
                   <div className="flex items-start space-x-3">
                     <Phone className="text-vesuviano-600 flex-shrink-0 mt-0.5" size={20} />
                     <div className="min-w-0 flex-1">
-                      <p className="font-semibold text-sm md:text-base">Telefono</p>
-                      <p className="text-sm text-gray-600">+39 350 928 6941</p>
+                      <p className="font-semibold text-sm md:text-base">{t('consultation.contact.phone')}</p>
+                      <p className="text-sm text-gray-600">{t('consultation.contact.phoneNumber')}</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <Mail className="text-vesuviano-600 flex-shrink-0 mt-0.5" size={20} />
                     <div className="min-w-0 flex-1">
-                      <p className="font-semibold text-sm md:text-base">Email</p>
-                      <p className="text-sm text-gray-600 break-all">info@vesuvianoforni.com</p>
+                      <p className="font-semibold text-sm md:text-base">{t('consultation.contact.email')}</p>
+                      <p className="text-sm text-gray-600 break-all">{t('consultation.contact.emailAddress')}</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <MapPin className="text-vesuviano-600 flex-shrink-0 mt-0.5" size={20} />
                     <div className="min-w-0 flex-1">
-                      <p className="font-semibold text-sm md:text-base">Laboratorio</p>
-                      <p className="text-sm text-gray-600">Napoli, Italia</p>
+                      <p className="font-semibold text-sm md:text-base">{t('consultation.contact.laboratory')}</p>
+                      <p className="text-sm text-gray-600">{t('consultation.contact.location')}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -349,7 +348,7 @@ const ConsultationForm = () => {
                 className="w-full bg-fire-600 hover:bg-fire-700 text-white text-sm md:text-base h-auto py-3"
               >
                 <Download className="mr-2 flex-shrink-0" size={20} />
-                Scarica Catalogo Completo
+                {t('consultation.contact.downloadCatalog')}
               </Button>
             </div>
           </div>

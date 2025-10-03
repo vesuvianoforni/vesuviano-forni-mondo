@@ -270,20 +270,36 @@
     "errorDesc": "Si è verificato un errore. Riprova più tardi."
   },
   "consultation": {
+    "badge": "Consulenza Gratuita",
     "title": "Consulenza",
     "titleHighlight": "Gratuita",
     "subtitle": "I nostri esperti sono pronti ad aiutarti a trovare la soluzione perfetta per la tua attività",
+    "header": {
+      "title": "Inizia il Tuo Progetto",
+      "subtitle": "I nostri esperti ti guideranno nella scelta della soluzione perfetta, dalla progettazione al trasporto internazionale."
+    },
     "form": {
+      "title": "Richiesta Consulenza",
       "fullName": "Nome Completo",
+      "fullNamePlaceholder": "Il tuo nome",
       "email": "Email",
-      "phone": "Telefono",  
+      "emailPlaceholder": "la-tua-email@esempio.com",
+      "phone": "Telefono",
+      "phonePlaceholder": "+39 123 456 7890",
       "company": "Azienda/Ristorante",
+      "companyPlaceholder": "Nome della tua attività",
       "country": "Paese di Destinazione",
+      "countryPlaceholder": "Es. Francia, Germania, USA...",
       "ovenType": "Tipo di Forno",
+      "ovenTypePlaceholder": "Seleziona il tipo",
       "capacity": "Capacità Richiesta",
+      "capacityPlaceholder": "Es. 100 pizze/ora, 50 cm diametro...",
       "budget": "Budget Orientativo",
+      "budgetPlaceholder": "Es. €5.000 - €15.000",
       "services": "Servizi Richiesti",
+      "servicesLabel": "Servizi Richiesti:",
       "message": "Messaggio",
+      "messagePlaceholder": "Descrivici il tuo progetto, le tue esigenze specifiche o qualsiasi domanda...",
       "submit": "Invia Richiesta Consulenza Gratuita",
       "submitting": "Invio in corso..."
     },
