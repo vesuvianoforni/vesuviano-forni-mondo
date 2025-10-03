@@ -79,14 +79,14 @@ const ConsultationForm = () => {
       // Redirect to thank you page based on current language
       const currentLang = i18n.language || 'it';
       const thankYouRoutes: Record<string, string> = {
-        'it': '/it/grazie',
-        'en': '/en/thank-you',
-        'fr': '/fr/merci',
-        'es': '/es/gracias',
-        'de': '/de/danke'
+        'it': '/it/thank-you-it',
+        'en': '/en/thank-you-en',
+        'fr': '/fr/thank-you-fr',
+        'es': '/es/thank-you-es',
+        'de': '/de/thank-you-de'
       };
       
-      navigate(thankYouRoutes[currentLang] || '/it/grazie');
+      navigate(thankYouRoutes[currentLang] || '/it/thank-you-it');
 
     } catch (error) {
       console.error("Errore invio consulenza:", error);

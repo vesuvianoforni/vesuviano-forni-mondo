@@ -27,27 +27,27 @@ const App = () => {
             {/* Italian Routes */}
             <Route path="/it" element={<LocalizedIndex lang="it" />} />
             <Route path="/it/architettoai" element={<LocalizedArchitettoAI lang="it" />} />
-            <Route path="/it/grazie" element={<ThankYou lang="it" />} />
+            <Route path="/it/thank-you-it" element={<ThankYou lang="it" />} />
             
             {/* English Routes */}
             <Route path="/en" element={<LocalizedIndex lang="en" />} />
             <Route path="/en/architettoai" element={<LocalizedArchitettoAI lang="en" />} />
-            <Route path="/en/thank-you" element={<ThankYou lang="en" />} />
+            <Route path="/en/thank-you-en" element={<ThankYou lang="en" />} />
             
             {/* French Routes */}
             <Route path="/fr" element={<LocalizedIndex lang="fr" />} />
             <Route path="/fr/architettoai" element={<LocalizedArchitettoAI lang="fr" />} />
-            <Route path="/fr/merci" element={<ThankYou lang="fr" />} />
+            <Route path="/fr/thank-you-fr" element={<ThankYou lang="fr" />} />
             
             {/* Spanish Routes */}
             <Route path="/es" element={<LocalizedIndex lang="es" />} />
             <Route path="/es/architettoai" element={<LocalizedArchitettoAI lang="es" />} />
-            <Route path="/es/gracias" element={<ThankYou lang="es" />} />
+            <Route path="/es/thank-you-es" element={<ThankYou lang="es" />} />
             
             {/* German Routes */}
             <Route path="/de" element={<LocalizedIndex lang="de" />} />
             <Route path="/de/architettoai" element={<LocalizedArchitettoAI lang="de" />} />
-            <Route path="/de/danke" element={<ThankYou lang="de" />} />
+            <Route path="/de/thank-you-de" element={<ThankYou lang="de" />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
