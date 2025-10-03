@@ -35,17 +35,17 @@ const OvenGallery = () => {
   } | null>(null);
 
   const categories = [
-    { value: 'all', label: 'Tutti i Forni', color: 'bg-stone-100 text-stone-800' },
-    { value: 'mosaico', label: 'Forni Mosaico', color: 'bg-vesuviano-100 text-vesuviano-800' },
-    { value: 'misto', label: 'Forni Misti', color: 'bg-blue-100 text-blue-800' },
-    { value: 'legna', label: 'Forni a Legna', color: 'bg-green-100 text-green-800' }
+    { value: 'all', label: t('ovenGallery.filters.allOvens'), color: 'bg-stone-100 text-stone-800' },
+    { value: 'mosaico', label: t('ovenGallery.filters.mosaicOvens'), color: 'bg-vesuviano-100 text-vesuviano-800' },
+    { value: 'misto', label: t('ovenGallery.filters.mixedOvens'), color: 'bg-blue-100 text-blue-800' },
+    { value: 'legna', label: t('ovenGallery.filters.woodOvens'), color: 'bg-green-100 text-green-800' }
   ];
 
   const coatingTypes = [
-    { value: 'all', label: 'Tutti i Rivestimenti', color: 'bg-gray-100 text-gray-800' },
-    { value: 'mosaico', label: 'Rivestimento Mosaico', color: 'bg-amber-100 text-amber-800' },
-    { value: 'verniciato', label: 'Rivestimento Verniciato', color: 'bg-orange-100 text-orange-800' },
-    { value: 'metallico', label: 'Rivestimento Metallico', color: 'bg-slate-100 text-slate-800' }
+    { value: 'all', label: t('ovenGallery.coatings.all'), color: 'bg-gray-100 text-gray-800' },
+    { value: 'mosaico', label: t('ovenGallery.coatings.mosaic'), color: 'bg-amber-100 text-amber-800' },
+    { value: 'verniciato', label: t('ovenGallery.coatings.painted'), color: 'bg-orange-100 text-orange-800' },
+    { value: 'metallico', label: t('ovenGallery.coatings.metallic'), color: 'bg-slate-100 text-slate-800' }
   ];
 
   useEffect(() => {
@@ -107,10 +107,10 @@ const OvenGallery = () => {
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="font-playfair text-3xl md:text-4xl font-bold text-stone-800 mb-4">
-            La Nostra Collezione di Forni
+            {t('ovenGallery.title')}
           </h2>
           <p className="text-stone-600 max-w-2xl mx-auto">
-            Scopri la nostra selezione di forni artigianali, classificati per tipologia e caratteristiche tecniche
+            {t('ovenGallery.subtitle')}
           </p>
         </div>
 
@@ -118,7 +118,7 @@ const OvenGallery = () => {
         <div className="mb-8 space-y-6">
           {/* Category Filters */}
           <div>
-            <h3 className="text-base sm:text-lg font-semibold text-stone-700 mb-3 text-center">Filtra per Combustibile</h3>
+            <h3 className="text-base sm:text-lg font-semibold text-stone-700 mb-3 text-center">{t('ovenGallery.filterByFuel')}</h3>
             <div className="flex flex-wrap justify-center gap-2">
               {categories.map((category) => (
                 <Button
@@ -145,7 +145,7 @@ const OvenGallery = () => {
 
           {/* Coating Type Filters */}
           <div>
-            <h3 className="text-base sm:text-lg font-semibold text-stone-700 mb-3 text-center">Filtra per Rivestimento</h3>
+            <h3 className="text-base sm:text-lg font-semibold text-stone-700 mb-3 text-center">{t('ovenGallery.filterByCoating')}</h3>
             <div className="flex flex-wrap justify-center gap-2">
               {coatingTypes.map((coating) => (
                 <Button
@@ -174,7 +174,7 @@ const OvenGallery = () => {
         {/* Ovens Grid */}
         {filteredOvens.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-stone-500 text-lg">Nessun forno trovato per questa categoria.</p>
+            <p className="text-stone-500 text-lg">{t('ovenGallery.noOvensFound')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -235,7 +235,7 @@ const OvenGallery = () => {
                       onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
                       className="w-full group-hover:bg-vesuviano-600 group-hover:text-white group-hover:border-vesuviano-600 transition-all"
                     >
-                      Richiedi Informazioni
+                      {t('ovenGallery.requestInfo')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -253,7 +253,7 @@ const OvenGallery = () => {
               size="lg"
               className="bg-white hover:bg-vesuviano-50 border-vesuviano-200 text-vesuviano-700 hover:text-vesuviano-800 px-8"
             >
-              Mostra Altri Forni ({filteredOvens.length - displayCount} rimanenti)
+              {t('ovenGallery.showMore', { count: filteredOvens.length - displayCount })}
             </Button>
           </div>
         )}
@@ -261,13 +261,17 @@ const OvenGallery = () => {
         {/* Call to Action */}
         <div className="text-center mt-12 p-8 bg-vesuviano-50 rounded-2xl border border-vesuviano-100">
           <h3 className="font-playfair text-2xl font-bold text-stone-800 mb-4">
-            Hai bisogno di una consulenza personalizzata?
+            {t('ovenGallery.cta.title')}
           </h3>
           <p className="text-stone-600 mb-6 max-w-xl mx-auto">
-            I nostri esperti sono a disposizione per aiutarti a scegliere il forno più adatto alle tue esigenze
+            {t('ovenGallery.cta.description')}
           </p>
-          <Button size="lg" className="bg-vesuviano-600 hover:bg-vesuviano-700">
-            Contatta un Esperto
+          <Button 
+            size="lg" 
+            className="bg-vesuviano-600 hover:bg-vesuviano-700"
+            onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            {t('ovenGallery.cta.button')}
           </Button>
         </div>
 

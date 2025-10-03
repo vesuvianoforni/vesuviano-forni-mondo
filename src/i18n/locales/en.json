@@ -153,45 +153,45 @@
     "title": "Our",
     "titleHighlight": "Services",
     "subtitle": "Complete support from initial consultation to after-sales assistance, to guarantee you maximum success with our artisan ovens.",
-    "technical": {
+    "consultation": {
       "title": "Specialized Technical Consulting",
       "description": "Our experts guide you in choosing the perfect oven for your specific needs, considering space, production volume and type of cuisine.",
-      "features": {
-        "analysis": "Needs analysis",
-        "advice": "Personalized advice",
-        "support": "Support in choosing",
-        "evaluation": "Technical evaluation"
-      }
+      "features": [
+        "Needs analysis",
+        "Personalized advice",
+        "Support in choosing",
+        "Technical evaluation"
+      ]
     },
     "design": {
       "title": "3D Rendering and Design",
       "description": "Visualize your oven in the context of your kitchen before purchase with our photorealistic 3D renders.",
-      "features": {
-        "photorealistic": "Photorealistic renders",
-        "integration": "Environmental integration",
-        "modifications": "Design modifications",
-        "preview": "Realistic preview"
-      }
+      "features": [
+        "Photorealistic renders",
+        "Environmental integration",
+        "Design modifications",
+        "Realistic preview"
+      ]
     },
     "logistics": {
       "title": "International Logistics",
       "description": "We completely manage the shipment and installation of your ovens worldwide with maximum safety.",
-      "features": {
-        "worldwide": "Worldwide shipping",
-        "packaging": "Safe packaging",
-        "tracking": "Complete tracking",
-        "delivery": "Guaranteed delivery"
-      }
+      "features": [
+        "Worldwide shipping",
+        "Safe packaging",
+        "Complete tracking",
+        "Guaranteed delivery"
+      ]
     },
     "training": {
       "title": "Training and Assistance",
       "description": "Training courses to make the best use of your oven and dedicated after-sales assistance for every need.",
-      "features": {
-        "practical": "Practical courses",
-        "technical": "Technical assistance",
-        "maintenance": "Maintenance",
-        "support": "Continuous support"
-      }
+      "features": [
+        "Practical courses",
+        "Technical assistance",
+        "Maintenance",
+        "Continuous support"
+      ]
     },
     "cta": {
       "title": "Need personalized support?",
@@ -342,6 +342,32 @@
       "traditional": "Traditional",
       "modern": "Modern",
       "installations": "Installations"
+    }
+  },
+  "ovenGallery": {
+    "title": "Our Oven Collection",
+    "subtitle": "Discover our selection of artisan ovens, classified by type and technical characteristics",
+    "filterByFuel": "Filter by Fuel",
+    "filterByCoating": "Filter by Coating",
+    "filters": {
+      "allOvens": "All Ovens",
+      "mosaicOvens": "Mosaic Ovens",
+      "mixedOvens": "Mixed Ovens",
+      "woodOvens": "Wood-Fired Ovens"
+    },
+    "coatings": {
+      "all": "All Coatings",
+      "mosaic": "Mosaic Coating",
+      "painted": "Painted Coating",
+      "metallic": "Metallic Coating"
+    },
+    "noOvensFound": "No ovens found for this category.",
+    "requestInfo": "Request Information",
+    "showMore": "Show More Ovens ({{count}} remaining)",
+    "cta": {
+      "title": "Need personalized advice?",
+      "description": "Our experts are available to help you choose the most suitable oven for your needs",
+      "button": "Contact an Expert"
     }
   },
   "nav": {

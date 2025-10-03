@@ -54,7 +54,7 @@ const Services = () => {
           {/* Header */}
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="font-playfair text-4xl md:text-5xl font-bold text-charcoal-900 mb-6">
-              {t('services.title')}
+              {t('services.title')} <span className="text-vesuviano-600">{t('services.titleHighlight')}</span>
             </h2>
             <p className="font-inter text-xl text-stone-600 max-w-3xl mx-auto">
               {t('services.subtitle')}
@@ -118,10 +118,10 @@ const Services = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <h3 className="font-playfair text-2xl md:text-3xl font-semibold text-charcoal-900 mb-4">
-              {t('services.logistics.sectionTitle')}
+              {t('services.logisticsSection.title')} <span className="text-vesuviano-600">{t('services.logisticsSection.titleHighlight')}</span>
             </h3>
             <p className="text-stone-600 text-lg">
-              {t('services.logistics.sectionSubtitle')}
+              {t('services.logisticsSection.subtitle')}
             </p>
           </div>
           
@@ -134,10 +134,10 @@ const Services = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-vesuviano-900/60 via-transparent to-transparent opacity-80"></div>
             <div className="absolute bottom-6 left-6 right-6 text-white">
               <h4 className="font-playfair text-xl md:text-2xl font-semibold mb-2">
-                {t('services.logistics.photoTitle')}
+                {t('services.logisticsSection.caption')}
               </h4>
               <p className="text-stone-200 text-sm md:text-base">
-                {t('services.logistics.photoDescription')}
+                {t('services.logisticsSection.description')}
               </p>
             </div>
           </div>

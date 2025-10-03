@@ -153,45 +153,45 @@
     "title": "I Nostri",
     "titleHighlight": "Servizi",
     "subtitle": "Un supporto completo dalla consulenza iniziale all'assistenza post-vendita, per garantirti il massimo successo con i nostri forni artigianali.",
-    "technical": {
+    "consultation": {
       "title": "Consulenza Tecnica Specializzata",
       "description": "I nostri esperti ti guidano nella scelta del forno perfetto per le tue esigenze specifiche, considerando spazio, volume di produzione e tipo di cucina.",
-      "features": {
-        "analysis": "Analisi delle esigenze",
-        "advice": "Consigli personalizzati",
-        "support": "Supporto nella scelta",
-        "evaluation": "Valutazione tecnica"
-      }
+      "features": [
+        "Analisi delle esigenze",
+        "Consigli personalizzati",
+        "Supporto nella scelta",
+        "Valutazione tecnica"
+      ]
     },
     "design": {
       "title": "Rendering 3D e Progettazione",
       "description": "Visualizza il tuo forno nel contesto della tua cucina prima dell'acquisto con i nostri render fotorealistici 3D.",
-      "features": {
-        "photorealistic": "Render fotorealistici",
-        "integration": "Integrazione ambientale",
-        "modifications": "Modifiche progettuali",
-        "preview": "Anteprima realistica"
-      }
+      "features": [
+        "Render fotorealistici",
+        "Integrazione ambientale",
+        "Modifiche progettuali",
+        "Anteprima realistica"
+      ]
     },
     "logistics": {
       "title": "Logistica Internazionale",
       "description": "Gestiamo completamente la spedizione e l'installazione dei tuoi forni in tutto il mondo con massima sicurezza.",
-      "features": {
-        "worldwide": "Spedizioni mondiali",
-        "packaging": "Imballaggio sicuro",
-        "tracking": "Tracking completo",
-        "delivery": "Consegna garantita"
-      }
+      "features": [
+        "Spedizioni mondiali",
+        "Imballaggio sicuro",
+        "Tracking completo",
+        "Consegna garantita"
+      ]
     },
     "training": {
       "title": "Formazione e Assistenza",
       "description": "Corsi di formazione per utilizzare al meglio il tuo forno e assistenza post-vendita dedicata per ogni necessità.",
-      "features": {
-        "practical": "Corsi pratici",
-        "technical": "Assistenza tecnica",
-        "maintenance": "Manutenzione",
-        "support": "Supporto continuo"
-      }
+      "features": [
+        "Corsi pratici",
+        "Assistenza tecnica",
+        "Manutenzione",
+        "Supporto continuo"
+      ]
     },
     "cta": {
       "title": "Hai bisogno di supporto personalizzato?",
@@ -332,6 +332,32 @@
   "whatsapp": {
     "tooltip": "Contattaci su WhatsApp",
     "message": "Ciao, vorrei informazioni sui vostri forni professionali 🔥"
+  },
+  "ovenGallery": {
+    "title": "La Nostra Collezione di Forni",
+    "subtitle": "Scopri la nostra selezione di forni artigianali, classificati per tipologia e caratteristiche tecniche",
+    "filterByFuel": "Filtra per Combustibile",
+    "filterByCoating": "Filtra per Rivestimento",
+    "filters": {
+      "allOvens": "Tutti i Forni",
+      "mosaicOvens": "Forni Mosaico",
+      "mixedOvens": "Forni Misti",
+      "woodOvens": "Forni a Legna"
+    },
+    "coatings": {
+      "all": "Tutti i Rivestimenti",
+      "mosaic": "Rivestimento Mosaico",
+      "painted": "Rivestimento Verniciato",
+      "metallic": "Rivestimento Metallico"
+    },
+    "noOvensFound": "Nessun forno trovato per questa categoria.",
+    "requestInfo": "Richiedi Informazioni",
+    "showMore": "Mostra Altri Forni ({{count}} rimanenti)",
+    "cta": {
+      "title": "Hai bisogno di una consulenza personalizzata?",
+      "description": "I nostri esperti sono a disposizione per aiutarti a scegliere il forno più adatto alle tue esigenze",
+      "button": "Contatta un Esperto"
+    }
   },
   "ovenVisualizer": {
     "badge": "Novità assoluta AI",
