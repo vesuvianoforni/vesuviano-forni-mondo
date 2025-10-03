@@ -105,19 +105,18 @@ const VesuvioBuono = () => {
             <div className="flex flex-wrap justify-center gap-4 mb-6">
               <Badge className="bg-vesuviano-500 text-white px-6 py-3 text-xl font-bold animate-scale-in border-none">
                 <Leaf className="mr-3" size={24} />
-                ESCLUSIVA MONDIALE
+                {t('vesuvioBuono.badges.exclusive')}
               </Badge>
               <Badge className="bg-amber-600 text-white px-6 py-3 text-xl font-bold animate-scale-in border-none" style={{ animationDelay: '0.1s' }}>
                 <Shield className="mr-3" size={24} />
-                BREVETTATO
+                {t('vesuvioBuono.badges.patented')}
               </Badge>
             </div>
             <h2 className="font-playfair text-5xl md:text-7xl font-bold text-white mb-6 animate-slide-in-left">
               Vesuvio<span className="text-vesuviano-500 drop-shadow-lg">Buono</span>
             </h2>
             <p className="font-inter text-xl text-vesuviano-200 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.3s' }}>
-              Il primo forno al mondo a legna e combinato gas/legna che non emette fuliggine in atmosfera. 
-              Una rivoluzione per l'ambiente e la salute.
+              {t('vesuvioBuono.subtitle')}
             </p>
           </div>
 
@@ -125,7 +124,7 @@ const VesuvioBuono = () => {
           <div className="mb-16 animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <div className="max-w-4xl mx-auto bg-stone-900 rounded-xl p-6 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300">
               <h3 className="font-playfair text-2xl font-semibold text-vesuviano-100 mb-4 text-center">
-                VesuvioBuono in Azione
+                {t('vesuvioBuono.videoTitle')}
               </h3>
               <div className="aspect-video rounded-lg overflow-hidden relative">
                 <VideoPlayer
@@ -137,7 +136,7 @@ const VesuvioBuono = () => {
                 <div className="absolute bottom-0 right-0 w-32 h-16 bg-gradient-to-l from-vesuviano-900 via-vesuviano-900/80 to-transparent pointer-events-none"></div>
               </div>
               <p className="text-vesuviano-200 text-center mt-4 text-sm">
-                Scopri come VesuvioBuono rivoluziona la cottura a legna senza emissioni
+                {t('vesuvioBuono.videoDescription')}
               </p>
             </div>
           </div>
@@ -154,7 +153,7 @@ const VesuvioBuono = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-vesuviano-400 text-center mt-2 text-sm">Forno in Azione</p>
+                <p className="text-vesuviano-400 text-center mt-2 text-sm">{t('vesuvioBuono.gallery.ovenInAction')}</p>
               </div>
               
               {/* Photo Slot 2 */}
@@ -166,7 +165,7 @@ const VesuvioBuono = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-copper-400 text-center mt-2 text-sm">Pizza Perfetta</p>
+                <p className="text-copper-400 text-center mt-2 text-sm">{t('vesuvioBuono.gallery.perfectPizza')}</p>
               </div>
               
               {/* Photo Slot 3 */}
@@ -178,7 +177,7 @@ const VesuvioBuono = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-vesuviano-400 text-center mt-2 text-sm">Zero Emissioni</p>
+                <p className="text-vesuviano-400 text-center mt-2 text-sm">{t('vesuvioBuono.gallery.zeroEmissions')}</p>
               </div>
             </div>
           </div>
@@ -193,30 +192,30 @@ const VesuvioBuono = () => {
                     <Leaf className="text-white" size={28} />
                   </div>
                   <h3 className="font-playfair text-2xl font-semibold text-charcoal-900">
-                    Zero Emissioni
+                    {t('vesuvioBuono.features.zeroEmissions.title')}
                   </h3>
                 </div>
 
                 <div className="space-y-6">
                   <div className="border-l-4 border-vesuviano-500 pl-4 hover:border-l-8 transition-all duration-300 relative">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-semibold text-stone-900">Tecnologia Brevettata</h4>
+                      <h4 className="font-semibold text-stone-900">{t('vesuvioBuono.features.patented.title')}</h4>
                       <Badge className="bg-amber-100 text-amber-800 px-2 py-1 text-xs border-amber-200">
                         <CheckCircle className="mr-1" size={12} />
                         PATENT
                       </Badge>
                     </div>
-                    <p className="text-stone-600">Sistema di combustione completa che elimina il 99.9% delle particelle di fuliggine.</p>
+                    <p className="text-stone-600">{t('vesuvioBuono.features.patented.description')}</p>
                   </div>
 
                   <div className="border-l-4 border-copper-500 pl-4 hover:border-l-8 transition-all duration-300">
-                    <h4 className="font-semibold text-charcoal-900 mb-2">Certificazioni Ambientali</h4>
-                    <p className="text-stone-600">Conforme alle più severe normative europee e internazionali sulle emissioni.</p>
+                    <h4 className="font-semibold text-charcoal-900 mb-2">{t('vesuvioBuono.features.certifications.title')}</h4>
+                    <p className="text-stone-600">{t('vesuvioBuono.features.certifications.description')}</p>
                   </div>
 
                   <div className="border-l-4 border-vesuviano-400 pl-4 hover:border-l-8 transition-all duration-300">
-                    <h4 className="font-semibold text-charcoal-900 mb-2">Doppia Alimentazione</h4>
-                    <p className="text-stone-600">Funziona perfettamente sia a legna che con la combinazione gas/legna.</p>
+                    <h4 className="font-semibold text-charcoal-900 mb-2">{t('vesuvioBuono.features.dualFuel.title')}</h4>
+                    <p className="text-stone-600">{t('vesuvioBuono.features.dualFuel.description')}</p>
                   </div>
                 </div>
 
@@ -230,7 +229,7 @@ const VesuvioBuono = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <p className="text-stone-600 text-center mt-2 text-xs">Forno a legna</p>
+                    <p className="text-stone-600 text-center mt-2 text-xs">{t('vesuvioBuono.gallery.woodOven')}</p>
                   </div>
                   <div className="bg-stone-100 rounded-lg p-3 hover:scale-105 transition-all duration-300">
                     <div className="aspect-square rounded overflow-hidden">
@@ -240,7 +239,7 @@ const VesuvioBuono = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <p className="text-stone-600 text-center mt-2 text-xs">Depuratore fumi</p>
+                    <p className="text-stone-600 text-center mt-2 text-xs">{t('vesuvioBuono.gallery.smokePurifier')}</p>
                   </div>
                 </div>
               </div>
@@ -252,30 +251,30 @@ const VesuvioBuono = () => {
                 <div className="flex items-center mb-6">
                   <Award className="mr-3" size={36} />
                   <h3 className="font-playfair text-3xl font-semibold">
-                    Vantaggi Esclusivi
+                    {t('vesuvioBuono.advantages.title')}
                   </h3>
                 </div>
 
                 <ul className="space-y-4 mb-8">
                   <li className="flex items-start hover:translate-x-2 transition-transform duration-300">
                     <div className="w-3 h-3 bg-vesuviano-200 rounded-full mt-2 mr-4 flex-shrink-0"></div>
-                    <span>Installazione in qualsiasi zona urbana senza restrizioni</span>
+                    <span>{t('vesuvioBuono.advantages.list.0')}</span>
                   </li>
                   <li className="flex items-start hover:translate-x-2 transition-transform duration-300">
                     <div className="w-3 h-3 bg-vesuviano-200 rounded-full mt-2 mr-4 flex-shrink-0"></div>
-                    <span>Riduzione drastica dei costi di manutenzione camini</span>
+                    <span>{t('vesuvioBuono.advantages.list.1')}</span>
                   </li>
                   <li className="flex items-start hover:translate-x-2 transition-transform duration-300">
                     <div className="w-3 h-3 bg-vesuviano-200 rounded-full mt-2 mr-4 flex-shrink-0"></div>
-                    <span>Mantenimento del sapore autentico della cottura a legna</span>
+                    <span>{t('vesuvioBuono.advantages.list.2')}</span>
                   </li>
                   <li className="flex items-start hover:translate-x-2 transition-transform duration-300">
                     <div className="w-3 h-3 bg-vesuviano-200 rounded-full mt-2 mr-4 flex-shrink-0"></div>
-                    <span>Rispetto totale dell'ambiente e della comunità</span>
+                    <span>{t('vesuvioBuono.advantages.list.3')}</span>
                   </li>
                   <li className="flex items-start hover:translate-x-2 transition-transform duration-300">
                     <div className="w-3 h-3 bg-vesuviano-200 rounded-full mt-2 mr-4 flex-shrink-0"></div>
-                    <span>Garanzia internazionale e supporto tecnico specializzato</span>
+                    <span>{t('vesuvioBuono.advantages.list.4')}</span>
                   </li>
                 </ul>
 
@@ -284,20 +283,20 @@ const VesuvioBuono = () => {
                     <DialogTrigger asChild>
                       <Button className="bg-white text-vesuviano-700 hover:bg-stone-100 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-lg">
                         <Download className="mr-2" size={20} />
-                        Scarica Scheda Tecnica
+                        {t('vesuvioBuono.downloadSheet')}
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                       <DialogHeader>
-                        <DialogTitle className="text-vesuviano-800">Scarica Scheda Tecnica</DialogTitle>
+                        <DialogTitle className="text-vesuviano-800">{t('vesuvioBuono.modal.title')}</DialogTitle>
                         <DialogDescription>
-                          Compila i tuoi dati per scaricare la scheda tecnica di VesuvioBuono
+                          {t('vesuvioBuono.modal.description')}
                         </DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="grid gap-2">
-                            <Label htmlFor="firstName">Nome</Label>
+                            <Label htmlFor="firstName">{t('vesuvioBuono.modal.firstName')}</Label>
                             <Input
                               id="firstName"
                               name="firstName"
@@ -307,7 +306,7 @@ const VesuvioBuono = () => {
                             />
                           </div>
                           <div className="grid gap-2">
-                            <Label htmlFor="lastName">Cognome</Label>
+                            <Label htmlFor="lastName">{t('vesuvioBuono.modal.lastName')}</Label>
                             <Input
                               id="lastName"
                               name="lastName"
@@ -318,7 +317,7 @@ const VesuvioBuono = () => {
                           </div>
                         </div>
                         <div className="grid gap-2">
-                          <Label htmlFor="email">Email</Label>
+                          <Label htmlFor="email">{t('vesuvioBuono.modal.email')}</Label>
                           <Input
                             id="email"
                             name="email"
@@ -329,7 +328,7 @@ const VesuvioBuono = () => {
                           />
                         </div>
                         <div className="grid gap-2">
-                          <Label htmlFor="city">Città</Label>
+                          <Label htmlFor="city">{t('vesuvioBuono.modal.city')}</Label>
                           <Input
                             id="city"
                             name="city"
@@ -339,7 +338,7 @@ const VesuvioBuono = () => {
                           />
                         </div>
                         <div className="grid gap-2">
-                          <Label htmlFor="phone">Numero di telefono</Label>
+                          <Label htmlFor="phone">{t('vesuvioBuono.modal.phone')}</Label>
                           <Input
                             id="phone"
                             name="phone"
@@ -352,10 +351,10 @@ const VesuvioBuono = () => {
                       </div>
                       <div className="flex justify-end gap-2">
                         <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                          Annulla
+                          {t('vesuvioBuono.modal.cancel')}
                         </Button>
                         <Button onClick={handleDownloadPDF} className="bg-vesuviano-600 hover:bg-vesuviano-700">
-                          Scarica PDF
+                          {t('vesuvioBuono.modal.download')}
                         </Button>
                       </div>
                     </DialogContent>

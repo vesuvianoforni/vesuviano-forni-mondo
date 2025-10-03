@@ -6,24 +6,44 @@ const Services = () => {
   const { t } = useTranslation();
   const services = [
     {
-      title: "Consulenza Tecnica Specializzata",
-      description: "I nostri esperti ti guidano nella scelta del forno perfetto per le tue esigenze specifiche, considerando spazio, volume di produzione e tipo di cucina.",
-      features: ["Analisi delle esigenze", "Consigli personalizzati", "Supporto nella scelta", "Valutazione tecnica"]
+      title: t('services.consultation.title'),
+      description: t('services.consultation.description'),
+      features: [
+        t('services.consultation.features.0'),
+        t('services.consultation.features.1'),
+        t('services.consultation.features.2'),
+        t('services.consultation.features.3')
+      ]
     },
     {
-      title: "Rendering 3D e Progettazione",
-      description: "Visualizza il tuo forno nel contesto della tua cucina prima dell'acquisto con i nostri render fotorealistici 3D.",
-      features: ["Render fotorealistici", "Integrazione ambientale", "Modifiche progettuali", "Anteprima realistica"]
+      title: t('services.design.title'),
+      description: t('services.design.description'),
+      features: [
+        t('services.design.features.0'),
+        t('services.design.features.1'),
+        t('services.design.features.2'),
+        t('services.design.features.3')
+      ]
     },
     {
-      title: "Logistica Internazionale",
-      description: "Gestiamo completamente la spedizione e l'installazione dei tuoi forni in tutto il mondo con massima sicurezza.",
-      features: ["Spedizioni mondiali", "Imballaggio sicuro", "Tracking completo", "Consegna garantita"]
+      title: t('services.logistics.title'),
+      description: t('services.logistics.description'),
+      features: [
+        t('services.logistics.features.0'),
+        t('services.logistics.features.1'),
+        t('services.logistics.features.2'),
+        t('services.logistics.features.3')
+      ]
     },
     {
-      title: "Formazione e Assistenza",
-      description: "Corsi di formazione per utilizzare al meglio il tuo forno e assistenza post-vendita dedicata per ogni necessità.",
-      features: ["Corsi pratici", "Assistenza tecnica", "Manutenzione", "Supporto continuo"]
+      title: t('services.training.title'),
+      description: t('services.training.description'),
+      features: [
+        t('services.training.features.0'),
+        t('services.training.features.1'),
+        t('services.training.features.2'),
+        t('services.training.features.3')
+      ]
     }
   ];
 
@@ -34,11 +54,10 @@ const Services = () => {
           {/* Header */}
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="font-playfair text-4xl md:text-5xl font-bold text-charcoal-900 mb-6">
-              I Nostri <span className="text-vesuviano-600">Servizi</span>
+              {t('services.title')}
             </h2>
             <p className="font-inter text-xl text-stone-600 max-w-3xl mx-auto">
-              Un supporto completo dalla consulenza iniziale all'assistenza post-vendita, 
-              per garantirti il massimo successo con i nostri forni artigianali.
+              {t('services.subtitle')}
             </p>
           </div>
 
@@ -77,18 +96,17 @@ const Services = () => {
           <div className="text-center animate-scale-in" style={{ animationDelay: '0.8s' }}>
             <div className="bg-vesuviano-50 rounded-xl p-8 max-w-3xl mx-auto border border-vesuviano-200 hover:shadow-xl transition-all duration-500 hover:scale-105">
               <h4 className="font-playfair text-2xl font-semibold text-charcoal-900 mb-4">
-                Hai bisogno di supporto personalizzato?
+                {t('services.cta.title')}
               </h4>
               <p className="text-stone-600 mb-6">
-                Il nostro team è sempre disponibile per offrirti la migliore assistenza 
-                e trovare insieme la soluzione ideale per la tua attività.
+                {t('services.cta.description')}
               </p>
               <Button 
                 size="lg"
                 className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-3 transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                Contattaci Ora
+                {t('services.cta.button')}
               </Button>
             </div>
           </div>
@@ -100,10 +118,10 @@ const Services = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <h3 className="font-playfair text-2xl md:text-3xl font-semibold text-charcoal-900 mb-4">
-              La Nostra <span className="text-vesuviano-600">Efficacia Logistica</span>
+              {t('services.logistics.sectionTitle')}
             </h3>
             <p className="text-stone-600 text-lg">
-              Consegne in tutto il mondo, anche nelle metropoli più complesse come New York
+              {t('services.logistics.sectionSubtitle')}
             </p>
           </div>
           
@@ -116,10 +134,10 @@ const Services = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-vesuviano-900/60 via-transparent to-transparent opacity-80"></div>
             <div className="absolute bottom-6 left-6 right-6 text-white">
               <h4 className="font-playfair text-xl md:text-2xl font-semibold mb-2">
-                Forno Vesuviano in consegna a Manhattan
+                {t('services.logistics.photoTitle')}
               </h4>
               <p className="text-stone-200 text-sm md:text-base">
-                La nostra logistica specializzata garantisce consegne sicure anche nei centri urbani più impegnativi
+                {t('services.logistics.photoDescription')}
               </p>
             </div>
           </div>
