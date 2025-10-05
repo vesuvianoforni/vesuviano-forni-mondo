@@ -72,7 +72,7 @@ const ProductCategories = () => {
     },
     {
       key: 'rotating',
-      image: "/lovable-uploads/vesuviobuono-osteria-pizza.jpg"
+      image: "/lovable-uploads/forno-rotativo-mosaico.png"
     },
     {
       key: 'vesuviobuono',
