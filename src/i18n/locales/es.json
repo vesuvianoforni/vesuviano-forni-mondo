@@ -67,6 +67,10 @@
       }
     },
     "learnMore": "Saber Más",
+    "badges": {
+      "madeInNaples": "Made in Naples 🇮🇹",
+      "certified": "500°C Certified Performance"
+    },
     "customSolutions": {
       "title": "Soluciones a Medida",
       "description": "Cada horno Vesuviano está diseñado para satisfacer las necesidades específicas de su negocio. Nuestros expertos le ayudarán a encontrar la solución perfecta.",

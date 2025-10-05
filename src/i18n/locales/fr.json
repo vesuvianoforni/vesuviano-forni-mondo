@@ -83,6 +83,10 @@
       }
     },
     "learnMore": "En Savoir Plus",
+    "badges": {
+      "madeInNaples": "Made in Naples 🇮🇹",
+      "certified": "500°C Certified Performance"
+    },
     "customSolutions": {
       "title": "Solutions Sur Mesure",
       "description": "Chaque four Vesuviano est conçu pour répondre aux besoins spécifiques de votre activité. Nos experts vous aideront à trouver la solution parfaite.",

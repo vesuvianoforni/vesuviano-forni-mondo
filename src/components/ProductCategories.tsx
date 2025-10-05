@@ -126,7 +126,21 @@ const ProductCategories = () => {
                     ))}
                   </ul>
 
-                  <Button 
+                  {/* Distinctive Badges */}
+                  <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
+                    <div className="inline-flex items-center px-3 py-1.5 bg-vesuviano-50 border border-vesuviano-200 rounded-full">
+                      <span className="text-xs font-semibold text-vesuviano-700">
+                        {t('products.badges.madeInNaples')}
+                      </span>
+                    </div>
+                    <div className="inline-flex items-center px-3 py-1.5 bg-stone-100 border border-stone-300 rounded-full">
+                      <span className="text-xs font-semibold text-stone-700">
+                        {t('products.badges.certified')}
+                      </span>
+                    </div>
+                  </div>
+
+                  <Button
                     className="w-full bg-stone-100 text-stone-700 hover:bg-vesuviano-500 hover:text-white transition-all duration-300 text-sm sm:text-base py-2 sm:py-3"
                     onClick={() => navigate(getOvenPath(category.key))}
                   >

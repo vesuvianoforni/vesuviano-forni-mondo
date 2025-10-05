@@ -67,6 +67,10 @@
       }
     },
     "learnMore": "Mehr Erfahren",
+    "badges": {
+      "madeInNaples": "Made in Naples 🇮🇹",
+      "certified": "500°C Certified Performance"
+    },
     "customSolutions": {
       "title": "Maßgeschneiderte Lösungen",
       "description": "Jeder Vesuviano-Ofen ist darauf ausgelegt, die spezifischen Bedürfnisse Ihres Unternehmens zu erfüllen. Unsere Experten helfen Ihnen dabei, die perfekte Lösung zu finden.",
