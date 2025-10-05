@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
 import { useTranslation, Trans } from 'react-i18next';
 import LazyImage from './LazyImage';
+import laboratorioHero from '@/assets/laboratorio-artigianale-hero.png';
 
 const Hero = () => {
   const { t } = useTranslation();
@@ -16,17 +17,17 @@ const Hero = () => {
       {/* Background Image */}
       <div className="absolute inset-0">
         <LazyImage
-          src="/lovable-uploads/mattoni-refrattari-hero.jpg"
-          alt="Mattoni refrattari per forni a legna - Materiali di alta qualità per la costruzione di forni tradizionali napoletani"
+          src={laboratorioHero}
+          alt="Laboratorio artigianale Vesuviano - Produzione artigianale di forni napoletani a legna, gas ed elettrici"
           className="w-full h-full object-cover object-center"
           priority={true}
         />
         {/* Dark Overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="absolute inset-0 bg-black/60"></div>
       </div>
       
       {/* Main Content */}
-      <div className="container mx-auto px-3 sm:px-6 text-center z-10 relative max-w-full">
+      <div className="container mx-auto px-3 sm:px-6 text-center z-10 relative max-w-full py-8 sm:py-12">
         {/* Logo Section */}
         <div className="mb-6 sm:mb-8 animate-scale-in">
           <LazyImage 
