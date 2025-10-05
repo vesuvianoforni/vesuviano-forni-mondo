@@ -88,6 +88,13 @@ const Hero = () => {
               "{t('hero.review')}"
             </p>
           </div>
+          
+          {/* Proof Bar */}
+          <div className="mt-3 sm:mt-4 animate-fade-in" style={{ animationDelay: '1.5s' }}>
+            <p className="text-white/80 text-xs sm:text-sm text-center font-medium">
+              {t('hero.proofBar')}
+            </p>
+          </div>
         </div>
 
         {/* Scroll Indicator */}
