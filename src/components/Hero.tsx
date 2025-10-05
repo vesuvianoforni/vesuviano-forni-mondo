@@ -78,7 +78,7 @@ const Hero = () => {
           </p>
           
           {/* Customer Review */}
-          <div className="mt-4 sm:mt-6 bg-white/10 backdrop-blur-md rounded-lg p-3 sm:p-4 max-w-xl mx-auto animate-fade-in border border-white/20" style={{ animationDelay: '1.3s' }}>
+          <div className="mt-4 sm:mt-6 bg-white/5 backdrop-blur-md rounded-lg p-3 sm:p-4 max-w-xl mx-auto animate-fade-in border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)]" style={{ animationDelay: '1.3s' }}>
             <div className="flex justify-center gap-1 mb-2">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
