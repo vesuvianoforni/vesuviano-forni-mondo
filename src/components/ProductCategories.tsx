@@ -91,7 +91,7 @@ const ProductCategories = () => {
                 className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border border-stone-200 hover:border-vesuviano-300 animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden cursor-zoom-in"
+                <div className="relative h-64 sm:h-80 md:h-96 overflow-hidden cursor-zoom-in"
                      onClick={() => setZoomedImage({
                        url: category.image,
                        alt: t(`products.${category.key}.title`),
@@ -100,7 +100,7 @@ const ProductCategories = () => {
                   <img 
                     src={category.image} 
                     alt={t(`products.${category.key}.title`)}
-                    className="w-full h-full object-cover object-[center_35%] group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                   <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 text-white">
