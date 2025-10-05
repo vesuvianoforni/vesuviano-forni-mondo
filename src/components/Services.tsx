@@ -92,13 +92,15 @@ const Services = () => {
             ))}
           </div>
 
-          {/* Quality Badges */}
+          {/* Distinctive Badges */}
           <div className="flex flex-wrap justify-center gap-4 mb-12 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            <div className="bg-stone-50 border border-vesuviano-200 rounded-lg px-6 py-3 flex items-center gap-2 hover:shadow-md transition-all duration-300">
-              <span className="font-semibold text-charcoal-900">Made in Naples 🇮🇹</span>
+            <div className="flex items-center gap-2 bg-white/5 backdrop-blur-sm border border-stone-200 rounded-full px-6 py-3 hover:bg-white/10 transition-all duration-300 hover:scale-105">
+              <span className="text-2xl">🇮🇹</span>
+              <span className="font-semibold text-stone-800">Made in Naples</span>
             </div>
-            <div className="bg-stone-50 border border-vesuviano-200 rounded-lg px-6 py-3 flex items-center gap-2 hover:shadow-md transition-all duration-300">
-              <span className="font-semibold text-charcoal-900">500°C Certified Performance</span>
+            <div className="flex items-center gap-2 bg-vesuviano-50/80 backdrop-blur-sm border border-vesuviano-200 rounded-full px-6 py-3 hover:bg-vesuviano-100 transition-all duration-300 hover:scale-105">
+              <span className="text-2xl">🔥</span>
+              <span className="font-semibold text-vesuviano-700">500°C Certified Performance</span>
             </div>
           </div>
 
