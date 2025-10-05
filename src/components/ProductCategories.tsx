@@ -76,7 +76,7 @@ const ProductCategories = () => {
     },
     {
       key: 'vesuviobuono',
-      image: "/lovable-uploads/vesuviobuono-zero-emissioni.jpg"
+      image: "/lovable-uploads/vesuviobuono-ostepizza-completo.png"
     }
   ];
 
