@@ -54,22 +54,27 @@ const Hero = () => {
           />
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-6 sm:mb-8 animate-scale-in px-2 sm:px-4" style={{ animationDelay: '0.9s' }}>
-          <Button 
-            size="lg" 
-            className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl w-full sm:w-auto"
-            onClick={scrollToProducts}
-          >
-            {t('hero.discoverOvens')}
-          </Button>
-          <Button 
-            size="lg" 
-            variant="outline" 
-            className="border-2 border-vesuviano-500 text-vesuviano-500 hover:bg-vesuviano-500 hover:text-white px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl w-full sm:w-auto"
-            onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            {t('hero.freeConsultation')}
-          </Button>
+        <div className="flex flex-col items-center gap-3 sm:gap-4 justify-center mb-6 sm:mb-8 animate-scale-in px-2 sm:px-4" style={{ animationDelay: '0.9s' }}>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center w-full">
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="border-2 border-white/80 text-white hover:bg-white/10 hover:border-white px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl w-full sm:w-auto backdrop-blur-sm"
+              onClick={scrollToProducts}
+            >
+              {t('hero.discoverOvens')}
+            </Button>
+            <Button 
+              size="lg" 
+              className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-bold transition-all duration-300 hover:scale-105 hover:shadow-2xl w-full sm:w-auto shadow-lg"
+              onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              {t('hero.freeConsultation')}
+            </Button>
+          </div>
+          <p className="text-white/90 text-xs sm:text-sm text-center max-w-md animate-fade-in" style={{ animationDelay: '1.1s' }}>
+            {t('hero.consultationSubtext')}
+          </p>
         </div>
 
         {/* Scroll Indicator */}
