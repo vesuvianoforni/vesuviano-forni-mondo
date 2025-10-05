@@ -7,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Phone, Mail, MapPin, Download, CheckCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,21 +20,10 @@ const ConsultationForm = () => {
     name: "",
     email: "",
     phone: "",
-    company: "",
     country: "",
     ovenType: "",
-    capacity: "",
-    budget: "",
-    message: "",
-    services: [] as string[]
+    message: ""
   });
-
-  const services = [
-    { id: "identification", label: t('consultation.services.identification') },
-    { id: "quotation", label: t('consultation.services.quotation') },
-    { id: "rendering", label: t('consultation.services.rendering') },
-    { id: "logistics", label: t('consultation.services.logistics') }
-  ];
 
   const ovenTypes = [
     t('consultation.ovenTypes.woodFixed'),
@@ -108,15 +96,6 @@ const ConsultationForm = () => {
     });
   };
 
-  const handleServiceChange = (serviceId: string, checked: boolean) => {
-    setFormData(prev => ({
-      ...prev,
-      services: checked 
-        ? [...prev.services, serviceId]
-        : prev.services.filter(s => s !== serviceId)
-    }));
-  };
-
   return (
     <section id="consultation" className="py-16 md:py-20 bg-gradient-to-br from-gray-50 to-vesuviano-50">
       <div className="container mx-auto px-4 sm:px-6">
@@ -177,89 +156,36 @@ const ConsultationForm = () => {
                           type="tel"
                           value={formData.phone}
                           onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                          required
                           placeholder={t('consultation.form.phonePlaceholder')}
                           className="w-full"
                         />
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">{t('consultation.form.company')}</label>
-                        <Input
-                          type="text"
-                          value={formData.company}
-                          onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
-                          placeholder={t('consultation.form.companyPlaceholder')}
-                          className="w-full"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                       <div>
                         <label className="block text-sm font-medium mb-2">{t('consultation.form.country')}</label>
                         <Input
                           type="text"
                           value={formData.country}
                           onChange={(e) => setFormData(prev => ({ ...prev, country: e.target.value }))}
+                          required
                           placeholder={t('consultation.form.countryPlaceholder')}
                           className="w-full"
                         />
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">{t('consultation.form.ovenType')}</label>
-                        <Select onValueChange={(value) => setFormData(prev => ({ ...prev, ovenType: value }))}>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder={t('consultation.form.ovenTypePlaceholder')} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ovenTypes.map((type) => (
-                              <SelectItem key={type} value={type}>{type}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-                      <div>
-                        <label className="block text-sm font-medium mb-2">{t('consultation.form.capacity')}</label>
-                        <Input
-                          type="text"
-                          value={formData.capacity}
-                          onChange={(e) => setFormData(prev => ({ ...prev, capacity: e.target.value }))}
-                          placeholder={t('consultation.form.capacityPlaceholder')}
-                          className="w-full"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">{t('consultation.form.budget')}</label>
-                        <Input
-                          type="text"
-                          value={formData.budget}
-                          onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
-                          placeholder={t('consultation.form.budgetPlaceholder')}
-                          className="w-full"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Services */}
                     <div>
-                      <label className="block text-sm font-medium mb-3 md:mb-4">{t('consultation.form.servicesLabel')}</label>
-                      <div className="grid grid-cols-1 gap-3">
-                        {services.map((service) => (
-                          <div key={service.id} className="flex items-start space-x-3">
-                            <Checkbox
-                              id={service.id}
-                              checked={formData.services.includes(service.id)}
-                              onCheckedChange={(checked) => handleServiceChange(service.id, checked as boolean)}
-                              className="mt-0.5 flex-shrink-0"
-                            />
-                            <label htmlFor={service.id} className="text-sm cursor-pointer leading-relaxed">
-                              {service.label}
-                            </label>
-                          </div>
-                        ))}
-                      </div>
+                      <label className="block text-sm font-medium mb-2">{t('consultation.form.ovenType')}</label>
+                      <Select onValueChange={(value) => setFormData(prev => ({ ...prev, ovenType: value }))}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder={t('consultation.form.ovenTypePlaceholder')} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {ovenTypes.map((type) => (
+                            <SelectItem key={type} value={type}>{type}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     {/* Message */}
@@ -300,20 +226,6 @@ const ConsultationForm = () => {
 
             {/* Contact Info - Seconda su mobile */}
             <div className="order-2 lg:order-1 lg:col-span-1 space-y-4 md:space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="font-playfair text-xl md:text-2xl">{t('consultation.contact.title')}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 md:space-y-4">
-                  {services.map((service) => (
-                    <div key={service.id} className="flex items-start space-x-3">
-                      <CheckCircle className="text-vesuviano-600 mt-0.5 flex-shrink-0" size={16} />
-                      <span className="text-sm text-gray-700 leading-relaxed">{service.label}</span>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-
               <Card>
                 <CardHeader>
                   <CardTitle className="font-playfair text-xl md:text-2xl">{t('consultation.contact.directTitle')}</CardTitle>
