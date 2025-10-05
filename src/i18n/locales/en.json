@@ -537,6 +537,164 @@
       "preview": "Space preview"
     }
   },
+  "ovenDetails": {
+    "traditional": {
+      "aboutTitle": "The Art of Wood-Fired Cooking",
+      "aboutText1": "Traditional wood-fired ovens represent the essence of true Neapolitan pizza. Wood-fired cooking gives a unique and unmistakable flavor that only the living heat of the flame can provide.",
+      "aboutText2": "Each oven is handcrafted with the highest quality refractory materials, ensuring even heat distribution and long-lasting durability.",
+      "featuresTitle": "Technical Features",
+      "specsTitle": "Technical Specifications",
+      "specs": {
+        "material": {
+          "label": "Chamber Material",
+          "value": "Handcrafted refractory bricks"
+        },
+        "temperature": {
+          "label": "Maximum Temperature",
+          "value": "500°C"
+        },
+        "heatup": {
+          "label": "Heating Time",
+          "value": "45-60 minutes"
+        },
+        "capacity": {
+          "label": "Capacity",
+          "value": "4-8 pizzas (depending on model)"
+        },
+        "fuel": {
+          "label": "Fuel",
+          "value": "Dry wood (preferably beech or oak)"
+        }
+      },
+      "applicationsTitle": "Ideal For",
+      "applicationsText": "Perfect for restaurants, traditional pizzerias and anyone who wants to offer the authentic Neapolitan flavor.",
+      "applications": [
+        "Neapolitan Pizza",
+        "Artisan Bread",
+        "Roasts",
+        "Focaccia"
+      ],
+      "ctaTitle": "Interested in Traditional Ovens?",
+      "ctaText": "Contact us for a free consultation and discover which model is perfect for your business."
+    },
+    "gas": {
+      "aboutTitle": "Precision and Professional Control",
+      "aboutText1": "Vesuviano gas ovens combine the tradition of Neapolitan cooking with modern gas technology. They offer precise temperature control and the ability to maintain constant cooking conditions.",
+      "aboutText2": "Ideal for professionals who need efficiency, consistency and ease of use, without sacrificing the quality of traditional cooking.",
+      "featuresTitle": "Technical Features",
+      "specsTitle": "Technical Specifications",
+      "specs": {
+        "material": {
+          "label": "Chamber Material",
+          "value": "Refractory bricks with insulating coating"
+        },
+        "temperature": {
+          "label": "Maximum Temperature",
+          "value": "450-500°C"
+        },
+        "heatup": {
+          "label": "Heating Time",
+          "value": "20-30 minutes"
+        },
+        "capacity": {
+          "label": "Capacity",
+          "value": "4-10 pizzas (depending on model)"
+        },
+        "fuel": {
+          "label": "Fuel",
+          "value": "Natural gas or LPG"
+        }
+      },
+      "applicationsTitle": "Ideal For",
+      "applicationsText": "Perfect for modern restaurants, pizzeria chains and businesses requiring high productivity with consistent quality.",
+      "applications": [
+        "High Production Pizzerias",
+        "Modern Restaurants",
+        "Catering",
+        "Bakeries"
+      ],
+      "ctaTitle": "Want to Learn More About Gas Ovens?",
+      "ctaText": "Request a free consultation to discover all the advantages of our gas ovens."
+    },
+    "electric": {
+      "aboutTitle": "Technology and Sustainability",
+      "aboutText1": "Vesuviano electric ovens represent the future of professional cooking. Thanks to digital temperature control and advanced heating systems, they guarantee perfect, constant and completely eco-sustainable cooking.",
+      "aboutText2": "Ideal for environments where it is not possible to install a chimney or where maximum precision in cooking is required.",
+      "featuresTitle": "Technical Features",
+      "specsTitle": "Technical Specifications",
+      "specs": {
+        "material": {
+          "label": "Chamber Material",
+          "value": "High quality refractory stone"
+        },
+        "temperature": {
+          "label": "Maximum Temperature",
+          "value": "400-450°C"
+        },
+        "heatup": {
+          "label": "Heating Time",
+          "value": "15-25 minutes"
+        },
+        "capacity": {
+          "label": "Capacity",
+          "value": "3-6 pizzas (depending on model)"
+        },
+        "power": {
+          "label": "Power Supply",
+          "value": "380V three-phase"
+        }
+      },
+      "applicationsTitle": "Ideal For",
+      "applicationsText": "Perfect for shopping centers, food courts, urban restaurants and all activities requiring an eco-friendly solution.",
+      "applications": [
+        "Shopping Centers",
+        "Food Courts",
+        "Urban Restaurants",
+        "Hotels"
+      ],
+      "ctaTitle": "Discover Electric Ovens",
+      "ctaText": "Contact us for more information about our electric ovens and their applications."
+    },
+    "rotating": {
+      "aboutTitle": "Maximum Productivity",
+      "aboutText1": "Vesuviano rotating ovens are the ideal solution for those who need very high production volumes while maintaining excellent quality. The rotating deck ensures uniform cooking on every pizza.",
+      "aboutText2": "Thanks to advanced automation and the ability to cook numerous pizzas simultaneously, these ovens are perfect for high-intensity production activities.",
+      "featuresTitle": "Technical Features",
+      "specsTitle": "Technical Specifications",
+      "specs": {
+        "material": {
+          "label": "Chamber Material",
+          "value": "Rotating refractory stone"
+        },
+        "temperature": {
+          "label": "Maximum Temperature",
+          "value": "450°C"
+        },
+        "heatup": {
+          "label": "Heating Time",
+          "value": "25-35 minutes"
+        },
+        "capacity": {
+          "label": "Capacity",
+          "value": "10-20 pizzas simultaneously"
+        },
+        "rotation": {
+          "label": "Rotation",
+          "value": "Programmable with digital timer"
+        }
+      },
+      "applicationsTitle": "Ideal For",
+      "applicationsText": "Perfect for very high volume pizzerias, chains, events and all activities requiring massive production.",
+      "applications": [
+        "Pizzeria Chains",
+        "Industrial Production",
+        "Events and Catering",
+        "High Volume Delivery"
+      ],
+      "ctaTitle": "Rotating Ovens for High Production",
+      "ctaText": "Request a consultation to discover how rotating ovens can revolutionize your production."
+    }
+  },
   "thankYou": {
     "title": "Thank You for Your Request!",
     "subtitle": "We have received your free consultation request and sent you a confirmation email.",

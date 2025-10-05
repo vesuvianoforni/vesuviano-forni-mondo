@@ -499,6 +499,164 @@
       "preview": "Preview dello spazio"
     }
   },
+  "ovenDetails": {
+    "traditional": {
+      "aboutTitle": "L'Arte della Cottura a Legna",
+      "aboutText1": "I forni tradizionali a legna rappresentano l'essenza della vera pizza napoletana. La cottura a legna conferisce un sapore unico e inconfondibile, che solo il calore vivo della fiamma può donare.",
+      "aboutText2": "Ogni forno è realizzato artigianalmente con materiali refrattari di altissima qualità, garantendo una distribuzione omogenea del calore e una lunga durata nel tempo.",
+      "featuresTitle": "Caratteristiche Tecniche",
+      "specsTitle": "Specifiche Tecniche",
+      "specs": {
+        "material": {
+          "label": "Materiale Camera",
+          "value": "Mattoni refrattari artigianali"
+        },
+        "temperature": {
+          "label": "Temperatura Massima",
+          "value": "500°C"
+        },
+        "heatup": {
+          "label": "Tempo di Riscaldamento",
+          "value": "45-60 minuti"
+        },
+        "capacity": {
+          "label": "Capacità",
+          "value": "4-8 pizze (a seconda del modello)"
+        },
+        "fuel": {
+          "label": "Combustibile",
+          "value": "Legna secca (preferibilmente faggio o quercia)"
+        }
+      },
+      "applicationsTitle": "Ideale Per",
+      "applicationsText": "Perfetto per ristoranti, pizzerie tradizionali e tutti coloro che vogliono offrire l'autentico sapore napoletano.",
+      "applications": [
+        "Pizza Napoletana",
+        "Pane Artigianale",
+        "Arrosti",
+        "Focacce"
+      ],
+      "ctaTitle": "Interessato ai Forni Tradizionali?",
+      "ctaText": "Contattaci per una consulenza gratuita e scopri quale modello è perfetto per la tua attività."
+    },
+    "gas": {
+      "aboutTitle": "Precisione e Controllo Professionale",
+      "aboutText1": "I forni a gas Vesuviano combinano la tradizione della cottura napoletana con la moderna tecnologia del gas. Offrono un controllo preciso della temperatura e la possibilità di mantenere costanti le condizioni di cottura.",
+      "aboutText2": "Ideali per professionisti che necessitano di efficienza, costanza e facilità d'uso, senza rinunciare alla qualità della cottura tradizionale.",
+      "featuresTitle": "Caratteristiche Tecniche",
+      "specsTitle": "Specifiche Tecniche",
+      "specs": {
+        "material": {
+          "label": "Materiale Camera",
+          "value": "Mattoni refrattari con rivestimento isolante"
+        },
+        "temperature": {
+          "label": "Temperatura Massima",
+          "value": "450-500°C"
+        },
+        "heatup": {
+          "label": "Tempo di Riscaldamento",
+          "value": "20-30 minuti"
+        },
+        "capacity": {
+          "label": "Capacità",
+          "value": "4-10 pizze (a seconda del modello)"
+        },
+        "fuel": {
+          "label": "Combustibile",
+          "value": "Gas metano o GPL"
+        }
+      },
+      "applicationsTitle": "Ideale Per",
+      "applicationsText": "Perfetto per ristoranti moderni, catene di pizzerie e attività che richiedono alta produttività con qualità costante.",
+      "applications": [
+        "Pizzerie ad Alta Produzione",
+        "Ristoranti Moderni",
+        "Catering",
+        "Panifici"
+      ],
+      "ctaTitle": "Vuoi Saperne di Più sui Forni a Gas?",
+      "ctaText": "Richiedi una consulenza gratuita per scoprire tutti i vantaggi dei nostri forni a gas."
+    },
+    "electric": {
+      "aboutTitle": "Tecnologia e Sostenibilità",
+      "aboutText1": "I forni elettrici Vesuviano rappresentano il futuro della cottura professionale. Grazie al controllo digitale della temperatura e ai sistemi di riscaldamento avanzati, garantiscono una cottura perfetta, costante e completamente eco-sostenibile.",
+      "aboutText2": "Ideali per ambienti dove non è possibile installare canna fumaria o dove si richiede la massima precisione nella cottura.",
+      "featuresTitle": "Caratteristiche Tecniche",
+      "specsTitle": "Specifiche Tecniche",
+      "specs": {
+        "material": {
+          "label": "Materiale Camera",
+          "value": "Pietra refrattaria di alta qualità"
+        },
+        "temperature": {
+          "label": "Temperatura Massima",
+          "value": "400-450°C"
+        },
+        "heatup": {
+          "label": "Tempo di Riscaldamento",
+          "value": "15-25 minuti"
+        },
+        "capacity": {
+          "label": "Capacità",
+          "value": "3-6 pizze (a seconda del modello)"
+        },
+        "power": {
+          "label": "Alimentazione",
+          "value": "380V trifase"
+        }
+      },
+      "applicationsTitle": "Ideale Per",
+      "applicationsText": "Perfetto per centri commerciali, food court, ristoranti urbani e tutte le attività che necessitano di una soluzione ecologica.",
+      "applications": [
+        "Centri Commerciali",
+        "Food Court",
+        "Ristoranti Urbani",
+        "Hotel"
+      ],
+      "ctaTitle": "Scopri i Forni Elettrici",
+      "ctaText": "Contattaci per maggiori informazioni sui nostri forni elettrici e le loro applicazioni."
+    },
+    "rotating": {
+      "aboutTitle": "Massima Produttività",
+      "aboutText1": "I forni rotativi Vesuviano sono la soluzione ideale per chi necessita di altissimi volumi di produzione mantenendo una qualità eccellente. Il piano rotante garantisce una cottura uniforme su ogni pizza.",
+      "aboutText2": "Grazie all'automazione avanzata e alla capacità di cuocere simultaneamente numerose pizze, questi forni sono perfetti per attività ad alta intensità produttiva.",
+      "featuresTitle": "Caratteristiche Tecniche",
+      "specsTitle": "Specifiche Tecniche",
+      "specs": {
+        "material": {
+          "label": "Materiale Camera",
+          "value": "Pietra refrattaria rotante"
+        },
+        "temperature": {
+          "label": "Temperatura Massima",
+          "value": "450°C"
+        },
+        "heatup": {
+          "label": "Tempo di Riscaldamento",
+          "value": "25-35 minuti"
+        },
+        "capacity": {
+          "label": "Capacità",
+          "value": "10-20 pizze simultaneamente"
+        },
+        "rotation": {
+          "label": "Rotazione",
+          "value": "Programmabile con timer digitale"
+        }
+      },
+      "applicationsTitle": "Ideale Per",
+      "applicationsText": "Perfetto per pizzerie ad altissimo volume, catene, eventi e tutte le attività che richiedono produzioni massive.",
+      "applications": [
+        "Catene di Pizzerie",
+        "Produzioni Industriali",
+        "Eventi e Catering",
+        "Delivery ad Alto Volume"
+      ],
+      "ctaTitle": "Forni Rotativi per Alta Produzione",
+      "ctaText": "Richiedi una consulenza per scoprire come i forni rotativi possono rivoluzionare la tua produzione."
+    }
+  },
   "thankYou": {
     "title": "Grazie per la Tua Richiesta!",
     "subtitle": "Abbiamo ricevuto la tua richiesta di consulenza gratuita e ti abbiamo inviato una email di conferma.",

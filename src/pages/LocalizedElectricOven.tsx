@@ -1,0 +1,152 @@
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import Header from '@/components/Header';
+import ConsultationForm from '@/components/ConsultationForm';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+
+interface LocalizedElectricOvenProps {
+  lang: 'it' | 'en' | 'fr' | 'es' | 'de';
+}
+
+const LocalizedElectricOven = ({ lang }: LocalizedElectricOvenProps) => {
+  const { i18n, t } = useTranslation();
+
+  useEffect(() => {
+    i18n.changeLanguage(lang);
+    document.documentElement.lang = lang;
+    document.title = `${t('products.electric.title')} - Vesuviano`;
+  }, [lang, i18n, t]);
+
+  return (
+    <div className="min-h-screen bg-white">
+        <Header />
+        
+        {/* Hero Section */}
+        <section className="relative h-[60vh] min-h-[500px] overflow-hidden">
+          <img 
+            src="/lovable-uploads/forno-metallo-bianco-nuovo.png"
+            alt={t('products.electric.title')}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
+          <div className="relative h-full container mx-auto px-6 flex items-center">
+            <div className="max-w-3xl text-white">
+              <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                {t('products.electric.title')}
+              </h1>
+              <p className="text-xl md:text-2xl text-white/90 mb-8">
+                {t('products.electric.subtitle')}
+              </p>
+              <Button 
+                size="lg"
+                className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-6 text-lg"
+                onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                {t('hero.freeConsultation')}
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Main Content */}
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-6 max-w-6xl">
+            <div className="grid md:grid-cols-2 gap-12 mb-20">
+              <div>
+                <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-6">
+                  {t('ovenDetails.electric.aboutTitle')}
+                </h2>
+                <p className="text-lg text-stone-600 leading-relaxed mb-6">
+                  {t('ovenDetails.electric.aboutText1')}
+                </p>
+                <p className="text-lg text-stone-600 leading-relaxed">
+                  {t('ovenDetails.electric.aboutText2')}
+                </p>
+              </div>
+              <div className="space-y-6">
+                <img 
+                  src="/lovable-uploads/forno-metallo-nero-nuovo.png"
+                  alt={t('products.electric.title')}
+                  className="w-full h-80 object-cover rounded-lg shadow-lg"
+                />
+              </div>
+            </div>
+
+            {/* Technical Features */}
+            <div className="mb-20">
+              <h3 className="font-playfair text-3xl font-bold text-charcoal-900 mb-8 text-center">
+                {t('ovenDetails.electric.featuresTitle')}
+              </h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {Object.keys(t('products.electric.features', { returnObjects: true }) as object).map((featureKey) => (
+                  <Card key={featureKey} className="border-stone-200 hover:border-vesuviano-300 transition-colors">
+                    <CardContent className="p-6">
+                      <div className="w-12 h-12 bg-vesuviano-100 rounded-full flex items-center justify-center mb-4">
+                        <div className="w-6 h-6 bg-vesuviano-500 rounded-full"></div>
+                      </div>
+                      <h4 className="font-inter font-semibold text-charcoal-900 mb-2">
+                        {t(`products.electric.features.${featureKey}`)}
+                      </h4>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Technical Specifications */}
+            <div className="bg-stone-50 rounded-2xl p-8 mb-20">
+              <h3 className="font-playfair text-3xl font-bold text-charcoal-900 mb-8">
+                {t('ovenDetails.electric.specsTitle')}
+              </h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                {Object.keys(t('ovenDetails.electric.specs', { returnObjects: true }) as object).map((specKey) => (
+                  <div key={specKey} className="flex items-start space-x-4">
+                    <div className="w-2 h-2 bg-vesuviano-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <strong className="text-charcoal-900">{t(`ovenDetails.electric.specs.${specKey}.label`)}:</strong>{' '}
+                      <span className="text-stone-600">{t(`ovenDetails.electric.specs.${specKey}.value`)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Applications */}
+            <div className="text-center mb-20">
+              <h3 className="font-playfair text-3xl font-bold text-charcoal-900 mb-6">
+                {t('ovenDetails.electric.applicationsTitle')}
+              </h3>
+              <p className="text-lg text-stone-600 max-w-3xl mx-auto mb-8">
+                {t('ovenDetails.electric.applicationsText')}
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                {(t('ovenDetails.electric.applications', { returnObjects: true }) as string[]).map((app, index) => (
+                  <div key={index} className="bg-vesuviano-50 text-vesuviano-700 px-6 py-3 rounded-full font-inter">
+                    {app}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Consultation Form */}
+        <section id="consultation" className="py-20 bg-stone-50">
+          <div className="container mx-auto px-6 max-w-4xl">
+            <div className="text-center mb-12">
+              <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-4">
+                {t('ovenDetails.electric.ctaTitle')}
+              </h2>
+              <p className="text-lg text-stone-600">
+                {t('ovenDetails.electric.ctaText')}
+              </p>
+            </div>
+            <ConsultationForm />
+          </div>
+        </section>
+      </div>
+  );
+};
+
+export default LocalizedElectricOven;

@@ -3,15 +3,52 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ImageZoomModal from './ImageZoomModal';
 
 const ProductCategories = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [zoomedImage, setZoomedImage] = useState<{
     url: string;
     alt: string;
     title: string;
   } | null>(null);
+
+  const getOvenPath = (ovenType: string) => {
+    const lang = i18n.language || 'it';
+    const paths: Record<string, Record<string, string>> = {
+      'traditional': {
+        'it': '/it/forni-tradizionali',
+        'en': '/en/traditional-ovens',
+        'fr': '/fr/fours-traditionnels',
+        'es': '/es/hornos-tradicionales',
+        'de': '/de/traditionelle-oefen'
+      },
+      'gas': {
+        'it': '/it/forni-gas',
+        'en': '/en/gas-ovens',
+        'fr': '/fr/fours-gaz',
+        'es': '/es/hornos-gas',
+        'de': '/de/gasoefen'
+      },
+      'electric': {
+        'it': '/it/forni-elettrici',
+        'en': '/en/electric-ovens',
+        'fr': '/fr/fours-electriques',
+        'es': '/es/hornos-electricos',
+        'de': '/de/elektrooefen'
+      },
+      'rotating': {
+        'it': '/it/forni-rotativi',
+        'en': '/en/rotating-ovens',
+        'fr': '/fr/fours-rotatifs',
+        'es': '/es/hornos-rotativos',
+        'de': '/de/drehoefen'
+      }
+    };
+    return paths[ovenType]?.[lang] || paths[ovenType]?.['it'] || '/';
+  };
 
   const categories = [
     {
@@ -91,7 +128,7 @@ const ProductCategories = () => {
 
                   <Button 
                     className="w-full bg-stone-100 text-stone-700 hover:bg-vesuviano-500 hover:text-white transition-all duration-300 text-sm sm:text-base py-2 sm:py-3"
-                    onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
+                    onClick={() => navigate(getOvenPath(category.key))}
                   >
                     {t('products.learnMore')}
                   </Button>
