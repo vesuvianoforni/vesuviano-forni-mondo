@@ -92,6 +92,18 @@ const Services = () => {
             ))}
           </div>
 
+          {/* Distinctive Badges */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+            <div className="flex items-center gap-2 bg-white/5 backdrop-blur-sm border border-stone-200 rounded-full px-6 py-3 hover:bg-white/10 transition-all duration-300 hover:scale-105">
+              <span className="text-2xl">🇮🇹</span>
+              <span className="font-semibold text-stone-800">Made in Naples</span>
+            </div>
+            <div className="flex items-center gap-2 bg-vesuviano-50/80 backdrop-blur-sm border border-vesuviano-200 rounded-full px-6 py-3 hover:bg-vesuviano-100 transition-all duration-300 hover:scale-105">
+              <span className="text-2xl">🔥</span>
+              <span className="font-semibold text-vesuviano-700">500°C Certified Performance</span>
+            </div>
+          </div>
+
           {/* Bottom CTA */}
           <div className="text-center animate-scale-in" style={{ animationDelay: '0.8s' }}>
             <div className="bg-vesuviano-50 rounded-xl p-8 max-w-3xl mx-auto border border-vesuviano-200 hover:shadow-xl transition-all duration-500 hover:scale-105">
