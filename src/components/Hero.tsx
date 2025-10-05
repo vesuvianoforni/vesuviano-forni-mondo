@@ -59,18 +59,18 @@ const Hero = () => {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center w-full">
             <Button 
               size="lg" 
-              variant="outline"
-              className="border-2 border-white text-white bg-black/30 hover:bg-black/50 hover:border-white backdrop-blur-md px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-xl w-full sm:w-auto"
-              onClick={scrollToProducts}
-            >
-              {t('hero.discoverOvens')}
-            </Button>
-            <Button 
-              size="lg" 
               className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-bold transition-all duration-300 hover:scale-105 hover:shadow-2xl w-full sm:w-auto shadow-lg"
               onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
             >
               {t('hero.freeConsultation')}
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="border-2 border-black/60 text-white bg-black/20 hover:bg-black/40 hover:border-black/80 backdrop-blur-md px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-medium transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
+              onClick={scrollToProducts}
+            >
+              {t('hero.discoverOvens')}
             </Button>
           </div>
           <p className="text-white/90 text-xs sm:text-sm text-center max-w-md animate-fade-in" style={{ animationDelay: '1.1s' }}>
