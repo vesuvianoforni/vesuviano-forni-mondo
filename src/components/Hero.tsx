@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Star } from "lucide-react";
 import { useTranslation, Trans } from 'react-i18next';
 import LazyImage from './LazyImage';
 import laboratorioHero from '@/assets/laboratorio-artigianale-hero.png';
@@ -76,6 +76,18 @@ const Hero = () => {
           <p className="text-white/90 text-xs sm:text-sm text-center max-w-md animate-fade-in" style={{ animationDelay: '1.1s' }}>
             {t('hero.consultationSubtext')}
           </p>
+          
+          {/* Customer Review */}
+          <div className="mt-4 sm:mt-6 bg-white/10 backdrop-blur-md rounded-lg p-3 sm:p-4 max-w-xl mx-auto animate-fade-in border border-white/20" style={{ animationDelay: '1.3s' }}>
+            <div className="flex justify-center gap-1 mb-2">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
+              ))}
+            </div>
+            <p className="text-white text-xs sm:text-sm text-center italic leading-relaxed">
+              "{t('hero.review')}"
+            </p>
+          </div>
         </div>
 
         {/* Scroll Indicator */}
