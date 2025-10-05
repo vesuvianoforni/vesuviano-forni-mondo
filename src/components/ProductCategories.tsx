@@ -100,7 +100,7 @@ const ProductCategories = () => {
                   <img 
                     src={category.image} 
                     alt={t(`products.${category.key}.title`)}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-full object-cover object-[center_35%] group-hover:scale-110 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                   <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 text-white">
