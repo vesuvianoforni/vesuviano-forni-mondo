@@ -66,6 +66,17 @@
         "efficiency": "Energy efficiency"
       }
     },
+    "vesuviobuono": {
+      "title": "VesuvioBuono®",
+      "subtitle": "Zero Emissions",
+      "description": "Revolutionary integrated soot eliminator. Traditional wood-fired cooking with zero harmful emissions.",
+      "features": {
+        "zeroEmissions": "Zero harmful emissions",
+        "traditional": "Traditional wood-fired cooking",
+        "integrated": "Integrated soot eliminator",
+        "certified": "Environmentally certified"
+      }
+    },
     "learnMore": "Learn More",
     "badges": {
       "madeInNaples": "Made in Naples 🇮🇹",

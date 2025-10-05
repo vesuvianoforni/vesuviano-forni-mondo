@@ -82,6 +82,17 @@
         "efficiency": "Efficacité énergétique"
       }
     },
+    "vesuviobuono": {
+      "title": "VesuvioBuono®",
+      "subtitle": "Zéro Émissions",
+      "description": "Éliminateur de suie intégré révolutionnaire. Cuisson au bois traditionnelle avec zéro émissions nocives.",
+      "features": {
+        "zeroEmissions": "Zéro émissions nocives",
+        "traditional": "Cuisson traditionnelle au bois",
+        "integrated": "Éliminateur de suie intégré",
+        "certified": "Certifié environnemental"
+      }
+    },
     "learnMore": "En Savoir Plus",
     "badges": {
       "madeInNaples": "Made in Naples 🇮🇹",

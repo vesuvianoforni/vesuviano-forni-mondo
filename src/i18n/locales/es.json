@@ -66,6 +66,17 @@
         "efficiency": "Eficiencia energética"
       }
     },
+    "vesuviobuono": {
+      "title": "VesuvioBuono®",
+      "subtitle": "Cero Emisiones",
+      "description": "Revolucionario eliminador de hollín integrado. Cocción tradicional a leña con cero emisiones nocivas.",
+      "features": {
+        "zeroEmissions": "Cero emisiones nocivas",
+        "traditional": "Cocción tradicional a leña",
+        "integrated": "Eliminador de hollín integrado",
+        "certified": "Certificado ambiental"
+      }
+    },
     "learnMore": "Saber Más",
     "badges": {
       "madeInNaples": "Made in Naples 🇮🇹",

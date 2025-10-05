@@ -66,6 +66,17 @@
         "efficiency": "Efficienza energetica"
       }
     },
+    "vesuviobuono": {
+      "title": "VesuvioBuono®",
+      "subtitle": "Zero Emissioni",
+      "description": "Rivoluzionario abbattitore di fuliggine integrato. Cottura a legna tradizionale con zero emissioni nocive.",
+      "features": {
+        "zeroEmissions": "Zero emissioni nocive",
+        "traditional": "Cottura tradizionale a legna",
+        "integrated": "Abbattitore fuliggine integrato",
+        "certified": "Certificato ambientale"
+      }
+    },
     "learnMore": "Scopri di Più",
     "badges": {
       "madeInNaples": "Made in Naples 🇮🇹",

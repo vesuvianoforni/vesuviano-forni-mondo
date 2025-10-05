@@ -66,6 +66,17 @@
         "efficiency": "Energieeffizienz"
       }
     },
+    "vesuviobuono": {
+      "title": "VesuvioBuono®",
+      "subtitle": "Null Emissionen",
+      "description": "Revolutionärer integrierter Rußbeseitiger. Traditionelles Holzfeuer mit null schädlichen Emissionen.",
+      "features": {
+        "zeroEmissions": "Null schädliche Emissionen",
+        "traditional": "Traditionelles Holzfeuer",
+        "integrated": "Integrierter Rußbeseitiger",
+        "certified": "Umweltzertifiziert"
+      }
+    },
     "learnMore": "Mehr Erfahren",
     "badges": {
       "madeInNaples": "Made in Naples 🇮🇹",

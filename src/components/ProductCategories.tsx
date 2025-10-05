@@ -45,6 +45,13 @@ const ProductCategories = () => {
         'fr': '/fr/fours-rotatifs',
         'es': '/es/hornos-rotativos',
         'de': '/de/drehoefen'
+      },
+      'vesuviobuono': {
+        'it': '/it#vesuviobuono',
+        'en': '/en#vesuviobuono',
+        'fr': '/fr#vesuviobuono',
+        'es': '/es#vesuviobuono',
+        'de': '/de#vesuviobuono'
       }
     };
     return paths[ovenType]?.[lang] || paths[ovenType]?.['it'] || '/';
@@ -66,6 +73,10 @@ const ProductCategories = () => {
     {
       key: 'rotating',
       image: "/lovable-uploads/vesuviobuono-osteria-pizza.jpg"
+    },
+    {
+      key: 'vesuviobuono',
+      image: "/lovable-uploads/vesuviobuono-zero-emissioni.jpg"
     }
   ];
 
@@ -84,7 +95,7 @@ const ProductCategories = () => {
           </div>
 
           {/* Categories Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-12 sm:mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-12 sm:mb-16">
             {categories.map((category, index) => (
               <Card 
                 key={category.key}
