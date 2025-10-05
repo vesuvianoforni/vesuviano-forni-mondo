@@ -438,6 +438,164 @@
       "preview": "Raumvorschau"
     }
   },
+  "ovenDetails": {
+    "traditional": {
+      "aboutTitle": "Die Kunst des Holzofenbackens",
+      "aboutText1": "Traditionelle Holzöfen repräsentieren die Essenz der echten neapolitanischen Pizza. Das Backen mit Holz verleiht einen einzigartigen und unverwechselbaren Geschmack, den nur die lebendige Hitze der Flamme bieten kann.",
+      "aboutText2": "Jeder Ofen wird handwerklich mit feuerfesten Materialien höchster Qualität gefertigt und gewährleistet eine gleichmäßige Wärmeverteilung und lange Haltbarkeit.",
+      "featuresTitle": "Technische Merkmale",
+      "specsTitle": "Technische Spezifikationen",
+      "specs": {
+        "material": {
+          "label": "Kammermaterial",
+          "value": "Handgefertigte feuerfeste Ziegel"
+        },
+        "temperature": {
+          "label": "Maximale Temperatur",
+          "value": "500°C"
+        },
+        "heatup": {
+          "label": "Aufheizzeit",
+          "value": "45-60 Minuten"
+        },
+        "capacity": {
+          "label": "Kapazität",
+          "value": "4-8 Pizzen (je nach Modell)"
+        },
+        "fuel": {
+          "label": "Brennstoff",
+          "value": "Trockenes Holz (vorzugsweise Buche oder Eiche)"
+        }
+      },
+      "applicationsTitle": "Ideal Für",
+      "applicationsText": "Perfekt für Restaurants, traditionelle Pizzerien und alle, die den authentischen neapolitanischen Geschmack bieten möchten.",
+      "applications": [
+        "Neapolitanische Pizza",
+        "Handwerkliches Brot",
+        "Braten",
+        "Focaccia"
+      ],
+      "ctaTitle": "Interessiert an Traditionellen Öfen?",
+      "ctaText": "Kontaktieren Sie uns für eine kostenlose Beratung und entdecken Sie, welches Modell perfekt für Ihr Geschäft ist."
+    },
+    "gas": {
+      "aboutTitle": "Präzision und Professionelle Kontrolle",
+      "aboutText1": "Vesuviano Gasöfen kombinieren die Tradition der neapolitanischen Küche mit moderner Gastechnologie. Sie bieten präzise Temperaturkontrolle und die Möglichkeit, konstante Backbedingungen aufrechtzuerhalten.",
+      "aboutText2": "Ideal für Profis, die Effizienz, Konstanz und Benutzerfreundlichkeit benötigen, ohne die Qualität des traditionellen Backens zu opfern.",
+      "featuresTitle": "Technische Merkmale",
+      "specsTitle": "Technische Spezifikationen",
+      "specs": {
+        "material": {
+          "label": "Kammermaterial",
+          "value": "Feuerfeste Ziegel mit isolierender Beschichtung"
+        },
+        "temperature": {
+          "label": "Maximale Temperatur",
+          "value": "450-500°C"
+        },
+        "heatup": {
+          "label": "Aufheizzeit",
+          "value": "20-30 Minuten"
+        },
+        "capacity": {
+          "label": "Kapazität",
+          "value": "4-10 Pizzen (je nach Modell)"
+        },
+        "fuel": {
+          "label": "Brennstoff",
+          "value": "Erdgas oder LPG"
+        }
+      },
+      "applicationsTitle": "Ideal Für",
+      "applicationsText": "Perfekt für moderne Restaurants, Pizzeriaketten und Betriebe, die hohe Produktivität mit gleichbleibender Qualität benötigen.",
+      "applications": [
+        "Hochproduktions-Pizzerien",
+        "Moderne Restaurants",
+        "Catering",
+        "Bäckereien"
+      ],
+      "ctaTitle": "Möchten Sie Mehr über Gasöfen Erfahren?",
+      "ctaText": "Fordern Sie eine kostenlose Beratung an, um alle Vorteile unserer Gasöfen zu entdecken."
+    },
+    "electric": {
+      "aboutTitle": "Technologie und Nachhaltigkeit",
+      "aboutText1": "Vesuviano Elektroöfen repräsentieren die Zukunft des professionellen Backens. Dank digitaler Temperaturkontrolle und fortschrittlicher Heizsysteme garantieren sie perfektes, konstantes und vollständig umweltfreundliches Backen.",
+      "aboutText2": "Ideal für Umgebungen, in denen kein Schornstein installiert werden kann oder wo maximale Backpräzision erforderlich ist.",
+      "featuresTitle": "Technische Merkmale",
+      "specsTitle": "Technische Spezifikationen",
+      "specs": {
+        "material": {
+          "label": "Kammermaterial",
+          "value": "Hochwertige feuerfeste Steine"
+        },
+        "temperature": {
+          "label": "Maximale Temperatur",
+          "value": "400-450°C"
+        },
+        "heatup": {
+          "label": "Aufheizzeit",
+          "value": "15-25 Minuten"
+        },
+        "capacity": {
+          "label": "Kapazität",
+          "value": "3-6 Pizzen (je nach Modell)"
+        },
+        "power": {
+          "label": "Stromversorgung",
+          "value": "380V dreiphasig"
+        }
+      },
+      "applicationsTitle": "Ideal Für",
+      "applicationsText": "Perfekt für Einkaufszentren, Food Courts, städtische Restaurants und alle Aktivitäten, die eine umweltfreundliche Lösung benötigen.",
+      "applications": [
+        "Einkaufszentren",
+        "Food Courts",
+        "Städtische Restaurants",
+        "Hotels"
+      ],
+      "ctaTitle": "Entdecken Sie Elektroöfen",
+      "ctaText": "Kontaktieren Sie uns für weitere Informationen über unsere Elektroöfen und ihre Anwendungen."
+    },
+    "rotating": {
+      "aboutTitle": "Maximale Produktivität",
+      "aboutText1": "Vesuviano Drehöfen sind die ideale Lösung für diejenigen, die sehr hohe Produktionsvolumen bei gleichzeitig exzellenter Qualität benötigen. Die rotierende Platte garantiert ein gleichmäßiges Backen jeder Pizza.",
+      "aboutText2": "Dank fortschrittlicher Automatisierung und der Fähigkeit, zahlreiche Pizzen gleichzeitig zu backen, sind diese Öfen perfekt für hochintensive Produktionsaktivitäten.",
+      "featuresTitle": "Technische Merkmale",
+      "specsTitle": "Technische Spezifikationen",
+      "specs": {
+        "material": {
+          "label": "Kammermaterial",
+          "value": "Rotierender feuerfester Stein"
+        },
+        "temperature": {
+          "label": "Maximale Temperatur",
+          "value": "450°C"
+        },
+        "heatup": {
+          "label": "Aufheizzeit",
+          "value": "25-35 Minuten"
+        },
+        "capacity": {
+          "label": "Kapazität",
+          "value": "10-20 Pizzen gleichzeitig"
+        },
+        "rotation": {
+          "label": "Rotation",
+          "value": "Programmierbar mit digitalem Timer"
+        }
+      },
+      "applicationsTitle": "Ideal Für",
+      "applicationsText": "Perfekt für sehr hochvolumige Pizzerien, Ketten, Veranstaltungen und alle Aktivitäten, die Massenproduktion erfordern.",
+      "applications": [
+        "Pizzeriaketten",
+        "Industrielle Produktion",
+        "Veranstaltungen und Catering",
+        "Hochvolumen-Lieferung"
+      ],
+      "ctaTitle": "Drehöfen für Hohe Produktion",
+      "ctaText": "Fordern Sie eine Beratung an, um zu entdecken, wie Drehöfen Ihre Produktion revolutionieren können."
+    }
+  },
   "thankYou": {
     "title": "Vielen Dank für Ihre Anfrage!",
     "subtitle": "Wir haben Ihre Anfrage für eine kostenlose Beratung erhalten und Ihnen eine Bestätigungs-E-Mail gesendet.",

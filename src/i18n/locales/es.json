@@ -438,6 +438,164 @@
       "preview": "Vista previa del espacio"
     }
   },
+  "ovenDetails": {
+    "traditional": {
+      "aboutTitle": "El Arte de la Cocción a Leña",
+      "aboutText1": "Los hornos tradicionales a leña representan la esencia de la verdadera pizza napolitana. La cocción a leña confiere un sabor único e inconfundible que solo el calor vivo de la llama puede ofrecer.",
+      "aboutText2": "Cada horno está fabricado artesanalmente con materiales refractarios de la más alta calidad, garantizando una distribución uniforme del calor y una larga durabilidad.",
+      "featuresTitle": "Características Técnicas",
+      "specsTitle": "Especificaciones Técnicas",
+      "specs": {
+        "material": {
+          "label": "Material de la Cámara",
+          "value": "Ladrillos refractarios artesanales"
+        },
+        "temperature": {
+          "label": "Temperatura Máxima",
+          "value": "500°C"
+        },
+        "heatup": {
+          "label": "Tiempo de Calentamiento",
+          "value": "45-60 minutos"
+        },
+        "capacity": {
+          "label": "Capacidad",
+          "value": "4-8 pizzas (según el modelo)"
+        },
+        "fuel": {
+          "label": "Combustible",
+          "value": "Leña seca (preferiblemente haya o roble)"
+        }
+      },
+      "applicationsTitle": "Ideal Para",
+      "applicationsText": "Perfecto para restaurantes, pizzerías tradicionales y todos los que quieren ofrecer el auténtico sabor napolitano.",
+      "applications": [
+        "Pizza Napolitana",
+        "Pan Artesanal",
+        "Asados",
+        "Focaccia"
+      ],
+      "ctaTitle": "¿Interesado en los Hornos Tradicionales?",
+      "ctaText": "Contáctanos para una consulta gratuita y descubre qué modelo es perfecto para tu negocio."
+    },
+    "gas": {
+      "aboutTitle": "Precisión y Control Profesional",
+      "aboutText1": "Los hornos a gas Vesuviano combinan la tradición de la cocina napolitana con la moderna tecnología del gas. Ofrecen un control preciso de la temperatura y la posibilidad de mantener condiciones de cocción constantes.",
+      "aboutText2": "Ideales para profesionales que necesitan eficiencia, constancia y facilidad de uso, sin sacrificar la calidad de la cocción tradicional.",
+      "featuresTitle": "Características Técnicas",
+      "specsTitle": "Especificaciones Técnicas",
+      "specs": {
+        "material": {
+          "label": "Material de la Cámara",
+          "value": "Ladrillos refractarios con revestimiento aislante"
+        },
+        "temperature": {
+          "label": "Temperatura Máxima",
+          "value": "450-500°C"
+        },
+        "heatup": {
+          "label": "Tiempo de Calentamiento",
+          "value": "20-30 minutos"
+        },
+        "capacity": {
+          "label": "Capacidad",
+          "value": "4-10 pizzas (según el modelo)"
+        },
+        "fuel": {
+          "label": "Combustible",
+          "value": "Gas natural o GLP"
+        }
+      },
+      "applicationsTitle": "Ideal Para",
+      "applicationsText": "Perfecto para restaurantes modernos, cadenas de pizzerías y negocios que requieren alta productividad con calidad constante.",
+      "applications": [
+        "Pizzerías de Alta Producción",
+        "Restaurantes Modernos",
+        "Catering",
+        "Panaderías"
+      ],
+      "ctaTitle": "¿Quieres Saber Más sobre los Hornos a Gas?",
+      "ctaText": "Solicita una consulta gratuita para descubrir todas las ventajas de nuestros hornos a gas."
+    },
+    "electric": {
+      "aboutTitle": "Tecnología y Sostenibilidad",
+      "aboutText1": "Los hornos eléctricos Vesuviano representan el futuro de la cocción profesional. Gracias al control digital de la temperatura y a los sistemas de calentamiento avanzados, garantizan una cocción perfecta, constante y completamente eco-sostenible.",
+      "aboutText2": "Ideales para ambientes donde no es posible instalar chimenea o donde se requiere la máxima precisión en la cocción.",
+      "featuresTitle": "Características Técnicas",
+      "specsTitle": "Especificaciones Técnicas",
+      "specs": {
+        "material": {
+          "label": "Material de la Cámara",
+          "value": "Piedra refractaria de alta calidad"
+        },
+        "temperature": {
+          "label": "Temperatura Máxima",
+          "value": "400-450°C"
+        },
+        "heatup": {
+          "label": "Tiempo de Calentamiento",
+          "value": "15-25 minutos"
+        },
+        "capacity": {
+          "label": "Capacidad",
+          "value": "3-6 pizzas (según el modelo)"
+        },
+        "power": {
+          "label": "Alimentación",
+          "value": "380V trifásico"
+        }
+      },
+      "applicationsTitle": "Ideal Para",
+      "applicationsText": "Perfecto para centros comerciales, food courts, restaurantes urbanos y todas las actividades que necesitan una solución ecológica.",
+      "applications": [
+        "Centros Comerciales",
+        "Food Courts",
+        "Restaurantes Urbanos",
+        "Hoteles"
+      ],
+      "ctaTitle": "Descubre los Hornos Eléctricos",
+      "ctaText": "Contáctanos para más información sobre nuestros hornos eléctricos y sus aplicaciones."
+    },
+    "rotating": {
+      "aboutTitle": "Máxima Productividad",
+      "aboutText1": "Los hornos rotativos Vesuviano son la solución ideal para quienes necesitan volúmenes de producción muy altos manteniendo una calidad excelente. El plano rotativo garantiza una cocción uniforme en cada pizza.",
+      "aboutText2": "Gracias a la automatización avanzada y la capacidad de cocinar simultáneamente numerosas pizzas, estos hornos son perfectos para actividades de alta intensidad productiva.",
+      "featuresTitle": "Características Técnicas",
+      "specsTitle": "Especificaciones Técnicas",
+      "specs": {
+        "material": {
+          "label": "Material de la Cámara",
+          "value": "Piedra refractaria rotativa"
+        },
+        "temperature": {
+          "label": "Temperatura Máxima",
+          "value": "450°C"
+        },
+        "heatup": {
+          "label": "Tiempo de Calentamiento",
+          "value": "25-35 minutos"
+        },
+        "capacity": {
+          "label": "Capacidad",
+          "value": "10-20 pizzas simultáneamente"
+        },
+        "rotation": {
+          "label": "Rotación",
+          "value": "Programable con temporizador digital"
+        }
+      },
+      "applicationsTitle": "Ideal Para",
+      "applicationsText": "Perfecto para pizzerías de muy alto volumen, cadenas, eventos y todas las actividades que requieren producción masiva.",
+      "applications": [
+        "Cadenas de Pizzerías",
+        "Producción Industrial",
+        "Eventos y Catering",
+        "Delivery de Alto Volumen"
+      ],
+      "ctaTitle": "Hornos Rotativos para Alta Producción",
+      "ctaText": "Solicita una consulta para descubrir cómo los hornos rotativos pueden revolucionar tu producción."
+    }
+  },
   "thankYou": {
     "title": "¡Gracias por Tu Solicitud!",
     "subtitle": "Hemos recibido tu solicitud de consulta gratuita y te hemos enviado un email de confirmación.",

@@ -480,6 +480,164 @@
       "preview": "Aperçu de l'espace"
     }
   },
+  "ovenDetails": {
+    "traditional": {
+      "aboutTitle": "L'Art de la Cuisson au Feu de Bois",
+      "aboutText1": "Les fours traditionnels au feu de bois représentent l'essence de la véritable pizza napolitaine. La cuisson au feu de bois confère une saveur unique et incomparable que seule la chaleur vive de la flamme peut offrir.",
+      "aboutText2": "Chaque four est fabriqué artisanalement avec des matériaux réfractaires de la plus haute qualité, garantissant une distribution uniforme de la chaleur et une longue durabilité.",
+      "featuresTitle": "Caractéristiques Techniques",
+      "specsTitle": "Spécifications Techniques",
+      "specs": {
+        "material": {
+          "label": "Matériau de la Chambre",
+          "value": "Briques réfractaires artisanales"
+        },
+        "temperature": {
+          "label": "Température Maximale",
+          "value": "500°C"
+        },
+        "heatup": {
+          "label": "Temps de Chauffe",
+          "value": "45-60 minutes"
+        },
+        "capacity": {
+          "label": "Capacité",
+          "value": "4-8 pizzas (selon le modèle)"
+        },
+        "fuel": {
+          "label": "Combustible",
+          "value": "Bois sec (de préférence hêtre ou chêne)"
+        }
+      },
+      "applicationsTitle": "Idéal Pour",
+      "applicationsText": "Parfait pour les restaurants, pizzerias traditionnelles et tous ceux qui veulent offrir la saveur napolitaine authentique.",
+      "applications": [
+        "Pizza Napolitaine",
+        "Pain Artisanal",
+        "Rôtis",
+        "Focaccia"
+      ],
+      "ctaTitle": "Intéressé par les Fours Traditionnels?",
+      "ctaText": "Contactez-nous pour une consultation gratuite et découvrez quel modèle est parfait pour votre activité."
+    },
+    "gas": {
+      "aboutTitle": "Précision et Contrôle Professionnel",
+      "aboutText1": "Les fours à gaz Vesuviano combinent la tradition de la cuisine napolitaine avec la technologie moderne du gaz. Ils offrent un contrôle précis de la température et la possibilité de maintenir des conditions de cuisson constantes.",
+      "aboutText2": "Idéaux pour les professionnels qui ont besoin d'efficacité, de constance et de facilité d'utilisation, sans sacrifier la qualité de la cuisson traditionnelle.",
+      "featuresTitle": "Caractéristiques Techniques",
+      "specsTitle": "Spécifications Techniques",
+      "specs": {
+        "material": {
+          "label": "Matériau de la Chambre",
+          "value": "Briques réfractaires avec revêtement isolant"
+        },
+        "temperature": {
+          "label": "Température Maximale",
+          "value": "450-500°C"
+        },
+        "heatup": {
+          "label": "Temps de Chauffe",
+          "value": "20-30 minutes"
+        },
+        "capacity": {
+          "label": "Capacité",
+          "value": "4-10 pizzas (selon le modèle)"
+        },
+        "fuel": {
+          "label": "Combustible",
+          "value": "Gaz naturel ou GPL"
+        }
+      },
+      "applicationsTitle": "Idéal Pour",
+      "applicationsText": "Parfait pour les restaurants modernes, les chaînes de pizzerias et les entreprises nécessitant une haute productivité avec une qualité constante.",
+      "applications": [
+        "Pizzerias à Haute Production",
+        "Restaurants Modernes",
+        "Traiteur",
+        "Boulangeries"
+      ],
+      "ctaTitle": "Vous Voulez en Savoir Plus sur les Fours à Gaz?",
+      "ctaText": "Demandez une consultation gratuite pour découvrir tous les avantages de nos fours à gaz."
+    },
+    "electric": {
+      "aboutTitle": "Technologie et Durabilité",
+      "aboutText1": "Les fours électriques Vesuviano représentent l'avenir de la cuisine professionnelle. Grâce au contrôle numérique de la température et aux systèmes de chauffage avancés, ils garantissent une cuisson parfaite, constante et totalement éco-durable.",
+      "aboutText2": "Idéaux pour les environnements où il n'est pas possible d'installer une cheminée ou où une précision maximale de cuisson est requise.",
+      "featuresTitle": "Caractéristiques Techniques",
+      "specsTitle": "Spécifications Techniques",
+      "specs": {
+        "material": {
+          "label": "Matériau de la Chambre",
+          "value": "Pierre réfractaire de haute qualité"
+        },
+        "temperature": {
+          "label": "Température Maximale",
+          "value": "400-450°C"
+        },
+        "heatup": {
+          "label": "Temps de Chauffe",
+          "value": "15-25 minutes"
+        },
+        "capacity": {
+          "label": "Capacité",
+          "value": "3-6 pizzas (selon le modèle)"
+        },
+        "power": {
+          "label": "Alimentation",
+          "value": "380V triphasé"
+        }
+      },
+      "applicationsTitle": "Idéal Pour",
+      "applicationsText": "Parfait pour les centres commerciaux, food courts, restaurants urbains et toutes les activités nécessitant une solution écologique.",
+      "applications": [
+        "Centres Commerciaux",
+        "Food Courts",
+        "Restaurants Urbains",
+        "Hôtels"
+      ],
+      "ctaTitle": "Découvrez les Fours Électriques",
+      "ctaText": "Contactez-nous pour plus d'informations sur nos fours électriques et leurs applications."
+    },
+    "rotating": {
+      "aboutTitle": "Productivité Maximale",
+      "aboutText1": "Les fours rotatifs Vesuviano sont la solution idéale pour ceux qui ont besoin de très hauts volumes de production tout en maintenant une excellente qualité. Le plan rotatif garantit une cuisson uniforme sur chaque pizza.",
+      "aboutText2": "Grâce à l'automatisation avancée et à la capacité de cuire simultanément de nombreuses pizzas, ces fours sont parfaits pour les activités à haute intensité de production.",
+      "featuresTitle": "Caractéristiques Techniques",
+      "specsTitle": "Spécifications Techniques",
+      "specs": {
+        "material": {
+          "label": "Matériau de la Chambre",
+          "value": "Pierre réfractaire rotative"
+        },
+        "temperature": {
+          "label": "Température Maximale",
+          "value": "450°C"
+        },
+        "heatup": {
+          "label": "Temps de Chauffe",
+          "value": "25-35 minutes"
+        },
+        "capacity": {
+          "label": "Capacité",
+          "value": "10-20 pizzas simultanément"
+        },
+        "rotation": {
+          "label": "Rotation",
+          "value": "Programmable avec minuterie numérique"
+        }
+      },
+      "applicationsTitle": "Idéal Pour",
+      "applicationsText": "Parfait pour les pizzerias à très haut volume, les chaînes, les événements et toutes les activités nécessitant une production massive.",
+      "applications": [
+        "Chaînes de Pizzerias",
+        "Production Industrielle",
+        "Événements et Traiteur",
+        "Livraison à Haut Volume"
+      ],
+      "ctaTitle": "Fours Rotatifs pour Haute Production",
+      "ctaText": "Demandez une consultation pour découvrir comment les fours rotatifs peuvent révolutionner votre production."
+    }
+  },
   "thankYou": {
     "title": "Merci pour Votre Demande!",
     "subtitle": "Nous avons reçu votre demande de consultation gratuite et vous avons envoyé un email de confirmation.",
