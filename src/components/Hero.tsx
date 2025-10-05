@@ -39,7 +39,7 @@ const Hero = () => {
         </div>
         
         <div className="font-playfair text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold mb-4 sm:mb-6 leading-tight animate-fade-in text-white px-2 sm:px-4">
-          <p className="block text-vesuviano-400 text-base sm:text-lg md:text-2xl lg:text-3xl font-medium mb-1 sm:mb-2 animate-slide-in-left">{t('hero.subtitle')}</p>
+          <p className="block text-white text-base sm:text-lg md:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2 animate-slide-in-left drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">{t('hero.subtitle')}</p>
           <h1 className="block animate-slide-in-right" style={{ animationDelay: '0.3s' }}>{t('hero.title')}</h1>
         </div>
         
