@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Star } from "lucide-react";
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import LazyImage from './LazyImage';
 import laboratorioHero from '@/assets/laboratorio-artigianale-hero.png';
 
@@ -44,15 +44,7 @@ const Hero = () => {
         </div>
         
         <p className="font-inter text-sm sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed text-gray-200 animate-fade-in px-2 sm:px-4" style={{ animationDelay: '0.6s' }}>
-          <Trans 
-            i18nKey="hero.description"
-            components={{
-              vesuvioBuono: <span 
-                className="text-vesuviano-400 font-semibold cursor-pointer hover:text-vesuviano-300 hover:scale-105 transition-all duration-300 hover:drop-shadow-lg hover:brightness-125" 
-                onClick={() => document.getElementById('vesuviobuono')?.scrollIntoView({ behavior: 'smooth' })}
-              />
-            }}
-          />
+          {t('hero.description')}
         </p>
 
         <div className="flex flex-col items-center gap-3 sm:gap-4 justify-center mb-6 sm:mb-8 animate-scale-in px-2 sm:px-4" style={{ animationDelay: '0.9s' }}>
