@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import LanguageSelector from './LanguageSelector';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Menu, ChevronDown } from "lucide-react";
 import { useState } from 'react';
 import LazyImage from './LazyImage';
 
@@ -33,12 +35,52 @@ const Header = () => {
     return paths[currentLang] || paths['it'];
   };
 
+  const getOvenPath = (ovenType: string) => {
+    const paths: Record<string, Record<string, string>> = {
+      'traditional': {
+        'it': '/it/forni-tradizionali',
+        'en': '/en/traditional-ovens',
+        'fr': '/fr/fours-traditionnels',
+        'es': '/es/hornos-tradicionales',
+        'de': '/de/traditionelle-oefen'
+      },
+      'gas': {
+        'it': '/it/forni-gas',
+        'en': '/en/gas-ovens',
+        'fr': '/fr/fours-gaz',
+        'es': '/es/hornos-gas',
+        'de': '/de/gasoefen'
+      },
+      'electric': {
+        'it': '/it/forni-elettrici',
+        'en': '/en/electric-ovens',
+        'fr': '/fr/fours-electriques',
+        'es': '/es/hornos-electricos',
+        'de': '/de/elektrooefen'
+      },
+      'rotating': {
+        'it': '/it/forni-rotanti',
+        'en': '/en/rotating-ovens',
+        'fr': '/fr/fours-rotatifs',
+        'es': '/es/hornos-rotativos',
+        'de': '/de/drehoefen'
+      }
+    };
+    return paths[ovenType]?.[currentLang] || paths[ovenType]?.['it'] || '/';
+  };
+
+  const productDropdownItems = [
+    { key: 'traditional', label: t('products.traditional.title'), path: getOvenPath('traditional') },
+    { key: 'gas', label: t('products.gas.title'), path: getOvenPath('gas') },
+    { key: 'electric', label: t('products.electric.title'), path: getOvenPath('electric') },
+    { key: 'rotating', label: t('products.rotating.title'), path: getOvenPath('rotating') },
+    { key: 'vesuviobuono', label: t('products.vesuviobuono.title'), path: getVesuvioBuonoPath() }
+  ];
+
   const navItems: Array<{ href: string; label: string; type: 'anchor' | 'link' }> = [
-    { href: "#products", label: t('header.products'), type: 'anchor' },
     { href: "#ai-architect", label: "Architetto AI", type: 'anchor' },
     { href: "#oven-gallery", label: t('header.gallery'), type: 'anchor' },
     { href: "#rivestimenti", label: "Rivestimenti", type: 'anchor' },
-    { href: getVesuvioBuonoPath(), label: t('header.vesuviobuono'), type: 'link' },
     { href: "#clients-map", label: "Clienti", type: 'anchor' },
     { href: "#consultation", label: t('header.contact'), type: 'anchor' }
   ];
@@ -106,6 +148,25 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-6">
+            {/* Products Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="text-stone-700 hover:text-vesuviano-600 transition-colors font-medium text-sm xl:text-base relative after:absolute after:w-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-vesuviano-600 after:transition-all after:duration-300 hover:after:w-full flex items-center gap-1">
+                {t('header.products')}
+                <ChevronDown className="h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-white border border-stone-200 shadow-lg z-[100] min-w-[200px]">
+                {productDropdownItems.map((product) => (
+                  <DropdownMenuItem 
+                    key={product.key}
+                    className="cursor-pointer hover:bg-vesuviano-50 focus:bg-vesuviano-50"
+                    onClick={() => navigate(product.path)}
+                  >
+                    {product.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             {navItems.map((item) => (
               <a 
                 key={item.href}
@@ -142,7 +203,31 @@ const Header = () => {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px] sm:w-[350px]">
-                <nav className="flex flex-col space-y-6 mt-6">
+                <nav className="flex flex-col space-y-4 mt-6">
+                  {/* Products Collapsible */}
+                  <Collapsible>
+                    <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-stone-700 hover:text-vesuviano-600 transition-colors py-2">
+                      {t('header.products')}
+                      <ChevronDown className="h-5 w-5" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="pl-4 mt-2 space-y-2">
+                      {productDropdownItems.map((product) => (
+                        <a
+                          key={product.key}
+                          href={product.path}
+                          className="block text-base font-normal text-stone-600 hover:text-vesuviano-600 transition-colors py-2"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            navigate(product.path);
+                            setIsOpen(false);
+                          }}
+                        >
+                          {product.label}
+                        </a>
+                      ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+
                   {navItems.map((item) => (
                     <a
                       key={item.href}
