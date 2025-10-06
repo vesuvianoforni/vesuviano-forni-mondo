@@ -56,8 +56,8 @@
       }
     },
     "rotating": {
-      "title": "Forni Rotativi",
-      "subtitle": "Forni Rotativi",
+      "title": "Forni Rotanti",
+      "subtitle": "Forni Rotanti",
       "description": "Massima produttività con cottura uniforme su ogni superficie. Ideali per alta produzione.",
       "features": {
         "uniform": "Cottura uniforme",
@@ -637,7 +637,7 @@
     },
     "rotating": {
       "aboutTitle": "Massima Produttività",
-      "aboutText1": "I forni rotativi Vesuviano sono la soluzione ideale per chi necessita di altissimi volumi di produzione mantenendo una qualità eccellente. Il piano rotante garantisce una cottura uniforme su ogni pizza.",
+      "aboutText1": "I forni rotanti Vesuviano sono la soluzione ideale per chi necessita di altissimi volumi di produzione mantenendo una qualità eccellente. Il piano rotante garantisce una cottura uniforme su ogni pizza.",
       "aboutText2": "Grazie all'automazione avanzata e alla capacità di cuocere simultaneamente numerose pizze, questi forni sono perfetti per attività ad alta intensità produttiva.",
       "featuresTitle": "Caratteristiche Tecniche",
       "specsTitle": "Specifiche Tecniche",
@@ -671,8 +671,8 @@
         "Eventi e Catering",
         "Delivery ad Alto Volume"
       ],
-      "ctaTitle": "Forni Rotativi per Alta Produzione",
-      "ctaText": "Richiedi una consulenza per scoprire come i forni rotativi possono rivoluzionare la tua produzione."
+      "ctaTitle": "Forni Rotanti per Alta Produzione",
+      "ctaText": "Richiedi una consulenza per scoprire come i forni rotanti possono rivoluzionare la tua produzione."
     }
   },
   "thankYou": {
