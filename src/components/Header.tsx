@@ -22,17 +22,34 @@ const Header = () => {
   
   const currentLang = getCurrentLang();
 
-  const navItems = [
-    { href: "#products", label: t('header.products') },
-    { href: "#ai-architect", label: "Architetto AI" },
-    { href: "#oven-gallery", label: t('header.gallery') },
-    { href: "#rivestimenti", label: "Rivestimenti" },
-    { href: "#vesuviobuono", label: t('header.vesuviobuono') },
-    { href: "#clients-map", label: "Clienti" },
-    { href: "#consultation", label: t('header.contact') }
+  const getVesuvioBuonoPath = () => {
+    const paths: Record<string, string> = {
+      'it': '/it/sistema-vesuviobuono',
+      'en': '/en/vesuviobuono-system',
+      'fr': '/fr/systeme-vesuviobuono',
+      'es': '/es/sistema-vesuviobuono',
+      'de': '/de/vesuviobuono-system'
+    };
+    return paths[currentLang] || paths['it'];
+  };
+
+  const navItems: Array<{ href: string; label: string; type: 'anchor' | 'link' }> = [
+    { href: "#products", label: t('header.products'), type: 'anchor' },
+    { href: "#ai-architect", label: "Architetto AI", type: 'anchor' },
+    { href: "#oven-gallery", label: t('header.gallery'), type: 'anchor' },
+    { href: "#rivestimenti", label: "Rivestimenti", type: 'anchor' },
+    { href: getVesuvioBuonoPath(), label: t('header.vesuviobuono'), type: 'link' },
+    { href: "#clients-map", label: "Clienti", type: 'anchor' },
+    { href: "#consultation", label: t('header.contact'), type: 'anchor' }
   ];
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = (href: string, type: 'anchor' | 'link' = 'anchor') => {
+    if (type === 'link') {
+      navigate(href);
+      setIsOpen(false);
+      return;
+    }
+    
     const sectionId = href.replace('#', '');
     const homePath = `/${currentLang}`;
     
@@ -96,7 +113,7 @@ const Header = () => {
                 className="text-stone-700 hover:text-vesuviano-600 transition-colors font-medium text-sm xl:text-base relative after:absolute after:w-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-vesuviano-600 after:transition-all after:duration-300 hover:after:w-full"
                 onClick={(e) => {
                   e.preventDefault();
-                  handleNavClick(item.href);
+                  handleNavClick(item.href, item.type);
                 }}
               >
                 {item.label}
@@ -133,7 +150,7 @@ const Header = () => {
                       className="text-lg font-medium text-stone-700 hover:text-vesuviano-600 transition-colors py-2"
                       onClick={(e) => {
                         e.preventDefault();
-                        handleNavClick(item.href);
+                        handleNavClick(item.href, item.type);
                       }}
                     >
                       {item.label}

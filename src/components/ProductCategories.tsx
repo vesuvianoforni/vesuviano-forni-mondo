@@ -47,11 +47,11 @@ const ProductCategories = () => {
         'de': '/de/drehoefen'
       },
       'vesuviobuono': {
-        'it': '/it#vesuviobuono',
-        'en': '/en#vesuviobuono',
-        'fr': '/fr#vesuviobuono',
-        'es': '/es#vesuviobuono',
-        'de': '/de#vesuviobuono'
+        'it': '/it/sistema-vesuviobuono',
+        'en': '/en/vesuviobuono-system',
+        'fr': '/fr/systeme-vesuviobuono',
+        'es': '/es/sistema-vesuviobuono',
+        'de': '/de/vesuviobuono-system'
       }
     };
     return paths[ovenType]?.[lang] || paths[ovenType]?.['it'] || '/';

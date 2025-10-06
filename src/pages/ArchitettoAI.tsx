@@ -58,7 +58,7 @@ const ArchitettoAI = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to={`/${currentLang}#vesuviobuono`} className="text-gray-400 hover:text-white transition-colors">
+                  <Link to={`/${currentLang}/sistema-vesuviobuono`} className="text-gray-400 hover:text-white transition-colors">
                     VesuvioBuono
                   </Link>
                 </li>

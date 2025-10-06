@@ -9,6 +9,7 @@ import LocalizedTraditionalOven from "./pages/LocalizedTraditionalOven";
 import LocalizedGasOven from "./pages/LocalizedGasOven";
 import LocalizedElectricOven from "./pages/LocalizedElectricOven";
 import LocalizedRotatingOven from "./pages/LocalizedRotatingOven";
+import LocalizedVesuvioBuono from "./pages/LocalizedVesuvioBuono";
 import LanguageRedirect from "./pages/LanguageRedirect";
 import ArchitettoAIRedirect from "./pages/ArchitettoAIRedirect";
 import ThankYou from "./pages/ThankYou";
@@ -34,7 +35,8 @@ const App = () => {
             <Route path="/it/forni-tradizionali" element={<LocalizedTraditionalOven lang="it" />} />
             <Route path="/it/forni-gas" element={<LocalizedGasOven lang="it" />} />
             <Route path="/it/forni-elettrici" element={<LocalizedElectricOven lang="it" />} />
-            <Route path="/it/forni-rotativi" element={<LocalizedRotatingOven lang="it" />} />
+            <Route path="/it/forni-rotanti" element={<LocalizedRotatingOven lang="it" />} />
+            <Route path="/it/sistema-vesuviobuono" element={<LocalizedVesuvioBuono lang="it" />} />
             <Route path="/it/thank-you-it" element={<ThankYou lang="it" />} />
             
             {/* English Routes */}
@@ -44,6 +46,7 @@ const App = () => {
             <Route path="/en/gas-ovens" element={<LocalizedGasOven lang="en" />} />
             <Route path="/en/electric-ovens" element={<LocalizedElectricOven lang="en" />} />
             <Route path="/en/rotating-ovens" element={<LocalizedRotatingOven lang="en" />} />
+            <Route path="/en/vesuviobuono-system" element={<LocalizedVesuvioBuono lang="en" />} />
             <Route path="/en/thank-you-en" element={<ThankYou lang="en" />} />
             
             {/* French Routes */}
@@ -53,6 +56,7 @@ const App = () => {
             <Route path="/fr/fours-gaz" element={<LocalizedGasOven lang="fr" />} />
             <Route path="/fr/fours-electriques" element={<LocalizedElectricOven lang="fr" />} />
             <Route path="/fr/fours-rotatifs" element={<LocalizedRotatingOven lang="fr" />} />
+            <Route path="/fr/systeme-vesuviobuono" element={<LocalizedVesuvioBuono lang="fr" />} />
             <Route path="/fr/thank-you-fr" element={<ThankYou lang="fr" />} />
             
             {/* Spanish Routes */}
@@ -62,6 +66,7 @@ const App = () => {
             <Route path="/es/hornos-gas" element={<LocalizedGasOven lang="es" />} />
             <Route path="/es/hornos-electricos" element={<LocalizedElectricOven lang="es" />} />
             <Route path="/es/hornos-rotativos" element={<LocalizedRotatingOven lang="es" />} />
+            <Route path="/es/sistema-vesuviobuono" element={<LocalizedVesuvioBuono lang="es" />} />
             <Route path="/es/thank-you-es" element={<ThankYou lang="es" />} />
             
             {/* German Routes */}
@@ -71,6 +76,7 @@ const App = () => {
             <Route path="/de/gasoefen" element={<LocalizedGasOven lang="de" />} />
             <Route path="/de/elektrooefen" element={<LocalizedElectricOven lang="de" />} />
             <Route path="/de/drehoefen" element={<LocalizedRotatingOven lang="de" />} />
+            <Route path="/de/vesuviobuono-system" element={<LocalizedVesuvioBuono lang="de" />} />
             <Route path="/de/thank-you-de" element={<ThankYou lang="de" />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

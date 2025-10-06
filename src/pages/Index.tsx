@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
 import { Wand2, Eye, ArrowRight } from "lucide-react";
@@ -10,7 +10,6 @@ import ProductCategories from "@/components/ProductCategories";
 import CraftsmanshipSection from "@/components/CraftsmanshipSection";
 import Services from "@/components/Services";
 import Rivestimenti from "@/components/Rivestimenti";
-import VesuvioBuono from "@/components/VesuvioBuono";
 import ClientsMap from "@/components/ClientsMap";
 import OvenGallery from "@/components/OvenGallery";
 import OvenDataInitializer from "@/components/OvenDataInitializer";
@@ -25,6 +24,17 @@ const Index = () => {
   
   // Extract current language from location
   const currentLang = i18n.language;
+
+  const getVesuvioBuonoPath = () => {
+    const paths: Record<string, string> = {
+      'it': '/it/sistema-vesuviobuono',
+      'en': '/en/vesuviobuono-system',
+      'fr': '/fr/systeme-vesuviobuono',
+      'es': '/es/sistema-vesuviobuono',
+      'de': '/de/vesuviobuono-system'
+    };
+    return paths[currentLang] || paths['it'];
+  };
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -157,10 +167,6 @@ const Index = () => {
           <Rivestimenti />
         </section>
         
-        <section id="vesuviobuono" aria-label="VesuvioBuono zero emissioni">
-          <VesuvioBuono />
-        </section>
-        
         <section id="clients-map" aria-label="Clienti nel mondo">
           <ErrorBoundary fallback={<div className="container mx-auto px-6 py-8">Mappa temporaneamente non disponibile.</div>}>
             <ClientsMap />
@@ -239,13 +245,12 @@ const Index = () => {
                   </a>
                 </li>
                 <li>
-                  <a 
-                    href={`/${currentLang}#vesuviobuono`}
+                  <Link 
+                    to={getVesuvioBuonoPath()}
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
-                    onClick={(e) => handleNavClick(e, 'vesuviobuono')}
                   >
                     VesuvioBuono
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a 
