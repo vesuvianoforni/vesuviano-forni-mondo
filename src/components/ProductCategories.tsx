@@ -72,7 +72,7 @@ const ProductCategories = () => {
     },
     {
       key: 'rotating',
-      image: "/lovable-uploads/forno-rotativo-mosaico.png"
+      image: "/lovable-uploads/forno-rotativo-mosaico-nero.jpg"
     },
     {
       key: 'vesuviobuono',
