@@ -6,7 +6,7 @@ Allow: /lovable-uploads/
 Allow: /src/assets/
 
 # Sitemap location
-Sitemap: https://vesuviano.lovable.app/sitemap.xml
+Sitemap: https://www.vesuvianoforni.com/sitemap.xml
 
 # Crawl-delay for bots (respectful crawling)
 Crawl-delay: 1
