@@ -239,7 +239,7 @@ ${JSON.stringify(data, null, 2)}
 
       // Inviare email all'utente con la scheda tecnica
       const userEmailResult = await resend.emails.send({
-        from: 'Vesuviano Forni <system@vesuvianoforni.com>',
+        from: 'Vesuviano Forni <info@vesuvianoforni.com>',
         to: [data.email],
         subject: `🔥 Scheda Tecnica ${data.ovenType} - Vesuviano Forni`,
         html: userHtmlTemplate,
