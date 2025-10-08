@@ -29,24 +29,24 @@ const FAQSection = () => {
 
   const faqs = [
     {
-      question: "Posso personalizzare il forno in base al mio locale?",
-      answer: "Assolutamente sì. Ogni forno può essere personalizzato nella verniciatura, nel rivestimento in piastrelle e persino nel design della cupola. Offriamo anche un render 3D gratuito per visualizzare il forno nel tuo ambiente prima della produzione."
+      question: t('faq.questions.q1.question'),
+      answer: t('faq.questions.q1.answer')
     },
     {
-      question: "Effettuate consegna e installazione?",
-      answer: "Sì, ci occupiamo di trasporto e installazione completa in Italia e all'estero. Il forno arriva già assemblato e testato, pronto all'uso. Il nostro team tecnico può anche fornire formazione iniziale sul corretto utilizzo."
+      question: t('faq.questions.q2.question'),
+      answer: t('faq.questions.q2.answer')
     },
     {
-      question: "Quanto tempo serve per ricevere il forno?",
-      answer: "I tempi medi di consegna variano da 20 a 45 giorni, in base al livello di personalizzazione richiesto. Dopo la conferma dell'ordine, riceverai una data stimata di consegna garantita."
+      question: t('faq.questions.q3.question'),
+      answer: t('faq.questions.q3.answer')
     },
     {
-      question: "Offrite assistenza o garanzia?",
-      answer: "Tutti i nostri forni sono coperti da 3 anni di garanzia ufficiale su struttura e componenti. In più, il nostro centro tecnico a Napoli fornisce assistenza post-vendita e ricambi originali sempre disponibili."
+      question: t('faq.questions.q4.question'),
+      answer: t('faq.questions.q4.answer')
     },
     {
-      question: "Quanto costa un forno?",
-      answer: "I nostri forni artigianali partono da 2.700,00 € per i modelli base fino a circa 23.000,00 € per realizzazioni speciali, come il forno placcato in oro che abbiamo costruito per un cliente esclusivo. Ogni progetto è unico e viene realizzato su misura, in base alle esigenze produttive e al design desiderato. Per ricevere un preventivo personalizzato, puoi richiedere una consulenza gratuita."
+      question: t('faq.questions.q5.question'),
+      answer: t('faq.questions.q5.answer')
     }
   ];
 
@@ -59,10 +59,10 @@ const FAQSection = () => {
             <HelpCircle className="w-8 h-8 text-vesuviano-600" />
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
-            Domande Frequenti
+            {t('faq.title')}
           </h2>
           <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-            Trova le risposte alle domande più comuni sui nostri forni artigianali
+            {t('faq.subtitle')}
           </p>
         </div>
 
@@ -91,17 +91,17 @@ const FAQSection = () => {
         <div className="mt-12 text-center bg-gradient-to-r from-vesuviano-50 to-stone-50 rounded-2xl p-8 border border-vesuviano-100">
           <MessageCircle className="w-12 h-12 text-vesuviano-500 mx-auto mb-4" />
           <h3 className="text-2xl font-bold text-stone-900 mb-3">
-            Non trovi la risposta che cerchi?
+            {t('faq.cta.title')}
           </h3>
           <p className="text-stone-600 mb-6">
-            Contattaci ora e un nostro esperto ti risponderà entro 24 ore
+            {t('faq.cta.subtitle')}
           </p>
           <Button 
             onClick={scrollToContact}
             size="lg"
             className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
           >
-            Contattaci ora
+            {t('faq.cta.button')}
           </Button>
         </div>
       </div>

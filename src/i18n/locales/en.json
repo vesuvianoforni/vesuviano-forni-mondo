@@ -789,5 +789,36 @@
     "successMessage": "We have sent you the datasheet via email. Please check your inbox.",
     "error": "Error",
     "errorMessage": "An error occurred. Please try again later."
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to the most common questions about our artisan ovens",
+    "questions": {
+      "q1": {
+        "question": "Can I customize the oven for my establishment?",
+        "answer": "Absolutely. Each oven can be customized in painting, tile cladding, and even dome design. We also offer a free 3D render to visualize the oven in your space before production."
+      },
+      "q2": {
+        "question": "Do you provide delivery and installation?",
+        "answer": "Yes, we handle complete transportation and installation in Italy and abroad. The oven arrives already assembled and tested, ready to use. Our technical team can also provide initial training on proper usage."
+      },
+      "q3": {
+        "question": "How long does it take to receive the oven?",
+        "answer": "Average delivery times vary from 20 to 45 days, depending on the level of customization required. After order confirmation, you will receive a guaranteed estimated delivery date."
+      },
+      "q4": {
+        "question": "Do you offer assistance or warranty?",
+        "answer": "All our ovens are covered by a 3-year official warranty on structure and components. Additionally, our technical center in Naples provides after-sales support and original spare parts are always available."
+      },
+      "q5": {
+        "question": "How much does an oven cost?",
+        "answer": "Our artisan ovens start from €2,700.00 for basic models up to approximately €23,000.00 for special creations, such as the gold-plated oven we built for an exclusive client. Each project is unique and custom-made, based on production needs and desired design. To receive a personalized quote, you can request a free consultation."
+      }
+    },
+    "cta": {
+      "title": "Can't find the answer you're looking for?",
+      "subtitle": "Contact us now and one of our experts will respond within 24 hours",
+      "button": "Contact us now"
+    }
   }
 }

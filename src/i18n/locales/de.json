@@ -665,5 +665,36 @@
     "successMessage": "Wir haben Ihnen das Datenblatt per E-Mail gesendet. Bitte überprüfen Sie Ihr Postfach.",
     "error": "Fehler",
     "errorMessage": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
+  },
+  "faq": {
+    "title": "Häufig gestellte Fragen",
+    "subtitle": "Finden Sie Antworten auf die häufigsten Fragen zu unseren handwerklichen Öfen",
+    "questions": {
+      "q1": {
+        "question": "Kann ich den Ofen nach meinen Wünschen anpassen?",
+        "answer": "Auf jeden Fall. Jeder Ofen kann in der Lackierung, der Fliesenverkleidung und sogar im Kuppeldesign angepasst werden. Wir bieten auch eine kostenlose 3D-Darstellung an, um den Ofen vor der Produktion in Ihrem Raum zu visualisieren."
+      },
+      "q2": {
+        "question": "Bieten Sie Lieferung und Installation an?",
+        "answer": "Ja, wir kümmern uns um den kompletten Transport und die Installation in Italien und im Ausland. Der Ofen kommt bereits montiert und getestet an, bereit zur Verwendung. Unser technisches Team kann auch eine erste Schulung zur korrekten Nutzung anbieten."
+      },
+      "q3": {
+        "question": "Wie lange dauert es, bis ich den Ofen erhalte?",
+        "answer": "Die durchschnittlichen Lieferzeiten variieren von 20 bis 45 Tagen, abhängig vom erforderlichen Anpassungsgrad. Nach Auftragsbestätigung erhalten Sie ein garantiertes geschätztes Lieferdatum."
+      },
+      "q4": {
+        "question": "Bieten Sie Unterstützung oder Garantie an?",
+        "answer": "Alle unsere Öfen sind durch eine offizielle 3-jährige Garantie auf Struktur und Komponenten abgedeckt. Darüber hinaus bietet unser technisches Zentrum in Neapel Kundendienst und Original-Ersatzteile sind immer verfügbar."
+      },
+      "q5": {
+        "question": "Was kostet ein Ofen?",
+        "answer": "Unsere handwerklichen Öfen beginnen bei 2.700,00 € für Basismodelle bis zu etwa 23.000,00 € für spezielle Kreationen, wie den vergoldeten Ofen, den wir für einen exklusiven Kunden gebaut haben. Jedes Projekt ist einzigartig und maßgefertigt, basierend auf Produktionsbedürfnissen und gewünschtem Design. Um ein personalisiertes Angebot zu erhalten, können Sie eine kostenlose Beratung anfordern."
+      }
+    },
+    "cta": {
+      "title": "Finden Sie nicht die Antwort, die Sie suchen?",
+      "subtitle": "Kontaktieren Sie uns jetzt und einer unserer Experten antwortet innerhalb von 24 Stunden",
+      "button": "Kontaktieren Sie uns jetzt"
+    }
   }
 }

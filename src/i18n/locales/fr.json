@@ -732,5 +732,36 @@
     "successMessage": "Nous vous avons envoyé la fiche technique par email. Veuillez vérifier votre boîte de réception.",
     "error": "Erreur",
     "errorMessage": "Une erreur s'est produite. Veuillez réessayer plus tard."
+  },
+  "faq": {
+    "title": "Questions Fréquentes",
+    "subtitle": "Trouvez les réponses aux questions les plus courantes sur nos fours artisanaux",
+    "questions": {
+      "q1": {
+        "question": "Puis-je personnaliser le four selon mon établissement ?",
+        "answer": "Absolument. Chaque four peut être personnalisé dans sa peinture, son revêtement en carreaux et même dans le design de la coupole. Nous offrons également un rendu 3D gratuit pour visualiser le four dans votre espace avant la production."
+      },
+      "q2": {
+        "question": "Assurez-vous la livraison et l'installation ?",
+        "answer": "Oui, nous nous occupons du transport et de l'installation complète en Italie et à l'étranger. Le four arrive déjà assemblé et testé, prêt à l'emploi. Notre équipe technique peut également fournir une formation initiale sur l'utilisation correcte."
+      },
+      "q3": {
+        "question": "Combien de temps faut-il pour recevoir le four ?",
+        "answer": "Les délais de livraison moyens varient de 20 à 45 jours, en fonction du niveau de personnalisation requis. Après confirmation de la commande, vous recevrez une date de livraison estimée garantie."
+      },
+      "q4": {
+        "question": "Offrez-vous une assistance ou une garantie ?",
+        "answer": "Tous nos fours sont couverts par une garantie officielle de 3 ans sur la structure et les composants. De plus, notre centre technique à Naples fournit un support après-vente et des pièces de rechange originales toujours disponibles."
+      },
+      "q5": {
+        "question": "Combien coûte un four ?",
+        "answer": "Nos fours artisanaux commencent à partir de 2 700,00 € pour les modèles de base jusqu'à environ 23 000,00 € pour des réalisations spéciales, comme le four plaqué or que nous avons construit pour un client exclusif. Chaque projet est unique et réalisé sur mesure, en fonction des besoins de production et du design souhaité. Pour recevoir un devis personnalisé, vous pouvez demander une consultation gratuite."
+      }
+    },
+    "cta": {
+      "title": "Vous ne trouvez pas la réponse que vous cherchez ?",
+      "subtitle": "Contactez-nous maintenant et l'un de nos experts vous répondra dans les 24 heures",
+      "button": "Contactez-nous maintenant"
+    }
   }
 }

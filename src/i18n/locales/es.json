@@ -665,5 +665,36 @@
     "successMessage": "Te hemos enviado la ficha técnica por email. Por favor revisa tu bandeja de entrada.",
     "error": "Error",
     "errorMessage": "Se produjo un error. Por favor intenta de nuevo más tarde."
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "subtitle": "Encuentre respuestas a las preguntas más comunes sobre nuestros hornos artesanales",
+    "questions": {
+      "q1": {
+        "question": "¿Puedo personalizar el horno según mi local?",
+        "answer": "Absolutamente. Cada horno puede personalizarse en la pintura, el revestimiento de azulejos e incluso en el diseño de la cúpula. También ofrecemos un render 3D gratuito para visualizar el horno en su espacio antes de la producción."
+      },
+      "q2": {
+        "question": "¿Realizan entrega e instalación?",
+        "answer": "Sí, nos encargamos del transporte e instalación completa en Italia y en el extranjero. El horno llega ya ensamblado y probado, listo para usar. Nuestro equipo técnico también puede proporcionar formación inicial sobre el uso correcto."
+      },
+      "q3": {
+        "question": "¿Cuánto tiempo se tarda en recibir el horno?",
+        "answer": "Los tiempos medios de entrega varían de 20 a 45 días, según el nivel de personalización requerido. Después de la confirmación del pedido, recibirá una fecha estimada de entrega garantizada."
+      },
+      "q4": {
+        "question": "¿Ofrecen asistencia o garantía?",
+        "answer": "Todos nuestros hornos están cubiertos por una garantía oficial de 3 años en estructura y componentes. Además, nuestro centro técnico en Nápoles proporciona asistencia posventa y repuestos originales siempre disponibles."
+      },
+      "q5": {
+        "question": "¿Cuánto cuesta un horno?",
+        "answer": "Nuestros hornos artesanales comienzan desde 2.700,00 € para modelos básicos hasta aproximadamente 23.000,00 € para realizaciones especiales, como el horno chapado en oro que construimos para un cliente exclusivo. Cada proyecto es único y se realiza a medida, según las necesidades de producción y el diseño deseado. Para recibir un presupuesto personalizado, puede solicitar una consulta gratuita."
+      }
+    },
+    "cta": {
+      "title": "¿No encuentra la respuesta que busca?",
+      "subtitle": "Contáctenos ahora y uno de nuestros expertos le responderá en 24 horas",
+      "button": "Contáctenos ahora"
+    }
   }
 }
