@@ -108,14 +108,14 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-playfair text-charcoal-900">
+          <DialogTitle className="text-2xl font-playfair text-charcoal-900 pr-8">
             {t('downloadDatasheet.title')}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
+        <div className="space-y-4 py-4 overflow-y-auto max-h-[calc(90vh-8rem)]">
           <p className="text-sm text-stone-600">
             {t('downloadDatasheet.subtitle')}
           </p>
