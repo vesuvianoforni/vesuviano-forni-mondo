@@ -2,8 +2,7 @@ import React from 'react';
 
 const WhatsAppButton = () => {
   const handleWhatsAppClick = () => {
-    const message = encodeURIComponent("Ciao, vorrei informazioni sui vostri forni professionali 🔥");
-    const whatsappUrl = `https://wa.me/393509286941?text=${message}`;
+    const whatsappUrl = 'https://wa.link/a2959l';
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   };
 
