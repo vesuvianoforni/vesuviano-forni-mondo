@@ -18,6 +18,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import FAQSection from "@/components/FAQSection";
 
 import WhatsAppButton from "@/components/WhatsAppButton";
+import ContactBar from "@/components/ContactBar";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -351,6 +352,7 @@ const Index = () => {
       
       {/* WhatsApp Button */}
       <WhatsAppButton />
+      <ContactBar />
     </div>
   );
 };

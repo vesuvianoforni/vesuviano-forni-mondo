@@ -9,7 +9,7 @@ const WhatsAppButton = () => {
   return (
     <button
       onClick={handleWhatsAppClick}
-      className="fixed bottom-6 right-6 z-50 bg-white hover:bg-gray-50 px-4 py-3 rounded-lg shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:-translate-y-1 group border border-gray-200 animate-float"
+      className="fixed bottom-6 right-6 z-50 bg-white hover:bg-gray-50 px-4 py-3 rounded-lg shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:-translate-y-1 group border border-gray-200 animate-float hidden md:block"
       aria-label="Contattaci su WhatsApp"
       title="Contattaci su WhatsApp"
     >
