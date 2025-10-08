@@ -94,6 +94,7 @@
       }
     },
     "learnMore": "En Savoir Plus",
+    "downloadDatasheet": "Télécharger la Fiche Technique",
     "badges": {
       "madeInNaples": "Made in Naples 🇮🇹",
       "certified": "500°C Certified Performance"
@@ -671,5 +672,26 @@
     "loading": "Chargement...",
     "error": "Erreur",
     "success": "Succès"
+  },
+  "downloadDatasheet": {
+    "title": "Télécharger la Fiche Technique",
+    "subtitle": "Remplissez le formulaire pour recevoir la fiche technique du four",
+    "firstName": "Prénom",
+    "firstNamePlaceholder": "Entrez votre prénom",
+    "lastName": "Nom",
+    "lastNamePlaceholder": "Entrez votre nom",
+    "email": "Email",
+    "emailPlaceholder": "Entrez votre email",
+    "phone": "Numéro de Téléphone",
+    "phonePlaceholder": "Entrez votre numéro",
+    "city": "Ville",
+    "cityPlaceholder": "Entrez votre ville",
+    "download": "Télécharger la Fiche Technique",
+    "downloading": "Téléchargement...",
+    "fillAllFields": "Veuillez remplir tous les champs obligatoires",
+    "success": "Succès!",
+    "successMessage": "La fiche technique a été téléchargée. Nous vous avons envoyé un email de confirmation.",
+    "error": "Erreur",
+    "errorMessage": "Une erreur s'est produite. Veuillez réessayer plus tard."
   }
 }

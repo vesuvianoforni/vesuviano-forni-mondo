@@ -78,6 +78,7 @@
       }
     },
     "learnMore": "Mehr Erfahren",
+    "downloadDatasheet": "Datenblatt Herunterladen",
     "badges": {
       "madeInNaples": "Made in Naples 🇮🇹",
       "certified": "500°C Certified Performance"
@@ -629,5 +630,26 @@
     "loading": "Wird geladen...",
     "error": "Fehler",
     "success": "Erfolg"
+  },
+  "downloadDatasheet": {
+    "title": "Datenblatt Herunterladen",
+    "subtitle": "Füllen Sie das Formular aus, um das Ofendatenblatt zu erhalten",
+    "firstName": "Vorname",
+    "firstNamePlaceholder": "Geben Sie Ihren Vornamen ein",
+    "lastName": "Nachname",
+    "lastNamePlaceholder": "Geben Sie Ihren Nachnamen ein",
+    "email": "E-Mail",
+    "emailPlaceholder": "Geben Sie Ihre E-Mail ein",
+    "phone": "Telefonnummer",
+    "phonePlaceholder": "Geben Sie Ihre Nummer ein",
+    "city": "Stadt",
+    "cityPlaceholder": "Geben Sie Ihre Stadt ein",
+    "download": "Datenblatt Herunterladen",
+    "downloading": "Wird heruntergeladen...",
+    "fillAllFields": "Bitte füllen Sie alle Pflichtfelder aus",
+    "success": "Erfolg!",
+    "successMessage": "Das Datenblatt wurde heruntergeladen. Wir haben Ihnen eine Bestätigungs-E-Mail gesendet.",
+    "error": "Fehler",
+    "errorMessage": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
   }
 }

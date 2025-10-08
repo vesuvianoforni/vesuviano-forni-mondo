@@ -78,6 +78,7 @@
       }
     },
     "learnMore": "Scopri di Più",
+    "downloadDatasheet": "Scarica Scheda Tecnica",
     "badges": {
       "madeInNaples": "Made in Naples 🇮🇹",
       "certified": "500°C Certified Performance"
@@ -690,5 +691,26 @@
     "loading": "Caricamento...",
     "error": "Errore",
     "success": "Successo"
+  },
+  "downloadDatasheet": {
+    "title": "Scarica Scheda Tecnica",
+    "subtitle": "Compila il form per ricevere la scheda tecnica del forno",
+    "firstName": "Nome",
+    "firstNamePlaceholder": "Inserisci il tuo nome",
+    "lastName": "Cognome",
+    "lastNamePlaceholder": "Inserisci il tuo cognome",
+    "email": "Email",
+    "emailPlaceholder": "Inserisci la tua email",
+    "phone": "Numero di Telefono",
+    "phonePlaceholder": "Inserisci il tuo numero",
+    "city": "Città",
+    "cityPlaceholder": "Inserisci la tua città",
+    "download": "Scarica Scheda Tecnica",
+    "downloading": "Download in corso...",
+    "fillAllFields": "Compila tutti i campi obbligatori",
+    "success": "Successo!",
+    "successMessage": "La scheda tecnica è stata scaricata. Ti abbiamo inviato una email di conferma.",
+    "error": "Errore",
+    "errorMessage": "Si è verificato un errore. Riprova più tardi."
   }
 }

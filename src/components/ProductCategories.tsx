@@ -3,58 +3,27 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import ImageZoomModal from './ImageZoomModal';
+import DownloadDatasheetModal from './DownloadDatasheetModal';
 
 const ProductCategories = () => {
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
   const [zoomedImage, setZoomedImage] = useState<{
     url: string;
     alt: string;
     title: string;
   } | null>(null);
+  const [downloadModal, setDownloadModal] = useState<{
+    ovenType: string;
+    datasheetUrl?: string;
+  } | null>(null);
 
-  const getOvenPath = (ovenType: string) => {
-    const lang = i18n.language || 'it';
-    const paths: Record<string, Record<string, string>> = {
-      'traditional': {
-        'it': '/it/forni-tradizionali',
-        'en': '/en/traditional-ovens',
-        'fr': '/fr/fours-traditionnels',
-        'es': '/es/hornos-tradicionales',
-        'de': '/de/traditionelle-oefen'
-      },
-      'gas': {
-        'it': '/it/forni-gas',
-        'en': '/en/gas-ovens',
-        'fr': '/fr/fours-gaz',
-        'es': '/es/hornos-gas',
-        'de': '/de/gasoefen'
-      },
-      'electric': {
-        'it': '/it/forni-elettrici',
-        'en': '/en/electric-ovens',
-        'fr': '/fr/fours-electriques',
-        'es': '/es/hornos-electricos',
-        'de': '/de/elektrooefen'
-      },
-      'rotating': {
-        'it': '/it/forni-rotativi',
-        'en': '/en/rotating-ovens',
-        'fr': '/fr/fours-rotatifs',
-        'es': '/es/hornos-rotativos',
-        'de': '/de/drehoefen'
-      },
-      'vesuviobuono': {
-        'it': '/it/sistema-vesuviobuono',
-        'en': '/en/vesuviobuono-system',
-        'fr': '/fr/systeme-vesuviobuono',
-        'es': '/es/sistema-vesuviobuono',
-        'de': '/de/vesuviobuono-system'
-      }
+  const getDatasheetUrl = (ovenType: string) => {
+    const datasheetUrls: Record<string, string> = {
+      'vesuviobuono': '/lovable-uploads/vesuviobuono-scheda-tecnica.pdf',
+      // Add other datasheet URLs as needed
     };
-    return paths[ovenType]?.[lang] || paths[ovenType]?.['it'] || '/';
+    return datasheetUrls[ovenType];
   };
 
   const categories = [
@@ -153,9 +122,12 @@ const ProductCategories = () => {
 
                   <Button
                     className="w-full bg-stone-100 text-stone-700 hover:bg-vesuviano-500 hover:text-white transition-all duration-300 text-sm sm:text-base py-2 sm:py-3"
-                    onClick={() => navigate(getOvenPath(category.key))}
+                    onClick={() => setDownloadModal({
+                      ovenType: category.key,
+                      datasheetUrl: getDatasheetUrl(category.key)
+                    })}
                   >
-                    {t('products.learnMore')}
+                    {t('products.downloadDatasheet')}
                   </Button>
                 </CardContent>
               </Card>
@@ -198,6 +170,16 @@ const ProductCategories = () => {
             imageUrl={zoomedImage.url}
             imageAlt={zoomedImage.alt}
             title={zoomedImage.title}
+          />
+        )}
+
+        {/* Download Datasheet Modal */}
+        {downloadModal && (
+          <DownloadDatasheetModal
+            isOpen={!!downloadModal}
+            onClose={() => setDownloadModal(null)}
+            ovenType={downloadModal.ovenType}
+            datasheetUrl={downloadModal.datasheetUrl}
           />
         )}
       </div>

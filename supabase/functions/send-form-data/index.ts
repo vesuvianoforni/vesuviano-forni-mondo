@@ -105,6 +105,29 @@ serve(async (req) => {
         `
         break
 
+      case 'datasheet-download':
+        subject = `📥 Richiesta Scheda Tecnica - ${data.firstName} ${data.lastName} (${data.ovenType})`
+        emailContent = `
+          <h2>🔔 Richiesta Download Scheda Tecnica</h2>
+          <p><strong>Data:</strong> ${new Date().toLocaleString('it-IT')}</p>
+          
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3>Dati Cliente:</h3>
+            <p><strong>Nome:</strong> ${data.firstName}</p>
+            <p><strong>Cognome:</strong> ${data.lastName}</p>
+            <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
+            <p><strong>Città:</strong> ${data.city}</p>
+            <p><strong>Telefono:</strong> <a href="tel:${data.phone}">${data.phone}</a></p>
+          </div>
+          
+          <div style="background: #dcfce7; border-left: 4px solid #22c55e; padding: 15px; margin: 20px 0;">
+            <strong>🔥 Tipologia Forno Richiesto:</strong> ${data.ovenType}
+          </div>
+          
+          <p><em>Il cliente ha richiesto la scheda tecnica del forno.</em></p>
+        `
+        break
+
       default:
         subject = `📝 Nuovo Form Compilato - ${formType}`
         emailContent = `

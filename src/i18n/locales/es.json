@@ -78,6 +78,7 @@
       }
     },
     "learnMore": "Saber Más",
+    "downloadDatasheet": "Descargar Ficha Técnica",
     "badges": {
       "madeInNaples": "Made in Naples 🇮🇹",
       "certified": "500°C Certified Performance"
@@ -629,5 +630,26 @@
     "loading": "Cargando...",
     "error": "Error",
     "success": "Éxito"
+  },
+  "downloadDatasheet": {
+    "title": "Descargar Ficha Técnica",
+    "subtitle": "Completa el formulario para recibir la ficha técnica del horno",
+    "firstName": "Nombre",
+    "firstNamePlaceholder": "Introduce tu nombre",
+    "lastName": "Apellido",
+    "lastNamePlaceholder": "Introduce tu apellido",
+    "email": "Email",
+    "emailPlaceholder": "Introduce tu email",
+    "phone": "Número de Teléfono",
+    "phonePlaceholder": "Introduce tu número",
+    "city": "Ciudad",
+    "cityPlaceholder": "Introduce tu ciudad",
+    "download": "Descargar Ficha Técnica",
+    "downloading": "Descargando...",
+    "fillAllFields": "Por favor completa todos los campos obligatorios",
+    "success": "¡Éxito!",
+    "successMessage": "La ficha técnica ha sido descargada. Te hemos enviado un email de confirmación.",
+    "error": "Error",
+    "errorMessage": "Se produjo un error. Por favor intenta de nuevo más tarde."
   }
 }

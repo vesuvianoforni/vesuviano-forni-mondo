@@ -78,6 +78,7 @@
       }
     },
     "learnMore": "Learn More",
+    "downloadDatasheet": "Download Datasheet",
     "badges": {
       "madeInNaples": "Made in Naples 🇮🇹",
       "certified": "500°C Certified Performance"
@@ -728,5 +729,26 @@
     "loading": "Loading...",
     "error": "Error",
     "success": "Success"
+  },
+  "downloadDatasheet": {
+    "title": "Download Datasheet",
+    "subtitle": "Fill in the form to receive the oven datasheet",
+    "firstName": "First Name",
+    "firstNamePlaceholder": "Enter your first name",
+    "lastName": "Last Name",
+    "lastNamePlaceholder": "Enter your last name",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "phone": "Phone Number",
+    "phonePlaceholder": "Enter your phone number",
+    "city": "City",
+    "cityPlaceholder": "Enter your city",
+    "download": "Download Datasheet",
+    "downloading": "Downloading...",
+    "fillAllFields": "Please fill in all required fields",
+    "success": "Success!",
+    "successMessage": "The datasheet has been downloaded. We have sent you a confirmation email.",
+    "error": "Error",
+    "errorMessage": "An error occurred. Please try again later."
   }
 }
