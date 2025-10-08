@@ -366,60 +366,67 @@ const VesuvioBuono = () => {
             </div>
           </div>
 
-          {/* Abbattitore di Fuliggine Section */}
-          <div className="mt-16 animate-fade-in" style={{ animationDelay: '1.1s' }}>
-            <div className="bg-gradient-to-r from-stone-800 to-stone-900 rounded-xl shadow-2xl p-8 border border-vesuviano-400/30 hover:border-vesuviano-400/50 transition-all duration-500">
-              <div className="grid lg:grid-cols-2 gap-8 items-center">
-                <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center">
-                      <div className="w-12 h-12 bg-vesuviano-500 rounded-full flex items-center justify-center mr-4">
-                        <Leaf className="text-white" size={24} />
+          {/* Abbattitore di Fuliggine Section - PROMINENTE */}
+          <div className="mt-20 mb-20 animate-fade-in" style={{ animationDelay: '1.1s' }}>
+            <div className="bg-gradient-to-br from-stone-800 via-stone-900 to-vesuviano-900/30 rounded-2xl shadow-2xl p-12 md:p-16 border-4 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-500 hover:shadow-vesuviano-500/50 relative overflow-hidden">
+              {/* Decorative background elements */}
+              <div className="absolute top-0 right-0 w-96 h-96 bg-vesuviano-500/5 rounded-full blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-96 h-96 bg-vesuviano-400/5 rounded-full blur-3xl"></div>
+              
+              <div className="relative z-10">
+                <div className="grid lg:grid-cols-2 gap-12 items-center">
+                  <div>
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+                      <div className="flex items-center">
+                        <div className="w-16 h-16 md:w-20 md:h-20 bg-vesuviano-500 rounded-full flex items-center justify-center mr-4 shadow-lg shadow-vesuviano-500/50 animate-pulse">
+                          <Leaf className="text-white" size={36} />
+                        </div>
+                        <h3 className="font-playfair text-3xl md:text-5xl font-bold text-white leading-tight">
+                          Zero Emissioni
+                        </h3>
                       </div>
-                      <h3 className="font-playfair text-2xl md:text-3xl font-semibold text-white">
-                        Abbattitore di Fuliggine ad Acqua
-                      </h3>
+                      <Badge className="bg-amber-600 text-white px-5 py-3 text-base md:text-lg font-bold border-none shadow-xl animate-pulse self-start md:self-auto">
+                        <Shield className="mr-2" size={20} />
+                        PATENT
+                      </Badge>
                     </div>
-                    <Badge className="bg-amber-600 text-white px-3 py-2 text-sm font-bold border-none">
-                      <Shield className="mr-2" size={16} />
-                      BREVETTATO
-                    </Badge>
+                    
+                    <div className="space-y-6">
+                      <div className="bg-vesuviano-500/10 border-l-4 border-vesuviano-400 rounded-r-lg p-5">
+                        <h4 className="font-bold text-vesuviano-200 mb-3 text-xl">Tecnologia Brevettata</h4>
+                        <p className="text-vesuviano-100 text-lg leading-relaxed">
+                          Sistema di combustione completa che elimina il <strong className="text-white">99,9% delle particelle di fuliggine</strong>.
+                        </p>
+                      </div>
+
+                      <div className="bg-stone-700/30 border-l-4 border-vesuviano-300 rounded-r-lg p-5">
+                        <h4 className="font-bold text-vesuviano-200 mb-3 text-xl">Certificazioni Ambientali</h4>
+                        <p className="text-vesuviano-100 text-lg">
+                          Conforme ai più rigidi standard europei e internazionali sulle emissioni.
+                        </p>
+                      </div>
+
+                      <div className="bg-vesuviano-600/10 border-l-4 border-vesuviano-400 rounded-r-lg p-5">
+                        <h4 className="font-bold text-vesuviano-200 mb-3 text-xl">Doppia Alimentazione</h4>
+                        <p className="text-vesuviano-100 text-lg">
+                          Funziona perfettamente sia a legna che in combinazione gas/legna.
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="space-y-4">
-                    <p className="text-vesuviano-200 text-lg leading-relaxed">
-                      Sistema innovativo prodotto e realizzato in collaborazione con l'azienda leader del settore, 
-                      che garantisce <strong className="text-vesuviano-400">zero problemi di vicinato e normative</strong>.
+                  
+                  <div className="bg-stone-800/50 rounded-xl p-6 border-2 border-vesuviano-400/40 shadow-2xl hover:scale-105 transition-all duration-300">
+                    <div className="aspect-video rounded-lg overflow-hidden shadow-xl">
+                      <img 
+                        src="/lovable-uploads/abbattitore-fuliggine-acqua.png" 
+                        alt="Abbattitore di Fuliggine ad Acqua - Sistema interno" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <p className="text-vesuviano-200 text-center mt-4 text-base font-semibold">
+                      Sistema Interno Abbattitore Fuliggine
                     </p>
-                    <div className="bg-vesuviano-600/20 border border-vesuviano-400/30 rounded-lg p-4">
-                      <h4 className="font-semibold text-vesuviano-300 mb-2">Vantaggi Tecnici:</h4>
-                      <ul className="text-vesuviano-200 space-y-2 text-sm">
-                        <li className="flex items-center">
-                          <div className="w-2 h-2 bg-vesuviano-400 rounded-full mr-3"></div>
-                          Eliminazione completa delle particelle nocive
-                        </li>
-                        <li className="flex items-center">
-                          <div className="w-2 h-2 bg-vesuviano-400 rounded-full mr-3"></div>
-                          Conformità a tutte le normative ambientali
-                        </li>
-                        <li className="flex items-center">
-                          <div className="w-2 h-2 bg-vesuviano-400 rounded-full mr-3"></div>
-                          Installazione possibile in qualsiasi contesto urbano
-                        </li>
-                      </ul>
-                    </div>
                   </div>
-                </div>
-                <div className="bg-stone-700/50 rounded-lg p-4 border border-vesuviano-400/20">
-                  <div className="aspect-video rounded-lg overflow-hidden">
-                    <img 
-                      src="/lovable-uploads/abbattitore-fuliggine-acqua.png" 
-                      alt="Abbattitore di Fuliggine ad Acqua - Sistema interno" 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <p className="text-vesuviano-300 text-center mt-3 text-sm font-medium">
-                    Sistema Interno Abbattitore Fuliggine
-                  </p>
                 </div>
               </div>
             </div>
