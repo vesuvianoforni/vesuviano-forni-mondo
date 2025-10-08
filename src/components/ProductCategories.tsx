@@ -33,7 +33,7 @@ const ProductCategories = () => {
     },
     {
       key: 'gas',
-      image: "/lovable-uploads/forno-arancione-terra-del-gusto.png"
+      image: "/lovable-uploads/forno-gas-mosaico-azzurro.jpg"
     },
     {
       key: 'electric',
