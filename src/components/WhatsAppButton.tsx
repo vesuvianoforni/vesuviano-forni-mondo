@@ -1,5 +1,4 @@
 import React from 'react';
-import { MessageCircle } from 'lucide-react';
 
 const WhatsAppButton = () => {
   const handleWhatsAppClick = () => {
@@ -11,11 +10,15 @@ const WhatsAppButton = () => {
   return (
     <button
       onClick={handleWhatsAppClick}
-      className="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl group"
+      className="fixed bottom-6 right-6 z-50 bg-white hover:bg-gray-50 p-3 rounded-lg shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl group border border-gray-200"
       aria-label="Contattaci su WhatsApp"
       title="Contattaci su WhatsApp"
     >
-      <MessageCircle size={24} className="group-hover:animate-pulse" />
+      <img 
+        src="/lovable-uploads/whatsapp-logo.png" 
+        alt="WhatsApp" 
+        className="w-16 h-16 object-contain group-hover:scale-105 transition-transform duration-300"
+      />
       
       {/* Tooltip */}
       <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block">
@@ -24,9 +27,6 @@ const WhatsAppButton = () => {
           <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
         </div>
       </div>
-      
-      {/* Pulse animation ring */}
-      <div className="absolute inset-0 rounded-full bg-green-400 opacity-30 animate-ping"></div>
     </button>
   );
 };
