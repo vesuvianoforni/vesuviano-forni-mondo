@@ -81,7 +81,14 @@
       "title": "¿No sabes qué horno es para ti?",
       "subtitle": "Consultoría Personalizada",
       "description": "Déjanos tu email: te ayudamos a elegir el modelo perfecto para tu negocio",
-      "cta": "Solicitar Consulta Gratuita"
+      "cta": "Solicitar Consulta Gratuita",
+      "services": {
+        "render3d": "Renderizado 3D profesional",
+        "digitalInsertion": "Inserción digital en tu local",
+        "tilesChoice": "Selección azulejos / pintura",
+        "designChoice": "Elección diseño personalizado"
+      },
+      "warranty": "Garantía 3 Años"
     },
     "learnMore": "Saber Más",
     "downloadDatasheet": "Descargar Ficha Técnica",

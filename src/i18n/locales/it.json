@@ -81,7 +81,14 @@
       "title": "Non sai quale forno fa per te?",
       "subtitle": "Consulenza Personalizzata",
       "description": "Lasciaci la tua email: ti aiutiamo a scegliere il modello perfetto per la tua attività",
-      "cta": "Richiedi Consulenza Gratuita"
+      "cta": "Richiedi Consulenza Gratuita",
+      "services": {
+        "render3d": "Render 3D professionale",
+        "digitalInsertion": "Inserimento digitale nel locale",
+        "tilesChoice": "Scelta piastrelle / verniciatura",
+        "designChoice": "Scelta design personalizzato"
+      },
+      "warranty": "3 Anni di Garanzia"
     },
     "learnMore": "Scopri di Più",
     "downloadDatasheet": "Scarica Scheda Tecnica",

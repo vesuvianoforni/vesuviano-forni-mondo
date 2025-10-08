@@ -81,7 +81,14 @@
       "title": "Wissen Sie nicht, welcher Ofen für Sie geeignet ist?",
       "subtitle": "Persönliche Beratung",
       "description": "Hinterlassen Sie uns Ihre E-Mail: Wir helfen Ihnen, das perfekte Modell für Ihr Unternehmen zu wählen",
-      "cta": "Kostenlose Beratung Anfordern"
+      "cta": "Kostenlose Beratung Anfordern",
+      "services": {
+        "render3d": "Professionelles 3D-Rendering",
+        "digitalInsertion": "Digitale Einfügung in Ihren Raum",
+        "tilesChoice": "Fliesen- / Lackauswahl",
+        "designChoice": "Individuelle Designauswahl"
+      },
+      "warranty": "3 Jahre Garantie"
     },
     "learnMore": "Mehr Erfahren",
     "downloadDatasheet": "Datenblatt Herunterladen",

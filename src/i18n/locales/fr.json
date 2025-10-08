@@ -97,7 +97,14 @@
       "title": "Vous ne savez pas quel four vous convient?",
       "subtitle": "Consultation Personnalisée",
       "description": "Laissez-nous votre email: nous vous aidons à choisir le modèle parfait pour votre activité",
-      "cta": "Demander une Consultation Gratuite"
+      "cta": "Demander une Consultation Gratuite",
+      "services": {
+        "render3d": "Rendu 3D professionnel",
+        "digitalInsertion": "Insertion numérique dans votre espace",
+        "tilesChoice": "Choix carrelage / peinture",
+        "designChoice": "Choix design personnalisé"
+      },
+      "warranty": "Garantie 3 Ans"
     },
     "learnMore": "En Savoir Plus",
     "downloadDatasheet": "Télécharger la Fiche Technique",
