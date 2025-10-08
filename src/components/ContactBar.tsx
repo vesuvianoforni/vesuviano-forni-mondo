@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageCircle } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const ContactBar = () => {
@@ -40,7 +40,7 @@ const ContactBar = () => {
           className="flex items-center justify-center gap-2 bg-primary/90 hover:bg-primary text-primary-foreground px-5 py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg backdrop-blur-sm flex-1"
           aria-label={t('header.contact')}
         >
-          <MessageCircle className="h-5 w-5" />
+          <Mail className="h-5 w-5" />
           <span className="font-semibold text-sm">{t('header.contact')}</span>
         </button>
       </div>
