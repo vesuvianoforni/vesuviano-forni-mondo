@@ -143,7 +143,7 @@ const VesuvioBuono = () => {
 
           {/* Photo Gallery Section */}
           <div className="mb-16 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {/* Photo Slot 1 */}
               <div className="bg-stone-900 rounded-xl p-4 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
                 <div className="aspect-video rounded-lg overflow-hidden">
@@ -157,18 +157,6 @@ const VesuvioBuono = () => {
               </div>
               
               {/* Photo Slot 2 */}
-              <div className="bg-stone-900 rounded-xl p-4 border-2 border-copper-400 hover:border-copper-300 transition-all duration-300 hover:scale-105">
-                <div className="aspect-video rounded-lg overflow-hidden">
-                  <img 
-                    src="/lovable-uploads/vesuviobuono-pizza-perfetta.jpg" 
-                    alt="Pizza perfetta nel forno VesuvioBuono" 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <p className="text-copper-400 text-center mt-2 text-sm">{t('vesuvioBuono.gallery.perfectPizza')}</p>
-              </div>
-              
-              {/* Photo Slot 3 */}
               <div className="bg-stone-900 rounded-xl p-4 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
                 <div className="aspect-video rounded-lg overflow-hidden">
                   <img 
