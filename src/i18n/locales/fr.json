@@ -93,6 +93,12 @@
         "certified": "Certifié environnemental"
       }
     },
+    "consultation": {
+      "title": "Vous ne savez pas quel four vous convient?",
+      "subtitle": "Consultation Personnalisée",
+      "description": "Laissez-nous votre email: nous vous aidons à choisir le modèle parfait pour votre activité",
+      "cta": "Demander une Consultation Gratuite"
+    },
     "learnMore": "En Savoir Plus",
     "downloadDatasheet": "Télécharger la Fiche Technique",
     "badges": {
@@ -362,6 +368,31 @@
       "privacy": "Nous vous contacterons dans les 24 heures. Vos données sont protégées et ne seront pas partagées avec des tiers.",
       "catalogDownloaded": "Catalogue Téléchargé!",
       "catalogSuccess": "Le catalogue complet a été téléchargé sur votre appareil."
+    }
+  },
+  "consultationModal": {
+    "title": "Demander une Consultation Gratuite",
+    "form": {
+      "firstName": "Prénom",
+      "firstNamePlaceholder": "Pierre",
+      "lastName": "Nom",
+      "lastNamePlaceholder": "Martin",
+      "email": "Email",
+      "emailPlaceholder": "pierre.martin@exemple.com",
+      "phone": "Numéro de Téléphone",
+      "phonePlaceholder": "+33 1 23 45 67 89",
+      "city": "Ville",
+      "cityPlaceholder": "Paris",
+      "submit": "Envoyer la Demande",
+      "submitting": "Envoi en cours...",
+      "needHelp": "J'ai besoin d'aide pour choisir le four"
+    },
+    "messages": {
+      "requiredFields": "Champs Obligatoires",
+      "fillRequired": "Tous les champs sont requis pour envoyer la demande.",
+      "error": "Erreur d'Envoi",
+      "errorDescription": "Un problème s'est produit. Réessayez ou contactez-nous directement.",
+      "autoMessage": "Demande via formulaire de consultation produits - le client a besoin d'aide pour choisir le four parfait pour son activité."
     }
   },
   "gallery": {

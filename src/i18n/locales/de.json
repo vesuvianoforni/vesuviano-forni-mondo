@@ -77,6 +77,12 @@
         "certified": "Umweltzertifiziert"
       }
     },
+    "consultation": {
+      "title": "Wissen Sie nicht, welcher Ofen für Sie geeignet ist?",
+      "subtitle": "Persönliche Beratung",
+      "description": "Hinterlassen Sie uns Ihre E-Mail: Wir helfen Ihnen, das perfekte Modell für Ihr Unternehmen zu wählen",
+      "cta": "Kostenlose Beratung Anfordern"
+    },
     "learnMore": "Mehr Erfahren",
     "downloadDatasheet": "Datenblatt Herunterladen",
     "badges": {

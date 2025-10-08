@@ -77,6 +77,12 @@
         "certified": "Environmentally certified"
       }
     },
+    "consultation": {
+      "title": "Don't know which oven is right for you?",
+      "subtitle": "Personalized Consultation",
+      "description": "Leave us your email: we'll help you choose the perfect model for your business",
+      "cta": "Request Free Consultation"
+    },
     "learnMore": "Learn More",
     "downloadDatasheet": "Download Datasheet",
     "badges": {
@@ -362,6 +368,31 @@
       "privacy": "We will contact you within 24 hours. Your data is protected and will not be shared with third parties.",
       "catalogDownloaded": "Catalog Downloaded!",
       "catalogSuccess": "The full catalog has been downloaded to your device."
+    }
+  },
+  "consultationModal": {
+    "title": "Request Free Consultation",
+    "form": {
+      "firstName": "First Name",
+      "firstNamePlaceholder": "John",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Smith",
+      "email": "Email",
+      "emailPlaceholder": "john.smith@example.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 123 456 7890",
+      "city": "City",
+      "cityPlaceholder": "New York",
+      "submit": "Send Request",
+      "submitting": "Sending...",
+      "needHelp": "I need help choosing the oven"
+    },
+    "messages": {
+      "requiredFields": "Required Fields",
+      "fillRequired": "All fields are required to send the request.",
+      "error": "Sending Error",
+      "errorDescription": "An issue occurred. Please try again or contact us directly.",
+      "autoMessage": "Request via product consultation form - the customer needs help choosing the perfect oven for their business."
     }
   },
   "whatsapp": {

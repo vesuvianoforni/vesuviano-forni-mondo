@@ -77,6 +77,12 @@
         "certified": "Certificato ambientale"
       }
     },
+    "consultation": {
+      "title": "Non sai quale forno fa per te?",
+      "subtitle": "Consulenza Personalizzata",
+      "description": "Lasciaci la tua email: ti aiutiamo a scegliere il modello perfetto per la tua attività",
+      "cta": "Richiedi Consulenza Gratuita"
+    },
     "learnMore": "Scopri di Più",
     "downloadDatasheet": "Scarica Scheda Tecnica",
     "badges": {
@@ -360,6 +366,31 @@
       "privacy": "Ti contatteremo entro 24 ore. I tuoi dati sono protetti e non saranno condivisi con terzi.",
       "catalogDownloaded": "Catalogo Scaricato!",
       "catalogSuccess": "Il catalogo completo è stato scaricato sul tuo dispositivo."
+    }
+  },
+  "consultationModal": {
+    "title": "Richiedi Consulenza Gratuita",
+    "form": {
+      "firstName": "Nome",
+      "firstNamePlaceholder": "Mario",
+      "lastName": "Cognome",
+      "lastNamePlaceholder": "Rossi",
+      "email": "Email",
+      "emailPlaceholder": "mario.rossi@esempio.com",
+      "phone": "Numero di Telefono",
+      "phonePlaceholder": "+39 123 456 7890",
+      "city": "Città",
+      "cityPlaceholder": "Roma",
+      "submit": "Invia Richiesta",
+      "submitting": "Invio in corso...",
+      "needHelp": "Ho bisogno di aiuto per scegliere il forno"
+    },
+    "messages": {
+      "requiredFields": "Campi Obbligatori",
+      "fillRequired": "Tutti i campi sono richiesti per inviare la richiesta.",
+      "error": "Errore nell'Invio",
+      "errorDescription": "Si è verificato un problema. Riprova o contattaci direttamente.",
+      "autoMessage": "Richiesta tramite form consulenza prodotti - il cliente ha bisogno di aiuto per scegliere il forno perfetto per la sua attività."
     }
   },
   "whatsapp": {

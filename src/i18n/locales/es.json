@@ -77,6 +77,12 @@
         "certified": "Certificado ambiental"
       }
     },
+    "consultation": {
+      "title": "¿No sabes qué horno es para ti?",
+      "subtitle": "Consultoría Personalizada",
+      "description": "Déjanos tu email: te ayudamos a elegir el modelo perfecto para tu negocio",
+      "cta": "Solicitar Consulta Gratuita"
+    },
     "learnMore": "Saber Más",
     "downloadDatasheet": "Descargar Ficha Técnica",
     "badges": {
