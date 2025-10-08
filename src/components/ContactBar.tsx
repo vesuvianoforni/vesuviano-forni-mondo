@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageCircle, Phone } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const ContactBar = () => {
@@ -18,11 +18,11 @@ const ContactBar = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg md:hidden">
-      <div className="flex items-center justify-around p-3 max-w-screen-xl mx-auto">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-t border-border/50 shadow-2xl md:hidden">
+      <div className="flex items-center gap-2 p-2.5 max-w-screen-xl mx-auto">
         <button
           onClick={handleWhatsAppClick}
-          className="flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20BD5A] text-white px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105 shadow-md flex-1 mx-1"
+          className="flex items-center justify-center gap-2 bg-[#25D366]/90 hover:bg-[#25D366] text-white px-5 py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg backdrop-blur-sm flex-1"
           aria-label="Contattaci su WhatsApp"
         >
           <img 
@@ -30,16 +30,16 @@ const ContactBar = () => {
             alt="WhatsApp" 
             className="h-5 w-5 object-contain brightness-0 invert"
           />
-          <span className="font-medium text-sm">WhatsApp</span>
+          <span className="font-semibold text-sm">WhatsApp</span>
         </button>
 
         <button
           onClick={handleContactClick}
-          className="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105 shadow-md flex-1 mx-1"
-          aria-label="Richiedi consulenza"
+          className="flex items-center justify-center gap-2 bg-primary/90 hover:bg-primary text-primary-foreground px-5 py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg backdrop-blur-sm flex-1"
+          aria-label={t('consultation.title')}
         >
           <MessageCircle className="h-5 w-5" />
-          <span className="font-medium text-sm">{t('hero.cta')}</span>
+          <span className="font-semibold text-sm">{t('consultation.contact')}</span>
         </button>
       </div>
     </div>
