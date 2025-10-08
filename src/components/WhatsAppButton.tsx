@@ -10,14 +10,14 @@ const WhatsAppButton = () => {
   return (
     <button
       onClick={handleWhatsAppClick}
-      className="fixed bottom-6 right-6 z-50 bg-white hover:bg-gray-50 p-3 rounded-lg shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl group border border-gray-200"
+      className="fixed bottom-6 right-6 z-50 bg-white hover:bg-gray-50 px-4 py-3 rounded-lg shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl group border border-gray-200"
       aria-label="Contattaci su WhatsApp"
       title="Contattaci su WhatsApp"
     >
       <img 
-        src="/lovable-uploads/whatsapp-logo.png" 
+        src="/lovable-uploads/whatsapp-logo-inline.png" 
         alt="WhatsApp" 
-        className="w-16 h-16 object-contain group-hover:scale-105 transition-transform duration-300"
+        className="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
       />
       
       {/* Tooltip */}
