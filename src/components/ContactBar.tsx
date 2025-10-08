@@ -26,9 +26,9 @@ const ContactBar = () => {
           aria-label="Contattaci su WhatsApp"
         >
           <img 
-            src="/lovable-uploads/whatsapp-logo.png" 
+            src="/lovable-uploads/whatsapp-icon-white.png" 
             alt="WhatsApp" 
-            className="h-5 w-5 object-contain brightness-0 invert"
+            className="h-5 w-5 object-contain"
           />
           <span className="font-semibold text-sm">WhatsApp</span>
         </button>
