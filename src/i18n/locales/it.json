@@ -695,6 +695,7 @@
   "downloadDatasheet": {
     "title": "Scarica Scheda Tecnica",
     "subtitle": "Compila il form per ricevere la scheda tecnica del forno",
+    "emailNotice": "📧 Ti invieremo la scheda tecnica via email all'indirizzo fornito",
     "firstName": "Nome",
     "firstNamePlaceholder": "Inserisci il tuo nome",
     "lastName": "Cognome",
@@ -705,11 +706,11 @@
     "phonePlaceholder": "Inserisci il tuo numero",
     "city": "Città",
     "cityPlaceholder": "Inserisci la tua città",
-    "download": "Scarica Scheda Tecnica",
-    "downloading": "Download in corso...",
+    "download": "Ricevi Scheda Tecnica",
+    "downloading": "Invio in corso...",
     "fillAllFields": "Compila tutti i campi obbligatori",
     "success": "Successo!",
-    "successMessage": "La scheda tecnica è stata scaricata. Ti abbiamo inviato una email di conferma.",
+    "successMessage": "Ti abbiamo inviato la scheda tecnica via email. Controlla la tua casella di posta.",
     "error": "Errore",
     "errorMessage": "Si è verificato un errore. Riprova più tardi."
   }

@@ -634,6 +634,7 @@
   "downloadDatasheet": {
     "title": "Datenblatt Herunterladen",
     "subtitle": "Füllen Sie das Formular aus, um das Ofendatenblatt zu erhalten",
+    "emailNotice": "📧 Wir senden Ihnen das Datenblatt per E-Mail an die angegebene Adresse",
     "firstName": "Vorname",
     "firstNamePlaceholder": "Geben Sie Ihren Vornamen ein",
     "lastName": "Nachname",
@@ -644,11 +645,11 @@
     "phonePlaceholder": "Geben Sie Ihre Nummer ein",
     "city": "Stadt",
     "cityPlaceholder": "Geben Sie Ihre Stadt ein",
-    "download": "Datenblatt Herunterladen",
-    "downloading": "Wird heruntergeladen...",
+    "download": "Datenblatt Erhalten",
+    "downloading": "Wird gesendet...",
     "fillAllFields": "Bitte füllen Sie alle Pflichtfelder aus",
     "success": "Erfolg!",
-    "successMessage": "Das Datenblatt wurde heruntergeladen. Wir haben Ihnen eine Bestätigungs-E-Mail gesendet.",
+    "successMessage": "Wir haben Ihnen das Datenblatt per E-Mail gesendet. Bitte überprüfen Sie Ihr Postfach.",
     "error": "Fehler",
     "errorMessage": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
   }

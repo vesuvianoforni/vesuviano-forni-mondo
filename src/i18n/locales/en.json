@@ -733,6 +733,7 @@
   "downloadDatasheet": {
     "title": "Download Datasheet",
     "subtitle": "Fill in the form to receive the oven datasheet",
+    "emailNotice": "📧 We will send you the datasheet via email to the provided address",
     "firstName": "First Name",
     "firstNamePlaceholder": "Enter your first name",
     "lastName": "Last Name",
@@ -743,11 +744,11 @@
     "phonePlaceholder": "Enter your phone number",
     "city": "City",
     "cityPlaceholder": "Enter your city",
-    "download": "Download Datasheet",
-    "downloading": "Downloading...",
+    "download": "Receive Datasheet",
+    "downloading": "Sending...",
     "fillAllFields": "Please fill in all required fields",
     "success": "Success!",
-    "successMessage": "The datasheet has been downloaded. We have sent you a confirmation email.",
+    "successMessage": "We have sent you the datasheet via email. Please check your inbox.",
     "error": "Error",
     "errorMessage": "An error occurred. Please try again later."
   }

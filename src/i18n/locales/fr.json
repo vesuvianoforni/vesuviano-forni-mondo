@@ -676,6 +676,7 @@
   "downloadDatasheet": {
     "title": "Télécharger la Fiche Technique",
     "subtitle": "Remplissez le formulaire pour recevoir la fiche technique du four",
+    "emailNotice": "📧 Nous vous enverrons la fiche technique par email à l'adresse fournie",
     "firstName": "Prénom",
     "firstNamePlaceholder": "Entrez votre prénom",
     "lastName": "Nom",
@@ -686,11 +687,11 @@
     "phonePlaceholder": "Entrez votre numéro",
     "city": "Ville",
     "cityPlaceholder": "Entrez votre ville",
-    "download": "Télécharger la Fiche Technique",
-    "downloading": "Téléchargement...",
+    "download": "Recevoir la Fiche Technique",
+    "downloading": "Envoi...",
     "fillAllFields": "Veuillez remplir tous les champs obligatoires",
     "success": "Succès!",
-    "successMessage": "La fiche technique a été téléchargée. Nous vous avons envoyé un email de confirmation.",
+    "successMessage": "Nous vous avons envoyé la fiche technique par email. Veuillez vérifier votre boîte de réception.",
     "error": "Erreur",
     "errorMessage": "Une erreur s'est produite. Veuillez réessayer plus tard."
   }

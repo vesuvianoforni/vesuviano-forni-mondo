@@ -634,6 +634,7 @@
   "downloadDatasheet": {
     "title": "Descargar Ficha Técnica",
     "subtitle": "Completa el formulario para recibir la ficha técnica del horno",
+    "emailNotice": "📧 Te enviaremos la ficha técnica por email a la dirección proporcionada",
     "firstName": "Nombre",
     "firstNamePlaceholder": "Introduce tu nombre",
     "lastName": "Apellido",
@@ -644,11 +645,11 @@
     "phonePlaceholder": "Introduce tu número",
     "city": "Ciudad",
     "cityPlaceholder": "Introduce tu ciudad",
-    "download": "Descargar Ficha Técnica",
-    "downloading": "Descargando...",
+    "download": "Recibir Ficha Técnica",
+    "downloading": "Enviando...",
     "fillAllFields": "Por favor completa todos los campos obligatorios",
     "success": "¡Éxito!",
-    "successMessage": "La ficha técnica ha sido descargada. Te hemos enviado un email de confirmación.",
+    "successMessage": "Te hemos enviado la ficha técnica por email. Por favor revisa tu bandeja de entrada.",
     "error": "Error",
     "errorMessage": "Se produjo un error. Por favor intenta de nuevo más tarde."
   }

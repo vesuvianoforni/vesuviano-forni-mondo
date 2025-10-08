@@ -124,7 +124,11 @@ serve(async (req) => {
             <strong>🔥 Tipologia Forno Richiesto:</strong> ${data.ovenType}
           </div>
           
-          <p><em>Il cliente ha richiesto la scheda tecnica del forno.</em></p>
+          <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+            <strong>⚡ AZIONE RICHIESTA:</strong> Inviare scheda tecnica all'indirizzo email del cliente: <a href="mailto:${data.email}">${data.email}</a>
+          </div>
+          
+          <p><em>Il cliente ha richiesto la scheda tecnica del forno. È stata inviata automaticamente via email.</em></p>
         `
         break
 
@@ -178,6 +182,71 @@ ${JSON.stringify(data, null, 2)}
         </body>
       </html>
     `
+
+    // Email per l'utente con scheda tecnica
+    if (formType === 'datasheet-download') {
+      const userHtmlTemplate = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <title>Scheda Tecnica - Vesuviano Forni</title>
+            <style>
+              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; }
+              .container { max-width: 600px; margin: 0 auto; }
+              .header { background: #d97706; color: white; padding: 20px; border-radius: 8px; text-align: center; }
+              .content { background: white; padding: 25px; border-radius: 8px; margin: 20px 0; }
+              .footer { background: #1f2937; color: white; padding: 20px; border-radius: 8px; text-align: center; }
+              a { color: #d97706; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>🔥 Vesuviano Forni</h1>
+                <p>Scheda Tecnica Richiesta</p>
+              </div>
+              
+              <div class="content">
+                <h2>Ciao ${data.firstName}!</h2>
+                <p>Grazie per il tuo interesse nei nostri forni professionali.</p>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                  <h3>📄 Scheda Tecnica</h3>
+                  <p>Come richiesto, troverai in allegato o al link seguente la scheda tecnica del <strong>${data.ovenType}</strong>.</p>
+                  <p>Per ulteriori informazioni o per discutere le specifiche del forno, non esitare a contattarci.</p>
+                </div>
+
+                <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+                  <h3>📞 Hai Domande?</h3>
+                  <p>I nostri forni Vesuviano combinano la tradizione artigianale napoletana con le tecnologie più moderne.</p>
+                  <p><strong>Contattaci per una consulenza gratuita:</strong></p>
+                  <p>📧 Email: <a href="mailto:info@abbattitorizapper.it">info@abbattitorizapper.it</a></p>
+                  <p>🌐 Sito web: <a href="https://www.vesuvianoforni.com">www.vesuvianoforni.com</a></p>
+                </div>
+
+                <p>Ti ringraziamo per l'interesse e restiamo a disposizione!</p>
+              </div>
+
+              <div class="footer">
+                <p>&copy; 2024 Vesuviano Forni - Eccellenza Artigianale Napoletana</p>
+                <p><a href="https://www.vesuvianoforni.com" style="color: #d97706;">www.vesuvianoforni.com</a></p>
+              </div>
+            </div>
+          </body>
+        </html>
+      `
+
+      // Inviare email all'utente con la scheda tecnica
+      const userEmailResult = await resend.emails.send({
+        from: 'Vesuviano Forni <system@vesuvianoforni.com>',
+        to: [data.email],
+        subject: `🔥 Scheda Tecnica ${data.ovenType} - Vesuviano Forni`,
+        html: userHtmlTemplate,
+      })
+
+      console.log('User datasheet email sent:', userEmailResult)
+    }
 
     // Email per l'utente (solo per download-modal con immagine)
     if (formType === 'download-modal' && imageUrl) {

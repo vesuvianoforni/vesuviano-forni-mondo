@@ -80,16 +80,6 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
 
       if (error) throw error;
 
-      // If there's a datasheet URL, trigger download
-      if (datasheetUrl) {
-        const link = document.createElement('a');
-        link.href = datasheetUrl;
-        link.download = `vesuviano-${ovenType}-datasheet.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-
       toast({
         title: t('downloadDatasheet.success'),
         description: t('downloadDatasheet.successMessage'),
@@ -129,6 +119,15 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
           <p className="text-sm text-stone-600">
             {t('downloadDatasheet.subtitle')}
           </p>
+          
+          <div className="bg-vesuviano-50 border border-vesuviano-200 rounded-lg p-4">
+            <p className="text-sm text-vesuviano-800 flex items-center gap-2">
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              {t('downloadDatasheet.emailNotice')}
+            </p>
+          </div>
 
           <div className="space-y-4">
             <div className="space-y-2">
