@@ -31,7 +31,7 @@ const ProductCategories = () => {
     },
     {
       key: 'gas',
-      image: "/lovable-uploads/forno-gas-mosaico-azzurro.jpg",
+      image: "/lovable-uploads/forno-gas-verde-mosaico.png",
       video: "/lovable-uploads/forno-360-video.mp4"
     },
     {
