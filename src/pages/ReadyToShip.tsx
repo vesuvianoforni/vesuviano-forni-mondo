@@ -23,6 +23,21 @@ const ReadyToShip = () => {
         "Certificazioni CE"
       ],
       price: "Contattaci per il prezzo"
+    },
+    {
+      id: 2,
+      name: "Forno Pronta Consegna Mosaico Azzurro/Nero",
+      image: "/lovable-uploads/forno-pronta-consegna-2.png",
+      diameter: "130 cm",
+      fuel: "Legna (configurabile a Gas)",
+      coating: "Mosaico Azzurro/Nero",
+      features: [
+        "Camera di cottura professionale",
+        "Pronto per la spedizione immediata",
+        "Garanzia inclusa",
+        "Certificazioni CE"
+      ],
+      price: "Contattaci per il prezzo"
     }
   ];
 
