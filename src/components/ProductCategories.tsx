@@ -3,15 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import ImageZoomModal from './ImageZoomModal';
+import VideoModal from './VideoModal';
 import DownloadDatasheetModal from './DownloadDatasheetModal';
 import ConsultationModal from './ConsultationModal';
 
 const ProductCategories = () => {
   const { t, i18n } = useTranslation();
-  const [zoomedImage, setZoomedImage] = useState<{
+  const [videoModal, setVideoModal] = useState<{
     url: string;
-    alt: string;
     title: string;
   } | null>(null);
   const [downloadModal, setDownloadModal] = useState<{
@@ -31,23 +30,28 @@ const ProductCategories = () => {
   const categories = [
     {
       key: 'traditional',
-      image: "/lovable-uploads/vesuviobuono-verde-mosaico.jpg"
+      image: "/lovable-uploads/vesuviobuono-verde-mosaico.jpg",
+      video: "/lovable-uploads/forno-360-video.mp4"
     },
     {
       key: 'gas',
-      image: "/lovable-uploads/forno-gas-mosaico-azzurro.jpg"
+      image: "/lovable-uploads/forno-gas-mosaico-azzurro.jpg",
+      video: "/lovable-uploads/forno-360-video.mp4"
     },
     {
       key: 'electric',
-      image: "/lovable-uploads/forno-metallo-bianco-nuovo.png"
+      image: "/lovable-uploads/forno-metallo-bianco-nuovo.png",
+      video: "/lovable-uploads/forno-360-video.mp4"
     },
     {
       key: 'rotating',
-      image: "/lovable-uploads/forno-rotativo-mosaico-nero.jpg"
+      image: "/lovable-uploads/forno-rotativo-mosaico-nero.jpg",
+      video: "/lovable-uploads/forno-360-video.mp4"
     },
     {
       key: 'vesuviobuono',
-      image: "/lovable-uploads/vesuviobuono-ostepizza-completo.png"
+      image: "/lovable-uploads/vesuviobuono-ostepizza-completo.png",
+      video: "/lovable-uploads/forno-360-video.mp4"
     },
     {
       key: 'consultation',
@@ -81,16 +85,19 @@ const ProductCategories = () => {
                     isConsultation 
                       ? 'border-vesuviano-400 bg-gradient-to-br from-vesuviano-50 to-white' 
                       : 'border-stone-200 hover:border-vesuviano-300'
-                  }`}
+                  } ${!isConsultation && category.video ? 'cursor-pointer' : ''}`}
                   style={{ animationDelay: `${index * 0.1}s` }}
+                  onClick={() => {
+                    if (!isConsultation && category.video) {
+                      setVideoModal({
+                        url: category.video,
+                        title: t(`products.${category.key}.title`)
+                      });
+                    }
+                  }}
                 >
                   <div 
-                    className={`relative h-64 sm:h-80 md:h-96 overflow-hidden ${!isConsultation ? 'cursor-zoom-in' : ''}`}
-                    onClick={() => !isConsultation && setZoomedImage({
-                      url: category.image,
-                      alt: t(`products.${category.key}.title`),
-                      title: t(`products.${category.key}.title`)
-                    })}
+                    className={`relative h-64 sm:h-80 md:h-96 overflow-hidden`}
                   >
                     <img 
                       src={category.image} 
@@ -98,6 +105,15 @@ const ProductCategories = () => {
                       className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    {!isConsultation && category.video && (
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/30">
+                        <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center animate-pulse">
+                          <svg className="w-8 h-8 text-vesuviano-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                          </svg>
+                        </div>
+                      </div>
+                    )}
                     <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 text-white">
                       <h3 className="font-playfair text-lg sm:text-xl md:text-2xl font-bold mb-1">{t(`products.${category.key}.title`)}</h3>
                       <p className="text-xs sm:text-sm opacity-90 font-inter">{t(`products.${category.key}.subtitle`)}</p>
@@ -217,14 +233,13 @@ const ProductCategories = () => {
           </div>
         </div>
 
-        {/* Image Zoom Modal */}
-        {zoomedImage && (
-          <ImageZoomModal
-            isOpen={!!zoomedImage}
-            onClose={() => setZoomedImage(null)}
-            imageUrl={zoomedImage.url}
-            imageAlt={zoomedImage.alt}
-            title={zoomedImage.title}
+        {/* Video Modal */}
+        {videoModal && (
+          <VideoModal
+            isOpen={!!videoModal}
+            onClose={() => setVideoModal(null)}
+            videoUrl={videoModal.url}
+            title={videoModal.title}
           />
         )}
 
