@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import ContactBar from '@/components/ContactBar';
@@ -235,12 +236,12 @@ const ReadyToShip = () => {
             <div>
               <h3 className="font-playfair text-lg font-semibold mb-4">Link Rapidi</h3>
               <ul className="space-y-2 text-sm">
-                <li><a href="/it" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Home</a></li>
-                <li><a href="/it/forni-tradizionali" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Forni Tradizionali</a></li>
-                <li><a href="/it/forni-a-gas" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Forni a Gas</a></li>
-                <li><a href="/it/forni-elettrici" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Forni Elettrici</a></li>
-                <li><a href="/it/forni-rotanti" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Forni Rotanti</a></li>
-                <li><a href="/it/vesuviobuono" className="text-stone-400 hover:text-vesuviano-400 transition-colors">VesuvioBuono</a></li>
+                <li><Link to="/it" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Home</Link></li>
+                <li><Link to="/it/forni-tradizionali" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Forni Tradizionali</Link></li>
+                <li><Link to="/it/forni-a-gas" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Forni a Gas</Link></li>
+                <li><Link to="/it/forni-elettrici" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Forni Elettrici</Link></li>
+                <li><Link to="/it/forni-rotanti" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Forni Rotanti</Link></li>
+                <li><Link to="/it/vesuviobuono" className="text-stone-400 hover:text-vesuviano-400 transition-colors">VesuvioBuono</Link></li>
               </ul>
             </div>
 
@@ -248,8 +249,8 @@ const ReadyToShip = () => {
             <div>
               <h3 className="font-playfair text-lg font-semibold mb-4">Servizi</h3>
               <ul className="space-y-2 text-sm">
-                <li><a href="/it/architetto-ai" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Architetto AI</a></li>
-                <li><a href="/it/pronta-consegna" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Pronta Consegna</a></li>
+                <li><Link to="/it/architetto-ai" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Architetto AI</Link></li>
+                <li><Link to="/it/pronta-consegna" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Pronta Consegna</Link></li>
                 <li><span className="text-stone-400">Consulenza Personalizzata</span></li>
                 <li><span className="text-stone-400">Installazione</span></li>
                 <li><span className="text-stone-400">Assistenza Post-Vendita</span></li>
