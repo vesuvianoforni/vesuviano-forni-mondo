@@ -49,26 +49,14 @@ const Hero = () => {
         </p>
 
         <div className="flex flex-col items-center gap-3 sm:gap-4 justify-center mb-6 sm:mb-8 animate-scale-in px-2 sm:px-4" style={{ animationDelay: '0.9s' }}>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center w-full">
-            <Button 
-              size="lg" 
-              className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-bold transition-all duration-300 hover:scale-105 hover:shadow-2xl w-full sm:w-auto shadow-lg"
-              onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              {t('hero.freeConsultation')}
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="border-2 border-white/60 text-white bg-white/10 hover:bg-white/20 hover:border-white/80 backdrop-blur-md px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-medium transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
-              onClick={scrollToProducts}
-            >
-              {t('hero.discoverOvens')}
-            </Button>
-          </div>
-          <p className="text-white/90 text-xs sm:text-sm text-center max-w-md animate-fade-in" style={{ animationDelay: '1.1s' }}>
-            {t('hero.consultationSubtext')}
-          </p>
+          <Button 
+            size="lg" 
+            variant="outline"
+            className="border-2 border-white/60 text-white bg-white/10 hover:bg-white/20 hover:border-white/80 backdrop-blur-md px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-medium transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
+            onClick={scrollToProducts}
+          >
+            {t('hero.discoverOvens')}
+          </Button>
           
           {/* Customer Reviews Carousel */}
           <div className="mt-4 sm:mt-6 w-full max-w-xl mx-auto px-8 sm:px-12 animate-fade-in" style={{ animationDelay: '1.3s' }}>
