@@ -68,6 +68,21 @@ const ReadyToShip = () => {
         "Certificazioni CE"
       ],
       price: "Contattaci per il prezzo"
+    },
+    {
+      id: 5,
+      name: "Forno Pronta Consegna Mosaico Bianco",
+      image: "/lovable-uploads/forno-pronta-consegna-5.png",
+      diameter: "120 cm",
+      fuel: "Legna (configurabile a Gas)",
+      coating: "Mosaico Bianco",
+      features: [
+        "Camera di cottura professionale",
+        "Pronto per la spedizione immediata",
+        "Garanzia inclusa",
+        "Certificazioni CE"
+      ],
+      price: "Contattaci per il prezzo"
     }
   ];
 
