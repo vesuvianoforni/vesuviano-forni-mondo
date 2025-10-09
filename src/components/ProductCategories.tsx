@@ -37,7 +37,7 @@ const ProductCategories = () => {
     {
       key: 'electric',
       image: "/lovable-uploads/forno-metallo-bianco-nuovo.png",
-      video: "/lovable-uploads/forno-360-video.mp4"
+      video: "/lovable-uploads/forno-elettrico-360-video.mp4"
     },
     {
       key: 'rotating',
