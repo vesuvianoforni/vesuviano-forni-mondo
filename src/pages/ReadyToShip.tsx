@@ -11,14 +11,16 @@ const ReadyToShip = () => {
   const products = [
     {
       id: 1,
-      name: "Forno Rotante Mosaico Argentato",
+      name: "Forno Pronta Consegna Mosaico Argentato",
       image: "/lovable-uploads/forno-pronta-consegna-1.png",
-      description: "Forno rotante professionale con rivestimento in mosaico argentato",
+      diameter: "120 cm",
+      fuel: "Legna (configurabile a Gas)",
+      coating: "Mosaico Argentato/Grigio",
       features: [
-        "Rivestimento mosaico argentato/grigio",
         "Camera di cottura professionale",
-        "Pronto per la spedizione",
-        "Garanzia inclusa"
+        "Pronto per la spedizione immediata",
+        "Garanzia inclusa",
+        "Certificazioni CE"
       ],
       price: "Contattaci per il prezzo"
     }
@@ -66,10 +68,23 @@ const ReadyToShip = () => {
               </div>
               
               <CardContent className="p-6">
-                <p className="text-stone-600 mb-4 leading-relaxed">
-                  {product.description}
-                </p>
-                
+                {/* Main Specs */}
+                <div className="mb-6 space-y-3">
+                  <div className="flex items-start">
+                    <span className="font-semibold text-stone-900 min-w-[120px]">Diametro interno:</span>
+                    <span className="text-stone-700">{product.diameter}</span>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="font-semibold text-stone-900 min-w-[120px]">Alimentazione:</span>
+                    <span className="text-stone-700">{product.fuel}</span>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="font-semibold text-stone-900 min-w-[120px]">Rivestimento:</span>
+                    <span className="text-stone-700">{product.coating}</span>
+                  </div>
+                </div>
+
+                {/* Additional Features */}
                 <ul className="space-y-2 mb-6">
                   {product.features.map((feature, index) => (
                     <li 
