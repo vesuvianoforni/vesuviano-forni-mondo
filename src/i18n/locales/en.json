@@ -17,7 +17,13 @@
     "reviewer4": "Antonio Bianchi, Pizzeria Tradizione",
     "review5": "Excellent Oven, Excellent Pizza, Excellent customer service that helped me with the purchase and shipping to Belgium 🇧🇪",
     "reviewer5": "Francesca Romano, Trattoria La Famiglia",
-    "proofBar": "Trusted by top pizzerias in Italy, USA, Japan and UAE"
+    "proofBar": "Trusted by top pizzerias in Italy, USA, Japan and UAE",
+    "readyToShip": {
+      "title": "Ready to Ship",
+      "subtitle": "Ready to Ship in 24/48h",
+      "description": "Basic wood-fired ovens, ready to be packed and shipped. Can also be configured for gas according to your needs.",
+      "cta": "View Available Ovens →"
+    }
   },
   "header": {
     "tagline": "Selected Volcanic Ovens",
@@ -829,5 +835,17 @@
       "subtitle": "Contact us now and one of our experts will respond within 24 hours",
       "button": "Contact us now"
     }
+  },
+  "readyToShip": {
+    "hero": {
+      "title": "Ready to Ship",
+      "subtitle": "Ready to Ship in 24/48h",
+      "description1": "Basic wood-fired ovens, ready to be packed and shipped.",
+      "description2": "Can also be configured for gas according to your needs."
+    },
+    "productsPlaceholder": "Available ovens will be added soon..."
+  },
+  "footer": {
+    "rights": "All rights reserved"
   }
 }

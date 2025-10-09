@@ -17,7 +17,13 @@
     "reviewer4": "Antonio Bianchi, Pizzeria Tradizione",
     "review5": "Excellent Four, Excellente Pizza, Excellent service client qui m'a aidé pour l'achat et l'expédition en Belgique 🇧🇪",
     "reviewer5": "Francesca Romano, Trattoria La Famiglia",
-    "proofBar": "Choisi par les meilleures pizzerias en Italie, USA, Japon et Émirats Arabes Unis"
+    "proofBar": "Choisi par les meilleures pizzerias en Italie, USA, Japon et Émirats Arabes Unis",
+    "readyToShip": {
+      "title": "Prêt à Expédier",
+      "subtitle": "Prêt à Expédier en 24/48h",
+      "description": "Fours à bois de base, prêts à être emballés et expédiés. Peuvent également être configurés au gaz selon vos besoins.",
+      "cta": "Voir les Fours Disponibles →"
+    }
   },
   "header": {
     "tagline": "Fours Volcaniques Sélectionnés",
@@ -772,5 +778,17 @@
       "subtitle": "Contactez-nous maintenant et l'un de nos experts vous répondra dans les 24 heures",
       "button": "Contactez-nous maintenant"
     }
+  },
+  "readyToShip": {
+    "hero": {
+      "title": "Prêt à Expédier",
+      "subtitle": "Prêt à Expédier en 24/48h",
+      "description1": "Fours à bois de base, prêts à être emballés et expédiés.",
+      "description2": "Peuvent également être configurés au gaz selon vos besoins."
+    },
+    "productsPlaceholder": "Les fours disponibles seront ajoutés bientôt..."
+  },
+  "footer": {
+    "rights": "Tous droits réservés"
   }
 }

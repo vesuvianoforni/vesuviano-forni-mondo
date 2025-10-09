@@ -17,7 +17,13 @@
     "reviewer4": "Antonio Bianchi, Pizzeria Tradizione",
     "review5": "Ausgezeichneter Ofen, Ausgezeichnete Pizza, Ausgezeichneter Kundenservice, der mir beim Kauf und Versand nach Belgien geholfen hat 🇧🇪",
     "reviewer5": "Francesca Romano, Trattoria La Famiglia",
-    "proofBar": "Vertraut von Top-Pizzerien in Italien, USA, Japan und VAE"
+    "proofBar": "Vertraut von Top-Pizzerien in Italien, USA, Japan und VAE",
+    "readyToShip": {
+      "title": "Versandfertig",
+      "subtitle": "Versandfertig in 24/48h",
+      "description": "Basis-Holzöfen, bereit zum Verpacken und Versenden. Können auch für Gas nach Ihren Bedürfnissen konfiguriert werden.",
+      "cta": "Verfügbare Öfen anzeigen →"
+    }
   },
   "header": {
     "tagline": "Ausgewählte Vulkanöfen",
@@ -705,5 +711,17 @@
       "subtitle": "Kontaktieren Sie uns jetzt und einer unserer Experten antwortet innerhalb von 24 Stunden",
       "button": "Kontaktieren Sie uns jetzt"
     }
+  },
+  "readyToShip": {
+    "hero": {
+      "title": "Versandfertig",
+      "subtitle": "Versandfertig in 24/48h",
+      "description1": "Basis-Holzöfen, bereit zum Verpacken und Versenden.",
+      "description2": "Können auch für Gas nach Ihren Bedürfnissen konfiguriert werden."
+    },
+    "productsPlaceholder": "Verfügbare Öfen werden bald hinzugefügt..."
+  },
+  "footer": {
+    "rights": "Alle Rechte vorbehalten"
   }
 }

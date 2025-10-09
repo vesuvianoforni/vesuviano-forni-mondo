@@ -17,7 +17,13 @@
     "reviewer4": "Antonio Bianchi, Pizzeria Tradizione",
     "review5": "Ottimo Forno, Ottima Pizza, Ottimo il servizio clienti che mi ha aiutato per l'acquisto e spedizione in Belgio 🇧🇪",
     "reviewer5": "Francesca Romano, Trattoria La Famiglia",
-    "proofBar": "Scelto dalle migliori pizzerie in Italia, USA, Giappone ed Emirati Arabi"
+    "proofBar": "Scelto dalle migliori pizzerie in Italia, USA, Giappone ed Emirati Arabi",
+    "readyToShip": {
+      "title": "Pronta Consegna",
+      "subtitle": "Ready to Ship in 24/48h",
+      "description": "Forni di base a legna, già pronti per essere imballati e spediti. Possono essere configurati anche a gas secondo le tue esigenze.",
+      "cta": "Vedi Forni Disponibili →"
+    }
   },
   "header": {
     "tagline": "Forni Vulcanici Selezionati",
@@ -791,5 +797,17 @@
       "subtitle": "Contattaci ora e un nostro esperto ti risponderà entro 24 ore",
       "button": "Contattaci ora"
     }
+  },
+  "readyToShip": {
+    "hero": {
+      "title": "Pronta Consegna",
+      "subtitle": "Ready to Ship in 24/48h",
+      "description1": "Forni di base a legna, già pronti per essere imballati e spediti.",
+      "description2": "Possono essere configurati anche a gas secondo le tue esigenze."
+    },
+    "productsPlaceholder": "I forni disponibili verranno aggiunti presto..."
+  },
+  "footer": {
+    "rights": "Tutti i diritti riservati"
   }
 }

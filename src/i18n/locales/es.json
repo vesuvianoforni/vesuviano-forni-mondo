@@ -8,7 +8,13 @@
     "freeConsultation": "Solicitar Consulta Gratuita",
     "consultationSubtext": "Sin compromiso — te ayudamos a elegir el horno perfecto para tu local.",
     "review": "Excelente Horno, Excelente Pizza, Excelente servicio al cliente que me ayudó con la compra y el envío a Bélgica 🇧🇪",
-    "proofBar": "Confiado por las mejores pizzerías en Italia, EE.UU., Japón y Emiratos Árabes Unidos"
+    "proofBar": "Confiado por las mejores pizzerías en Italia, EE.UU., Japón y Emiratos Árabes Unidos",
+    "readyToShip": {
+      "title": "Listo para Enviar",
+      "subtitle": "Listo para Enviar en 24/48h",
+      "description": "Hornos de leña básicos, listos para ser embalados y enviados. También se pueden configurar a gas según tus necesidades.",
+      "cta": "Ver Hornos Disponibles →"
+    }
   },
   "header": {
     "tagline": "Hornos Volcánicos Seleccionados",
@@ -696,5 +702,17 @@
       "subtitle": "Contáctenos ahora y uno de nuestros expertos le responderá en 24 horas",
       "button": "Contáctenos ahora"
     }
+  },
+  "readyToShip": {
+    "hero": {
+      "title": "Listo para Enviar",
+      "subtitle": "Listo para Enviar en 24/48h",
+      "description1": "Hornos de leña básicos, listos para ser embalados y enviados.",
+      "description2": "También se pueden configurar a gas según sus necesidades."
+    },
+    "productsPlaceholder": "Los hornos disponibles se agregarán pronto..."
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados"
   }
 }

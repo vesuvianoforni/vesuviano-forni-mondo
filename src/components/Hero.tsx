@@ -58,6 +58,31 @@ const Hero = () => {
             {t('hero.discoverOvens')}
           </Button>
           
+          {/* Ready to Ship Section */}
+          <div className="mt-6 sm:mt-8 w-full max-w-3xl mx-auto bg-gradient-to-r from-vesuviano-600/20 via-vesuviano-500/20 to-vesuviano-600/20 backdrop-blur-md rounded-2xl p-6 sm:p-8 border-2 border-vesuviano-400/30 shadow-[0_0_40px_rgba(255,87,34,0.15)] animate-fade-in" style={{ animationDelay: '1.1s' }}>
+            <div className="text-center">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-playfair font-bold text-white mb-2">
+                {t('hero.readyToShip.title')}
+              </h2>
+              <p className="text-base sm:text-lg text-vesuviano-200 font-semibold mb-4">
+                {t('hero.readyToShip.subtitle')}
+              </p>
+              <p className="text-sm sm:text-base text-white/90 mb-6 leading-relaxed">
+                {t('hero.readyToShip.description')}
+              </p>
+              <Button 
+                size="lg"
+                className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-6 sm:px-8 py-3 text-base sm:text-lg font-bold transition-all duration-300 hover:scale-105 hover:shadow-2xl shadow-lg"
+                onClick={() => {
+                  const lang = localStorage.getItem('i18nextLng') || 'it';
+                  window.location.href = `/${lang}/pronta-consegna`;
+                }}
+              >
+                {t('hero.readyToShip.cta')}
+              </Button>
+            </div>
+          </div>
+          
           {/* Customer Reviews Carousel */}
           <div className="mt-4 sm:mt-6 w-full max-w-xl mx-auto px-8 sm:px-12 animate-fade-in" style={{ animationDelay: '1.3s' }}>
             <Carousel className="w-full">
