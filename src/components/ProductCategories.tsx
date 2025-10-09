@@ -42,7 +42,7 @@ const ProductCategories = () => {
     {
       key: 'rotating',
       image: "/lovable-uploads/forno-rotativo-mosaico-nero.jpg",
-      video: "/lovable-uploads/forno-360-video.mp4"
+      video: "/lovable-uploads/forno-rotativo-360-video.mp4"
     },
     {
       key: 'vesuviobuono',
