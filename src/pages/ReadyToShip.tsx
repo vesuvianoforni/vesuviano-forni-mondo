@@ -5,11 +5,13 @@ import ContactBar from '@/components/ContactBar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import ImageZoomModal from '@/components/ImageZoomModal';
+import ReadyToShipContactModal from '@/components/ReadyToShipContactModal';
 import { useState } from 'react';
 
 const ReadyToShip = () => {
   const { t } = useTranslation();
   const [selectedImage, setSelectedImage] = useState<{ url: string; name: string } | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<{ name: string; diameter: string; coating: string } | null>(null);
 
   const products = [
     {
@@ -173,7 +175,11 @@ const ReadyToShip = () => {
 
                 <Button
                   className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white transition-all duration-300"
-                  onClick={() => window.open('https://wa.me/393510308686', '_blank')}
+                  onClick={() => setSelectedProduct({ 
+                    name: product.name, 
+                    diameter: product.diameter, 
+                    coating: product.coating 
+                  })}
                 >
                   Richiedi Informazioni
                 </Button>
@@ -190,6 +196,15 @@ const ReadyToShip = () => {
         imageUrl={selectedImage?.url || ''}
         imageAlt={selectedImage?.name || ''}
         title={selectedImage?.name}
+      />
+
+      {/* Contact Modal */}
+      <ReadyToShipContactModal
+        isOpen={!!selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        productName={selectedProduct?.name || ''}
+        productDiameter={selectedProduct?.diameter || ''}
+        productCoating={selectedProduct?.coating || ''}
       />
 
       {/* Footer */}
