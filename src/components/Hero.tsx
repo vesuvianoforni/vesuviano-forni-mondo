@@ -4,6 +4,7 @@ import { ArrowDown, Star } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import LazyImage from './LazyImage';
 import laboratorioHero from '@/assets/laboratorio-artigianale-hero.png';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const Hero = () => {
   const { t } = useTranslation();
@@ -69,16 +70,31 @@ const Hero = () => {
             {t('hero.consultationSubtext')}
           </p>
           
-          {/* Customer Review */}
-          <div className="mt-4 sm:mt-6 bg-white/5 backdrop-blur-md rounded-lg p-3 sm:p-4 max-w-xl mx-auto animate-fade-in border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)]" style={{ animationDelay: '1.3s' }}>
-            <div className="flex justify-center gap-1 mb-2">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
-              ))}
-            </div>
-            <p className="text-white text-xs sm:text-sm text-center italic leading-relaxed">
-              "{t('hero.review')}"
-            </p>
+          {/* Customer Reviews Carousel */}
+          <div className="mt-4 sm:mt-6 max-w-xl mx-auto animate-fade-in" style={{ animationDelay: '1.3s' }}>
+            <Carousel className="w-full">
+              <CarouselContent>
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <CarouselItem key={num}>
+                    <div className="bg-white/5 backdrop-blur-md rounded-lg p-3 sm:p-4 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
+                      <div className="flex justify-center gap-1 mb-2">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                      <p className="text-white text-xs sm:text-sm text-center italic leading-relaxed">
+                        "{t(`hero.review${num}`)}"
+                      </p>
+                      <p className="text-white/70 text-xs text-center mt-2 font-medium">
+                        - {t(`hero.reviewer${num}`)}
+                      </p>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-0 -translate-x-12 bg-white/10 border-white/20 text-white hover:bg-white/20" />
+              <CarouselNext className="right-0 translate-x-12 bg-white/10 border-white/20 text-white hover:bg-white/20" />
+            </Carousel>
           </div>
           
           {/* Proof Bar */}
