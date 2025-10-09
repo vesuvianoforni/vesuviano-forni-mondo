@@ -71,29 +71,29 @@ const Hero = () => {
           </p>
           
           {/* Customer Reviews Carousel */}
-          <div className="mt-4 sm:mt-6 max-w-xl mx-auto animate-fade-in" style={{ animationDelay: '1.3s' }}>
+          <div className="mt-4 sm:mt-6 w-full max-w-xl mx-auto px-8 sm:px-12 animate-fade-in" style={{ animationDelay: '1.3s' }}>
             <Carousel className="w-full">
               <CarouselContent>
                 {[1, 2, 3, 4, 5].map((num) => (
                   <CarouselItem key={num}>
-                    <div className="bg-white/5 backdrop-blur-md rounded-lg p-3 sm:p-4 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
-                      <div className="flex justify-center gap-1 mb-2">
+                    <div className="bg-white/5 backdrop-blur-md rounded-lg p-4 sm:p-5 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] mx-2">
+                      <div className="flex justify-center gap-1 mb-3">
                         {[...Array(5)].map((_, i) => (
                           <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
                         ))}
                       </div>
-                      <p className="text-white text-xs sm:text-sm text-center italic leading-relaxed">
+                      <p className="text-white text-sm sm:text-base text-center italic leading-relaxed min-h-[60px] flex items-center justify-center">
                         "{t(`hero.review${num}`)}"
                       </p>
-                      <p className="text-white/70 text-xs text-center mt-2 font-medium">
+                      <p className="text-white/70 text-xs sm:text-sm text-center mt-3 font-medium">
                         - {t(`hero.reviewer${num}`)}
                       </p>
                     </div>
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="left-0 -translate-x-12 bg-white/10 border-white/20 text-white hover:bg-white/20" />
-              <CarouselNext className="right-0 translate-x-12 bg-white/10 border-white/20 text-white hover:bg-white/20" />
+              <CarouselPrevious className="left-0 bg-white/10 border-white/20 text-white hover:bg-white/20 h-8 w-8 sm:h-10 sm:w-10" />
+              <CarouselNext className="right-0 bg-white/10 border-white/20 text-white hover:bg-white/20 h-8 w-8 sm:h-10 sm:w-10" />
             </Carousel>
           </div>
           
