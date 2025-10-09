@@ -60,7 +60,7 @@ const Hero = () => {
             <Button 
               size="lg" 
               variant="outline"
-              className="border-2 border-black/60 text-white bg-black/20 hover:bg-black/40 hover:border-black/80 backdrop-blur-md px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-medium transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
+              className="border-2 border-white/60 text-white bg-white/10 hover:bg-white/20 hover:border-white/80 backdrop-blur-md px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-medium transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
               onClick={scrollToProducts}
             >
               {t('hero.discoverOvens')}
