@@ -4,9 +4,12 @@ import WhatsAppButton from '@/components/WhatsAppButton';
 import ContactBar from '@/components/ContactBar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import ImageZoomModal from '@/components/ImageZoomModal';
+import { useState } from 'react';
 
 const ReadyToShip = () => {
   const { t } = useTranslation();
+  const [selectedImage, setSelectedImage] = useState<{ url: string; name: string } | null>(null);
 
   const products = [
     {
@@ -115,14 +118,21 @@ const ReadyToShip = () => {
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((product) => (
             <Card key={product.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border-stone-200 hover:border-vesuviano-300">
-              <div className="relative h-80 overflow-hidden">
+              <div className="relative h-80 overflow-hidden cursor-pointer" onClick={() => setSelectedImage({ url: product.image, name: product.name })}>
                 <img 
                   src={product.image} 
                   alt={product.name}
                   className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                <div className="absolute bottom-4 left-4 text-white">
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20">
+                  <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
+                    <svg className="w-8 h-8 text-vesuviano-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="absolute bottom-4 left-4 text-white pointer-events-none">
                   <h3 className="font-playfair text-2xl font-bold mb-1">{product.name}</h3>
                 </div>
               </div>
@@ -172,6 +182,15 @@ const ReadyToShip = () => {
           ))}
         </section>
       </main>
+
+      {/* Image Zoom Modal */}
+      <ImageZoomModal
+        isOpen={!!selectedImage}
+        onClose={() => setSelectedImage(null)}
+        imageUrl={selectedImage?.url || ''}
+        imageAlt={selectedImage?.name || ''}
+        title={selectedImage?.name}
+      />
 
       {/* Footer */}
       <footer className="bg-stone-900 text-white py-12 mt-20">
