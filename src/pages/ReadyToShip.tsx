@@ -291,9 +291,9 @@ const ReadyToShip = () => {
                 © {new Date().getFullYear()} Vesuviano Forni a Pietra. Tutti i diritti riservati.
               </p>
               <div className="flex gap-6 text-sm">
-                <a href="#" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Privacy Policy</a>
-                <a href="#" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Cookie Policy</a>
-                <a href="#" className="text-stone-400 hover:text-vesuviano-400 transition-colors">Termini e Condizioni</a>
+                <button onClick={(e) => e.preventDefault()} className="text-stone-400 hover:text-vesuviano-400 transition-colors">Privacy Policy</button>
+                <button onClick={(e) => e.preventDefault()} className="text-stone-400 hover:text-vesuviano-400 transition-colors">Cookie Policy</button>
+                <button onClick={(e) => e.preventDefault()} className="text-stone-400 hover:text-vesuviano-400 transition-colors">Termini e Condizioni</button>
               </div>
             </div>
           </div>
