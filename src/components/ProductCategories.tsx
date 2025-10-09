@@ -47,7 +47,7 @@ const ProductCategories = () => {
     {
       key: 'vesuviobuono',
       image: "/lovable-uploads/vesuviobuono-ostepizza-completo.png",
-      video: "/lovable-uploads/forno-360-video.mp4"
+      video: "/lovable-uploads/vesuviobuono-360-video.mp4"
     },
     {
       key: 'consultation',
