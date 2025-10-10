@@ -80,20 +80,34 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
 
       if (error) throw error;
 
-      // Push GTM event (wait 300ms before closing)
-      (window.parent as any).dataLayer = (window.parent as any).dataLayer || [];
-      (window.parent as any).dataLayer.push({
-        event: 'lead_submit_success',
-        formType: 'datasheet_download',
+      // Push GTM event
+      try {
+        const dataLayer = (window.top as any).dataLayer || [];
+        (window.top as any).dataLayer = dataLayer;
+        dataLayer.push({
+          event: 'gtm.formSubmit',
+          formId: 'popup_form',
+          formName: 'lead_popup',
+          formType: 'datasheet_download',
+          ovenType: ovenType,
+        });
+        console.log('GTM Event pushed successfully:', {
+          event: 'gtm.formSubmit',
+          formId: 'popup_form',
+          formName: 'lead_popup',
+        });
+      } catch (e) {
+        console.error('Error pushing GTM event:', e);
+      }
+
+      // Show success message
+      toast({
+        title: t('downloadDatasheet.success'),
+        description: t('downloadDatasheet.successMessage'),
       });
 
+      // Wait 1 second before closing to ensure GTM processes the event
       setTimeout(() => {
-        toast({
-          title: t('downloadDatasheet.success'),
-          description: t('downloadDatasheet.successMessage'),
-        });
-
-        // Reset form and close modal
         setFormData({
           firstName: '',
           lastName: '',
@@ -102,7 +116,7 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
           city: '',
         });
         onClose();
-      }, 300);
+      }, 1000);
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
