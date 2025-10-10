@@ -20,15 +20,15 @@ const ReadyToShip = () => {
       name: "Forno Pronta Consegna Mosaico Argentato",
       image: "/lovable-uploads/forno-pronta-consegna-1.png",
       diameter: "120 cm",
-      fuel: "Legna (configurabile a Gas)",
+      fuel: t('readyToShip.woodOrGas'),
       coating: "Mosaico Argentato/Grigio",
       features: [
-        "Camera di cottura professionale",
-        "Pronto per la spedizione immediata",
-        "Garanzia inclusa",
-        "Certificazioni CE"
+        t('readyToShip.features.professional'),
+        t('readyToShip.features.immediate'),
+        t('readyToShip.features.warranty'),
+        t('readyToShip.features.certifications')
       ],
-      price: "Contattaci per il prezzo"
+      price: t('readyToShip.contactForPrice')
     },
     {
       id: 2,
@@ -36,15 +36,15 @@ const ReadyToShip = () => {
       name: "Forno Pronta Consegna Mosaico Azzurro/Nero",
       image: "/lovable-uploads/forno-pronta-consegna-2.png",
       diameter: "130 cm",
-      fuel: "Legna (configurabile a Gas)",
+      fuel: t('readyToShip.woodOrGas'),
       coating: "Mosaico Azzurro/Nero",
       features: [
-        "Camera di cottura professionale",
-        "Pronto per la spedizione immediata",
-        "Garanzia inclusa",
-        "Certificazioni CE"
+        t('readyToShip.features.professional'),
+        t('readyToShip.features.immediate'),
+        t('readyToShip.features.warranty'),
+        t('readyToShip.features.certifications')
       ],
-      price: "Contattaci per il prezzo"
+      price: t('readyToShip.contactForPrice')
     },
     {
       id: 3,
@@ -52,15 +52,15 @@ const ReadyToShip = () => {
       name: "Forno Pronta Consegna Mosaico Azzurro",
       image: "/lovable-uploads/forno-pronta-consegna-3.png",
       diameter: "120 cm",
-      fuel: "Legna (configurabile a Gas)",
+      fuel: t('readyToShip.woodOrGas'),
       coating: "Mosaico Azzurro",
       features: [
-        "Camera di cottura professionale",
-        "Pronto per la spedizione immediata",
-        "Garanzia inclusa",
-        "Certificazioni CE"
+        t('readyToShip.features.professional'),
+        t('readyToShip.features.immediate'),
+        t('readyToShip.features.warranty'),
+        t('readyToShip.features.certifications')
       ],
-      price: "Contattaci per il prezzo"
+      price: t('readyToShip.contactForPrice')
     },
     {
       id: 4,
@@ -68,15 +68,15 @@ const ReadyToShip = () => {
       name: "Forno Pronta Consegna Mosaico Azzurro/Oro",
       image: "/lovable-uploads/forno-pronta-consegna-4.png",
       diameter: "100 cm",
-      fuel: "Legna (configurabile a Gas)",
+      fuel: t('readyToShip.woodOrGas'),
       coating: "Mosaico Azzurro/Oro",
       features: [
-        "Camera di cottura professionale",
-        "Pronto per la spedizione immediata",
-        "Garanzia inclusa",
-        "Certificazioni CE"
+        t('readyToShip.features.professional'),
+        t('readyToShip.features.immediate'),
+        t('readyToShip.features.warranty'),
+        t('readyToShip.features.certifications')
       ],
-      price: "Contattaci per il prezzo"
+      price: t('readyToShip.contactForPrice')
     },
     {
       id: 5,
@@ -84,15 +84,15 @@ const ReadyToShip = () => {
       name: "Forno Pronta Consegna Mosaico Bianco",
       image: "/lovable-uploads/forno-pronta-consegna-5.png",
       diameter: "120 cm",
-      fuel: "Legna (configurabile a Gas)",
+      fuel: t('readyToShip.woodOrGas'),
       coating: "Mosaico Bianco",
       features: [
-        "Camera di cottura professionale",
-        "Pronto per la spedizione immediata",
-        "Garanzia inclusa",
-        "Certificazioni CE"
+        t('readyToShip.features.professional'),
+        t('readyToShip.features.immediate'),
+        t('readyToShip.features.warranty'),
+        t('readyToShip.features.certifications')
       ],
-      price: "Contattaci per il prezzo"
+      price: t('readyToShip.contactForPrice')
     }
   ];
 
@@ -148,22 +148,22 @@ const ReadyToShip = () => {
                 {/* Product Code Badge */}
                 <div className="mb-4">
                   <span className="inline-block bg-vesuviano-100 text-vesuviano-800 text-xs font-semibold px-3 py-1 rounded-full">
-                    Codice: {product.code}
+                    {t('readyToShip.productCode')}: {product.code}
                   </span>
                 </div>
 
                 {/* Main Specs */}
                 <div className="mb-6 space-y-3">
                   <div className="flex items-start">
-                    <span className="font-semibold text-stone-900 min-w-[120px]">Diametro interno:</span>
+                    <span className="font-semibold text-stone-900 min-w-[120px]">{t('readyToShip.diameter')}:</span>
                     <span className="text-stone-700">{product.diameter}</span>
                   </div>
                   <div className="flex items-start">
-                    <span className="font-semibold text-stone-900 min-w-[120px]">Alimentazione:</span>
+                    <span className="font-semibold text-stone-900 min-w-[120px]">{t('readyToShip.fuel')}:</span>
                     <span className="text-stone-700">{product.fuel}</span>
                   </div>
                   <div className="flex items-start">
-                    <span className="font-semibold text-stone-900 min-w-[120px]">Rivestimento:</span>
+                    <span className="font-semibold text-stone-900 min-w-[120px]">{t('readyToShip.coating')}:</span>
                     <span className="text-stone-700">{product.coating}</span>
                   </div>
                 </div>
@@ -194,7 +194,7 @@ const ReadyToShip = () => {
                     coating: product.coating 
                   })}
                 >
-                  Richiedi Informazioni
+                  {t('readyToShip.requestInfo')}
                 </Button>
               </CardContent>
             </Card>

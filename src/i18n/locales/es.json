@@ -710,7 +710,35 @@
       "description1": "Hornos de leña básicos, listos para ser embalados y enviados.",
       "description2": "También se pueden configurar a gas según sus necesidades."
     },
-    "productsPlaceholder": "Los hornos disponibles se agregarán pronto..."
+    "productsPlaceholder": "Los hornos disponibles se agregarán pronto...",
+    "productCode": "Código",
+    "diameter": "Diámetro Interno",
+    "fuel": "Tipo de Combustible",
+    "coating": "Revestimiento",
+    "woodOrGas": "Leña (configurable a Gas)",
+    "contactForPrice": "Contáctenos para el precio",
+    "requestInfo": "Solicitar Información",
+    "features": {
+      "professional": "Cámara de cocción profesional",
+      "immediate": "Listo para envío inmediato",
+      "warranty": "Garantía incluida",
+      "certifications": "Certificaciones CE"
+    },
+    "modal": {
+      "title": "Solicitar Información",
+      "selectedOven": "Horno seleccionado",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "email": "Correo Electrónico",
+      "phone": "Número de Teléfono",
+      "city": "Ciudad",
+      "submit": "Enviar Solicitud",
+      "sending": "Enviando...",
+      "requiredFields": "Faltan campos obligatorios",
+      "fillAllFields": "Por favor complete todos los campos obligatorios",
+      "error": "Error",
+      "errorMessage": "Se produjo un error al enviar la solicitud. Por favor, inténtelo de nuevo más tarde."
+    }
   },
   "footer": {
     "rights": "Todos los derechos reservados"

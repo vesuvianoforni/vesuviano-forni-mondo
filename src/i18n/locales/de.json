@@ -719,7 +719,35 @@
       "description1": "Basis-Holzöfen, bereit zum Verpacken und Versenden.",
       "description2": "Können auch für Gas nach Ihren Bedürfnissen konfiguriert werden."
     },
-    "productsPlaceholder": "Verfügbare Öfen werden bald hinzugefügt..."
+    "productsPlaceholder": "Verfügbare Öfen werden bald hinzugefügt...",
+    "productCode": "Code",
+    "diameter": "Innendurchmesser",
+    "fuel": "Brennstoffart",
+    "coating": "Beschichtung",
+    "woodOrGas": "Holz (Gas konfigurierbar)",
+    "contactForPrice": "Kontaktieren Sie uns für den Preis",
+    "requestInfo": "Informationen Anfordern",
+    "features": {
+      "professional": "Professionelle Garkammer",
+      "immediate": "Bereit für sofortigen Versand",
+      "warranty": "Garantie inklusive",
+      "certifications": "CE-Zertifizierungen"
+    },
+    "modal": {
+      "title": "Informationen Anfordern",
+      "selectedOven": "Ausgewählter Ofen",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "E-Mail",
+      "phone": "Telefonnummer",
+      "city": "Stadt",
+      "submit": "Anfrage Senden",
+      "sending": "Wird gesendet...",
+      "requiredFields": "Erforderliche Felder fehlen",
+      "fillAllFields": "Bitte füllen Sie alle erforderlichen Felder aus",
+      "error": "Fehler",
+      "errorMessage": "Beim Senden der Anfrage ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut."
+    }
   },
   "footer": {
     "rights": "Alle Rechte vorbehalten"

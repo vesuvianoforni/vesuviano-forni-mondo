@@ -843,7 +843,35 @@
       "description1": "Basic wood-fired ovens, ready to be packed and shipped.",
       "description2": "Can also be configured for gas according to your needs."
     },
-    "productsPlaceholder": "Available ovens will be added soon..."
+    "productsPlaceholder": "Available ovens will be added soon...",
+    "productCode": "Code",
+    "diameter": "Internal Diameter",
+    "fuel": "Fuel Type",
+    "coating": "Coating",
+    "woodOrGas": "Wood (Gas configurable)",
+    "contactForPrice": "Contact us for pricing",
+    "requestInfo": "Request Information",
+    "features": {
+      "professional": "Professional cooking chamber",
+      "immediate": "Ready for immediate shipping",
+      "warranty": "Warranty included",
+      "certifications": "CE Certifications"
+    },
+    "modal": {
+      "title": "Request Information",
+      "selectedOven": "Selected Oven",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "city": "City",
+      "submit": "Submit Request",
+      "sending": "Sending...",
+      "requiredFields": "Required fields missing",
+      "fillAllFields": "Please fill in all required fields",
+      "error": "Error",
+      "errorMessage": "An error occurred while sending the request. Please try again later."
+    }
   },
   "footer": {
     "rights": "All rights reserved"

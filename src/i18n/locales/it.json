@@ -805,7 +805,35 @@
       "description1": "Forni di base a legna, già pronti per essere imballati e spediti.",
       "description2": "Possono essere configurati anche a gas secondo le tue esigenze."
     },
-    "productsPlaceholder": "I forni disponibili verranno aggiunti presto..."
+    "productsPlaceholder": "I forni disponibili verranno aggiunti presto...",
+    "productCode": "Codice",
+    "diameter": "Diametro interno",
+    "fuel": "Alimentazione",
+    "coating": "Rivestimento",
+    "woodOrGas": "Legna (configurabile a Gas)",
+    "contactForPrice": "Contattaci per il prezzo",
+    "requestInfo": "Richiedi Informazioni",
+    "features": {
+      "professional": "Camera di cottura professionale",
+      "immediate": "Pronto per la spedizione immediata",
+      "warranty": "Garanzia inclusa",
+      "certifications": "Certificazioni CE"
+    },
+    "modal": {
+      "title": "Richiedi Informazioni",
+      "selectedOven": "Forno selezionato",
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "email": "Email",
+      "phone": "Numero di Telefono",
+      "city": "Città",
+      "submit": "Invia Richiesta",
+      "sending": "Invio in corso...",
+      "requiredFields": "Campi obbligatori mancanti",
+      "fillAllFields": "Per favore compila tutti i campi richiesti",
+      "error": "Errore",
+      "errorMessage": "Si è verificato un errore durante l'invio della richiesta. Riprova più tardi."
+    }
   },
   "footer": {
     "rights": "Tutti i diritti riservati"

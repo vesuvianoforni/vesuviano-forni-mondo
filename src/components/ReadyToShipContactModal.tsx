@@ -28,7 +28,7 @@ const ReadyToShipContactModal = ({
 }: ReadyToShipContactModalProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -59,8 +59,8 @@ const ReadyToShipContactModal = ({
     
     if (!isFormValid()) {
       toast({
-        title: "Campi obbligatori mancanti",
-        description: "Per favore compila tutti i campi richiesti",
+        title: t('readyToShip.modal.requiredFields'),
+        description: t('readyToShip.modal.fillAllFields'),
         variant: "destructive",
       });
       return;
@@ -97,8 +97,8 @@ const ReadyToShipContactModal = ({
     } catch (error) {
       console.error("Errore invio richiesta:", error);
       toast({
-        title: "Errore",
-        description: "Si è verificato un errore durante l'invio della richiesta. Riprova più tardi.",
+        title: t('readyToShip.modal.error'),
+        description: t('readyToShip.modal.errorMessage'),
         variant: "destructive",
       });
     } finally {
@@ -111,27 +111,27 @@ const ReadyToShipContactModal = ({
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-playfair text-2xl text-charcoal-900">
-            Richiedi Informazioni
+            {t('readyToShip.modal.title')}
           </DialogTitle>
         </DialogHeader>
         
         <div className="bg-vesuviano-50 border border-vesuviano-200 rounded-lg p-4 mb-4">
-          <p className="text-sm font-semibold text-vesuviano-900 mb-1">Forno selezionato:</p>
+          <p className="text-sm font-semibold text-vesuviano-900 mb-1">{t('readyToShip.modal.selectedOven')}:</p>
           <p className="text-sm text-vesuviano-800">{productName}</p>
           <div className="mt-2">
             <span className="inline-block bg-vesuviano-200 text-vesuviano-900 text-xs font-bold px-2 py-1 rounded">
-              Codice: {productCode}
+              {t('readyToShip.productCode')}: {productCode}
             </span>
           </div>
           <p className="text-xs text-vesuviano-700 mt-2">
-            Diametro: {productDiameter} • Rivestimento: {productCoating}
+            {t('readyToShip.diameter')}: {productDiameter} • {t('readyToShip.coating')}: {productCoating}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label htmlFor="firstName">Nome *</Label>
+              <Label htmlFor="firstName">{t('readyToShip.modal.firstName')} *</Label>
               <Input
                 id="firstName"
                 name="firstName"
@@ -143,7 +143,7 @@ const ReadyToShipContactModal = ({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Cognome *</Label>
+              <Label htmlFor="lastName">{t('readyToShip.modal.lastName')} *</Label>
               <Input
                 id="lastName"
                 name="lastName"
@@ -157,7 +157,7 @@ const ReadyToShipContactModal = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email *</Label>
+            <Label htmlFor="email">{t('readyToShip.modal.email')} *</Label>
             <Input
               id="email"
               name="email"
@@ -170,7 +170,7 @@ const ReadyToShipContactModal = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Numero di Telefono *</Label>
+            <Label htmlFor="phone">{t('readyToShip.modal.phone')} *</Label>
             <Input
               id="phone"
               name="phone"
@@ -183,7 +183,7 @@ const ReadyToShipContactModal = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="city">Città *</Label>
+            <Label htmlFor="city">{t('readyToShip.modal.city')} *</Label>
             <Input
               id="city"
               name="city"
@@ -204,10 +204,10 @@ const ReadyToShipContactModal = ({
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Invio in corso...
+                {t('readyToShip.modal.sending')}
               </>
             ) : (
-              "Invia Richiesta"
+              t('readyToShip.modal.submit')
             )}
           </Button>
         </form>

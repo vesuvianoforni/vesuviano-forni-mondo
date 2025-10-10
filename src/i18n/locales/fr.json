@@ -786,7 +786,35 @@
       "description1": "Fours à bois de base, prêts à être emballés et expédiés.",
       "description2": "Peuvent également être configurés au gaz selon vos besoins."
     },
-    "productsPlaceholder": "Les fours disponibles seront ajoutés bientôt..."
+    "productsPlaceholder": "Les fours disponibles seront ajoutés bientôt...",
+    "productCode": "Code",
+    "diameter": "Diamètre Intérieur",
+    "fuel": "Type de Combustible",
+    "coating": "Revêtement",
+    "woodOrGas": "Bois (configurable au Gaz)",
+    "contactForPrice": "Contactez-nous pour le prix",
+    "requestInfo": "Demander des Informations",
+    "features": {
+      "professional": "Chambre de cuisson professionnelle",
+      "immediate": "Prêt pour l'expédition immédiate",
+      "warranty": "Garantie incluse",
+      "certifications": "Certifications CE"
+    },
+    "modal": {
+      "title": "Demander des Informations",
+      "selectedOven": "Four sélectionné",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "phone": "Numéro de Téléphone",
+      "city": "Ville",
+      "submit": "Envoyer la Demande",
+      "sending": "Envoi en cours...",
+      "requiredFields": "Champs obligatoires manquants",
+      "fillAllFields": "Veuillez remplir tous les champs obligatoires",
+      "error": "Erreur",
+      "errorMessage": "Une erreur s'est produite lors de l'envoi de la demande. Veuillez réessayer plus tard."
+    }
   },
   "footer": {
     "rights": "Tous droits réservés"
