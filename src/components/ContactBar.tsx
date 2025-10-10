@@ -22,7 +22,7 @@ const ContactBar = () => {
       <div className="flex items-center gap-2 p-2.5 max-w-screen-xl mx-auto">
         <button
           onClick={handleWhatsAppClick}
-          className="flex items-center justify-center gap-2 bg-[#25D366]/90 hover:bg-[#25D366] text-white px-5 py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg backdrop-blur-sm flex-1"
+          className="flex items-center justify-center gap-2 bg-green-400 bg-[#25D366]/90 hover:bg-[#25D366] text-white px-5 py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg backdrop-blur-sm flex-1"
           aria-label="Contattaci su WhatsApp"
         >
           <svg 
