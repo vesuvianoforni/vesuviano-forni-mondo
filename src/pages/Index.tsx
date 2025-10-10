@@ -100,7 +100,16 @@ const Index = () => {
                   <Button 
                     size="lg"
                     className="bg-white text-vesuviano-600 hover:bg-stone-100 px-8 py-6 text-lg font-bold transition-all duration-300 hover:scale-105 shadow-xl"
-                    onClick={() => navigate(`/${currentLang}/pronta-consegna`)}
+                    onClick={() => {
+                      const readyToShipPaths: Record<string, string> = {
+                        'it': '/it/pronta-consegna',
+                        'en': '/en/ready-to-ship',
+                        'fr': '/fr/pret-a-expedier',
+                        'es': '/es/listo-para-enviar',
+                        'de': '/de/versandfertig'
+                      };
+                      navigate(readyToShipPaths[currentLang] || readyToShipPaths['it']);
+                    }}
                   >
                     {t('hero.readyToShip.cta')}
                     <ArrowRight className="ml-2 w-5 h-5" />
