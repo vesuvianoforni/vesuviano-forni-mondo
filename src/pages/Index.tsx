@@ -19,6 +19,7 @@ import FAQSection from "@/components/FAQSection";
 
 import WhatsAppButton from "@/components/WhatsAppButton";
 import ContactBar from "@/components/ContactBar";
+import ReadyToShipPopup from "@/components/ReadyToShipPopup";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -394,6 +395,7 @@ const Index = () => {
       {/* WhatsApp Button */}
       <WhatsAppButton />
       <ContactBar />
+      <ReadyToShipPopup />
     </div>
   );
 };
