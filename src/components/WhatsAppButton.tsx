@@ -1,9 +1,21 @@
 import React from 'react';
 
 const WhatsAppButton = () => {
-  const handleWhatsAppClick = () => {
-    const whatsappUrl = 'https://wa.link/a2959l';
-    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+  const handleWhatsAppClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    // Invia evento a Google Tag Manager
+    (window as any).dataLayer = (window as any).dataLayer || [];
+    (window as any).dataLayer.push({
+      event: 'click_whatsapp',
+      source: 'desktop_button',
+    });
+    
+    // Delay di 200ms prima del redirect
+    setTimeout(() => {
+      const whatsappUrl = 'https://wa.link/a2959l';
+      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    }, 200);
   };
 
   return (
