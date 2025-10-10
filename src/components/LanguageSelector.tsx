@@ -57,6 +57,20 @@ const LanguageSelector = () => {
       es: '/hornos-rotativos',
       de: '/drehoefen'
     },
+    'ready-to-ship': {
+      it: '/pronta-consegna',
+      en: '/ready-to-ship',
+      fr: '/pret-a-expedier',
+      es: '/listo-para-enviar',
+      de: '/versandfertig'
+    },
+    'vesuviobuono': {
+      it: '/sistema-vesuviobuono',
+      en: '/vesuviobuono-system',
+      fr: '/systeme-vesuviobuono',
+      es: '/sistema-vesuviobuono',
+      de: '/vesuviobuono-system'
+    },
     'architettoai': {
       it: '/architettoai',
       en: '/architettoai',
