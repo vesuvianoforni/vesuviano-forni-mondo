@@ -85,7 +85,17 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
       (window as any).dataLayer.push({
         'event': 'gtm.formSubmit',
         'formId': 'popup_form',
-        'formName': 'lead_popup'
+        'formName': 'lead_popup',
+        'formData': {
+          ovenType: ovenType,
+          city: formData.city
+        }
+      });
+
+      console.log('GTM dataLayer pushed:', {
+        event: 'gtm.formSubmit',
+        formId: 'popup_form',
+        formName: 'lead_popup'
       });
 
       toast({
@@ -93,7 +103,7 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
         description: t('downloadDatasheet.successMessage'),
       });
 
-      // Reset form and close modal
+      // Reset form
       setFormData({
         firstName: '',
         lastName: '',
@@ -101,7 +111,11 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
         phone: '',
         city: ''
       });
-      onClose();
+
+      // Wait a moment for GTM to process the event before navigating
+      setTimeout(() => {
+        onClose();
+      }, 300);
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
