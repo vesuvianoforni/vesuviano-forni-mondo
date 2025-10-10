@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
 
 interface DownloadDatasheetModalProps {
   isOpen: boolean;
@@ -23,8 +24,9 @@ interface FormData {
 }
 
 const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: DownloadDatasheetModalProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
@@ -80,11 +82,6 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
 
       if (error) throw error;
 
-      toast({
-        title: t('downloadDatasheet.success'),
-        description: t('downloadDatasheet.successMessage'),
-      });
-
       // Reset form and close modal
       setFormData({
         firstName: '',
@@ -94,6 +91,10 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
         city: ''
       });
       onClose();
+
+      // Navigate to thank you page with appropriate language
+      const currentLang = i18n.language;
+      navigate(`/${currentLang}/thank-you`);
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
