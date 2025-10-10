@@ -13,6 +13,7 @@ interface ReadyToShipContactModalProps {
   isOpen: boolean;
   onClose: () => void;
   productName: string;
+  productCode: string;
   productDiameter: string;
   productCoating: string;
 }
@@ -20,7 +21,8 @@ interface ReadyToShipContactModalProps {
 const ReadyToShipContactModal = ({ 
   isOpen, 
   onClose, 
-  productName, 
+  productName,
+  productCode, 
   productDiameter, 
   productCoating 
 }: ReadyToShipContactModalProps) => {
@@ -72,8 +74,8 @@ const ReadyToShipContactModal = ({
         email: formData.email,
         phone: formData.phone,
         country: formData.city,
-        ovenType: `${productName} (${productDiameter} - ${productCoating})`,
-        message: `Richiesta informazioni per forno pronta consegna: ${productName}. Diametro: ${productDiameter}, Rivestimento: ${productCoating}`
+        ovenType: `${productName} - ${productCode} (${productDiameter} - ${productCoating})`,
+        message: `Richiesta informazioni per forno pronta consegna: ${productName} (Codice: ${productCode}). Diametro: ${productDiameter}, Rivestimento: ${productCoating}`
       };
 
       const { data, error } = await supabase.functions.invoke('send-consultation-email', {
@@ -116,7 +118,12 @@ const ReadyToShipContactModal = ({
         <div className="bg-vesuviano-50 border border-vesuviano-200 rounded-lg p-4 mb-4">
           <p className="text-sm font-semibold text-vesuviano-900 mb-1">Forno selezionato:</p>
           <p className="text-sm text-vesuviano-800">{productName}</p>
-          <p className="text-xs text-vesuviano-700 mt-1">
+          <div className="mt-2">
+            <span className="inline-block bg-vesuviano-200 text-vesuviano-900 text-xs font-bold px-2 py-1 rounded">
+              Codice: {productCode}
+            </span>
+          </div>
+          <p className="text-xs text-vesuviano-700 mt-2">
             Diametro: {productDiameter} • Rivestimento: {productCoating}
           </p>
         </div>

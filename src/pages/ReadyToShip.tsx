@@ -11,11 +11,12 @@ import { useState } from 'react';
 const ReadyToShip = () => {
   const { t } = useTranslation();
   const [selectedImage, setSelectedImage] = useState<{ url: string; name: string } | null>(null);
-  const [selectedProduct, setSelectedProduct] = useState<{ name: string; diameter: string; coating: string } | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<{ name: string; code: string; diameter: string; coating: string } | null>(null);
 
   const products = [
     {
       id: 1,
+      code: "FPC-001",
       name: "Forno Pronta Consegna Mosaico Argentato",
       image: "/lovable-uploads/forno-pronta-consegna-1.png",
       diameter: "120 cm",
@@ -31,6 +32,7 @@ const ReadyToShip = () => {
     },
     {
       id: 2,
+      code: "FPC-002",
       name: "Forno Pronta Consegna Mosaico Azzurro/Nero",
       image: "/lovable-uploads/forno-pronta-consegna-2.png",
       diameter: "130 cm",
@@ -46,6 +48,7 @@ const ReadyToShip = () => {
     },
     {
       id: 3,
+      code: "FPC-003",
       name: "Forno Pronta Consegna Mosaico Azzurro",
       image: "/lovable-uploads/forno-pronta-consegna-3.png",
       diameter: "120 cm",
@@ -61,6 +64,7 @@ const ReadyToShip = () => {
     },
     {
       id: 4,
+      code: "FPC-004",
       name: "Forno Pronta Consegna Mosaico Azzurro/Oro",
       image: "/lovable-uploads/forno-pronta-consegna-4.png",
       diameter: "100 cm",
@@ -76,6 +80,7 @@ const ReadyToShip = () => {
     },
     {
       id: 5,
+      code: "FPC-005",
       name: "Forno Pronta Consegna Mosaico Bianco",
       image: "/lovable-uploads/forno-pronta-consegna-5.png",
       diameter: "120 cm",
@@ -140,6 +145,13 @@ const ReadyToShip = () => {
               </div>
               
               <CardContent className="p-6">
+                {/* Product Code Badge */}
+                <div className="mb-4">
+                  <span className="inline-block bg-vesuviano-100 text-vesuviano-800 text-xs font-semibold px-3 py-1 rounded-full">
+                    Codice: {product.code}
+                  </span>
+                </div>
+
                 {/* Main Specs */}
                 <div className="mb-6 space-y-3">
                   <div className="flex items-start">
@@ -176,7 +188,8 @@ const ReadyToShip = () => {
                 <Button
                   className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white transition-all duration-300"
                   onClick={() => setSelectedProduct({ 
-                    name: product.name, 
+                    name: product.name,
+                    code: product.code,
                     diameter: product.diameter, 
                     coating: product.coating 
                   })}
@@ -203,6 +216,7 @@ const ReadyToShip = () => {
         isOpen={!!selectedProduct}
         onClose={() => setSelectedProduct(null)}
         productName={selectedProduct?.name || ''}
+        productCode={selectedProduct?.code || ''}
         productDiameter={selectedProduct?.diameter || ''}
         productCoating={selectedProduct?.coating || ''}
       />
