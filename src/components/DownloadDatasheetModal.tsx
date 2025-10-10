@@ -50,7 +50,9 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
            formData.city.trim() !== '';
   };
 
-  const handleDownload = async () => {
+  const handleDownload = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
     if (!isFormValid()) {
       toast({
         title: t('downloadDatasheet.error'),
@@ -80,43 +82,20 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
 
       if (error) throw error;
 
-      // Push GTM event
-      try {
-        const dataLayer = (window.top as any).dataLayer || [];
-        (window.top as any).dataLayer = dataLayer;
-        dataLayer.push({
-          event: 'gtm.formSubmit',
-          formId: 'popup_form',
-          formName: 'lead_popup',
-          formType: 'datasheet_download',
-          ovenType: ovenType,
-        });
-        console.log('GTM Event pushed successfully:', {
-          event: 'gtm.formSubmit',
-          formId: 'popup_form',
-          formName: 'lead_popup',
-        });
-      } catch (e) {
-        console.error('Error pushing GTM event:', e);
-      }
-
-      // Show success message
       toast({
         title: t('downloadDatasheet.success'),
         description: t('downloadDatasheet.successMessage'),
       });
 
-      // Wait 1 second before closing to ensure GTM processes the event
-      setTimeout(() => {
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          phone: '',
-          city: '',
-        });
-        onClose();
-      }, 1000);
+      // Reset form and close modal
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        city: '',
+      });
+      onClose();
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
@@ -138,7 +117,7 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 py-4 overflow-y-auto max-h-[calc(90vh-8rem)]">
+        <form onSubmit={handleDownload} className="space-y-4 py-4 overflow-y-auto max-h-[calc(90vh-8rem)]">
           <p className="text-sm text-stone-600">
             {t('downloadDatasheet.subtitle')}
           </p>
@@ -217,13 +196,13 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
           </div>
 
           <Button
-            onClick={handleDownload}
+            type="submit"
             disabled={!isFormValid() || isSubmitting}
             className="w-full bg-vesuviano-500 hover:bg-vesuviano-600 text-white"
           >
             {isSubmitting ? t('downloadDatasheet.downloading') : t('downloadDatasheet.download')}
           </Button>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
