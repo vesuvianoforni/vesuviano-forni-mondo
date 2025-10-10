@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
 
 interface DownloadDatasheetModalProps {
   isOpen: boolean;
@@ -24,9 +23,8 @@ interface FormData {
 }
 
 const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: DownloadDatasheetModalProps) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { toast } = useToast();
-  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
@@ -82,6 +80,11 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
 
       if (error) throw error;
 
+      toast({
+        title: t('downloadDatasheet.success'),
+        description: t('downloadDatasheet.successMessage'),
+      });
+
       // Reset form and close modal
       setFormData({
         firstName: '',
@@ -91,17 +94,6 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
         city: ''
       });
       onClose();
-
-      // Navigate to thank you page with appropriate language
-      const currentLang = i18n.language;
-      const thankYouRoutes: Record<string, string> = {
-        'it': '/it/thank-you-it',
-        'en': '/en/thank-you-en',
-        'fr': '/fr/thank-you-fr',
-        'es': '/es/thank-you-es',
-        'de': '/de/thank-you-de'
-      };
-      navigate(thankYouRoutes[currentLang] || '/it/thank-you-it');
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({

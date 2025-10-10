@@ -84,18 +84,7 @@ const ReadyToShipContactModal = ({
 
       if (error) throw error;
 
-      // Reset form and close modal
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        city: ""
-      });
-      onClose();
-
-      // Navigate to thank you page with appropriate language
-      const currentLang = i18n.language;
+      const currentLang = i18n.language || 'it';
       const thankYouRoutes: Record<string, string> = {
         'it': '/it/thank-you-it',
         'en': '/en/thank-you-en',
@@ -103,6 +92,7 @@ const ReadyToShipContactModal = ({
         'es': '/es/thank-you-es',
         'de': '/de/thank-you-de'
       };
+      
       navigate(thankYouRoutes[currentLang] || '/it/thank-you-it');
     } catch (error) {
       console.error("Errore invio richiesta:", error);

@@ -78,35 +78,7 @@ const LanguageSelector = () => {
       es: '/architettoai',
       de: '/architettoai'
     },
-    'thank-you-it': {
-      it: '/thank-you-it',
-      en: '/thank-you-en',
-      fr: '/thank-you-fr',
-      es: '/thank-you-es',
-      de: '/thank-you-de'
-    },
-    'thank-you-en': {
-      it: '/thank-you-it',
-      en: '/thank-you-en',
-      fr: '/thank-you-fr',
-      es: '/thank-you-es',
-      de: '/thank-you-de'
-    },
-    'thank-you-fr': {
-      it: '/thank-you-it',
-      en: '/thank-you-en',
-      fr: '/thank-you-fr',
-      es: '/thank-you-es',
-      de: '/thank-you-de'
-    },
-    'thank-you-es': {
-      it: '/thank-you-it',
-      en: '/thank-you-en',
-      fr: '/thank-you-fr',
-      es: '/thank-you-es',
-      de: '/thank-you-de'
-    },
-    'thank-you-de': {
+    'thank-you': {
       it: '/thank-you-it',
       en: '/thank-you-en',
       fr: '/thank-you-fr',
