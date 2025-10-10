@@ -80,6 +80,14 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
 
       if (error) throw error;
 
+      // Push GTM event
+      (window as any).dataLayer = (window as any).dataLayer || [];
+      (window as any).dataLayer.push({
+        'event': 'gtm.formSubmit',
+        'formId': 'popup_form',
+        'formName': 'lead_popup'
+      });
+
       toast({
         title: t('downloadDatasheet.success'),
         description: t('downloadDatasheet.successMessage'),
