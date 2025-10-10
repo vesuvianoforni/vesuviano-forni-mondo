@@ -81,11 +81,10 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
       if (error) throw error;
 
       // Push GTM event (wait 300ms before closing)
-      (window as any).dataLayer = (window as any).dataLayer || [];
-      (window as any).dataLayer.push({
-        event: 'gtm.formSubmit',
-        formId: 'popup_form',
-        formName: 'lead_popup',
+      (window.parent as any).dataLayer = (window.parent as any).dataLayer || [];
+      (window.parent as any).dataLayer.push({
+        event: 'lead_submit_success',
+        formType: 'datasheet_download',
       });
 
       setTimeout(() => {
