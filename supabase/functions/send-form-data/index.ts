@@ -322,7 +322,7 @@ ${JSON.stringify(data, null, 2)}
     // Send notification email to company
     const companyEmailResult = await resend.emails.send({
       from: 'Sistema Notifiche <system@vesuvianoforni.com>',
-      to: ['info@abbattitorizapper.it'],
+      to: ['stanislaoelefante@gmail.com'],
       subject: subject,
       html: companyHtmlTemplate,
     })
