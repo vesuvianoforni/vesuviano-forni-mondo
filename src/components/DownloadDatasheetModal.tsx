@@ -80,40 +80,28 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
 
       if (error) throw error;
 
-      // Push GTM event
+      // Push GTM event (wait 300ms before closing)
       (window as any).dataLayer = (window as any).dataLayer || [];
       (window as any).dataLayer.push({
-        'event': 'gtm.formSubmit',
-        'formId': 'popup_form',
-        'formName': 'lead_popup',
-        'formData': {
-          ovenType: ovenType,
-          city: formData.city
-        }
-      });
-
-      console.log('GTM dataLayer pushed:', {
         event: 'gtm.formSubmit',
         formId: 'popup_form',
-        formName: 'lead_popup'
+        formName: 'lead_popup',
       });
 
-      toast({
-        title: t('downloadDatasheet.success'),
-        description: t('downloadDatasheet.successMessage'),
-      });
-
-      // Reset form
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        city: ''
-      });
-
-      // Wait a moment for GTM to process the event before navigating
       setTimeout(() => {
+        toast({
+          title: t('downloadDatasheet.success'),
+          description: t('downloadDatasheet.successMessage'),
+        });
+
+        // Reset form and close modal
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          city: '',
+        });
         onClose();
       }, 300);
     } catch (error) {
