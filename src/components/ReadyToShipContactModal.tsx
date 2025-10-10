@@ -96,7 +96,14 @@ const ReadyToShipContactModal = ({
 
       // Navigate to thank you page with appropriate language
       const currentLang = i18n.language;
-      navigate(`/${currentLang}/thank-you`);
+      const thankYouRoutes: Record<string, string> = {
+        'it': '/it/thank-you-it',
+        'en': '/en/thank-you-en',
+        'fr': '/fr/thank-you-fr',
+        'es': '/es/thank-you-es',
+        'de': '/de/thank-you-de'
+      };
+      navigate(thankYouRoutes[currentLang] || '/it/thank-you-it');
     } catch (error) {
       console.error("Errore invio richiesta:", error);
       toast({
