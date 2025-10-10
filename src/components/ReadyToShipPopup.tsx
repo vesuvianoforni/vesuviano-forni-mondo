@@ -53,9 +53,17 @@ const ReadyToShipPopup = () => {
             {t('hero.readyToShip.title')}
           </h2>
 
-          <p className="text-white/90 mb-6 text-sm sm:text-base">
+          <p className="text-white/90 mb-2 text-sm sm:text-base">
             {t('readyToShip.hero.description1')}
           </p>
+
+          <p className="text-white font-semibold mb-1 text-base sm:text-lg">
+            Disponibili anche a Gas
+          </p>
+
+          <div className="inline-block bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
+            <span className="text-xl font-bold">Sconto 20%</span>
+          </div>
 
           <Button
             onClick={handleNavigate}
