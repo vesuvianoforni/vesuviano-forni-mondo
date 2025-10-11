@@ -15,11 +15,11 @@ const ContactBar = () => {
       source: 'mobile_button',
     });
     
-    // Delay di 200ms prima del redirect
+    // Delay di 300ms prima del redirect per dare tempo a GTM
     setTimeout(() => {
       const whatsappUrl = 'https://wa.link/a2959l';
       window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-    }, 200);
+    }, 300);
   };
 
   const handleContactClick = () => {
@@ -36,6 +36,9 @@ const ContactBar = () => {
           onClick={handleWhatsAppClick}
           className="flex items-center justify-center gap-2 bg-green-400 bg-[#25D366]/90 hover:bg-[#25D366] text-white px-5 py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg backdrop-blur-sm flex-1"
           aria-label="Contattaci su WhatsApp"
+          data-gtm-event="click_whatsapp"
+          data-gtm-source="mobile_button"
+          data-whatsapp-link="https://wa.link/a2959l"
         >
           <svg 
             viewBox="0 0 24 24" 

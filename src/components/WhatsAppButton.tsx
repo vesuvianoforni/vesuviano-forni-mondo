@@ -11,11 +11,11 @@ const WhatsAppButton = () => {
       source: 'desktop_button',
     });
     
-    // Delay di 200ms prima del redirect
+    // Delay di 300ms prima del redirect per dare tempo a GTM
     setTimeout(() => {
       const whatsappUrl = 'https://wa.link/a2959l';
       window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-    }, 200);
+    }, 300);
   };
 
   return (
@@ -24,6 +24,9 @@ const WhatsAppButton = () => {
       className="fixed bottom-6 right-6 z-50 bg-green-400 bg-white hover:bg-gray-50 px-4 py-3 rounded-lg shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:-translate-y-1 group border border-gray-200 animate-float hidden md:block"
       aria-label="Contattaci su WhatsApp"
       title="Contattaci su WhatsApp"
+      data-gtm-event="click_whatsapp"
+      data-gtm-source="desktop_button"
+      data-whatsapp-link="https://wa.link/a2959l"
     >
       <img 
         src="/lovable-uploads/whatsapp-logo-inline.png" 
