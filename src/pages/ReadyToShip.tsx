@@ -92,7 +92,8 @@ const ReadyToShip = () => {
         t('readyToShip.features.warranty'),
         t('readyToShip.features.certifications')
       ],
-      price: t('readyToShip.contactForPrice')
+      price: t('readyToShip.contactForPrice'),
+      sold: true
     }
   ];
 
@@ -132,6 +133,16 @@ const ReadyToShip = () => {
                   className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                {product.sold && (
+                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-10">
+                    <div className="relative">
+                      <h2 className="text-5xl font-bold text-white font-playfair">
+                        SOLD - VENDUTO
+                      </h2>
+                      <div className="absolute top-1/2 left-0 right-0 h-1 bg-red-600 transform -rotate-12"></div>
+                    </div>
+                  </div>
+                )}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20">
                   <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
                     <svg className="w-8 h-8 text-vesuviano-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
