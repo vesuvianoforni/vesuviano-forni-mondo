@@ -16,7 +16,7 @@ import OvenDataInitializer from "@/components/OvenDataInitializer";
 import ConsultationForm from "@/components/ConsultationForm";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import FAQSection from "@/components/FAQSection";
-import PizzaVicoSection from "@/components/PizzaVicoSection";
+
 
 import WhatsAppButton from "@/components/WhatsAppButton";
 import ContactBar from "@/components/ContactBar";
@@ -71,11 +71,6 @@ const Index = () => {
           <ProductCategories />
         </section>
 
-        {/* Pizza a Vico Section */}
-        <section id="pizza-vico" aria-label="Pizza a Vico">
-          <PizzaVicoSection />
-        </section>
-        
         {/* Ready to Ship Section */}
         <section id="ready-to-ship" aria-label="Pronta consegna" className="py-16 md:py-20 bg-gradient-to-b from-stone-100 to-stone-50">
           <div className="container mx-auto px-4 md:px-6">
