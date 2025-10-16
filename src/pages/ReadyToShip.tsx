@@ -44,7 +44,8 @@ const ReadyToShip = () => {
         t('readyToShip.features.warranty'),
         t('readyToShip.features.certifications')
       ],
-      price: t('readyToShip.contactForPrice')
+      price: t('readyToShip.contactForPrice'),
+      sold: true
     },
     {
       id: 3,
