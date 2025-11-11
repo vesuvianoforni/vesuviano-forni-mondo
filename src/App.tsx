@@ -15,6 +15,7 @@ import LanguageRedirect from "./pages/LanguageRedirect";
 import ArchitettoAIRedirect from "./pages/ArchitettoAIRedirect";
 import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
+import BookAppointment from "./pages/BookAppointment";
 
 const queryClient = new QueryClient();
 
@@ -86,6 +87,7 @@ const App = () => {
             <Route path="/de/thank-you-de" element={<ThankYou lang="de" />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/prenota-appuntamento" element={<BookAppointment />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
