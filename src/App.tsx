@@ -16,6 +16,7 @@ import ArchitettoAIRedirect from "./pages/ArchitettoAIRedirect";
 import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
 import BookAppointment from "./pages/BookAppointment";
+import Appointments from "./pages/Appointments";
 
 const queryClient = new QueryClient();
 
@@ -88,6 +89,7 @@ const App = () => {
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="/book-a-slot-call" element={<BookAppointment />} />
+            <Route path="/appointments" element={<Appointments />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

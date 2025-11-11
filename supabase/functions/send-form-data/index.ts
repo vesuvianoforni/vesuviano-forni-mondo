@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "npm:resend@2.0.0"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -7,6 +8,11 @@ const corsHeaders = {
 }
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'))
+
+// Initialize Supabase client
+const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
 interface FormData {
   formType: string
@@ -152,6 +158,28 @@ serve(async (req) => {
           
           <p><em>Il lead ha richiesto di essere contattato per informazioni sui forni Vesuviano.</em></p>
         `
+        
+        // Save appointment to database
+        try {
+          const { error: dbError } = await supabase
+            .from('appointments')
+            .insert({
+              appointment_date: data.date,
+              appointment_time: data.time,
+              phone_number: data.phoneNumber,
+              contact_method: data.contactMethod,
+              status: 'pending'
+            })
+          
+          if (dbError) {
+            console.error('Error saving appointment to database:', dbError)
+          } else {
+            console.log('Appointment saved successfully to database')
+          }
+        } catch (dbError) {
+          console.error('Database error:', dbError)
+        }
+        
         break
 
       default:

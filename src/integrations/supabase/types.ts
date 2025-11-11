@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      appointments: {
+        Row: {
+          appointment_date: string
+          appointment_time: string
+          contact_method: string
+          created_at: string
+          id: string
+          notes: string | null
+          phone_number: string
+          status: string
+        }
+        Insert: {
+          appointment_date: string
+          appointment_time: string
+          contact_method: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          phone_number: string
+          status?: string
+        }
+        Update: {
+          appointment_date?: string
+          appointment_time?: string
+          contact_method?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          phone_number?: string
+          status?: string
+        }
+        Relationships: []
+      }
       ovens: {
         Row: {
           category: string
