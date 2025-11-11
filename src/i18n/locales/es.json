@@ -1,5 +1,29 @@
 
 {
+  "bookSlot": {
+    "title": "Reserve Su Franja Horaria",
+    "subtitle": "Elija su fecha, hora y método de contacto preferidos",
+    "dateLabel": "Fecha Preferida",
+    "datePlaceholder": "Seleccionar una fecha",
+    "timeLabel": "Hora Preferida",
+    "timePlaceholder": "Seleccionar una hora",
+    "contactMethodLabel": "¿Cómo Prefiere Ser Contactado?",
+    "whatsapp": "WhatsApp",
+    "phone": "Llamada Telefónica",
+    "googleMeet": "Google Meet",
+    "phoneLabel": "Número de Teléfono",
+    "phonePlaceholder": "+34 912 34 56 78",
+    "submitButton": "Reservar Llamada",
+    "submittingButton": "Enviando...",
+    "successMessage": "¡Cita reservada con éxito!",
+    "errorMessage": "Error al reservar. Por favor, inténtelo de nuevo.",
+    "validation": {
+      "dateRequired": "Por favor seleccione una fecha",
+      "timeRequired": "Por favor seleccione una hora",
+      "contactMethodRequired": "Por favor seleccione un método de contacto",
+      "phoneInvalid": "Por favor ingrese un número de teléfono válido"
+    }
+  },
   "pizzaVico": {
     "title": "Pizza a Vico - Nuestros Hornos en Acción",
     "description": "Nuestros hornos artesanales son protagonistas de este evento especial que se celebra cada año, donde la tradición napolitana se encuentra con la excelencia culinaria.",

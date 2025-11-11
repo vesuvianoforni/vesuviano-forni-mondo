@@ -1,5 +1,29 @@
 
 {
+  "bookSlot": {
+    "title": "Prenota il Tuo Slot",
+    "subtitle": "Scegli data, ora e modalità di contatto preferite",
+    "dateLabel": "Data Preferita",
+    "datePlaceholder": "Seleziona una data",
+    "timeLabel": "Orario Preferito",
+    "timePlaceholder": "Seleziona un orario",
+    "contactMethodLabel": "Come Preferisci Essere Contattato?",
+    "whatsapp": "WhatsApp",
+    "phone": "Telefono",
+    "googleMeet": "Google Meet",
+    "phoneLabel": "Numero di Telefono",
+    "phonePlaceholder": "+39 123 456 7890",
+    "submitButton": "Prenota Chiamata",
+    "submittingButton": "Invio in corso...",
+    "successMessage": "Prenotazione effettuata con successo!",
+    "errorMessage": "Errore durante la prenotazione. Riprova.",
+    "validation": {
+      "dateRequired": "Seleziona una data",
+      "timeRequired": "Seleziona un orario",
+      "contactMethodRequired": "Seleziona un metodo di contatto",
+      "phoneInvalid": "Inserisci un numero di telefono valido"
+    }
+  },
   "pizzaVico": {
     "title": "Pizza a Vico - I Nostri Forni in Azione",
     "description": "I nostri forni artigianali protagonisti di questa speciale manifestazione che si tiene ogni anno, dove la tradizione napoletana incontra l'eccellenza culinaria.",

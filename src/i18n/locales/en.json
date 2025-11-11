@@ -1,5 +1,29 @@
 
 {
+  "bookSlot": {
+    "title": "Book Your Call Slot",
+    "subtitle": "Choose your preferred date, time and contact method",
+    "dateLabel": "Preferred Date",
+    "datePlaceholder": "Select a date",
+    "timeLabel": "Preferred Time",
+    "timePlaceholder": "Select a time slot",
+    "contactMethodLabel": "How Would You Like to Be Contacted?",
+    "whatsapp": "WhatsApp",
+    "phone": "Phone Call",
+    "googleMeet": "Google Meet",
+    "phoneLabel": "Phone Number",
+    "phonePlaceholder": "+1 234 567 8900",
+    "submitButton": "Book Call Slot",
+    "submittingButton": "Booking...",
+    "successMessage": "Appointment booked successfully!",
+    "errorMessage": "Error booking appointment. Please try again.",
+    "validation": {
+      "dateRequired": "Please select a date",
+      "timeRequired": "Please select a time",
+      "contactMethodRequired": "Please select a contact method",
+      "phoneInvalid": "Please enter a valid phone number"
+    }
+  },
   "pizzaVico": {
     "title": "Pizza a Vico - Our Ovens in Action",
     "description": "Our artisan ovens take center stage at this special annual event, where Neapolitan tradition meets culinary excellence.",

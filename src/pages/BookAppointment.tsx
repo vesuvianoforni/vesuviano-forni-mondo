@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -33,23 +33,34 @@ import {
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
-
-const formSchema = z.object({
-  date: z.date({
-    required_error: "Please select a date",
-  }),
-  time: z.string().min(1, "Please select a time"),
-  contactMethod: z.enum(["whatsapp", "phone", "googlemeet"], {
-    required_error: "Please select a contact method",
-  }),
-  phoneNumber: z.string().min(8, "Please enter a valid phone number").max(20),
-});
-
-type FormData = z.infer<typeof formSchema>;
+import LanguageSelector from "@/components/LanguageSelector";
 
 const BookAppointment = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Detect browser language on mount
+  useEffect(() => {
+    const browserLang = navigator.language.split('-')[0];
+    const supportedLanguages = ['it', 'en', 'fr', 'es', 'de'];
+    
+    if (supportedLanguages.includes(browserLang) && i18n.language !== browserLang) {
+      i18n.changeLanguage(browserLang);
+    }
+  }, [i18n]);
+
+  const formSchema = z.object({
+    date: z.date({
+      required_error: t("bookSlot.validation.dateRequired"),
+    }),
+    time: z.string().min(1, t("bookSlot.validation.timeRequired")),
+    contactMethod: z.enum(["whatsapp", "phone", "googlemeet"], {
+      required_error: t("bookSlot.validation.contactMethodRequired"),
+    }),
+    phoneNumber: z.string().min(8, t("bookSlot.validation.phoneInvalid")).max(20),
+  });
+
+  type FormData = z.infer<typeof formSchema>;
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -79,11 +90,11 @@ const BookAppointment = () => {
 
       if (error) throw error;
 
-      toast.success("Appointment booked successfully!");
+      toast.success(t("bookSlot.successMessage"));
       form.reset();
     } catch (error) {
       console.error("Error submitting appointment:", error);
-      toast.error("Error booking appointment. Please try again.");
+      toast.error(t("bookSlot.errorMessage"));
     } finally {
       setIsSubmitting(false);
     }
@@ -92,12 +103,17 @@ const BookAppointment = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4">
       <div className="max-w-2xl mx-auto">
+        {/* Language Selector */}
+        <div className="flex justify-end mb-6">
+          <LanguageSelector />
+        </div>
+
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Book Your Call Slot
+            {t("bookSlot.title")}
           </h1>
           <p className="text-muted-foreground text-lg">
-            Choose your preferred date, time and contact method
+            {t("bookSlot.subtitle")}
           </p>
         </div>
 
@@ -111,7 +127,7 @@ const BookAppointment = () => {
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel className="text-base font-semibold">
-                      Preferred Date
+                      {t("bookSlot.dateLabel")}
                     </FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
@@ -126,7 +142,7 @@ const BookAppointment = () => {
                             {field.value ? (
                               format(field.value, "MMMM dd, yyyy")
                             ) : (
-                              <span>Select a date</span>
+                              <span>{t("bookSlot.datePlaceholder")}</span>
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
@@ -155,12 +171,12 @@ const BookAppointment = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-base font-semibold">
-                      Preferred Time
+                      {t("bookSlot.timeLabel")}
                     </FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="h-12">
-                          <SelectValue placeholder="Select a time slot" />
+                          <SelectValue placeholder={t("bookSlot.timePlaceholder")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -186,7 +202,7 @@ const BookAppointment = () => {
                 render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel className="text-base font-semibold">
-                      How Would You Like to Be Contacted?
+                      {t("bookSlot.contactMethodLabel")}
                     </FormLabel>
                     <FormControl>
                       <RadioGroup
@@ -201,7 +217,7 @@ const BookAppointment = () => {
                             className="flex items-center gap-3 cursor-pointer flex-1"
                           >
                             <MessageCircle className="h-5 w-5 text-green-600" />
-                            <span className="font-medium">WhatsApp</span>
+                            <span className="font-medium">{t("bookSlot.whatsapp")}</span>
                           </label>
                         </div>
                         <div className="flex items-center space-x-3 border rounded-lg p-4 hover:bg-accent transition-colors">
@@ -211,7 +227,7 @@ const BookAppointment = () => {
                             className="flex items-center gap-3 cursor-pointer flex-1"
                           >
                             <Phone className="h-5 w-5 text-blue-600" />
-                            <span className="font-medium">Phone Call</span>
+                            <span className="font-medium">{t("bookSlot.phone")}</span>
                           </label>
                         </div>
                         <div className="flex items-center space-x-3 border rounded-lg p-4 hover:bg-accent transition-colors">
@@ -221,7 +237,7 @@ const BookAppointment = () => {
                             className="flex items-center gap-3 cursor-pointer flex-1"
                           >
                             <Video className="h-5 w-5 text-purple-600" />
-                            <span className="font-medium">Google Meet</span>
+                            <span className="font-medium">{t("bookSlot.googleMeet")}</span>
                           </label>
                         </div>
                       </RadioGroup>
@@ -238,11 +254,11 @@ const BookAppointment = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-base font-semibold">
-                      Phone Number
+                      {t("bookSlot.phoneLabel")}
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="+1 234 567 8900"
+                        placeholder={t("bookSlot.phonePlaceholder")}
                         {...field}
                         className="h-12"
                         type="tel"
@@ -258,7 +274,7 @@ const BookAppointment = () => {
                 className="w-full h-12 text-lg font-semibold"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Booking..." : "Book Call Slot"}
+                {isSubmitting ? t("bookSlot.submittingButton") : t("bookSlot.submitButton")}
               </Button>
             </form>
           </Form>

@@ -1,5 +1,29 @@
 
 {
+  "bookSlot": {
+    "title": "Réservez Votre Créneau",
+    "subtitle": "Choisissez votre date, heure et méthode de contact préférées",
+    "dateLabel": "Date Préférée",
+    "datePlaceholder": "Sélectionner une date",
+    "timeLabel": "Heure Préférée",
+    "timePlaceholder": "Sélectionner un créneau",
+    "contactMethodLabel": "Comment Souhaitez-Vous Être Contacté?",
+    "whatsapp": "WhatsApp",
+    "phone": "Appel Téléphonique",
+    "googleMeet": "Google Meet",
+    "phoneLabel": "Numéro de Téléphone",
+    "phonePlaceholder": "+33 1 23 45 67 89",
+    "submitButton": "Réserver un Créneau",
+    "submittingButton": "Envoi en cours...",
+    "successMessage": "Rendez-vous réservé avec succès!",
+    "errorMessage": "Erreur lors de la réservation. Veuillez réessayer.",
+    "validation": {
+      "dateRequired": "Veuillez sélectionner une date",
+      "timeRequired": "Veuillez sélectionner une heure",
+      "contactMethodRequired": "Veuillez sélectionner une méthode de contact",
+      "phoneInvalid": "Veuillez entrer un numéro de téléphone valide"
+    }
+  },
   "pizzaVico": {
     "title": "Pizza a Vico - Nos Fours en Action",
     "description": "Nos fours artisanaux sont les protagonistes de cet événement spécial qui a lieu chaque année, où la tradition napolitaine rencontre l'excellence culinaire.",

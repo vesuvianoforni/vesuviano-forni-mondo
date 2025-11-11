@@ -1,5 +1,29 @@
 
 {
+  "bookSlot": {
+    "title": "Buchen Sie Ihren Termin",
+    "subtitle": "Wählen Sie Ihr bevorzugtes Datum, Uhrzeit und Kontaktmethode",
+    "dateLabel": "Bevorzugtes Datum",
+    "datePlaceholder": "Datum auswählen",
+    "timeLabel": "Bevorzugte Uhrzeit",
+    "timePlaceholder": "Zeitfenster auswählen",
+    "contactMethodLabel": "Wie Möchten Sie Kontaktiert Werden?",
+    "whatsapp": "WhatsApp",
+    "phone": "Telefonanruf",
+    "googleMeet": "Google Meet",
+    "phoneLabel": "Telefonnummer",
+    "phonePlaceholder": "+49 123 456 7890",
+    "submitButton": "Anruf Buchen",
+    "submittingButton": "Wird gesendet...",
+    "successMessage": "Termin erfolgreich gebucht!",
+    "errorMessage": "Fehler bei der Buchung. Bitte versuchen Sie es erneut.",
+    "validation": {
+      "dateRequired": "Bitte wählen Sie ein Datum",
+      "timeRequired": "Bitte wählen Sie eine Uhrzeit",
+      "contactMethodRequired": "Bitte wählen Sie eine Kontaktmethode",
+      "phoneInvalid": "Bitte geben Sie eine gültige Telefonnummer ein"
+    }
+  },
   "pizzaVico": {
     "title": "Pizza a Vico - Unsere Öfen in Aktion",
     "description": "Unsere handwerklichen Öfen sind die Protagonisten dieser besonderen jährlichen Veranstaltung, bei der neapolitanische Tradition auf kulinarische Exzellenz trifft.",
