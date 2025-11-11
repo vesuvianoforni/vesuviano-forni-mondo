@@ -132,6 +132,28 @@ serve(async (req) => {
         `
         break
 
+      case 'appointment':
+        subject = `📞 Nuova chiamata prenotata da Lead`
+        emailContent = `
+          <h2>🔔 Nuova chiamata prenotata da Lead</h2>
+          <p><strong>Data richiesta:</strong> ${new Date().toLocaleString('it-IT')}</p>
+          
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3>Dettagli Appuntamento:</h3>
+            <p><strong>📅 Data:</strong> ${data.date}</p>
+            <p><strong>🕐 Ora:</strong> ${data.time}</p>
+            <p><strong>📞 Telefono:</strong> <a href="tel:${data.phoneNumber}">${data.phoneNumber}</a></p>
+            <p><strong>💬 Metodo di contatto preferito:</strong> ${data.contactMethod === 'whatsapp' ? '📱 WhatsApp' : data.contactMethod === 'googlemeet' ? '🎥 Google Meet' : '☎️ Telefonata'}</p>
+          </div>
+          
+          <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+            <strong>⚡ AZIONE RICHIESTA:</strong> Contattare il lead al numero <a href="tel:${data.phoneNumber}">${data.phoneNumber}</a> tramite ${data.contactMethod} nella data e ora indicata.
+          </div>
+          
+          <p><em>Il lead ha richiesto di essere contattato per informazioni sui forni Vesuviano.</em></p>
+        `
+        break
+
       default:
         subject = `📝 Nuovo Form Compilato - ${formType}`
         emailContent = `
