@@ -87,7 +87,7 @@ const App = () => {
             <Route path="/de/thank-you-de" element={<ThankYou lang="de" />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="/prenota-appuntamento" element={<BookAppointment />} />
+            <Route path="/book-a-slot-call" element={<BookAppointment />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

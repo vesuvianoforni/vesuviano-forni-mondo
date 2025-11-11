@@ -36,13 +36,13 @@ import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   date: z.date({
-    required_error: "Seleziona una data",
+    required_error: "Please select a date",
   }),
-  time: z.string().min(1, "Seleziona un orario"),
+  time: z.string().min(1, "Please select a time"),
   contactMethod: z.enum(["whatsapp", "phone", "googlemeet"], {
-    required_error: "Seleziona un metodo di contatto",
+    required_error: "Please select a contact method",
   }),
-  phoneNumber: z.string().min(8, "Inserisci un numero di telefono valido").max(20),
+  phoneNumber: z.string().min(8, "Please enter a valid phone number").max(20),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -79,11 +79,11 @@ const BookAppointment = () => {
 
       if (error) throw error;
 
-      toast.success("Appuntamento prenotato con successo!");
+      toast.success("Appointment booked successfully!");
       form.reset();
     } catch (error) {
       console.error("Error submitting appointment:", error);
-      toast.error("Errore durante la prenotazione. Riprova.");
+      toast.error("Error booking appointment. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -94,10 +94,10 @@ const BookAppointment = () => {
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Prenota un Appuntamento
+            Book Your Call Slot
           </h1>
           <p className="text-muted-foreground text-lg">
-            Scegli data, ora e modalità con cui preferisci essere contattato
+            Choose your preferred date, time and contact method
           </p>
         </div>
 
@@ -111,7 +111,7 @@ const BookAppointment = () => {
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel className="text-base font-semibold">
-                      Data Preferita
+                      Preferred Date
                     </FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
@@ -124,9 +124,9 @@ const BookAppointment = () => {
                             )}
                           >
                             {field.value ? (
-                              format(field.value, "dd MMMM yyyy")
+                              format(field.value, "MMMM dd, yyyy")
                             ) : (
-                              <span>Seleziona una data</span>
+                              <span>Select a date</span>
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
@@ -155,12 +155,12 @@ const BookAppointment = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-base font-semibold">
-                      Orario Preferito
+                      Preferred Time
                     </FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="h-12">
-                          <SelectValue placeholder="Seleziona un orario" />
+                          <SelectValue placeholder="Select a time slot" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -186,7 +186,7 @@ const BookAppointment = () => {
                 render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel className="text-base font-semibold">
-                      Come Preferisci Essere Contattato?
+                      How Would You Like to Be Contacted?
                     </FormLabel>
                     <FormControl>
                       <RadioGroup
@@ -211,7 +211,7 @@ const BookAppointment = () => {
                             className="flex items-center gap-3 cursor-pointer flex-1"
                           >
                             <Phone className="h-5 w-5 text-blue-600" />
-                            <span className="font-medium">Telefono</span>
+                            <span className="font-medium">Phone Call</span>
                           </label>
                         </div>
                         <div className="flex items-center space-x-3 border rounded-lg p-4 hover:bg-accent transition-colors">
@@ -238,11 +238,11 @@ const BookAppointment = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-base font-semibold">
-                      Numero di Telefono
+                      Phone Number
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="+39 123 456 7890"
+                        placeholder="+1 234 567 8900"
                         {...field}
                         className="h-12"
                         type="tel"
@@ -258,7 +258,7 @@ const BookAppointment = () => {
                 className="w-full h-12 text-lg font-semibold"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Invio in corso..." : "Prenota Appuntamento"}
+                {isSubmitting ? "Booking..." : "Book Call Slot"}
               </Button>
             </form>
           </Form>
