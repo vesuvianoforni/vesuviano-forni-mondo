@@ -80,11 +80,13 @@ const BookAppointment = () => {
     try {
       const { error } = await supabase.functions.invoke("send-form-data", {
         body: {
-          type: "appointment",
-          date: format(data.date, "dd/MM/yyyy"),
-          time: data.time,
-          contactMethod: data.contactMethod,
-          phoneNumber: data.phoneNumber,
+          formType: "appointment",
+          data: {
+            date: format(data.date, "dd/MM/yyyy"),
+            time: data.time,
+            contactMethod: data.contactMethod,
+            phoneNumber: data.phoneNumber,
+          },
         },
       });
 
