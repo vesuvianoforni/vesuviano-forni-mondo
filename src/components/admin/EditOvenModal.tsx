@@ -179,11 +179,15 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                 id="image-upload"
                 disabled={uploading}
               />
-              <label htmlFor="image-upload">
-                <Button type="button" variant="outline" size="sm" disabled={uploading} asChild>
-                  <span className="cursor-pointer">Seleziona file</span>
-                </Button>
-              </label>
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="sm" 
+                disabled={uploading}
+                onClick={() => document.getElementById('image-upload')?.click()}
+              >
+                Seleziona file
+              </Button>
             </div>
             <div className="mt-2">
               <Label>Oppure inserisci URL</Label>
@@ -216,11 +220,15 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                 id="video-upload"
                 disabled={uploading}
               />
-              <label htmlFor="video-upload">
-                <Button type="button" variant="outline" size="sm" disabled={uploading} asChild>
-                  <span className="cursor-pointer">Seleziona file</span>
-                </Button>
-              </label>
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="sm" 
+                disabled={uploading}
+                onClick={() => document.getElementById('video-upload')?.click()}
+              >
+                Seleziona file
+              </Button>
             </div>
             <div className="mt-2">
               <Label>Oppure inserisci URL</Label>
