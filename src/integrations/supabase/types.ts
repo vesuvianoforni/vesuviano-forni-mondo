@@ -47,6 +47,137 @@ export type Database = {
         }
         Relationships: []
       }
+      configurator_options: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          price: number
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          price: number
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          price?: number
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      configurator_ovens: {
+        Row: {
+          base_price: number
+          category: string
+          created_at: string
+          delivery_time_weeks: number
+          description: string | null
+          diameters: Json
+          id: string
+          image_url: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          base_price: number
+          category: string
+          created_at?: string
+          delivery_time_weeks: number
+          description?: string | null
+          diameters?: Json
+          id?: string
+          image_url: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          base_price?: number
+          category?: string
+          created_at?: string
+          delivery_time_weeks?: number
+          description?: string | null
+          diameters?: Json
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      configurator_quotes: {
+        Row: {
+          created_at: string
+          customer_email: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          delivery_time_weeks: number
+          diameter: string
+          has_gas: boolean
+          has_installation: boolean
+          id: string
+          notes: string | null
+          oven_id: string | null
+          status: string
+          total_price: number
+        }
+        Insert: {
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivery_time_weeks: number
+          diameter: string
+          has_gas?: boolean
+          has_installation?: boolean
+          id?: string
+          notes?: string | null
+          oven_id?: string | null
+          status?: string
+          total_price: number
+        }
+        Update: {
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivery_time_weeks?: number
+          diameter?: string
+          has_gas?: boolean
+          has_installation?: boolean
+          id?: string
+          notes?: string | null
+          oven_id?: string | null
+          status?: string
+          total_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "configurator_quotes_oven_id_fkey"
+            columns: ["oven_id"]
+            isOneToOne: false
+            referencedRelation: "configurator_ovens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ovens: {
         Row: {
           category: string
