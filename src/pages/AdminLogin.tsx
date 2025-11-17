@@ -15,24 +15,25 @@ const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const { data: roles } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', session.user.id)
-          .eq('role', 'admin')
-          .maybeSingle();
-        
-        if (roles) {
-          navigate('/admin/configuratore');
-        }
-      }
-    };
-    checkAuth();
-  }, [navigate]);
+  // Temporaneamente disabilitato per sviluppo
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     const { data: { session } } = await supabase.auth.getSession();
+  //     if (session?.user) {
+  //       const { data: roles } = await supabase
+  //         .from('user_roles')
+  //         .select('role')
+  //         .eq('user_id', session.user.id)
+  //         .eq('role', 'admin')
+  //         .maybeSingle();
+  //       
+  //       if (roles) {
+  //         navigate('/admin/configuratore');
+  //       }
+  //     }
+  //   };
+  //   checkAuth();
+  // }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,7 +64,8 @@ const AdminLogin = () => {
         }
 
         toast.success('Login effettuato con successo');
-        navigate('/admin/configuratore');
+        // Temporaneamente commentato per sviluppo
+        // navigate('/admin/configuratore');
       }
     } catch (error: any) {
       toast.error(error.message || 'Errore durante il login');
