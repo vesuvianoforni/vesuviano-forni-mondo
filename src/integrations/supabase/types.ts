@@ -87,9 +87,12 @@ export type Database = {
           delivery_time_weeks: number
           description: string | null
           diameter: number
+          electric_price: number | null
           fuel_type: string
+          gas_price: number | null
           id: string
           image_url: string
+          installation_price: number | null
           is_active: boolean
           model_name: string
           pizza_capacity: string
@@ -102,9 +105,12 @@ export type Database = {
           delivery_time_weeks: number
           description?: string | null
           diameter: number
+          electric_price?: number | null
           fuel_type: string
+          gas_price?: number | null
           id?: string
           image_url: string
+          installation_price?: number | null
           is_active?: boolean
           model_name: string
           pizza_capacity: string
@@ -117,9 +123,12 @@ export type Database = {
           delivery_time_weeks?: number
           description?: string | null
           diameter?: number
+          electric_price?: number | null
           fuel_type?: string
+          gas_price?: number | null
           id?: string
           image_url?: string
+          installation_price?: number | null
           is_active?: boolean
           model_name?: string
           pizza_capacity?: string

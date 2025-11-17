@@ -22,6 +22,9 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     diameter: oven.diameter,
     pizza_capacity: oven.pizza_capacity,
     base_price: oven.base_price,
+    gas_price: oven.gas_price || 0,
+    electric_price: oven.electric_price || 0,
+    installation_price: oven.installation_price || 0,
     delivery_time_weeks: oven.delivery_time_weeks,
     image_url: oven.image_url,
     video_url_360: oven.video_url_360 || '',
@@ -150,8 +153,20 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
               <Input value={formData.pizza_capacity} onChange={(e) => handleChange('pizza_capacity', e.target.value)} />
             </div>
             <div>
-              <Label>Prezzo Base (€)</Label>
+              <Label>Prezzo Base - Legna (€)</Label>
               <Input type="number" value={formData.base_price} onChange={(e) => handleChange('base_price', parseFloat(e.target.value))} />
+            </div>
+            <div>
+              <Label>Prezzo Gas (€)</Label>
+              <Input type="number" value={formData.gas_price} onChange={(e) => handleChange('gas_price', parseFloat(e.target.value))} placeholder="0" />
+            </div>
+            <div>
+              <Label>Prezzo Elettrico (€)</Label>
+              <Input type="number" value={formData.electric_price} onChange={(e) => handleChange('electric_price', parseFloat(e.target.value))} placeholder="0" />
+            </div>
+            <div>
+              <Label>Prezzo Montaggio sul Posto (€)</Label>
+              <Input type="number" value={formData.installation_price} onChange={(e) => handleChange('installation_price', parseFloat(e.target.value))} placeholder="0" />
             </div>
             <div>
               <Label>Tempo Consegna (settimane)</Label>
