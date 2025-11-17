@@ -108,73 +108,139 @@ const Configurator = () => {
 
   return (
     <div className="min-h-screen bg-background py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-2">Configuratore Forni</h1>
           <p className="text-muted-foreground">Configura il tuo forno perfetto</p>
         </div>
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Scegli il tuo forno</CardTitle>
-            <CardDescription>Seleziona modello, configurazione e dimensione</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <Label>Modello</Label>
-              <Select value={selectedModel} onValueChange={(v) => { setSelectedModel(v); setSelectedFuelType(''); setSelectedDiameter(''); }}>
-                <SelectTrigger><SelectValue placeholder="Seleziona modello" /></SelectTrigger>
-                <SelectContent>{models.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}</SelectContent>
-              </Select>
+        
+        {/* Step 1: Model Selection */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">1. Scegli il Modello</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {models.map(model => (
+              <Card 
+                key={model} 
+                className={`cursor-pointer transition-all hover:shadow-lg ${selectedModel === model ? 'ring-2 ring-primary' : ''}`}
+                onClick={() => { setSelectedModel(model); setSelectedFuelType(''); setSelectedDiameter(''); }}
+              >
+                <CardContent className="p-4">
+                  <div className="aspect-square mb-3 bg-muted rounded-lg overflow-hidden">
+                    <img 
+                      src={ovens.find(o => o.model_name === model)?.image_url || '/placeholder.svg'} 
+                      alt={model}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <h3 className="font-semibold text-center">{model}</h3>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Step 2: Fuel Type Selection */}
+        {selectedModel && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4">2. Scegli l'Alimentazione</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {availableFuelTypes.map(fuel => (
+                <Card 
+                  key={fuel}
+                  className={`cursor-pointer transition-all hover:shadow-lg ${selectedFuelType === fuel ? 'ring-2 ring-primary' : ''}`}
+                  onClick={() => { setSelectedFuelType(fuel); setSelectedDiameter(''); }}
+                >
+                  <CardContent className="p-6 text-center">
+                    <Flame className="w-8 h-8 mx-auto mb-2" />
+                    <h3 className="font-semibold">{fuel}</h3>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-            {selectedModel && (
-              <div className="space-y-2">
-                <Label>Alimentazione</Label>
-                <Select value={selectedFuelType} onValueChange={(v) => { setSelectedFuelType(v); setSelectedDiameter(''); }}>
-                  <SelectTrigger><SelectValue placeholder="Seleziona alimentazione" /></SelectTrigger>
-                  <SelectContent>{availableFuelTypes.map(f => <SelectItem key={f} value={f}>{f}</SelectItem>)}</SelectContent>
-                </Select>
-              </div>
-            )}
-            {selectedFuelType && (
-              <div className="space-y-2">
-                <Label>Dimensione</Label>
-                <Select value={selectedDiameter} onValueChange={setSelectedDiameter}>
-                  <SelectTrigger><SelectValue placeholder="Seleziona dimensione" /></SelectTrigger>
-                  <SelectContent>{availableDiameters.map(o => <SelectItem key={o.id} value={o.diameter.toString()}>{o.diameter}cm - {o.pizza_capacity}</SelectItem>)}</SelectContent>
-                </Select>
-              </div>
-            )}
-            {selectedOven && (
-              <>
-                <div className="border-t pt-6">
-                  <h3 className="font-semibold mb-4">Opzioni Aggiuntive</h3>
+          </div>
+        )}
+
+        {/* Step 3: Diameter Selection */}
+        {selectedFuelType && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4">3. Scegli la Dimensione</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {availableDiameters.map(oven => (
+                <Card 
+                  key={oven.id}
+                  className={`cursor-pointer transition-all hover:shadow-lg ${selectedDiameter === oven.diameter.toString() ? 'ring-2 ring-primary' : ''}`}
+                  onClick={() => setSelectedDiameter(oven.diameter.toString())}
+                >
+                  <CardContent className="p-6">
+                    <div className="text-center">
+                      <Pizza className="w-8 h-8 mx-auto mb-2" />
+                      <h3 className="font-semibold text-lg">{oven.diameter}cm</h3>
+                      <p className="text-sm text-muted-foreground">{oven.pizza_capacity}</p>
+                      <p className="text-lg font-bold mt-2">€{oven.base_price.toFixed(2)}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+        {/* Step 4: Additional Options & Summary */}
+        {selectedOven && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>4. Opzioni Aggiuntive e Riepilogo</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <h3 className="font-semibold mb-4">Opzioni Aggiuntive</h3>
+                <div className="space-y-3">
                   {installationOption && (
-                    <div className="flex items-start space-x-3 mb-4">
+                    <div className="flex items-start space-x-3 p-3 border rounded-lg">
                       <Checkbox id="installation" checked={hasInstallation} onCheckedChange={(c) => setHasInstallation(c as boolean)} />
-                      <div><Label htmlFor="installation" className="cursor-pointer">{installationOption.name} (+€{installationOption.price.toFixed(2)})</Label></div>
+                      <div className="flex-1">
+                        <Label htmlFor="installation" className="cursor-pointer font-medium">{installationOption.name}</Label>
+                        <p className="text-sm text-muted-foreground">{installationOption.description}</p>
+                        <p className="text-sm font-semibold mt-1">+€{installationOption.price.toFixed(2)}</p>
+                      </div>
                     </div>
                   )}
                   {gasConversionOption && selectedFuelType === 'Legna' && (
-                    <div className="flex items-start space-x-3">
+                    <div className="flex items-start space-x-3 p-3 border rounded-lg">
                       <Checkbox id="gas" checked={hasGasConversion} onCheckedChange={(c) => setHasGasConversion(c as boolean)} />
-                      <div><Label htmlFor="gas" className="cursor-pointer">{gasConversionOption.name} (+€{gasConversionOption.price.toFixed(2)})</Label></div>
+                      <div className="flex-1">
+                        <Label htmlFor="gas" className="cursor-pointer font-medium">{gasConversionOption.name}</Label>
+                        <p className="text-sm text-muted-foreground">{gasConversionOption.description}</p>
+                        <p className="text-sm font-semibold mt-1">+€{gasConversionOption.price.toFixed(2)}</p>
+                      </div>
                     </div>
                   )}
                 </div>
-                <div className="border-t pt-6">
-                  <h3 className="font-semibold mb-4">Riepilogo</h3>
-                  <div className="bg-muted/50 rounded-lg p-4 space-y-3">
-                    <div className="flex items-center gap-2"><Flame className="w-4 h-4" /><span>{selectedOven.model_name} - {selectedOven.fuel_type}</span></div>
-                    <div className="flex items-center gap-2"><Pizza className="w-4 h-4" /><span>{selectedOven.diameter}cm - {selectedOven.pizza_capacity}</span></div>
-                    <div className="flex items-center gap-2"><Clock className="w-4 h-4" /><span>Consegna: {selectedOven.delivery_time_weeks} settimane</span></div>
-                    <div className="flex items-center gap-2 pt-3 border-t"><Euro className="w-5 h-5" /><span className="text-2xl font-bold">€{calculateTotal().toFixed(2)}</span></div>
+              </div>
+              
+              <div className="border-t pt-6">
+                <h3 className="font-semibold mb-4 text-xl">Riepilogo Configurazione</h3>
+                <div className="bg-muted/50 rounded-lg p-6 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-24 h-24 bg-background rounded-lg overflow-hidden">
+                      <img src={selectedOven.image_url} alt={selectedOven.model_name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-bold text-lg">{selectedOven.model_name}</h4>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground"><Flame className="w-4 h-4" /><span>{selectedOven.fuel_type}</span></div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground"><Pizza className="w-4 h-4" /><span>{selectedOven.diameter}cm - {selectedOven.pizza_capacity}</span></div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 pt-3 border-t"><Clock className="w-5 h-5" /><span>Consegna: {selectedOven.delivery_time_weeks} settimane</span></div>
+                  <div className="flex items-center justify-between pt-3 border-t">
+                    <span className="text-lg font-semibold">Totale:</span>
+                    <span className="text-3xl font-bold text-primary">€{calculateTotal().toFixed(2)}</span>
                   </div>
                 </div>
-                <Button onClick={() => setShowQuoteModal(true)} className="w-full" size="lg">Richiedi Preventivo</Button>
-              </>
-            )}
-          </CardContent>
-        </Card>
+              </div>
+              <Button onClick={() => setShowQuoteModal(true)} className="w-full" size="lg">Richiedi Preventivo</Button>
+            </CardContent>
+          </Card>
+        )}
         <Dialog open={showQuoteModal} onOpenChange={setShowQuoteModal}>
           <DialogContent className="max-w-md">
             <DialogHeader><DialogTitle>Richiedi Preventivo</DialogTitle></DialogHeader>

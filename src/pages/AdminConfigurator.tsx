@@ -52,6 +52,7 @@ const AdminConfigurator = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead>Immagine</TableHead>
                     <TableHead>Modello</TableHead>
                     <TableHead>Alimentazione</TableHead>
                     <TableHead>Diametro</TableHead>
@@ -63,6 +64,11 @@ const AdminConfigurator = () => {
                 <TableBody>
                   {ovens.map((oven: any) => (
                     <TableRow key={oven.id}>
+                      <TableCell>
+                        {oven.image_url && (
+                          <img src={oven.image_url} alt={oven.model_name} className="w-16 h-16 object-cover rounded" />
+                        )}
+                      </TableCell>
                       <TableCell>{oven.model_name}</TableCell>
                       <TableCell>{oven.fuel_type}</TableCell>
                       <TableCell>{oven.diameter}cm</TableCell>
