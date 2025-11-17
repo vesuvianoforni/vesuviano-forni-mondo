@@ -24,10 +24,10 @@ Deno.serve(async (req) => {
     };
 
     const models = [
-      { name: 'Sebastian', image: '/lovable-uploads/forno-metallo-bianco-nuovo.png', basePrice: 3500, deliveryWeeks: 6 },
-      { name: 'Realbosco', image: '/lovable-uploads/forno-arancione-terra-del-gusto.png', basePrice: 4200, deliveryWeeks: 8 },
-      { name: 'Anastasia', image: '/lovable-uploads/forno-mosaico-bianco.jpg', basePrice: 4500, deliveryWeeks: 8 },
-      { name: 'Ottavio', image: '/lovable-uploads/forno-metallo-nero-nuovo.png', basePrice: 3800, deliveryWeeks: 6 }
+      { name: 'Sebastian', image: '/lovable-uploads/forno-metallo-nero-nuovo.png', basePrice: 3500, deliveryWeeks: 4 },
+      { name: 'Realbosco', image: '/lovable-uploads/vesuviobuono-verde-mosaico.jpg', basePrice: 4000, deliveryWeeks: 4 },
+      { name: 'Anastasia', image: '/lovable-uploads/forno-mosaico-rosso.jpg', basePrice: 3800, deliveryWeeks: 4 },
+      { name: 'Ottavio', image: '/lovable-uploads/forno-metallo-bianco-nuovo.png', basePrice: 4500, deliveryWeeks: 5 }
     ];
 
     const fuelTypes = ['Elettrico', 'Gas', 'Legna'];
