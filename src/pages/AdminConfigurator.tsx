@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
+import InitConfiguratorData from '@/components/InitConfiguratorData';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -293,6 +294,10 @@ const AdminConfigurator = () => {
     <div className="min-h-screen bg-stone-50 p-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Gestione Configuratore</h1>
+
+        {ovens.length === 0 && (
+          <InitConfiguratorData />
+        )}
 
         <Tabs defaultValue="ovens">
           <TabsList className="mb-6">
