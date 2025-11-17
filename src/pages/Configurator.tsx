@@ -9,7 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Flame, Clock, Euro, Pizza } from 'lucide-react';
+import { Flame, Clock, Euro, Pizza, Video } from 'lucide-react';
+import Video360Modal from '@/components/Video360Modal';
 
 interface ConfiguratorOven {
   id: string;
@@ -18,6 +19,7 @@ interface ConfiguratorOven {
   diameter: number;
   pizza_capacity: string;
   image_url: string;
+  video_url_360?: string;
   base_price: number;
   delivery_time_weeks: number;
   description: string | null;
@@ -46,6 +48,7 @@ const Configurator = () => {
   const [customerPhone, setCustomerPhone] = useState('');
   const [notes, setNotes] = useState('');
   const [savingQuote, setSavingQuote] = useState(false);
+  const [showVideo360, setShowVideo360] = useState(false);
 
   useEffect(() => { fetchData(); }, []);
 
@@ -237,7 +240,15 @@ const Configurator = () => {
                   </div>
                 </div>
               </div>
-              <Button onClick={() => setShowQuoteModal(true)} className="w-full" size="lg">Richiedi Preventivo</Button>
+              <div className="flex gap-3">
+                <Button onClick={() => setShowQuoteModal(true)} className="flex-1" size="lg">Richiedi Preventivo</Button>
+                {selectedOven.video_url_360 && (
+                  <Button onClick={() => setShowVideo360(true)} variant="outline" size="lg" className="flex-1">
+                    <Video className="w-5 h-5 mr-2" />
+                    Video 360°
+                  </Button>
+                )}
+              </div>
             </CardContent>
           </Card>
         )}
@@ -253,6 +264,14 @@ const Configurator = () => {
             </div>
           </DialogContent>
         </Dialog>
+        {selectedOven && (
+          <Video360Modal
+            open={showVideo360}
+            onClose={() => setShowVideo360(false)}
+            videoUrl={selectedOven.video_url_360}
+            title={`${selectedOven.model_name} ${selectedOven.fuel_type}`}
+          />
+        )}
       </div>
     </div>
   );

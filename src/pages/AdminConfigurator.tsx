@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import InitConfiguratorData from '@/components/InitConfiguratorData';
@@ -7,14 +8,45 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
+import EditOvenModal from '@/components/admin/EditOvenModal';
+import { LogOut, Edit } from 'lucide-react';
 
 const AdminConfigurator = () => {
+  const navigate = useNavigate();
   const [ovens, setOvens] = useState([]);
   const [options, setOptions] = useState([]);
   const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [editingOven, setEditingOven] = useState<any>(null);
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => { 
+    checkAuth(); 
+  }, []);
+
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      navigate('/admin/login');
+      return;
+    }
+
+    const { data: roles } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', session.user.id)
+      .eq('role', 'admin')
+      .maybeSingle();
+
+    if (!roles) {
+      toast.error('Non hai i permessi di amministratore');
+      navigate('/admin/login');
+      return;
+    }
+
+    setIsAuthenticated(true);
+    fetchData();
+  };
 
   const fetchData = async () => {
     try {
@@ -33,12 +65,23 @@ const AdminConfigurator = () => {
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Caricamento...</div>;
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/admin/login');
+  };
+
+  if (loading || !isAuthenticated) return <div className="min-h-screen flex items-center justify-center">Caricamento...</div>;
 
   return (
     <div className="min-h-screen bg-stone-50 p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Gestione Configuratore</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold">Gestione Configuratore</h1>
+          <Button onClick={handleLogout} variant="outline">
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
+          </Button>
+        </div>
         {ovens.length === 0 && <InitConfiguratorData />}
         <Tabs defaultValue="ovens">
           <TabsList className="mb-6">
@@ -59,6 +102,7 @@ const AdminConfigurator = () => {
                     <TableHead>Capacità</TableHead>
                     <TableHead>Prezzo</TableHead>
                     <TableHead>Stato</TableHead>
+                    <TableHead>Azioni</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -75,6 +119,11 @@ const AdminConfigurator = () => {
                       <TableCell>{oven.pizza_capacity}</TableCell>
                       <TableCell>€{oven.base_price}</TableCell>
                       <TableCell><Badge variant={oven.is_active ? 'default' : 'secondary'}>{oven.is_active ? 'Attivo' : 'Inattivo'}</Badge></TableCell>
+                      <TableCell>
+                        <Button size="sm" variant="ghost" onClick={() => setEditingOven(oven)}>
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -123,6 +172,14 @@ const AdminConfigurator = () => {
           </TabsContent>
         </Tabs>
       </div>
+      {editingOven && (
+        <EditOvenModal
+          oven={editingOven}
+          open={!!editingOven}
+          onClose={() => setEditingOven(null)}
+          onUpdate={fetchData}
+        />
+      )}
     </div>
   );
 };

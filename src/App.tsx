@@ -19,6 +19,8 @@ import BookAppointment from "./pages/BookAppointment";
 import Appointments from "./pages/Appointments";
 import Configurator from "./pages/Configurator";
 import AdminConfigurator from "./pages/AdminConfigurator";
+import AdminLogin from "./pages/AdminLogin";
+import CreateAdmin from "./pages/CreateAdmin";
 
 const queryClient = new QueryClient();
 
@@ -93,6 +95,8 @@ const App = () => {
             <Route path="/book-a-slot-call" element={<BookAppointment />} />
             <Route path="/appointments" element={<Appointments />} />
             <Route path="/configuratore" element={<Configurator />} />
+            <Route path="/admin/create" element={<CreateAdmin />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/configuratore" element={<AdminConfigurator />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
