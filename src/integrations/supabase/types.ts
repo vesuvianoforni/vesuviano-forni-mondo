@@ -83,41 +83,44 @@ export type Database = {
       configurator_ovens: {
         Row: {
           base_price: number
-          category: string
           created_at: string
           delivery_time_weeks: number
           description: string | null
-          diameters: Json
+          diameter: number
+          fuel_type: string
           id: string
           image_url: string
           is_active: boolean
-          name: string
+          model_name: string
+          pizza_capacity: string
           updated_at: string
         }
         Insert: {
           base_price: number
-          category: string
           created_at?: string
           delivery_time_weeks: number
           description?: string | null
-          diameters?: Json
+          diameter: number
+          fuel_type: string
           id?: string
           image_url: string
           is_active?: boolean
-          name: string
+          model_name: string
+          pizza_capacity: string
           updated_at?: string
         }
         Update: {
           base_price?: number
-          category?: string
           created_at?: string
           delivery_time_weeks?: number
           description?: string | null
-          diameters?: Json
+          diameter?: number
+          fuel_type?: string
           id?: string
           image_url?: string
           is_active?: boolean
-          name?: string
+          model_name?: string
+          pizza_capacity?: string
           updated_at?: string
         }
         Relationships: []
@@ -129,7 +132,6 @@ export type Database = {
           customer_name: string | null
           customer_phone: string | null
           delivery_time_weeks: number
-          diameter: string
           has_gas: boolean
           has_installation: boolean
           id: string
@@ -144,7 +146,6 @@ export type Database = {
           customer_name?: string | null
           customer_phone?: string | null
           delivery_time_weeks: number
-          diameter: string
           has_gas?: boolean
           has_installation?: boolean
           id?: string
@@ -159,7 +160,6 @@ export type Database = {
           customer_name?: string | null
           customer_phone?: string | null
           delivery_time_weeks?: number
-          diameter?: string
           has_gas?: boolean
           has_installation?: boolean
           id?: string
