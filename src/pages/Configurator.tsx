@@ -21,6 +21,9 @@ interface ConfiguratorOven {
   image_url: string;
   video_url_360?: string;
   base_price: number;
+  gas_price?: number;
+  electric_price?: number;
+  installation_price?: number;
   delivery_time_weeks: number;
   description: string | null;
 }
@@ -40,8 +43,7 @@ const Configurator = () => {
   const [selectedModel, setSelectedModel] = useState<string>('');
   const [selectedFuelType, setSelectedFuelType] = useState<string>('');
   const [selectedDiameter, setSelectedDiameter] = useState<string>('');
-  const [hasInstallation, setHasInstallation] = useState(false);
-  const [hasGasConversion, setHasGasConversion] = useState(false);
+  const [deliveryOption, setDeliveryOption] = useState<'shipping' | 'on_site' | ''>('');
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
@@ -73,8 +75,6 @@ const Configurator = () => {
   const availableFuelTypes = selectedModel ? Array.from(new Set(ovens.filter(o => o.model_name === selectedModel).map(o => o.fuel_type))) : [];
   const availableDiameters = (selectedModel && selectedFuelType) ? ovens.filter(o => o.model_name === selectedModel && o.fuel_type === selectedFuelType) : [];
   const selectedOven = ovens.find(o => o.model_name === selectedModel && o.fuel_type === selectedFuelType && o.diameter === parseInt(selectedDiameter));
-  const installationOption = options.find(o => o.type === 'installation');
-  const gasConversionOption = options.find(o => o.type === 'gas_conversion');
 
   // Funzione per ottenere l'anteprima delle configurazioni per un modello
   const getModelPreview = (modelName: string) => {
@@ -84,11 +84,34 @@ const Configurator = () => {
     return { fuelTypes, diameters };
   };
 
+  // Calcola il prezzo della spedizione in base al diametro
+  const getShippingPrice = (diameter: number) => {
+    if (diameter === 80) return 1000;
+    if (diameter === 100) return 1300;
+    if (diameter === 120) return 1400;
+    if (diameter === 130) return 1500;
+    return 0;
+  };
+
+  // Calcola il prezzo base del forno in base all'alimentazione
+  const getOvenPrice = () => {
+    if (!selectedOven) return 0;
+    if (selectedFuelType === 'Legna') return selectedOven.base_price;
+    if (selectedFuelType === 'Gas') return selectedOven.gas_price || selectedOven.base_price;
+    if (selectedFuelType === 'Elettrico') return selectedOven.electric_price || selectedOven.base_price;
+    return selectedOven.base_price;
+  };
+
   const calculateTotal = () => {
     if (!selectedOven) return 0;
-    let total = selectedOven.base_price;
-    if (hasInstallation && installationOption) total += installationOption.price;
-    if (hasGasConversion && gasConversionOption) total += gasConversionOption.price;
+    let total = getOvenPrice();
+    
+    if (deliveryOption === 'shipping') {
+      total += getShippingPrice(selectedOven.diameter);
+    } else if (deliveryOption === 'on_site') {
+      total += selectedOven.installation_price || 0;
+    }
+    
     return total;
   };
 
@@ -97,16 +120,21 @@ const Configurator = () => {
     setSavingQuote(true);
     try {
       const { error } = await supabase.from('configurator_quotes').insert({
-        oven_id: selectedOven.id, has_installation: hasInstallation, has_gas: hasGasConversion,
-        total_price: calculateTotal(), delivery_time_weeks: selectedOven.delivery_time_weeks,
-        customer_name: customerName || null, customer_email: customerEmail || null,
-        customer_phone: customerPhone || null, notes: notes || null
+        oven_id: selectedOven.id, 
+        has_installation: deliveryOption === 'on_site', 
+        has_gas: selectedFuelType === 'Gas',
+        total_price: calculateTotal(), 
+        delivery_time_weeks: selectedOven.delivery_time_weeks,
+        customer_name: customerName || null, 
+        customer_email: customerEmail || null,
+        customer_phone: customerPhone || null, 
+        notes: notes || null
       });
       if (error) throw error;
       toast.success('Preventivo salvato!');
       setShowQuoteModal(false);
       setSelectedModel(''); setSelectedFuelType(''); setSelectedDiameter('');
-      setHasInstallation(false); setHasGasConversion(false);
+      setDeliveryOption('');
       setCustomerName(''); setCustomerEmail(''); setCustomerPhone(''); setNotes('');
     } catch (error) {
       toast.error('Errore nel salvare');
@@ -230,28 +258,41 @@ const Configurator = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <h3 className="font-semibold mb-4">Opzioni Aggiuntive</h3>
+                <h3 className="font-semibold mb-4">Opzioni di Consegna e Installazione</h3>
                 <div className="space-y-3">
-                  {installationOption && (
-                    <div className="flex items-start space-x-3 p-3 border rounded-lg">
-                      <Checkbox id="installation" checked={hasInstallation} onCheckedChange={(c) => setHasInstallation(c as boolean)} />
+                  <div 
+                    className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${deliveryOption === 'shipping' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}
+                    onClick={() => setDeliveryOption('shipping')}
+                  >
+                    <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <Label htmlFor="installation" className="cursor-pointer font-medium">{installationOption.name}</Label>
-                        <p className="text-sm text-muted-foreground">{installationOption.description}</p>
-                        <p className="text-sm font-semibold mt-1">+€{installationOption.price.toFixed(2)}</p>
+                        <Label className="cursor-pointer font-medium text-base">Spedizione in Europa</Label>
+                        <p className="text-sm text-muted-foreground mt-1">Spedizione con imballaggio cassonato in legno</p>
+                        <p className="text-lg font-bold mt-2 text-vesuviano-600">+€{getShippingPrice(selectedOven.diameter).toFixed(2)}</p>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${deliveryOption === 'shipping' ? 'border-primary' : 'border-border'}`}>
+                        {deliveryOption === 'shipping' && <div className="w-3 h-3 rounded-full bg-primary"></div>}
                       </div>
                     </div>
-                  )}
-                  {gasConversionOption && selectedFuelType === 'Legna' && (
-                    <div className="flex items-start space-x-3 p-3 border rounded-lg">
-                      <Checkbox id="gas" checked={hasGasConversion} onCheckedChange={(c) => setHasGasConversion(c as boolean)} />
+                  </div>
+
+                  <div 
+                    className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${deliveryOption === 'on_site' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}
+                    onClick={() => setDeliveryOption('on_site')}
+                  >
+                    <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <Label htmlFor="gas" className="cursor-pointer font-medium">{gasConversionOption.name}</Label>
-                        <p className="text-sm text-muted-foreground">{gasConversionOption.description}</p>
-                        <p className="text-sm font-semibold mt-1">+€{gasConversionOption.price.toFixed(2)}</p>
+                        <Label className="cursor-pointer font-medium text-base">Montaggio sul Posto</Label>
+                        <p className="text-sm text-muted-foreground mt-1">Montaggio e installazione professionale presso la vostra sede</p>
+                        <p className="text-lg font-bold mt-2 text-vesuviano-600">
+                          +€{(selectedOven.installation_price || 0).toFixed(2)}
+                        </p>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${deliveryOption === 'on_site' ? 'border-primary' : 'border-border'}`}>
+                        {deliveryOption === 'on_site' && <div className="w-3 h-3 rounded-full bg-primary"></div>}
                       </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
               
@@ -276,7 +317,14 @@ const Configurator = () => {
                 </div>
               </div>
               <div className="flex gap-3">
-                <Button onClick={() => setShowQuoteModal(true)} className="flex-1" size="lg">Richiedi Preventivo</Button>
+                <Button 
+                  onClick={() => setShowQuoteModal(true)} 
+                  className="flex-1" 
+                  size="lg"
+                  disabled={!deliveryOption}
+                >
+                  Richiedi Preventivo
+                </Button>
                 {selectedOven.video_url_360 && (
                   <Button onClick={() => setShowVideo360(true)} variant="outline" size="lg" className="flex-1">
                     <Video className="w-5 h-5 mr-2" />
@@ -284,6 +332,9 @@ const Configurator = () => {
                   </Button>
                 )}
               </div>
+              {!deliveryOption && (
+                <p className="text-sm text-center text-muted-foreground">Seleziona un'opzione di consegna per richiedere un preventivo</p>
+              )}
             </CardContent>
           </Card>
         )}
