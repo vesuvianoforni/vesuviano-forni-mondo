@@ -36,7 +36,11 @@ interface ConfiguratorOption {
   description: string | null;
 }
 
-const Configurator = () => {
+interface ConfiguratorProps {
+  sessionId?: string;
+}
+
+const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   const [ovens, setOvens] = useState<ConfiguratorOven[]>([]);
   const [options, setOptions] = useState<ConfiguratorOption[]>([]);
   const [loading, setLoading] = useState(true);
@@ -119,7 +123,7 @@ const Configurator = () => {
     if (!selectedOven) { toast.error('Completa la configurazione'); return; }
     setSavingQuote(true);
     try {
-      const { error } = await supabase.from('configurator_quotes').insert({
+      const { data: quoteData, error: quoteError } = await supabase.from('configurator_quotes').insert({
         oven_id: selectedOven.id, 
         has_installation: deliveryOption === 'on_site', 
         has_gas: selectedFuelType === 'Gas',
@@ -129,9 +133,42 @@ const Configurator = () => {
         customer_email: customerEmail || null,
         customer_phone: customerPhone || null, 
         notes: notes || null
-      });
-      if (error) throw error;
-      toast.success('Preventivo salvato!');
+      }).select().single();
+      
+      if (quoteError) throw quoteError;
+
+      // Update session if exists
+      if (sessionId && quoteData) {
+        await supabase
+          .from('configurator_sessions')
+          .update({ 
+            quote_id: quoteData.id,
+            status: 'interested',
+            customer_info: {
+              name: customerName,
+              email: customerEmail,
+              phone: customerPhone
+            }
+          })
+          .eq('id', sessionId);
+
+        // Send notification email
+        await supabase.functions.invoke('send-consultation-email', {
+          body: {
+            type: 'configurator_interest',
+            quoteId: quoteData.id,
+            ovenModel: selectedOven.model_name,
+            fuelType: selectedFuelType,
+            totalPrice: calculateTotal(),
+            deliveryOption: deliveryOption === 'on_site' ? 'Montaggio sul Posto' : 'Spedizione in Europa',
+            customerName,
+            customerEmail,
+            customerPhone
+          }
+        });
+      }
+      
+      toast.success(sessionId ? 'Grazie per il tuo interesse! Ti contatteremo presto.' : 'Preventivo salvato!');
       setShowQuoteModal(false);
       setSelectedModel(''); setSelectedFuelType(''); setSelectedDiameter('');
       setDeliveryOption('');
