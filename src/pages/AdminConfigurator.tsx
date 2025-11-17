@@ -21,7 +21,10 @@ const AdminConfigurator = () => {
   const [editingOven, setEditingOven] = useState<any>(null);
 
   useEffect(() => { 
-    checkAuth(); 
+    // Temporaneamente disabilitato per sviluppo
+    setIsAuthenticated(true);
+    fetchData();
+    // checkAuth(); 
   }, []);
 
   const checkAuth = async () => {
