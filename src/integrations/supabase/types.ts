@@ -190,6 +190,50 @@ export type Database = {
           },
         ]
       }
+      configurator_sessions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          customer_info: Json | null
+          expires_at: string | null
+          id: string
+          is_used: boolean
+          quote_id: string | null
+          status: string
+          token: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          customer_info?: Json | null
+          expires_at?: string | null
+          id?: string
+          is_used?: boolean
+          quote_id?: string | null
+          status?: string
+          token: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          customer_info?: Json | null
+          expires_at?: string | null
+          id?: string
+          is_used?: boolean
+          quote_id?: string | null
+          status?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "configurator_sessions_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "configurator_quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ovens: {
         Row: {
           category: string
