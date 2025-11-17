@@ -76,6 +76,14 @@ const Configurator = () => {
   const installationOption = options.find(o => o.type === 'installation');
   const gasConversionOption = options.find(o => o.type === 'gas_conversion');
 
+  // Funzione per ottenere l'anteprima delle configurazioni per un modello
+  const getModelPreview = (modelName: string) => {
+    const modelOvens = ovens.filter(o => o.model_name === modelName);
+    const fuelTypes = Array.from(new Set(modelOvens.map(o => o.fuel_type)));
+    const diameters = Array.from(new Set(modelOvens.map(o => o.diameter))).sort((a, b) => a - b);
+    return { fuelTypes, diameters };
+  };
+
   const calculateTotal = () => {
     if (!selectedOven) return 0;
     let total = selectedOven.base_price;
@@ -121,24 +129,51 @@ const Configurator = () => {
         <div className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">1. Scegli il Modello</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {models.map(model => (
-              <Card 
-                key={model} 
-                className={`cursor-pointer transition-all hover:shadow-lg ${selectedModel === model ? 'ring-2 ring-primary' : ''}`}
-                onClick={() => { setSelectedModel(model); setSelectedFuelType(''); setSelectedDiameter(''); }}
-              >
-                <CardContent className="p-4">
-                  <div className="aspect-square mb-3 bg-muted rounded-lg overflow-hidden">
-                    <img 
-                      src={ovens.find(o => o.model_name === model)?.image_url || '/placeholder.svg'} 
-                      alt={model}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <h3 className="font-semibold text-center">{model}</h3>
-                </CardContent>
-              </Card>
-            ))}
+            {models.map(model => {
+              const preview = getModelPreview(model);
+              return (
+                <Card 
+                  key={model} 
+                  className={`cursor-pointer transition-all hover:shadow-lg ${selectedModel === model ? 'ring-2 ring-primary' : ''}`}
+                  onClick={() => { setSelectedModel(model); setSelectedFuelType(''); setSelectedDiameter(''); }}
+                >
+                  <CardContent className="p-4">
+                    <div className="aspect-square mb-3 bg-muted rounded-lg overflow-hidden">
+                      <img 
+                        src={ovens.find(o => o.model_name === model)?.image_url || '/placeholder.svg'} 
+                        alt={model}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <h3 className="font-semibold text-center mb-3">{model}</h3>
+                    
+                    {/* Anteprima configurazioni */}
+                    <div className="border-t pt-3 space-y-2">
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Alimentazioni:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {preview.fuelTypes.map(fuel => (
+                            <span key={fuel} className="text-xs px-2 py-1 bg-vesuviano-50 text-vesuviano-700 rounded-full">
+                              {fuel}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Dimensioni:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {preview.diameters.map(diameter => (
+                            <span key={diameter} className="text-xs px-2 py-1 bg-stone-100 text-stone-700 rounded-full">
+                              {diameter}cm
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
 
