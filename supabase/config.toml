@@ -3,6 +3,9 @@ project_id = "lgueucxznbqgvhpjzurf"
 [functions.sync-ovens]
 verify_jwt = false
 
+[functions.init-configurator-data]
+verify_jwt = false
+
 [functions.generate-oven-space]
 verify_jwt = false
 
