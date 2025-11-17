@@ -17,6 +17,8 @@ import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
 import BookAppointment from "./pages/BookAppointment";
 import Appointments from "./pages/Appointments";
+import Configurator from "./pages/Configurator";
+import AdminConfigurator from "./pages/AdminConfigurator";
 
 const queryClient = new QueryClient();
 
@@ -90,6 +92,8 @@ const App = () => {
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="/book-a-slot-call" element={<BookAppointment />} />
             <Route path="/appointments" element={<Appointments />} />
+            <Route path="/configuratore" element={<Configurator />} />
+            <Route path="/admin/configuratore" element={<AdminConfigurator />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
