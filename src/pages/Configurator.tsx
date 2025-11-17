@@ -9,16 +9,17 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Flame, Clock, Euro, MapPin } from 'lucide-react';
+import { Flame, Clock, Euro, Pizza } from 'lucide-react';
 
 interface ConfiguratorOven {
   id: string;
-  name: string;
-  category: string;
+  model_name: string;
+  fuel_type: string;
+  diameter: number;
+  pizza_capacity: string;
   image_url: string;
   base_price: number;
   delivery_time_weeks: number;
-  diameters: any;
   description: string | null;
 }
 
@@ -34,12 +35,11 @@ const Configurator = () => {
   const [ovens, setOvens] = useState<ConfiguratorOven[]>([]);
   const [options, setOptions] = useState<ConfiguratorOption[]>([]);
   const [loading, setLoading] = useState(true);
-  
-  const [selectedOven, setSelectedOven] = useState<string>('');
+  const [selectedModel, setSelectedModel] = useState<string>('');
+  const [selectedFuelType, setSelectedFuelType] = useState<string>('');
   const [selectedDiameter, setSelectedDiameter] = useState<string>('');
   const [hasInstallation, setHasInstallation] = useState(false);
-  const [hasGas, setHasGas] = useState(false);
-  
+  const [hasGasConversion, setHasGasConversion] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
@@ -47,9 +47,7 @@ const Configurator = () => {
   const [notes, setNotes] = useState('');
   const [savingQuote, setSavingQuote] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useEffect(() => { fetchData(); }, []);
 
   const fetchData = async () => {
     try {
@@ -57,299 +55,139 @@ const Configurator = () => {
         supabase.from('configurator_ovens').select('*').eq('is_active', true),
         supabase.from('configurator_options').select('*').eq('is_active', true)
       ]);
-
       if (ovensResult.error) throw ovensResult.error;
       if (optionsResult.error) throw optionsResult.error;
-
       setOvens(ovensResult.data || []);
       setOptions(optionsResult.data || []);
     } catch (error) {
-      console.error('Error fetching data:', error);
-      toast.error('Errore nel caricamento dei dati');
+      toast.error('Errore nel caricamento');
     } finally {
       setLoading(false);
     }
   };
 
-  const selectedOvenData = ovens.find(o => o.id === selectedOven);
+  const models = Array.from(new Set(ovens.map(o => o.model_name)));
+  const availableFuelTypes = selectedModel ? Array.from(new Set(ovens.filter(o => o.model_name === selectedModel).map(o => o.fuel_type))) : [];
+  const availableDiameters = (selectedModel && selectedFuelType) ? ovens.filter(o => o.model_name === selectedModel && o.fuel_type === selectedFuelType) : [];
+  const selectedOven = ovens.find(o => o.model_name === selectedModel && o.fuel_type === selectedFuelType && o.diameter === parseInt(selectedDiameter));
   const installationOption = options.find(o => o.type === 'installation');
-  const gasOption = options.find(o => o.type === 'gas');
+  const gasConversionOption = options.find(o => o.type === 'gas_conversion');
 
   const calculateTotal = () => {
-    if (!selectedOvenData) return 0;
-    let total = selectedOvenData.base_price;
+    if (!selectedOven) return 0;
+    let total = selectedOven.base_price;
     if (hasInstallation && installationOption) total += installationOption.price;
-    if (hasGas && gasOption) total += gasOption.price;
+    if (hasGasConversion && gasConversionOption) total += gasConversionOption.price;
     return total;
   };
 
   const handleSaveQuote = async () => {
-    if (!selectedOven || !selectedDiameter) {
-      toast.error('Seleziona un forno e un diametro');
-      return;
-    }
-
+    if (!selectedOven) { toast.error('Completa la configurazione'); return; }
     setSavingQuote(true);
     try {
       const { error } = await supabase.from('configurator_quotes').insert({
-        oven_id: selectedOven,
-        diameter: selectedDiameter,
-        has_installation: hasInstallation,
-        has_gas: hasGas,
-        total_price: calculateTotal(),
-        delivery_time_weeks: selectedOvenData?.delivery_time_weeks || 0,
-        customer_name: customerName || null,
-        customer_email: customerEmail || null,
-        customer_phone: customerPhone || null,
-        notes: notes || null
+        oven_id: selectedOven.id, has_installation: hasInstallation, has_gas: hasGasConversion,
+        total_price: calculateTotal(), delivery_time_weeks: selectedOven.delivery_time_weeks,
+        customer_name: customerName || null, customer_email: customerEmail || null,
+        customer_phone: customerPhone || null, notes: notes || null
       });
-
       if (error) throw error;
-
-      toast.success('Preventivo salvato con successo!');
+      toast.success('Preventivo salvato!');
       setShowQuoteModal(false);
-      
-      // Reset form
-      setCustomerName('');
-      setCustomerEmail('');
-      setCustomerPhone('');
-      setNotes('');
+      setSelectedModel(''); setSelectedFuelType(''); setSelectedDiameter('');
+      setHasInstallation(false); setHasGasConversion(false);
+      setCustomerName(''); setCustomerEmail(''); setCustomerPhone(''); setNotes('');
     } catch (error) {
-      console.error('Error saving quote:', error);
-      toast.error('Errore nel salvataggio del preventivo');
+      toast.error('Errore nel salvare');
     } finally {
       setSavingQuote(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg">Caricamento...</p>
-      </div>
-    );
-  }
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Caricamento...</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-stone-50 to-stone-100 py-12 px-4">
+    <div className="min-h-screen bg-background py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-stone-900 mb-4">Configuratore Forni</h1>
-          <p className="text-stone-600">Configura il tuo forno ideale e ricevi subito il preventivo</p>
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold mb-2">Configuratore Forni</h1>
+          <p className="text-muted-foreground">Configura il tuo forno perfetto</p>
         </div>
-
-        <Card className="mb-8">
+        <Card className="mb-6">
           <CardHeader>
-            <CardTitle>Seleziona il Forno</CardTitle>
-            <CardDescription>Scegli il modello che preferisci</CardDescription>
+            <CardTitle>Scegli il tuo forno</CardTitle>
+            <CardDescription>Seleziona modello, configurazione e dimensione</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div>
-              <Label htmlFor="oven">Modello Forno</Label>
-              <Select value={selectedOven} onValueChange={setSelectedOven}>
-                <SelectTrigger id="oven" className="mt-2">
-                  <SelectValue placeholder="Seleziona un forno" />
-                </SelectTrigger>
-                <SelectContent>
-                  {ovens.map((oven) => (
-                    <SelectItem key={oven.id} value={oven.id}>
-                      {oven.name} - {oven.category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+            <div className="space-y-2">
+              <Label>Modello</Label>
+              <Select value={selectedModel} onValueChange={(v) => { setSelectedModel(v); setSelectedFuelType(''); setSelectedDiameter(''); }}>
+                <SelectTrigger><SelectValue placeholder="Seleziona modello" /></SelectTrigger>
+                <SelectContent>{models.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}</SelectContent>
               </Select>
             </div>
-
-            {selectedOvenData && (
+            {selectedModel && (
+              <div className="space-y-2">
+                <Label>Alimentazione</Label>
+                <Select value={selectedFuelType} onValueChange={(v) => { setSelectedFuelType(v); setSelectedDiameter(''); }}>
+                  <SelectTrigger><SelectValue placeholder="Seleziona alimentazione" /></SelectTrigger>
+                  <SelectContent>{availableFuelTypes.map(f => <SelectItem key={f} value={f}>{f}</SelectItem>)}</SelectContent>
+                </Select>
+              </div>
+            )}
+            {selectedFuelType && (
+              <div className="space-y-2">
+                <Label>Dimensione</Label>
+                <Select value={selectedDiameter} onValueChange={setSelectedDiameter}>
+                  <SelectTrigger><SelectValue placeholder="Seleziona dimensione" /></SelectTrigger>
+                  <SelectContent>{availableDiameters.map(o => <SelectItem key={o.id} value={o.diameter.toString()}>{o.diameter}cm - {o.pizza_capacity}</SelectItem>)}</SelectContent>
+                </Select>
+              </div>
+            )}
+            {selectedOven && (
               <>
-                <div className="border rounded-lg p-4 bg-white">
-                  <img 
-                    src={selectedOvenData.image_url} 
-                    alt={selectedOvenData.name}
-                    className="w-full h-48 object-cover rounded-lg mb-4"
-                  />
-                  {selectedOvenData.description && (
-                    <p className="text-sm text-stone-600">{selectedOvenData.description}</p>
+                <div className="border-t pt-6">
+                  <h3 className="font-semibold mb-4">Opzioni Aggiuntive</h3>
+                  {installationOption && (
+                    <div className="flex items-start space-x-3 mb-4">
+                      <Checkbox id="installation" checked={hasInstallation} onCheckedChange={(c) => setHasInstallation(c as boolean)} />
+                      <div><Label htmlFor="installation" className="cursor-pointer">{installationOption.name} (+€{installationOption.price.toFixed(2)})</Label></div>
+                    </div>
+                  )}
+                  {gasConversionOption && selectedFuelType === 'Legna' && (
+                    <div className="flex items-start space-x-3">
+                      <Checkbox id="gas" checked={hasGasConversion} onCheckedChange={(c) => setHasGasConversion(c as boolean)} />
+                      <div><Label htmlFor="gas" className="cursor-pointer">{gasConversionOption.name} (+€{gasConversionOption.price.toFixed(2)})</Label></div>
+                    </div>
                   )}
                 </div>
-
-                <div>
-                  <Label htmlFor="diameter">Diametro</Label>
-                  <Select value={selectedDiameter} onValueChange={setSelectedDiameter}>
-                    <SelectTrigger id="diameter" className="mt-2">
-                      <SelectValue placeholder="Seleziona il diametro" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {selectedOvenData.diameters.map((diameter) => (
-                        <SelectItem key={diameter} value={diameter}>
-                          {diameter}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <div className="border-t pt-6">
+                  <h3 className="font-semibold mb-4">Riepilogo</h3>
+                  <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+                    <div className="flex items-center gap-2"><Flame className="w-4 h-4" /><span>{selectedOven.model_name} - {selectedOven.fuel_type}</span></div>
+                    <div className="flex items-center gap-2"><Pizza className="w-4 h-4" /><span>{selectedOven.diameter}cm - {selectedOven.pizza_capacity}</span></div>
+                    <div className="flex items-center gap-2"><Clock className="w-4 h-4" /><span>Consegna: {selectedOven.delivery_time_weeks} settimane</span></div>
+                    <div className="flex items-center gap-2 pt-3 border-t"><Euro className="w-5 h-5" /><span className="text-2xl font-bold">€{calculateTotal().toFixed(2)}</span></div>
+                  </div>
                 </div>
+                <Button onClick={() => setShowQuoteModal(true)} className="w-full" size="lg">Richiedi Preventivo</Button>
               </>
             )}
           </CardContent>
         </Card>
-
-        {selectedOven && selectedDiameter && (
-          <>
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle>Opzioni Aggiuntive</CardTitle>
-                <CardDescription>Personalizza il tuo forno</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {installationOption && (
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center space-x-4">
-                      <Checkbox 
-                        id="installation" 
-                        checked={hasInstallation}
-                        onCheckedChange={(checked) => setHasInstallation(checked as boolean)}
-                      />
-                      <div>
-                        <Label htmlFor="installation" className="cursor-pointer font-medium">
-                          <MapPin className="inline w-4 h-4 mr-2" />
-                          {installationOption.name}
-                        </Label>
-                        {installationOption.description && (
-                          <p className="text-sm text-stone-500">{installationOption.description}</p>
-                        )}
-                      </div>
-                    </div>
-                    <span className="font-bold">+€{installationOption.price}</span>
-                  </div>
-                )}
-
-                {gasOption && (
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center space-x-4">
-                      <Checkbox 
-                        id="gas" 
-                        checked={hasGas}
-                        onCheckedChange={(checked) => setHasGas(checked as boolean)}
-                      />
-                      <div>
-                        <Label htmlFor="gas" className="cursor-pointer font-medium">
-                          <Flame className="inline w-4 h-4 mr-2" />
-                          {gasOption.name}
-                        </Label>
-                        {gasOption.description && (
-                          <p className="text-sm text-stone-500">{gasOption.description}</p>
-                        )}
-                      </div>
-                    </div>
-                    <span className="font-bold">+€{gasOption.price}</span>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card className="bg-primary/5 border-primary/20">
-              <CardHeader>
-                <CardTitle className="text-2xl">Riepilogo Preventivo</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-between text-lg">
-                  <span>Prezzo Base:</span>
-                  <span className="font-bold">€{selectedOvenData?.base_price}</span>
-                </div>
-                {hasInstallation && installationOption && (
-                  <div className="flex justify-between">
-                    <span>{installationOption.name}:</span>
-                    <span className="font-bold">+€{installationOption.price}</span>
-                  </div>
-                )}
-                {hasGas && gasOption && (
-                  <div className="flex justify-between">
-                    <span>{gasOption.name}:</span>
-                    <span className="font-bold">+€{gasOption.price}</span>
-                  </div>
-                )}
-                <div className="border-t pt-4 flex justify-between text-2xl font-bold text-primary">
-                  <span className="flex items-center gap-2">
-                    <Euro className="w-6 h-6" />
-                    Totale:
-                  </span>
-                  <span>€{calculateTotal()}</span>
-                </div>
-                <div className="flex items-center gap-2 text-stone-600 pt-2">
-                  <Clock className="w-5 h-5" />
-                  <span>Tempi di consegna: {selectedOvenData?.delivery_time_weeks} settimane</span>
-                </div>
-                
-                <Button 
-                  onClick={() => setShowQuoteModal(true)}
-                  className="w-full mt-6"
-                  size="lg"
-                >
-                  Richiedi Preventivo
-                </Button>
-              </CardContent>
-            </Card>
-          </>
-        )}
+        <Dialog open={showQuoteModal} onOpenChange={setShowQuoteModal}>
+          <DialogContent className="max-w-md">
+            <DialogHeader><DialogTitle>Richiedi Preventivo</DialogTitle></DialogHeader>
+            <div className="space-y-4">
+              <div><Label>Nome</Label><Input value={customerName} onChange={(e) => setCustomerName(e.target.value)} /></div>
+              <div><Label>Email</Label><Input type="email" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} /></div>
+              <div><Label>Telefono</Label><Input value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} /></div>
+              <div><Label>Note</Label><Textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} /></div>
+              <Button onClick={handleSaveQuote} className="w-full" disabled={savingQuote}>{savingQuote ? 'Invio...' : 'Invia Richiesta'}</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
-
-      <Dialog open={showQuoteModal} onOpenChange={setShowQuoteModal}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Richiedi Preventivo</DialogTitle>
-            <DialogDescription>
-              Lasciaci i tuoi dati per ricevere il preventivo dettagliato
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="name">Nome e Cognome</Label>
-              <Input
-                id="name"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                placeholder="Mario Rossi"
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={customerEmail}
-                onChange={(e) => setCustomerEmail(e.target.value)}
-                placeholder="mario@esempio.it"
-              />
-            </div>
-            <div>
-              <Label htmlFor="phone">Telefono</Label>
-              <Input
-                id="phone"
-                value={customerPhone}
-                onChange={(e) => setCustomerPhone(e.target.value)}
-                placeholder="+39 123 456 7890"
-              />
-            </div>
-            <div>
-              <Label htmlFor="notes">Note (opzionale)</Label>
-              <Textarea
-                id="notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Eventuali richieste o domande..."
-                rows={3}
-              />
-            </div>
-            <Button 
-              onClick={handleSaveQuote} 
-              className="w-full"
-              disabled={savingQuote}
-            >
-              {savingQuote ? 'Invio in corso...' : 'Invia Richiesta'}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
