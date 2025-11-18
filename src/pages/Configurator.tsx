@@ -70,6 +70,10 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     email: string;
     phone: string;
   } | null>(null);
+  const [showNotInterestedModal, setShowNotInterestedModal] = useState(false);
+  const [feedbackReasons, setFeedbackReasons] = useState<string[]>([]);
+  const [otherReason, setOtherReason] = useState('');
+  const [savingFeedback, setSavingFeedback] = useState(false);
 
   useEffect(() => { 
     fetchData(); 
@@ -233,6 +237,55 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     } finally {
       setSavingQuote(false);
     }
+  };
+
+  const handleInterestedClick = () => {
+    setShowQuoteModal(true);
+  };
+
+  const handleNotInterestedSubmit = async () => {
+    if (feedbackReasons.length === 0 && !otherReason.trim()) {
+      toast.error('Seleziona almeno una motivazione o inserisci un commento');
+      return;
+    }
+
+    setSavingFeedback(true);
+    try {
+      const combinedReason = [
+        ...feedbackReasons,
+        otherReason.trim() ? `Altro: ${otherReason}` : ''
+      ].filter(Boolean).join('; ');
+
+      if (sessionId) {
+        await supabase
+          .from('configurator_sessions')
+          .update({
+            feedback_status: 'not_interested',
+            feedback_reason: combinedReason,
+            feedback_date: new Date().toISOString(),
+            status: 'rejected'
+          })
+          .eq('id', sessionId);
+      }
+
+      toast.success('Grazie per il tuo feedback!');
+      setShowNotInterestedModal(false);
+      setFeedbackReasons([]);
+      setOtherReason('');
+    } catch (error) {
+      console.error('Error saving feedback:', error);
+      toast.error('Errore durante l\'invio del feedback');
+    } finally {
+      setSavingFeedback(false);
+    }
+  };
+
+  const toggleFeedbackReason = (reason: string) => {
+    setFeedbackReasons(prev => 
+      prev.includes(reason) 
+        ? prev.filter(r => r !== reason)
+        : [...prev, reason]
+    );
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Caricamento...</div>;
@@ -485,6 +538,29 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               {!deliveryOption && (
                 <p className="text-sm text-center text-muted-foreground">Seleziona un'opzione di consegna per richiedere un preventivo</p>
               )}
+
+              {/* Bottoni feedback */}
+              {sessionId && deliveryOption && (
+                <div className="border-t pt-6 mt-6 space-y-3">
+                  <h3 className="font-semibold text-center mb-4">Hai bisogno di assistenza?</h3>
+                  <Button 
+                    onClick={handleInterestedClick}
+                    className="w-full" 
+                    size="lg"
+                    variant="default"
+                  >
+                    Sono interessato - Fammi contattare dal vostro responsabile clienti
+                  </Button>
+                  <Button 
+                    onClick={() => setShowNotInterestedModal(true)}
+                    className="w-full" 
+                    size="lg"
+                    variant="outline"
+                  >
+                    Non sono interessato
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
@@ -533,6 +609,73 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
             title={`${selectedOven.model_name} ${selectedOven.fuel_type}`}
           />
         )}
+
+        {/* Modal Non Interessato */}
+        <Dialog open={showNotInterestedModal} onOpenChange={setShowNotInterestedModal}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Aiutaci a migliorare</DialogTitle>
+              <DialogDescription>
+                Ci dispiace che non sia interessato. Cosa possiamo migliorare?
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-3">
+                <Label>Seleziona una o più motivazioni:</Label>
+                {[
+                  'Prezzo troppo elevato',
+                  'Non c\'è il modello che cerco',
+                  'Tempi di consegna troppo lunghi',
+                  'Preferisco un altro fornitore',
+                  'Ho bisogno di più informazioni'
+                ].map((reason) => (
+                  <div key={reason} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={reason}
+                      checked={feedbackReasons.includes(reason)}
+                      onCheckedChange={() => toggleFeedbackReason(reason)}
+                    />
+                    <label
+                      htmlFor={reason}
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                    >
+                      {reason}
+                    </label>
+                  </div>
+                ))}
+              </div>
+              
+              <div>
+                <Label htmlFor="other-reason">Altro (specificare):</Label>
+                <Textarea
+                  id="other-reason"
+                  value={otherReason}
+                  onChange={(e) => setOtherReason(e.target.value)}
+                  placeholder="Inserisci qui la tua motivazione..."
+                  rows={3}
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowNotInterestedModal(false)}
+                  className="flex-1"
+                  disabled={savingFeedback}
+                >
+                  Annulla
+                </Button>
+                <Button
+                  onClick={handleNotInterestedSubmit}
+                  className="flex-1"
+                  disabled={savingFeedback}
+                >
+                  {savingFeedback ? 'Invio...' : 'Invia Feedback'}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
