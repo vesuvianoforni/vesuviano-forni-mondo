@@ -251,7 +251,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Prezzo Installazione (€)</label>
+                <label className="text-sm font-medium">Prezzo Montaggio sul Posto (€)</label>
                 <input
                   type="number"
                   value={formData.installation_price_a}
@@ -294,7 +294,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Prezzo Installazione (€)</label>
+                <label className="text-sm font-medium">Prezzo Montaggio sul Posto (€)</label>
                 <input
                   type="number"
                   value={formData.installation_price_b}
@@ -337,7 +337,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Prezzo Installazione (€)</label>
+                <label className="text-sm font-medium">Prezzo Montaggio sul Posto (€)</label>
                 <input
                   type="number"
                   value={formData.installation_price_c}
