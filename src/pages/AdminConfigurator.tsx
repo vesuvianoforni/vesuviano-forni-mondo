@@ -10,7 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import EditOvenModal from '@/components/admin/EditOvenModal';
 import { SessionLinksManager } from '@/components/admin/SessionLinksManager';
-import { LogOut, Edit } from 'lucide-react';
+import { AddOvenModal } from '@/components/admin/AddOvenModal';
+import { LogOut, Edit, Plus } from 'lucide-react';
 
 const AdminConfigurator = () => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const AdminConfigurator = () => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [editingOven, setEditingOven] = useState<any>(null);
+  const [showAddOven, setShowAddOven] = useState(false);
 
   useEffect(() => { 
     // Temporaneamente disabilitato per sviluppo
@@ -97,7 +99,13 @@ const AdminConfigurator = () => {
           </TabsList>
           <TabsContent value="ovens">
             <Card>
-              <CardHeader><CardTitle>Forni Configurabili</CardTitle></CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Forni Configurabili</CardTitle>
+                <Button onClick={() => setShowAddOven(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Aggiungi Forno
+                </Button>
+              </CardHeader>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -184,6 +192,13 @@ const AdminConfigurator = () => {
           open={!!editingOven}
           onClose={() => setEditingOven(null)}
           onUpdate={fetchData}
+        />
+      )}
+      {showAddOven && (
+        <AddOvenModal
+          open={showAddOven}
+          onClose={() => setShowAddOven(false)}
+          onSuccess={fetchData}
         />
       )}
     </div>
