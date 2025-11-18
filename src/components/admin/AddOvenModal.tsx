@@ -32,6 +32,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
     installation_price_c: 0,
     delivery_time_weeks: 4,
     image_url: "",
+    additional_images: [] as string[],
     video_url_360: ""
   });
 
@@ -76,6 +77,29 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
     } finally {
       setUploadingImage(false);
     }
+  };
+
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingImage(true);
+    try {
+      const uploadPromises = Array.from(files).map(file => uploadFile(file, 'oven-gallery'));
+      const urls = await Promise.all(uploadPromises);
+      handleChange('additional_images', [...formData.additional_images, ...urls]);
+      toast.success(`${files.length} immagini caricate!`);
+    } catch (error) {
+      console.error('Error uploading gallery images:', error);
+      toast.error("Errore nel caricamento delle immagini");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const removeAdditionalImage = (index: number) => {
+    const newImages = formData.additional_images.filter((_, i) => i !== index);
+    handleChange('additional_images', newImages);
   };
 
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -383,6 +407,47 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                     type="file"
                     accept="video/*"
                     onChange={handleVideoUpload}
+                    className="hidden"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Galleria Immagini Aggiuntive</label>
+                {formData.additional_images.length > 0 && (
+                  <div className="grid grid-cols-3 gap-2 mt-2 mb-2">
+                    {formData.additional_images.map((url, index) => (
+                      <div key={index} className="relative group">
+                        <img src={url} alt={`Gallery ${index + 1}`} className="w-full h-24 object-cover rounded" />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => removeAdditionalImage(index)}
+                        >
+                          ×
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="flex gap-2 mt-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={uploadingImage}
+                    onClick={() => document.getElementById('gallery-upload')?.click()}
+                    className="w-full"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    {uploadingImage ? "Caricamento..." : "Aggiungi Immagini alla Galleria"}
+                  </Button>
+                  <input
+                    id="gallery-upload"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleGalleryUpload}
                     className="hidden"
                   />
                 </div>

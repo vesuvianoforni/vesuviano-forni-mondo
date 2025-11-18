@@ -82,6 +82,7 @@ export type Database = {
       }
       configurator_ovens: {
         Row: {
+          additional_images: string[] | null
           base_price_a: number
           base_price_b: number | null
           base_price_c: number | null
@@ -108,6 +109,7 @@ export type Database = {
           video_url_360: string | null
         }
         Insert: {
+          additional_images?: string[] | null
           base_price_a: number
           base_price_b?: number | null
           base_price_c?: number | null
@@ -134,6 +136,7 @@ export type Database = {
           video_url_360?: string | null
         }
         Update: {
+          additional_images?: string[] | null
           base_price_a?: number
           base_price_b?: number | null
           base_price_c?: number | null

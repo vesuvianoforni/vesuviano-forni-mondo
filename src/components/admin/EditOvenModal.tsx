@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Upload } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
 
 interface EditOvenModalProps {
   oven: any;
@@ -35,22 +35,23 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     installation_price_c: oven.installation_price_c || 0,
     delivery_time_weeks: oven.delivery_time_weeks,
     image_url: oven.image_url,
+    additional_images: oven.additional_images || [],
     video_url_360: oven.video_url_360 || '',
     description: oven.description || '',
     is_active: oven.is_active,
   });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [dragActive, setDragActive] = useState({ image: false, video: false });
+  const [dragActive, setDragActive] = useState({ image: false, video: false, gallery: false });
 
   const handleChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const uploadFile = async (file: File, type: 'image' | 'video') => {
+  const uploadFile = async (file: File, type: 'image' | 'video' | 'gallery') => {
     setUploading(true);
     try {
-      const bucket = type === 'image' ? 'oven-gallery' : 'videos';
+      const bucket = type === 'video' ? 'videos' : 'oven-gallery';
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `${fileName}`;
@@ -67,11 +68,13 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
 
       if (type === 'image') {
         handleChange('image_url', publicUrl);
-      } else {
+      } else if (type === 'video') {
         handleChange('video_url_360', publicUrl);
+      } else if (type === 'gallery') {
+        handleChange('additional_images', [...formData.additional_images, publicUrl]);
       }
 
-      toast.success(`${type === 'image' ? 'Immagine' : 'Video'} caricato con successo`);
+      toast.success(`${type === 'video' ? 'Video' : 'Immagine'} caricato con successo`);
     } catch (error: any) {
       toast.error('Errore durante il caricamento: ' + error.message);
     } finally {
@@ -79,7 +82,12 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     }
   };
 
-  const handleDrag = (e: React.DragEvent, type: 'image' | 'video') => {
+  const removeAdditionalImage = (index: number) => {
+    const newImages = formData.additional_images.filter((_, i) => i !== index);
+    handleChange('additional_images', newImages);
+  };
+
+  const handleDrag = (e: React.DragEvent, type: 'image' | 'video' | 'gallery') => {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === "dragenter" || e.type === "dragover") {
@@ -89,29 +97,42 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     }
   };
 
-  const handleDrop = async (e: React.DragEvent, type: 'image' | 'video') => {
+  const handleDrop = async (e: React.DragEvent, type: 'image' | 'video' | 'gallery') => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(prev => ({ ...prev, [type]: false }));
 
     const files = e.dataTransfer.files;
-    if (files && files[0]) {
+    if (type === 'gallery' && files.length > 0) {
+      // Handle multiple files for gallery
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.type.startsWith('image/')) {
+          await uploadFile(file, 'gallery');
+        }
+      }
+    } else if (files && files[0]) {
       const file = files[0];
-      const isValidType = type === 'image' 
-        ? file.type.startsWith('image/')
-        : file.type.startsWith('video/');
+      const isValidType = type === 'video' 
+        ? file.type.startsWith('video/')
+        : file.type.startsWith('image/');
       
       if (isValidType) {
         await uploadFile(file, type);
       } else {
-        toast.error(`Seleziona un file ${type === 'image' ? 'immagine' : 'video'} valido`);
+        toast.error(`Seleziona un file ${type === 'video' ? 'video' : 'immagine'} valido`);
       }
     }
   };
 
-  const handleFileInput = async (e: React.ChangeEvent<HTMLInputElement>, type: 'image' | 'video') => {
+  const handleFileInput = async (e: React.ChangeEvent<HTMLInputElement>, type: 'image' | 'video' | 'gallery') => {
     const files = e.target.files;
-    if (files && files[0]) {
+    if (type === 'gallery' && files && files.length > 0) {
+      // Handle multiple files for gallery
+      for (let i = 0; i < files.length; i++) {
+        await uploadFile(files[i], 'gallery');
+      }
+    } else if (files && files[0]) {
       await uploadFile(files[0], type);
     }
   };
@@ -397,6 +418,60 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                 onClick={() => document.getElementById('video-upload')?.click()}
               >
                 {uploading ? 'Caricamento...' : 'Seleziona Video'}
+              </Button>
+            </div>
+          </div>
+
+          {/* Additional Images Gallery */}
+          <div>
+            <Label>Galleria Immagini Aggiuntive (opzionale)</Label>
+            <div
+              className={`mt-2 border-2 border-dashed rounded-lg p-8 text-center ${
+                dragActive.gallery ? 'border-primary bg-primary/10' : 'border-border'
+              }`}
+              onDragEnter={(e) => handleDrag(e, 'gallery')}
+              onDragLeave={(e) => handleDrag(e, 'gallery')}
+              onDragOver={(e) => handleDrag(e, 'gallery')}
+              onDrop={(e) => handleDrop(e, 'gallery')}
+            >
+              {formData.additional_images.length > 0 ? (
+                <div className="grid grid-cols-3 gap-4 mb-4">
+                  {formData.additional_images.map((url, index) => (
+                    <div key={index} className="relative group">
+                      <img src={url} alt={`Gallery ${index + 1}`} className="w-full h-32 object-cover rounded" />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => removeAdditionalImage(index)}
+                      >
+                        ×
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-muted-foreground mb-4">
+                  <Upload className="w-12 h-12 mx-auto mb-2" />
+                  <p>Trascina immagini multiple o</p>
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => handleFileInput(e, 'gallery')}
+                className="hidden"
+                id="gallery-upload"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                disabled={uploading}
+                onClick={() => document.getElementById('gallery-upload')?.click()}
+              >
+                {uploading ? 'Caricamento...' : 'Aggiungi Immagini'}
               </Button>
             </div>
           </div>

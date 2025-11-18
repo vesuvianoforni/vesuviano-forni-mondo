@@ -19,6 +19,7 @@ interface ConfiguratorOven {
   diameter: number;
   pizza_capacity: string;
   image_url: string;
+  additional_images?: string[];
   video_url_360?: string;
   base_price_a: number;
   base_price_b?: number;
@@ -370,6 +371,45 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Oven Images Gallery */}
+              <div>
+                <h3 className="font-semibold mb-4">Il Tuo Forno</h3>
+                <div className="space-y-3">
+                  <div className="aspect-video relative overflow-hidden rounded-lg border">
+                    <img 
+                      src={selectedOven.image_url} 
+                      alt={selectedOven.model_name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  
+                  {selectedOven.additional_images && selectedOven.additional_images.length > 0 && (
+                    <div className="grid grid-cols-4 gap-2">
+                      {selectedOven.additional_images.map((img: string, index: number) => (
+                        <div key={index} className="aspect-square relative overflow-hidden rounded border cursor-pointer hover:opacity-80 transition-opacity">
+                          <img 
+                            src={img} 
+                            alt={`${selectedOven.model_name} - Vista ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {selectedOven.video_url_360 && (
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => setShowVideo360(true)}
+                    >
+                      <Video className="w-4 h-4 mr-2" />
+                      Visualizza Video 360°
+                    </Button>
+                  )}
                 </div>
               </div>
               
