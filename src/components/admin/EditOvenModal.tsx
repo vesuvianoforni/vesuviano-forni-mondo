@@ -244,7 +244,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                 />
               </div>
               <div>
-                <Label>Prezzo Installazione (€)</Label>
+                <Label>Prezzo Montaggio sul Posto (€)</Label>
                 <Input
                   type="number"
                   value={formData.installation_price_a}
@@ -283,7 +283,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                 />
               </div>
               <div>
-                <Label>Prezzo Installazione (€)</Label>
+                <Label>Prezzo Montaggio sul Posto (€)</Label>
                 <Input
                   type="number"
                   value={formData.installation_price_b}
@@ -322,7 +322,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                 />
               </div>
               <div>
-                <Label>Prezzo Installazione (€)</Label>
+                <Label>Prezzo Montaggio sul Posto (€)</Label>
                 <Input
                   type="number"
                   value={formData.installation_price_c}
