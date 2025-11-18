@@ -65,6 +65,11 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   const [savingQuote, setSavingQuote] = useState(false);
   const [showVideo360, setShowVideo360] = useState(false);
   const [priceList, setPriceList] = useState<'A' | 'B' | 'C'>('A');
+  const [customerData, setCustomerData] = useState<{
+    name: string;
+    email: string;
+    phone: string;
+  } | null>(null);
 
   useEffect(() => { 
     fetchData(); 
@@ -83,6 +88,17 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
       if (error) throw error;
       if (data) {
         setPriceList(data.price_list as 'A' | 'B' | 'C');
+        const customerInfo = {
+          name: data.customer_name || '',
+          email: data.customer_email || '',
+          phone: data.customer_phone || ''
+        };
+        setCustomerData(customerInfo);
+        
+        // Precompila anche i campi del form
+        setCustomerName(customerInfo.name);
+        setCustomerEmail(customerInfo.email);
+        setCustomerPhone(customerInfo.phone);
       }
     } catch (error) {
       console.error('Error loading session:', error);
@@ -226,7 +242,24 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-2">Configuratore Forni</h1>
-          <p className="text-muted-foreground">Configura il tuo forno perfetto</p>
+          {customerData ? (
+            <div className="space-y-2">
+              <p className="text-muted-foreground text-lg">
+                Configura il tuo forno perfetto, <span className="font-semibold text-foreground">{customerData.name}</span>
+              </p>
+              <div className="flex flex-col sm:flex-row gap-2 items-center justify-center text-sm text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <span className="font-medium">Email:</span> {customerData.email}
+                </span>
+                <span className="hidden sm:inline">•</span>
+                <span className="flex items-center gap-1">
+                  <span className="font-medium">Tel:</span> {customerData.phone}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <p className="text-muted-foreground">Configura il tuo forno perfetto</p>
+          )}
         </div>
         
         {/* Step 1: Model Selection */}
@@ -459,9 +492,34 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           <DialogContent className="max-w-md">
             <DialogHeader><DialogTitle>Richiedi Preventivo</DialogTitle></DialogHeader>
             <div className="space-y-4">
-              <div><Label>Nome</Label><Input value={customerName} onChange={(e) => setCustomerName(e.target.value)} /></div>
-              <div><Label>Email</Label><Input type="email" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} /></div>
-              <div><Label>Telefono</Label><Input value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} /></div>
+              <div>
+                <Label>Nome</Label>
+                <Input 
+                  value={customerName} 
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  readOnly={!!customerData}
+                  className={customerData ? "bg-muted" : ""}
+                />
+              </div>
+              <div>
+                <Label>Email</Label>
+                <Input 
+                  type="email" 
+                  value={customerEmail} 
+                  onChange={(e) => setCustomerEmail(e.target.value)}
+                  readOnly={!!customerData}
+                  className={customerData ? "bg-muted" : ""}
+                />
+              </div>
+              <div>
+                <Label>Telefono</Label>
+                <Input 
+                  value={customerPhone} 
+                  onChange={(e) => setCustomerPhone(e.target.value)}
+                  readOnly={!!customerData}
+                  className={customerData ? "bg-muted" : ""}
+                />
+              </div>
               <div><Label>Note</Label><Textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} /></div>
               <Button onClick={handleSaveQuote} className="w-full" disabled={savingQuote}>{savingQuote ? 'Invio...' : 'Invia Richiesta'}</Button>
             </div>
