@@ -44,7 +44,7 @@ export const SessionLinksManager = () => {
 
       if (error) throw error;
 
-      const link = `${window.location.origin}/configuratore/${token}`;
+      const link = `https://www.vesuvianoforni.com/configuratore/${token}`;
       await navigator.clipboard.writeText(link);
       
       toast.success("Link generato e copiato negli appunti!");
@@ -62,6 +62,12 @@ export const SessionLinksManager = () => {
     }
   };
 
+  const copyLink = async (token: string) => {
+    const link = `https://www.vesuvianoforni.com/configuratore/${token}`;
+    await navigator.clipboard.writeText(link);
+    toast.success("Link copiato!");
+  };
+
   const loadSessions = async () => {
     try {
       const { data, error } = await supabase
@@ -75,12 +81,6 @@ export const SessionLinksManager = () => {
     } catch (error) {
       console.error('Error loading sessions:', error);
     }
-  };
-
-  const copyLink = async (token: string) => {
-    const link = `${window.location.origin}/configuratore/${token}`;
-    await navigator.clipboard.writeText(link);
-    toast.success("Link copiato!");
   };
 
   const regenerateLink = async (sessionId: string) => {
