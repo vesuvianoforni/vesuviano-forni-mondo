@@ -21,6 +21,18 @@ interface ConsultationFormData {
   services: string[]
 }
 
+interface ConfiguratorInterestData {
+  type: 'configurator_interest'
+  quoteId: string
+  ovenModel: string
+  fuelType: string
+  totalPrice: number
+  deliveryOption: string
+  customerName: string
+  customerEmail: string
+  customerPhone: string
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -28,7 +40,239 @@ serve(async (req) => {
   }
 
   try {
-    const formData: ConsultationFormData = await req.json()
+    const requestData = await req.json()
+
+    // Check if this is a configurator interest request
+    if (requestData.type === 'configurator_interest') {
+      console.log('Processing configurator interest for:', requestData.customerEmail)
+      
+      // Email di conferma per il cliente
+      const customerEmailHtml = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Grazie per il tuo interesse - Vesuviano</title>
+            <style>
+              body { 
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                line-height: 1.6; 
+                color: #333; 
+                margin: 0; 
+                padding: 0; 
+                background-color: #f8f9fa;
+              }
+              .container { 
+                max-width: 600px; 
+                margin: 0 auto; 
+                background: white; 
+                border-radius: 10px; 
+                overflow: hidden; 
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+              }
+              .header { 
+                background: linear-gradient(135deg, #d97706 0%, #ea580c 100%); 
+                color: white; 
+                padding: 40px 30px; 
+                text-align: center; 
+              }
+              .content { 
+                padding: 40px 30px; 
+              }
+              .highlight { 
+                background: #fef3c7; 
+                border-left: 4px solid #f59e0b; 
+                padding: 20px; 
+                margin: 20px 0; 
+                border-radius: 0 8px 8px 0;
+              }
+              .info-section { 
+                background: #f8fafc; 
+                padding: 25px; 
+                border-radius: 8px; 
+                margin: 25px 0; 
+              }
+              .info-item { 
+                margin: 12px 0; 
+                display: flex; 
+                align-items: center; 
+              }
+              .info-label { 
+                font-weight: 600; 
+                color: #374151; 
+                min-width: 150px; 
+              }
+              .footer { 
+                background: #1f2937; 
+                color: white; 
+                padding: 30px; 
+                text-align: center; 
+              }
+              .price-highlight {
+                font-size: 24px;
+                color: #d97706;
+                font-weight: bold;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1 style="margin: 0; font-size: 28px;">Grazie per il tuo interesse!</h1>
+                <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.9;">Il nostro team ti contatterà presto</p>
+              </div>
+              
+              <div class="content">
+                <p>Caro/a <strong>${requestData.customerName}</strong>,</p>
+                
+                <p>Grazie per aver mostrato interesse per il nostro configuratore di forni. Siamo entusiasti di poterti assistere nella realizzazione del tuo progetto!</p>
+                
+                <div class="highlight">
+                  <h3 style="margin-top: 0; color: #d97706;">🔥 Il tuo preventivo</h3>
+                  <p><strong>Modello:</strong> ${requestData.ovenModel}</p>
+                  <p><strong>Combustibile:</strong> ${requestData.fuelType}</p>
+                  <p><strong>Opzione consegna:</strong> ${requestData.deliveryOption}</p>
+                  <p class="price-highlight">Totale: €${requestData.totalPrice.toLocaleString('it-IT', { minimumFractionDigits: 2 })}</p>
+                </div>
+
+                <div class="info-section">
+                  <h3 style="margin-top: 0; color: #374151;">I prossimi passi:</h3>
+                  <ul>
+                    <li>Un nostro esperto ti contatterà <strong>entro 24 ore</strong></li>
+                    <li>Discuteremo nel dettaglio le tue esigenze specifiche</li>
+                    <li>Finalizzeremo il preventivo e i dettagli tecnici</li>
+                    <li>Ti assisteremo in ogni fase, dalla conferma alla consegna</li>
+                  </ul>
+                </div>
+
+                <p>Se hai domande urgenti, non esitare a contattarci:</p>
+                <p><strong>📞 Telefono:</strong> +39 350 928 6941<br>
+                <strong>✉️ Email:</strong> info@vesuvianoforni.com</p>
+              </div>
+
+              <div class="footer">
+                <p style="margin: 0; opacity: 0.8;">© 2024 Vesuviano - Forni Professionali Artigianali</p>
+                <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.7;">Tradizione, qualità e innovazione dal cuore di Napoli</p>
+              </div>
+            </div>
+          </body>
+        </html>
+      `
+
+      // Email di notifica per l'azienda
+      const companyEmailHtml = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <title>Nuovo Interesse da Configuratore - Vesuviano</title>
+            <style>
+              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+              .header { background: #d97706; color: white; padding: 20px; border-radius: 8px; }
+              .content { background: #f8f9fa; padding: 25px; border-radius: 8px; margin: 20px 0; }
+              .field { margin: 15px 0; padding: 10px; background: white; border-radius: 4px; }
+              .label { font-weight: bold; color: #d97706; }
+              .priority { background: #fef3c7; border: 2px solid #f59e0b; padding: 15px; border-radius: 8px; margin: 20px 0; }
+              .price-box { background: #dcfce7; border: 2px solid #22c55e; padding: 20px; border-radius: 8px; text-align: center; font-size: 24px; font-weight: bold; color: #15803d; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h2>🎉 Nuovo Interesse da Configuratore!</h2>
+                <p>Ricevuto il ${new Date().toLocaleString('it-IT')}</p>
+              </div>
+              
+              <div class="priority">
+                <strong>⚡ AZIONE RICHIESTA:</strong> Contattare il cliente entro 24 ore per finalizzare il preventivo
+              </div>
+
+              <div class="content">
+                <h3>Dati Cliente:</h3>
+                <div class="field">
+                  <div class="label">Nome Completo:</div>
+                  ${requestData.customerName}
+                </div>
+                
+                <div class="field">
+                  <div class="label">Email:</div>
+                  <a href="mailto:${requestData.customerEmail}">${requestData.customerEmail}</a>
+                </div>
+                
+                <div class="field">
+                  <div class="label">Telefono:</div>
+                  <a href="tel:${requestData.customerPhone}">${requestData.customerPhone}</a>
+                </div>
+
+                <h3 style="margin-top: 30px;">Configurazione Forno:</h3>
+                
+                <div class="field">
+                  <div class="label">Modello:</div>
+                  ${requestData.ovenModel}
+                </div>
+                
+                <div class="field">
+                  <div class="label">Tipo di Combustibile:</div>
+                  ${requestData.fuelType}
+                </div>
+                
+                <div class="field">
+                  <div class="label">Opzione Consegna:</div>
+                  ${requestData.deliveryOption}
+                </div>
+
+                <div class="field">
+                  <div class="label">ID Preventivo:</div>
+                  ${requestData.quoteId}
+                </div>
+
+                <div class="price-box">
+                  Totale: €${requestData.totalPrice.toLocaleString('it-IT', { minimumFractionDigits: 2 })}
+                </div>
+              </div>
+            </div>
+          </body>
+        </html>
+      `
+
+      // Invia email al cliente
+      const customerEmailResult = await resend.emails.send({
+        from: 'Vesuviano Forni <noreply@vesuvianoforni.com>',
+        to: [requestData.customerEmail],
+        subject: '🔥 Grazie per il tuo interesse - Vesuviano Forni',
+        html: customerEmailHtml,
+      })
+
+      console.log('Customer email sent:', customerEmailResult)
+
+      // Invia email all'azienda
+      const companyEmailResult = await resend.emails.send({
+        from: 'Sistema Configuratore <system@vesuvianoforni.com>',
+        to: ['info@vesuvianoforni.com'],
+        subject: `🎉 Nuovo Interesse Configuratore: ${requestData.customerName} - ${requestData.ovenModel}`,
+        html: companyEmailHtml,
+      })
+
+      console.log('Company notification email sent:', companyEmailResult)
+
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          message: 'Configurator interest emails sent successfully',
+          customerEmailId: customerEmailResult.data?.id,
+          companyEmailId: companyEmailResult.data?.id
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200 
+        }
+      )
+    }
+
+    // Handle regular consultation form
+    const formData: ConsultationFormData = requestData
 
     console.log('Processing consultation request for:', formData.email)
 
