@@ -226,6 +226,9 @@ export type Database = {
           customer_name: string | null
           customer_phone: string | null
           expires_at: string | null
+          feedback_date: string | null
+          feedback_reason: string | null
+          feedback_status: string | null
           id: string
           is_used: boolean
           price_list: string
@@ -241,6 +244,9 @@ export type Database = {
           customer_name?: string | null
           customer_phone?: string | null
           expires_at?: string | null
+          feedback_date?: string | null
+          feedback_reason?: string | null
+          feedback_status?: string | null
           id?: string
           is_used?: boolean
           price_list?: string
@@ -256,6 +262,9 @@ export type Database = {
           customer_name?: string | null
           customer_phone?: string | null
           expires_at?: string | null
+          feedback_date?: string | null
+          feedback_reason?: string | null
+          feedback_status?: string | null
           id?: string
           is_used?: boolean
           price_list?: string
