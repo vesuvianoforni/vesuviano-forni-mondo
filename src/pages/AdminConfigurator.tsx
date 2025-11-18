@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import EditOvenModal from '@/components/admin/EditOvenModal';
 import { SessionLinksManager } from '@/components/admin/SessionLinksManager';
 import { AddOvenModal } from '@/components/admin/AddOvenModal';
-import { LogOut, Edit, Plus } from 'lucide-react';
+import { LogOut, Edit, Plus, Trash2 } from 'lucide-react';
 
 const AdminConfigurator = () => {
   const navigate = useNavigate();
@@ -76,6 +76,25 @@ const AdminConfigurator = () => {
     navigate('/admin/login');
   };
 
+  const handleDeleteOven = async (ovenId: string) => {
+    if (!confirm('Sei sicuro di voler eliminare questo forno?')) return;
+    
+    try {
+      const { error } = await supabase
+        .from('configurator_ovens')
+        .delete()
+        .eq('id', ovenId);
+
+      if (error) throw error;
+      
+      toast.success('Forno eliminato con successo');
+      fetchData();
+    } catch (error) {
+      console.error('Errore eliminazione forno:', error);
+      toast.error('Errore durante l\'eliminazione del forno');
+    }
+  };
+
   if (loading || !isAuthenticated) return <div className="min-h-screen flex items-center justify-center">Caricamento...</div>;
 
   return (
@@ -131,12 +150,17 @@ const AdminConfigurator = () => {
                       <TableCell>{oven.fuel_type}</TableCell>
                       <TableCell>{oven.diameter}cm</TableCell>
                       <TableCell>{oven.pizza_capacity}</TableCell>
-                      <TableCell>€{oven.base_price}</TableCell>
+                      <TableCell>€{oven.base_price_a}</TableCell>
                       <TableCell><Badge variant={oven.is_active ? 'default' : 'secondary'}>{oven.is_active ? 'Attivo' : 'Inattivo'}</Badge></TableCell>
                       <TableCell>
-                        <Button size="sm" variant="ghost" onClick={() => setEditingOven(oven)}>
-                          <Edit className="w-4 h-4" />
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="ghost" onClick={() => setEditingOven(oven)}>
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => handleDeleteOven(oven.id)} className="text-destructive hover:text-destructive">
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
