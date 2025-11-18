@@ -20,10 +20,18 @@ interface ConfiguratorOven {
   pizza_capacity: string;
   image_url: string;
   video_url_360?: string;
-  base_price: number;
-  gas_price?: number;
-  electric_price?: number;
-  installation_price?: number;
+  base_price_a: number;
+  base_price_b?: number;
+  base_price_c?: number;
+  gas_price_a?: number;
+  gas_price_b?: number;
+  gas_price_c?: number;
+  electric_price_a?: number;
+  electric_price_b?: number;
+  electric_price_c?: number;
+  installation_price_a?: number;
+  installation_price_b?: number;
+  installation_price_c?: number;
   delivery_time_weeks: number;
   description: string | null;
 }
@@ -55,8 +63,30 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   const [notes, setNotes] = useState('');
   const [savingQuote, setSavingQuote] = useState(false);
   const [showVideo360, setShowVideo360] = useState(false);
+  const [priceList, setPriceList] = useState<'A' | 'B' | 'C'>('A');
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => { 
+    fetchData(); 
+    if (sessionId) loadSessionData();
+  }, []);
+
+  const loadSessionData = async () => {
+    if (!sessionId) return;
+    try {
+      const { data, error } = await supabase
+        .from('configurator_sessions')
+        .select('*')
+        .eq('id', sessionId)
+        .single();
+      
+      if (error) throw error;
+      if (data) {
+        setPriceList(data.price_list as 'A' | 'B' | 'C');
+      }
+    } catch (error) {
+      console.error('Error loading session:', error);
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -97,13 +127,21 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     return 0;
   };
 
+  // Ottieni il prezzo in base al listino selezionato
+  const getPrice = (field: 'base' | 'gas' | 'electric' | 'installation') => {
+    if (!selectedOven) return 0;
+    const suffix = priceList.toLowerCase();
+    const fieldName = `${field}_price_${suffix}` as keyof ConfiguratorOven;
+    return selectedOven[fieldName] as number || 0;
+  };
+
   // Calcola il prezzo base del forno in base all'alimentazione
   const getOvenPrice = () => {
     if (!selectedOven) return 0;
-    if (selectedFuelType === 'Legna') return selectedOven.base_price;
-    if (selectedFuelType === 'Gas') return selectedOven.gas_price || selectedOven.base_price;
-    if (selectedFuelType === 'Elettrico') return selectedOven.electric_price || selectedOven.base_price;
-    return selectedOven.base_price;
+    if (selectedFuelType === 'Legna') return getPrice('base');
+    if (selectedFuelType === 'Gas') return getPrice('gas') || getPrice('base');
+    if (selectedFuelType === 'Elettrico') return getPrice('electric') || getPrice('base');
+    return getPrice('base');
   };
 
   const calculateTotal = () => {
@@ -113,7 +151,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     if (deliveryOption === 'shipping') {
       total += getShippingPrice(selectedOven.diameter);
     } else if (deliveryOption === 'on_site') {
-      total += selectedOven.installation_price || 0;
+      total += getPrice('installation');
     }
     
     return total;
@@ -279,7 +317,9 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                       <Pizza className="w-8 h-8 mx-auto mb-2" />
                       <h3 className="font-semibold text-lg">{oven.diameter}cm</h3>
                       <p className="text-sm text-muted-foreground">{oven.pizza_capacity}</p>
-                      <p className="text-lg font-bold mt-2">€{oven.base_price.toFixed(2)}</p>
+                      <p className="text-lg font-bold mt-2">
+                        €{((priceList === 'A' ? oven.base_price_a : priceList === 'B' ? oven.base_price_b : oven.base_price_c) || 0).toFixed(2)}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -322,7 +362,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         <Label className="cursor-pointer font-medium text-base">Montaggio sul Posto</Label>
                         <p className="text-sm text-muted-foreground mt-1">Montaggio e installazione professionale presso la vostra sede</p>
                         <p className="text-lg font-bold mt-2 text-vesuviano-600">
-                          +€{(selectedOven.installation_price || 0).toFixed(2)}
+                          +€{getPrice('installation').toFixed(2)}
                         </p>
                       </div>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${deliveryOption === 'on_site' ? 'border-primary' : 'border-border'}`}>

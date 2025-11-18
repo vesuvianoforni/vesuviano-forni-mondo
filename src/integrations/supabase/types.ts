@@ -82,17 +82,25 @@ export type Database = {
       }
       configurator_ovens: {
         Row: {
-          base_price: number
+          base_price_a: number
+          base_price_b: number | null
+          base_price_c: number | null
           created_at: string
           delivery_time_weeks: number
           description: string | null
           diameter: number
-          electric_price: number | null
+          electric_price_a: number | null
+          electric_price_b: number | null
+          electric_price_c: number | null
           fuel_type: string
-          gas_price: number | null
+          gas_price_a: number | null
+          gas_price_b: number | null
+          gas_price_c: number | null
           id: string
           image_url: string
-          installation_price: number | null
+          installation_price_a: number | null
+          installation_price_b: number | null
+          installation_price_c: number | null
           is_active: boolean
           model_name: string
           pizza_capacity: string
@@ -100,17 +108,25 @@ export type Database = {
           video_url_360: string | null
         }
         Insert: {
-          base_price: number
+          base_price_a: number
+          base_price_b?: number | null
+          base_price_c?: number | null
           created_at?: string
           delivery_time_weeks: number
           description?: string | null
           diameter: number
-          electric_price?: number | null
+          electric_price_a?: number | null
+          electric_price_b?: number | null
+          electric_price_c?: number | null
           fuel_type: string
-          gas_price?: number | null
+          gas_price_a?: number | null
+          gas_price_b?: number | null
+          gas_price_c?: number | null
           id?: string
           image_url: string
-          installation_price?: number | null
+          installation_price_a?: number | null
+          installation_price_b?: number | null
+          installation_price_c?: number | null
           is_active?: boolean
           model_name: string
           pizza_capacity: string
@@ -118,17 +134,25 @@ export type Database = {
           video_url_360?: string | null
         }
         Update: {
-          base_price?: number
+          base_price_a?: number
+          base_price_b?: number | null
+          base_price_c?: number | null
           created_at?: string
           delivery_time_weeks?: number
           description?: string | null
           diameter?: number
-          electric_price?: number | null
+          electric_price_a?: number | null
+          electric_price_b?: number | null
+          electric_price_c?: number | null
           fuel_type?: string
-          gas_price?: number | null
+          gas_price_a?: number | null
+          gas_price_b?: number | null
+          gas_price_c?: number | null
           id?: string
           image_url?: string
-          installation_price?: number | null
+          installation_price_a?: number | null
+          installation_price_b?: number | null
+          installation_price_c?: number | null
           is_active?: boolean
           model_name?: string
           pizza_capacity?: string
@@ -194,10 +218,14 @@ export type Database = {
         Row: {
           created_at: string
           created_by: string | null
+          customer_email: string | null
           customer_info: Json | null
+          customer_name: string | null
+          customer_phone: string | null
           expires_at: string | null
           id: string
           is_used: boolean
+          price_list: string
           quote_id: string | null
           status: string
           token: string
@@ -205,10 +233,14 @@ export type Database = {
         Insert: {
           created_at?: string
           created_by?: string | null
+          customer_email?: string | null
           customer_info?: Json | null
+          customer_name?: string | null
+          customer_phone?: string | null
           expires_at?: string | null
           id?: string
           is_used?: boolean
+          price_list?: string
           quote_id?: string | null
           status?: string
           token: string
@@ -216,10 +248,14 @@ export type Database = {
         Update: {
           created_at?: string
           created_by?: string | null
+          customer_email?: string | null
           customer_info?: Json | null
+          customer_name?: string | null
+          customer_phone?: string | null
           expires_at?: string | null
           id?: string
           is_used?: boolean
+          price_list?: string
           quote_id?: string | null
           status?: string
           token?: string
