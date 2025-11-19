@@ -371,16 +371,16 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   if (loading) return <div className="min-h-screen flex items-center justify-center">Caricamento...</div>;
 
   return (
-    <div className="min-h-screen bg-background py-12 px-4">
+    <div className="min-h-screen bg-background py-6 md:py-12 px-3 md:px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-2">Configuratore Forni</h1>
+        <div className="text-center mb-6 md:mb-12">
+          <h1 className="text-2xl md:text-4xl font-bold mb-2">Configuratore Forni</h1>
           {customerData ? (
             <div className="space-y-2">
-              <p className="text-muted-foreground text-lg">
+              <p className="text-muted-foreground text-base md:text-lg">
                 Configura il tuo forno perfetto, <span className="font-semibold text-foreground">{customerData.name}</span>
               </p>
-              <div className="flex flex-col sm:flex-row gap-2 items-center justify-center text-sm text-muted-foreground">
+              <div className="flex flex-col sm:flex-row gap-2 items-center justify-center text-xs md:text-sm text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <span className="font-medium">Email:</span> {customerData.email}
                 </span>
@@ -391,14 +391,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               </div>
             </div>
           ) : (
-            <p className="text-muted-foreground">Configura il tuo forno perfetto</p>
+            <p className="text-muted-foreground text-sm md:text-base">Configura il tuo forno perfetto</p>
           )}
         </div>
         
         {/* Step 1: Model Selection */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">1. Scegli il Modello</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="mb-6 md:mb-8">
+          <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4">1. Scegli il Modello</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {models.map(model => {
               const preview = getModelPreview(model);
               return (
@@ -407,8 +407,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   className={`cursor-pointer transition-all hover:shadow-lg ${selectedModel === model ? 'ring-2 ring-primary' : ''}`}
                   onClick={() => { setSelectedModel(model); setSelectedFuelType(''); setSelectedDiameter(''); }}
                 >
-                  <CardContent className="p-4">
-                    <div className="aspect-square mb-3 bg-muted rounded-lg overflow-hidden">
+                  <CardContent className="p-3 md:p-4">
+                    <div className="aspect-square mb-2 md:mb-3 bg-muted rounded-lg overflow-hidden">
                       <img 
                         src={ovens.find(o => o.model_name === model)?.image_url || '/placeholder.svg'} 
                         alt={model}
@@ -449,18 +449,18 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
         {/* Step 2: Fuel Type Selection */}
         {selectedModel && (
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">2. Scegli l'Alimentazione</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="mb-6 md:mb-8">
+            <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4">2. Scegli l'Alimentazione</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
               {availableFuelTypes.map(fuel => (
                 <Card 
                   key={fuel}
                   className={`cursor-pointer transition-all hover:shadow-lg ${selectedFuelType === fuel ? 'ring-2 ring-primary' : ''}`}
                   onClick={() => { setSelectedFuelType(fuel); setSelectedDiameter(''); }}
                 >
-                  <CardContent className="p-6 text-center">
-                    <Flame className="w-8 h-8 mx-auto mb-2" />
-                    <h3 className="font-semibold">{fuel}</h3>
+                  <CardContent className="p-4 md:p-6 text-center">
+                    <Flame className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2" />
+                    <h3 className="font-semibold text-sm md:text-base">{fuel}</h3>
                   </CardContent>
                 </Card>
               ))}
@@ -470,21 +470,21 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
         {/* Step 3: Diameter Selection */}
         {selectedFuelType && (
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">3. Scegli la Dimensione</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="mb-6 md:mb-8">
+            <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4">3. Scegli la Dimensione</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
               {availableDiameters.map(oven => (
                 <Card 
                   key={oven.id}
                   className={`cursor-pointer transition-all hover:shadow-lg ${selectedDiameter === oven.diameter.toString() ? 'ring-2 ring-primary' : ''}`}
                   onClick={() => setSelectedDiameter(oven.diameter.toString())}
                 >
-                  <CardContent className="p-6">
+                  <CardContent className="p-3 md:p-6">
                     <div className="text-center">
-                      <Pizza className="w-8 h-8 mx-auto mb-2" />
-                      <h3 className="font-semibold text-lg">{oven.diameter}cm</h3>
-                      <p className="text-sm text-muted-foreground">{oven.pizza_capacity}</p>
-                      <p className="text-lg font-bold mt-2">
+                      <Pizza className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2" />
+                      <h3 className="font-semibold text-base md:text-lg">{oven.diameter}cm</h3>
+                      <p className="text-xs md:text-sm text-muted-foreground">{oven.pizza_capacity}</p>
+                      <p className="text-base md:text-lg font-bold mt-2">
                         €{((priceList === 'A' ? oven.base_price_a : priceList === 'B' ? oven.base_price_b : oven.base_price_c) || 0).toFixed(2)}
                       </p>
                     </div>
@@ -553,7 +553,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   </div>
                   
                   {selectedOven.additional_images && selectedOven.additional_images.length > 0 && (
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
                       {selectedOven.additional_images.map((img: string, index: number) => (
                         <div key={index} className="aspect-square relative overflow-hidden rounded border cursor-pointer hover:opacity-80 transition-opacity">
                           <img 
@@ -579,41 +579,42 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 </div>
               </div>
               
-              <div className="border-t pt-6">
-                <h3 className="font-semibold mb-4 text-xl">Riepilogo Configurazione</h3>
-                <div className="bg-muted/50 rounded-lg p-6 space-y-4">
+              <div className="border-t pt-4 md:pt-6">
+                <h3 className="font-semibold mb-3 md:mb-4 text-lg md:text-xl">Riepilogo Configurazione</h3>
+                <div className="bg-muted/50 rounded-lg p-4 md:p-6 space-y-3 md:space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-24 h-24 bg-background rounded-lg overflow-hidden">
+                    <div className="w-16 h-16 md:w-24 md:h-24 bg-background rounded-lg overflow-hidden flex-shrink-0">
                       <img src={selectedOven.image_url} alt={selectedOven.model_name} className="w-full h-full object-cover" />
                     </div>
-                    <div className="flex-1">
-                      <h4 className="font-bold text-lg">{selectedOven.model_name}</h4>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground"><Flame className="w-4 h-4" /><span>{selectedOven.fuel_type}</span></div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground"><Pizza className="w-4 h-4" /><span>{selectedOven.diameter}cm - {selectedOven.pizza_capacity}</span></div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-base md:text-lg truncate">{selectedOven.model_name}</h4>
+                      <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground"><Flame className="w-3 h-3 md:w-4 md:h-4" /><span>{selectedOven.fuel_type}</span></div>
+                      <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground"><Pizza className="w-3 h-3 md:w-4 md:h-4" /><span>{selectedOven.diameter}cm - {selectedOven.pizza_capacity}</span></div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 pt-3 border-t"><Clock className="w-5 h-5" /><span>Consegna: {selectedOven.delivery_time_weeks} settimane</span></div>
-                  <div className="flex items-center justify-between pt-3 border-t">
-                    <span className="text-lg font-semibold">Totale:</span>
-                    <span className="text-3xl font-bold text-primary">€{calculateTotal().toFixed(2)}</span>
+                  <div className="flex items-center gap-2 pt-2 md:pt-3 border-t text-sm md:text-base"><Clock className="w-4 h-4 md:w-5 md:h-5" /><span>Consegna: {selectedOven.delivery_time_weeks} settimane</span></div>
+                  <div className="flex items-center justify-between pt-2 md:pt-3 border-t">
+                    <span className="text-base md:text-lg font-semibold">Totale:</span>
+                    <span className="text-2xl md:text-3xl font-bold text-primary">€{calculateTotal().toFixed(2)}</span>
                   </div>
                 </div>
               </div>
               {/* Bottoni feedback */}
               {sessionId && deliveryOption && (
-                <div className="border-t pt-6 mt-6 space-y-3">
-                  <h3 className="font-semibold text-center mb-4">Hai bisogno di assistenza?</h3>
+                <div className="border-t pt-4 md:pt-6 mt-4 md:mt-6 space-y-3">
+                  <h3 className="font-semibold text-center mb-3 md:mb-4 text-base md:text-lg">Hai bisogno di assistenza?</h3>
                   <Button 
                     onClick={handleInterestedClick}
-                    className="w-full" 
+                    className="w-full text-sm md:text-base" 
                     size="lg"
                     variant="default"
                   >
-                    Sono interessato - Fammi contattare dal vostro responsabile clienti
+                    <span className="hidden md:inline">Sono interessato - Fammi contattare dal vostro responsabile clienti</span>
+                    <span className="md:hidden">Sono interessato - Richiedi contatto</span>
                   </Button>
                   <Button 
                     onClick={() => setShowNotInterestedModal(true)}
-                    className="w-full" 
+                    className="w-full text-sm md:text-base" 
                     size="lg"
                     variant="outline"
                   >
