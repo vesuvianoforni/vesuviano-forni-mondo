@@ -191,7 +191,10 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     try {
       const { error } = await supabase
         .from('configurator_ovens')
-        .update(formData)
+        .update({
+          ...formData,
+          coatings: formData.coatings as any
+        })
         .eq('id', oven.id);
 
       if (error) throw error;
