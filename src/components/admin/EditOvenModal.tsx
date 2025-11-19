@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -43,6 +43,35 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState({ image: false, video: false, gallery: false });
+
+  useEffect(() => {
+    if (open && oven) {
+      setFormData({
+        model_name: oven.model_name,
+        fuel_type: oven.fuel_type,
+        diameter: oven.diameter,
+        pizza_capacity: oven.pizza_capacity,
+        base_price_a: oven.base_price_a || oven.base_price || 0,
+        base_price_b: oven.base_price_b || 0,
+        base_price_c: oven.base_price_c || 0,
+        gas_price_a: oven.gas_price_a || oven.gas_price || 0,
+        gas_price_b: oven.gas_price_b || 0,
+        gas_price_c: oven.gas_price_c || 0,
+        electric_price_a: oven.electric_price_a || oven.electric_price || 0,
+        electric_price_b: oven.electric_price_b || 0,
+        electric_price_c: oven.electric_price_c || 0,
+        installation_price_a: oven.installation_price_a || oven.installation_price || 0,
+        installation_price_b: oven.installation_price_b || 0,
+        installation_price_c: oven.installation_price_c || 0,
+        delivery_time_weeks: oven.delivery_time_weeks,
+        image_url: oven.image_url,
+        additional_images: oven.additional_images || [],
+        video_url_360: oven.video_url_360 || '',
+        description: oven.description || '',
+        is_active: oven.is_active,
+      });
+    }
+  }, [open, oven]);
 
   const handleChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
