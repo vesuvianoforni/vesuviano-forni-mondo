@@ -384,15 +384,71 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                           />
                         </div>
                         <div>
-                          <Label className="text-xs">URL Immagine</Label>
-                          <Input 
-                            value={editingSizeIndex === sizeIdx ? newCoating.image_url : ''} 
-                            onChange={(e) => {
-                              setEditingSizeIndex(sizeIdx);
-                              setNewCoating(prev => ({ ...prev, image_url: e.target.value }));
+                          <Label className="text-xs">Immagine Rivestimento</Label>
+                          <div 
+                            className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary transition-colors"
+                            onDragOver={(e) => {
+                              e.preventDefault();
+                              e.currentTarget.classList.add('border-primary');
                             }}
-                            placeholder="/lovable-uploads/..."
-                          />
+                            onDragLeave={(e) => {
+                              e.currentTarget.classList.remove('border-primary');
+                            }}
+                            onDrop={async (e) => {
+                              e.preventDefault();
+                              e.currentTarget.classList.remove('border-primary');
+                              const file = e.dataTransfer.files?.[0];
+                              if (file && file.type.startsWith('image/')) {
+                                setUploadingImage(true);
+                                try {
+                                  const url = await uploadFile(file, 'oven-gallery');
+                                  setEditingSizeIndex(sizeIdx);
+                                  setNewCoating(prev => ({ ...prev, image_url: url }));
+                                  toast.success("Immagine caricata!");
+                                } catch (error) {
+                                  console.error('Error uploading image:', error);
+                                  toast.error("Errore nel caricamento");
+                                } finally {
+                                  setUploadingImage(false);
+                                }
+                              }
+                            }}
+                            onClick={() => document.getElementById(`coating-upload-${sizeIdx}`)?.click()}
+                          >
+                            <input
+                              id={`coating-upload-${sizeIdx}`}
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  setUploadingImage(true);
+                                  try {
+                                    const url = await uploadFile(file, 'oven-gallery');
+                                    setEditingSizeIndex(sizeIdx);
+                                    setNewCoating(prev => ({ ...prev, image_url: url }));
+                                    toast.success("Immagine caricata!");
+                                  } catch (error) {
+                                    console.error('Error uploading image:', error);
+                                    toast.error("Errore nel caricamento");
+                                  } finally {
+                                    setUploadingImage(false);
+                                  }
+                                }
+                              }}
+                            />
+                            {editingSizeIndex === sizeIdx && newCoating.image_url ? (
+                              <div className="flex items-center gap-2 justify-center">
+                                <img src={newCoating.image_url} alt="Preview" className="h-16 w-16 object-cover rounded" />
+                                <span className="text-xs text-muted-foreground">Caricata</span>
+                              </div>
+                            ) : (
+                              <div className="text-sm text-muted-foreground">
+                                {uploadingImage ? "Caricamento..." : "Trascina immagine o clicca per caricare"}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
 
