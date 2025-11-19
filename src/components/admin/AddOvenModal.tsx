@@ -40,6 +40,8 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [uploadingCoating, setUploadingCoating] = useState(false);
+  const [newCoating, setNewCoating] = useState({ type: '', name: '', image_url: '' });
 
   const handleChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -120,9 +122,51 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
     }
   };
 
+  const handleCoatingImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingCoating(true);
+    try {
+      const url = await uploadFile(file, 'oven-gallery');
+      setNewCoating(prev => ({ ...prev, image_url: url }));
+      toast.success("Immagine rivestimento caricata!");
+    } catch (error) {
+      console.error('Error uploading coating image:', error);
+      toast.error("Errore nel caricamento dell'immagine");
+    } finally {
+      setUploadingCoating(false);
+    }
+  };
+
+  const addCoating = () => {
+    if (!newCoating.type || !newCoating.name || !newCoating.image_url) {
+      toast.error('Compila tutti i campi del rivestimento');
+      return;
+    }
+    
+    handleChange('coatings', [...formData.coatings, newCoating]);
+    setNewCoating({ type: '', name: '', image_url: '' });
+    toast.success('Rivestimento aggiunto');
+  };
+
+  const removeCoating = (index: number) => {
+    const newCoatings = formData.coatings.filter((_, i) => i !== index);
+    handleChange('coatings', newCoatings);
+  };
+
+  const toggleFuelType = (fuel: string) => {
+    const current = formData.fuel_type;
+    if (current.includes(fuel)) {
+      handleChange('fuel_type', current.filter(f => f !== fuel));
+    } else {
+      handleChange('fuel_type', [...current, fuel]);
+    }
+  };
+
   const handleSave = async () => {
-    if (!formData.model_name || !formData.fuel_type || !formData.image_url) {
-      toast.error("Compila tutti i campi obbligatori (nome, tipo combustibile, immagine)");
+    if (!formData.model_name || formData.fuel_type.length === 0 || !formData.image_url) {
+      toast.error("Compila tutti i campi obbligatori (nome, almeno un tipo combustibile, immagine)");
       return;
     }
 
@@ -130,7 +174,10 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
     try {
       const { error } = await supabase
         .from('configurator_ovens')
-        .insert([formData]);
+        .insert([{
+          ...formData,
+          coatings: formData.coatings as any
+        }]);
 
       if (error) throw error;
 
@@ -167,18 +214,20 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Tipo Combustibile *</label>
-                <select
-                  value={formData.fuel_type}
-                  onChange={(e) => handleChange('fuel_type', e.target.value)}
-                  className="w-full mt-1 px-3 py-2 border rounded-md"
-                >
-                  <option value="">Seleziona...</option>
-                  <option value="legna">Legna</option>
-                  <option value="gas">Gas</option>
-                  <option value="elettrico">Elettrico</option>
-                  <option value="rotativo">Rotativo</option>
-                </select>
+                <label className="text-sm font-medium">Tipo Combustibile * (seleziona uno o più)</label>
+                <div className="space-y-2 mt-1 px-3 py-2 border rounded-md">
+                  {['legna', 'gas', 'elettrico', 'rotativo'].map((fuel) => (
+                    <label key={fuel} className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.fuel_type.includes(fuel)}
+                        onChange={() => toggleFuelType(fuel)}
+                        className="rounded"
+                      />
+                      <span className="capitalize">{fuel}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
               <div>
                 <label className="text-sm font-medium">Diametro (cm)</label>
@@ -453,6 +502,103 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                   />
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Rivestimenti */}
+          <div className="space-y-4 p-4 border rounded-lg bg-amber-50/50">
+            <h3 className="font-semibold text-sm">Rivestimenti</h3>
+            
+            {/* Lista rivestimenti esistenti */}
+            {formData.coatings.length > 0 && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Rivestimenti aggiunti:</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {formData.coatings.map((coating, index) => (
+                    <div key={index} className="flex items-center gap-2 p-2 bg-white rounded border">
+                      <img src={coating.image_url} alt={coating.name} className="w-12 h-12 object-cover rounded" />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm truncate">{coating.name}</p>
+                        <p className="text-xs text-muted-foreground truncate">{coating.type}</p>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        className="h-7 w-7 p-0"
+                        onClick={() => removeCoating(index)}
+                      >
+                        ×
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Form per aggiungere nuovo rivestimento */}
+            <div className="space-y-3 p-3 border rounded bg-white">
+              <label className="text-sm font-medium">Aggiungi Rivestimento</label>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-xs text-muted-foreground">Tipo</label>
+                  <input
+                    type="text"
+                    value={newCoating.type}
+                    onChange={(e) => setNewCoating(prev => ({ ...prev, type: e.target.value }))}
+                    placeholder="es. mosaico, ceramica"
+                    className="w-full mt-1 px-2 py-1.5 text-sm border rounded-md"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground">Nome</label>
+                  <input
+                    type="text"
+                    value={newCoating.name}
+                    onChange={(e) => setNewCoating(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="es. Mosaico Blu"
+                    className="w-full mt-1 px-2 py-1.5 text-sm border rounded-md"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground">Immagine</label>
+                <div className="flex gap-2 mt-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={uploadingCoating}
+                    onClick={() => document.getElementById('coating-upload')?.click()}
+                    className="flex-1"
+                  >
+                    <Upload className="h-3 w-3 mr-2" />
+                    {uploadingCoating ? "Caricamento..." : "Carica Immagine"}
+                  </Button>
+                  <input
+                    id="coating-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCoatingImageUpload}
+                    className="hidden"
+                  />
+                </div>
+                {newCoating.image_url && (
+                  <div className="mt-2">
+                    <img src={newCoating.image_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
+                  </div>
+                )}
+              </div>
+              <Button
+                type="button"
+                onClick={addCoating}
+                disabled={!newCoating.type || !newCoating.name || !newCoating.image_url}
+                className="w-full"
+                size="sm"
+              >
+                <Upload className="h-3 w-3 mr-2" />
+                Aggiungi Rivestimento
+              </Button>
             </div>
           </div>
 
