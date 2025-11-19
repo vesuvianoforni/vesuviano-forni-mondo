@@ -106,6 +106,7 @@ export type Database = {
           is_active: boolean
           model_name: string
           pizza_capacity: string
+          sizes: Json | null
           updated_at: string
           video_url_360: string | null
         }
@@ -134,6 +135,7 @@ export type Database = {
           is_active?: boolean
           model_name: string
           pizza_capacity: string
+          sizes?: Json | null
           updated_at?: string
           video_url_360?: string | null
         }
@@ -162,6 +164,7 @@ export type Database = {
           is_active?: boolean
           model_name?: string
           pizza_capacity?: string
+          sizes?: Json | null
           updated_at?: string
           video_url_360?: string | null
         }
