@@ -24,10 +24,7 @@ const AdminConfigurator = () => {
   const [showAddOven, setShowAddOven] = useState(false);
 
   useEffect(() => { 
-    // Temporaneamente disabilitato per sviluppo
-    setIsAuthenticated(true);
-    fetchData();
-    // checkAuth(); 
+    checkAuth(); 
   }, []);
 
   const checkAuth = async () => {
