@@ -14,7 +14,7 @@ interface AddOvenModalProps {
 export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) => {
   const [formData, setFormData] = useState({
     model_name: "",
-    fuel_type: "",
+    fuel_type: [] as string[],
     diameter: 0,
     pizza_capacity: "",
     description: "",
@@ -33,7 +33,8 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
     delivery_time_weeks: 4,
     image_url: "",
     additional_images: [] as string[],
-    video_url_360: ""
+    video_url_360: "",
+    coatings: [] as Array<{type: string; name: string; image_url: string}>
   });
 
   const [saving, setSaving] = useState(false);

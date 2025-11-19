@@ -15,7 +15,7 @@ import Video360Modal from '@/components/Video360Modal';
 interface ConfiguratorOven {
   id: string;
   model_name: string;
-  fuel_type: string;
+  fuel_type: string[];
   diameter: number;
   pizza_capacity: string;
   image_url: string;
@@ -35,6 +35,7 @@ interface ConfiguratorOven {
   installation_price_c?: number;
   delivery_time_weeks: number;
   description: string | null;
+  coatings?: Array<{type: string; name: string; image_url: string}>;
 }
 
 interface ConfiguratorOption {
@@ -117,7 +118,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
       ]);
       if (ovensResult.error) throw ovensResult.error;
       if (optionsResult.error) throw optionsResult.error;
-      setOvens(ovensResult.data || []);
+      setOvens((ovensResult.data as unknown as ConfiguratorOven[]) || []);
       setOptions(optionsResult.data || []);
     } catch (error) {
       toast.error('Errore nel caricamento');
@@ -127,14 +128,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   };
 
   const models = Array.from(new Set(ovens.map(o => o.model_name)));
-  const availableFuelTypes = selectedModel ? Array.from(new Set(ovens.filter(o => o.model_name === selectedModel).map(o => o.fuel_type))) : [];
-  const availableDiameters = (selectedModel && selectedFuelType) ? ovens.filter(o => o.model_name === selectedModel && o.fuel_type === selectedFuelType) : [];
-  const selectedOven = ovens.find(o => o.model_name === selectedModel && o.fuel_type === selectedFuelType && o.diameter === parseInt(selectedDiameter));
+  const availableFuelTypes = selectedModel ? Array.from(new Set(ovens.filter(o => o.model_name === selectedModel).flatMap(o => o.fuel_type))) : [];
+  const availableDiameters = (selectedModel && selectedFuelType) ? ovens.filter(o => o.model_name === selectedModel && o.fuel_type.includes(selectedFuelType)) : [];
+  const selectedOven = ovens.find(o => o.model_name === selectedModel && o.fuel_type.includes(selectedFuelType) && o.diameter === parseInt(selectedDiameter));
 
   // Funzione per ottenere l'anteprima delle configurazioni per un modello
   const getModelPreview = (modelName: string) => {
     const modelOvens = ovens.filter(o => o.model_name === modelName);
-    const fuelTypes = Array.from(new Set(modelOvens.map(o => o.fuel_type)));
+    const fuelTypes = Array.from(new Set(modelOvens.flatMap(o => o.fuel_type)));
     const diameters = Array.from(new Set(modelOvens.map(o => o.diameter))).sort((a, b) => a - b);
     return { fuelTypes, diameters };
   };

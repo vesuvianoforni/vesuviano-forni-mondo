@@ -86,6 +86,7 @@ export type Database = {
           base_price_a: number
           base_price_b: number | null
           base_price_c: number | null
+          coatings: Json | null
           created_at: string
           delivery_time_weeks: number
           description: string | null
@@ -93,7 +94,7 @@ export type Database = {
           electric_price_a: number | null
           electric_price_b: number | null
           electric_price_c: number | null
-          fuel_type: string
+          fuel_type: string[]
           gas_price_a: number | null
           gas_price_b: number | null
           gas_price_c: number | null
@@ -113,6 +114,7 @@ export type Database = {
           base_price_a: number
           base_price_b?: number | null
           base_price_c?: number | null
+          coatings?: Json | null
           created_at?: string
           delivery_time_weeks: number
           description?: string | null
@@ -120,7 +122,7 @@ export type Database = {
           electric_price_a?: number | null
           electric_price_b?: number | null
           electric_price_c?: number | null
-          fuel_type: string
+          fuel_type: string[]
           gas_price_a?: number | null
           gas_price_b?: number | null
           gas_price_c?: number | null
@@ -140,6 +142,7 @@ export type Database = {
           base_price_a?: number
           base_price_b?: number | null
           base_price_c?: number | null
+          coatings?: Json | null
           created_at?: string
           delivery_time_weeks?: number
           description?: string | null
@@ -147,7 +150,7 @@ export type Database = {
           electric_price_a?: number | null
           electric_price_b?: number | null
           electric_price_c?: number | null
-          fuel_type?: string
+          fuel_type?: string[]
           gas_price_a?: number | null
           gas_price_b?: number | null
           gas_price_c?: number | null

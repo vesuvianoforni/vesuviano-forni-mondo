@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Upload, X } from 'lucide-react';
@@ -15,10 +16,16 @@ interface EditOvenModalProps {
   onUpdate: () => void;
 }
 
+interface Coating {
+  type: string;
+  name: string;
+  image_url: string;
+}
+
 const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) => {
   const [formData, setFormData] = useState({
     model_name: oven.model_name,
-    fuel_type: oven.fuel_type,
+    fuel_type: Array.isArray(oven.fuel_type) ? oven.fuel_type : [oven.fuel_type],
     diameter: oven.diameter,
     pizza_capacity: oven.pizza_capacity,
     base_price_a: oven.base_price_a || oven.base_price || 0,
@@ -39,16 +46,18 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     video_url_360: oven.video_url_360 || '',
     description: oven.description || '',
     is_active: oven.is_active,
+    coatings: (oven.coatings || []) as Coating[],
   });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [dragActive, setDragActive] = useState({ image: false, video: false, gallery: false });
+  const [newCoating, setNewCoating] = useState({ type: '', name: '', image_url: '' });
+  const [uploadingCoating, setUploadingCoating] = useState(false);
 
   useEffect(() => {
     if (open && oven) {
       setFormData({
         model_name: oven.model_name,
-        fuel_type: oven.fuel_type,
+        fuel_type: Array.isArray(oven.fuel_type) ? oven.fuel_type : [oven.fuel_type],
         diameter: oven.diameter,
         pizza_capacity: oven.pizza_capacity,
         base_price_a: oven.base_price_a || oven.base_price || 0,
@@ -69,6 +78,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
         video_url_360: oven.video_url_360 || '',
         description: oven.description || '',
         is_active: oven.is_active,
+        coatings: (oven.coatings || []) as Coating[],
       });
     }
   }, [open, oven]);
@@ -77,15 +87,26 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const uploadFile = async (file: File, type: 'image' | 'video' | 'gallery') => {
-    setUploading(true);
+  const handleFuelTypeToggle = (fuel: string) => {
+    const current = formData.fuel_type;
+    if (current.includes(fuel)) {
+      handleChange('fuel_type', current.filter(f => f !== fuel));
+    } else {
+      handleChange('fuel_type', [...current, fuel]);
+    }
+  };
+
+  const uploadFile = async (file: File, type: 'image' | 'video' | 'gallery' | 'coating') => {
+    if (type === 'coating') setUploadingCoating(true);
+    else setUploading(true);
+    
     try {
       const bucket = type === 'video' ? 'videos' : 'oven-gallery';
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `${fileName}`;
 
-      const { error: uploadError, data } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from(bucket)
         .upload(filePath, file);
 
@@ -97,76 +118,75 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
 
       if (type === 'image') {
         handleChange('image_url', publicUrl);
+        toast.success('Immagine caricata!');
       } else if (type === 'video') {
         handleChange('video_url_360', publicUrl);
+        toast.success('Video caricato!');
       } else if (type === 'gallery') {
         handleChange('additional_images', [...formData.additional_images, publicUrl]);
+        toast.success('Immagine aggiunta alla galleria!');
+      } else if (type === 'coating') {
+        return publicUrl;
       }
-
-      toast.success(`${type === 'video' ? 'Video' : 'Immagine'} caricato con successo`);
-    } catch (error: any) {
-      toast.error('Errore durante il caricamento: ' + error.message);
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error('Errore durante il caricamento');
+      throw error;
     } finally {
-      setUploading(false);
+      if (type === 'coating') setUploadingCoating(false);
+      else setUploading(false);
     }
+  };
+
+  const handleCoatingImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    try {
+      const url = await uploadFile(file, 'coating');
+      setNewCoating(prev => ({ ...prev, image_url: url as string }));
+    } catch (error) {
+      console.error('Coating image upload error:', error);
+    }
+  };
+
+  const addCoating = () => {
+    if (!newCoating.type || !newCoating.name || !newCoating.image_url) {
+      toast.error('Compila tutti i campi del rivestimento');
+      return;
+    }
+    handleChange('coatings', [...formData.coatings, newCoating]);
+    setNewCoating({ type: '', name: '', image_url: '' });
+    toast.success('Rivestimento aggiunto!');
+  };
+
+  const removeCoating = (index: number) => {
+    handleChange('coatings', formData.coatings.filter((_, i) => i !== index));
   };
 
   const removeAdditionalImage = (index: number) => {
-    const newImages = formData.additional_images.filter((_, i) => i !== index);
-    handleChange('additional_images', newImages);
-  };
-
-  const handleDrag = (e: React.DragEvent, type: 'image' | 'video' | 'gallery') => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(prev => ({ ...prev, [type]: true }));
-    } else if (e.type === "dragleave") {
-      setDragActive(prev => ({ ...prev, [type]: false }));
-    }
-  };
-
-  const handleDrop = async (e: React.DragEvent, type: 'image' | 'video' | 'gallery') => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(prev => ({ ...prev, [type]: false }));
-
-    const files = e.dataTransfer.files;
-    if (type === 'gallery' && files.length > 0) {
-      // Handle multiple files for gallery
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        if (file.type.startsWith('image/')) {
-          await uploadFile(file, 'gallery');
-        }
-      }
-    } else if (files && files[0]) {
-      const file = files[0];
-      const isValidType = type === 'video' 
-        ? file.type.startsWith('video/')
-        : file.type.startsWith('image/');
-      
-      if (isValidType) {
-        await uploadFile(file, type);
-      } else {
-        toast.error(`Seleziona un file ${type === 'video' ? 'video' : 'immagine'} valido`);
-      }
-    }
+    handleChange('additional_images', formData.additional_images.filter((_, i) => i !== index));
   };
 
   const handleFileInput = async (e: React.ChangeEvent<HTMLInputElement>, type: 'image' | 'video' | 'gallery') => {
     const files = e.target.files;
-    if (type === 'gallery' && files && files.length > 0) {
-      // Handle multiple files for gallery
-      for (let i = 0; i < files.length; i++) {
-        await uploadFile(files[i], 'gallery');
+    if (files && files.length > 0) {
+      if (type === 'gallery') {
+        for (let i = 0; i < files.length; i++) {
+          await uploadFile(files[i], type);
+        }
+      } else {
+        await uploadFile(files[0], type);
       }
-    } else if (files && files[0]) {
-      await uploadFile(files[0], type);
     }
   };
 
   const handleSave = async () => {
+    if (formData.fuel_type.length === 0) {
+      toast.error('Seleziona almeno un tipo di alimentazione');
+      return;
+    }
+
     setSaving(true);
     try {
       const { error } = await supabase
@@ -176,11 +196,12 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
 
       if (error) throw error;
 
-      toast.success('Forno aggiornato con successo');
+      toast.success('Forno aggiornato!');
       onUpdate();
       onClose();
-    } catch (error: any) {
-      toast.error('Errore durante il salvataggio: ' + error.message);
+    } catch (error) {
+      console.error('Save error:', error);
+      toast.error('Errore durante il salvataggio');
     } finally {
       setSaving(false);
     }
@@ -194,54 +215,41 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Basic Info */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Nome Modello</Label>
-              <Input
-                value={formData.model_name}
-                onChange={(e) => handleChange('model_name', e.target.value)}
-              />
-            </div>
-            <div>
-              <Label>Tipo Combustibile</Label>
-              <Input
-                value={formData.fuel_type}
-                onChange={(e) => handleChange('fuel_type', e.target.value)}
-              />
+              <Input value={formData.model_name} onChange={(e) => handleChange('model_name', e.target.value)} />
             </div>
             <div>
               <Label>Diametro (cm)</Label>
-              <Input
-                type="number"
-                value={formData.diameter}
-                onChange={(e) => handleChange('diameter', parseInt(e.target.value))}
-              />
-            </div>
-            <div>
-              <Label>Capacità Pizze</Label>
-              <Input
-                value={formData.pizza_capacity}
-                onChange={(e) => handleChange('pizza_capacity', e.target.value)}
-              />
-            </div>
-            <div>
-              <Label>Tempo Consegna (settimane)</Label>
-              <Input
-                type="number"
-                value={formData.delivery_time_weeks}
-                onChange={(e) => handleChange('delivery_time_weeks', parseInt(e.target.value))}
-              />
+              <Input type="number" value={formData.diameter} onChange={(e) => handleChange('diameter', parseInt(e.target.value))} />
             </div>
           </div>
 
           <div>
+            <Label className="mb-3 block">Tipi di Alimentazione</Label>
+            <div className="flex gap-4">
+              {['legna', 'gas', 'elettrico'].map(fuel => (
+                <div key={fuel} className="flex items-center space-x-2">
+                  <Checkbox 
+                    id={`fuel-${fuel}`}
+                    checked={formData.fuel_type.includes(fuel)}
+                    onCheckedChange={() => handleFuelTypeToggle(fuel)}
+                  />
+                  <label htmlFor={`fuel-${fuel}`} className="capitalize cursor-pointer">{fuel}</label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <Label>Capacità Pizza</Label>
+            <Input value={formData.pizza_capacity} onChange={(e) => handleChange('pizza_capacity', e.target.value)} />
+          </div>
+
+          <div>
             <Label>Descrizione</Label>
-            <Textarea
-              value={formData.description}
-              onChange={(e) => handleChange('description', e.target.value)}
-              rows={3}
-            />
+            <Textarea value={formData.description} onChange={(e) => handleChange('description', e.target.value)} rows={3} />
           </div>
 
           {/* Listino A */}
@@ -361,18 +369,62 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
             </div>
           </div>
 
+          <div className="border-t pt-4">
+            <h3 className="font-semibold mb-3">Rivestimenti</h3>
+            
+            {formData.coatings.length > 0 && (
+              <div className="grid grid-cols-3 gap-4 mb-4">
+                {formData.coatings.map((coating, index) => (
+                  <div key={index} className="relative border rounded-lg p-2">
+                    <Button variant="destructive" size="sm" className="absolute -top-2 -right-2 h-6 w-6 p-0" onClick={() => removeCoating(index)}>
+                      <X className="w-4 h-4" />
+                    </Button>
+                    <img src={coating.image_url} alt={coating.name} className="w-full h-24 object-cover rounded" />
+                    <p className="text-xs font-semibold mt-1">{coating.name}</p>
+                    <p className="text-xs text-gray-500">{coating.type}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="border rounded-lg p-4 bg-gray-50">
+              <h4 className="text-sm font-semibold mb-3">Aggiungi Rivestimento</h4>
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                <div>
+                  <Label className="text-xs">Tipo</Label>
+                  <Input placeholder="es. Mosaico" value={newCoating.type} onChange={(e) => setNewCoating(prev => ({ ...prev, type: e.target.value }))} className="h-8" />
+                </div>
+                <div>
+                  <Label className="text-xs">Nome</Label>
+                  <Input placeholder="es. Blu Mare" value={newCoating.name} onChange={(e) => setNewCoating(prev => ({ ...prev, name: e.target.value }))} className="h-8" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs">Immagine</Label>
+                {newCoating.image_url ? (
+                  <div className="flex items-center gap-2">
+                    <img src={newCoating.image_url} alt="Preview" className="w-16 h-16 object-cover rounded" />
+                    <Button variant="outline" size="sm" onClick={() => setNewCoating(prev => ({ ...prev, image_url: '' }))}>Cambia</Button>
+                  </div>
+                ) : (
+                  <div>
+                    <input type="file" accept="image/*" onChange={handleCoatingImageUpload} className="hidden" id="coating-image-upload" />
+                    <Button variant="outline" size="sm" onClick={() => document.getElementById('coating-image-upload')?.click()} disabled={uploadingCoating}>
+                      {uploadingCoating ? 'Caricamento...' : 'Carica Immagine'}
+                    </Button>
+                  </div>
+                )}
+              </div>
+              <Button onClick={addCoating} size="sm" className="mt-3 w-full" disabled={!newCoating.type || !newCoating.name || !newCoating.image_url}>
+                Aggiungi Rivestimento
+              </Button>
+            </div>
+          </div>
+
           {/* Image Upload */}
           <div>
             <Label>Immagine Forno</Label>
-            <div
-              className={`mt-2 border-2 border-dashed rounded-lg p-8 text-center ${
-                dragActive.image ? 'border-primary bg-primary/10' : 'border-border'
-              }`}
-              onDragEnter={(e) => handleDrag(e, 'image')}
-              onDragLeave={(e) => handleDrag(e, 'image')}
-              onDragOver={(e) => handleDrag(e, 'image')}
-              onDrop={(e) => handleDrop(e, 'image')}
-            >
+            <div className="mt-2 border-2 border-dashed rounded-lg p-8 text-center border-border">
               {formData.image_url ? (
                 <div>
                   <img src={formData.image_url} alt="Preview" className="max-h-48 mx-auto mb-4 rounded" />
@@ -409,15 +461,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
           {/* Video Upload */}
           <div>
             <Label>Video 360° (opzionale)</Label>
-            <div
-              className={`mt-2 border-2 border-dashed rounded-lg p-8 text-center ${
-                dragActive.video ? 'border-primary bg-primary/10' : 'border-border'
-              }`}
-              onDragEnter={(e) => handleDrag(e, 'video')}
-              onDragLeave={(e) => handleDrag(e, 'video')}
-              onDragOver={(e) => handleDrag(e, 'video')}
-              onDrop={(e) => handleDrop(e, 'video')}
-            >
+            <div className="mt-2 border-2 border-dashed rounded-lg p-8 text-center border-border">
               {formData.video_url_360 ? (
                 <div>
                   <video src={formData.video_url_360} controls className="max-h-48 mx-auto mb-4 rounded" />
@@ -454,36 +498,27 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
           {/* Additional Images Gallery */}
           <div>
             <Label>Galleria Immagini Aggiuntive (opzionale)</Label>
-            <div
-              className={`mt-2 border-2 border-dashed rounded-lg p-8 text-center ${
-                dragActive.gallery ? 'border-primary bg-primary/10' : 'border-border'
-              }`}
-              onDragEnter={(e) => handleDrag(e, 'gallery')}
-              onDragLeave={(e) => handleDrag(e, 'gallery')}
-              onDragOver={(e) => handleDrag(e, 'gallery')}
-              onDrop={(e) => handleDrop(e, 'gallery')}
-            >
+            <div className="mt-2 border-2 border-dashed rounded-lg p-8 text-center border-border">
               {formData.additional_images.length > 0 ? (
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   {formData.additional_images.map((url, index) => (
                     <div key={index} className="relative group">
-                      <img src={url} alt={`Gallery ${index + 1}`} className="w-full h-32 object-cover rounded" />
+                      <img src={url} alt={`Anteprima ${index + 1}`} className="max-h-24 mx-auto rounded" />
                       <Button
-                        type="button"
                         variant="destructive"
-                        size="sm"
-                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                        size="icon"
+                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition"
                         onClick={() => removeAdditionalImage(index)}
                       >
-                        ×
+                        <X className="h-4 w-4" />
                       </Button>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-muted-foreground mb-4">
+                <div className="text-muted-foreground">
                   <Upload className="w-12 h-12 mx-auto mb-2" />
-                  <p>Trascina immagini multiple o</p>
+                  <p>Trascina immagini aggiuntive o</p>
                 </div>
               )}
               <input
@@ -504,16 +539,13 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
               </Button>
             </div>
           </div>
+        </div>
 
-          {/* Actions */}
-          <div className="flex justify-end gap-4">
-            <Button variant="outline" onClick={onClose}>
-              Annulla
-            </Button>
-            <Button onClick={handleSave} disabled={saving || uploading}>
-              {saving ? 'Salvataggio...' : 'Salva Modifiche'}
-            </Button>
-          </div>
+        <div className="flex justify-end gap-2 mt-6">
+          <Button variant="outline" onClick={onClose}>Annulla</Button>
+          <Button onClick={handleSave} disabled={saving || formData.fuel_type.length === 0}>
+            {saving ? 'Salvataggio...' : 'Salva'}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
