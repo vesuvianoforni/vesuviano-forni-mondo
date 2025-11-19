@@ -19,37 +19,12 @@ const AdminConfigurator = () => {
   const [options, setOptions] = useState([]);
   const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [editingOven, setEditingOven] = useState<any>(null);
   const [showAddOven, setShowAddOven] = useState(false);
 
   useEffect(() => { 
-    checkAuth(); 
+    fetchData(); 
   }, []);
-
-  const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) {
-      navigate('/admin/login');
-      return;
-    }
-
-    const { data: roles } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', session.user.id)
-      .eq('role', 'admin')
-      .maybeSingle();
-
-    if (!roles) {
-      toast.error('Non hai i permessi di amministratore');
-      navigate('/admin/login');
-      return;
-    }
-
-    setIsAuthenticated(true);
-    fetchData();
-  };
 
   const fetchData = async () => {
     try {
@@ -92,7 +67,7 @@ const AdminConfigurator = () => {
     }
   };
 
-  if (loading || !isAuthenticated) return <div className="min-h-screen flex items-center justify-center">Caricamento...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Caricamento...</div>;
 
   return (
     <div className="min-h-screen bg-stone-50 p-8">
