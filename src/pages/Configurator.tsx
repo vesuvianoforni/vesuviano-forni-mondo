@@ -519,26 +519,6 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-3">
-                <Button 
-                  onClick={() => setShowQuoteModal(true)} 
-                  className="flex-1" 
-                  size="lg"
-                  disabled={!deliveryOption}
-                >
-                  Richiedi Preventivo
-                </Button>
-                {selectedOven.video_url_360 && (
-                  <Button onClick={() => setShowVideo360(true)} variant="outline" size="lg" className="flex-1">
-                    <Video className="w-5 h-5 mr-2" />
-                    Video 360°
-                  </Button>
-                )}
-              </div>
-              {!deliveryOption && (
-                <p className="text-sm text-center text-muted-foreground">Seleziona un'opzione di consegna per richiedere un preventivo</p>
-              )}
-
               {/* Bottoni feedback */}
               {sessionId && deliveryOption && (
                 <div className="border-t pt-6 mt-6 space-y-3">
@@ -560,6 +540,9 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     Non sono interessato
                   </Button>
                 </div>
+              )}
+              {!deliveryOption && sessionId && (
+                <p className="text-sm text-center text-muted-foreground mt-6">Seleziona un'opzione di consegna per procedere</p>
               )}
             </CardContent>
           </Card>
