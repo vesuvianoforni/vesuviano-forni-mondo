@@ -25,12 +25,16 @@ interface ConfiguratorInterestData {
   type: 'configurator_interest'
   quoteId: string
   ovenModel: string
+  diameter: number
+  pizzaCapacity: string
   fuelType: string
   totalPrice: number
   deliveryOption: string
+  deliveryWeeks: number
   customerName: string
   customerEmail: string
   customerPhone: string
+  notes: string
 }
 
 serve(async (req) => {
@@ -214,6 +218,16 @@ serve(async (req) => {
                 </div>
                 
                 <div class="field">
+                  <div class="label">Diametro:</div>
+                  ${requestData.diameter}cm
+                </div>
+                
+                <div class="field">
+                  <div class="label">Capacità:</div>
+                  ${requestData.pizzaCapacity}
+                </div>
+                
+                <div class="field">
                   <div class="label">Tipo di Combustibile:</div>
                   ${requestData.fuelType}
                 </div>
@@ -222,6 +236,18 @@ serve(async (req) => {
                   <div class="label">Opzione Consegna:</div>
                   ${requestData.deliveryOption}
                 </div>
+                
+                <div class="field">
+                  <div class="label">Tempi di Consegna:</div>
+                  ${requestData.deliveryWeeks} settimane
+                </div>
+
+                ${requestData.notes ? `
+                <div class="field">
+                  <div class="label">Note Cliente:</div>
+                  ${requestData.notes}
+                </div>
+                ` : ''}
 
                 <div class="field">
                   <div class="label">ID Preventivo:</div>
