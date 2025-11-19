@@ -103,39 +103,74 @@ const AdminConfigurator = () => {
                     <TableHead>Immagine</TableHead>
                     <TableHead>Modello</TableHead>
                     <TableHead>Alimentazione</TableHead>
-                    <TableHead>Diametro</TableHead>
-                    <TableHead>Capacità</TableHead>
-                    <TableHead>Prezzo</TableHead>
+                    <TableHead>Configurazioni</TableHead>
+                    <TableHead>Prezzo Base (Lista A)</TableHead>
                     <TableHead>Stato</TableHead>
                     <TableHead>Azioni</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {ovens.map((oven: any) => (
-                    <TableRow key={oven.id}>
-                      <TableCell>
-                        {oven.image_url && (
-                          <img src={oven.image_url} alt={oven.model_name} className="w-16 h-16 object-cover rounded" />
-                        )}
-                      </TableCell>
-                      <TableCell>{oven.model_name}</TableCell>
-                      <TableCell>{oven.fuel_type}</TableCell>
-                      <TableCell>{oven.diameter}cm</TableCell>
-                      <TableCell>{oven.pizza_capacity}</TableCell>
-                      <TableCell>€{oven.base_price_a}</TableCell>
-                      <TableCell><Badge variant={oven.is_active ? 'default' : 'secondary'}>{oven.is_active ? 'Attivo' : 'Inattivo'}</Badge></TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="ghost" onClick={() => setEditingOven(oven)}>
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          <Button size="sm" variant="ghost" onClick={() => handleDeleteOven(oven.id)} className="text-destructive hover:text-destructive">
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {ovens.map((oven: any) => {
+                    // Calcola il prezzo dalla nuova struttura
+                    const getBasePrice = () => {
+                      if (oven.sizes && oven.sizes.length > 0 && oven.sizes[0].coatings && oven.sizes[0].coatings.length > 0) {
+                        return oven.sizes[0].coatings[0].prices?.listA?.base || 0;
+                      }
+                      return oven.base_price_a || 0;
+                    };
+
+                    // Formatta le configurazioni disponibili
+                    const getSizesInfo = () => {
+                      if (oven.sizes && oven.sizes.length > 0) {
+                        if (oven.sizes.length === 1) {
+                          return `${oven.sizes[0].diameter}cm (${oven.sizes[0].pizza_capacity})`;
+                        }
+                        return `${oven.sizes.length} taglie`;
+                      }
+                      return `${oven.diameter}cm (${oven.pizza_capacity})`;
+                    };
+
+                    return (
+                      <TableRow key={oven.id}>
+                        <TableCell>
+                          {oven.image_url && (
+                            <img src={oven.image_url} alt={oven.model_name} className="w-16 h-16 object-cover rounded" />
+                          )}
+                        </TableCell>
+                        <TableCell className="font-medium">{oven.model_name}</TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {Array.isArray(oven.fuel_type) ? (
+                              oven.fuel_type.filter(f => f).map((fuel, idx) => (
+                                <Badge key={idx} variant="outline" className="text-xs">
+                                  {fuel}
+                                </Badge>
+                              ))
+                            ) : (
+                              <span className="text-sm text-muted-foreground">N/A</span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>{getSizesInfo()}</TableCell>
+                        <TableCell className="font-medium">€{getBasePrice().toLocaleString()}</TableCell>
+                        <TableCell>
+                          <Badge variant={oven.is_active ? 'default' : 'secondary'}>
+                            {oven.is_active ? 'Attivo' : 'Inattivo'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <Button size="sm" variant="ghost" onClick={() => setEditingOven(oven)}>
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => handleDeleteOven(oven.id)} className="text-destructive hover:text-destructive">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </Card>
