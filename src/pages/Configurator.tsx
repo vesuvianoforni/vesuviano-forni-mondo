@@ -239,8 +239,88 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     }
   };
 
-  const handleInterestedClick = () => {
-    setShowQuoteModal(true);
+  const handleInterestedClick = async () => {
+    if (!selectedOven) {
+      toast.error('Completa la configurazione');
+      return;
+    }
+
+    if (!customerData?.name || !customerData?.email || !customerData?.phone) {
+      toast.error('Dati cliente mancanti');
+      return;
+    }
+
+    setSavingQuote(true);
+    try {
+      // Save quote
+      const { data: quoteData, error: quoteError } = await supabase
+        .from('configurator_quotes')
+        .insert({
+          oven_id: selectedOven.id,
+          has_installation: deliveryOption === 'on_site',
+          has_gas: selectedFuelType === 'Gas',
+          total_price: calculateTotal(),
+          delivery_time_weeks: selectedOven.delivery_time_weeks,
+          customer_name: customerData.name,
+          customer_email: customerData.email,
+          customer_phone: customerData.phone,
+          notes: notes || null
+        })
+        .select()
+        .single();
+
+      if (quoteError) throw quoteError;
+
+      // Update session
+      if (sessionId && quoteData) {
+        await supabase
+          .from('configurator_sessions')
+          .update({
+            quote_id: quoteData.id,
+            status: 'interested',
+            feedback_status: 'interested',
+            customer_info: {
+              name: customerData.name,
+              email: customerData.email,
+              phone: customerData.phone
+            }
+          })
+          .eq('id', sessionId);
+
+        // Send email with complete details
+        await supabase.functions.invoke('send-consultation-email', {
+          body: {
+            type: 'configurator_interest',
+            quoteId: quoteData.id,
+            ovenModel: selectedOven.model_name,
+            diameter: selectedOven.diameter,
+            pizzaCapacity: selectedOven.pizza_capacity,
+            fuelType: selectedFuelType,
+            totalPrice: calculateTotal(),
+            deliveryOption: deliveryOption === 'on_site' ? 'Montaggio sul Posto' : 'Spedizione in Europa',
+            deliveryWeeks: selectedOven.delivery_time_weeks,
+            customerName: customerData.name,
+            customerEmail: customerData.email,
+            customerPhone: customerData.phone,
+            notes: notes || ''
+          }
+        });
+      }
+
+      toast.success('Grazie per il tuo interesse! Ti contatteremo presto.');
+      
+      // Reset configurator
+      setSelectedModel('');
+      setSelectedFuelType('');
+      setSelectedDiameter('');
+      setDeliveryOption('');
+      setNotes('');
+    } catch (error) {
+      console.error('Error saving interest:', error);
+      toast.error('Errore nel salvare la richiesta');
+    } finally {
+      setSavingQuote(false);
+    }
   };
 
   const handleNotInterestedSubmit = async () => {
