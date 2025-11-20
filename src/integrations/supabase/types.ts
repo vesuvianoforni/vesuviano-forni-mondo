@@ -86,7 +86,6 @@ export type Database = {
           base_price_a: number
           base_price_b: number | null
           base_price_c: number | null
-          can_be_built_on_site: boolean | null
           coatings: Json | null
           created_at: string
           delivery_time_weeks: number
@@ -106,7 +105,6 @@ export type Database = {
           installation_price_c: number | null
           is_active: boolean
           model_name: string
-          passage_space_cm: number | null
           pizza_capacity: string
           sizes: Json | null
           updated_at: string
@@ -117,7 +115,6 @@ export type Database = {
           base_price_a: number
           base_price_b?: number | null
           base_price_c?: number | null
-          can_be_built_on_site?: boolean | null
           coatings?: Json | null
           created_at?: string
           delivery_time_weeks: number
@@ -137,7 +134,6 @@ export type Database = {
           installation_price_c?: number | null
           is_active?: boolean
           model_name: string
-          passage_space_cm?: number | null
           pizza_capacity: string
           sizes?: Json | null
           updated_at?: string
@@ -148,7 +144,6 @@ export type Database = {
           base_price_a?: number
           base_price_b?: number | null
           base_price_c?: number | null
-          can_be_built_on_site?: boolean | null
           coatings?: Json | null
           created_at?: string
           delivery_time_weeks?: number
@@ -168,7 +163,6 @@ export type Database = {
           installation_price_c?: number | null
           is_active?: boolean
           model_name?: string
-          passage_space_cm?: number | null
           pizza_capacity?: string
           sizes?: Json | null
           updated_at?: string
