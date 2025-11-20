@@ -41,7 +41,7 @@ interface ConfiguratorOven {
     pizza_capacity: string;
     coatings: Array<{
       name: string;
-      image: string;
+      image_url: string;
       prices: {
         listA: { base: number; gas?: number; electric?: number; installation?: number };
         listB: { base: number; gas?: number; electric?: number; installation?: number };
@@ -620,7 +620,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   <CardContent className="p-0">
                     <div className="aspect-square relative">
                       <img 
-                        src={coating.image} 
+                        src={coating.image_url} 
                         alt={coating.name}
                         className="w-full h-full object-cover"
                       />
@@ -687,7 +687,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 <div className="space-y-3">
                   <div className="aspect-video relative overflow-hidden rounded-lg border">
                     <img 
-                      src={selectedOvenData.coating?.image || selectedOven.image_url} 
+                      src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
                       alt={selectedOven.model_name}
                       className="w-full h-full object-cover"
                     />
@@ -726,7 +726,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   <div className="flex items-center gap-3">
                     <div className="w-16 h-16 md:w-24 md:h-24 bg-background rounded-lg overflow-hidden flex-shrink-0">
                       <img 
-                        src={selectedOvenData.coating?.image || selectedOven.image_url} 
+                        src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
                         alt={selectedOven.model_name} 
                         className="w-full h-full object-cover" 
                       />
