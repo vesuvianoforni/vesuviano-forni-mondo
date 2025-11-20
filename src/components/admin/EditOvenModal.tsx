@@ -21,9 +21,9 @@ interface Coating {
   name: string;
   image_url: string;
   prices: {
-    listA: { base: number; gas: number; electric: number; installation: number };
-    listB: { base: number; gas: number; electric: number; installation: number };
-    listC: { base: number; gas: number; electric: number; installation: number };
+    listA: { base: number; gas: number; electric: number; onSite: number };
+    listB: { base: number; gas: number; electric: number; onSite: number };
+    listC: { base: number; gas: number; electric: number; onSite: number };
   };
 }
 
@@ -44,6 +44,8 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     video_url_360: '',
     sizes: [] as SizeOption[],
     is_active: true,
+    can_be_built_on_site: true,
+    passage_space_cm: 0,
   });
 
   const [newSize, setNewSize] = useState<SizeOption>({
@@ -56,9 +58,9 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     name: "",
     image_url: "",
     prices: {
-      listA: { base: 0, gas: 0, electric: 0, installation: 0 },
-      listB: { base: 0, gas: 0, electric: 0, installation: 0 },
-      listC: { base: 0, gas: 0, electric: 0, installation: 0 }
+      listA: { base: 0, gas: 0, electric: 0, onSite: 0 },
+      listB: { base: 0, gas: 0, electric: 0, onSite: 0 },
+      listC: { base: 0, gas: 0, electric: 0, onSite: 0 }
     }
   });
 
@@ -108,6 +110,8 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
         video_url_360: oven.video_url_360 || '',
         sizes: sizes,
         is_active: oven.is_active,
+        can_be_built_on_site: oven.can_be_built_on_site ?? true,
+        passage_space_cm: oven.passage_space_cm || 0,
       });
     }
   }, [open, oven]);
@@ -153,9 +157,9 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
       name: "",
       image_url: "",
       prices: {
-        listA: { base: 0, gas: 0, electric: 0, installation: 0 },
-        listB: { base: 0, gas: 0, electric: 0, installation: 0 },
-        listC: { base: 0, gas: 0, electric: 0, installation: 0 }
+        listA: { base: 0, gas: 0, electric: 0, onSite: 0 },
+        listB: { base: 0, gas: 0, electric: 0, onSite: 0 },
+        listC: { base: 0, gas: 0, electric: 0, onSite: 0 }
       }
     });
     setEditingSizeIndex(null);
@@ -267,6 +271,26 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                   <Label className="cursor-pointer">{fuel}</Label>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Construction Options */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                checked={formData.can_be_built_on_site}
+                onCheckedChange={(checked) => setFormData(prev => ({ ...prev, can_be_built_on_site: !!checked }))}
+              />
+              <Label className="cursor-pointer">Può essere costruito sul posto</Label>
+            </div>
+            <div>
+              <Label>Spazio passaggio forno già costruito (cm)</Label>
+              <Input 
+                type="number" 
+                value={formData.passage_space_cm || ''} 
+                onChange={(e) => setFormData(prev => ({ ...prev, passage_space_cm: parseInt(e.target.value) || 0 }))}
+                placeholder="es. 150"
+              />
             </div>
           </div>
 
@@ -491,17 +515,17 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                                     />
                                   </div>
                                   <div>
-                                    <Label className="text-xs">Installazione</Label>
+                                    <Label className="text-xs">Costruito sul Posto (€)</Label>
                                     <Input 
                                       type="number" 
-                                      value={newCoating.prices[`list${list}` as keyof typeof newCoating.prices].installation || ''} 
+                                      value={newCoating.prices[`list${list}` as keyof typeof newCoating.prices].onSite || ''} 
                                       onChange={(e) => setNewCoating(prev => ({
                                         ...prev,
                                         prices: {
                                           ...prev.prices,
                                           [`list${list}`]: { 
                                             ...prev.prices[`list${list}` as keyof typeof prev.prices], 
-                                            installation: parseFloat(e.target.value) || 0 
+                                            onSite: parseFloat(e.target.value) || 0 
                                           }
                                         }
                                       }))}
@@ -547,7 +571,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                                           <strong>Listino {list}:</strong> Base: €{coating.prices[`list${list}` as keyof typeof coating.prices].base}, 
                                           Gas: €{coating.prices[`list${list}` as keyof typeof coating.prices].gas}, 
                                           Elettrico: €{coating.prices[`list${list}` as keyof typeof coating.prices].electric}, 
-                                          Inst: €{coating.prices[`list${list}` as keyof typeof coating.prices].installation}
+                                          Sul Posto: €{coating.prices[`list${list}` as keyof typeof coating.prices].onSite}
                                         </div>
                                       ))}
                                     </div>
@@ -641,14 +665,14 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                                           />
                                         </div>
                                         <div>
-                                          <Label className="text-xs">Inst (€)</Label>
+                                          <Label className="text-xs">Sul Posto (€)</Label>
                                           <Input
                                             type="number"
-                                            value={displayCoating.prices[`list${list}` as keyof typeof displayCoating.prices].installation}
+                                            value={displayCoating.prices[`list${list}` as keyof typeof displayCoating.prices].onSite}
                                             onChange={(e) => {
                                               if (!editingCoatingData) return;
                                               const newData = { ...editingCoatingData };
-                                              newData.prices[`list${list}` as keyof typeof newData.prices].installation = Number(e.target.value);
+                                              newData.prices[`list${list}` as keyof typeof newData.prices].onSite = Number(e.target.value);
                                               setEditingCoatingData(newData);
                                             }}
                                             className="h-8 text-xs"
