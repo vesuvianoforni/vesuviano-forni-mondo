@@ -478,18 +478,18 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   if (loading) return <div className="min-h-screen flex items-center justify-center">Caricamento...</div>;
 
   return (
-    <div className="min-h-screen bg-background py-6 md:py-12 px-3 md:px-4">
+    <div className="min-h-screen bg-background py-4 sm:py-6 md:py-12 px-3 sm:px-4 pb-24 md:pb-12">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-6 md:mb-12">
-          <h1 className="text-2xl md:text-4xl font-bold mb-2">Configuratore Forni</h1>
+        <div className="text-center mb-4 sm:mb-6 md:mb-12">
+          <h1 className="text-xl sm:text-2xl md:text-4xl font-bold mb-1 sm:mb-2">Configuratore Forni</h1>
           {customerData ? (
-            <div className="space-y-2">
-              <p className="text-muted-foreground text-base md:text-lg">
+            <div className="space-y-1 sm:space-y-2">
+              <p className="text-muted-foreground text-sm sm:text-base md:text-lg">
                 Configura il tuo forno perfetto, <span className="font-semibold text-foreground">{customerData.name}</span>
               </p>
-              <div className="flex flex-col sm:flex-row gap-2 items-center justify-center text-xs md:text-sm text-muted-foreground">
+              <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 items-center justify-center text-xs sm:text-sm text-muted-foreground">
                 <span className="flex items-center gap-1">
-                  <span className="font-medium">Email:</span> {customerData.email}
+                  <span className="font-medium">Email:</span> <span className="truncate max-w-[200px]">{customerData.email}</span>
                 </span>
                 <span className="hidden sm:inline">•</span>
                 <span className="flex items-center gap-1">
@@ -498,49 +498,49 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               </div>
             </div>
           ) : (
-            <p className="text-muted-foreground text-sm md:text-base">Configura il tuo forno perfetto</p>
+            <p className="text-muted-foreground text-xs sm:text-sm md:text-base">Configura il tuo forno perfetto</p>
           )}
         </div>
         
         {/* Step 1: Model Selection */}
-        <div className="mb-6 md:mb-8">
-          <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4">1. Scegli il Modello</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+        <div className="mb-4 sm:mb-6 md:mb-8">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">1. Scegli il Modello</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {models.map(model => {
               const preview = getModelPreview(model);
               return (
                 <Card 
                   key={model} 
-                  className={`cursor-pointer transition-all hover:shadow-lg ${selectedModel === model ? 'ring-2 ring-primary' : ''}`}
+                  className={`cursor-pointer transition-all hover:shadow-lg active:scale-[0.98] ${selectedModel === model ? 'ring-2 ring-primary' : ''}`}
                   onClick={() => { setSelectedModel(model); setSelectedFuelType(''); setSelectedDiameter(''); }}
                 >
-                  <CardContent className="p-3 md:p-4">
-                    <div className="aspect-square mb-2 md:mb-3 bg-muted rounded-lg overflow-hidden">
+                  <CardContent className="p-2 sm:p-3 md:p-4">
+                    <div className="aspect-square mb-2 sm:mb-2 md:mb-3 bg-muted rounded-lg overflow-hidden">
                       <img 
                         src={ovens.find(o => o.model_name === model)?.image_url || '/placeholder.svg'} 
                         alt={model}
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <h3 className="font-semibold text-center mb-3">{model}</h3>
+                    <h3 className="font-semibold text-center mb-2 sm:mb-3 text-sm sm:text-base">{model}</h3>
                     
                     {/* Anteprima configurazioni */}
-                    <div className="border-t pt-3 space-y-2">
+                    <div className="border-t pt-2 sm:pt-3 space-y-1.5 sm:space-y-2">
                       <div>
-                        <p className="text-xs font-medium text-muted-foreground mb-1">Alimentazioni:</p>
-                        <div className="flex flex-wrap gap-1">
+                        <p className="text-[10px] sm:text-xs font-medium text-muted-foreground mb-0.5 sm:mb-1">Alimentazioni:</p>
+                        <div className="flex flex-wrap gap-0.5 sm:gap-1">
                           {preview.fuelTypes.map(fuel => (
-                            <span key={fuel} className="text-xs px-2 py-1 bg-vesuviano-50 text-vesuviano-700 rounded-full">
+                            <span key={fuel} className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-vesuviano-50 text-vesuviano-700 rounded-full">
                               {fuel}
                             </span>
                           ))}
                         </div>
                       </div>
                       <div>
-                        <p className="text-xs font-medium text-muted-foreground mb-1">Dimensioni:</p>
-                        <div className="flex flex-wrap gap-1">
+                        <p className="text-[10px] sm:text-xs font-medium text-muted-foreground mb-0.5 sm:mb-1">Dimensioni:</p>
+                        <div className="flex flex-wrap gap-0.5 sm:gap-1">
                           {preview.diameters.map(diameter => (
-                            <span key={diameter} className="text-xs px-2 py-1 bg-stone-100 text-stone-700 rounded-full">
+                            <span key={diameter} className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-stone-100 text-stone-700 rounded-full">
                               {diameter}cm
                             </span>
                           ))}
@@ -556,18 +556,18 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
         {/* Step 2: Fuel Type Selection */}
         {selectedModel && (
-          <div className="mb-6 md:mb-8">
-            <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4">2. Scegli l'Alimentazione</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          <div className="mb-4 sm:mb-6 md:mb-8">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">2. Scegli l'Alimentazione</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
               {availableFuelTypes.map(fuel => (
                 <Card 
                   key={fuel}
-                  className={`cursor-pointer transition-all hover:shadow-lg ${selectedFuelType === fuel ? 'ring-2 ring-primary' : ''}`}
+                  className={`cursor-pointer transition-all hover:shadow-lg active:scale-[0.98] ${selectedFuelType === fuel ? 'ring-2 ring-primary' : ''}`}
                   onClick={() => { setSelectedFuelType(fuel); setSelectedDiameter(''); }}
                 >
-                  <CardContent className="p-4 md:p-6 text-center">
-                    <Flame className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2" />
-                    <h3 className="font-semibold text-sm md:text-base">{fuel}</h3>
+                  <CardContent className="p-3 sm:p-4 md:p-6 text-center">
+                    <Flame className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 mx-auto mb-1 sm:mb-2" />
+                    <h3 className="font-semibold text-xs sm:text-sm md:text-base">{fuel}</h3>
                   </CardContent>
                 </Card>
               ))}
@@ -577,9 +577,9 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
         {/* Step 3: Diameter Selection */}
         {selectedFuelType && availableDiameters.length > 0 && (
-          <div className="mb-6 md:mb-8">
-            <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4">3. Scegli il Diametro</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+          <div className="mb-4 sm:mb-6 md:mb-8">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">3. Scegli il Diametro</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
               {availableDiameters.map(diameter => {
                 const modelOven = ovens.find(o => o.model_name === selectedModel);
                 const sizeData = modelOven?.sizes?.find(s => s.diameter === diameter);
@@ -608,13 +608,13 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
         {/* Step 4: Coating Selection (if new structure) */}
         {selectedDiameter && availableCoatings.length > 0 && (
-          <div className="mb-6 md:mb-8">
-            <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4">4. Scegli il Rivestimento</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+          <div className="mb-4 sm:mb-6 md:mb-8">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">4. Scegli il Rivestimento</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
               {availableCoatings.map(coating => (
                 <Card 
                   key={coating.name}
-                  className={`cursor-pointer transition-all overflow-hidden ${selectedCoating === coating.name ? 'ring-2 ring-primary' : 'hover:shadow-lg'}`}
+                  className={`cursor-pointer transition-all overflow-hidden active:scale-[0.98] ${selectedCoating === coating.name ? 'ring-2 ring-primary' : 'hover:shadow-lg'}`}
                   onClick={() => setSelectedCoating(coating.name)}
                 >
                   <CardContent className="p-0">
@@ -625,8 +625,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="p-3 text-center">
-                      <div className="font-medium text-sm">{coating.name}</div>
+                    <div className="p-2 sm:p-3 text-center">
+                      <div className="font-medium text-xs sm:text-sm line-clamp-2">{coating.name}</div>
                     </div>
                   </CardContent>
                 </Card>
@@ -637,38 +637,38 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
         {/* Step 5: Additional Options & Summary */}
         {selectedOvenData && (availableCoatings.length === 0 || selectedCoating) && (
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>{availableCoatings.length > 0 ? '5' : '4'}. Opzioni Aggiuntive e Riepilogo</CardTitle>
+          <Card className="mb-4 sm:mb-6">
+            <CardHeader className="px-4 sm:px-6 py-3 sm:py-4">
+              <CardTitle className="text-lg sm:text-xl md:text-2xl">{availableCoatings.length > 0 ? '5' : '4'}. Opzioni Aggiuntive e Riepilogo</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
               <div>
-                <h3 className="font-semibold mb-4">Opzioni di Consegna e Installazione</h3>
-                <div className="space-y-3">
+                <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Opzioni di Consegna e Installazione</h3>
+                <div className="space-y-2 sm:space-y-3">
                   <div 
-                    className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${deliveryOption === 'shipping' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}
+                    className={`p-3 sm:p-4 border-2 rounded-lg cursor-pointer transition-all active:scale-[0.99] ${deliveryOption === 'shipping' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}
                     onClick={() => setDeliveryOption('shipping')}
                   >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <Label className="cursor-pointer font-medium text-base">Spedizione in Europa</Label>
-                        <p className="text-sm text-muted-foreground mt-1">Spedizione con imballaggio cassonato in legno</p>
-                        <p className="text-lg font-bold mt-2 text-vesuviano-600">+€{getShippingPrice(selectedOvenData.size?.diameter || selectedOven.diameter).toFixed(2)}</p>
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <Label className="cursor-pointer font-medium text-sm sm:text-base">Spedizione in Europa</Label>
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">Spedizione con imballaggio cassonato in legno</p>
+                        <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2 text-vesuviano-600">+€{getShippingPrice(selectedOvenData.size?.diameter || selectedOven.diameter).toFixed(2)}</p>
                       </div>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${deliveryOption === 'shipping' ? 'border-primary' : 'border-border'}`}>
-                        {deliveryOption === 'shipping' && <div className="w-3 h-3 rounded-full bg-primary"></div>}
+                      <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${deliveryOption === 'shipping' ? 'border-primary' : 'border-border'}`}>
+                        {deliveryOption === 'shipping' && <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-primary"></div>}
                       </div>
                     </div>
                   </div>
 
                   <div 
-                    className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${deliveryOption === 'on_site' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}
+                    className={`p-3 sm:p-4 border-2 rounded-lg cursor-pointer transition-all active:scale-[0.99] ${deliveryOption === 'on_site' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}
                     onClick={() => setDeliveryOption('on_site')}
                   >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <Label className="cursor-pointer font-medium text-base">Montaggio sul Posto</Label>
-                        <p className="text-sm text-muted-foreground mt-1">Montaggio e installazione professionale presso la vostra sede</p>
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <Label className="cursor-pointer font-medium text-sm sm:text-base">Montaggio sul Posto</Label>
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">Montaggio e installazione professionale presso la vostra sede</p>
                         <p className="text-lg font-bold mt-2 text-vesuviano-600">
                           +€{getPrice('installation').toFixed(2)}
                         </p>
@@ -762,20 +762,20 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               </div>
               {/* Bottoni feedback */}
               {sessionId && deliveryOption && (
-                <div className="border-t pt-4 md:pt-6 mt-4 md:mt-6 space-y-3">
-                  <h3 className="font-semibold text-center mb-3 md:mb-4 text-base md:text-lg">Hai bisogno di assistenza?</h3>
+                <div className="border-t pt-3 sm:pt-4 md:pt-6 mt-3 sm:mt-4 md:mt-6 space-y-2 sm:space-y-3">
+                  <h3 className="font-semibold text-center mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base md:text-lg">Hai bisogno di assistenza?</h3>
                   <Button 
                     onClick={handleInterestedClick}
-                    className="w-full text-sm md:text-base" 
+                    className="w-full text-xs sm:text-sm md:text-base h-12 sm:h-auto" 
                     size="lg"
                     variant="default"
                   >
-                    <span className="hidden md:inline">Sono interessato - Fammi contattare dal vostro responsabile clienti</span>
-                    <span className="md:hidden">Sono interessato - Richiedi contatto</span>
+                    <span className="hidden sm:inline">Sono interessato - Fammi contattare dal vostro responsabile clienti</span>
+                    <span className="sm:hidden leading-tight">Sono interessato<br/>Richiedi contatto</span>
                   </Button>
                   <Button 
                     onClick={() => setShowNotInterestedModal(true)}
-                    className="w-full text-sm md:text-base" 
+                    className="w-full text-xs sm:text-sm md:text-base" 
                     size="lg"
                     variant="outline"
                   >
@@ -784,14 +784,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 </div>
               )}
               {!deliveryOption && sessionId && (
-                <p className="text-sm text-center text-muted-foreground mt-6">Seleziona un'opzione di consegna per procedere</p>
+                <p className="text-xs sm:text-sm text-center text-muted-foreground mt-4 sm:mt-6">Seleziona un'opzione di consegna per procedere</p>
               )}
             </CardContent>
           </Card>
         )}
         <Dialog open={showQuoteModal} onOpenChange={setShowQuoteModal}>
-          <DialogContent className="max-w-md">
-            <DialogHeader><DialogTitle>Richiedi Preventivo</DialogTitle></DialogHeader>
+          <DialogContent className="max-w-md mx-4">
+            <DialogHeader><DialogTitle className="text-lg sm:text-xl">Richiedi Preventivo</DialogTitle></DialogHeader>
             <div className="space-y-4">
               <div>
                 <Label>Nome</Label>
