@@ -43,12 +43,14 @@ interface ConfiguratorOven {
       name: string;
       image_url: string;
       prices: {
-        listA: { base: number; gas?: number; electric?: number; installation?: number };
-        listB: { base: number; gas?: number; electric?: number; installation?: number };
-        listC: { base: number; gas?: number; electric?: number; installation?: number };
+        listA: { base: number; gas?: number; electric?: number; onSite?: number };
+        listB: { base: number; gas?: number; electric?: number; onSite?: number };
+        listC: { base: number; gas?: number; electric?: number; onSite?: number };
       };
     }>;
   }>;
+  can_be_built_on_site?: boolean;
+  passage_space_cm?: number;
 }
 
 interface ConfiguratorOption {
@@ -67,11 +69,12 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   const [ovens, setOvens] = useState<ConfiguratorOven[]>([]);
   const [options, setOptions] = useState<ConfiguratorOption[]>([]);
   const [loading, setLoading] = useState(true);
+  const [buildType, setBuildType] = useState<'on_site' | 'ready_to_use' | ''>('');
   const [selectedModel, setSelectedModel] = useState<string>('');
   const [selectedFuelType, setSelectedFuelType] = useState<string>('');
   const [selectedDiameter, setSelectedDiameter] = useState<string>('');
   const [selectedCoating, setSelectedCoating] = useState<string>('');
-  const [deliveryOption, setDeliveryOption] = useState<'shipping' | 'on_site' | ''>('');
+  const [deliveryOption, setDeliveryOption] = useState<'shipping' | ''>('');
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
@@ -141,7 +144,15 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     }
   };
 
-  const models = Array.from(new Set(ovens.map(o => o.model_name)));
+  const models = Array.from(new Set(
+    ovens
+      .filter(o => {
+        if (!buildType) return true; // Show all if buildType not selected
+        if (buildType === 'on_site') return o.can_be_built_on_site !== false;
+        return true; // ready_to_use can show all
+      })
+      .map(o => o.model_name)
+  ));
   const availableFuelTypes = selectedModel ? Array.from(new Set(ovens.filter(o => o.model_name === selectedModel).flatMap(o => o.fuel_type))) : [];
   
   // Get available diameters from sizes array or legacy structure
@@ -242,7 +253,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   };
 
   // Ottieni il prezzo in base al listino selezionato
-  const getPrice = (field: 'base' | 'gas' | 'electric' | 'installation') => {
+  const getPrice = (field: 'base' | 'gas' | 'electric' | 'onSite') => {
     if (!selectedOvenData) return 0;
     
     // New structure with sizes and coatings
@@ -274,11 +285,12 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   const calculateTotal = () => {
     if (!selectedOvenData) return 0;
     
-    // Per "Costruito sul Posto", il prezzo è unico (non forno + installazione)
-    if (deliveryOption === 'on_site') {
-      return getPrice('installation');
+    // Per "Costruito sul Posto", il prezzo è unico (non forno + spedizione)
+    if (buildType === 'on_site') {
+      return getPrice('onSite');
     }
     
+    // Per "Già Pronto all'Uso"
     let total = getOvenPrice();
     
     const diameter = selectedOvenData.size?.diameter || selectedOven?.diameter || 0;
@@ -295,7 +307,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     try {
       const { data: quoteData, error: quoteError } = await supabase.from('configurator_quotes').insert({
         oven_id: selectedOven.id, 
-        has_installation: deliveryOption === 'on_site', 
+        has_installation: buildType === 'on_site',
         has_gas: selectedFuelType === 'Gas',
         total_price: calculateTotal(), 
         delivery_time_weeks: selectedOven.delivery_time_weeks,
@@ -330,7 +342,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
             ovenModel: selectedOven.model_name,
             fuelType: selectedFuelType,
             totalPrice: calculateTotal(),
-            deliveryOption: deliveryOption === 'on_site' ? 'Montaggio sul Posto' : 'Spedizione in Europa',
+            deliveryOption: buildType === 'on_site' ? 'Costruito sul Posto' : 'Spedizione in Europa',
             customerName,
             customerEmail,
             customerPhone
@@ -368,7 +380,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         .from('configurator_quotes')
         .insert({
           oven_id: selectedOven.id,
-          has_installation: deliveryOption === 'on_site',
+          has_installation: buildType === 'on_site',
           has_gas: selectedFuelType === 'Gas',
           total_price: calculateTotal(),
           delivery_time_weeks: selectedOven.delivery_time_weeks,
@@ -408,7 +420,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
             pizzaCapacity: selectedOven.pizza_capacity,
             fuelType: selectedFuelType,
             totalPrice: calculateTotal(),
-            deliveryOption: deliveryOption === 'on_site' ? 'Montaggio sul Posto' : 'Spedizione in Europa',
+            deliveryOption: buildType === 'on_site' ? 'Costruito sul Posto' : 'Spedizione in Europa',
             deliveryWeeks: selectedOven.delivery_time_weeks,
             customerName: customerData.name,
             customerEmail: customerData.email,
@@ -506,9 +518,66 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           )}
         </div>
         
-        {/* Step 1: Model Selection */}
+        {/* Step 0: Build Type Selection */}
         <div className="mb-4 sm:mb-6 md:mb-8">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">1. Scegli il Modello</h2>
+          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">1. Come preferisci il tuo forno?</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-3xl mx-auto">
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-lg active:scale-[0.98] ${buildType === 'ready_to_use' ? 'ring-2 ring-primary' : ''}`}
+              onClick={() => { 
+                setBuildType('ready_to_use'); 
+                setSelectedModel(''); 
+                setSelectedFuelType(''); 
+                setSelectedDiameter(''); 
+                setSelectedCoating(''); 
+                setDeliveryOption('');
+              }}
+            >
+              <CardHeader className="text-center pb-3">
+                <CardTitle className="text-base sm:text-lg md:text-xl">Già Pronto all'Uso</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <div className="mb-3">
+                  <Pizza className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-primary" />
+                </div>
+                <CardDescription className="text-xs sm:text-sm">
+                  Forno costruito artigianalmente nel nostro laboratorio e spedito pronto all'uso. 
+                  Richiede spazio adeguato per il passaggio.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-lg active:scale-[0.98] ${buildType === 'on_site' ? 'ring-2 ring-primary' : ''}`}
+              onClick={() => { 
+                setBuildType('on_site'); 
+                setSelectedModel(''); 
+                setSelectedFuelType(''); 
+                setSelectedDiameter(''); 
+                setSelectedCoating(''); 
+                setDeliveryOption('');
+              }}
+            >
+              <CardHeader className="text-center pb-3">
+                <CardTitle className="text-base sm:text-lg md:text-xl">Costruito sul Posto</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <div className="mb-3">
+                  <Flame className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-primary" />
+                </div>
+                <CardDescription className="text-xs sm:text-sm">
+                  Il forno viene costruito direttamente presso la tua sede dai nostri artigiani esperti.
+                  Ideale per spazi ridotti o installazioni personalizzate.
+                </CardDescription>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Step 1: Model Selection */}
+        {buildType && (
+        <div className="mb-4 sm:mb-6 md:mb-8">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">2. Scegli il Modello</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {models.map(model => {
               const preview = getModelPreview(model);
@@ -557,11 +626,12 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
             })}
           </div>
         </div>
+        )}
 
         {/* Step 2: Fuel Type Selection */}
         {selectedModel && (
           <div className="mb-4 sm:mb-6 md:mb-8">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">2. Scegli l'Alimentazione</h2>
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">3. Scegli l'Alimentazione</h2>
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
               {availableFuelTypes.map(fuel => (
                 <Card 
@@ -582,7 +652,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         {/* Step 3: Diameter Selection */}
         {selectedFuelType && availableDiameters.length > 0 && (
           <div className="mb-4 sm:mb-6 md:mb-8">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">3. Scegli il Diametro</h2>
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">4. Scegli il Diametro</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
               {availableDiameters.map(diameter => {
                 const modelOven = ovens.find(o => o.model_name === selectedModel);
@@ -613,7 +683,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         {/* Step 4: Coating Selection (if new structure) */}
         {selectedDiameter && availableCoatings.length > 0 && (
           <div className="mb-4 sm:mb-6 md:mb-8">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">4. Scegli il Rivestimento</h2>
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">5. Scegli il Rivestimento</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
               {availableCoatings.map(coating => (
                 <Card 
@@ -643,7 +713,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         {selectedOvenData && (availableCoatings.length === 0 || selectedCoating) && (
           <Card className="mb-4 sm:mb-6">
             <CardHeader className="px-4 sm:px-6 py-3 sm:py-4">
-              <CardTitle className="text-lg sm:text-xl md:text-2xl">{availableCoatings.length > 0 ? '5' : '4'}. Opzioni Aggiuntive e Riepilogo</CardTitle>
+              <CardTitle className="text-lg sm:text-xl md:text-2xl">{availableCoatings.length > 0 ? '6' : '5'}. Opzioni Aggiuntive e Riepilogo</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
               {/* Prezzo Totale - Sempre visibile in alto */}
@@ -673,46 +743,38 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 )}
               </div>
 
-              <div>
-                <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Opzioni di Consegna e Installazione</h3>
-                <div className="space-y-2 sm:space-y-3">
-                  <div 
-                    className={`p-3 sm:p-4 border-2 rounded-lg cursor-pointer transition-all active:scale-[0.99] ${deliveryOption === 'shipping' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}
-                    onClick={() => setDeliveryOption('shipping')}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1 min-w-0">
-                        <Label className="cursor-pointer font-medium text-sm sm:text-base">Spedizione in Europa</Label>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">Spedizione con imballaggio cassonato in legno</p>
-                        <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2 text-primary">
-                          +€{getShippingPrice(selectedOvenData.size?.diameter || selectedOven.diameter).toFixed(2)}
-                        </p>
-                      </div>
-                      <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${deliveryOption === 'shipping' ? 'border-primary' : 'border-border'}`}>
-                        {deliveryOption === 'shipping' && <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-primary"></div>}
-                      </div>
+              {buildType === 'ready_to_use' && (
+                <div>
+                  <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Opzioni di Consegna</h3>
+                  {selectedOven.passage_space_cm && (
+                    <div className="mb-3 p-2 sm:p-3 bg-blue-50 border border-blue-200 rounded-md">
+                      <p className="text-xs sm:text-sm text-blue-900">
+                        <strong>Spazio necessario per il passaggio:</strong> {selectedOven.passage_space_cm} cm
+                      </p>
                     </div>
-                  </div>
-
-                  <div 
-                    className={`p-3 sm:p-4 border-2 rounded-lg cursor-pointer transition-all active:scale-[0.99] ${deliveryOption === 'on_site' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}
-                    onClick={() => setDeliveryOption('on_site')}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1 min-w-0">
-                      <Label className="cursor-pointer font-medium text-sm sm:text-base">Costruito sul Posto</Label>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">Costruzione e installazione professionale presso la vostra sede</p>
-                        <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2 text-primary">
-                          €{getPrice('installation').toFixed(2)}
-                        </p>
-                      </div>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${deliveryOption === 'on_site' ? 'border-primary' : 'border-border'}`}>
-                        {deliveryOption === 'on_site' && <div className="w-3 h-3 rounded-full bg-primary"></div>}
+                  )}
+                  <div className="space-y-2 sm:space-y-3">
+                    <div 
+                      className={`p-3 sm:p-4 border-2 rounded-lg cursor-pointer transition-all active:scale-[0.99] ${deliveryOption === 'shipping' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}
+                      onClick={() => setDeliveryOption('shipping')}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <Label className="cursor-pointer font-medium text-sm sm:text-base">Spedizione in Europa</Label>
+                          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">Spedizione con imballaggio cassonato in legno</p>
+                          <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2 text-primary">
+                            +€{getShippingPrice(selectedOvenData.size?.diameter || selectedOven.diameter).toFixed(2)}
+                          </p>
+                        </div>
+                        <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${deliveryOption === 'shipping' ? 'border-primary' : 'border-border'}`}>
+                          {deliveryOption === 'shipping' && <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-primary"></div>}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
+
 
               {/* Oven Images Gallery */}
               <div>
@@ -794,7 +856,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 </div>
               </div>
               {/* Bottoni feedback */}
-              {sessionId && deliveryOption && (
+              {sessionId && (buildType === 'on_site' || deliveryOption) && (
                 <div className="border-t pt-3 sm:pt-4 md:pt-6 mt-3 sm:mt-4 md:mt-6 space-y-2 sm:space-y-3">
                   <h3 className="font-semibold text-center mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base md:text-lg">Hai bisogno di assistenza?</h3>
                   <Button 
@@ -816,8 +878,11 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   </Button>
                 </div>
               )}
-              {!deliveryOption && sessionId && (
+              {!deliveryOption && buildType === 'ready_to_use' && sessionId && (
                 <p className="text-xs sm:text-sm text-center text-muted-foreground mt-4 sm:mt-6">Seleziona un'opzione di consegna per procedere</p>
+              )}
+              {!buildType && sessionId && (
+                <p className="text-xs sm:text-sm text-center text-muted-foreground mt-4 sm:mt-6">Scegli come preferisci il tuo forno per iniziare</p>
               )}
             </CardContent>
           </Card>
