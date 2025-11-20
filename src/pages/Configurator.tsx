@@ -273,13 +273,17 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
   const calculateTotal = () => {
     if (!selectedOvenData) return 0;
+    
+    // Per "Costruito sul Posto", il prezzo è unico (non forno + installazione)
+    if (deliveryOption === 'on_site') {
+      return getPrice('installation');
+    }
+    
     let total = getOvenPrice();
     
     const diameter = selectedOvenData.size?.diameter || selectedOven?.diameter || 0;
     if (deliveryOption === 'shipping') {
       total += getShippingPrice(diameter);
-    } else if (deliveryOption === 'on_site') {
-      total += getPrice('installation');
     }
     
     return total;
@@ -653,21 +657,16 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   </div>
                   <Euro className="w-8 h-8 sm:w-12 sm:h-12 text-primary/30" />
                 </div>
-                {deliveryOption && (
+                {deliveryOption === 'shipping' && (
                   <div className="mt-3 pt-3 border-t border-primary/20">
                     <div className="flex items-center justify-between text-xs sm:text-sm">
                       <span className="text-muted-foreground">Forno:</span>
                       <span className="font-semibold">€{getOvenPrice().toFixed(2)}</span>
                     </div>
                     <div className="flex items-center justify-between text-xs sm:text-sm mt-1">
-                      <span className="text-muted-foreground">
-                        {deliveryOption === 'shipping' ? 'Spedizione:' : 'Montaggio:'}
-                      </span>
+                      <span className="text-muted-foreground">Spedizione:</span>
                       <span className="font-semibold">
-                        +€{deliveryOption === 'shipping' 
-                          ? getShippingPrice(selectedOvenData.size?.diameter || selectedOven.diameter).toFixed(2)
-                          : getPrice('installation').toFixed(2)
-                        }
+                        +€{getShippingPrice(selectedOvenData.size?.diameter || selectedOven.diameter).toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -701,10 +700,10 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <Label className="cursor-pointer font-medium text-sm sm:text-base">Montaggio sul Posto</Label>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">Montaggio e installazione professionale presso la vostra sede</p>
+                      <Label className="cursor-pointer font-medium text-sm sm:text-base">Costruito sul Posto</Label>
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">Costruzione e installazione professionale presso la vostra sede</p>
                         <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2 text-primary">
-                          +€{getPrice('installation').toFixed(2)}
+                          €{getPrice('installation').toFixed(2)}
                         </p>
                       </div>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${deliveryOption === 'on_site' ? 'border-primary' : 'border-border'}`}>
