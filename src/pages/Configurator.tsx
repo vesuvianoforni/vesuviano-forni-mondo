@@ -642,6 +642,38 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               <CardTitle className="text-lg sm:text-xl md:text-2xl">{availableCoatings.length > 0 ? '5' : '4'}. Opzioni Aggiuntive e Riepilogo</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
+              {/* Prezzo Totale - Sempre visibile in alto */}
+              <div className="bg-gradient-to-r from-primary/10 to-primary/5 border-2 border-primary/20 rounded-lg p-4 sm:p-6 sticky top-4 z-10 shadow-lg">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-1">Prezzo Totale</p>
+                    <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">
+                      €{calculateTotal().toFixed(2)}
+                    </p>
+                  </div>
+                  <Euro className="w-8 h-8 sm:w-12 sm:h-12 text-primary/30" />
+                </div>
+                {deliveryOption && (
+                  <div className="mt-3 pt-3 border-t border-primary/20">
+                    <div className="flex items-center justify-between text-xs sm:text-sm">
+                      <span className="text-muted-foreground">Forno:</span>
+                      <span className="font-semibold">€{getOvenPrice().toFixed(2)}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs sm:text-sm mt-1">
+                      <span className="text-muted-foreground">
+                        {deliveryOption === 'shipping' ? 'Spedizione:' : 'Montaggio:'}
+                      </span>
+                      <span className="font-semibold">
+                        +€{deliveryOption === 'shipping' 
+                          ? getShippingPrice(selectedOvenData.size?.diameter || selectedOven.diameter).toFixed(2)
+                          : getPrice('installation').toFixed(2)
+                        }
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <div>
                 <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Opzioni di Consegna e Installazione</h3>
                 <div className="space-y-2 sm:space-y-3">
@@ -653,7 +685,9 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                       <div className="flex-1 min-w-0">
                         <Label className="cursor-pointer font-medium text-sm sm:text-base">Spedizione in Europa</Label>
                         <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">Spedizione con imballaggio cassonato in legno</p>
-                        <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2 text-vesuviano-600">+€{getShippingPrice(selectedOvenData.size?.diameter || selectedOven.diameter).toFixed(2)}</p>
+                        <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2 text-primary">
+                          +€{getShippingPrice(selectedOvenData.size?.diameter || selectedOven.diameter).toFixed(2)}
+                        </p>
                       </div>
                       <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${deliveryOption === 'shipping' ? 'border-primary' : 'border-border'}`}>
                         {deliveryOption === 'shipping' && <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-primary"></div>}
@@ -669,7 +703,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                       <div className="flex-1 min-w-0">
                         <Label className="cursor-pointer font-medium text-sm sm:text-base">Montaggio sul Posto</Label>
                         <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">Montaggio e installazione professionale presso la vostra sede</p>
-                        <p className="text-lg font-bold mt-2 text-vesuviano-600">
+                        <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2 text-primary">
                           +€{getPrice('installation').toFixed(2)}
                         </p>
                       </div>
