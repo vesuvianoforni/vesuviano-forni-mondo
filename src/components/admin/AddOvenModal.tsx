@@ -20,9 +20,9 @@ interface Coating {
   name: string;
   image_url: string;
   prices: {
-    listA: { base: number; gas: number; electric: number; installation: number };
-    listB: { base: number; gas: number; electric: number; installation: number };
-    listC: { base: number; gas: number; electric: number; installation: number };
+    listA: { base: number; gas: number; electric: number; onSite: number };
+    listB: { base: number; gas: number; electric: number; onSite: number };
+    listC: { base: number; gas: number; electric: number; onSite: number };
   };
 }
 
@@ -41,7 +41,9 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
     image_url: "",
     additional_images: [] as string[],
     video_url_360: "",
-    sizes: [] as SizeOption[]
+    sizes: [] as SizeOption[],
+    can_be_built_on_site: true,
+    passage_space_cm: 0,
   });
 
   const [saving, setSaving] = useState(false);
@@ -58,9 +60,9 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
     name: "",
     image_url: "",
     prices: {
-      listA: { base: 0, gas: 0, electric: 0, installation: 0 },
-      listB: { base: 0, gas: 0, electric: 0, installation: 0 },
-      listC: { base: 0, gas: 0, electric: 0, installation: 0 }
+      listA: { base: 0, gas: 0, electric: 0, onSite: 0 },
+      listB: { base: 0, gas: 0, electric: 0, onSite: 0 },
+      listC: { base: 0, gas: 0, electric: 0, onSite: 0 }
     }
   });
 
@@ -156,9 +158,9 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
       name: "",
       image_url: "",
       prices: {
-        listA: { base: 0, gas: 0, electric: 0, installation: 0 },
-        listB: { base: 0, gas: 0, electric: 0, installation: 0 },
-        listC: { base: 0, gas: 0, electric: 0, installation: 0 }
+        listA: { base: 0, gas: 0, electric: 0, onSite: 0 },
+        listB: { base: 0, gas: 0, electric: 0, onSite: 0 },
+        listC: { base: 0, gas: 0, electric: 0, onSite: 0 }
       }
     });
     setEditingSizeIndex(null);
@@ -228,7 +230,9 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
         image_url: "",
         additional_images: [] as string[],
         video_url_360: "",
-        sizes: [] as SizeOption[]
+        sizes: [] as SizeOption[],
+        can_be_built_on_site: true,
+        passage_space_cm: 0,
       });
       onSuccess();
       onClose();
@@ -300,6 +304,26 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                   <Label className="cursor-pointer">{fuel}</Label>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Construction Options */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                checked={formData.can_be_built_on_site}
+                onCheckedChange={(checked) => handleChange('can_be_built_on_site', !!checked)}
+              />
+              <Label className="cursor-pointer">Può essere costruito sul posto</Label>
+            </div>
+            <div>
+              <Label>Spazio passaggio forno già costruito (cm)</Label>
+              <Input 
+                type="number" 
+                value={formData.passage_space_cm || ''} 
+                onChange={(e) => handleChange('passage_space_cm', parseInt(e.target.value) || 0)}
+                placeholder="es. 150"
+              />
             </div>
           </div>
 
@@ -538,17 +562,17 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                                     />
                                   </div>
                                   <div>
-                                    <Label className="text-xs">Installazione</Label>
+                                    <Label className="text-xs">Costruito sul Posto (€)</Label>
                                     <Input 
                                       type="number" 
-                                      value={newCoating.prices[`list${list}` as keyof typeof newCoating.prices].installation || ''} 
+                                      value={newCoating.prices[`list${list}` as keyof typeof newCoating.prices].onSite || ''} 
                                       onChange={(e) => setNewCoating(prev => ({
                                         ...prev,
                                         prices: {
                                           ...prev.prices,
                                           [`list${list}`]: { 
                                             ...prev.prices[`list${list}` as keyof typeof prev.prices], 
-                                            installation: parseFloat(e.target.value) || 0 
+                                            onSite: parseFloat(e.target.value) || 0 
                                           }
                                         }
                                       }))}
@@ -594,7 +618,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                                           <strong>Listino {list}:</strong> Base: €{coating.prices[`list${list}` as keyof typeof coating.prices].base}, 
                                           Gas: €{coating.prices[`list${list}` as keyof typeof coating.prices].gas}, 
                                           Elettrico: €{coating.prices[`list${list}` as keyof typeof coating.prices].electric}, 
-                                          Inst: €{coating.prices[`list${list}` as keyof typeof coating.prices].installation}
+                                          Sul Posto: €{coating.prices[`list${list}` as keyof typeof coating.prices].onSite}
                                         </div>
                                       ))}
                                     </div>
@@ -688,14 +712,14 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                                           />
                                         </div>
                                         <div>
-                                          <Label className="text-xs">Inst (€)</Label>
+                                          <Label className="text-xs">Sul Posto (€)</Label>
                                           <Input
                                             type="number"
-                                            value={displayCoating.prices[`list${list}` as keyof typeof displayCoating.prices].installation}
+                                            value={displayCoating.prices[`list${list}` as keyof typeof displayCoating.prices].onSite}
                                             onChange={(e) => {
                                               if (!editingCoatingData) return;
                                               const newData = { ...editingCoatingData };
-                                              newData.prices[`list${list}` as keyof typeof newData.prices].installation = Number(e.target.value);
+                                              newData.prices[`list${list}` as keyof typeof newData.prices].onSite = Number(e.target.value);
                                               setEditingCoatingData(newData);
                                             }}
                                             className="h-8 text-xs"
