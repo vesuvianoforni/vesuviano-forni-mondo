@@ -647,7 +647,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
             </CardHeader>
             <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
               {/* Prezzo Totale - Sempre visibile in alto */}
-              <div className="bg-gradient-to-r from-primary/10 to-primary/5 border-2 border-primary/20 rounded-lg p-4 sm:p-6 sticky top-4 z-10 shadow-lg">
+              <div className="bg-gradient-to-r from-primary/10 to-primary/5 border-2 border-primary/20 rounded-lg p-4 sm:p-6 shadow-lg mb-6">
                 <div className="flex items-center justify-between gap-4">
                   <div>
                     <p className="text-xs sm:text-sm text-muted-foreground mb-1">Prezzo Totale</p>
