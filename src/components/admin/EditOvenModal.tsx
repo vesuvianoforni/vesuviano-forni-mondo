@@ -46,8 +46,6 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     video_url_360: '',
     sizes: [] as SizeOption[],
     is_active: true,
-    can_be_built_on_site: true,
-    passage_space_cm: 0,
   });
 
   const [newSize, setNewSize] = useState<SizeOption>({
@@ -114,8 +112,6 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
         video_url_360: oven.video_url_360 || '',
         sizes: sizes,
         is_active: oven.is_active,
-        can_be_built_on_site: oven.can_be_built_on_site ?? true,
-        passage_space_cm: oven.passage_space_cm || 0,
       });
     }
   }, [open, oven]);
@@ -278,26 +274,6 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
             </div>
           </div>
 
-          {/* Construction Options */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                checked={formData.can_be_built_on_site}
-                onCheckedChange={(checked) => setFormData(prev => ({ ...prev, can_be_built_on_site: !!checked }))}
-              />
-              <Label className="cursor-pointer">Può essere costruito sul posto</Label>
-            </div>
-            <div>
-              <Label>Spazio passaggio forno già costruito (cm)</Label>
-              <Input 
-                type="number" 
-                value={formData.passage_space_cm || ''} 
-                onChange={(e) => setFormData(prev => ({ ...prev, passage_space_cm: parseInt(e.target.value) || 0 }))}
-                placeholder="es. 150"
-              />
-            </div>
-          </div>
-
           {/* Image URL */}
           <div>
             <Label>URL Immagine Principale</Label>
@@ -346,6 +322,25 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                   </div>
                 </div>
 
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Spazio passaggio forno già pronto (cm)</Label>
+                    <Input 
+                      type="number" 
+                      value={newSize.passage_space_cm || ''} 
+                      onChange={(e) => setNewSize(prev => ({ ...prev, passage_space_cm: e.target.value ? parseInt(e.target.value) : null }))}
+                      placeholder="es. 150"
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2 pt-6">
+                    <Checkbox 
+                      checked={newSize.can_be_built_on_site}
+                      onCheckedChange={(checked) => setNewSize(prev => ({ ...prev, can_be_built_on_site: !!checked }))}
+                    />
+                    <Label className="cursor-pointer">Può essere costruito sul posto</Label>
+                  </div>
+                </div>
+
                 <Button type="button" onClick={addSize} className="w-full">
                   <Plus className="mr-2 h-4 w-4" /> Aggiungi Dimensione
                 </Button>
@@ -357,8 +352,35 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
               <Card key={sizeIdx}>
                 <CardContent className="p-4 space-y-4">
                   <div className="flex justify-between items-start">
-                    <div>
+                    <div className="space-y-2">
                       <p className="font-medium text-lg">Ø {size.diameter}cm - {size.pizza_capacity} pizze</p>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <Label className="text-xs">Spazio passaggio (cm)</Label>
+                          <Input 
+                            type="number" 
+                            value={size.passage_space_cm || ''} 
+                            onChange={(e) => {
+                              const newSizes = [...formData.sizes];
+                              newSizes[sizeIdx].passage_space_cm = e.target.value ? parseInt(e.target.value) : null;
+                              setFormData(prev => ({ ...prev, sizes: newSizes }));
+                            }}
+                            placeholder="es. 150"
+                            className="h-8"
+                          />
+                        </div>
+                        <div className="flex items-center space-x-2 pt-5">
+                          <Checkbox 
+                            checked={size.can_be_built_on_site}
+                            onCheckedChange={(checked) => {
+                              const newSizes = [...formData.sizes];
+                              newSizes[sizeIdx].can_be_built_on_site = !!checked;
+                              setFormData(prev => ({ ...prev, sizes: newSizes }));
+                            }}
+                          />
+                          <Label className="cursor-pointer text-xs">Costruibile sul posto</Label>
+                        </div>
+                      </div>
                     </div>
                     <Button 
                       type="button" 
