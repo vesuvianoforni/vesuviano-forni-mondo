@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Edit } from "lucide-react";
 
 interface AddOvenModalProps {
   open: boolean;
@@ -65,6 +65,8 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
   });
 
   const [editingSizeIndex, setEditingSizeIndex] = useState<number | null>(null);
+  const [editingCoating, setEditingCoating] = useState<{ sizeIdx: number; coatingIdx: number } | null>(null);
+  const [editingCoatingData, setEditingCoatingData] = useState<Coating | null>(null);
 
   const handleChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -168,6 +170,28 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
     updatedSizes[sizeIndex].coatings.splice(coatingIndex, 1);
     setFormData(prev => ({ ...prev, sizes: updatedSizes }));
     toast.success("Rivestimento rimosso");
+  };
+
+  const startEditingCoating = (sizeIdx: number, coatingIdx: number) => {
+    const coating = formData.sizes[sizeIdx].coatings[coatingIdx];
+    setEditingCoating({ sizeIdx, coatingIdx });
+    setEditingCoatingData({ ...coating });
+  };
+
+  const cancelEditingCoating = () => {
+    setEditingCoating(null);
+    setEditingCoatingData(null);
+  };
+
+  const saveEditingCoating = () => {
+    if (!editingCoating || !editingCoatingData) return;
+    
+    const updatedSizes = [...formData.sizes];
+    updatedSizes[editingCoating.sizeIdx].coatings[editingCoating.coatingIdx] = { ...editingCoatingData };
+    setFormData(prev => ({ ...prev, sizes: updatedSizes }));
+    
+    toast.success("Rivestimento aggiornato");
+    cancelEditingCoating();
   };
 
   const handleSave = async () => {
@@ -552,36 +576,140 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                   {size.coatings.length > 0 && (
                     <div className="space-y-2">
                       <h5 className="text-sm font-medium">Rivestimenti Configurati</h5>
-                      {size.coatings.map((coating, coatingIdx) => (
-                        <Card key={coatingIdx} className="bg-muted/30">
-                          <CardContent className="p-3">
-                            <div className="flex justify-between items-start">
-                              <div className="flex-1">
-                                <p className="font-medium text-sm">{coating.name}</p>
-                                <p className="text-xs text-muted-foreground">{coating.image_url}</p>
-                                <div className="text-xs text-muted-foreground mt-1 space-y-1">
+                      {size.coatings.map((coating, coatingIdx) => {
+                        const isEditing = editingCoating?.sizeIdx === sizeIdx && editingCoating?.coatingIdx === coatingIdx;
+                        const displayCoating = isEditing && editingCoatingData ? editingCoatingData : coating;
+                        
+                        return (
+                          <Card key={coatingIdx} className="bg-muted/30">
+                            <CardContent className="p-3">
+                              {!isEditing ? (
+                                <div className="flex justify-between items-start">
+                                  <div className="flex-1">
+                                    <p className="font-medium text-sm">{coating.name}</p>
+                                    <p className="text-xs text-muted-foreground truncate">{coating.image_url}</p>
+                                    <div className="text-xs text-muted-foreground mt-1 space-y-1">
+                                      {(['A', 'B', 'C'] as const).map(list => (
+                                        <div key={list}>
+                                          <strong>Listino {list}:</strong> Base: €{coating.prices[`list${list}` as keyof typeof coating.prices].base}, 
+                                          Gas: €{coating.prices[`list${list}` as keyof typeof coating.prices].gas}, 
+                                          Elettrico: €{coating.prices[`list${list}` as keyof typeof coating.prices].electric}, 
+                                          Inst: €{coating.prices[`list${list}` as keyof typeof coating.prices].installation}
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                  <div className="flex gap-1">
+                                    <Button 
+                                      type="button" 
+                                      variant="ghost" 
+                                      size="sm"
+                                      onClick={() => startEditingCoating(sizeIdx, coatingIdx)}
+                                    >
+                                      <Edit className="h-3 w-3" />
+                                    </Button>
+                                    <Button 
+                                      type="button" 
+                                      variant="ghost" 
+                                      size="sm"
+                                      onClick={() => removeCoatingFromSize(sizeIdx, coatingIdx)}
+                                    >
+                                      <Trash2 className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="space-y-3">
+                                  <div className="flex justify-between items-center">
+                                    <p className="font-medium text-sm">Modifica: {coating.name}</p>
+                                    <div className="flex gap-2">
+                                      <Button 
+                                        type="button" 
+                                        size="sm" 
+                                        onClick={saveEditingCoating}
+                                      >
+                                        Salva
+                                      </Button>
+                                      <Button 
+                                        type="button" 
+                                        variant="outline" 
+                                        size="sm"
+                                        onClick={cancelEditingCoating}
+                                      >
+                                        Annulla
+                                      </Button>
+                                    </div>
+                                  </div>
+                                  
                                   {(['A', 'B', 'C'] as const).map(list => (
-                                    <div key={list}>
-                                      <strong>Listino {list}:</strong> Base: €{coating.prices[`list${list}` as keyof typeof coating.prices].base}, 
-                                      Gas: €{coating.prices[`list${list}` as keyof typeof coating.prices].gas}, 
-                                      Elettrico: €{coating.prices[`list${list}` as keyof typeof coating.prices].electric}, 
-                                      Inst: €{coating.prices[`list${list}` as keyof typeof coating.prices].installation}
+                                    <div key={list} className="space-y-2">
+                                      <Label className="text-xs font-semibold">Listino {list}</Label>
+                                      <div className="grid grid-cols-4 gap-2">
+                                        <div>
+                                          <Label className="text-xs">Base (€)</Label>
+                                          <Input
+                                            type="number"
+                                            value={displayCoating.prices[`list${list}` as keyof typeof displayCoating.prices].base}
+                                            onChange={(e) => {
+                                              if (!editingCoatingData) return;
+                                              const newData = { ...editingCoatingData };
+                                              newData.prices[`list${list}` as keyof typeof newData.prices].base = Number(e.target.value);
+                                              setEditingCoatingData(newData);
+                                            }}
+                                            className="h-8 text-xs"
+                                          />
+                                        </div>
+                                        <div>
+                                          <Label className="text-xs">Gas (€)</Label>
+                                          <Input
+                                            type="number"
+                                            value={displayCoating.prices[`list${list}` as keyof typeof displayCoating.prices].gas}
+                                            onChange={(e) => {
+                                              if (!editingCoatingData) return;
+                                              const newData = { ...editingCoatingData };
+                                              newData.prices[`list${list}` as keyof typeof newData.prices].gas = Number(e.target.value);
+                                              setEditingCoatingData(newData);
+                                            }}
+                                            className="h-8 text-xs"
+                                          />
+                                        </div>
+                                        <div>
+                                          <Label className="text-xs">Elettrico (€)</Label>
+                                          <Input
+                                            type="number"
+                                            value={displayCoating.prices[`list${list}` as keyof typeof displayCoating.prices].electric}
+                                            onChange={(e) => {
+                                              if (!editingCoatingData) return;
+                                              const newData = { ...editingCoatingData };
+                                              newData.prices[`list${list}` as keyof typeof newData.prices].electric = Number(e.target.value);
+                                              setEditingCoatingData(newData);
+                                            }}
+                                            className="h-8 text-xs"
+                                          />
+                                        </div>
+                                        <div>
+                                          <Label className="text-xs">Inst (€)</Label>
+                                          <Input
+                                            type="number"
+                                            value={displayCoating.prices[`list${list}` as keyof typeof displayCoating.prices].installation}
+                                            onChange={(e) => {
+                                              if (!editingCoatingData) return;
+                                              const newData = { ...editingCoatingData };
+                                              newData.prices[`list${list}` as keyof typeof newData.prices].installation = Number(e.target.value);
+                                              setEditingCoatingData(newData);
+                                            }}
+                                            className="h-8 text-xs"
+                                          />
+                                        </div>
+                                      </div>
                                     </div>
                                   ))}
                                 </div>
-                              </div>
-                              <Button 
-                                type="button" 
-                                variant="ghost" 
-                                size="sm"
-                                onClick={() => removeCoatingFromSize(sizeIdx, coatingIdx)}
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                              )}
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
                     </div>
                   )}
                 </CardContent>
