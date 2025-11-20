@@ -36,6 +36,19 @@ interface ConfiguratorOven {
   delivery_time_weeks: number;
   description: string | null;
   coatings?: Array<{type: string; name: string; image_url: string}>;
+  sizes?: Array<{
+    diameter: number;
+    pizza_capacity: string;
+    coatings: Array<{
+      name: string;
+      image: string;
+      prices: {
+        listA: { base: number; gas?: number; electric?: number; installation?: number };
+        listB: { base: number; gas?: number; electric?: number; installation?: number };
+        listC: { base: number; gas?: number; electric?: number; installation?: number };
+      };
+    }>;
+  }>;
 }
 
 interface ConfiguratorOption {
@@ -57,6 +70,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   const [selectedModel, setSelectedModel] = useState<string>('');
   const [selectedFuelType, setSelectedFuelType] = useState<string>('');
   const [selectedDiameter, setSelectedDiameter] = useState<string>('');
+  const [selectedCoating, setSelectedCoating] = useState<string>('');
   const [deliveryOption, setDeliveryOption] = useState<'shipping' | 'on_site' | ''>('');
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [customerName, setCustomerName] = useState('');
@@ -129,14 +143,92 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
   const models = Array.from(new Set(ovens.map(o => o.model_name)));
   const availableFuelTypes = selectedModel ? Array.from(new Set(ovens.filter(o => o.model_name === selectedModel).flatMap(o => o.fuel_type))) : [];
-  const availableDiameters = (selectedModel && selectedFuelType) ? ovens.filter(o => o.model_name === selectedModel && o.fuel_type.includes(selectedFuelType)) : [];
-  const selectedOven = ovens.find(o => o.model_name === selectedModel && o.fuel_type.includes(selectedFuelType) && o.diameter === parseInt(selectedDiameter));
+  
+  // Get available diameters from sizes array or legacy structure
+  const getAvailableDiameters = () => {
+    if (!selectedModel || !selectedFuelType) return [];
+    const modelOvens = ovens.filter(o => o.model_name === selectedModel && o.fuel_type.includes(selectedFuelType));
+    const diametersSet = new Set<number>();
+    modelOvens.forEach(oven => {
+      if (oven.sizes && oven.sizes.length > 0) {
+        oven.sizes.forEach(size => diametersSet.add(size.diameter));
+      } else {
+        diametersSet.add(oven.diameter);
+      }
+    });
+    return Array.from(diametersSet).sort((a, b) => a - b);
+  };
+  
+  const availableDiameters = getAvailableDiameters();
+  
+  // Get available coatings for selected diameter
+  const getAvailableCoatings = () => {
+    if (!selectedModel || !selectedFuelType || !selectedDiameter) return [];
+    const modelOven = ovens.find(o => o.model_name === selectedModel && o.fuel_type.includes(selectedFuelType));
+    if (!modelOven) return [];
+    
+    if (modelOven.sizes && modelOven.sizes.length > 0) {
+      const size = modelOven.sizes.find(s => s.diameter === parseInt(selectedDiameter));
+      return size?.coatings || [];
+    }
+    return [];
+  };
+  
+  const availableCoatings = getAvailableCoatings();
+  
+  // Get selected oven data
+  const getSelectedOvenData = () => {
+    if (!selectedModel || !selectedFuelType || !selectedDiameter) return null;
+    const modelOven = ovens.find(o => o.model_name === selectedModel && o.fuel_type.includes(selectedFuelType));
+    if (!modelOven) return null;
+    
+    // New structure with sizes
+    if (modelOven.sizes && modelOven.sizes.length > 0) {
+      const size = modelOven.sizes.find(s => s.diameter === parseInt(selectedDiameter));
+      if (!size) return null;
+      
+      const coating = selectedCoating ? size.coatings.find(c => c.name === selectedCoating) : size.coatings[0];
+      if (!coating) return null;
+      
+      return {
+        oven: modelOven,
+        size,
+        coating,
+        isNewStructure: true
+      };
+    }
+    
+    // Legacy structure
+    if (modelOven.diameter === parseInt(selectedDiameter)) {
+      return {
+        oven: modelOven,
+        size: null,
+        coating: null,
+        isNewStructure: false
+      };
+    }
+    
+    return null;
+  };
+  
+  const selectedOvenData = getSelectedOvenData();
+  const selectedOven = selectedOvenData?.oven;
 
   // Funzione per ottenere l'anteprima delle configurazioni per un modello
   const getModelPreview = (modelName: string) => {
     const modelOvens = ovens.filter(o => o.model_name === modelName);
     const fuelTypes = Array.from(new Set(modelOvens.flatMap(o => o.fuel_type)));
-    const diameters = Array.from(new Set(modelOvens.map(o => o.diameter))).sort((a, b) => a - b);
+    const diametersSet = new Set<number>();
+    
+    modelOvens.forEach(oven => {
+      if (oven.sizes && oven.sizes.length > 0) {
+        oven.sizes.forEach(size => diametersSet.add(size.diameter));
+      } else {
+        diametersSet.add(oven.diameter);
+      }
+    });
+    
+    const diameters = Array.from(diametersSet).sort((a, b) => a - b);
     return { fuelTypes, diameters };
   };
 
@@ -151,15 +243,28 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
   // Ottieni il prezzo in base al listino selezionato
   const getPrice = (field: 'base' | 'gas' | 'electric' | 'installation') => {
-    if (!selectedOven) return 0;
-    const suffix = priceList.toLowerCase();
-    const fieldName = `${field}_price_${suffix}` as keyof ConfiguratorOven;
-    return selectedOven[fieldName] as number || 0;
+    if (!selectedOvenData) return 0;
+    
+    // New structure with sizes and coatings
+    if (selectedOvenData.isNewStructure && selectedOvenData.coating) {
+      const priceKey = `list${priceList}` as 'listA' | 'listB' | 'listC';
+      const prices = selectedOvenData.coating.prices[priceKey];
+      return prices?.[field] || prices?.base || 0;
+    }
+    
+    // Legacy structure
+    if (!selectedOvenData.isNewStructure && selectedOven) {
+      const suffix = priceList.toLowerCase();
+      const fieldName = `${field}_price_${suffix}` as keyof ConfiguratorOven;
+      return selectedOven[fieldName] as number || 0;
+    }
+    
+    return 0;
   };
 
   // Calcola il prezzo base del forno in base all'alimentazione
   const getOvenPrice = () => {
-    if (!selectedOven) return 0;
+    if (!selectedOvenData) return 0;
     if (selectedFuelType === 'Legna') return getPrice('base');
     if (selectedFuelType === 'Gas') return getPrice('gas') || getPrice('base');
     if (selectedFuelType === 'Elettrico') return getPrice('electric') || getPrice('base');
@@ -167,11 +272,12 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   };
 
   const calculateTotal = () => {
-    if (!selectedOven) return 0;
+    if (!selectedOvenData) return 0;
     let total = getOvenPrice();
     
+    const diameter = selectedOvenData.size?.diameter || selectedOven?.diameter || 0;
     if (deliveryOption === 'shipping') {
-      total += getShippingPrice(selectedOven.diameter);
+      total += getShippingPrice(diameter);
     } else if (deliveryOption === 'on_site') {
       total += getPrice('installation');
     }
@@ -470,24 +576,57 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         )}
 
         {/* Step 3: Diameter Selection */}
-        {selectedFuelType && (
+        {selectedFuelType && availableDiameters.length > 0 && (
           <div className="mb-6 md:mb-8">
-            <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4">3. Scegli la Dimensione</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-              {availableDiameters.map(oven => (
+            <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4">3. Scegli il Diametro</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+              {availableDiameters.map(diameter => {
+                const modelOven = ovens.find(o => o.model_name === selectedModel);
+                const sizeData = modelOven?.sizes?.find(s => s.diameter === diameter);
+                const pizzaCapacity = sizeData?.pizza_capacity || modelOven?.pizza_capacity || '';
+                
+                return (
+                  <Card 
+                    key={diameter}
+                    className={`cursor-pointer transition-all ${selectedDiameter === diameter.toString() ? 'ring-2 ring-primary' : 'hover:shadow-lg'}`}
+                    onClick={() => {
+                      setSelectedDiameter(diameter.toString());
+                      setSelectedCoating('');
+                    }}
+                  >
+                    <CardContent className="p-4 md:p-6 text-center">
+                      <Pizza className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 text-primary" />
+                      <div className="font-bold text-lg md:text-xl mb-1">{diameter}cm</div>
+                      <div className="text-xs md:text-sm text-muted-foreground">{pizzaCapacity}</div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Step 4: Coating Selection (if new structure) */}
+        {selectedDiameter && availableCoatings.length > 0 && (
+          <div className="mb-6 md:mb-8">
+            <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4">4. Scegli il Rivestimento</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+              {availableCoatings.map(coating => (
                 <Card 
-                  key={oven.id}
-                  className={`cursor-pointer transition-all hover:shadow-lg ${selectedDiameter === oven.diameter.toString() ? 'ring-2 ring-primary' : ''}`}
-                  onClick={() => setSelectedDiameter(oven.diameter.toString())}
+                  key={coating.name}
+                  className={`cursor-pointer transition-all overflow-hidden ${selectedCoating === coating.name ? 'ring-2 ring-primary' : 'hover:shadow-lg'}`}
+                  onClick={() => setSelectedCoating(coating.name)}
                 >
-                  <CardContent className="p-3 md:p-6">
-                    <div className="text-center">
-                      <Pizza className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2" />
-                      <h3 className="font-semibold text-base md:text-lg">{oven.diameter}cm</h3>
-                      <p className="text-xs md:text-sm text-muted-foreground">{oven.pizza_capacity}</p>
-                      <p className="text-base md:text-lg font-bold mt-2">
-                        €{((priceList === 'A' ? oven.base_price_a : priceList === 'B' ? oven.base_price_b : oven.base_price_c) || 0).toFixed(2)}
-                      </p>
+                  <CardContent className="p-0">
+                    <div className="aspect-square relative">
+                      <img 
+                        src={coating.image} 
+                        alt={coating.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-3 text-center">
+                      <div className="font-medium text-sm">{coating.name}</div>
                     </div>
                   </CardContent>
                 </Card>
@@ -495,11 +634,12 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
             </div>
           </div>
         )}
-        {/* Step 4: Additional Options & Summary */}
-        {selectedOven && (
+
+        {/* Step 5: Additional Options & Summary */}
+        {selectedOvenData && (availableCoatings.length === 0 || selectedCoating) && (
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle>4. Opzioni Aggiuntive e Riepilogo</CardTitle>
+              <CardTitle>{availableCoatings.length > 0 ? '5' : '4'}. Opzioni Aggiuntive e Riepilogo</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
@@ -513,7 +653,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                       <div className="flex-1">
                         <Label className="cursor-pointer font-medium text-base">Spedizione in Europa</Label>
                         <p className="text-sm text-muted-foreground mt-1">Spedizione con imballaggio cassonato in legno</p>
-                        <p className="text-lg font-bold mt-2 text-vesuviano-600">+€{getShippingPrice(selectedOven.diameter).toFixed(2)}</p>
+                        <p className="text-lg font-bold mt-2 text-vesuviano-600">+€{getShippingPrice(selectedOvenData.size?.diameter || selectedOven.diameter).toFixed(2)}</p>
                       </div>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${deliveryOption === 'shipping' ? 'border-primary' : 'border-border'}`}>
                         {deliveryOption === 'shipping' && <div className="w-3 h-3 rounded-full bg-primary"></div>}
@@ -547,7 +687,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 <div className="space-y-3">
                   <div className="aspect-video relative overflow-hidden rounded-lg border">
                     <img 
-                      src={selectedOven.image_url} 
+                      src={selectedOvenData.coating?.image || selectedOven.image_url} 
                       alt={selectedOven.model_name}
                       className="w-full h-full object-cover"
                     />
@@ -585,15 +725,35 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 <div className="bg-muted/50 rounded-lg p-4 md:p-6 space-y-3 md:space-y-4">
                   <div className="flex items-center gap-3">
                     <div className="w-16 h-16 md:w-24 md:h-24 bg-background rounded-lg overflow-hidden flex-shrink-0">
-                      <img src={selectedOven.image_url} alt={selectedOven.model_name} className="w-full h-full object-cover" />
+                      <img 
+                        src={selectedOvenData.coating?.image || selectedOven.image_url} 
+                        alt={selectedOven.model_name} 
+                        className="w-full h-full object-cover" 
+                      />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-bold text-base md:text-lg truncate">{selectedOven.model_name}</h4>
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground"><Flame className="w-3 h-3 md:w-4 md:h-4" /><span>{selectedOven.fuel_type}</span></div>
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground"><Pizza className="w-3 h-3 md:w-4 md:h-4" /><span>{selectedOven.diameter}cm - {selectedOven.pizza_capacity}</span></div>
+                      <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground">
+                        <Flame className="w-3 h-3 md:w-4 md:h-4" />
+                        <span>{selectedFuelType}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground">
+                        <Pizza className="w-3 h-3 md:w-4 md:h-4" />
+                        <span>
+                          {selectedOvenData.size?.diameter || selectedOven.diameter}cm - {selectedOvenData.size?.pizza_capacity || selectedOven.pizza_capacity}
+                        </span>
+                      </div>
+                      {selectedCoating && (
+                        <div className="text-xs md:text-sm text-muted-foreground mt-1">
+                          Rivestimento: {selectedCoating}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 pt-2 md:pt-3 border-t text-sm md:text-base"><Clock className="w-4 h-4 md:w-5 md:h-5" /><span>Consegna: {selectedOven.delivery_time_weeks} settimane</span></div>
+                  <div className="flex items-center gap-2 pt-2 md:pt-3 border-t text-sm md:text-base">
+                    <Clock className="w-4 h-4 md:w-5 md:h-5" />
+                    <span>Consegna: {selectedOven.delivery_time_weeks} settimane</span>
+                  </div>
                   <div className="flex items-center justify-between pt-2 md:pt-3 border-t">
                     <span className="text-base md:text-lg font-semibold">Totale:</span>
                     <span className="text-2xl md:text-3xl font-bold text-primary">€{calculateTotal().toFixed(2)}</span>
