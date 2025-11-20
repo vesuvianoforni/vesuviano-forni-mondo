@@ -30,6 +30,8 @@ interface SizeOption {
   diameter: number;
   pizza_capacity: string;
   coatings: Coating[];
+  passage_space_cm: number | null;
+  can_be_built_on_site: boolean;
 }
 
 export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) => {
@@ -53,7 +55,9 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
   const [newSize, setNewSize] = useState<SizeOption>({
     diameter: 0,
     pizza_capacity: "",
-    coatings: []
+    coatings: [],
+    passage_space_cm: null,
+    can_be_built_on_site: true
   });
 
   const [newCoating, setNewCoating] = useState<Coating>({
@@ -132,7 +136,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
       return;
     }
     setFormData(prev => ({ ...prev, sizes: [...prev.sizes, { ...newSize }] }));
-    setNewSize({ diameter: 0, pizza_capacity: "", coatings: [] });
+    setNewSize({ diameter: 0, pizza_capacity: "", coatings: [], passage_space_cm: null, can_be_built_on_site: true });
     toast.success("Dimensione aggiunta");
   };
 
