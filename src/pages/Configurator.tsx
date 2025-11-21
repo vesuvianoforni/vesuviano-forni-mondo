@@ -39,6 +39,8 @@ interface ConfiguratorOven {
   sizes?: Array<{
     diameter: number;
     pizza_capacity: string;
+    passage_space_cm?: number | null;
+    can_be_built_on_site?: boolean;
     coatings: Array<{
       name: string;
       image_url: string;
@@ -49,8 +51,6 @@ interface ConfiguratorOven {
       };
     }>;
   }>;
-  can_be_built_on_site?: boolean;
-  passage_space_cm?: number;
 }
 
 interface ConfiguratorOption {
@@ -148,7 +148,13 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     ovens
       .filter(o => {
         if (!buildType) return true; // Show all if buildType not selected
-        if (buildType === 'on_site') return o.can_be_built_on_site !== false;
+        if (buildType === 'on_site') {
+          // Check if at least one size can be built on site
+          if (o.sizes && o.sizes.length > 0) {
+            return o.sizes.some(size => size.can_be_built_on_site === true);
+          }
+          return false;
+        }
         return true; // ready_to_use can show all
       })
       .map(o => o.model_name)
@@ -162,7 +168,16 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     const diametersSet = new Set<number>();
     modelOvens.forEach(oven => {
       if (oven.sizes && oven.sizes.length > 0) {
-        oven.sizes.forEach(size => diametersSet.add(size.diameter));
+        oven.sizes.forEach(size => {
+          // Filter by buildType if on_site
+          if (buildType === 'on_site') {
+            if (size.can_be_built_on_site === true) {
+              diametersSet.add(size.diameter);
+            }
+          } else {
+            diametersSet.add(size.diameter);
+          }
+        });
       } else {
         diametersSet.add(oven.diameter);
       }
@@ -746,10 +761,10 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               {buildType === 'ready_to_use' && (
                 <div>
                   <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Opzioni di Consegna</h3>
-                  {selectedOven.passage_space_cm && (
+                  {selectedOvenData?.size?.passage_space_cm && (
                     <div className="mb-3 p-2 sm:p-3 bg-blue-50 border border-blue-200 rounded-md">
                       <p className="text-xs sm:text-sm text-blue-900">
-                        <strong>Spazio necessario per il passaggio:</strong> {selectedOven.passage_space_cm} cm
+                        <strong>Spazio necessario per il passaggio:</strong> {selectedOvenData.size.passage_space_cm} cm
                       </p>
                     </div>
                   )}
