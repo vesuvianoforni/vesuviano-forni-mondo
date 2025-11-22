@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Plus, Trash2, Edit } from 'lucide-react';
+import { Plus, Trash2, Edit, Video } from 'lucide-react';
 
 interface EditOvenModalProps {
   oven: any;
@@ -20,6 +20,7 @@ interface EditOvenModalProps {
 interface Coating {
   name: string;
   image_url: string;
+  video_url_360?: string;
   prices: {
     listA: { base: number; gas: number; electric: number; onSite: number };
     listB: { base: number; gas: number; electric: number; onSite: number };
@@ -59,6 +60,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
   const [newCoating, setNewCoating] = useState<Coating>({
     name: "",
     image_url: "",
+    video_url_360: "",
     prices: {
       listA: { base: 0, gas: 0, electric: 0, onSite: 0 },
       listB: { base: 0, gas: 0, electric: 0, onSite: 0 },
@@ -156,6 +158,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     setNewCoating({
       name: "",
       image_url: "",
+      video_url_360: "",
       prices: {
         listA: { base: 0, gas: 0, electric: 0, onSite: 0 },
         listB: { base: 0, gas: 0, electric: 0, onSite: 0 },
@@ -478,6 +481,75 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                           </div>
                         </div>
                       </div>
+
+                      {/* Video 360 Upload for Coating */}
+                      {editingSizeIndex === sizeIdx && (
+                        <div>
+                          <Label className="text-xs">Video 360° Rivestimento (opzionale)</Label>
+                          <div 
+                            className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary transition-colors"
+                            onDragOver={(e) => {
+                              e.preventDefault();
+                              e.currentTarget.classList.add('border-primary');
+                            }}
+                            onDragLeave={(e) => {
+                              e.currentTarget.classList.remove('border-primary');
+                            }}
+                            onDrop={async (e) => {
+                              e.preventDefault();
+                              e.currentTarget.classList.remove('border-primary');
+                              const file = e.dataTransfer.files?.[0];
+                              if (file && file.type.startsWith('video/')) {
+                                setUploadingImage(true);
+                                try {
+                                  const url = await uploadFile(file, 'videos');
+                                  setNewCoating(prev => ({ ...prev, video_url_360: url }));
+                                  toast.success("Video caricato!");
+                                } catch (error) {
+                                  console.error('Error uploading video:', error);
+                                  toast.error("Errore nel caricamento");
+                                } finally {
+                                  setUploadingImage(false);
+                                }
+                              }
+                            }}
+                            onClick={() => document.getElementById(`coating-video-upload-${sizeIdx}`)?.click()}
+                          >
+                            <input
+                              id={`coating-video-upload-${sizeIdx}`}
+                              type="file"
+                              accept="video/*"
+                              className="hidden"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  setUploadingImage(true);
+                                  try {
+                                    const url = await uploadFile(file, 'videos');
+                                    setNewCoating(prev => ({ ...prev, video_url_360: url }));
+                                    toast.success("Video caricato!");
+                                  } catch (error) {
+                                    console.error('Error uploading video:', error);
+                                    toast.error("Errore nel caricamento");
+                                  } finally {
+                                    setUploadingImage(false);
+                                  }
+                                }
+                              }}
+                            />
+                            {newCoating.video_url_360 ? (
+                              <div className="flex items-center gap-2 justify-center">
+                                <Video className="h-6 w-6 text-primary" />
+                                <span className="text-xs text-green-600">Video caricato</span>
+                              </div>
+                            ) : (
+                              <div className="text-sm text-muted-foreground">
+                                {uploadingImage ? "Caricamento..." : "Trascina video o clicca per caricare"}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
 
                       {/* Prices for coating */}
                       {editingSizeIndex === sizeIdx && (

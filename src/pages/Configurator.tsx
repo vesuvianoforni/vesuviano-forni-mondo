@@ -44,6 +44,7 @@ interface ConfiguratorOven {
     coatings: Array<{
       name: string;
       image_url: string;
+      video_url_360?: string;
       prices: {
         listA: { base: number; gas?: number; electric?: number; onSite?: number };
         listB: { base: number; gas?: number; electric?: number; onSite?: number };
@@ -817,7 +818,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     </div>
                   )}
 
-                  {selectedOven.video_url_360 && (
+                  {(selectedOvenData.coating?.video_url_360 || selectedOven.video_url_360) && (
                     <Button
                       variant="outline"
                       className="w-full"
@@ -943,8 +944,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           <Video360Modal
             open={showVideo360}
             onClose={() => setShowVideo360(false)}
-            videoUrl={selectedOven.video_url_360}
-            title={`${selectedOven.model_name} ${selectedOven.fuel_type}`}
+            videoUrl={selectedOvenData?.coating?.video_url_360 || selectedOven.video_url_360 || ''}
+            title={`${selectedOven.model_name} ${selectedFuelType}${selectedOvenData?.coating ? ` - ${selectedOvenData.coating.name}` : ''}`}
           />
         )}
 
