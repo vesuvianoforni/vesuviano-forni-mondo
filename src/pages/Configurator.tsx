@@ -608,7 +608,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                       <img 
                         src={ovens.find(o => o.model_name === model)?.image_url || '/placeholder.svg'} 
                         alt={model}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain p-2"
                       />
                     </div>
                     <h3 className="font-semibold text-center mb-2 sm:mb-3 text-sm sm:text-base">{model}</h3>
@@ -796,22 +796,22 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               <div>
                 <h3 className="font-semibold mb-4">Il Tuo Forno</h3>
                 <div className="space-y-3">
-                  <div className="aspect-video relative overflow-hidden rounded-lg border">
+                  <div className="aspect-[4/5] sm:aspect-[3/4] md:aspect-video relative overflow-hidden rounded-lg border bg-muted">
                     <img 
                       src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
                       alt={selectedOven.model_name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain p-2 sm:p-4"
                     />
                   </div>
                   
                   {selectedOven.additional_images && selectedOven.additional_images.length > 0 && (
                     <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
                       {selectedOven.additional_images.map((img: string, index: number) => (
-                        <div key={index} className="aspect-square relative overflow-hidden rounded border cursor-pointer hover:opacity-80 transition-opacity">
+                        <div key={index} className="aspect-square relative overflow-hidden rounded border cursor-pointer hover:opacity-80 transition-opacity bg-muted">
                           <img 
                             src={img} 
                             alt={`${selectedOven.model_name} - Vista ${index + 1}`}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-contain p-1"
                           />
                         </div>
                       ))}
@@ -839,7 +839,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                       <img 
                         src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
                         alt={selectedOven.model_name} 
-                        className="w-full h-full object-cover" 
+                        className="w-full h-full object-contain p-1" 
                       />
                     </div>
                     <div className="flex-1 min-w-0">
