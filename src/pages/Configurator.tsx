@@ -9,8 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Flame, Clock, Euro, Pizza, Video } from 'lucide-react';
-import Video360Modal from '@/components/Video360Modal';
+import { Flame, Clock, Euro, Pizza } from 'lucide-react';
 
 interface ConfiguratorOven {
   id: string;
@@ -82,7 +81,6 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   const [customerPhone, setCustomerPhone] = useState('');
   const [notes, setNotes] = useState('');
   const [savingQuote, setSavingQuote] = useState(false);
-  const [showVideo360, setShowVideo360] = useState(false);
   const [priceList, setPriceList] = useState<'A' | 'B' | 'C'>('A');
   const [customerData, setCustomerData] = useState<{
     name: string;
@@ -943,14 +941,6 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
             </div>
           </DialogContent>
         </Dialog>
-        {selectedOven && (
-          <Video360Modal
-            open={showVideo360}
-            onClose={() => setShowVideo360(false)}
-            videoUrl={selectedOvenData?.coating?.video_url_360 || selectedOven.video_url_360 || ''}
-            title={`${selectedOven.model_name} ${selectedFuelType}${selectedOvenData?.coating ? ` - ${selectedOvenData.coating.name}` : ''}`}
-          />
-        )}
 
         {/* Modal Non Interessato */}
         <Dialog open={showNotInterestedModal} onOpenChange={setShowNotInterestedModal}>
