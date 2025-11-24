@@ -797,11 +797,25 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 <h3 className="font-semibold mb-4">Il Tuo Forno</h3>
                 <div className="space-y-3">
                   <div className="aspect-[4/5] sm:aspect-[3/4] md:aspect-video relative overflow-hidden rounded-lg border bg-muted">
-                    <img 
-                      src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
-                      alt={selectedOven.model_name}
-                      className="w-full h-full object-contain p-2 sm:p-4"
-                    />
+                    {(selectedOvenData.coating?.video_url_360 || selectedOven.video_url_360) ? (
+                      <video 
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        controls
+                        className="w-full h-full object-contain"
+                        src={selectedOvenData.coating?.video_url_360 || selectedOven.video_url_360}
+                      >
+                        Il tuo browser non supporta il tag video.
+                      </video>
+                    ) : (
+                      <img 
+                        src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
+                        alt={selectedOven.model_name}
+                        className="w-full h-full object-contain p-2 sm:p-4"
+                      />
+                    )}
                   </div>
                   
                   {selectedOven.additional_images && selectedOven.additional_images.length > 0 && (
@@ -816,17 +830,6 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         </div>
                       ))}
                     </div>
-                  )}
-
-                  {(selectedOvenData.coating?.video_url_360 || selectedOven.video_url_360) && (
-                    <Button
-                      variant="outline"
-                      className="w-full"
-                      onClick={() => setShowVideo360(true)}
-                    >
-                      <Video className="w-4 h-4 mr-2" />
-                      Visualizza Video 360°
-                    </Button>
                   )}
                 </div>
               </div>
