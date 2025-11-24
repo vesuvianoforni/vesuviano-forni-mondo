@@ -50,6 +50,8 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [uploadingCoatingImage, setUploadingCoatingImage] = useState(false);
+  const [uploadingCoatingVideo, setUploadingCoatingVideo] = useState(false);
   
   const [newSize, setNewSize] = useState<SizeOption>({
     diameter: 0,
@@ -471,12 +473,12 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                             onDragLeave={(e) => {
                               e.currentTarget.classList.remove('border-primary');
                             }}
-                            onDrop={async (e) => {
+                             onDrop={async (e) => {
                               e.preventDefault();
                               e.currentTarget.classList.remove('border-primary');
                               const file = e.dataTransfer.files?.[0];
                               if (file && file.type.startsWith('image/')) {
-                                setUploadingImage(true);
+                                setUploadingCoatingImage(true);
                                 try {
                                   const url = await uploadFile(file, 'oven-gallery');
                                   setEditingSizeIndex(sizeIdx);
@@ -486,7 +488,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                                   console.error('Error uploading image:', error);
                                   toast.error("Errore nel caricamento");
                                 } finally {
-                                  setUploadingImage(false);
+                                  setUploadingCoatingImage(false);
                                 }
                               }
                             }}
@@ -500,7 +502,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                               onChange={async (e) => {
                                 const file = e.target.files?.[0];
                                 if (file) {
-                                  setUploadingImage(true);
+                                  setUploadingCoatingImage(true);
                                   try {
                                     const url = await uploadFile(file, 'oven-gallery');
                                     setEditingSizeIndex(sizeIdx);
@@ -510,7 +512,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                                     console.error('Error uploading image:', error);
                                     toast.error("Errore nel caricamento");
                                   } finally {
-                                    setUploadingImage(false);
+                                    setUploadingCoatingImage(false);
                                   }
                                 }
                               }}
@@ -522,7 +524,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                               </div>
                             ) : (
                               <div className="text-sm text-muted-foreground">
-                                {uploadingImage ? "Caricamento..." : "Trascina immagine o clicca per caricare"}
+                                {uploadingCoatingImage ? "Caricamento..." : "Trascina immagine o clicca per caricare"}
                               </div>
                             )}
                           </div>
@@ -547,7 +549,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                               e.currentTarget.classList.remove('border-primary');
                               const file = e.dataTransfer.files?.[0];
                               if (file && file.type.startsWith('video/')) {
-                                setUploadingImage(true);
+                                setUploadingCoatingVideo(true);
                                 try {
                                   const url = await uploadFile(file, 'videos');
                                   setNewCoating(prev => ({ ...prev, video_url_360: url }));
@@ -556,7 +558,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                                   console.error('Error uploading video:', error);
                                   toast.error("Errore nel caricamento");
                                 } finally {
-                                  setUploadingImage(false);
+                                  setUploadingCoatingVideo(false);
                                 }
                               }
                             }}
@@ -570,7 +572,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                               onChange={async (e) => {
                                 const file = e.target.files?.[0];
                                 if (file) {
-                                  setUploadingImage(true);
+                                  setUploadingCoatingVideo(true);
                                   try {
                                     const url = await uploadFile(file, 'videos');
                                     setNewCoating(prev => ({ ...prev, video_url_360: url }));
@@ -579,7 +581,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                                     console.error('Error uploading video:', error);
                                     toast.error("Errore nel caricamento");
                                   } finally {
-                                    setUploadingImage(false);
+                                    setUploadingCoatingVideo(false);
                                   }
                                 }
                               }}
@@ -591,7 +593,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                               </div>
                             ) : (
                               <div className="text-sm text-muted-foreground">
-                                {uploadingImage ? "Caricamento..." : "Trascina video o clicca per caricare"}
+                                {uploadingCoatingVideo ? "Caricamento..." : "Trascina video o clicca per caricare"}
                               </div>
                             )}
                           </div>
