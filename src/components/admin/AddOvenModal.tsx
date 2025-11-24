@@ -456,8 +456,21 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                           <Input 
                             value={editingSizeIndex === sizeIdx ? newCoating.name : ''} 
                             onChange={(e) => {
+                              if (editingSizeIndex !== sizeIdx) {
+                                setNewCoating({
+                                  name: e.target.value,
+                                  image_url: "",
+                                  video_url_360: "",
+                                  prices: {
+                                    listA: { base: 0, gas: 0, electric: 0, onSite: 0 },
+                                    listB: { base: 0, gas: 0, electric: 0, onSite: 0 },
+                                    listC: { base: 0, gas: 0, electric: 0, onSite: 0 }
+                                  }
+                                });
+                              } else {
+                                setNewCoating(prev => ({ ...prev, name: e.target.value }));
+                              }
                               setEditingSizeIndex(sizeIdx);
-                              setNewCoating(prev => ({ ...prev, name: e.target.value }));
                             }}
                             placeholder="es. Verniciato"
                           />
@@ -481,8 +494,21 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                                 setUploadingCoatingImage(true);
                                 try {
                                   const url = await uploadFile(file, 'oven-gallery');
+                                  if (editingSizeIndex !== sizeIdx) {
+                                    setNewCoating({
+                                      name: "",
+                                      image_url: url,
+                                      video_url_360: "",
+                                      prices: {
+                                        listA: { base: 0, gas: 0, electric: 0, onSite: 0 },
+                                        listB: { base: 0, gas: 0, electric: 0, onSite: 0 },
+                                        listC: { base: 0, gas: 0, electric: 0, onSite: 0 }
+                                      }
+                                    });
+                                  } else {
+                                    setNewCoating(prev => ({ ...prev, image_url: url }));
+                                  }
                                   setEditingSizeIndex(sizeIdx);
-                                  setNewCoating(prev => ({ ...prev, image_url: url }));
                                   toast.success("Immagine caricata!");
                                 } catch (error) {
                                   console.error('Error uploading image:', error);
@@ -505,8 +531,21 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                                   setUploadingCoatingImage(true);
                                   try {
                                     const url = await uploadFile(file, 'oven-gallery');
+                                    if (editingSizeIndex !== sizeIdx) {
+                                      setNewCoating({
+                                        name: "",
+                                        image_url: url,
+                                        video_url_360: "",
+                                        prices: {
+                                          listA: { base: 0, gas: 0, electric: 0, onSite: 0 },
+                                          listB: { base: 0, gas: 0, electric: 0, onSite: 0 },
+                                          listC: { base: 0, gas: 0, electric: 0, onSite: 0 }
+                                        }
+                                      });
+                                    } else {
+                                      setNewCoating(prev => ({ ...prev, image_url: url }));
+                                    }
                                     setEditingSizeIndex(sizeIdx);
-                                    setNewCoating(prev => ({ ...prev, image_url: url }));
                                     toast.success("Immagine caricata!");
                                   } catch (error) {
                                     console.error('Error uploading image:', error);
