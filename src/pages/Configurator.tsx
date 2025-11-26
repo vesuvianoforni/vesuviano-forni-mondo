@@ -44,6 +44,7 @@ interface ConfiguratorOven {
       name: string;
       image_url: string;
       video_url_360?: string;
+      render_images?: string[];
       prices: {
         listA: { base: number; gas?: number; electric?: number; onSite?: number };
         listB: { base: number; gas?: number; electric?: number; onSite?: number };
@@ -816,9 +817,11 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     )}
                   </div>
                   
-                  {selectedOven.additional_images && selectedOven.additional_images.length > 0 && (
+                  {/* Show coating render images if available, otherwise fall back to oven additional_images */}
+                  {((selectedOvenData.coating?.render_images && selectedOvenData.coating.render_images.length > 0) ||
+                    (selectedOven.additional_images && selectedOven.additional_images.length > 0)) && (
                     <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
-                      {selectedOven.additional_images.map((img: string, index: number) => (
+                      {(selectedOvenData.coating?.render_images || selectedOven.additional_images || []).map((img: string, index: number) => (
                         <div key={index} className="aspect-square relative overflow-hidden rounded border cursor-pointer hover:opacity-80 transition-opacity bg-muted">
                           <img 
                             src={img} 
