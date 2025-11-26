@@ -50,15 +50,23 @@ const AdminConfigurator = () => {
 
   const handleDeleteOven = async (ovenId: string) => {
     if (!confirm('Sei sicuro di voler eliminare questo forno?')) return;
-    
+
     try {
-      const { error } = await supabase
+      // Prima eliminiamo eventuali preventivi collegati a questo forno per evitare errori di vincoli
+      const { error: quotesError } = await supabase
+        .from('configurator_quotes')
+        .delete()
+        .eq('oven_id', ovenId);
+
+      if (quotesError) throw quotesError;
+
+      const { error: ovenError } = await supabase
         .from('configurator_ovens')
         .delete()
         .eq('id', ovenId);
 
-      if (error) throw error;
-      
+      if (ovenError) throw ovenError;
+
       toast.success('Forno eliminato con successo');
       fetchData();
     } catch (error) {
