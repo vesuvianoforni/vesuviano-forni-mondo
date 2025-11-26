@@ -53,7 +53,6 @@ serve(async (req) => {
       form.append("prompt", prompt);
       form.append("size", "1024x1024");
       form.append("n", "1");
-      form.append("response_format", "b64_json");
 
       const bytes = dataUrlToBytes(imageBase64 as string);
       const file = new File([bytes], "image.png", { type: "image/png" });
@@ -89,7 +88,6 @@ serve(async (req) => {
           prompt,
           size: "1024x1024",
           n: 1,
-          response_format: "b64_json",
         }),
       });
 
