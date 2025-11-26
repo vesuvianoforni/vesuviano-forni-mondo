@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Plus, Trash2, Edit, Video } from 'lucide-react';
+import { Plus, Trash2, Edit, Video, Upload } from 'lucide-react';
 
 interface EditOvenModalProps {
   oven: any;
@@ -75,6 +75,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingCoatingImage, setUploadingCoatingImage] = useState(false);
   const [uploadingCoatingVideo, setUploadingCoatingVideo] = useState(false);
+  const [uploadingMainImage, setUploadingMainImage] = useState(false);
 
   const uploadFile = async (file: File, bucket: string) => {
     const fileExt = file.name.split('.').pop();
@@ -280,13 +281,82 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
             </div>
           </div>
 
-          {/* Image URL */}
+          {/* Main Image Upload */}
           <div>
-            <Label>URL Immagine Principale</Label>
-            <Input 
-              value={formData.image_url} 
-              onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
-            />
+            <Label>Immagine Principale</Label>
+            <div className="space-y-2">
+              <Input 
+                value={formData.image_url} 
+                onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
+                placeholder="https://..."
+              />
+              <div className="text-center text-sm text-muted-foreground">oppure</div>
+              <div
+                className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-primary transition-colors"
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                onDrop={async (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const file = e.dataTransfer.files[0];
+                  if (file && file.type.startsWith('image/')) {
+                    setUploadingMainImage(true);
+                    try {
+                      const url = await uploadFile(file, 'oven-gallery');
+                      setFormData(prev => ({ ...prev, image_url: url }));
+                      toast.success('Immagine caricata con successo');
+                    } catch (error) {
+                      console.error('Error uploading image:', error);
+                      toast.error('Errore nel caricamento dell\'immagine');
+                    } finally {
+                      setUploadingMainImage(false);
+                    }
+                  }
+                }}
+                onClick={() => document.getElementById('main-image-upload')?.click()}
+              >
+                {uploadingMainImage ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                    <span>Caricamento...</span>
+                  </div>
+                ) : (
+                  <>
+                    <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                    <p className="text-sm text-muted-foreground">
+                      Trascina qui l'immagine o clicca per selezionare
+                    </p>
+                  </>
+                )}
+              </div>
+              <input
+                id="main-image-upload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setUploadingMainImage(true);
+                    try {
+                      const url = await uploadFile(file, 'oven-gallery');
+                      setFormData(prev => ({ ...prev, image_url: url }));
+                      toast.success('Immagine caricata con successo');
+                    } catch (error) {
+                      console.error('Error uploading image:', error);
+                      toast.error('Errore nel caricamento dell\'immagine');
+                    } finally {
+                      setUploadingMainImage(false);
+                    }
+                  }
+                }}
+              />
+              {formData.image_url && (
+                <img src={formData.image_url} alt="Preview" className="w-full h-32 object-contain rounded border" />
+              )}
+            </div>
           </div>
 
           {/* Video 360 URL */}
