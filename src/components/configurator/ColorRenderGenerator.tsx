@@ -9,32 +9,44 @@ import { supabase } from "@/integrations/supabase/client";
 import ImageResultModal from "@/components/oven-visualizer/ImageResultModal";
 import CreativeLoader from "@/components/oven-visualizer/CreativeLoader";
 
-interface AIRenderGeneratorProps {
+interface ColorRenderGeneratorProps {
   ovenName: string;
   ovenImageUrl: string;
   selectedCoating?: string;
 }
 
-const AIRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: AIRenderGeneratorProps) => {
+const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: ColorRenderGeneratorProps) => {
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
-  const [customColor, setCustomColor] = useState<string>(selectedCoating || "");
+  const [customColor, setCustomColor] = useState<string>("");
+
+  const downloadImage = () => {
+    if (!generatedImageUrl) return;
+    
+    const link = document.createElement('a');
+    link.href = generatedImageUrl;
+    link.download = `render-${ovenName}-${Date.now()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Download avviato!");
+  };
 
   const generateRender = async () => {
     const colorToUse = customColor.trim() || selectedCoating;
     
     if (!colorToUse) {
-      toast.error("Inserisci il colore desiderato!");
+      toast.error("Seleziona o inserisci un colore/rivestimento!");
       return;
     }
 
     setIsGenerating(true);
     
     try {
-      const promptText = `Genera un render fotorealistico professionale di un forno a legna per pizza modello "${ovenName}" con finitura/rivestimento colore ${colorToUse}. Il forno deve essere mostrato in un ambiente elegante e professionale, con illuminazione da studio che ne esalti i dettagli, la texture e il colore del rivestimento. Focus sul design artigianale e sulla qualità dei materiali. Altissima risoluzione, qualità fotografica professionale, sfondo neutro o ambiente elegante.`;
+      const promptText = `Genera un render fotorealistico professionale di un forno a legna per pizza modello "${ovenName}" con finitura/rivestimento "${colorToUse}". Il forno deve essere mostrato in un ambiente elegante e professionale, con illuminazione da studio che ne esalti i dettagli, la texture e il colore del rivestimento. Focus sul design artigianale italiano e sulla qualità dei materiali. Altissima risoluzione, qualità fotografica professionale, sfondo neutro elegante.`;
       
-      console.log("🚀 Generazione render AI del forno...");
+      console.log("🚀 Generazione render AI del forno con colore:", colorToUse);
       const { data, error } = await supabase.functions.invoke('generate-image-openai', {
         body: {
           prompt: promptText
@@ -59,17 +71,7 @@ const AIRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: AIRender
     }
   };
 
-  const downloadImage = () => {
-    if (!generatedImageUrl) return;
-    
-    const link = document.createElement('a');
-    link.href = generatedImageUrl;
-    link.download = `render-${ovenName}-${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    toast.success("Download avviato!");
-  };
+  const displayColor = customColor.trim() || selectedCoating || "";
 
   return (
     <>
@@ -79,56 +81,71 @@ const AIRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: AIRender
         isOpen={showResultModal}
         onClose={() => setShowResultModal(false)}
         imageUrl={generatedImageUrl}
-        ovenModel={ovenName + (selectedCoating ? ` - ${selectedCoating}` : '')}
+        ovenModel={`${ovenName} - ${displayColor}`}
         onDownload={downloadImage}
       />
 
-      <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200">
-        <CardHeader className="pb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-              <Palette className="w-5 h-5 text-white" />
+      <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+        <CardHeader className="pb-3">
+          <div className="flex items-start gap-3">
+            <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
+              <Palette className="w-6 h-6 text-primary-foreground" />
             </div>
-            <div>
-              <CardTitle className="text-lg">Genera Render AI</CardTitle>
-              <p className="text-sm text-muted-foreground mt-1">
-                Visualizza il forno con il colore/rivestimento che preferisci
+            <div className="flex-1">
+              <CardTitle className="text-lg mb-1">Genera Render AI</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Visualizza il forno con il rivestimento selezionato in alta qualità
               </p>
             </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Color/Coating Selector */}
-          <div className="space-y-2">
-            <Label htmlFor="color-input" className="text-sm font-medium">
-              Colore / Rivestimento desiderato
-            </Label>
-            {selectedCoating && (
-              <div className="text-xs text-muted-foreground mb-2">
-                Rivestimento selezionato: <span className="font-semibold text-blue-700">{selectedCoating}</span>
+          {/* Selected Coating Display */}
+          {selectedCoating && !customColor && (
+            <div className="bg-background/80 border rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <Palette className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium text-foreground mb-1">
+                    Rivestimento selezionato
+                  </p>
+                  <p className="text-primary text-base font-semibold">
+                    {selectedCoating}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Clicca "Genera" per vedere un render professionale
+                  </p>
+                </div>
               </div>
-            )}
+            </div>
+          )}
+
+          {/* Custom Color Input */}
+          <div className="space-y-2">
+            <Label htmlFor="custom-color" className="text-sm font-medium">
+              Preferisci un altro colore? (opzionale)
+            </Label>
             <Input
-              id="color-input"
+              id="custom-color"
               type="text"
-              placeholder="Es: Nero opaco, Mosaico rosso, Bianco lucido, Grigio antracite..."
+              placeholder="Es: Rosso mattone, Grigio pietra, Bianco lucido..."
               value={customColor}
               onChange={(e) => setCustomColor(e.target.value)}
-              className="bg-white border-blue-200 focus:border-blue-400"
+              className="bg-background"
             />
             <p className="text-xs text-muted-foreground">
-              Descrivi il colore o tipo di rivestimento che vorresti vedere
+              Lascia vuoto per usare il rivestimento selezionato
             </p>
           </div>
 
           {/* Generated Result */}
           {generatedImageUrl && (
-            <div className="space-y-3">
-              <div className="relative">
+            <div className="space-y-3 pt-2">
+              <div className="relative rounded-lg overflow-hidden border-2 border-green-300">
                 <img 
                   src={generatedImageUrl} 
                   alt="Render generato" 
-                  className="w-full h-64 object-contain rounded-lg border-2 border-green-300 bg-white"
+                  className="w-full h-64 object-contain bg-white"
                 />
               </div>
               <Button 
@@ -145,8 +162,8 @@ const AIRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: AIRender
           {/* Generate Button */}
           <Button 
             onClick={generateRender}
-            disabled={(!customColor.trim() && !selectedCoating) || isGenerating}
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+            disabled={(!displayColor) || isGenerating}
+            className="w-full"
             size="lg"
           >
             {isGenerating ? (
@@ -171,4 +188,4 @@ const AIRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: AIRender
   );
 };
 
-export default AIRenderGenerator;
+export default ColorRenderGenerator;

@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { Flame, Clock, Euro, Pizza, PlayCircle, Image as ImageIcon } from 'lucide-react';
-import AIRenderGenerator from '@/components/configurator/AIRenderGenerator';
+import ColorRenderGenerator from '@/components/configurator/ColorRenderGenerator';
 import Video360Modal from '@/components/Video360Modal';
 
 interface ConfiguratorOven {
@@ -864,8 +864,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 </div>
               </div>
 
-              {/* AI Render Generator */}
-              <AIRenderGenerator
+              {/* Color Render Generator */}
+              <ColorRenderGenerator
                 ovenName={selectedOven.model_name}
                 ovenImageUrl={selectedOvenData.coating?.image_url || selectedOven.image_url}
                 selectedCoating={selectedCoating}
