@@ -9,7 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Flame, Clock, Euro, Pizza } from 'lucide-react';
+import { Flame, Clock, Euro, Pizza, PlayCircle, Image as ImageIcon } from 'lucide-react';
+import AIRenderGenerator from '@/components/configurator/AIRenderGenerator';
+import Video360Modal from '@/components/Video360Modal';
 
 interface ConfiguratorOven {
   id: string;
@@ -92,6 +94,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   const [feedbackReasons, setFeedbackReasons] = useState<string[]>([]);
   const [otherReason, setOtherReason] = useState('');
   const [savingFeedback, setSavingFeedback] = useState(false);
+  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [showPhotoGallery, setShowPhotoGallery] = useState(true);
 
   useEffect(() => { 
     fetchData(); 
@@ -791,12 +795,37 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               )}
 
 
-              {/* Oven Images Gallery */}
+              {/* Oven Media Gallery - Photo and Video */}
               <div>
-                <h3 className="font-semibold mb-4">Il Tuo Forno</h3>
-                <div className="space-y-3">
+                <h3 className="font-semibold mb-4 text-base sm:text-lg">Il Tuo Forno</h3>
+                <div className="space-y-4">
+                  {/* Media Toggle Buttons */}
+                  {(selectedOvenData.coating?.video_url_360 || selectedOven.video_url_360) && (
+                    <div className="flex gap-2 justify-center">
+                      <Button
+                        variant={showPhotoGallery ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setShowPhotoGallery(true)}
+                        className="flex items-center gap-2"
+                      >
+                        <ImageIcon className="w-4 h-4" />
+                        Foto
+                      </Button>
+                      <Button
+                        variant={!showPhotoGallery ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setShowPhotoGallery(false)}
+                        className="flex items-center gap-2"
+                      >
+                        <PlayCircle className="w-4 h-4" />
+                        Video 360°
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* Main Display */}
                   <div className="aspect-[4/5] sm:aspect-[3/4] md:aspect-video relative overflow-hidden rounded-lg border bg-muted">
-                    {(selectedOvenData.coating?.video_url_360 || selectedOven.video_url_360) ? (
+                    {!showPhotoGallery && (selectedOvenData.coating?.video_url_360 || selectedOven.video_url_360) ? (
                       <video 
                         autoPlay
                         loop
@@ -817,8 +846,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     )}
                   </div>
                   
-                  {/* Show coating render images if available, otherwise fall back to oven additional_images */}
-                  {((selectedOvenData.coating?.render_images && selectedOvenData.coating.render_images.length > 0) ||
+                  {/* Additional Images */}
+                  {showPhotoGallery && ((selectedOvenData.coating?.render_images && selectedOvenData.coating.render_images.length > 0) ||
                     (selectedOven.additional_images && selectedOven.additional_images.length > 0)) && (
                     <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
                       {(selectedOvenData.coating?.render_images || selectedOven.additional_images || []).map((img: string, index: number) => (
@@ -834,6 +863,13 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   )}
                 </div>
               </div>
+
+              {/* AI Render Generator */}
+              <AIRenderGenerator
+                ovenName={selectedOven.model_name}
+                ovenImageUrl={selectedOvenData.coating?.image_url || selectedOven.image_url}
+                selectedCoating={selectedCoating}
+              />
               
               <div className="border-t pt-4 md:pt-6">
                 <h3 className="font-semibold mb-3 md:mb-4 text-lg md:text-xl">Riepilogo Configurazione</h3>
