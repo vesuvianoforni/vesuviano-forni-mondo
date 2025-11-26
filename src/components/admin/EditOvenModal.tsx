@@ -21,6 +21,7 @@ interface Coating {
   name: string;
   image_url: string;
   video_url_360?: string;
+  render_images?: string[];
   prices: {
     listA: { base: number; gas: number; electric: number; onSite: number };
     listB: { base: number; gas: number; electric: number; onSite: number };
@@ -818,6 +819,75 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                                       )}
                                     </div>
                                   </div>
+
+                                  {/* Edit Render Images */}
+                                  <div>
+                                    <Label className="text-xs">Immagini Render (opzionali)</Label>
+                                    <div className="space-y-2 mt-2">
+                                      {(displayCoating.render_images || []).map((img, imgIdx) => (
+                                        <div key={imgIdx} className="flex gap-2 items-center">
+                                          <img src={img} alt={`Render ${imgIdx + 1}`} className="h-12 w-12 object-cover rounded" />
+                                          <Input
+                                            value={img}
+                                            readOnly
+                                            className="h-8 text-xs flex-1"
+                                          />
+                                          <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => {
+                                              if (!editingCoatingData) return;
+                                              const newRenderImages = [...(editingCoatingData.render_images || [])];
+                                              newRenderImages.splice(imgIdx, 1);
+                                              setEditingCoatingData({ ...editingCoatingData, render_images: newRenderImages });
+                                            }}
+                                          >
+                                            <Trash2 className="h-3 w-3" />
+                                          </Button>
+                                        </div>
+                                      ))}
+                                      <div 
+                                        className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary transition-colors"
+                                        onClick={() => document.getElementById(`edit-coating-render-upload-${sizeIdx}-${coatingIdx}`)?.click()}
+                                      >
+                                        <input
+                                          id={`edit-coating-render-upload-${sizeIdx}-${coatingIdx}`}
+                                          type="file"
+                                          accept="image/*"
+                                          multiple
+                                          className="hidden"
+                                          onChange={async (e) => {
+                                            const files = Array.from(e.target.files || []);
+                                            if (files.length > 0) {
+                                              setUploadingImage(true);
+                                              try {
+                                                const uploadPromises = files.map(file => uploadFile(file, 'oven-gallery'));
+                                                const urls = await Promise.all(uploadPromises);
+                                                if (editingCoatingData) {
+                                                  const currentRenderImages = editingCoatingData.render_images || [];
+                                                  setEditingCoatingData({ 
+                                                    ...editingCoatingData, 
+                                                    render_images: [...currentRenderImages, ...urls]
+                                                  });
+                                                }
+                                                toast.success(`${urls.length} immagine/i caricata/e!`);
+                                              } catch (error) {
+                                                console.error('Error uploading images:', error);
+                                                toast.error("Errore nel caricamento");
+                                              } finally {
+                                                setUploadingImage(false);
+                                              }
+                                            }
+                                          }}
+                                        />
+                                        <div className="text-sm text-muted-foreground">
+                                          {uploadingImage ? "Caricamento..." : "Clicca per caricare immagini render (multiplo)"}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
                                   
                                   {(['A', 'B', 'C'] as const).map(list => (
                                     <div key={list} className="space-y-2">
