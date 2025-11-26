@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Wand2, Download, Loader2, Palette } from "lucide-react";
+import { Wand2, Download, Loader2, Palette, Check } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import ImageResultModal from "@/components/oven-visualizer/ImageResultModal";
@@ -15,11 +13,22 @@ interface ColorRenderGeneratorProps {
   selectedCoating?: string;
 }
 
+const POPULAR_COLORS = [
+  { name: "Nero", color: "#1a1a1a" },
+  { name: "Bianco", color: "#f5f5f5" },
+  { name: "Rosso Mattone", color: "#a0522d" },
+  { name: "Grigio Pietra", color: "#708090" },
+  { name: "Terracotta", color: "#e2725b" },
+  { name: "Beige", color: "#d4c5b9" },
+  { name: "Marrone", color: "#654321" },
+  { name: "Verde Oliva", color: "#556b2f" },
+];
+
 const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: ColorRenderGeneratorProps) => {
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
-  const [customColor, setCustomColor] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState<string>(selectedCoating || "");
 
   const downloadImage = () => {
     if (!generatedImageUrl) return;
@@ -34,10 +43,10 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
   };
 
   const generateRender = async () => {
-    const colorToUse = customColor.trim() || selectedCoating;
+    const colorToUse = selectedColor;
     
     if (!colorToUse) {
-      toast.error("Seleziona o inserisci un colore/rivestimento!");
+      toast.error("Seleziona un colore/rivestimento!");
       return;
     }
 
@@ -71,8 +80,6 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
     }
   };
 
-  const displayColor = customColor.trim() || selectedCoating || "";
-
   return (
     <>
       {isGenerating && <CreativeLoader />}
@@ -81,7 +88,7 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
         isOpen={showResultModal}
         onClose={() => setShowResultModal(false)}
         imageUrl={generatedImageUrl}
-        ovenModel={`${ovenName} - ${displayColor}`}
+        ovenModel={`${ovenName} - ${selectedColor}`}
         onDownload={downloadImage}
       />
 
@@ -101,41 +108,62 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Selected Coating Display */}
-          {selectedCoating && !customColor && (
-            <div className="bg-background/80 border rounded-lg p-4">
-              <div className="flex items-start gap-3">
-                <Palette className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-foreground mb-1">
-                    Rivestimento selezionato
-                  </p>
-                  <p className="text-primary text-base font-semibold">
-                    {selectedCoating}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Clicca "Genera" per vedere un render professionale
-                  </p>
-                </div>
-              </div>
+          {selectedCoating && (
+            <div className="bg-background/80 border rounded-lg p-3">
+              <p className="text-xs text-muted-foreground mb-1">
+                Rivestimento selezionato:
+              </p>
+              <p className="text-primary text-sm font-semibold">
+                {selectedCoating}
+              </p>
             </div>
           )}
 
-          {/* Custom Color Input */}
-          <div className="space-y-2">
-            <Label htmlFor="custom-color" className="text-sm font-medium">
-              Preferisci un altro colore? (opzionale)
-            </Label>
-            <Input
-              id="custom-color"
-              type="text"
-              placeholder="Es: Rosso mattone, Grigio pietra, Bianco lucido..."
-              value={customColor}
-              onChange={(e) => setCustomColor(e.target.value)}
-              className="bg-background"
-            />
-            <p className="text-xs text-muted-foreground">
-              Lascia vuoto per usare il rivestimento selezionato
+          {/* Color Selection Grid */}
+          <div className="space-y-3">
+            <p className="text-sm font-medium">
+              Colore / Rivestimento desiderato
             </p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {POPULAR_COLORS.map((colorOption) => (
+                <button
+                  key={colorOption.name}
+                  onClick={() => setSelectedColor(colorOption.name)}
+                  className={`relative p-3 border-2 rounded-lg transition-all hover:scale-105 ${
+                    selectedColor === colorOption.name
+                      ? 'border-primary ring-2 ring-primary/20 bg-primary/5'
+                      : 'border-border hover:border-primary/50'
+                  }`}
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <div 
+                      className="w-12 h-12 rounded-full border-2 border-background shadow-md"
+                      style={{ backgroundColor: colorOption.color }}
+                    />
+                    <span className="text-xs font-medium text-center leading-tight">
+                      {colorOption.name}
+                    </span>
+                  </div>
+                  {selectedColor === colorOption.name && (
+                    <div className="absolute top-1 right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                      <Check className="w-3 h-3 text-primary-foreground" />
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+            
+            {/* Selected Color Display */}
+            {selectedColor && (
+              <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
+                <div className="flex items-center gap-2">
+                  <Palette className="w-4 h-4 text-primary" />
+                  <span className="text-sm">
+                    Selezionato: <span className="font-semibold text-primary">{selectedColor}</span>
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Generated Result */}
@@ -162,7 +190,7 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
           {/* Generate Button */}
           <Button 
             onClick={generateRender}
-            disabled={(!displayColor) || isGenerating}
+            disabled={!selectedColor || isGenerating}
             className="w-full"
             size="lg"
           >
