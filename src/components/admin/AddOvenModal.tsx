@@ -804,6 +804,107 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                                     </div>
                                   </div>
                                   
+                                  {/* Edit name */}
+                                  <div>
+                                    <Label className="text-xs">Nome Rivestimento</Label>
+                                    <Input
+                                      value={displayCoating.name}
+                                      onChange={(e) => {
+                                        if (!editingCoatingData) return;
+                                        setEditingCoatingData({ ...editingCoatingData, name: e.target.value });
+                                      }}
+                                      className="h-8"
+                                    />
+                                  </div>
+
+                                  {/* Edit Image */}
+                                  <div>
+                                    <Label className="text-xs">Immagine Rivestimento</Label>
+                                    <div 
+                                      className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary transition-colors"
+                                      onClick={() => document.getElementById(`edit-coating-upload-${sizeIdx}-${coatingIdx}`)?.click()}
+                                    >
+                                      <input
+                                        id={`edit-coating-upload-${sizeIdx}-${coatingIdx}`}
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={async (e) => {
+                                          const file = e.target.files?.[0];
+                                          if (file) {
+                                            setUploadingCoatingImage(true);
+                                            try {
+                                              const url = await uploadFile(file, 'oven-gallery');
+                                              if (editingCoatingData) {
+                                                setEditingCoatingData({ ...editingCoatingData, image_url: url });
+                                              }
+                                              toast.success("Immagine caricata!");
+                                            } catch (error) {
+                                              console.error('Error uploading image:', error);
+                                              toast.error("Errore nel caricamento");
+                                            } finally {
+                                              setUploadingCoatingImage(false);
+                                            }
+                                          }
+                                        }}
+                                      />
+                                      {displayCoating.image_url ? (
+                                        <div className="flex items-center gap-2 justify-center">
+                                          <img src={displayCoating.image_url} alt="Preview" className="h-16 w-16 object-cover rounded" />
+                                          <span className="text-xs text-muted-foreground">Caricata</span>
+                                        </div>
+                                      ) : (
+                                        <div className="text-sm text-muted-foreground">
+                                          {uploadingCoatingImage ? "Caricamento..." : "Clicca per caricare nuova immagine"}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  {/* Edit Video 360 */}
+                                  <div>
+                                    <Label className="text-xs">Video 360° Rivestimento (opzionale)</Label>
+                                    <div 
+                                      className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary transition-colors"
+                                      onClick={() => document.getElementById(`edit-coating-video-upload-${sizeIdx}-${coatingIdx}`)?.click()}
+                                    >
+                                      <input
+                                        id={`edit-coating-video-upload-${sizeIdx}-${coatingIdx}`}
+                                        type="file"
+                                        accept="video/*"
+                                        className="hidden"
+                                        onChange={async (e) => {
+                                          const file = e.target.files?.[0];
+                                          if (file) {
+                                            setUploadingCoatingVideo(true);
+                                            try {
+                                              const url = await uploadFile(file, 'videos');
+                                              if (editingCoatingData) {
+                                                setEditingCoatingData({ ...editingCoatingData, video_url_360: url });
+                                              }
+                                              toast.success("Video caricato!");
+                                            } catch (error) {
+                                              console.error('Error uploading video:', error);
+                                              toast.error("Errore nel caricamento");
+                                            } finally {
+                                              setUploadingCoatingVideo(false);
+                                            }
+                                          }
+                                        }}
+                                      />
+                                      {displayCoating.video_url_360 ? (
+                                        <div className="flex items-center gap-2 justify-center">
+                                          <Video className="h-6 w-6 text-primary" />
+                                          <span className="text-xs text-green-600">Video caricato</span>
+                                        </div>
+                                      ) : (
+                                        <div className="text-sm text-muted-foreground">
+                                          {uploadingCoatingVideo ? "Caricamento..." : "Clicca per caricare video"}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                  
                                   {(['A', 'B', 'C'] as const).map(list => (
                                     <div key={list} className="space-y-2">
                                       <Label className="text-xs font-semibold">Listino {list}</Label>
