@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Upload, Wand2, Download, Loader2, X } from "lucide-react";
+import { Wand2, Download, Loader2, Palette } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import ImageResultModal from "@/components/oven-visualizer/ImageResultModal";
@@ -14,79 +14,33 @@ interface AIRenderGeneratorProps {
 }
 
 const AIRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: AIRenderGeneratorProps) => {
-  const [spaceImage, setSpaceImage] = useState<File | null>(null);
-  const [spaceImagePreview, setSpaceImagePreview] = useState<string>("");
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSpaceImage(file);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setSpaceImagePreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-      toast.success("Immagine caricata!");
-    }
-  };
-
-  const removeImage = () => {
-    setSpaceImage(null);
-    setSpaceImagePreview("");
-  };
-
-  const convertFileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
-    });
-  };
-
-  const fetchUrlToBase64 = async (url: string): Promise<string> => {
-    const res = await fetch(url);
-    const blob = await res.blob();
-    return await new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  };
-
   const generateRender = async () => {
-    if (!spaceImage) {
-      toast.error("Carica prima un'immagine del tuo spazio!");
+    if (!selectedCoating) {
+      toast.error("Seleziona prima un rivestimento!");
       return;
     }
 
     setIsGenerating(true);
     
     try {
-      const base64Image = await convertFileToBase64(spaceImage);
-      const ovenImageBase64 = await fetchUrlToBase64(ovenImageUrl);
+      const promptText = `Genera un render fotorealistico professionale di un forno a legna per pizza modello "${ovenName}" con rivestimento ${selectedCoating}. Il forno deve essere mostrato in un ambiente elegante, con illuminazione professionale che ne esalti i dettagli e la texture del rivestimento. Focus sul design e sulla qualità dei materiali. Altissima risoluzione e qualità fotografica.`;
       
-      const coatingInfo = selectedCoating ? ` con rivestimento ${selectedCoating}` : '';
-      const promptText = `Inserisci il forno "${ovenName}"${coatingInfo} nella foto caricata in fotorealismo, senza alterare la foto caricata, semplicemente inserendo il forno in modo equilibrato e naturale. Qualora ci sia già un altro forno presente nell'immagine, sostituiscilo completamente con il nostro forno selezionato. Il forno deve integrarsi perfettamente nell'ambiente rispettando prospettiva, illuminazione e ombre.`;
-      
-      console.log("🚀 Generazione render AI...");
-      const { data, error } = await supabase.functions.invoke('generate-oven-space', {
+      console.log("🚀 Generazione render AI del forno...");
+      const { data, error } = await supabase.functions.invoke('generate-image-openai', {
         body: {
-          spaceImage: base64Image,
-          ovenType: ovenName,
-          ovenModel: ovenName + coatingInfo,
-          ovenImage: ovenImageBase64
+          prompt: promptText
         }
       });
       
       if (error) throw error;
 
-      if (data?.success && data?.imageUrl) {
-        setGeneratedImageUrl(data.imageUrl);
+      if (data?.imageUrl || data?.imageURL) {
+        const imageUrl = data.imageUrl || data.imageURL;
+        setGeneratedImageUrl(imageUrl);
         setShowResultModal(true);
         toast.success("Render generato con successo!");
       } else {
@@ -128,50 +82,40 @@ const AIRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: AIRender
         <CardHeader className="pb-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-              <Wand2 className="w-5 h-5 text-white" />
+              <Palette className="w-5 h-5 text-white" />
             </div>
             <div>
-              <CardTitle className="text-lg">Visualizza con AI</CardTitle>
+              <CardTitle className="text-lg">Genera Render AI</CardTitle>
               <p className="text-sm text-muted-foreground mt-1">
-                Carica una foto del tuo spazio e genera un render fotorealistico
+                Visualizza il forno con il rivestimento selezionato in alta qualità
               </p>
             </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Upload Area */}
-          {!spaceImagePreview ? (
-            <div className="border-2 border-dashed border-blue-300 rounded-xl p-6 text-center bg-white/50 hover:border-blue-400 hover:bg-white/70 transition-all">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="space-upload"
-              />
-              <label htmlFor="space-upload" className="cursor-pointer">
-                <Upload className="w-10 h-10 text-blue-400 mx-auto mb-3" />
-                <p className="font-medium text-stone-900 mb-1">Carica foto del tuo spazio</p>
-                <p className="text-sm text-muted-foreground">
-                  Cucina, giardino, locale commerciale...
-                </p>
-              </label>
+          {/* Info Box */}
+          {selectedCoating ? (
+            <div className="bg-white/70 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <Palette className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-medium text-sm text-stone-900 mb-1">
+                    Rivestimento selezionato
+                  </p>
+                  <p className="text-blue-700 font-semibold">
+                    {selectedCoating}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Clicca "Genera" per vedere un render professionale
+                  </p>
+                </div>
+              </div>
             </div>
           ) : (
-            <div className="relative">
-              <img 
-                src={spaceImagePreview} 
-                alt="Spazio caricato" 
-                className="w-full h-48 object-cover rounded-lg"
-              />
-              <Button
-                size="icon"
-                variant="destructive"
-                className="absolute top-2 right-2"
-                onClick={removeImage}
-              >
-                <X className="w-4 h-4" />
-              </Button>
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <p className="text-sm text-amber-900">
+                ⚠️ Seleziona prima un rivestimento per generare il render
+              </p>
             </div>
           )}
 
@@ -199,7 +143,7 @@ const AIRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: AIRender
           {/* Generate Button */}
           <Button 
             onClick={generateRender}
-            disabled={!spaceImage || isGenerating}
+            disabled={!selectedCoating || isGenerating}
             className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
             size="lg"
           >
@@ -217,7 +161,7 @@ const AIRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: AIRender
           </Button>
 
           <p className="text-xs text-center text-muted-foreground">
-            La generazione richiede circa 10-30 secondi
+            Genera un'immagine professionale del forno personalizzato
           </p>
         </CardContent>
       </Card>
