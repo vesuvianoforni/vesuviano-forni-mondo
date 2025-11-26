@@ -56,9 +56,10 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
       const promptText = `Genera un render fotorealistico professionale di un forno a legna per pizza modello "${ovenName}" con finitura/rivestimento "${colorToUse}". Il forno deve essere mostrato in un ambiente elegante e professionale, con illuminazione da studio che ne esalti i dettagli, la texture e il colore del rivestimento. Focus sul design artigianale italiano e sulla qualità dei materiali. Altissima risoluzione, qualità fotografica professionale, sfondo neutro elegante.`;
       
       console.log("🚀 Generazione render AI del forno con colore:", colorToUse);
-      const { data, error } = await supabase.functions.invoke('generate-image-openai', {
+      const { data, error } = await supabase.functions.invoke('generate-oven-render', {
         body: {
-          prompt: promptText
+          ovenName,
+          color: colorToUse
         }
       });
       

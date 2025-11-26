@@ -18,5 +18,8 @@ verify_jwt = false
 [functions.generate-image-openai]
 verify_jwt = false
 
+[functions.generate-oven-render]
+verify_jwt = false
+
 [functions.send-consultation-email]
 verify_jwt = false
