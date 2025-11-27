@@ -87,9 +87,9 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    const generatedImageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
 
-    if (!imageUrl) {
+    if (!generatedImageUrl) {
       console.error('No image in response:', JSON.stringify(data));
       return new Response(
         JSON.stringify({ error: 'No image generated' }),
@@ -100,7 +100,7 @@ serve(async (req) => {
     console.log('Image generated successfully');
 
     return new Response(
-      JSON.stringify({ success: true, imageUrl, imageURL: imageUrl }),
+      JSON.stringify({ success: true, imageUrl: generatedImageUrl, imageURL: generatedImageUrl }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
   } catch (error: any) {
