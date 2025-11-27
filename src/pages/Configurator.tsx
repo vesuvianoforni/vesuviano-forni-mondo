@@ -1017,46 +1017,19 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         </p>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Strumenti AI Utilizzati */}
-                  {(selectedColorForRender || spaceImageUrl || architectAIRenderUrl) && (
-                    <div className="pt-3 md:pt-4 border-t">
-                      <h4 className="font-semibold text-sm md:text-base mb-3 flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-primary" />
-                        Strumenti AI Utilizzati
-                      </h4>
-                      <div className="space-y-2">
-                        {selectedColorForRender && colorRenderImageUrl && (
-                          <div className="bg-background rounded-lg p-3 space-y-2">
-                            <div className="flex items-center justify-between">
-                              <span className="text-xs md:text-sm font-medium">Colore Personalizzato</span>
-                              <span className="text-xs text-primary font-semibold">{selectedColorForRender}</span>
-                            </div>
-                            <div className="w-full h-24 rounded-md overflow-hidden">
-                              <img src={colorRenderImageUrl} alt="Render colore" className="w-full h-full object-contain" />
-                            </div>
-                          </div>
-                        )}
-                        {spaceImageUrl && (
-                          <div className="bg-background rounded-lg p-3 space-y-2">
-                            <span className="text-xs md:text-sm font-medium block">Foto Ambiente</span>
-                            <div className="w-full h-24 rounded-md overflow-hidden">
-                              <img src={spaceImageUrl} alt="Ambiente cliente" className="w-full h-full object-cover" />
-                            </div>
-                          </div>
-                        )}
-                        {architectAIRenderUrl && (
-                          <div className="bg-background rounded-lg p-3 space-y-2">
-                            <span className="text-xs md:text-sm font-medium block">Render Architetto AI</span>
-                            <div className="w-full h-24 rounded-md overflow-hidden">
-                              <img src={architectAIRenderUrl} alt="Render finale" className="w-full h-full object-contain" />
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                    {/* CTA Non sono interessato */}
+                    <div className="mt-4 pt-4 border-t border-border/50">
+                      <Button 
+                        onClick={() => setShowNotInterestedModal(true)}
+                        className="w-full" 
+                        size="lg"
+                        variant="ghost"
+                      >
+                        Non sono interessato
+                      </Button>
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
               {/* Bottoni feedback */}
