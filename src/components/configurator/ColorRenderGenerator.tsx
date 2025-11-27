@@ -9,6 +9,7 @@ interface ColorRenderGeneratorProps {
   ovenName: string;
   ovenImageUrl: string;
   selectedCoating?: string;
+  onRenderGenerated?: (imageUrl: string) => void;
 }
 
 const POPULAR_COLORS = [
@@ -22,7 +23,7 @@ const POPULAR_COLORS = [
   { name: "Verde Oliva", color: "#556B2F" },
 ];
 
-const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: ColorRenderGeneratorProps) => {
+const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRenderGenerated }: ColorRenderGeneratorProps) => {
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string>(selectedCoating || "");
@@ -66,6 +67,7 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
         const imageUrl = data.imageUrl || data.imageURL;
         setGeneratedImageUrl(imageUrl);
         setLastGeneratedColor(colorToUse);
+        onRenderGenerated?.(imageUrl);
         toast.success("Render generato con successo!");
       } else {
         throw new Error(data?.error || 'Errore nella generazione');

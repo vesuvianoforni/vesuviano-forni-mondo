@@ -97,6 +97,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   const [savingFeedback, setSavingFeedback] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [showPhotoGallery, setShowPhotoGallery] = useState(true);
+  const [colorRenderImageUrl, setColorRenderImageUrl] = useState<string>("");
 
   useEffect(() => { 
     fetchData(); 
@@ -870,12 +871,13 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 ovenName={selectedOven.model_name}
                 ovenImageUrl={selectedOvenData.coating?.image_url || selectedOven.image_url}
                 selectedCoating={selectedCoating}
+                onRenderGenerated={setColorRenderImageUrl}
               />
 
               {/* Architetto AI */}
               <ArchitettoAI
                 ovenName={selectedOven.model_name}
-                ovenImageUrl={selectedOvenData.coating?.image_url || selectedOven.image_url}
+                ovenImageUrl={colorRenderImageUrl || selectedOvenData.coating?.image_url || selectedOven.image_url}
               />
               
               <div className="border-t pt-4 md:pt-6">
