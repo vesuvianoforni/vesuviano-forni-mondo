@@ -101,6 +101,9 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   const [selectedColorForRender, setSelectedColorForRender] = useState<string>("");
   const [spaceImageUrl, setSpaceImageUrl] = useState<string>("");
   const [architectAIRenderUrl, setArchitectAIRenderUrl] = useState<string>("");
+  const [showContactMethodModal, setShowContactMethodModal] = useState(false);
+  const [selectedContactMethod, setSelectedContactMethod] = useState<'whatsapp' | 'phone' | ''>('');
+  const [showThankYouMessage, setShowThankYouMessage] = useState(false);
 
   useEffect(() => { 
     fetchData(); 
@@ -397,21 +400,31 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
       return;
     }
 
+    // Show contact method selection modal
+    setShowContactMethodModal(true);
+  };
+
+  const handleContactMethodSubmit = async () => {
+    if (!selectedContactMethod) {
+      toast.error('Seleziona un metodo di contatto');
+      return;
+    }
+
     setSavingQuote(true);
     try {
       // Save quote
       const { data: quoteData, error: quoteError } = await supabase
         .from('configurator_quotes')
         .insert({
-          oven_id: selectedOven.id,
+          oven_id: selectedOven!.id,
           has_installation: buildType === 'on_site',
           has_gas: selectedFuelType === 'Gas',
           total_price: calculateTotal(),
-          delivery_time_weeks: selectedOven.delivery_time_weeks,
-          customer_name: customerData.name,
-          customer_email: customerData.email,
-          customer_phone: customerData.phone,
-          notes: notes || null
+          delivery_time_weeks: selectedOven!.delivery_time_weeks,
+          customer_name: customerData!.name,
+          customer_email: customerData!.email,
+          customer_phone: customerData!.phone,
+          notes: `Metodo di contatto preferito: ${selectedContactMethod === 'whatsapp' ? 'WhatsApp' : 'Chiamata telefonica'}${notes ? '\n' + notes : ''}`
         })
         .select()
         .single();
@@ -427,9 +440,10 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
             status: 'interested',
             feedback_status: 'interested',
             customer_info: {
-              name: customerData.name,
-              email: customerData.email,
-              phone: customerData.phone
+              name: customerData!.name,
+              email: customerData!.email,
+              phone: customerData!.phone,
+              contact_method: selectedContactMethod
             }
           })
           .eq('id', sessionId);
@@ -439,32 +453,26 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           body: {
             type: 'configurator_interest',
             quoteId: quoteData.id,
-            ovenModel: selectedOven.model_name,
-            diameter: selectedOven.diameter,
-            pizzaCapacity: selectedOven.pizza_capacity,
+            ovenModel: selectedOven!.model_name,
+            diameter: selectedOven!.diameter,
+            pizzaCapacity: selectedOven!.pizza_capacity,
             fuelType: selectedFuelType,
             totalPrice: calculateTotal(),
             deliveryOption: buildType === 'on_site' ? 'Costruito sul Posto' : 'Spedizione in Europa',
-            deliveryWeeks: selectedOven.delivery_time_weeks,
-            customerName: customerData.name,
-            customerEmail: customerData.email,
-            customerPhone: customerData.phone,
-            notes: notes || ''
+            deliveryWeeks: selectedOven!.delivery_time_weeks,
+            customerName: customerData!.name,
+            customerEmail: customerData!.email,
+            customerPhone: customerData!.phone,
+            contactMethod: selectedContactMethod === 'whatsapp' ? 'WhatsApp' : 'Chiamata telefonica'
           }
         });
       }
 
-      toast.success('Grazie per il tuo interesse! Ti contatteremo presto.');
-      
-      // Reset configurator
-      setSelectedModel('');
-      setSelectedFuelType('');
-      setSelectedDiameter('');
-      setDeliveryOption('');
-      setNotes('');
+      setShowContactMethodModal(false);
+      setShowThankYouMessage(true);
     } catch (error) {
-      console.error('Error saving interest:', error);
-      toast.error('Errore nel salvare la richiesta');
+      console.error('Error saving interested status:', error);
+      toast.error('Errore durante il salvataggio');
     } finally {
       setSavingQuote(false);
     }
@@ -1193,6 +1201,104 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   {savingFeedback ? 'Invio...' : 'Invia Feedback'}
                 </Button>
               </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Contact Method Selection Modal */}
+        <Dialog open={showContactMethodModal} onOpenChange={setShowContactMethodModal}>
+          <DialogContent className="max-w-md mx-4">
+            <DialogHeader>
+              <DialogTitle className="text-lg sm:text-xl">Come preferisci essere contattato?</DialogTitle>
+              <DialogDescription>
+                Scegli il metodo di contatto che preferisci e ti richiameremo al più presto
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-3">
+                <Button
+                  variant={selectedContactMethod === 'whatsapp' ? 'default' : 'outline'}
+                  className="w-full h-auto py-4 justify-start"
+                  onClick={() => setSelectedContactMethod('whatsapp')}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white text-xl">
+                      <Phone className="w-5 h-5" />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-semibold">WhatsApp</div>
+                      <div className="text-xs opacity-80">Ti contatteremo su WhatsApp</div>
+                    </div>
+                  </div>
+                </Button>
+
+                <Button
+                  variant={selectedContactMethod === 'phone' ? 'default' : 'outline'}
+                  className="w-full h-auto py-4 justify-start"
+                  onClick={() => setSelectedContactMethod('phone')}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white text-xl">
+                      <Phone className="w-5 h-5" />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-semibold">Chiamata Telefonica</div>
+                      <div className="text-xs opacity-80">Ti chiameremo al tuo numero</div>
+                    </div>
+                  </div>
+                </Button>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowContactMethodModal(false);
+                    setSelectedContactMethod('');
+                  }}
+                  className="flex-1"
+                  disabled={savingQuote}
+                >
+                  Annulla
+                </Button>
+                <Button
+                  onClick={handleContactMethodSubmit}
+                  className="flex-1"
+                  disabled={savingQuote || !selectedContactMethod}
+                >
+                  {savingQuote ? 'Invio...' : 'Conferma'}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Thank You Message Modal */}
+        <Dialog open={showThankYouMessage} onOpenChange={setShowThankYouMessage}>
+          <DialogContent className="max-w-md mx-4">
+            <DialogHeader>
+              <DialogTitle className="text-xl sm:text-2xl text-center">Grazie {customerData?.name}! 🎉</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 text-center">
+              <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-6">
+                <p className="text-sm md:text-base text-green-900 dark:text-green-100">
+                  La tua richiesta è stata inviata con successo!
+                </p>
+                <p className="text-sm md:text-base text-green-900 dark:text-green-100 mt-3">
+                  {selectedContactMethod === 'whatsapp' 
+                    ? 'Ti contatteremo presto su WhatsApp'
+                    : 'Ti chiameremo al più presto'}
+                </p>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Il nostro team clienti ti ricontatterà entro 24 ore per finalizzare il tuo ordine.
+              </p>
+              <Button
+                onClick={() => setShowThankYouMessage(false)}
+                className="w-full"
+              >
+                Chiudi
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
