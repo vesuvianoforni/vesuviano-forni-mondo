@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Flame, Clock, Euro, Pizza, PlayCircle, Image as ImageIcon } from 'lucide-react';
+import { Flame, Clock, Euro, Pizza, PlayCircle, Image as ImageIcon, Sparkles } from 'lucide-react';
 import ColorRenderGenerator from '@/components/configurator/ColorRenderGenerator';
 import ArchitettoAI from '@/components/configurator/ArchitettoAI';
 import Video360Modal from '@/components/Video360Modal';
@@ -98,6 +98,9 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [showPhotoGallery, setShowPhotoGallery] = useState(true);
   const [colorRenderImageUrl, setColorRenderImageUrl] = useState<string>("");
+  const [selectedColorForRender, setSelectedColorForRender] = useState<string>("");
+  const [spaceImageUrl, setSpaceImageUrl] = useState<string>("");
+  const [architectAIRenderUrl, setArchitectAIRenderUrl] = useState<string>("");
 
   useEffect(() => { 
     fetchData(); 
@@ -871,13 +874,18 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 ovenName={selectedOven.model_name}
                 ovenImageUrl={selectedOvenData.coating?.image_url || selectedOven.image_url}
                 selectedCoating={selectedCoating}
-                onRenderGenerated={setColorRenderImageUrl}
+                onRenderGenerated={(imageUrl, color) => {
+                  setColorRenderImageUrl(imageUrl);
+                  setSelectedColorForRender(color);
+                }}
               />
 
               {/* Architetto AI */}
               <ArchitettoAI
                 ovenName={selectedOven.model_name}
                 ovenImageUrl={colorRenderImageUrl || selectedOvenData.coating?.image_url || selectedOven.image_url}
+                onSpaceImageSelected={setSpaceImageUrl}
+                onRenderGenerated={setArchitectAIRenderUrl}
               />
               
               <div className="border-t pt-4 md:pt-6">
@@ -918,6 +926,45 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     <span className="text-base md:text-lg font-semibold">Totale:</span>
                     <span className="text-2xl md:text-3xl font-bold text-primary">€{calculateTotal().toFixed(2)}</span>
                   </div>
+
+                  {/* Strumenti AI Utilizzati */}
+                  {(selectedColorForRender || spaceImageUrl || architectAIRenderUrl) && (
+                    <div className="pt-3 md:pt-4 border-t">
+                      <h4 className="font-semibold text-sm md:text-base mb-3 flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-primary" />
+                        Strumenti AI Utilizzati
+                      </h4>
+                      <div className="space-y-2">
+                        {selectedColorForRender && colorRenderImageUrl && (
+                          <div className="bg-background rounded-lg p-3 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs md:text-sm font-medium">Colore Personalizzato</span>
+                              <span className="text-xs text-primary font-semibold">{selectedColorForRender}</span>
+                            </div>
+                            <div className="w-full h-24 rounded-md overflow-hidden">
+                              <img src={colorRenderImageUrl} alt="Render colore" className="w-full h-full object-contain" />
+                            </div>
+                          </div>
+                        )}
+                        {spaceImageUrl && (
+                          <div className="bg-background rounded-lg p-3 space-y-2">
+                            <span className="text-xs md:text-sm font-medium block">Foto Ambiente</span>
+                            <div className="w-full h-24 rounded-md overflow-hidden">
+                              <img src={spaceImageUrl} alt="Ambiente cliente" className="w-full h-full object-cover" />
+                            </div>
+                          </div>
+                        )}
+                        {architectAIRenderUrl && (
+                          <div className="bg-background rounded-lg p-3 space-y-2">
+                            <span className="text-xs md:text-sm font-medium block">Render Architetto AI</span>
+                            <div className="w-full h-24 rounded-md overflow-hidden">
+                              <img src={architectAIRenderUrl} alt="Render finale" className="w-full h-full object-contain" />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               {/* Bottoni feedback */}

@@ -9,7 +9,7 @@ interface ColorRenderGeneratorProps {
   ovenName: string;
   ovenImageUrl: string;
   selectedCoating?: string;
-  onRenderGenerated?: (imageUrl: string) => void;
+  onRenderGenerated?: (imageUrl: string, color: string) => void;
 }
 
 const POPULAR_COLORS = [
@@ -67,7 +67,7 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
         const imageUrl = data.imageUrl || data.imageURL;
         setGeneratedImageUrl(imageUrl);
         setLastGeneratedColor(colorToUse);
-        onRenderGenerated?.(imageUrl);
+        onRenderGenerated?.(imageUrl, colorToUse);
         toast.success("Render generato con successo!");
       } else {
         throw new Error(data?.error || 'Errore nella generazione');

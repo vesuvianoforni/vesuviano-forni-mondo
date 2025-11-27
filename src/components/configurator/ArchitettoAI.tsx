@@ -9,9 +9,11 @@ import CreativeLoader from "@/components/oven-visualizer/CreativeLoader";
 interface ArchitettoAIProps {
   ovenName: string;
   ovenImageUrl: string;
+  onSpaceImageSelected?: (imageUrl: string) => void;
+  onRenderGenerated?: (imageUrl: string) => void;
 }
 
-const ArchitettoAI = ({ ovenName, ovenImageUrl }: ArchitettoAIProps) => {
+const ArchitettoAI = ({ ovenName, ovenImageUrl, onSpaceImageSelected, onRenderGenerated }: ArchitettoAIProps) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string>("");
@@ -46,6 +48,7 @@ const ArchitettoAI = ({ ovenName, ovenImageUrl }: ArchitettoAIProps) => {
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
       setGeneratedImageUrl(""); // Reset generated image
+      onSpaceImageSelected?.(url);
     }
   };
 
@@ -80,6 +83,7 @@ const ArchitettoAI = ({ ovenName, ovenImageUrl }: ArchitettoAIProps) => {
 
       if (data?.success && data?.imageUrl) {
         setGeneratedImageUrl(data.imageUrl);
+        onRenderGenerated?.(data.imageUrl);
         toast.success("Render generato con successo!");
       } else {
         throw new Error(data?.error || 'Errore nella generazione');
