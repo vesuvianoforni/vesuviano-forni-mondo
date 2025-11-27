@@ -14,14 +14,14 @@ interface ColorRenderGeneratorProps {
 }
 
 const POPULAR_COLORS = [
-  { name: "Nero", color: "#1a1a1a" },
-  { name: "Bianco", color: "#f5f5f5" },
-  { name: "Rosso Mattone", color: "#a0522d" },
+  { name: "Nero", color: "#000000" },
+  { name: "Bianco", color: "#FFFFFF" },
+  { name: "Rosso Mattone", color: "#8B4513" },
   { name: "Grigio Pietra", color: "#708090" },
-  { name: "Terracotta", color: "#e2725b" },
-  { name: "Beige", color: "#d4c5b9" },
-  { name: "Marrone", color: "#654321" },
-  { name: "Verde Oliva", color: "#556b2f" },
+  { name: "Terracotta", color: "#E07856" },
+  { name: "Beige", color: "#C8B89A" },
+  { name: "Marrone", color: "#5D4037" },
+  { name: "Verde Oliva", color: "#556B2F" },
 ];
 
 const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: ColorRenderGeneratorProps) => {
@@ -53,13 +53,12 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
     setIsGenerating(true);
     
     try {
-      const promptText = `Genera un render fotorealistico professionale di un forno a legna per pizza modello "${ovenName}" con finitura/rivestimento "${colorToUse}". Il forno deve essere mostrato in un ambiente elegante e professionale, con illuminazione da studio che ne esalti i dettagli, la texture e il colore del rivestimento. Focus sul design artigianale italiano e sulla qualità dei materiali. Altissima risoluzione, qualità fotografica professionale, sfondo neutro elegante.`;
-      
-      console.log("🚀 Generazione render AI del forno con colore:", colorToUse);
+      console.log("🚀 Generazione render real time del forno con colore:", colorToUse);
       const { data, error } = await supabase.functions.invoke('generate-oven-render', {
         body: {
           ovenName,
-          color: colorToUse
+          color: colorToUse,
+          imageUrl: ovenImageUrl
         }
       });
       
@@ -100,9 +99,9 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
               <Palette className="w-6 h-6 text-primary-foreground" />
             </div>
             <div className="flex-1">
-              <CardTitle className="text-lg mb-1">Genera Render AI</CardTitle>
+              <CardTitle className="text-lg mb-1">Render Real Time</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Visualizza il forno con il rivestimento selezionato in alta qualità
+                Visualizza il forno con il colore selezionato in tempo reale
               </p>
             </div>
           </div>
@@ -123,7 +122,7 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
           {/* Color Selection Grid */}
           <div className="space-y-3">
             <p className="text-sm font-medium">
-              Colore / Rivestimento desiderato
+              Colore desiderato
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {POPULAR_COLORS.map((colorOption) => (
@@ -203,13 +202,13 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
             ) : (
               <>
                 <Wand2 className="w-4 h-4 mr-2" />
-                Genera Render AI
+                Genera Render Real Time
               </>
             )}
           </Button>
 
           <p className="text-xs text-center text-muted-foreground">
-            Genera un'immagine professionale del forno personalizzato
+            Visualizza il render del forno nel colore selezionato
           </p>
         </CardContent>
       </Card>
