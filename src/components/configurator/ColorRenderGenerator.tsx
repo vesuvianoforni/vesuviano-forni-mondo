@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wand2, Download, Loader2, Palette, Check } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import ImageResultModal from "@/components/oven-visualizer/ImageResultModal";
 import CreativeLoader from "@/components/oven-visualizer/CreativeLoader";
 
 interface ColorRenderGeneratorProps {
@@ -27,7 +26,6 @@ const POPULAR_COLORS = [
 const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: ColorRenderGeneratorProps) => {
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [showResultModal, setShowResultModal] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string>(selectedCoating || "");
 
   const downloadImage = () => {
@@ -67,7 +65,6 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
       if (data?.imageUrl || data?.imageURL) {
         const imageUrl = data.imageUrl || data.imageURL;
         setGeneratedImageUrl(imageUrl);
-        setShowResultModal(true);
         toast.success("Render generato con successo!");
       } else {
         throw new Error(data?.error || 'Errore nella generazione');
@@ -83,14 +80,6 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
   return (
     <>
       {isGenerating && <CreativeLoader />}
-
-      <ImageResultModal
-        isOpen={showResultModal}
-        onClose={() => setShowResultModal(false)}
-        imageUrl={generatedImageUrl}
-        ovenModel={`${ovenName} - ${selectedColor}`}
-        onDownload={downloadImage}
-      />
 
       <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
         <CardHeader className="pb-3">
@@ -168,22 +157,42 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
 
           {/* Generated Result */}
           {generatedImageUrl && (
-            <div className="space-y-3 pt-2">
-              <div className="relative rounded-lg overflow-hidden border-2 border-green-300">
+            <div className="space-y-4 pt-4">
+              <div className="relative rounded-lg overflow-hidden bg-gradient-to-b from-background to-muted/20 p-6">
                 <img 
                   src={generatedImageUrl} 
                   alt="Render generato" 
-                  className="w-full h-64 object-contain bg-white"
+                  className="w-full h-auto object-contain"
                 />
               </div>
+              
               <Button 
                 onClick={downloadImage}
-                variant="outline"
-                className="w-full"
+                size="lg"
+                className="w-full gap-2"
               >
-                <Download className="w-4 h-4 mr-2" />
-                Scarica Render
+                <Download className="w-5 h-5" />
+                Scarica Immagine HD
               </Button>
+
+              {/* Info Badges */}
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 text-center">
+                  <div className="text-2xl mb-1">🤖</div>
+                  <div className="text-xs font-medium text-blue-600 dark:text-blue-400">AI</div>
+                  <div className="text-[10px] text-muted-foreground">Intelligenza Artificiale</div>
+                </div>
+                <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3 text-center">
+                  <div className="text-2xl mb-1">✨</div>
+                  <div className="text-xs font-medium text-green-600 dark:text-green-400">HD</div>
+                  <div className="text-[10px] text-muted-foreground">Alta Risoluzione</div>
+                </div>
+                <div className="bg-orange-500/10 border border-orange-500/20 rounded-lg p-3 text-center">
+                  <div className="text-2xl mb-1">🔥</div>
+                  <div className="text-xs font-medium text-orange-600 dark:text-orange-400">Real</div>
+                  <div className="text-[10px] text-muted-foreground">Fotorealistico</div>
+                </div>
+              </div>
             </div>
           )}
 
