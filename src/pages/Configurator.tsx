@@ -890,41 +890,121 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               
               <div className="border-t pt-4 md:pt-6">
                 <h3 className="font-semibold mb-3 md:mb-4 text-lg md:text-xl">Riepilogo Configurazione</h3>
-                <div className="bg-muted/50 rounded-lg p-4 md:p-6 space-y-3 md:space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-16 h-16 md:w-24 md:h-24 bg-background rounded-lg overflow-hidden flex-shrink-0">
+                <div className="bg-gradient-to-br from-background to-muted/30 rounded-xl p-4 md:p-6 space-y-4 md:space-y-5 border-2 border-primary/10 shadow-lg">
+                  
+                  {/* Header con immagine e titolo */}
+                  <div className="flex items-start gap-4">
+                    <div className="w-20 h-20 md:w-28 md:h-28 bg-background rounded-xl overflow-hidden flex-shrink-0 shadow-md border border-border">
                       <img 
                         src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
                         alt={selectedOven.model_name} 
-                        className="w-full h-full object-contain p-1" 
+                        className="w-full h-full object-contain p-2" 
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-bold text-base md:text-lg truncate">{selectedOven.model_name}</h4>
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground">
-                        <Flame className="w-3 h-3 md:w-4 md:h-4" />
-                        <span>{selectedFuelType}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground">
-                        <Pizza className="w-3 h-3 md:w-4 md:h-4" />
-                        <span>
-                          {selectedOvenData.size?.diameter || selectedOven.diameter}cm - {selectedOvenData.size?.pizza_capacity || selectedOven.pizza_capacity}
-                        </span>
+                      <h4 className="font-bold text-lg md:text-xl mb-2">{selectedOven.model_name}</h4>
+                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-3">
+                        Forno a legna artigianale costruito con materiali di alta qualità. 
+                        Ideale per cottura professionale di pizza napoletana e prodotti da forno.
+                      </p>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="flex items-center gap-2 text-xs md:text-sm">
+                          <Flame className="w-4 h-4 text-primary" />
+                          <span className="font-medium">{selectedFuelType}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs md:text-sm">
+                          <Pizza className="w-4 h-4 text-primary" />
+                          <span className="font-medium">
+                            {selectedOvenData.size?.diameter || selectedOven.diameter}cm
+                          </span>
+                        </div>
                       </div>
                       {selectedCoating && (
-                        <div className="text-xs md:text-sm text-muted-foreground mt-1">
-                          Rivestimento: {selectedCoating}
+                        <div className="text-xs md:text-sm mt-2 px-2 py-1 bg-primary/10 rounded-md inline-block">
+                          <span className="font-medium">Rivestimento:</span> {selectedCoating}
                         </div>
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 pt-2 md:pt-3 border-t text-sm md:text-base">
-                    <Clock className="w-4 h-4 md:w-5 md:h-5" />
-                    <span>Consegna: {selectedOven.delivery_time_weeks} settimane</span>
+
+                  {/* Dettagli tecnici */}
+                  <div className="bg-background/80 rounded-lg p-3 md:p-4 space-y-2 border border-border/50">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Capacità produttiva:</span>
+                      <span className="font-semibold">{selectedOvenData.size?.pizza_capacity || selectedOven.pizza_capacity}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        Tempo di consegna:
+                      </span>
+                      <span className="font-semibold">{selectedOven.delivery_time_weeks} settimane</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Tipologia:</span>
+                      <span className="font-semibold">
+                        {buildType === 'ready_to_use' ? 'Già Pronto all\'Uso' : 'Costruito sul Posto'}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between pt-2 md:pt-3 border-t">
-                    <span className="text-base md:text-lg font-semibold">Totale:</span>
-                    <span className="text-2xl md:text-3xl font-bold text-primary">€{calculateTotal().toFixed(2)}</span>
+
+                  {/* Totale */}
+                  <div className="bg-primary/5 rounded-lg p-4 md:p-5 border-2 border-primary/20">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-base md:text-lg font-semibold">Totale:</span>
+                      <span className="text-2xl md:text-3xl font-bold text-primary">€{calculateTotal().toFixed(2)}</span>
+                    </div>
+                    
+                    {/* Sconto a tempo */}
+                    <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-2 border-green-500/30 rounded-lg p-3 md:p-4 mb-3">
+                      <div className="flex items-start gap-2 mb-2">
+                        <Sparkles className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                        <div className="flex-1">
+                          <p className="font-bold text-green-700 dark:text-green-400 text-sm md:text-base">
+                            Sconto Speciale 5% - Offerta a Tempo!
+                          </p>
+                          <p className="text-xs md:text-sm text-green-600 dark:text-green-500 mt-1">
+                            Blocca ora il tuo ordine e risparmia €{(calculateTotal() * 0.05).toFixed(2)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between pt-2 border-t border-green-500/20">
+                        <span className="text-sm font-medium text-green-700 dark:text-green-400">Prezzo scontato:</span>
+                        <span className="text-xl md:text-2xl font-bold text-green-600 dark:text-green-400">
+                          €{(calculateTotal() * 0.95).toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Modalità di pagamento */}
+                    <div className="bg-background/80 rounded-lg p-3 md:p-4 border border-border/50">
+                      <p className="font-semibold text-sm md:text-base mb-2 flex items-center gap-2">
+                        <Euro className="w-4 h-4 text-primary" />
+                        Accordi di Pagamento:
+                      </p>
+                      <div className="space-y-1.5 text-xs md:text-sm text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                          <span><strong>50% acconto</strong> alla conferma dell'ordine</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                          <span><strong>50% saldo</strong> al completamento del forno (pronto per la consegna)</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Pulsante blocca ordine */}
+                    <Button 
+                      className="w-full mt-4 h-12 md:h-14 text-sm md:text-base font-bold shadow-lg hover:shadow-xl transition-all"
+                      size="lg"
+                    >
+                      <Euro className="w-5 h-5 mr-2" />
+                      Paga Acconto 1% per Bloccare il Tuo Ordine
+                    </Button>
+                    <p className="text-xs text-center text-muted-foreground mt-2">
+                      Acconto simbolico di €{(calculateTotal() * 0.01).toFixed(2)} per riservare subito il tuo forno
+                    </p>
                   </div>
 
                   {/* Strumenti AI Utilizzati */}
