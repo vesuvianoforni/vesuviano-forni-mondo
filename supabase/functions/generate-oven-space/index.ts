@@ -38,24 +38,27 @@ serve(async (req) => {
     const base64Image = dataUrlToBase64(spaceImage);
     const mimeType = spaceImage.startsWith('data:image/png') ? 'image/png' : 'image/jpeg';
 
-    // Create prompt in Italian as per user's example
-    const prompt = `Inserisci il forno selezionato "${ovenModel}" nella foto caricata in fotorealismo, senza alterare la foto caricata, semplicemente inserendo il forno in modo equilibrato e naturale. Qualora ci sia già un altro forno presente nell'immagine, sostituiscilo completamente con il nostro forno selezionato. Il forno deve integrarsi perfettamente nell'ambiente rispettando prospettiva, illuminazione e ombre.`;
+    // Create prompt in Italian - more explicit about using the provided oven image
+    const prompt = ovenImage 
+      ? `Nella prima immagine vedi uno spazio/ambiente. Nella seconda immagine vedi un forno (modello "${ovenModel}"). Il tuo compito è inserire ESATTAMENTE il forno della seconda immagine nello spazio della prima immagine, mantenendo tutte le caratteristiche del forno (colore, forma, dettagli). Rispetta prospettiva, illuminazione e ombre dell'ambiente. Se c'è già un altro forno nell'ambiente, sostituiscilo completamente con il forno fornito nella seconda immagine.`
+      : `Inserisci il forno selezionato "${ovenModel}" nella foto caricata in fotorealismo, senza alterare la foto caricata, semplicemente inserendo il forno in modo equilibrato e naturale. Qualora ci sia già un altro forno presente nell'immagine, sostituiscilo completamente con il nostro forno selezionato. Il forno deve integrarsi perfettamente nell'ambiente rispettando prospettiva, illuminazione e ombre.`;
 
-    console.log('Generating image with Gemini. Prompt:', prompt);
+    console.log('Generating image with Gemini. Has oven image:', !!ovenImage);
+    console.log('Prompt:', prompt);
 
     // Call Gemini API for image editing (text-and-image-to-image)
     const contentsParts: any[] = [];
-    // Order: space image -> instruction -> oven image (if provided) -> extra guidance
+    
+    // Add space image first
     contentsParts.push({
       inlineData: {
         mimeType: mimeType,
         data: base64Image,
       },
     });
-    contentsParts.push({ text: prompt });
-
+    
+    // Add oven image if provided (before the text instruction)
     if (ovenImage) {
-      // support data URL or pure base64
       const ovenB64 = ovenImage.includes(',') ? dataUrlToBase64(ovenImage) : ovenImage;
       const ovenMime = ovenImage.startsWith('data:image/png') ? 'image/png' : 'image/jpeg';
       contentsParts.push({
@@ -64,10 +67,10 @@ serve(async (req) => {
           data: ovenB64,
         },
       });
-      contentsParts.push({
-        text: 'Integra il forno nella scena rispettando prospettiva, scala, luce e ombre. Se presente un altro forno, sostituiscilo completamente con quello selezionato.'
-      });
     }
+    
+    // Add the instruction text
+    contentsParts.push({ text: prompt });
 
     const response = await fetch(
       'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent',
