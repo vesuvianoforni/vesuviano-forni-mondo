@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { toast } from 'sonner';
 import { Flame, Clock, Euro, Pizza, PlayCircle, Image as ImageIcon } from 'lucide-react';
 import ColorRenderGenerator from '@/components/configurator/ColorRenderGenerator';
+import ArchitettoAI from '@/components/configurator/ArchitettoAI';
 import Video360Modal from '@/components/Video360Modal';
 
 interface ConfiguratorOven {
@@ -869,6 +870,12 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 ovenName={selectedOven.model_name}
                 ovenImageUrl={selectedOvenData.coating?.image_url || selectedOven.image_url}
                 selectedCoating={selectedCoating}
+              />
+
+              {/* Architetto AI */}
+              <ArchitettoAI
+                ovenName={selectedOven.model_name}
+                ovenImageUrl={selectedOvenData.coating?.image_url || selectedOven.image_url}
               />
               
               <div className="border-t pt-4 md:pt-6">
