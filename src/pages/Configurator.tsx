@@ -1140,13 +1140,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
             </DialogHeader>
             <div className="space-y-4">
               <div className="space-y-3">
-                <Label>Seleziona una o più motivazioni:</Label>
+                <Label>Qual è il motivo principale?</Label>
                 {[
-                  'Prezzo troppo elevato',
+                  'Troppo caro',
+                  'Troppo tempo per realizzare',
+                  'Mi serve urgente',
+                  'Non mi piace',
                   'Non c\'è il modello che cerco',
-                  'Tempi di consegna troppo lunghi',
-                  'Preferisco un altro fornitore',
-                  'Ho bisogno di più informazioni'
+                  'Preferisco un altro fornitore'
                 ].map((reason) => (
                   <div key={reason} className="flex items-center space-x-2">
                     <Checkbox
@@ -1169,10 +1170,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 <Textarea
                   id="other-reason"
                   value={otherReason}
-                  onChange={(e) => setOtherReason(e.target.value)}
+                  onChange={(e) => setOtherReason(e.target.value.slice(0, 500))}
                   placeholder="Inserisci qui la tua motivazione..."
                   rows={3}
+                  maxLength={500}
                 />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {otherReason.length}/500 caratteri
+                </p>
               </div>
 
               <div className="flex gap-3">
