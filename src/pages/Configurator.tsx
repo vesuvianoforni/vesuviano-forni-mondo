@@ -977,7 +977,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     </div>
 
                     {/* Modalità di pagamento */}
-                    <div className="bg-background/80 rounded-lg p-3 md:p-4 border border-border/50">
+                    <div className="bg-background/80 rounded-lg p-3 md:p-4 border border-border/50 mb-3">
                       <p className="font-semibold text-sm md:text-base mb-2 flex items-center gap-2">
                         <Euro className="w-4 h-4 text-primary" />
                         Accordi di Pagamento:
@@ -996,15 +996,27 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
                     {/* Pulsante blocca ordine */}
                     <Button 
-                      className="w-full mt-4 h-12 md:h-14 text-sm md:text-base font-bold shadow-lg hover:shadow-xl transition-all"
+                      className="w-full h-12 md:h-14 text-sm md:text-base font-bold shadow-lg hover:shadow-xl transition-all"
                       size="lg"
                     >
                       <Euro className="w-5 h-5 mr-2" />
                       Paga Acconto 1% per Bloccare il Tuo Ordine
                     </Button>
-                    <p className="text-xs text-center text-muted-foreground mt-2">
-                      Acconto simbolico di €{(calculateTotal() * 0.01).toFixed(2)} per riservare subito il tuo forno
-                    </p>
+                    <div className="space-y-2 mt-2">
+                      <p className="text-xs text-center text-muted-foreground">
+                        Acconto simbolico di €{(calculateTotal() * 0.95 * 0.01).toFixed(2)} per riservare subito il tuo forno
+                      </p>
+                      <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 space-y-1.5">
+                        <p className="text-xs md:text-sm text-blue-900 dark:text-blue-100 flex items-start gap-2">
+                          <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0">✓</span>
+                          <span>Verrai <strong>contattato dal nostro responsabile clienti entro 24 ore</strong> per supporto alla finalizzazione</span>
+                        </p>
+                        <p className="text-xs md:text-sm text-blue-900 dark:text-blue-100 flex items-start gap-2">
+                          <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0">✓</span>
+                          <span>Acconto <strong>100% rimborsabile entro 7 giorni</strong></span>
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Strumenti AI Utilizzati */}
