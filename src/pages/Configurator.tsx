@@ -996,11 +996,18 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
                     {/* Pulsante blocca ordine */}
                     <Button 
-                      className="w-full h-12 md:h-14 text-sm md:text-base font-bold shadow-lg hover:shadow-xl transition-all"
+                      className="w-full h-auto py-3 md:py-4 text-sm md:text-base font-bold shadow-lg hover:shadow-xl transition-all"
                       size="lg"
                     >
-                      <Euro className="w-5 h-5 mr-2" />
-                      Paga Acconto 1% per Bloccare il Tuo Ordine
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="flex items-center gap-2">
+                          <Euro className="w-5 h-5" />
+                          Paga Acconto 1% per Bloccare il Tuo Ordine
+                        </span>
+                        <span className="text-xs md:text-sm font-semibold opacity-90">
+                          La produzione del tuo forno inizia da domani! Non perdi tempo
+                        </span>
+                      </div>
                     </Button>
                     <div className="space-y-2 mt-2">
                       <p className="text-xs text-center text-muted-foreground">
@@ -1014,10 +1021,6 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         <p className="text-xs md:text-sm text-blue-900 dark:text-blue-100 flex items-start gap-2">
                           <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0">✓</span>
                           <span>Acconto <strong>100% rimborsabile entro 7 giorni</strong></span>
-                        </p>
-                        <p className="text-xs md:text-sm text-blue-900 dark:text-blue-100 flex items-start gap-2">
-                          <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0">✓</span>
-                          <span><strong>La produzione del tuo forno inizia da domani!</strong> Non perdi tempo</span>
                         </p>
                       </div>
                     </div>
