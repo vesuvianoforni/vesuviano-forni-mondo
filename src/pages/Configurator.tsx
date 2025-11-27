@@ -930,7 +930,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   {/* Dettagli tecnici */}
                   <div className="bg-background/80 rounded-lg p-3 md:p-4 space-y-2 border border-border/50">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Capacità produttiva:</span>
+                      <span className="text-muted-foreground">Numero pizze:</span>
                       <span className="font-semibold">{selectedOvenData.size?.pizza_capacity || selectedOven.pizza_capacity}</span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
