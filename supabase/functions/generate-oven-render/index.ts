@@ -11,11 +11,11 @@ serve(async (req) => {
   }
 
   try {
-    const { ovenName, color } = await req.json();
+    const { ovenName, color, imageUrl } = await req.json();
     
-    if (!ovenName || !color) {
+    if (!ovenName || !color || !imageUrl) {
       return new Response(
-        JSON.stringify({ error: 'Missing ovenName or color' }),
+        JSON.stringify({ error: 'Missing ovenName, color, or imageUrl' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
       );
     }
@@ -29,9 +29,9 @@ serve(async (req) => {
       );
     }
 
-    const prompt = `Professional photorealistic render of a wood-fired pizza oven model "${ovenName}" with ${color} finish/coating. The oven should be shown in an elegant professional setting with studio lighting that highlights the details, texture and color of the coating. Focus on Italian artisan design and quality materials. Ultra high resolution, professional photography quality, elegant neutral background. 16:9 aspect ratio.`;
+    const prompt = `Change the color/finish of this pizza oven to ${color}. Maintain the exact same shape, structure, proportions, and lighting. Only change the exterior color/coating to ${color}, keeping all other details identical. The result should look natural and professionally rendered with the new ${color} finish.`;
 
-    console.log('Generating render for:', ovenName, 'with color:', color);
+    console.log('Editing oven image with color:', color);
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -44,7 +44,18 @@ serve(async (req) => {
         messages: [
           {
             role: 'user',
-            content: prompt
+            content: [
+              {
+                type: 'text',
+                text: prompt
+              },
+              {
+                type: 'image_url',
+                image_url: {
+                  url: imageUrl
+                }
+              }
+            ]
           }
         ],
         modalities: ['image', 'text']
