@@ -1015,6 +1015,10 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                           <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0">✓</span>
                           <span>Acconto <strong>100% rimborsabile entro 7 giorni</strong></span>
                         </p>
+                        <p className="text-xs md:text-sm text-blue-900 dark:text-blue-100 flex items-start gap-2">
+                          <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0">✓</span>
+                          <span><strong>La produzione del tuo forno inizia da domani!</strong> Non perdi tempo</span>
+                        </p>
                       </div>
                     </div>
 
