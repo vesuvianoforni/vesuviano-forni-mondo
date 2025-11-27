@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wand2, Download, Loader2, Palette, Check } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import CreativeLoader from "@/components/oven-visualizer/CreativeLoader";
 
 interface ColorRenderGeneratorProps {
   ovenName: string;
@@ -79,7 +78,48 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating }: Color
 
   return (
     <>
-      {isGenerating && <CreativeLoader />}
+      {isGenerating && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white rounded-3xl p-8 text-center max-w-md mx-4 shadow-2xl">
+            <div className="relative mb-6">
+              <div className="w-20 h-20 mx-auto relative">
+                <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary border-r-primary/50 animate-spin"></div>
+                <div className="absolute inset-2 rounded-full border-4 border-transparent border-t-primary/50 border-r-primary animate-spin" style={{ animationDuration: '1.5s', animationDirection: 'reverse' }}></div>
+                <div className="absolute inset-6 rounded-full bg-primary/10 animate-pulse flex items-center justify-center">
+                  <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                </div>
+              </div>
+            </div>
+
+            <h3 className="text-xl font-semibold text-primary mb-3">
+              Realizzazione Render
+            </h3>
+            
+            <p className="text-stone-600 mb-6 leading-relaxed">
+              Stiamo creando il tuo render personalizzato...
+            </p>
+
+            <div className="relative h-2 bg-stone-200 rounded-full overflow-hidden mb-6">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/50 rounded-full animate-shimmer"></div>
+            </div>
+
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center justify-center space-x-2 text-primary">
+                <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                <span>Elaborazione immagine</span>
+              </div>
+              <div className="flex items-center justify-center space-x-2 text-primary/70" style={{ animationDelay: '0.5s' }}>
+                <div className="w-2 h-2 bg-primary/70 rounded-full animate-pulse"></div>
+                <span>Applicazione colore</span>
+              </div>
+              <div className="flex items-center justify-center space-x-2 text-primary/50" style={{ animationDelay: '1s' }}>
+                <div className="w-2 h-2 bg-primary/50 rounded-full animate-pulse"></div>
+                <span>Finalizzazione render</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
         <CardHeader className="pb-3">
