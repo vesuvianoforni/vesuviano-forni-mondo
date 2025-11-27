@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Flame, Clock, Euro, Pizza, PlayCircle, Image as ImageIcon, Sparkles } from 'lucide-react';
+import { Flame, Clock, Euro, Pizza, PlayCircle, Image as ImageIcon, Sparkles, Phone } from 'lucide-react';
 import ColorRenderGenerator from '@/components/configurator/ColorRenderGenerator';
 import ArchitettoAI from '@/components/configurator/ArchitettoAI';
 import Video360Modal from '@/components/Video360Modal';
@@ -1018,12 +1018,28 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                       </div>
                     </div>
 
+                    {/* CTA secondaria - Richiedi contatto */}
+                    <div className="mt-4">
+                      <Button 
+                        onClick={handleInterestedClick}
+                        className="w-full" 
+                        size="lg"
+                        variant="outline"
+                      >
+                        <Phone className="w-4 h-4 mr-2" />
+                        Voglio Essere Contattato
+                      </Button>
+                      <p className="text-xs text-center text-muted-foreground mt-2">
+                        Il nostro team ti chiamerà per rispondere a tutte le tue domande
+                      </p>
+                    </div>
+
                     {/* CTA Non sono interessato */}
                     <div className="mt-4 pt-4 border-t border-border/50">
                       <Button 
                         onClick={() => setShowNotInterestedModal(true)}
                         className="w-full" 
-                        size="lg"
+                        size="sm"
                         variant="ghost"
                       >
                         Non sono interessato
