@@ -912,8 +912,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     <div className="flex-1 min-w-0">
                       <h4 className="font-bold text-lg md:text-xl mb-2">{selectedOven.model_name}</h4>
                       <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-3">
-                        Forno a legna artigianale costruito con materiali di alta qualità. 
-                        Ideale per cottura professionale di pizza napoletana e prodotti da forno.
+                        {selectedOven.description || 'Forno a legna artigianale costruito con materiali di alta qualità. Ideale per cottura professionale di pizza napoletana e prodotti da forno.'}
                       </p>
                       <div className="grid grid-cols-2 gap-2">
                         <div className="flex items-center gap-2 text-xs md:text-sm">
