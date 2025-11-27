@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Wand2, Download, Loader2, Palette, Check } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -28,6 +30,8 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string>(selectedCoating || "");
   const [lastGeneratedColor, setLastGeneratedColor] = useState<string>("");
+  const [customColor, setCustomColor] = useState<string>("");
+  const [isCustomColor, setIsCustomColor] = useState(false);
 
   const downloadImage = () => {
     if (!generatedImageUrl) return;
@@ -42,11 +46,23 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
   };
 
   const generateRender = async () => {
-    const colorToUse = selectedColor;
+    const colorToUse = isCustomColor ? customColor.trim() : selectedColor;
     
     if (!colorToUse) {
-      toast.error("Seleziona un colore/rivestimento!");
+      toast.error("Seleziona un colore o inserisci un colore personalizzato!");
       return;
+    }
+
+    // Validate custom color input (max 50 characters, alphanumeric + spaces)
+    if (isCustomColor) {
+      if (customColor.trim().length > 50) {
+        toast.error("Il colore personalizzato non può superare i 50 caratteri");
+        return;
+      }
+      if (!/^[a-zA-ZÀ-ÿ0-9\s-]+$/.test(customColor.trim())) {
+        toast.error("Il colore può contenere solo lettere, numeri, spazi e trattini");
+        return;
+      }
     }
 
     setIsGenerating(true);
@@ -161,9 +177,13 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
               {POPULAR_COLORS.map((colorOption) => (
                 <button
                   key={colorOption.name}
-                  onClick={() => setSelectedColor(colorOption.name)}
+                  onClick={() => {
+                    setSelectedColor(colorOption.name);
+                    setIsCustomColor(false);
+                    setCustomColor("");
+                  }}
                   className={`relative p-3 border-2 rounded-lg transition-all hover:scale-105 ${
-                    selectedColor === colorOption.name
+                    selectedColor === colorOption.name && !isCustomColor
                       ? 'border-primary ring-2 ring-primary/20 bg-primary/5'
                       : 'border-border hover:border-primary/50'
                   }`}
@@ -177,7 +197,7 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
                       {colorOption.name}
                     </span>
                   </div>
-                  {selectedColor === colorOption.name && (
+                  {selectedColor === colorOption.name && !isCustomColor && (
                     <div className="absolute top-1 right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
                       <Check className="w-3 h-3 text-primary-foreground" />
                     </div>
@@ -185,14 +205,43 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
                 </button>
               ))}
             </div>
+
+            {/* Custom Color Input */}
+            <div className="space-y-2">
+              <Label htmlFor="custom-color" className="text-sm font-medium">
+                Colore Personalizzato
+              </Label>
+              <Input
+                id="custom-color"
+                type="text"
+                placeholder="Es: Rosso Ferrari, Blu Oceano, Verde Bosco..."
+                value={customColor}
+                onChange={(e) => {
+                  setCustomColor(e.target.value);
+                  if (e.target.value.trim()) {
+                    setIsCustomColor(true);
+                    setSelectedColor("");
+                  } else {
+                    setIsCustomColor(false);
+                  }
+                }}
+                maxLength={50}
+                className="w-full"
+              />
+              <p className="text-xs text-muted-foreground">
+                Descrivi il colore che desideri (max 50 caratteri)
+              </p>
+            </div>
             
             {/* Selected Color Display */}
-            {selectedColor && (
+            {(selectedColor || (isCustomColor && customColor.trim())) && (
               <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
                 <div className="flex items-center gap-2">
                   <Palette className="w-4 h-4 text-primary" />
                   <span className="text-sm">
-                    Selezionato: <span className="font-semibold text-primary">{selectedColor}</span>
+                    Selezionato: <span className="font-semibold text-primary">
+                      {isCustomColor ? customColor.trim() : selectedColor}
+                    </span>
                   </span>
                 </div>
               </div>
@@ -215,7 +264,11 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
           {/* Generate Button */}
           <Button 
             onClick={generateRender}
-            disabled={!selectedColor || isGenerating || (generatedImageUrl && selectedColor === lastGeneratedColor)}
+            disabled={
+              (!selectedColor && !customColor.trim()) || 
+              isGenerating || 
+              (generatedImageUrl && (isCustomColor ? customColor.trim() : selectedColor) === lastGeneratedColor)
+            }
             className="w-full"
             size="lg"
           >
