@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, Mail } from 'lucide-react';
+import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, Mail, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Input } from '@/components/ui/input';
@@ -177,6 +177,27 @@ const SessionsCRM = () => {
     }
   };
 
+  const deleteSession = async (sessionId: string, customerName: string) => {
+    if (!confirm(`Sei sicuro di voler eliminare la sessione di ${customerName}?`)) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('configurator_sessions')
+        .delete()
+        .eq('id', sessionId);
+
+      if (error) throw error;
+
+      toast.success('Sessione eliminata con successo');
+      loadSessions();
+    } catch (error) {
+      console.error('Error deleting session:', error);
+      toast.error('Errore nell\'eliminazione della sessione');
+    }
+  };
+
   const getStatusBadge = (session: SessionData, compact = false) => {
     if (session.configurator_quotes?.payment_completed) {
       return (
@@ -338,6 +359,18 @@ const SessionsCRM = () => {
                   >
                     <RefreshCw className="w-3.5 h-3.5" />
                   </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteSession(session.id, session.customer_name || 'Cliente');
+                    }}
+                    title="Elimina sessione"
+                    className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </Button>
                 </div>
               </div>
 
@@ -468,6 +501,18 @@ const SessionsCRM = () => {
                 title="Rigenera link"
               >
                 <RefreshCw className="w-4 h-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteSession(session.id, session.customer_name || 'Cliente');
+                }}
+                title="Elimina sessione"
+                className="text-destructive hover:text-destructive"
+              >
+                <Trash2 className="w-4 h-4" />
               </Button>
             </div>
           </div>
