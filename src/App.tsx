@@ -22,6 +22,7 @@ import ConfiguratorWithToken from "./pages/ConfiguratorWithToken";
 import AdminConfigurator from "./pages/AdminConfigurator";
 import AdminLogin from "./pages/AdminLogin";
 import CreateAdmin from "./pages/CreateAdmin";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 const queryClient = new QueryClient();
 
@@ -97,6 +98,7 @@ const App = () => {
             <Route path="/appointments" element={<Appointments />} />
             <Route path="/configuratore" element={<Configurator />} />
             <Route path="/configuratore/:token" element={<ConfiguratorWithToken />} />
+            <Route path="/success" element={<PaymentSuccess />} />
             <Route path="/admin/create" element={<CreateAdmin />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/configuratore" element={<AdminConfigurator />} />
