@@ -101,7 +101,7 @@ const handler = async (req: Request): Promise<Response> => {
         },
       ],
       mode: 'payment',
-      success_url: `${origin}/configuratore?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/configuratore?canceled=true`,
       customer_email: customerEmail,
       billing_address_collection: 'required',
