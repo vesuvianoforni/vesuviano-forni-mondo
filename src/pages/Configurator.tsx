@@ -523,6 +523,98 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     );
   };
 
+  const handleDepositPayment = async () => {
+    if (!selectedOven || !customerData?.name || !customerData?.email || !customerData?.phone) {
+      toast.error('Completa tutti i dati richiesti');
+      return;
+    }
+
+    try {
+      setSavingQuote(true);
+
+      // First, create the quote
+      const { data: quoteData, error: quoteError } = await supabase
+        .from('configurator_quotes')
+        .insert({
+          oven_id: selectedOven.id,
+          has_installation: buildType === 'on_site',
+          has_gas: selectedFuelType === 'Gas',
+          total_price: calculateTotal(),
+          delivery_time_weeks: selectedOven.delivery_time_weeks,
+          customer_name: customerData.name,
+          customer_email: customerData.email,
+          customer_phone: customerData.phone,
+          notes: notes || null,
+        })
+        .select()
+        .single();
+
+      if (quoteError) throw quoteError;
+
+      // Update session if exists
+      if (sessionId && quoteData) {
+        await supabase
+          .from('configurator_sessions')
+          .update({
+            quote_id: quoteData.id,
+            status: 'payment_initiated',
+            customer_info: {
+              name: customerData.name,
+              email: customerData.email,
+              phone: customerData.phone,
+            },
+          })
+          .eq('id', sessionId);
+      }
+
+      // Calculate prices
+      const totalPrice = calculateTotal();
+      const discountedPrice = totalPrice * 0.95;
+      const depositAmount = discountedPrice * 0.01;
+
+      // Create Stripe checkout session
+      const { data: checkoutData, error: checkoutError } = await supabase.functions.invoke(
+        'create-checkout-session',
+        {
+          body: {
+            ovenModel: selectedOven.model_name,
+            fuelType: selectedFuelType,
+            diameter: selectedOvenData?.size?.diameter || selectedOven.diameter,
+            coating: selectedCoating || undefined,
+            buildType: buildType,
+            totalPrice: totalPrice,
+            discountedPrice: discountedPrice,
+            depositAmount: depositAmount,
+            customerName: customerData.name,
+            customerEmail: customerData.email,
+            customerPhone: customerData.phone,
+            quoteId: quoteData.id,
+            sessionId: sessionId || undefined,
+            deliveryWeeks: selectedOven.delivery_time_weeks,
+            pizzaCapacity: selectedOvenData?.size?.pizza_capacity || selectedOven.pizza_capacity,
+          },
+        }
+      );
+
+      if (checkoutError) {
+        console.error('Checkout error:', checkoutError);
+        throw new Error('Errore nella creazione della sessione di pagamento');
+      }
+
+      // Redirect to Stripe Checkout
+      if (checkoutData?.url) {
+        window.location.href = checkoutData.url;
+      } else {
+        throw new Error('URL di pagamento non ricevuto');
+      }
+    } catch (error: any) {
+      console.error('Error initiating payment:', error);
+      toast.error(error.message || 'Errore nell\'elaborazione del pagamento');
+    } finally {
+      setSavingQuote(false);
+    }
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center">Caricamento...</div>;
 
   return (
@@ -1005,6 +1097,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     <Button 
                       className="w-full h-auto py-3 md:py-4 text-sm md:text-base font-bold shadow-lg hover:shadow-xl transition-all"
                       size="lg"
+                      onClick={handleDepositPayment}
+                      disabled={!customerData?.name || !customerData?.email || !customerData?.phone}
                     >
                       <div className="flex flex-col items-center gap-1">
                         <span className="flex items-center gap-2">
