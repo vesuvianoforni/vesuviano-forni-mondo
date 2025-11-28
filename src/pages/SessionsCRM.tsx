@@ -79,7 +79,7 @@ const SessionsCRM = () => {
   };
 
   const copyLink = (token: string) => {
-    const link = `https://www.vesuviano.com/configuratore/${token}`;
+    const link = `https://www.vesuvianoforni.com/configuratore/${token}`;
     navigator.clipboard.writeText(link);
     toast.success('Link copiato!');
   };
@@ -111,7 +111,7 @@ const SessionsCRM = () => {
 
   const sendEmailToCustomer = async (session: SessionData) => {
     try {
-      const configuratorLink = `https://www.vesuviano.com/configuratore/${session.token}`;
+      const configuratorLink = `https://www.vesuvianoforni.com/configuratore/${session.token}`;
       
       toast.loading('Invio email in corso...');
 
@@ -161,7 +161,7 @@ const SessionsCRM = () => {
 
       if (error) throw error;
 
-      const link = `https://www.vesuviano.com/configuratore/${token}`;
+      const link = `https://www.vesuvianoforni.com/configuratore/${token}`;
       await navigator.clipboard.writeText(link);
       
       toast.success('Link generato e copiato negli appunti!');
