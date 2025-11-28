@@ -148,23 +148,50 @@ const SessionsCRM = () => {
     }
   };
 
-  const getStatusBadge = (session: SessionData) => {
+  const getStatusBadge = (session: SessionData, compact = false) => {
     if (session.configurator_quotes?.payment_completed) {
-      return <Badge className="bg-green-600 hover:bg-green-700"><Package className="w-3 h-3 mr-1" />Pagato</Badge>;
+      return (
+        <Badge className="bg-green-600 hover:bg-green-700 text-white">
+          <Package className="w-3 h-3 mr-1" />
+          Pagato
+        </Badge>
+      );
     }
     if (session.status === 'payment_initiated') {
-      return <Badge className="bg-blue-600 hover:bg-blue-700"><Clock className="w-3 h-3 mr-1" />Pagamento Avviato</Badge>;
+      return (
+        <Badge className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Clock className="w-3 h-3 mr-1" />
+          Pagamento Avviato
+        </Badge>
+      );
     }
     if (session.status === 'interested' || session.feedback_status === 'interested') {
-      return <Badge className="bg-amber-600 hover:bg-amber-700"><Check className="w-3 h-3 mr-1" />Interessato</Badge>;
+      return (
+        <Badge className="bg-orange-600 hover:bg-orange-700 text-white">
+          Interessato
+        </Badge>
+      );
     }
     if (session.feedback_status === 'not_interested') {
-      return <Badge variant="destructive"><X className="w-3 h-3 mr-1" />Non Interessato</Badge>;
+      return (
+        <Badge variant="destructive">
+          <X className="w-3 h-3 mr-1" />
+          Non Interessato
+        </Badge>
+      );
     }
     if (session.is_used) {
-      return <Badge variant="secondary"><Check className="w-3 h-3 mr-1" />Aperto</Badge>;
+      return (
+        <Badge className="bg-stone-600 hover:bg-stone-700 text-white">
+          Aperto
+        </Badge>
+      );
     }
-    return <Badge variant="outline">Nuovo</Badge>;
+    return (
+      <Badge variant="outline" className="bg-background">
+        Nuovo
+      </Badge>
+    );
   };
 
   const getActivitySummary = (session: SessionData) => {
@@ -220,84 +247,162 @@ const SessionsCRM = () => {
 
   const kanbanGroups = groupSessionsByStatus();
 
-  const renderSessionCard = (session: SessionData, compact = false) => (
-    <Card key={session.id} className={compact ? '' : 'hover:shadow-md transition-shadow'}>
-      <CardContent className={compact ? 'p-4' : 'p-6'}>
-        <div className="flex items-start justify-between">
-          <div className="flex-1 space-y-3">
-            <div className="flex items-center gap-3">
-              {getStatusBadge(session)}
-              <Badge variant="outline">Listino {session.price_list}</Badge>
-            </div>
-
-            <div>
-              <h3 className="font-semibold text-lg">{session.customer_name || 'Nome non disponibile'}</h3>
-              <div className="text-sm text-muted-foreground mt-1">
-                {session.customer_email && <div>{session.customer_email}</div>}
-                {session.customer_phone && <div>{session.customer_phone}</div>}
-              </div>
-            </div>
-
-            <div className="text-sm text-muted-foreground">
-              Creato: {format(new Date(session.created_at), 'dd/MM/yyyy, HH:mm', { locale: it })}
-            </div>
-
-            {session.is_used && (
-              <div className="flex items-center gap-2 text-sm text-green-600">
-                <Check className="w-4 h-4" />
-                Link utilizzato
-              </div>
-            )}
-
-            {!compact && (
-              <>
-                <div className="pt-2 border-t">
-                  <div className="font-medium text-sm mb-2">Attività del cliente:</div>
-                  {getActivitySummary(session)}
+  const renderSessionCard = (session: SessionData, compact = false) => {
+    if (compact) {
+      // Compact kanban card
+      return (
+        <Card key={session.id} className="hover:shadow-lg transition-all border-l-4" style={{
+          borderLeftColor: session.configurator_quotes?.payment_completed ? '#16a34a' : 
+                           session.status === 'payment_initiated' ? '#2563eb' :
+                           session.status === 'interested' || session.feedback_status === 'interested' ? '#ea580c' :
+                           session.feedback_status === 'not_interested' ? '#dc2626' :
+                           session.is_used ? '#57534e' : '#e5e7eb'
+        }}>
+          <CardContent className="p-4">
+            <div className="space-y-3">
+              {/* Header with status and price list */}
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex flex-col gap-2 min-w-0 flex-1">
+                  {getStatusBadge(session, true)}
+                  <Badge variant="outline" className="w-fit text-xs">
+                    Listino {session.price_list}
+                  </Badge>
                 </div>
+                <div className="flex gap-1 flex-shrink-0">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => copyLink(session.token)}
+                    title="Copia link"
+                    className="h-8 w-8 p-0"
+                  >
+                    <Copy className="w-3.5 h-3.5" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => regenerateLink(session.id)}
+                    title="Rigenera link"
+                    className="h-8 w-8 p-0"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
+              </div>
 
-                {session.feedback_status === 'not_interested' && session.feedback_reason && (
-                  <div className="pt-2 border-t">
-                    <div className="font-medium text-sm mb-1">Motivo non interessato:</div>
-                    <div className="text-sm text-muted-foreground">{session.feedback_reason}</div>
+              {/* Customer info */}
+              <div className="min-w-0">
+                <h4 className="font-semibold text-sm truncate">{session.customer_name || 'Nome non disponibile'}</h4>
+                <div className="text-xs text-muted-foreground space-y-0.5 mt-1">
+                  {session.customer_email && (
+                    <div className="truncate" title={session.customer_email}>{session.customer_email}</div>
+                  )}
+                  {session.customer_phone && <div>{session.customer_phone}</div>}
+                </div>
+              </div>
+
+              {/* Date info */}
+              <div className="text-xs text-muted-foreground">
+                <div>Creato: {format(new Date(session.created_at), 'dd/MM/yy HH:mm', { locale: it })}</div>
+              </div>
+
+              {/* Link status indicator */}
+              {session.is_used && (
+                <div className="flex items-center gap-1.5 text-xs text-green-600 bg-green-50 dark:bg-green-950 px-2 py-1 rounded">
+                  <Check className="w-3 h-3" />
+                  Link utilizzato
+                </div>
+              )}
+
+              {/* Order info for paid */}
+              {session.configurator_quotes && (
+                <div className="text-xs bg-muted/50 px-2 py-1.5 rounded">
+                  <span className="font-medium">Ordine: </span>
+                  €{session.configurator_quotes.total_price.toLocaleString()}
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    // Full list card
+    return (
+      <Card key={session.id} className="hover:shadow-md transition-shadow">
+        <CardContent className="p-6">
+          <div className="flex items-start justify-between">
+            <div className="flex-1 space-y-3">
+              <div className="flex items-center gap-3">
+                {getStatusBadge(session)}
+                <Badge variant="outline">Listino {session.price_list}</Badge>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-lg">{session.customer_name || 'Nome non disponibile'}</h3>
+                <div className="text-sm text-muted-foreground mt-1">
+                  {session.customer_email && <div>{session.customer_email}</div>}
+                  {session.customer_phone && <div>{session.customer_phone}</div>}
+                </div>
+              </div>
+
+              <div className="text-sm text-muted-foreground">
+                Creato: {format(new Date(session.created_at), 'dd/MM/yyyy, HH:mm', { locale: it })}
+              </div>
+
+              {session.is_used && (
+                <div className="flex items-center gap-2 text-sm text-green-600">
+                  <Check className="w-4 h-4" />
+                  Link utilizzato
+                </div>
+              )}
+
+              <div className="pt-2 border-t">
+                <div className="font-medium text-sm mb-2">Attività del cliente:</div>
+                {getActivitySummary(session)}
+              </div>
+
+              {session.feedback_status === 'not_interested' && session.feedback_reason && (
+                <div className="pt-2 border-t">
+                  <div className="font-medium text-sm mb-1">Motivo non interessato:</div>
+                  <div className="text-sm text-muted-foreground">{session.feedback_reason}</div>
+                </div>
+              )}
+
+              {session.configurator_quotes && (
+                <div className="pt-2 border-t">
+                  <div className="font-medium text-sm mb-1">Ordine:</div>
+                  <div className="text-sm text-muted-foreground">
+                    Totale: €{session.configurator_quotes.total_price.toLocaleString()}
+                    {session.configurator_quotes.payment_completed && <span className="text-green-600 ml-2">• Pagato</span>}
                   </div>
-                )}
+                </div>
+              )}
+            </div>
 
-                {session.configurator_quotes && (
-                  <div className="pt-2 border-t">
-                    <div className="font-medium text-sm mb-1">Ordine:</div>
-                    <div className="text-sm text-muted-foreground">
-                      Totale: €{session.configurator_quotes.total_price.toLocaleString()}
-                      {session.configurator_quotes.payment_completed && <span className="text-green-600 ml-2">• Pagato</span>}
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
+            <div className="flex gap-2 ml-4">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => copyLink(session.token)}
+                title="Copia link"
+              >
+                <Copy className="w-4 h-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => regenerateLink(session.id)}
+                title="Rigenera link"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
-
-          <div className="flex gap-2 ml-4">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => copyLink(session.token)}
-              title="Copia link"
-            >
-              <Copy className="w-4 h-4" />
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => regenerateLink(session.id)}
-              title="Rigenera link"
-            >
-              <RefreshCw className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
+        </CardContent>
+      </Card>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-stone-50 p-8">
@@ -421,70 +526,120 @@ const SessionsCRM = () => {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {/* Colonna Nuovo */}
-            <div className="space-y-3">
-              <div className="bg-card border rounded-lg p-3">
-                <h3 className="font-semibold text-sm mb-1">Nuovo</h3>
-                <p className="text-xs text-muted-foreground">{kanbanGroups.nuovo.length} link</p>
+          <div className="overflow-x-auto pb-4">
+            <div className="inline-flex gap-4 min-w-full">
+              {/* Colonna Nuovo */}
+              <div className="w-[280px] flex-shrink-0 space-y-3">
+                <div className="bg-card border-2 rounded-lg p-3 sticky top-0 z-10 shadow-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+                    <h3 className="font-semibold text-sm">Nuovo</h3>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{kanbanGroups.nuovo.length} link</p>
+                </div>
+                <div className="space-y-3">
+                  {kanbanGroups.nuovo.map(session => renderSessionCard(session, true))}
+                  {kanbanGroups.nuovo.length === 0 && (
+                    <div className="text-center p-8 text-sm text-muted-foreground bg-muted/30 rounded-lg border-2 border-dashed">
+                      Nessun link nuovo
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="space-y-3">
-                {kanbanGroups.nuovo.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
 
-            {/* Colonna Aperto */}
-            <div className="space-y-3">
-              <div className="bg-card border rounded-lg p-3">
-                <h3 className="font-semibold text-sm mb-1">Aperto</h3>
-                <p className="text-xs text-muted-foreground">{kanbanGroups.aperto.length} sessioni</p>
+              {/* Colonna Aperto */}
+              <div className="w-[280px] flex-shrink-0 space-y-3">
+                <div className="bg-card border-2 rounded-lg p-3 sticky top-0 z-10 shadow-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-3 h-3 rounded-full bg-stone-600"></div>
+                    <h3 className="font-semibold text-sm">Aperto</h3>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{kanbanGroups.aperto.length} sessioni</p>
+                </div>
+                <div className="space-y-3">
+                  {kanbanGroups.aperto.map(session => renderSessionCard(session, true))}
+                  {kanbanGroups.aperto.length === 0 && (
+                    <div className="text-center p-8 text-sm text-muted-foreground bg-muted/30 rounded-lg border-2 border-dashed">
+                      Nessuna sessione aperta
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="space-y-3">
-                {kanbanGroups.aperto.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
 
-            {/* Colonna Interessato */}
-            <div className="space-y-3">
-              <div className="bg-card border rounded-lg p-3">
-                <h3 className="font-semibold text-sm mb-1">Interessato</h3>
-                <p className="text-xs text-muted-foreground">{kanbanGroups.interessato.length} clienti</p>
+              {/* Colonna Interessato */}
+              <div className="w-[280px] flex-shrink-0 space-y-3">
+                <div className="bg-card border-2 rounded-lg p-3 sticky top-0 z-10 shadow-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-3 h-3 rounded-full bg-orange-600"></div>
+                    <h3 className="font-semibold text-sm">Interessato</h3>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{kanbanGroups.interessato.length} clienti</p>
+                </div>
+                <div className="space-y-3">
+                  {kanbanGroups.interessato.map(session => renderSessionCard(session, true))}
+                  {kanbanGroups.interessato.length === 0 && (
+                    <div className="text-center p-8 text-sm text-muted-foreground bg-muted/30 rounded-lg border-2 border-dashed">
+                      Nessun cliente interessato
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="space-y-3">
-                {kanbanGroups.interessato.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
 
-            {/* Colonna Pagamento Avviato */}
-            <div className="space-y-3">
-              <div className="bg-card border rounded-lg p-3">
-                <h3 className="font-semibold text-sm mb-1">Pagamento Avviato</h3>
-                <p className="text-xs text-muted-foreground">{kanbanGroups.pagamento.length} in corso</p>
+              {/* Colonna Pagamento Avviato */}
+              <div className="w-[280px] flex-shrink-0 space-y-3">
+                <div className="bg-card border-2 rounded-lg p-3 sticky top-0 z-10 shadow-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+                    <h3 className="font-semibold text-sm">Pagamento Avviato</h3>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{kanbanGroups.pagamento.length} in corso</p>
+                </div>
+                <div className="space-y-3">
+                  {kanbanGroups.pagamento.map(session => renderSessionCard(session, true))}
+                  {kanbanGroups.pagamento.length === 0 && (
+                    <div className="text-center p-8 text-sm text-muted-foreground bg-muted/30 rounded-lg border-2 border-dashed">
+                      Nessun pagamento in corso
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="space-y-3">
-                {kanbanGroups.pagamento.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
 
-            {/* Colonna Pagato */}
-            <div className="space-y-3">
-              <div className="bg-card border rounded-lg p-3">
-                <h3 className="font-semibold text-sm mb-1">Pagato</h3>
-                <p className="text-xs text-muted-foreground">{kanbanGroups.pagato.length} ordini</p>
+              {/* Colonna Pagato */}
+              <div className="w-[280px] flex-shrink-0 space-y-3">
+                <div className="bg-card border-2 rounded-lg p-3 sticky top-0 z-10 shadow-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-3 h-3 rounded-full bg-green-600"></div>
+                    <h3 className="font-semibold text-sm">Pagato</h3>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{kanbanGroups.pagato.length} ordini</p>
+                </div>
+                <div className="space-y-3">
+                  {kanbanGroups.pagato.map(session => renderSessionCard(session, true))}
+                  {kanbanGroups.pagato.length === 0 && (
+                    <div className="text-center p-8 text-sm text-muted-foreground bg-muted/30 rounded-lg border-2 border-dashed">
+                      Nessun ordine pagato
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="space-y-3">
-                {kanbanGroups.pagato.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
 
-            {/* Colonna Non Interessato */}
-            <div className="space-y-3">
-              <div className="bg-card border rounded-lg p-3">
-                <h3 className="font-semibold text-sm mb-1">Non Interessato</h3>
-                <p className="text-xs text-muted-foreground">{kanbanGroups.nonInteressato.length} archiviati</p>
-              </div>
-              <div className="space-y-3">
-                {kanbanGroups.nonInteressato.map(session => renderSessionCard(session, true))}
+              {/* Colonna Non Interessato */}
+              <div className="w-[280px] flex-shrink-0 space-y-3">
+                <div className="bg-card border-2 rounded-lg p-3 sticky top-0 z-10 shadow-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-3 h-3 rounded-full bg-red-600"></div>
+                    <h3 className="font-semibold text-sm">Non Interessato</h3>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{kanbanGroups.nonInteressato.length} archiviati</p>
+                </div>
+                <div className="space-y-3">
+                  {kanbanGroups.nonInteressato.map(session => renderSessionCard(session, true))}
+                  {kanbanGroups.nonInteressato.length === 0 && (
+                    <div className="text-center p-8 text-sm text-muted-foreground bg-muted/30 rounded-lg border-2 border-dashed">
+                      Nessuno non interessato
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
