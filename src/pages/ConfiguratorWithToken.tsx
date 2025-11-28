@@ -46,10 +46,17 @@ export default function ConfiguratorWithToken() {
           setShowExpiredDialog(true);
           setValid(false);
         } else {
-          // Mark as used
+          // Mark as used and track opening
           await supabase
             .from('configurator_sessions')
-            .update({ is_used: true })
+            .update({ 
+              is_used: true,
+              last_opened_at: new Date().toISOString(),
+              customer_actions: [{ 
+                type: 'link_opened', 
+                timestamp: new Date().toISOString() 
+              }]
+            })
             .eq('id', data.id);
 
           setSession(data);
