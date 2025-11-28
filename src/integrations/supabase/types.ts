@@ -172,46 +172,67 @@ export type Database = {
       }
       configurator_quotes: {
         Row: {
+          billing_address: string | null
+          company_name: string | null
           created_at: string
           customer_email: string | null
           customer_name: string | null
           customer_phone: string | null
+          delivery_address: string | null
           delivery_time_weeks: number
+          final_notes: string | null
           has_gas: boolean
           has_installation: boolean
           id: string
           notes: string | null
           oven_id: string | null
+          payment_completed: boolean | null
           status: string
+          stripe_session_id: string | null
           total_price: number
+          vat_number: string | null
         }
         Insert: {
+          billing_address?: string | null
+          company_name?: string | null
           created_at?: string
           customer_email?: string | null
           customer_name?: string | null
           customer_phone?: string | null
+          delivery_address?: string | null
           delivery_time_weeks: number
+          final_notes?: string | null
           has_gas?: boolean
           has_installation?: boolean
           id?: string
           notes?: string | null
           oven_id?: string | null
+          payment_completed?: boolean | null
           status?: string
+          stripe_session_id?: string | null
           total_price: number
+          vat_number?: string | null
         }
         Update: {
+          billing_address?: string | null
+          company_name?: string | null
           created_at?: string
           customer_email?: string | null
           customer_name?: string | null
           customer_phone?: string | null
+          delivery_address?: string | null
           delivery_time_weeks?: number
+          final_notes?: string | null
           has_gas?: boolean
           has_installation?: boolean
           id?: string
           notes?: string | null
           oven_id?: string | null
+          payment_completed?: boolean | null
           status?: string
+          stripe_session_id?: string | null
           total_price?: number
+          vat_number?: string | null
         }
         Relationships: [
           {
