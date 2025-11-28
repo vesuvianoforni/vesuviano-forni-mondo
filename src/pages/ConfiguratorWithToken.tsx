@@ -3,12 +3,22 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import Configurator from "./Configurator";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export default function ConfiguratorWithToken() {
   const { token } = useParams();
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState(false);
+  const [showExpiredDialog, setShowExpiredDialog] = useState(false);
+  const [customerName, setCustomerName] = useState("");
 
   useEffect(() => {
     const validateToken = async () => {
@@ -27,7 +37,8 @@ export default function ConfiguratorWithToken() {
         if (error) throw error;
 
         if (data.is_used) {
-          toast.error("Questo link è già stato utilizzato");
+          setCustomerName(data.customer_name || "");
+          setShowExpiredDialog(true);
           setValid(false);
         } else {
           // Mark as used
@@ -41,7 +52,8 @@ export default function ConfiguratorWithToken() {
         }
       } catch (error) {
         console.error('Error validating token:', error);
-        toast.error("Link non valido o scaduto");
+        setCustomerName("");
+        setShowExpiredDialog(true);
         setValid(false);
       } finally {
         setLoading(false);
@@ -63,7 +75,34 @@ export default function ConfiguratorWithToken() {
   }
 
   if (!valid) {
-    return <Navigate to="/" replace />;
+    return (
+      <>
+        <Dialog open={showExpiredDialog} onOpenChange={(open) => {
+          if (!open) window.location.href = "/";
+        }}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-xl">
+                {customerName ? `Ciao ${customerName}` : "Ciao"}
+              </DialogTitle>
+              <DialogDescription className="text-base pt-4">
+                Questo link è scaduto. Richiedi un nuovo link ai nostri commerciali, ti verrà fornito a breve.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-end pt-4">
+              <Button onClick={() => window.location.href = "/"}>
+                Torna alla Home
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <p>Link non valido</p>
+          </div>
+        </div>
+      </>
+    );
   }
 
   return <Configurator sessionId={session?.id} />;
