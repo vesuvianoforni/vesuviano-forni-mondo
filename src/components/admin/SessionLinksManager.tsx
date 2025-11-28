@@ -44,7 +44,7 @@ export const SessionLinksManager = () => {
 
       if (error) throw error;
 
-      const link = `https://www.vesuvianoforni.com/configuratore/${token}`;
+      const link = `https://www.vesuviano.com/configuratore/${token}`;
       await navigator.clipboard.writeText(link);
       
       toast.success("Link generato e copiato negli appunti!");
@@ -63,7 +63,7 @@ export const SessionLinksManager = () => {
   };
 
   const copyLink = async (token: string) => {
-    const link = `https://www.vesuvianoforni.com/configuratore/${token}`;
+    const link = `https://www.vesuviano.com/configuratore/${token}`;
     await navigator.clipboard.writeText(link);
     toast.success("Link copiato!");
   };
