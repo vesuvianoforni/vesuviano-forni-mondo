@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.request-new-link]
 verify_jwt = false
+
+[functions.send-configurator-link]
+verify_jwt = false
