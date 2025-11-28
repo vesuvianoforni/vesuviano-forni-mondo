@@ -328,6 +328,52 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     return total;
   };
 
+  // Track customer actions
+  const trackAction = async (actionType: string, actionData?: any) => {
+    if (!sessionId) return;
+    
+    try {
+      const { data: session } = await supabase
+        .from('configurator_sessions')
+        .select('customer_actions')
+        .eq('id', sessionId)
+        .single();
+      
+      const currentActions = Array.isArray(session?.customer_actions) ? session.customer_actions : [];
+      const newAction = {
+        type: actionType,
+        timestamp: new Date().toISOString(),
+        ...actionData
+      };
+      
+      await supabase
+        .from('configurator_sessions')
+        .update({ 
+          customer_actions: [...currentActions, newAction] as any
+        })
+        .eq('id', sessionId);
+    } catch (error) {
+      console.error('Error tracking action:', error);
+    }
+  };
+
+  // Track selections
+  useEffect(() => {
+    if (selectedModel) trackAction('model_selected', { model: selectedModel });
+  }, [selectedModel]);
+
+  useEffect(() => {
+    if (selectedFuelType) trackAction('fuel_selected', { fuelType: selectedFuelType });
+  }, [selectedFuelType]);
+
+  useEffect(() => {
+    if (selectedDiameter) trackAction('size_selected', { diameter: selectedDiameter });
+  }, [selectedDiameter]);
+
+  useEffect(() => {
+    if (selectedCoating) trackAction('coating_selected', { coating: selectedCoating });
+  }, [selectedCoating]);
+
   const handleSaveQuote = async () => {
     if (!selectedOven) { toast.error('Completa la configurazione'); return; }
     setSavingQuote(true);
@@ -348,6 +394,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
       // Update session if exists
       if (sessionId && quoteData) {
+        await trackAction('quote_saved', { quoteId: quoteData.id, totalPrice: calculateTotal() });
+        
         await supabase
           .from('configurator_sessions')
           .update({ 

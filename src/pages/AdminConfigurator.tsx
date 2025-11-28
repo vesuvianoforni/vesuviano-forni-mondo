@@ -80,7 +80,14 @@ const AdminConfigurator = () => {
   return (
     <div className="min-h-screen bg-stone-50 p-8">
       <div className="max-w-7xl mx-auto">
-        <SessionLinksManager />
+        <div className="mb-6">
+          <SessionLinksManager />
+          <div className="mt-4">
+            <Button onClick={() => navigate('/admin/sessions-crm')} variant="outline" className="w-full">
+              Visualizza CRM Link Completo
+            </Button>
+          </div>
+        </div>
         
         <div className="flex justify-between items-center mb-8 mt-8">
           <h1 className="text-3xl font-bold">Gestione Configuratore</h1>

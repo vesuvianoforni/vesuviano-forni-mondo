@@ -248,6 +248,7 @@ export type Database = {
         Row: {
           created_at: string
           created_by: string | null
+          customer_actions: Json | null
           customer_email: string | null
           customer_info: Json | null
           customer_name: string | null
@@ -258,6 +259,7 @@ export type Database = {
           feedback_status: string | null
           id: string
           is_used: boolean
+          last_opened_at: string | null
           price_list: string
           quote_id: string | null
           status: string
@@ -266,6 +268,7 @@ export type Database = {
         Insert: {
           created_at?: string
           created_by?: string | null
+          customer_actions?: Json | null
           customer_email?: string | null
           customer_info?: Json | null
           customer_name?: string | null
@@ -276,6 +279,7 @@ export type Database = {
           feedback_status?: string | null
           id?: string
           is_used?: boolean
+          last_opened_at?: string | null
           price_list?: string
           quote_id?: string | null
           status?: string
@@ -284,6 +288,7 @@ export type Database = {
         Update: {
           created_at?: string
           created_by?: string | null
+          customer_actions?: Json | null
           customer_email?: string | null
           customer_info?: Json | null
           customer_name?: string | null
@@ -294,6 +299,7 @@ export type Database = {
           feedback_status?: string | null
           id?: string
           is_used?: boolean
+          last_opened_at?: string | null
           price_list?: string
           quote_id?: string | null
           status?: string

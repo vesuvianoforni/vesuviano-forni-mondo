@@ -23,6 +23,7 @@ import AdminConfigurator from "./pages/AdminConfigurator";
 import AdminLogin from "./pages/AdminLogin";
 import CreateAdmin from "./pages/CreateAdmin";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import SessionsCRM from "./pages/SessionsCRM";
 
 const queryClient = new QueryClient();
 
@@ -102,6 +103,7 @@ const App = () => {
             <Route path="/admin/create" element={<CreateAdmin />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/configuratore" element={<AdminConfigurator />} />
+            <Route path="/admin/sessions-crm" element={<SessionsCRM />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
