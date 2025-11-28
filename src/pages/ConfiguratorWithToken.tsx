@@ -19,6 +19,9 @@ export default function ConfiguratorWithToken() {
   const [valid, setValid] = useState(false);
   const [showExpiredDialog, setShowExpiredDialog] = useState(false);
   const [customerName, setCustomerName] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [requestingNewLink, setRequestingNewLink] = useState(false);
 
   useEffect(() => {
     const validateToken = async () => {
@@ -38,6 +41,8 @@ export default function ConfiguratorWithToken() {
 
         if (data.is_used) {
           setCustomerName(data.customer_name || "");
+          setCustomerEmail(data.customer_email || "");
+          setCustomerPhone(data.customer_phone || "");
           setShowExpiredDialog(true);
           setValid(false);
         } else {
@@ -62,6 +67,37 @@ export default function ConfiguratorWithToken() {
 
     validateToken();
   }, [token]);
+
+  const handleRequestNewLink = async () => {
+    if (!customerName || !customerEmail || !customerPhone) {
+      toast.error("Dati cliente mancanti");
+      return;
+    }
+
+    setRequestingNewLink(true);
+    try {
+      const { error } = await supabase.functions.invoke("request-new-link", {
+        body: {
+          customerName,
+          customerEmail,
+          customerPhone,
+          oldToken: token,
+        },
+      });
+
+      if (error) throw error;
+
+      toast.success("Richiesta inviata! Un nostro commerciale ti contatterà a breve.");
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 2000);
+    } catch (error) {
+      console.error("Error requesting new link:", error);
+      toast.error("Errore nell'invio della richiesta");
+    } finally {
+      setRequestingNewLink(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -89,9 +125,18 @@ export default function ConfiguratorWithToken() {
                 Questo link è scaduto. Richiedi un nuovo link ai nostri commerciali, ti verrà fornito a breve.
               </DialogDescription>
             </DialogHeader>
-            <div className="flex justify-end pt-4">
-              <Button onClick={() => window.location.href = "/"}>
+            <div className="flex gap-3 justify-end pt-4">
+              <Button 
+                variant="outline" 
+                onClick={() => window.location.href = "/"}
+              >
                 Torna alla Home
+              </Button>
+              <Button 
+                onClick={handleRequestNewLink}
+                disabled={requestingNewLink || !customerEmail}
+              >
+                {requestingNewLink ? "Invio..." : "Richiedi Nuovo Link"}
               </Button>
             </div>
           </DialogContent>
