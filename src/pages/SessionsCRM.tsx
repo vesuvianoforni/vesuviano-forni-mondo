@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, ExternalLink } from 'lucide-react';
+import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, Mail } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Input } from '@/components/ui/input';
@@ -106,6 +106,32 @@ const SessionsCRM = () => {
     } catch (error) {
       console.error('Error regenerating link:', error);
       toast.error('Errore nella rigenerazione del link');
+    }
+  };
+
+  const sendEmailToCustomer = async (session: SessionData) => {
+    try {
+      const configuratorLink = `${window.location.origin}/configuratore/${session.token}`;
+      
+      toast.loading('Invio email in corso...');
+
+      const { data, error } = await supabase.functions.invoke('send-configurator-link', {
+        body: {
+          customerName: session.customer_name,
+          customerEmail: session.customer_email,
+          configuratorLink: configuratorLink,
+          priceList: session.price_list
+        }
+      });
+
+      if (error) throw error;
+
+      toast.dismiss();
+      toast.success(`Email inviata con successo a ${session.customer_email}!`);
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast.dismiss();
+      toast.error('Errore nell\'invio dell\'email. Riprova più tardi.');
     }
   };
 
@@ -281,6 +307,18 @@ const SessionsCRM = () => {
                     variant="ghost"
                     onClick={(e) => {
                       e.stopPropagation();
+                      sendEmailToCustomer(session);
+                    }}
+                    title="Invia email"
+                    className="h-8 w-8 p-0"
+                  >
+                    <Mail className="w-3.5 h-3.5" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={(e) => {
+                      e.stopPropagation();
                       copyLink(session.token);
                     }}
                     title="Copia link"
@@ -398,6 +436,17 @@ const SessionsCRM = () => {
             </div>
 
             <div className="flex gap-2 ml-4">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  sendEmailToCustomer(session);
+                }}
+                title="Invia email"
+              >
+                <Mail className="w-4 h-4" />
+              </Button>
               <Button
                 size="sm"
                 variant="outline"
@@ -685,6 +734,14 @@ const SessionsCRM = () => {
                       </div>
                     </div>
                     <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => sendEmailToCustomer(selectedSession)}
+                      >
+                        <Mail className="w-4 h-4 mr-2" />
+                        Invia Email
+                      </Button>
                       <Button
                         size="sm"
                         variant="outline"
