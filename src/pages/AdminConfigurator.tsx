@@ -9,9 +9,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import EditOvenModal from '@/components/admin/EditOvenModal';
-import { SessionLinksManager } from '@/components/admin/SessionLinksManager';
 import { AddOvenModal } from '@/components/admin/AddOvenModal';
-import { LogOut, Edit, Plus, Trash2 } from 'lucide-react';
+import { LogOut, Edit, Plus, Trash2, TrendingUp, Users, CheckCircle, Clock, ArrowRight } from 'lucide-react';
+import { format } from 'date-fns';
+import { it } from 'date-fns/locale';
 
 const AdminConfigurator = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const AdminConfigurator = () => {
   const [loading, setLoading] = useState(true);
   const [editingOven, setEditingOven] = useState<any>(null);
   const [showAddOven, setShowAddOven] = useState(false);
+  const [sessions, setSessions] = useState<any[]>([]);
 
   useEffect(() => { 
     fetchData(); 
@@ -28,20 +30,42 @@ const AdminConfigurator = () => {
 
   const fetchData = async () => {
     try {
-      const [ovensResult, optionsResult, quotesResult] = await Promise.all([
+      const [ovensResult, optionsResult, quotesResult, sessionsResult] = await Promise.all([
         supabase.from('configurator_ovens').select('*').order('created_at', { ascending: false }),
         supabase.from('configurator_options').select('*').order('created_at', { ascending: false }),
-        supabase.from('configurator_quotes').select('*').order('created_at', { ascending: false })
+        supabase.from('configurator_quotes').select('*').order('created_at', { ascending: false }),
+        supabase.from('configurator_sessions').select(`
+          *,
+          configurator_quotes (
+            id,
+            total_price,
+            status,
+            payment_completed
+          )
+        `).order('created_at', { ascending: false })
       ]);
       setOvens(ovensResult.data || []);
       setOptions(optionsResult.data || []);
       setQuotes(quotesResult.data || []);
+      setSessions(sessionsResult.data || []);
     } catch (error) {
       toast.error('Errore caricamento');
     } finally {
       setLoading(false);
     }
   };
+
+  // Calcola KPI
+  const totalSessions = sessions.length;
+  const openedSessions = sessions.filter(s => s.is_used).length;
+  const paidOrders = sessions.filter(s => s.configurator_quotes?.payment_completed).length;
+  const interestedSessions = sessions.filter(s => s.status === 'interested' || s.feedback_status === 'interested').length;
+  
+  const openRate = totalSessions > 0 ? ((openedSessions / totalSessions) * 100).toFixed(1) : '0';
+  const conversionRate = openedSessions > 0 ? ((paidOrders / openedSessions) * 100).toFixed(1) : '0';
+
+  // Ultime 5 interazioni
+  const recentSessions = sessions.slice(0, 5);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -80,22 +104,125 @@ const AdminConfigurator = () => {
   return (
     <div className="min-h-screen bg-stone-50 p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-6">
-          <SessionLinksManager />
-          <div className="mt-4">
-            <Button onClick={() => navigate('/admin/sessions-crm')} variant="outline" className="w-full">
-              Visualizza CRM Link Completo
-            </Button>
-          </div>
-        </div>
-        
-        <div className="flex justify-between items-center mb-8 mt-8">
+        <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Gestione Configuratore</h1>
           <Button onClick={handleLogout} variant="outline">
             <LogOut className="w-4 h-4 mr-2" />
             Logout
           </Button>
         </div>
+
+        {/* KPI Section */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Link Generati</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <div className="p-6 pt-0">
+              <div className="text-2xl font-bold">{totalSessions}</div>
+            </div>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Tasso Apertura</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <div className="p-6 pt-0">
+              <div className="text-2xl font-bold">{openRate}%</div>
+              <p className="text-xs text-muted-foreground">{openedSessions} su {totalSessions}</p>
+            </div>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Ordini Pagati</CardTitle>
+              <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <div className="p-6 pt-0">
+              <div className="text-2xl font-bold">{paidOrders}</div>
+              <p className="text-xs text-muted-foreground">Conv. {conversionRate}%</p>
+            </div>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Interessati</CardTitle>
+              <Clock className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <div className="p-6 pt-0">
+              <div className="text-2xl font-bold">{interestedSessions}</div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Ultime Interazioni */}
+        <Card className="mb-8">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Ultime Interazioni</CardTitle>
+            <Button onClick={() => navigate('/admin/sessions-crm')} variant="outline" size="sm">
+              Visualizza CRM Completo
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </CardHeader>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Cliente</TableHead>
+                <TableHead>Stato</TableHead>
+                <TableHead>Data Creazione</TableHead>
+                <TableHead>Ultimo Accesso</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {recentSessions.map((session: any) => {
+                const getStatusLabel = () => {
+                  if (session.configurator_quotes?.payment_completed) return 'Pagato';
+                  if (session.status === 'payment_initiated') return 'Pagamento Avviato';
+                  if (session.status === 'interested' || session.feedback_status === 'interested') return 'Interessato';
+                  if (session.feedback_status === 'not_interested') return 'Non Interessato';
+                  if (session.is_used) return 'Aperto';
+                  return 'Nuovo';
+                };
+
+                const getStatusVariant = () => {
+                  if (session.configurator_quotes?.payment_completed) return 'default';
+                  if (session.status === 'payment_initiated') return 'default';
+                  if (session.status === 'interested' || session.feedback_status === 'interested') return 'secondary';
+                  if (session.feedback_status === 'not_interested') return 'destructive';
+                  if (session.is_used) return 'secondary';
+                  return 'outline';
+                };
+
+                return (
+                  <TableRow key={session.id}>
+                    <TableCell className="font-medium">
+                      <div>{session.customer_name || 'N/A'}</div>
+                      <div className="text-xs text-muted-foreground">{session.customer_email}</div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={getStatusVariant() as any}>{getStatusLabel()}</Badge>
+                    </TableCell>
+                    <TableCell>{format(new Date(session.created_at), 'dd/MM/yy HH:mm', { locale: it })}</TableCell>
+                    <TableCell>
+                      {session.last_opened_at 
+                        ? format(new Date(session.last_opened_at), 'dd/MM/yy HH:mm', { locale: it })
+                        : '-'
+                      }
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          {recentSessions.length === 0 && (
+            <div className="p-8 text-center text-muted-foreground">
+              Nessuna sessione ancora creata
+            </div>
+          )}
+        </Card>
+        
         {ovens.length === 0 && <InitConfiguratorData />}
         <Tabs defaultValue="ovens">
           <TabsList className="mb-6">
