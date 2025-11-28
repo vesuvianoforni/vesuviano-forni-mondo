@@ -5,12 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid } from 'lucide-react';
+import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, ExternalLink } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
 
 interface SessionData {
   id: string;
@@ -45,6 +47,7 @@ const SessionsCRM = () => {
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [priceList, setPriceList] = useState('A');
+  const [selectedSession, setSelectedSession] = useState<SessionData | null>(null);
 
   useEffect(() => {
     loadSessions();
@@ -251,7 +254,11 @@ const SessionsCRM = () => {
     if (compact) {
       // Compact kanban card
       return (
-        <Card key={session.id} className="hover:shadow-lg transition-all border-l-4" style={{
+        <Card 
+          key={session.id} 
+          className="hover:shadow-lg transition-all border-l-4 cursor-pointer" 
+          onClick={() => setSelectedSession(session)}
+          style={{
           borderLeftColor: session.configurator_quotes?.payment_completed ? '#16a34a' : 
                            session.status === 'payment_initiated' ? '#2563eb' :
                            session.status === 'interested' || session.feedback_status === 'interested' ? '#ea580c' :
@@ -272,7 +279,10 @@ const SessionsCRM = () => {
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => copyLink(session.token)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      copyLink(session.token);
+                    }}
                     title="Copia link"
                     className="h-8 w-8 p-0"
                   >
@@ -281,7 +291,10 @@ const SessionsCRM = () => {
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => regenerateLink(session.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      regenerateLink(session.id);
+                    }}
                     title="Rigenera link"
                     className="h-8 w-8 p-0"
                   >
@@ -329,7 +342,11 @@ const SessionsCRM = () => {
 
     // Full list card
     return (
-      <Card key={session.id} className="hover:shadow-md transition-shadow">
+      <Card 
+        key={session.id} 
+        className="hover:shadow-md transition-shadow cursor-pointer"
+        onClick={() => setSelectedSession(session)}
+      >
         <CardContent className="p-6">
           <div className="flex items-start justify-between">
             <div className="flex-1 space-y-3">
@@ -384,7 +401,10 @@ const SessionsCRM = () => {
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => copyLink(session.token)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  copyLink(session.token);
+                }}
                 title="Copia link"
               >
                 <Copy className="w-4 h-4" />
@@ -392,7 +412,10 @@ const SessionsCRM = () => {
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => regenerateLink(session.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  regenerateLink(session.id);
+                }}
                 title="Rigenera link"
               >
                 <RefreshCw className="w-4 h-4" />
@@ -644,6 +667,189 @@ const SessionsCRM = () => {
             </div>
           </div>
         )}
+
+        {/* Customer Detail Modal */}
+        <Dialog open={!!selectedSession} onOpenChange={() => setSelectedSession(null)}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            {selectedSession && (
+              <>
+                <DialogHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <DialogTitle className="text-2xl mb-2">
+                        {selectedSession.customer_name || 'Nome non disponibile'}
+                      </DialogTitle>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {getStatusBadge(selectedSession)}
+                        <Badge variant="outline">Listino {selectedSession.price_list}</Badge>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => copyLink(selectedSession.token)}
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copia Link
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => regenerateLink(selectedSession.id)}
+                      >
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Rigenera
+                      </Button>
+                    </div>
+                  </div>
+                </DialogHeader>
+
+                <div className="space-y-6 mt-4">
+                  {/* Contact Info */}
+                  <div>
+                    <h3 className="font-semibold text-sm text-muted-foreground mb-3">INFORMAZIONI CONTATTO</h3>
+                    <div className="space-y-2">
+                      {selectedSession.customer_email && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium w-20">Email:</span>
+                          <span className="text-sm">{selectedSession.customer_email}</span>
+                        </div>
+                      )}
+                      {selectedSession.customer_phone && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium w-20">Telefono:</span>
+                          <span className="text-sm">{selectedSession.customer_phone}</span>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium w-20">Creato:</span>
+                        <span className="text-sm">
+                          {format(new Date(selectedSession.created_at), 'dd/MM/yyyy, HH:mm', { locale: it })}
+                        </span>
+                      </div>
+                      {selectedSession.last_opened_at && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium w-20">Ultimo accesso:</span>
+                          <span className="text-sm">
+                            {format(new Date(selectedSession.last_opened_at), 'dd/MM/yyyy, HH:mm', { locale: it })}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Link Status */}
+                  <div>
+                    <h3 className="font-semibold text-sm text-muted-foreground mb-3">STATO LINK</h3>
+                    {selectedSession.is_used ? (
+                      <div className="flex items-center gap-2 text-green-600 bg-green-50 dark:bg-green-950 px-3 py-2 rounded-lg">
+                        <Check className="w-4 h-4" />
+                        <span className="text-sm font-medium">Link utilizzato</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 text-muted-foreground bg-muted px-3 py-2 rounded-lg">
+                        <Clock className="w-4 h-4" />
+                        <span className="text-sm font-medium">Link non ancora aperto</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <Separator />
+
+                  {/* Activity Timeline */}
+                  <div>
+                    <h3 className="font-semibold text-sm text-muted-foreground mb-3">ATTIVITÀ DEL CLIENTE</h3>
+                    {selectedSession.customer_actions && selectedSession.customer_actions.length > 0 ? (
+                      <div className="space-y-3">
+                        {(selectedSession.customer_actions as any[]).map((action: any, idx: number) => (
+                          <div key={idx} className="flex gap-3 items-start">
+                            <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+                            <div className="flex-1">
+                              <div className="text-sm font-medium">
+                                {action.type === 'model_selected' && 'Ha selezionato un modello'}
+                                {action.type === 'fuel_selected' && 'Ha scelto l\'alimentazione'}
+                                {action.type === 'size_selected' && 'Ha scelto la dimensione'}
+                                {action.type === 'coating_selected' && 'Ha scelto il rivestimento'}
+                                {action.type === 'color_render_generated' && 'Ha generato un render colore'}
+                                {action.type === 'architect_ai_used' && 'Ha usato Architetto AI'}
+                                {action.type === 'quote_saved' && 'Ha salvato il preventivo'}
+                              </div>
+                              {action.data && (
+                                <div className="text-xs text-muted-foreground mt-1">
+                                  {action.data.model_name && `Modello: ${action.data.model_name}`}
+                                  {action.data.fuel_type && ` • Alimentazione: ${action.data.fuel_type}`}
+                                  {action.data.diameter && ` • Diametro: ${action.data.diameter}cm`}
+                                  {action.data.coating && ` • Rivestimento: ${action.data.coating}`}
+                                </div>
+                              )}
+                              {action.timestamp && (
+                                <div className="text-xs text-muted-foreground mt-1">
+                                  {format(new Date(action.timestamp), 'dd/MM/yyyy, HH:mm:ss', { locale: it })}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8 text-muted-foreground bg-muted/30 rounded-lg">
+                        <Clock className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        <p className="text-sm">Nessuna attività registrata</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Feedback */}
+                  {selectedSession.feedback_status === 'not_interested' && selectedSession.feedback_reason && (
+                    <>
+                      <Separator />
+                      <div>
+                        <h3 className="font-semibold text-sm text-muted-foreground mb-3">MOTIVO NON INTERESSATO</h3>
+                        <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 px-4 py-3 rounded-lg">
+                          <p className="text-sm">{selectedSession.feedback_reason}</p>
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Order Info */}
+                  {selectedSession.configurator_quotes && (
+                    <>
+                      <Separator />
+                      <div>
+                        <h3 className="font-semibold text-sm text-muted-foreground mb-3">DETTAGLI ORDINE</h3>
+                        <div className="bg-muted/50 px-4 py-3 rounded-lg space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm font-medium">Totale ordine:</span>
+                            <span className="text-lg font-bold">
+                              €{selectedSession.configurator_quotes.total_price.toLocaleString()}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm font-medium">Stato:</span>
+                            <Badge variant={selectedSession.configurator_quotes.payment_completed ? 'default' : 'secondary'}>
+                              {selectedSession.configurator_quotes.payment_completed ? 'Pagato' : 'In attesa'}
+                            </Badge>
+                          </div>
+                          {selectedSession.configurator_quotes.payment_completed && (
+                            <div className="pt-2 border-t">
+                              <div className="text-xs text-green-600">
+                                ✓ Pagamento completato
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
