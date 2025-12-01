@@ -263,13 +263,28 @@ const SessionsCRM = () => {
       summary.push(`Aperto ${session.last_opened_at ? format(new Date(session.last_opened_at), 'dd/MM/yy HH:mm', { locale: it }) : ''}`);
     }
     
+    // Extract details from actions
+    const modelAction = actions.find((a: any) => a.type === 'model_selected');
+    const fuelAction = actions.find((a: any) => a.type === 'fuel_selected');
+    const sizeAction = actions.find((a: any) => a.type === 'size_selected');
+    const coatingAction = actions.find((a: any) => a.type === 'coating_selected');
+    const quoteAction = actions.find((a: any) => a.type === 'quote_saved');
+    
     const actionTypes = new Set(actions.map((a: any) => a.type));
-    if (actionTypes.has('model_selected')) summary.push('Ha selezionato un modello');
-    if (actionTypes.has('fuel_selected')) summary.push('Ha scelto alimentazione');
-    if (actionTypes.has('size_selected')) summary.push('Ha scelto dimensione');
-    if (actionTypes.has('coating_selected')) summary.push('Ha scelto rivestimento');
-    if (actionTypes.has('color_render_generated')) summary.push('Ha generato render colore');
-    if (actionTypes.has('architect_ai_used')) summary.push('Ha usato Architetto AI');
+    
+    if (modelAction) summary.push(`Modello: ${modelAction.model || 'N/A'}`);
+    if (fuelAction) summary.push(`Alimentazione: ${fuelAction.fuelType || 'N/A'}`);
+    if (sizeAction) summary.push(`Diametro: ${sizeAction.diameter || 'N/A'} cm`);
+    if (coatingAction) summary.push(`Rivestimento: ${coatingAction.coating || 'N/A'}`);
+    if (actionTypes.has('color_render_generated')) summary.push('✓ Ha generato render colore');
+    if (actionTypes.has('architect_ai_used')) summary.push('✓ Ha usato Architetto AI');
+    
+    // Show price if available
+    if (quoteAction?.totalPrice) {
+      summary.push(`💰 Prezzo: €${quoteAction.totalPrice.toLocaleString('it-IT')}`);
+    } else if (session.configurator_quotes?.total_price) {
+      summary.push(`💰 Prezzo: €${session.configurator_quotes.total_price.toLocaleString('it-IT')}`);
+    }
 
     return (
       <div className="text-sm text-muted-foreground space-y-1">
