@@ -12,9 +12,10 @@ import EditOvenModal from '@/components/admin/EditOvenModal';
 import { AddOvenModal } from '@/components/admin/AddOvenModal';
 import EditOptionModal from '@/components/admin/EditOptionModal';
 import AddOptionModal from '@/components/admin/AddOptionModal';
-import { LogOut, Edit, Plus, Trash2, TrendingUp, Users, CheckCircle, Clock, ArrowRight } from 'lucide-react';
+import { LogOut, Edit, Plus, Trash2, TrendingUp, Users, CheckCircle, Clock, ArrowRight, Search } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
+import { Input } from '@/components/ui/input';
 
 const AdminConfigurator = () => {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ const AdminConfigurator = () => {
   const [editingOption, setEditingOption] = useState<any>(null);
   const [showAddOption, setShowAddOption] = useState(false);
   const [sessions, setSessions] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => { 
     fetchData(); 
@@ -68,8 +70,20 @@ const AdminConfigurator = () => {
   const openRate = totalSessions > 0 ? ((openedSessions / totalSessions) * 100).toFixed(1) : '0';
   const conversionRate = openedSessions > 0 ? ((paidOrders / openedSessions) * 100).toFixed(1) : '0';
 
-  // Ultime 5 interazioni
-  const recentSessions = sessions.slice(0, 5);
+  // Filtra le sessioni in base al termine di ricerca
+  const filteredSessions = sessions.filter((session: any) => {
+    if (!searchTerm) return true;
+    
+    const search = searchTerm.toLowerCase();
+    const name = session.customer_name?.toLowerCase() || '';
+    const email = session.customer_email?.toLowerCase() || '';
+    const phone = session.customer_phone?.toLowerCase() || '';
+    
+    return name.includes(search) || email.includes(search) || phone.includes(search);
+  });
+
+  // Ultime 5 interazioni (dopo il filtro)
+  const recentSessions = filteredSessions.slice(0, 5);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -189,6 +203,18 @@ const AdminConfigurator = () => {
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </CardHeader>
+          <div className="px-6 pb-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Cerca per nome, email o telefono..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
           <Table>
             <TableHeader>
               <TableRow>
