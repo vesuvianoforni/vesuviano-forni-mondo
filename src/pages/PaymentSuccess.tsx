@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { CheckCircle, Loader2 } from "lucide-react";
+import { syncEventToERP } from "@/services/erpSyncService";
 
 export default function PaymentSuccess() {
   const [searchParams] = useSearchParams();
@@ -50,6 +51,29 @@ export default function PaymentSuccess() {
         setQuote(data.quote);
         setPaymentInfo(data.session);
         setVerified(true);
+
+        // Get session ID from quote to sync payment completion to ERP
+        if (data.quote?.id) {
+          // Find session associated with this quote
+          const { data: sessionData } = await supabase
+            .from('configurator_sessions')
+            .select('id')
+            .eq('quote_id', data.quote.id)
+            .single();
+
+          if (sessionData?.id) {
+            // Sync payment completion to ERP
+            syncEventToERP({
+              session_id: sessionData.id,
+              event_type: 'payment_completed',
+              event_data: {
+                quoteId: data.quote.id,
+                totalPrice: data.quote.total_price,
+                stripeSessionId: sessionId
+              }
+            });
+          }
+        }
       } else {
         toast.error("Pagamento non completato");
         navigate("/");
