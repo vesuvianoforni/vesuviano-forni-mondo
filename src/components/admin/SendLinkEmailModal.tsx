@@ -204,7 +204,7 @@ export const SendLinkEmailModal = ({ isOpen, onClose, session }: SendLinkEmailMo
                   </div>
 
                   <div className="bg-[#2c2c2c] text-gray-400 p-6 rounded-b-lg text-center text-xs space-y-2">
-                    <p className="font-semibold text-white text-sm">Vesuviano Forni S.r.l.</p>
+                    <p className="font-semibold text-white text-sm">Vesuviano Forni</p>
                     <p className="text-xs">{language === 'it' ? 'Forni Artigianali dal Vesuvio' : language === 'en' ? 'Artisanal Ovens from Vesuvius' : 'Fours Artisanaux du Vésuve'}</p>
                     <p>Via Sant'Anastasia 123, Napoli, Italia</p>
                     <p>
