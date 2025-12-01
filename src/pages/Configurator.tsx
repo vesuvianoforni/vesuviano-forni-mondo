@@ -565,7 +565,6 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
       if (error) throw error;
       const quoteData = (data as any)?.quote;
 
-
       // Update session
       if (sessionId && quoteData) {
         await supabase
@@ -583,12 +582,18 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           })
           .eq('id', sessionId);
 
-        // Send complete configuration email with all details and images
-        await sendConfigurationEmail('contact_request', quoteData.id);
-
-        await trackAction('contact_requested', { contactMethod: selectedContactMethod });
+        // Esegui operazioni non-critiche in background (senza bloccare la UI)
+        // Email e tracking ERP vengono eseguiti in parallelo senza await
+        Promise.all([
+          sendConfigurationEmail('contact_request', quoteData.id),
+          trackAction('contact_requested', { contactMethod: selectedContactMethod })
+        ]).catch(error => {
+          console.error('Background operations error:', error);
+          // Non bloccare l'utente in caso di errore nelle operazioni non-critiche
+        });
       }
 
+      // Mostra immediatamente il messaggio di conferma senza attendere email/tracking
       setShowContactMethodModal(false);
       setShowThankYouMessage(true);
     } catch (error) {
