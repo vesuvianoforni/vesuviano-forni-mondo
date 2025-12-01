@@ -223,7 +223,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailResponse = await resend.emails.send({
       from: "Vesuviano Configuratore <noreply@vesuvianoforni.com>",
-      to: ["info@vesuvianoforni.com", "commerciale@vesuviano.it"],
+      to: ["info@vesuvianoforni.com"],
       subject: emailSubject,
       html: emailHtml,
     });
