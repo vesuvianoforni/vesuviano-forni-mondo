@@ -47,7 +47,23 @@ export const SessionLinksManager = () => {
       const link = `https://www.vesuvianoforni.com/configuratore/${token}`;
       await navigator.clipboard.writeText(link);
       
-      toast.success("Link generato e copiato negli appunti!");
+      // Invia l'email al cliente con il link
+      const { error: emailError } = await supabase.functions.invoke('send-configurator-link', {
+        body: {
+          customerName,
+          customerEmail,
+          configuratorLink: link,
+          priceList
+        }
+      });
+
+      if (emailError) {
+        console.error('Error sending email:', emailError);
+        toast.error("Link generato ma errore nell'invio email");
+      } else {
+        toast.success("Link generato e email inviata con successo!");
+      }
+      
       setShowForm(false);
       setCustomerName("");
       setCustomerEmail("");

@@ -26,7 +26,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log('Sending configurator link email to:', customerEmail);
 
     const emailResponse = await resend.emails.send({
-      from: "Vesuviano Forni <onboarding@resend.dev>",
+      from: "Vesuviano Forni <noreply@vesuvianoforni.com>",
       to: [customerEmail],
       subject: "Il tuo link personale per configurare il tuo forno Vesuviano",
       html: `
