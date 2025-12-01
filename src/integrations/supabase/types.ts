@@ -263,6 +263,7 @@ export type Database = {
           id: string
           is_used: boolean
           last_opened_at: string | null
+          link_sent: boolean
           price_list: string
           quote_id: string | null
           status: string
@@ -283,6 +284,7 @@ export type Database = {
           id?: string
           is_used?: boolean
           last_opened_at?: string | null
+          link_sent?: boolean
           price_list?: string
           quote_id?: string | null
           status?: string
@@ -303,6 +305,7 @@ export type Database = {
           id?: string
           is_used?: boolean
           last_opened_at?: string | null
+          link_sent?: boolean
           price_list?: string
           quote_id?: string | null
           status?: string

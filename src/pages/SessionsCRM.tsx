@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface SessionData {
   id: string;
@@ -30,6 +31,7 @@ interface SessionData {
   customer_actions: any[];
   quote_id: string | null;
   customer_info: any;
+  link_sent: boolean;
   configurator_quotes?: {
     id: string;
     total_price: number;
@@ -127,12 +129,36 @@ const SessionsCRM = () => {
 
       if (error) throw error;
 
+      // Mark link as sent
+      await supabase
+        .from('configurator_sessions')
+        .update({ link_sent: true })
+        .eq('id', session.id);
+
       toast.dismiss();
       toast.success(`Email inviata con successo a ${session.customer_email}!`);
+      loadSessions();
     } catch (error) {
       console.error('Error sending email:', error);
       toast.dismiss();
       toast.error('Errore nell\'invio dell\'email. Riprova più tardi.');
+    }
+  };
+
+  const toggleLinkSent = async (sessionId: string, currentValue: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('configurator_sessions')
+        .update({ link_sent: !currentValue })
+        .eq('id', sessionId);
+
+      if (error) throw error;
+
+      toast.success(currentValue ? 'Link marcato come non inviato' : 'Link marcato come inviato');
+      loadSessions();
+    } catch (error) {
+      console.error('Error updating link_sent:', error);
+      toast.error('Errore nell\'aggiornamento dello stato');
     }
   };
 
@@ -433,6 +459,24 @@ const SessionsCRM = () => {
                 </div>
               )}
 
+              {/* Link sent checkbox */}
+              <div 
+                className="flex items-center gap-2 text-xs"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Checkbox
+                  id={`link-sent-${session.id}`}
+                  checked={session.link_sent}
+                  onCheckedChange={() => toggleLinkSent(session.id, session.link_sent)}
+                />
+                <label
+                  htmlFor={`link-sent-${session.id}`}
+                  className="cursor-pointer select-none"
+                >
+                  Link inviato al cliente
+                </label>
+              </div>
+
               {/* Order info for paid */}
               {session.configurator_quotes && (
                 <div className="text-xs bg-muted/50 px-2 py-1.5 rounded">
@@ -479,6 +523,24 @@ const SessionsCRM = () => {
                   Link utilizzato
                 </div>
               )}
+
+              {/* Link sent checkbox */}
+              <div 
+                className="flex items-center gap-2 text-sm"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Checkbox
+                  id={`link-sent-list-${session.id}`}
+                  checked={session.link_sent}
+                  onCheckedChange={() => toggleLinkSent(session.id, session.link_sent)}
+                />
+                <label
+                  htmlFor={`link-sent-list-${session.id}`}
+                  className="cursor-pointer select-none"
+                >
+                  Link inviato al cliente
+                </label>
+              </div>
 
               <div className="pt-2 border-t">
                 <div className="font-medium text-sm mb-2">Attività del cliente:</div>
@@ -910,17 +972,34 @@ const SessionsCRM = () => {
                   {/* Link Status */}
                   <div>
                     <h3 className="font-semibold text-sm text-muted-foreground mb-3">STATO LINK</h3>
-                    {selectedSession.is_used ? (
-                      <div className="flex items-center gap-2 text-green-600 bg-green-50 dark:bg-green-950 px-3 py-2 rounded-lg">
-                        <Check className="w-4 h-4" />
-                        <span className="text-sm font-medium">Link utilizzato</span>
+                    <div className="space-y-3">
+                      {selectedSession.is_used ? (
+                        <div className="flex items-center gap-2 text-green-600 bg-green-50 dark:bg-green-950 px-3 py-2 rounded-lg">
+                          <Check className="w-4 h-4" />
+                          <span className="text-sm font-medium">Link utilizzato</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2 text-muted-foreground bg-muted px-3 py-2 rounded-lg">
+                          <Clock className="w-4 h-4" />
+                          <span className="text-sm font-medium">Link non ancora aperto</span>
+                        </div>
+                      )}
+                      
+                      {/* Link sent checkbox */}
+                      <div className="flex items-center gap-2 px-3 py-2">
+                        <Checkbox
+                          id={`link-sent-modal-${selectedSession.id}`}
+                          checked={selectedSession.link_sent}
+                          onCheckedChange={() => toggleLinkSent(selectedSession.id, selectedSession.link_sent)}
+                        />
+                        <label
+                          htmlFor={`link-sent-modal-${selectedSession.id}`}
+                          className="cursor-pointer select-none text-sm font-medium"
+                        >
+                          Link inviato al cliente
+                        </label>
                       </div>
-                    ) : (
-                      <div className="flex items-center gap-2 text-muted-foreground bg-muted px-3 py-2 rounded-lg">
-                        <Clock className="w-4 h-4" />
-                        <span className="text-sm font-medium">Link non ancora aperto</span>
-                      </div>
-                    )}
+                    </div>
                   </div>
 
                   <Separator />
