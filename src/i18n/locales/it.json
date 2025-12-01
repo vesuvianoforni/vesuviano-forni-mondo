@@ -983,7 +983,7 @@
       "feedbackSent": "Grazie per il tuo feedback!"
     },
     "expired": {
-      "greeting": "Ciao {name}",
+      "greeting": "Ciao {{name}}",
       "greetingGeneric": "Ciao",
       "message": "Questo link è scaduto. Richiedi un nuovo link ai nostri commerciali, ti verrà fornito a breve.",
       "returnHome": "Torna alla Home",

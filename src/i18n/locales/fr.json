@@ -964,7 +964,7 @@
       "feedbackSent": "Merci pour votre retour!"
     },
     "expired": {
-      "greeting": "Bonjour {name}",
+      "greeting": "Bonjour {{name}}",
       "greetingGeneric": "Bonjour",
       "message": "Ce lien a expiré. Demandez un nouveau lien à notre équipe commerciale, il sera fourni sous peu.",
       "returnHome": "Retour à l'Accueil",
