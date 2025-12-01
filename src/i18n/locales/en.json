@@ -907,6 +907,8 @@
   },
   "configurator": {
     "loading": "Loading...",
+    "title": "Oven Configurator",
+    "subtitle": "Configure your perfect oven",
     "buildType": {
       "title": "How do you prefer your oven?",
       "readyToUse": "Ready to Use",
@@ -918,6 +920,16 @@
     "selectFuel": "Select Fuel Type",
     "selectSize": "Select Size",
     "selectCoating": "Select Coating",
+    "steps": {
+      "chooseFuel": "Choose Fuel Type",
+      "chooseDiameter": "Choose Diameter",
+      "chooseCoating": "Choose Coating"
+    },
+    "preview": {
+      "fuelTypes": "Fuel Types",
+      "diameters": "Diameters",
+      "coatings": "Coatings"
+    },
     "fuelTypes": {
       "Legna": "Wood",
       "Gas": "Gas",

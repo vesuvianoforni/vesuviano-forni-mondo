@@ -686,11 +686,11 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         </div>
         
         <div className="text-center mb-4 sm:mb-6 md:mb-12">
-          <h1 className="text-xl sm:text-2xl md:text-4xl font-bold mb-1 sm:mb-2">{t('configurator.selectModel')}</h1>
+          <h1 className="text-xl sm:text-2xl md:text-4xl font-bold mb-1 sm:mb-2">{t('configurator.title')}</h1>
           {customerData ? (
             <div className="space-y-1 sm:space-y-2">
               <p className="text-muted-foreground text-sm sm:text-base md:text-lg">
-                {t('configurator.selectModel')}, <span className="font-semibold text-foreground">{customerData.name}</span>
+                {t('configurator.subtitle')}, <span className="font-semibold text-foreground">{customerData.name}</span>
               </p>
               <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 items-center justify-center text-xs sm:text-sm text-muted-foreground">
                 <span className="flex items-center gap-1">
@@ -703,7 +703,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               </div>
             </div>
           ) : (
-            <p className="text-muted-foreground text-xs sm:text-sm md:text-base">{t('configurator.selectModel')}</p>
+            <p className="text-muted-foreground text-xs sm:text-sm md:text-base">{t('configurator.subtitle')}</p>
           )}
         </div>
         
@@ -723,15 +723,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               }}
             >
               <CardHeader className="text-center pb-3">
-                <CardTitle className="text-base sm:text-lg md:text-xl">Già Pronto all'Uso</CardTitle>
+                <CardTitle className="text-base sm:text-lg md:text-xl">{t('configurator.buildType.readyToUse')}</CardTitle>
               </CardHeader>
               <CardContent className="text-center">
                 <div className="mb-3">
                   <Pizza className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-primary" />
                 </div>
                 <CardDescription className="text-xs sm:text-sm">
-                  Forno costruito artigianalmente nel nostro laboratorio e spedito pronto all'uso. 
-                  Richiede spazio adeguato per il passaggio.
+                  {t('configurator.buildType.readyToUseDesc')}
                 </CardDescription>
               </CardContent>
             </Card>
@@ -748,15 +747,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               }}
             >
               <CardHeader className="text-center pb-3">
-                <CardTitle className="text-base sm:text-lg md:text-xl">Costruito sul Posto</CardTitle>
+                <CardTitle className="text-base sm:text-lg md:text-xl">{t('configurator.buildType.builtOnSite')}</CardTitle>
               </CardHeader>
               <CardContent className="text-center">
                 <div className="mb-3">
                   <Flame className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-primary" />
                 </div>
                 <CardDescription className="text-xs sm:text-sm">
-                  Il forno viene costruito direttamente presso la tua sede dai nostri artigiani esperti.
-                  Ideale per spazi ridotti o installazioni personalizzate.
+                  {t('configurator.buildType.builtOnSiteDesc')}
                 </CardDescription>
               </CardContent>
             </Card>
@@ -766,7 +764,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         {/* Step 1: Model Selection */}
         {buildType && (
         <div className="mb-4 sm:mb-6 md:mb-8">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">2. Scegli il Modello</h2>
+          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">2. {t('configurator.selectModel')}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {models.map(model => {
               const preview = getModelPreview(model);
