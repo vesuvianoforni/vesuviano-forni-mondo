@@ -1,169 +1,215 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
 interface SendLinkRequest {
   customerName: string;
   customerEmail: string;
   configuratorLink: string;
-  priceList: string;
+  language: 'it' | 'en' | 'fr';
 }
 
+const getEmailTemplate = (name: string, link: string, language: 'it' | 'en' | 'fr') => {
+  const templates = {
+    it: {
+      subject: 'Il tuo configuratore personalizzato Vesuviano Forni',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #FF6B35 0%, #D32F2F 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; }
+            .cta-button { display: inline-block; background: #FF6B35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
+            .footer { background: #333; color: #999; padding: 20px; text-align: center; font-size: 12px; border-radius: 0 0 8px 8px; }
+            .footer a { color: #FF6B35; text-decoration: none; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Vesuviano Forni</h1>
+              <p>Forni Artigianali d'Eccellenza</p>
+            </div>
+            <div class="content">
+              <h2>Ciao ${name},</h2>
+              <p>Grazie per il tuo interesse nei nostri forni artigianali!</p>
+              <p>Abbiamo preparato per te un <strong>configuratore personalizzato</strong> dove potrai:</p>
+              <ul>
+                <li>✨ Scegliere il modello perfetto per le tue esigenze</li>
+                <li>🎨 Personalizzare colori e rivestimenti</li>
+                <li>📊 Visualizzare il tuo forno con render AI</li>
+                <li>💰 Ricevere un preventivo immediato</li>
+              </ul>
+              <p style="text-align: center;">
+                <a href="${link}" class="cta-button">CONFIGURA IL TUO FORNO</a>
+              </p>
+              <p><strong>Il link è valido per 30 giorni</strong> e ti permetterà di salvare la tua configurazione e tornare quando vuoi.</p>
+              <p>Se hai domande o necessiti di assistenza, il nostro team è a tua disposizione!</p>
+              <p>Cordiali saluti,<br><strong>Il Team Vesuviano Forni</strong></p>
+            </div>
+            <div class="footer">
+              <p><strong>Vesuviano Forni S.r.l.</strong></p>
+              <p>Via Sant'Anastasia 123, Napoli, Italia</p>
+              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 081 123 4567</p>
+              <p>🌐 <a href="https://www.vesuvianoforni.com">www.vesuvianoforni.com</a></p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    },
+    en: {
+      subject: 'Your personalized Vesuviano Ovens configurator',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #FF6B35 0%, #D32F2F 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; }
+            .cta-button { display: inline-block; background: #FF6B35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
+            .footer { background: #333; color: #999; padding: 20px; text-align: center; font-size: 12px; border-radius: 0 0 8px 8px; }
+            .footer a { color: #FF6B35; text-decoration: none; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Vesuviano Ovens</h1>
+              <p>Artisanal Ovens of Excellence</p>
+            </div>
+            <div class="content">
+              <h2>Hello ${name},</h2>
+              <p>Thank you for your interest in our artisanal ovens!</p>
+              <p>We have prepared a <strong>personalized configurator</strong> for you where you can:</p>
+              <ul>
+                <li>✨ Choose the perfect model for your needs</li>
+                <li>🎨 Customize colors and finishes</li>
+                <li>📊 Visualize your oven with AI renders</li>
+                <li>💰 Get an instant quote</li>
+              </ul>
+              <p style="text-align: center;">
+                <a href="${link}" class="cta-button">CONFIGURE YOUR OVEN</a>
+              </p>
+              <p><strong>The link is valid for 30 days</strong> and will allow you to save your configuration and come back whenever you want.</p>
+              <p>If you have any questions or need assistance, our team is at your disposal!</p>
+              <p>Best regards,<br><strong>The Vesuviano Ovens Team</strong></p>
+            </div>
+            <div class="footer">
+              <p><strong>Vesuviano Forni S.r.l.</strong></p>
+              <p>Via Sant'Anastasia 123, Naples, Italy</p>
+              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 081 123 4567</p>
+              <p>🌐 <a href="https://www.vesuvianoforni.com">www.vesuvianoforni.com</a></p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    },
+    fr: {
+      subject: 'Votre configurateur personnalisé Vesuviano Fours',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #FF6B35 0%, #D32F2F 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; }
+            .cta-button { display: inline-block; background: #FF6B35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
+            .footer { background: #333; color: #999; padding: 20px; text-align: center; font-size: 12px; border-radius: 0 0 8px 8px; }
+            .footer a { color: #FF6B35; text-decoration: none; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Vesuviano Fours</h1>
+              <p>Fours Artisanaux d'Excellence</p>
+            </div>
+            <div class="content">
+              <h2>Bonjour ${name},</h2>
+              <p>Merci pour votre intérêt dans nos fours artisanaux !</p>
+              <p>Nous avons préparé pour vous un <strong>configurateur personnalisé</strong> où vous pourrez :</p>
+              <ul>
+                <li>✨ Choisir le modèle parfait pour vos besoins</li>
+                <li>🎨 Personnaliser les couleurs et les revêtements</li>
+                <li>📊 Visualiser votre four avec des rendus IA</li>
+                <li>💰 Recevoir un devis immédiat</li>
+              </ul>
+              <p style="text-align: center;">
+                <a href="${link}" class="cta-button">CONFIGUREZ VOTRE FOUR</a>
+              </p>
+              <p><strong>Le lien est valable 30 jours</strong> et vous permettra de sauvegarder votre configuration et de revenir quand vous voulez.</p>
+              <p>Si vous avez des questions ou besoin d'assistance, notre équipe est à votre disposition !</p>
+              <p>Cordialement,<br><strong>L'Équipe Vesuviano Fours</strong></p>
+            </div>
+            <div class="footer">
+              <p><strong>Vesuviano Forni S.r.l.</strong></p>
+              <p>Via Sant'Anastasia 123, Naples, Italie</p>
+              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 081 123 4567</p>
+              <p>🌐 <a href="https://www.vesuvianoforni.com">www.vesuvianoforni.com</a></p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    }
+  };
+
+  return templates[language];
+};
+
 const handler = async (req: Request): Promise<Response> => {
-  if (req.method === "OPTIONS") {
+  if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { customerName, customerEmail, configuratorLink, priceList }: SendLinkRequest = await req.json();
+    const { customerName, customerEmail, configuratorLink, language }: SendLinkRequest = await req.json();
 
-    console.log('Sending configurator link email to:', customerEmail);
+    console.log('Sending configurator link email:', { customerName, customerEmail, language });
+
+    const template = getEmailTemplate(customerName, configuratorLink, language);
 
     const emailResponse = await resend.emails.send({
-      from: "Vesuviano Forni <noreply@vesuvianoforni.com>",
+      from: 'Vesuviano Forni <noreply@vesuvianoforni.com>',
       to: [customerEmail],
-      subject: "Il tuo link personale per configurare il tuo forno Vesuviano",
-      html: `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="utf-8">
-            <style>
-              body {
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-                line-height: 1.6;
-                color: #333;
-                max-width: 600px;
-                margin: 0 auto;
-                padding: 20px;
-              }
-              .header {
-                background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-                color: white;
-                padding: 30px;
-                text-align: center;
-                border-radius: 8px 8px 0 0;
-              }
-              .content {
-                background: #ffffff;
-                padding: 30px;
-                border: 1px solid #e5e7eb;
-                border-top: none;
-                border-radius: 0 0 8px 8px;
-              }
-              .button {
-                display: inline-block;
-                background: #dc2626;
-                color: white;
-                padding: 14px 28px;
-                text-decoration: none;
-                border-radius: 6px;
-                font-weight: 600;
-                margin: 20px 0;
-              }
-              .info-box {
-                background: #f9fafb;
-                border: 1px solid #e5e7eb;
-                border-radius: 6px;
-                padding: 15px;
-                margin: 20px 0;
-              }
-              .footer {
-                text-align: center;
-                color: #6b7280;
-                font-size: 12px;
-                margin-top: 30px;
-                padding-top: 20px;
-                border-top: 1px solid #e5e7eb;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <h1 style="margin: 0;">Vesuviano Forni</h1>
-              <p style="margin: 10px 0 0 0; opacity: 0.9;">I Migliori Forni Artigianali Italiani</p>
-            </div>
-            
-            <div class="content">
-              <h2>Ciao ${customerName},</h2>
-              
-              <p>Siamo felici di condividere con te il tuo <strong>link personale</strong> per configurare il forno dei tuoi sogni.</p>
-              
-              <p>Con il nostro configuratore interattivo potrai:</p>
-              <ul>
-                <li>✨ Scegliere il modello perfetto per le tue esigenze</li>
-                <li>🎨 Personalizzare colori e rivestimenti</li>
-                <li>📐 Selezionare le dimensioni ideali</li>
-                <li>💰 Visualizzare il preventivo in tempo reale</li>
-                <li>🏠 Vedere il forno nel tuo spazio con l'Architetto AI</li>
-              </ul>
-
-              <div style="text-align: center;">
-                <a href="${configuratorLink}" class="button">
-                  🔥 Configura il Tuo Forno
-                </a>
-              </div>
-
-              <div class="info-box">
-                <strong>Listino prezzi applicato:</strong> Listino ${priceList}<br>
-                <strong>Il tuo link personale:</strong><br>
-                <a href="${configuratorLink}" style="word-break: break-all; color: #dc2626;">${configuratorLink}</a>
-              </div>
-
-              <p>Il link è personale e puoi utilizzarlo ogni volta che vuoi per continuare la tua configurazione. Tutte le tue scelte verranno salvate automaticamente.</p>
-
-              <p><strong>Hai bisogno di assistenza?</strong><br>
-              Il nostro team è a tua disposizione per qualsiasi domanda. Contattaci via WhatsApp o telefono.</p>
-
-              <p>Ti aspettiamo per realizzare insieme il forno perfetto per te!</p>
-
-              <p style="margin-top: 30px;">
-                A presto,<br>
-                <strong>Il Team Vesuviano Forni</strong>
-              </p>
-            </div>
-
-            <div class="footer">
-              <p>Vesuviano Forni - Tradizione Artigianale dal Vesuvio<br>
-              Sant'Anastasia (NA) - Italia<br>
-              <a href="https://www.vesuvianoforni.com" style="color: #dc2626;">www.vesuvianoforni.com</a></p>
-            </div>
-          </body>
-        </html>
-      `,
+      subject: template.subject,
+      html: template.html,
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    console.log('Email sent successfully:', emailResponse);
 
-    return new Response(
-      JSON.stringify({ success: true, data: emailResponse }),
-      {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders,
-        },
-      }
-    );
+    return new Response(JSON.stringify({ success: true, emailResponse }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        ...corsHeaders,
+      },
+    });
   } catch (error: any) {
-    console.error("Error sending configurator link email:", error);
+    console.error('Error in send-configurator-link function:', error);
     return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: error.message || "Failed to send email" 
-      }),
+      JSON.stringify({ error: error.message }),
       {
         status: 500,
-        headers: { 
-          "Content-Type": "application/json", 
-          ...corsHeaders 
-        },
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
       }
     );
   }
