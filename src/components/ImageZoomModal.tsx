@@ -19,19 +19,20 @@ const ImageZoomModal: React.FC<ImageZoomModalProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl w-full h-[90vh] p-0 border-0 bg-black/90">
+      <DialogContent className="max-w-5xl w-full h-[90vh] p-0 border-0 bg-black/90" onClick={onClose}>
         <DialogTitle className="sr-only">{title || imageAlt}</DialogTitle>
         
-        {/* Close button */}
+        {/* Close button - Più grande su mobile */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+          className="absolute top-2 right-2 md:top-4 md:right-4 z-50 p-3 md:p-2 rounded-full bg-white/90 text-black hover:bg-white transition-colors shadow-lg touch-manipulation"
+          aria-label="Chiudi immagine ingrandita"
         >
-          <X className="w-6 h-6" />
+          <X className="w-8 h-8 md:w-6 md:h-6" />
         </button>
 
         {/* Image container */}
-        <div className="w-full h-full flex items-center justify-center p-4">
+        <div className="w-full h-full flex items-center justify-center p-4" onClick={(e) => e.stopPropagation()}>
           <img
             src={imageUrl}
             alt={imageAlt}
