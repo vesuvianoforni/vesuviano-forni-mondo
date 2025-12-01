@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -26,6 +27,7 @@ const POPULAR_COLORS = [
 ];
 
 const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRenderGenerated }: ColorRenderGeneratorProps) => {
+  const { t } = useTranslation();
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string>(selectedCoating || "");
@@ -42,25 +44,25 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast.success("Download avviato!");
+    toast.success(t('colorRender.success.downloaded'));
   };
 
   const generateRender = async () => {
     const colorToUse = isCustomColor ? customColor.trim() : selectedColor;
     
     if (!colorToUse) {
-      toast.error("Seleziona un colore o inserisci un colore personalizzato!");
+      toast.error(t('colorRender.errors.selectColor'));
       return;
     }
 
     // Validate custom color input (max 50 characters, alphanumeric + spaces)
     if (isCustomColor) {
       if (customColor.trim().length > 50) {
-        toast.error("Il colore personalizzato non può superare i 50 caratteri");
+        toast.error(t('colorRender.errors.maxLength'));
         return;
       }
       if (!/^[a-zA-ZÀ-ÿ0-9\s-]+$/.test(customColor.trim())) {
-        toast.error("Il colore può contenere solo lettere, numeri, spazi e trattini");
+        toast.error(t('colorRender.errors.invalidChars'));
         return;
       }
     }
@@ -84,13 +86,13 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
         setGeneratedImageUrl(imageUrl);
         setLastGeneratedColor(colorToUse);
         onRenderGenerated?.(imageUrl, colorToUse);
-        toast.success("Render generato con successo!");
+        toast.success(t('colorRender.success.generated'));
       } else {
         throw new Error(data?.error || 'Errore nella generazione');
       }
     } catch (error: any) {
       console.error('Errore generazione render:', error);
-      toast.error(`Errore: ${error?.message || 'Impossibile generare il render'}`);
+      toast.error(`${t('configurator.errors.loadingError')}: ${error?.message || 'Impossibile generare il render'}`);
     } finally {
       setIsGenerating(false);
     }
@@ -148,9 +150,9 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
               <Palette className="w-6 h-6 text-primary-foreground" />
             </div>
             <div className="flex-1">
-              <CardTitle className="text-lg mb-1">Render Real Time</CardTitle>
+              <CardTitle className="text-lg mb-1">{t('colorRender.title')}</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Visualizza il forno con il colore selezionato in tempo reale
+                {t('colorRender.subtitle')}
               </p>
             </div>
           </div>
@@ -160,7 +162,7 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
           {selectedCoating && (
             <div className="bg-background/80 border rounded-lg p-3">
               <p className="text-xs text-muted-foreground mb-1">
-                Rivestimento selezionato:
+                {t('colorRender.selectedCoating')}
               </p>
               <p className="text-primary text-sm font-semibold">
                 {selectedCoating}
@@ -171,7 +173,7 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
           {/* Color Selection Grid */}
           <div className="space-y-3">
             <p className="text-sm font-medium">
-              Colore desiderato
+              {t('colorRender.desiredColor')}
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {POPULAR_COLORS.map((colorOption) => (
@@ -194,7 +196,7 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
                       style={{ backgroundColor: colorOption.color }}
                     />
                     <span className="text-xs font-medium text-center leading-tight">
-                      {colorOption.name}
+                      {t(`colorRender.colors.${colorOption.name}`)}
                     </span>
                   </div>
                   {selectedColor === colorOption.name && !isCustomColor && (
@@ -209,12 +211,12 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
             {/* Custom Color Input */}
             <div className="space-y-2">
               <Label htmlFor="custom-color" className="text-sm font-medium">
-                Colore Personalizzato
+                {t('colorRender.customColor')}
               </Label>
               <Input
                 id="custom-color"
                 type="text"
-                placeholder="Es: Rosso Ferrari, Blu Oceano, Verde Bosco..."
+                placeholder={t('colorRender.customColorPlaceholder')}
                 value={customColor}
                 onChange={(e) => {
                   setCustomColor(e.target.value);
@@ -229,7 +231,7 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
                 className="w-full"
               />
               <p className="text-xs text-muted-foreground">
-                Descrivi il colore che desideri (max 50 caratteri)
+                {t('colorRender.customColorDescription')}
               </p>
             </div>
             
@@ -239,8 +241,8 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
                 <div className="flex items-center gap-2">
                   <Palette className="w-4 h-4 text-primary" />
                   <span className="text-sm">
-                    Selezionato: <span className="font-semibold text-primary">
-                      {isCustomColor ? customColor.trim() : selectedColor}
+                    {t('colorRender.selected')} <span className="font-semibold text-primary">
+                      {isCustomColor ? customColor.trim() : t(`colorRender.colors.${selectedColor}`)}
                     </span>
                   </span>
                 </div>
@@ -280,13 +282,13 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
             ) : (
               <>
                 <Wand2 className="w-4 h-4 mr-2" />
-                Genera Render Real Time
+                {t('colorRender.generateButton')}
               </>
             )}
           </Button>
 
           <p className="text-xs text-center text-muted-foreground">
-            Visualizza il render del forno nel colore selezionato
+            {t('colorRender.generateDescription')}
           </p>
         </CardContent>
       </Card>

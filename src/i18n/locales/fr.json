@@ -1030,6 +1030,57 @@
         "submit": "Envoyer le Retour",
         "submitting": "Envoi..."
       }
+    },
+    "colorRender": {
+      "title": "Rendu en Temps Réel",
+      "subtitle": "Visualisez le four avec la couleur sélectionnée en temps réel",
+      "selectedCoating": "Revêtement sélectionné:",
+      "desiredColor": "Couleur Désirée",
+      "customColor": "Couleur Personnalisée",
+      "customColorPlaceholder": "Ex: Rouge Ferrari, Bleu Océan, Vert Forêt...",
+      "customColorDescription": "Décrivez la couleur que vous souhaitez (max 50 caractères)",
+      "selected": "Sélectionné:",
+      "generateButton": "Générer Rendu en Temps Réel",
+      "generateDescription": "Visualisez le rendu du four dans la couleur sélectionnée",
+      "downloadButton": "Télécharger l'Image",
+      "colors": {
+        "Nero": "Noir",
+        "Bianco": "Blanc",
+        "Rosso Mattone": "Rouge Brique",
+        "Grigio Pietra": "Gris Pierre",
+        "Terracotta": "Terre Cuite",
+        "Beige": "Beige",
+        "Marrone": "Marron",
+        "Verde Oliva": "Vert Olive"
+      },
+      "errors": {
+        "selectColor": "Sélectionnez une couleur ou entrez une couleur personnalisée!",
+        "maxLength": "La couleur personnalisée ne peut pas dépasser 50 caractères",
+        "invalidChars": "La couleur ne peut contenir que des lettres, chiffres, espaces et traits d'union"
+      },
+      "success": {
+        "generated": "Rendu généré avec succès!",
+        "downloaded": "Téléchargement démarré!"
+      }
+    },
+    "architectAI": {
+      "title": "Architecte IA",
+      "subtitle": "Insérez le four dans votre environnement avec l'intelligence artificielle",
+      "takePhoto": "Prendre une Photo",
+      "takePhotoDescription": "Utiliser l'appareil photo",
+      "uploadImage": "Télécharger une Image",
+      "uploadImageDescription": "Depuis votre appareil",
+      "or": "OU",
+      "generateButton": "Générer Rendu IA",
+      "downloadButton": "Télécharger le Rendu",
+      "errors": {
+        "noImage": "Téléchargez d'abord une photo de votre environnement",
+        "generationFailed": "Erreur lors de la génération du rendu"
+      },
+      "success": {
+        "generated": "Rendu généré avec succès!",
+        "downloaded": "Téléchargement terminé!"
+      }
     }
   }
 }

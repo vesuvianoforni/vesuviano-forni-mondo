@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Camera, Upload, Loader2, Sparkles, Download, Image as ImageIcon } from "lucide-react";
@@ -14,6 +15,7 @@ interface ArchitettoAIProps {
 }
 
 const ArchitettoAI = ({ ovenName, ovenImageUrl, onSpaceImageSelected, onRenderGenerated }: ArchitettoAIProps) => {
+  const { t } = useTranslation();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string>("");
@@ -54,7 +56,7 @@ const ArchitettoAI = ({ ovenName, ovenImageUrl, onSpaceImageSelected, onRenderGe
 
   const handleGenerate = async () => {
     if (!selectedImage) {
-      toast.error("Carica prima una foto del tuo ambiente");
+      toast.error(t('architectAI.errors.noImage'));
       return;
     }
 
@@ -116,10 +118,10 @@ const ArchitettoAI = ({ ovenName, ovenImageUrl, onSpaceImageSelected, onRenderGe
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-xl">
             <Sparkles className="w-5 h-5 text-primary" />
-            Architetto AI
+            {t('architectAI.title')}
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Inserisci il forno nel tuo ambiente con l'intelligenza artificiale
+            {t('architectAI.subtitle')}
           </p>
         </CardHeader>
 
@@ -151,8 +153,8 @@ const ArchitettoAI = ({ ovenName, ovenImageUrl, onSpaceImageSelected, onRenderGe
               >
                 <div className="flex flex-col items-center gap-2">
                   <Camera className="w-8 h-8 text-primary" />
-                  <span className="font-medium">Scatta una Foto</span>
-                  <span className="text-xs text-muted-foreground">Usa la fotocamera</span>
+                  <span className="font-medium">{t('architectAI.takePhoto')}</span>
+                  <span className="text-xs text-muted-foreground">{t('architectAI.takePhotoDescription')}</span>
                 </div>
               </Button>
 
@@ -161,7 +163,7 @@ const ArchitettoAI = ({ ovenName, ovenImageUrl, onSpaceImageSelected, onRenderGe
                   <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">oppure</span>
+                  <span className="bg-background px-2 text-muted-foreground">{t('architectAI.or')}</span>
                 </div>
               </div>
 
@@ -173,8 +175,8 @@ const ArchitettoAI = ({ ovenName, ovenImageUrl, onSpaceImageSelected, onRenderGe
               >
                 <div className="flex flex-col items-center gap-2">
                   <Upload className="w-8 h-8 text-primary" />
-                  <span className="font-medium">Carica Immagine</span>
-                  <span className="text-xs text-muted-foreground">Dal tuo dispositivo</span>
+                  <span className="font-medium">{t('architectAI.uploadImage')}</span>
+                  <span className="text-xs text-muted-foreground">{t('architectAI.uploadImageDescription')}</span>
                 </div>
               </Button>
             </div>
@@ -241,7 +243,7 @@ const ArchitettoAI = ({ ovenName, ovenImageUrl, onSpaceImageSelected, onRenderGe
                 className="w-full gap-2"
               >
                 <Download className="w-5 h-5" />
-                Scarica Immagine HD
+                {t('architectAI.downloadButton')}
               </Button>
 
               {/* Info Badges */}
