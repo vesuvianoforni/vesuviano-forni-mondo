@@ -1303,23 +1303,24 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
             <div className="space-y-4">
               <div className="space-y-3">
                 <Label>{t('configurator.modals.notInterested.mainReason')}</Label>
-                {Object.keys(t('configurator.feedback.reasons', { returnObjects: true })).map((key) => {
+                {['tooExpensive', 'tooLong', 'urgent', 'dontLike', 'noModel', 'otherSupplier'].map((key) => {
                   const reason = t(`configurator.feedback.reasons.${key}`);
                   return (
-                    <div key={reason} className="flex items-center space-x-2">
+                    <div key={key} className="flex items-center space-x-2">
                       <Checkbox
-                        id={reason}
+                        id={key}
                         checked={feedbackReasons.includes(reason)}
                         onCheckedChange={() => toggleFeedbackReason(reason)}
                       />
                       <label
-                      htmlFor={reason}
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                    >
-                      {reason}
-                    </label>
-                  </div>
-                ))}
+                        htmlFor={key}
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                      >
+                        {reason}
+                      </label>
+                    </div>
+                  );
+                })}
               </div>
               
               <div>
