@@ -446,20 +446,24 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
     setSavingQuote(true);
     try {
-      const { data: quoteData, error: quoteError } = await supabase.from('configurator_quotes').insert({
-        oven_id: selectedOven.id, 
-        has_installation: buildType === 'on_site',
-        has_gas: selectedFuelType === 'Gas',
-        total_price: total, 
-        delivery_time_weeks: selectedOven.delivery_time_weeks,
-        customer_name: customerName || null, 
-        customer_email: customerEmail || null,
-        customer_phone: customerPhone || null, 
-        notes: notes || null,
-        status: 'pending',
-      }).select().single();
-      
-      if (quoteError) throw quoteError;
+      const { data, error } = await supabase.functions.invoke('create-quote', {
+        body: {
+          oven_id: selectedOven.id,
+          has_installation: buildType === 'on_site',
+          has_gas: selectedFuelType === 'Gas',
+          total_price: total,
+          delivery_time_weeks: selectedOven.delivery_time_weeks,
+          customer_name: customerName || null,
+          customer_email: customerEmail || null,
+          customer_phone: customerPhone || null,
+          notes: notes || null,
+          status: 'pending',
+        },
+      });
+
+      if (error) throw error;
+      const quoteData = (data as any)?.quote;
+
 
       // Update session if exists
       if (sessionId && quoteData) {
@@ -542,10 +546,9 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         return;
       }
 
-      // Save quote
-      const { data: quoteData, error: quoteError } = await supabase
-        .from('configurator_quotes')
-        .insert({
+      // Save quote tramite edge function (service role, niente problemi RLS)
+      const { data, error } = await supabase.functions.invoke('create-quote', {
+        body: {
           oven_id: selectedOven.id,
           has_installation: buildType === 'on_site',
           has_gas: selectedFuelType === 'Gas',
@@ -556,11 +559,12 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           customer_phone: customerData.phone,
           notes: `Metodo di contatto preferito: ${selectedContactMethod === 'whatsapp' ? 'WhatsApp' : 'Chiamata telefonica'}${notes ? '\n' + notes : ''}`,
           status: 'interested',
-        })
-        .select()
-        .single();
+        },
+      });
 
-      if (quoteError) throw quoteError;
+      if (error) throw error;
+      const quoteData = (data as any)?.quote;
+
 
       // Update session
       if (sessionId && quoteData) {
@@ -656,25 +660,34 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     try {
       setSavingQuote(true);
 
-      // First, create the quote
-      const { data: quoteData, error: quoteError } = await supabase
-        .from('configurator_quotes')
-        .insert({
-          oven_id: selectedOven.id,
-          has_installation: buildType === 'on_site',
-          has_gas: selectedFuelType === 'Gas',
-          total_price: calculateTotal(),
-          delivery_time_weeks: selectedOven.delivery_time_weeks,
-          customer_name: customerData.name,
-          customer_email: customerData.email,
-          customer_phone: customerData.phone,
-          status: 'payment_initiated',
-          notes: notes || null,
-        })
-        .select()
-        .single();
+      // First, create the quote tramite edge function (service role)
+      const totalForQuote = calculateTotal();
+      if (!Number.isFinite(totalForQuote) || totalForQuote <= 0) {
+        toast.error(t('configurator.errors.completeConfig'));
+        setSavingQuote(false);
+        return;
+      }
+
+      const { data: quoteResult, error: quoteError } = await supabase
+        .functions
+        .invoke('create-quote', {
+          body: {
+            oven_id: selectedOven.id,
+            has_installation: buildType === 'on_site',
+            has_gas: selectedFuelType === 'Gas',
+            total_price: totalForQuote,
+            delivery_time_weeks: selectedOven.delivery_time_weeks,
+            customer_name: customerData.name,
+            customer_email: customerData.email,
+            customer_phone: customerData.phone,
+            status: 'payment_initiated',
+            notes: notes || null,
+          },
+        });
 
       if (quoteError) throw quoteError;
+      const quoteData = (quoteResult as any)?.quote;
+
 
       // Update session if exists
       if (sessionId && quoteData) {
