@@ -1138,6 +1138,108 @@
         "generated": "Render generated successfully!",
         "downloaded": "Download completed!"
       }
+    },
+    "colorRender": {
+      "title": "Real Time Render",
+      "subtitle": "Visualize the oven with the selected color in real time",
+      "selectedCoating": "Selected coating:",
+      "desiredColor": "Desired Color",
+      "customColor": "Custom Color",
+      "customColorPlaceholder": "E.g.: Ferrari Red, Ocean Blue, Forest Green...",
+      "customColorDescription": "Describe the color you want (max 50 characters)",
+      "selected": "Selected:",
+      "generateButton": "Generate Real Time Render",
+      "generateDescription": "View the oven render in the selected color",
+      "downloadButton": "Download Image",
+      "colors": {
+        "Nero": "Black",
+        "Bianco": "White",
+        "Rosso Mattone": "Brick Red",
+        "Grigio Pietra": "Stone Gray",
+        "Terracotta": "Terracotta",
+        "Beige": "Beige",
+        "Marrone": "Brown",
+        "Verde Oliva": "Olive Green"
+      },
+      "errors": {
+        "selectColor": "Select a color or enter a custom color!",
+        "maxLength": "Custom color cannot exceed 50 characters",
+        "invalidChars": "Color can only contain letters, numbers, spaces and hyphens"
+      },
+      "success": {
+        "generated": "Render generated successfully!",
+        "downloaded": "Download started!"
+      }
+    },
+    "architectAI": {
+      "title": "AI Architect",
+      "subtitle": "Insert the oven in your environment with artificial intelligence",
+      "takePhoto": "Take a Photo",
+      "takePhotoDescription": "Use the camera",
+      "uploadImage": "Upload Image",
+      "uploadImageDescription": "From your device",
+      "or": "OR",
+      "generateButton": "Generate AI Render",
+      "downloadButton": "Download Render",
+      "errors": {
+        "noImage": "First upload a photo of your environment",
+        "generationFailed": "Error generating render"
+      },
+      "success": {
+        "generated": "Render generated successfully!",
+        "downloaded": "Download completed!"
+      }
+    }
+  },
+  "colorRender": {
+    "title": "Real Time Render",
+    "subtitle": "Visualize the oven with the selected color in real time",
+    "selectedCoating": "Selected coating:",
+    "desiredColor": "Desired Color",
+    "customColor": "Custom Color",
+    "customColorPlaceholder": "E.g.: Ferrari Red, Ocean Blue, Forest Green...",
+    "customColorDescription": "Describe the color you want (max 50 characters)",
+    "selected": "Selected:",
+    "generateButton": "Generate Real Time Render",
+    "generateDescription": "View the oven render in the selected color",
+    "downloadButton": "Download Image",
+    "colors": {
+      "Nero": "Black",
+      "Bianco": "White",
+      "Rosso Mattone": "Brick Red",
+      "Grigio Pietra": "Stone Gray",
+      "Terracotta": "Terracotta",
+      "Beige": "Beige",
+      "Marrone": "Brown",
+      "Verde Oliva": "Olive Green"
+    },
+    "errors": {
+      "selectColor": "Select a color or enter a custom color!",
+      "maxLength": "Custom color cannot exceed 50 characters",
+      "invalidChars": "Color can only contain letters, numbers, spaces and hyphens"
+    },
+    "success": {
+      "generated": "Render generated successfully!",
+      "downloaded": "Download started!"
+    }
+  },
+  "architectAI": {
+    "title": "AI Architect",
+    "subtitle": "Insert the oven in your environment with artificial intelligence",
+    "takePhoto": "Take a Photo",
+    "takePhotoDescription": "Use the camera",
+    "uploadImage": "Upload Image",
+    "uploadImageDescription": "From your device",
+    "or": "OR",
+    "generateButton": "Generate AI Render",
+    "downloadButton": "Download Render",
+    "errors": {
+      "noImage": "First upload a photo of your environment",
+      "generationFailed": "Error generating render"
+    },
+    "success": {
+      "generated": "Render generated successfully!",
+      "downloaded": "Download completed!"
     }
   }
 }
