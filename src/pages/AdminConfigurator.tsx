@@ -354,6 +354,7 @@ const AdminConfigurator = () => {
                   <TableRow>
                     <TableHead>Nome</TableHead>
                     <TableHead>Tipo</TableHead>
+                    <TableHead>Diametro</TableHead>
                     <TableHead>Prezzo</TableHead>
                     <TableHead>Stato</TableHead>
                     <TableHead>Azioni</TableHead>
@@ -364,6 +365,13 @@ const AdminConfigurator = () => {
                     <TableRow key={opt.id}>
                       <TableCell>{opt.name}</TableCell>
                       <TableCell>{opt.type}</TableCell>
+                      <TableCell>
+                        {opt.diameter ? (
+                          <Badge variant="outline">{opt.diameter}cm</Badge>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">Tutti</span>
+                        )}
+                      </TableCell>
                       <TableCell>€{opt.price}</TableCell>
                       <TableCell>
                         <Badge variant={opt.is_active ? 'default' : 'secondary'}>

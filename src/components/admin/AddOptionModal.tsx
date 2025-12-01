@@ -19,6 +19,7 @@ const AddOptionModal: React.FC<AddOptionModalProps> = ({ open, onClose, onSucces
     type: '',
     price: 0,
     description: '',
+    diameter: null as number | null,
     is_active: true,
   });
   const [saving, setSaving] = useState(false);
@@ -35,6 +36,7 @@ const AddOptionModal: React.FC<AddOptionModalProps> = ({ open, onClose, onSucces
           type: formData.type,
           price: parseFloat(String(formData.price)),
           description: formData.description,
+          diameter: formData.diameter ? parseInt(String(formData.diameter)) : null,
           is_active: formData.is_active,
         });
 
@@ -50,6 +52,7 @@ const AddOptionModal: React.FC<AddOptionModalProps> = ({ open, onClose, onSucces
         type: '',
         price: 0,
         description: '',
+        diameter: null,
         is_active: true,
       });
     } catch (error) {
@@ -99,6 +102,20 @@ const AddOptionModal: React.FC<AddOptionModalProps> = ({ open, onClose, onSucces
               onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
               required
             />
+          </div>
+
+          <div>
+            <Label htmlFor="diameter">Diametro (cm) - opzionale</Label>
+            <Input
+              id="diameter"
+              type="number"
+              value={formData.diameter || ''}
+              onChange={(e) => setFormData({ ...formData, diameter: e.target.value ? parseInt(e.target.value) : null })}
+              placeholder="Lascia vuoto per tutti i diametri"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Specifica un diametro per opzioni specifiche (es: 80, 100, 120, 130)
+            </p>
           </div>
 
           <div>
