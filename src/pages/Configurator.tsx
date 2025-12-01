@@ -66,6 +66,8 @@ interface ConfiguratorOption {
   type: string;
   price: number;
   description: string | null;
+  diameter?: number | null;
+  is_active: boolean;
 }
 
 interface ConfiguratorProps {
@@ -285,13 +287,12 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     return { fuelTypes, diameters };
   };
 
-  // Calcola il prezzo della spedizione in base al diametro
+  // Ottieni il prezzo della spedizione dal database in base al diametro
   const getShippingPrice = (diameter: number) => {
-    if (diameter === 80) return 1000;
-    if (diameter === 100) return 1300;
-    if (diameter === 120) return 1400;
-    if (diameter === 130) return 1500;
-    return 0;
+    const shippingOption = options.find(
+      opt => opt.type === 'shipping' && opt.diameter === diameter && opt.is_active
+    );
+    return shippingOption?.price || 0;
   };
 
   // Ottieni il prezzo in base al listino selezionato
