@@ -437,13 +437,20 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
   const handleSaveQuote = async () => {
     if (!selectedOven) { toast.error(t('configurator.errors.completeConfig')); return; }
+
+    const total = calculateTotal();
+    if (!Number.isFinite(total) || total <= 0) {
+      toast.error(t('configurator.errors.completeConfig'));
+      return;
+    }
+
     setSavingQuote(true);
     try {
       const { data: quoteData, error: quoteError } = await supabase.from('configurator_quotes').insert({
         oven_id: selectedOven.id, 
         has_installation: buildType === 'on_site',
         has_gas: selectedFuelType === 'Gas',
-        total_price: calculateTotal(), 
+        total_price: total, 
         delivery_time_weeks: selectedOven.delivery_time_weeks,
         customer_name: customerName || null, 
         customer_email: customerEmail || null,
@@ -527,6 +534,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
     setSavingQuote(true);
     try {
+      // Calcola e valida il totale prima del salvataggio
+      const total = calculateTotal();
+      if (!Number.isFinite(total) || total <= 0) {
+        toast.error(t('configurator.errors.completeConfig'));
+        setSavingQuote(false);
+        return;
+      }
+
       // Save quote
       const { data: quoteData, error: quoteError } = await supabase
         .from('configurator_quotes')
@@ -534,7 +549,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           oven_id: selectedOven.id,
           has_installation: buildType === 'on_site',
           has_gas: selectedFuelType === 'Gas',
-          total_price: calculateTotal(),
+          total_price: total,
           delivery_time_weeks: selectedOven.delivery_time_weeks,
           customer_name: customerData.name,
           customer_email: customerData.email,
@@ -679,6 +694,11 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
       // Calculate prices
       const totalPrice = calculateTotal();
+      if (!Number.isFinite(totalPrice) || totalPrice <= 0) {
+        toast.error(t('configurator.errors.completeConfig'));
+        setSavingQuote(false);
+        return;
+      }
       const discountedPrice = totalPrice * 0.95;
       const depositAmount = discountedPrice * 0.01;
 
