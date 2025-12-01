@@ -1118,73 +1118,73 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     </div>
                     
                     {/* Sconto a tempo */}
-                    <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-2 border-green-500/30 rounded-lg p-2.5 md:p-4 mb-2 md:mb-3">
-                      <div className="flex items-start gap-1.5 md:gap-2 mb-1.5 md:mb-2">
-                        <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-2 border-green-500/30 rounded-lg p-2 md:p-4 mb-2 md:mb-3">
+                      <div className="flex items-start gap-1 md:gap-2 mb-1 md:mb-2">
+                        <Sparkles className="w-3.5 h-3.5 md:w-5 md:h-5 text-green-600 flex-shrink-0 mt-0.5" />
                         <div className="flex-1 min-w-0">
-                          <p className="font-bold text-green-700 dark:text-green-400 text-xs md:text-base leading-tight">
+                          <p className="font-bold text-green-700 dark:text-green-400 text-[11px] md:text-base leading-tight break-words">
                             {t('configurator.summary.discount.title')}
                           </p>
-                          <p className="text-[11px] md:text-sm text-green-600 dark:text-green-500 mt-0.5 md:mt-1 leading-snug">
+                          <p className="text-[10px] md:text-sm text-green-600 dark:text-green-500 mt-0.5 md:mt-1 leading-snug break-words">
                             {t('configurator.summary.discount.description')} €{(calculateTotal() * 0.05).toFixed(2)}
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between pt-1.5 md:pt-2 border-t border-green-500/20">
-                        <span className="text-xs md:text-sm font-medium text-green-700 dark:text-green-400">{t('configurator.summary.discount.discountedPrice')}</span>
-                        <span className="text-lg md:text-2xl font-bold text-green-600 dark:text-green-400">
+                      <div className="flex items-center justify-between pt-1.5 md:pt-2 border-t border-green-500/20 gap-2">
+                        <span className="text-[10px] md:text-sm font-medium text-green-700 dark:text-green-400 leading-tight break-words">{t('configurator.summary.discount.discountedPrice')}</span>
+                        <span className="text-base md:text-2xl font-bold text-green-600 dark:text-green-400 flex-shrink-0">
                           €{(calculateTotal() * 0.95).toFixed(2)}
                         </span>
                       </div>
                     </div>
 
                     {/* Modalità di pagamento */}
-                    <div className="bg-background/80 rounded-lg p-2.5 md:p-4 border border-border/50 mb-2 md:mb-3">
-                      <p className="font-semibold text-xs md:text-base mb-1.5 md:mb-2 flex items-center gap-1.5 md:gap-2">
-                        <Euro className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary flex-shrink-0" />
-                        <span className="leading-tight">{t('configurator.summary.paymentTerms.title')}</span>
+                    <div className="bg-background/80 rounded-lg p-2 md:p-4 border border-border/50 mb-2 md:mb-3">
+                      <p className="font-semibold text-[11px] md:text-base mb-1 md:mb-2 flex items-center gap-1 md:gap-2">
+                        <Euro className="w-3 h-3 md:w-4 md:h-4 text-primary flex-shrink-0" />
+                        <span className="leading-tight break-words">{t('configurator.summary.paymentTerms.title')}</span>
                       </p>
-                      <div className="space-y-1 md:space-y-1.5 text-[11px] md:text-sm text-muted-foreground">
-                        <div className="flex items-start gap-1.5 md:gap-2">
+                      <div className="space-y-1 text-[10px] md:text-sm text-muted-foreground">
+                        <div className="flex items-start gap-1 md:gap-2">
                           <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-primary flex-shrink-0 mt-1"></div>
-                          <span className="leading-snug"><strong>{t('configurator.summary.paymentTerms.deposit')}</strong> {t('configurator.summary.paymentTerms.depositDescription')}</span>
+                          <span className="leading-snug break-words"><strong>{t('configurator.summary.paymentTerms.deposit')}</strong> {t('configurator.summary.paymentTerms.depositDescription')}</span>
                         </div>
-                        <div className="flex items-start gap-1.5 md:gap-2">
+                        <div className="flex items-start gap-1 md:gap-2">
                           <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-primary flex-shrink-0 mt-1"></div>
-                          <span className="leading-snug"><strong>{t('configurator.summary.paymentTerms.balance')}</strong> {t('configurator.summary.paymentTerms.balanceDescription')}</span>
+                          <span className="leading-snug break-words"><strong>{t('configurator.summary.paymentTerms.balance')}</strong> {t('configurator.summary.paymentTerms.balanceDescription')}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Pulsante blocca ordine */}
                     <Button 
-                      className="w-full h-auto py-2.5 md:py-4 text-xs md:text-base font-bold shadow-lg hover:shadow-xl transition-all"
+                      className="w-full h-auto py-2 md:py-4 px-2 md:px-4 text-xs md:text-base font-bold shadow-lg hover:shadow-xl transition-all"
                       size="lg"
                       onClick={handleDepositPayment}
                       disabled={!customerData?.name || !customerData?.email || !customerData?.phone}
                     >
-                      <div className="flex flex-col items-center gap-0.5 md:gap-1">
-                        <span className="flex items-center gap-1.5 md:gap-2 text-sm md:text-base">
-                          <Euro className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" />
-                          <span className="leading-tight">{t('configurator.payment.depositButton')}</span>
+                      <div className="flex flex-col items-center gap-0.5 md:gap-1 w-full">
+                        <span className="flex items-center justify-center gap-1 md:gap-2 text-[11px] md:text-base w-full">
+                          <Euro className="w-3.5 h-3.5 md:w-5 md:h-5 flex-shrink-0" />
+                          <span className="leading-tight break-words">{t('configurator.payment.depositButton')}</span>
                         </span>
-                        <span className="text-[10px] md:text-sm font-medium opacity-90 leading-tight text-center px-1">
+                        <span className="text-[9px] md:text-sm font-medium opacity-90 leading-tight text-center max-w-full break-words px-0.5">
                           {t('configurator.cta.payDeposit').split(' — ')[1]}
                         </span>
                       </div>
                     </Button>
                     <div className="space-y-2 mt-3">
-                      <p className="text-[11px] md:text-xs text-center text-muted-foreground font-medium">
+                      <p className="text-[10px] md:text-xs text-center text-muted-foreground font-medium">
                         {t('configurator.summary.depositAmount')}: <span className="font-bold">€{(calculateTotal() * 0.95 * 0.01).toFixed(2)}</span>
                       </p>
-                      <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-2.5 md:p-3 space-y-1.5">
-                        <p className="text-[11px] md:text-sm text-blue-900 dark:text-blue-100 flex items-start gap-1.5 md:gap-2">
-                          <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0 text-sm md:text-base">✓</span>
-                          <span className="leading-snug">{t('configurator.payment.benefit2')}</span>
+                      <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-2 md:p-3 space-y-1">
+                        <p className="text-[10px] md:text-sm text-blue-900 dark:text-blue-100 flex items-start gap-1.5 md:gap-2">
+                          <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0 text-xs md:text-base">✓</span>
+                          <span className="leading-snug break-words">{t('configurator.payment.benefit2')}</span>
                         </p>
-                        <p className="text-[11px] md:text-sm text-blue-900 dark:text-blue-100 flex items-start gap-1.5 md:gap-2">
-                          <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0 text-sm md:text-base">✓</span>
-                          <span className="leading-snug">{t('configurator.payment.benefit1')}</span>
+                        <p className="text-[10px] md:text-sm text-blue-900 dark:text-blue-100 flex items-start gap-1.5 md:gap-2">
+                          <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0 text-xs md:text-base">✓</span>
+                          <span className="leading-snug break-words">{t('configurator.payment.benefit1')}</span>
                         </p>
                       </div>
                     </div>
@@ -1193,14 +1193,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     <div className="mt-3 md:mt-4">
                       <Button 
                         onClick={handleInterestedClick}
-                        className="w-full text-sm md:text-base" 
+                        className="w-full text-xs md:text-base h-auto py-2 md:py-3" 
                         size="lg"
                         variant="outline"
                       >
-                        <Phone className="w-4 h-4 mr-2 flex-shrink-0" />
-                        <span className="leading-tight">{t('configurator.cta.interested')}</span>
+                        <Phone className="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5 md:mr-2 flex-shrink-0" />
+                        <span className="leading-tight break-words">{t('configurator.cta.interested')}</span>
                       </Button>
-                      <p className="text-[11px] md:text-xs text-center text-muted-foreground mt-2 leading-snug px-2">
+                      <p className="text-[10px] md:text-xs text-center text-muted-foreground mt-2 leading-snug px-1 break-words">
                         {t('configurator.payment.teamWillCall')}
                       </p>
                     </div>
@@ -1209,7 +1209,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     <div className="mt-3 md:mt-4 pt-3 md:pt-4 border-t border-border/50">
                       <Button 
                         onClick={() => setShowNotInterestedModal(true)}
-                        className="w-full text-xs md:text-sm" 
+                        className="w-full text-[11px] md:text-sm" 
                         size="sm"
                         variant="ghost"
                       >
