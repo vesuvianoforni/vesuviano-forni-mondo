@@ -1021,7 +1021,7 @@
       "feedbackSent": "Thank you for your feedback!"
     },
     "expired": {
-      "greeting": "Hello {name}",
+      "greeting": "Hello {{name}}",
       "greetingGeneric": "Hello",
       "message": "This link has expired. Request a new link from our sales team, it will be provided shortly.",
       "returnHome": "Return to Home",
