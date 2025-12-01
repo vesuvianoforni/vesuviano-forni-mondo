@@ -448,7 +448,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         customer_name: customerName || null, 
         customer_email: customerEmail || null,
         customer_phone: customerPhone || null, 
-        notes: notes || null
+        notes: notes || null,
+        status: 'pending',
       }).select().single();
       
       if (quoteError) throw quoteError;
@@ -538,7 +539,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           customer_name: customerData.name,
           customer_email: customerData.email,
           customer_phone: customerData.phone,
-          notes: `Metodo di contatto preferito: ${selectedContactMethod === 'whatsapp' ? 'WhatsApp' : 'Chiamata telefonica'}${notes ? '\n' + notes : ''}`
+          notes: `Metodo di contatto preferito: ${selectedContactMethod === 'whatsapp' ? 'WhatsApp' : 'Chiamata telefonica'}${notes ? '\n' + notes : ''}`,
+          status: 'interested',
         })
         .select()
         .single();
@@ -644,6 +646,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           customer_name: customerData.name,
           customer_email: customerData.email,
           customer_phone: customerData.phone,
+          status: 'payment_initiated',
           notes: notes || null,
         })
         .select()
