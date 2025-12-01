@@ -29,6 +29,7 @@ interface SessionData {
   last_opened_at: string | null;
   customer_actions: any[];
   quote_id: string | null;
+  customer_info: any;
   configurator_quotes?: {
     id: string;
     total_price: number;
@@ -259,6 +260,15 @@ const SessionsCRM = () => {
     }
 
     const summary: string[] = [];
+    
+    // Show ERP origin if applicable
+    if (session.customer_info?.imported_from === 'erp') {
+      const pipelineInfo = session.customer_info.pipeline_id 
+        ? ` (Pipeline: ${session.customer_info.pipeline_id})`
+        : '';
+      summary.push(`📊 Importato da ERP${pipelineInfo}`);
+    }
+    
     if (session.is_used) {
       summary.push(`Aperto ${session.last_opened_at ? format(new Date(session.last_opened_at), 'dd/MM/yy HH:mm', { locale: it }) : ''}`);
     }
@@ -856,6 +866,16 @@ const SessionsCRM = () => {
                   <div>
                     <h3 className="font-semibold text-sm text-muted-foreground mb-3">INFORMAZIONI CONTATTO</h3>
                     <div className="space-y-2">
+                      {selectedSession.customer_info?.imported_from === 'erp' && (
+                        <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950 px-3 py-2 rounded-lg mb-3">
+                          <span className="text-sm font-medium">📊 Importato da ERP</span>
+                          {selectedSession.customer_info.pipeline_id && (
+                            <Badge variant="outline" className="ml-auto">
+                              Pipeline: {selectedSession.customer_info.pipeline_id}
+                            </Badge>
+                          )}
+                        </div>
+                      )}
                       {selectedSession.customer_email && (
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium w-20">Email:</span>
