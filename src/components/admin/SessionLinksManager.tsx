@@ -3,9 +3,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Copy, RefreshCw } from "lucide-react";
+import { Copy, RefreshCw, Sparkles } from "lucide-react";
 
-export const SessionLinksManager = () => {
+interface SessionLinksManagerProps {
+  onGenerateAIMessage?: (sessionId: string) => void;
+}
+
+export const SessionLinksManager = ({ onGenerateAIMessage }: SessionLinksManagerProps) => {
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -236,6 +240,16 @@ export const SessionLinksManager = () => {
                   )}
                 </div>
                 <div className="flex gap-2">
+                  {onGenerateAIMessage && session.customer_email && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onGenerateAIMessage(session.id)}
+                      title="Genera messaggio AI"
+                    >
+                      <Sparkles className="h-4 w-4" />
+                    </Button>
+                  )}
                   <Button
                     variant="ghost"
                     size="sm"
