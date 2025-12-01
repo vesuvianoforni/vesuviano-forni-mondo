@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, Mail, Trash2 } from 'lucide-react';
+import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, Mail, Trash2, Search } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Input } from '@/components/ui/input';
@@ -44,13 +44,14 @@ const SessionsCRM = () => {
   const navigate = useNavigate();
   const [sessions, setSessions] = useState<SessionData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<'list' | 'kanban'>('list');
+  const [viewMode, setViewMode] = useState<'list' | 'kanban'>('kanban');
   const [showNewLinkForm, setShowNewLinkForm] = useState(false);
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [priceList, setPriceList] = useState('A');
   const [selectedSession, setSelectedSession] = useState<SessionData | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     loadSessions();
@@ -331,15 +332,27 @@ const SessionsCRM = () => {
     );
   };
 
+  const filterSessions = (sessionList: SessionData[]) => {
+    if (!searchQuery.trim()) return sessionList;
+    
+    const query = searchQuery.toLowerCase();
+    return sessionList.filter(s => 
+      s.customer_name?.toLowerCase().includes(query) ||
+      s.customer_email?.toLowerCase().includes(query) ||
+      s.customer_phone?.toLowerCase().includes(query)
+    );
+  };
+
   const groupSessionsByStatus = () => {
+    const filteredSessions = filterSessions(sessions);
     const groups = {
-      nuovo: sessions.filter(s => !s.is_used && s.status !== 'link_renewal_requested'),
-      aperto: sessions.filter(s => s.is_used && !s.feedback_status && s.status !== 'payment_initiated' && s.status !== 'link_renewal_requested' && !s.configurator_quotes?.payment_completed),
-      rinnovoRichiesto: sessions.filter(s => s.status === 'link_renewal_requested'),
-      interessato: sessions.filter(s => (s.status === 'interested' || s.feedback_status === 'interested') && !s.configurator_quotes?.payment_completed),
-      pagamento: sessions.filter(s => s.status === 'payment_initiated' && !s.configurator_quotes?.payment_completed),
-      pagato: sessions.filter(s => s.configurator_quotes?.payment_completed),
-      nonInteressato: sessions.filter(s => s.feedback_status === 'not_interested')
+      nuovo: filteredSessions.filter(s => !s.is_used && s.status !== 'link_renewal_requested'),
+      aperto: filteredSessions.filter(s => s.is_used && !s.feedback_status && s.status !== 'payment_initiated' && s.status !== 'link_renewal_requested' && !s.configurator_quotes?.payment_completed),
+      rinnovoRichiesto: filteredSessions.filter(s => s.status === 'link_renewal_requested'),
+      interessato: filteredSessions.filter(s => (s.status === 'interested' || s.feedback_status === 'interested') && !s.configurator_quotes?.payment_completed),
+      pagamento: filteredSessions.filter(s => s.status === 'payment_initiated' && !s.configurator_quotes?.payment_completed),
+      pagato: filteredSessions.filter(s => s.configurator_quotes?.payment_completed),
+      nonInteressato: filteredSessions.filter(s => s.feedback_status === 'not_interested')
     };
     return groups;
   };
@@ -653,6 +666,16 @@ const SessionsCRM = () => {
           <p className="text-muted-foreground">Tracciamento completo delle sessioni e attività dei clienti</p>
         </div>
 
+        <div className="mb-6 relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Cerca per nome, email o telefono..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+
         {!showNewLinkForm ? (
           <Button onClick={() => setShowNewLinkForm(true)} className="mb-6">
             <Plus className="w-4 h-4 mr-2" />
@@ -729,9 +752,9 @@ const SessionsCRM = () => {
 
         {viewMode === 'list' ? (
           <div className="grid gap-4">
-            {sessions.map(session => renderSessionCard(session))}
+            {filterSessions(sessions).map(session => renderSessionCard(session))}
 
-            {sessions.length === 0 && (
+            {filterSessions(sessions).length === 0 && (
               <Card>
                 <CardContent className="p-12 text-center">
                   <p className="text-muted-foreground">Nessuna sessione trovata</p>
