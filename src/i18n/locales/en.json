@@ -910,9 +910,9 @@
     "buildType": {
       "title": "How do you prefer your oven?",
       "readyToUse": "Ready to Use",
-      "readyToUseDesc": "Shipped pre-assembled, ready for installation",
+      "readyToUseDesc": "Oven built artisanally in our laboratory and shipped ready to use. Requires adequate space for passage.",
       "builtOnSite": "Built on Site",
-      "builtOnSiteDesc": "Assembled directly at your location"
+      "builtOnSiteDesc": "The oven is built directly at your location by our expert craftsmen. Ideal for small spaces or personalized installations."
     },
     "selectModel": "Select Model",
     "selectFuel": "Select Fuel Type",
