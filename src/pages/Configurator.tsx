@@ -1103,9 +1103,9 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     <span className="font-semibold">{selectedOven.delivery_time_weeks} {t('configurator.summary.weeks')}</span>
                   </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Tipologia:</span>
+                      <span className="text-muted-foreground">{t('configurator.summary.buildType')}</span>
                       <span className="font-semibold">
-                        {buildType === 'ready_to_use' ? 'Già Pronto all\'Uso' : 'Costruito sul Posto'}
+                        {buildType === 'ready_to_use' ? t('configurator.buildType.readyToUse') : t('configurator.buildType.builtOnSite')}
                       </span>
                     </div>
                   </div>
@@ -1113,7 +1113,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   {/* Totale */}
                   <div className="bg-primary/5 rounded-lg p-4 md:p-5 border-2 border-primary/20">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-base md:text-lg font-semibold">Totale:</span>
+                      <span className="text-base md:text-lg font-semibold">{t('configurator.summary.total')}</span>
                       <span className="text-2xl md:text-3xl font-bold text-primary">€{calculateTotal().toFixed(2)}</span>
                     </div>
                     
@@ -1123,15 +1123,15 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         <Sparkles className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                         <div className="flex-1">
                           <p className="font-bold text-green-700 dark:text-green-400 text-sm md:text-base">
-                            Sconto Speciale 5% - Offerta a Tempo!
+                            {t('configurator.summary.discount.title')}
                           </p>
                           <p className="text-xs md:text-sm text-green-600 dark:text-green-500 mt-1">
-                            Blocca ora il tuo ordine e risparmia €{(calculateTotal() * 0.05).toFixed(2)}
+                            {t('configurator.summary.discount.description')} €{(calculateTotal() * 0.05).toFixed(2)}
                           </p>
                         </div>
                       </div>
                       <div className="flex items-center justify-between pt-2 border-t border-green-500/20">
-                        <span className="text-sm font-medium text-green-700 dark:text-green-400">Prezzo scontato:</span>
+                        <span className="text-sm font-medium text-green-700 dark:text-green-400">{t('configurator.summary.discount.discountedPrice')}</span>
                         <span className="text-xl md:text-2xl font-bold text-green-600 dark:text-green-400">
                           €{(calculateTotal() * 0.95).toFixed(2)}
                         </span>
@@ -1142,16 +1142,16 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     <div className="bg-background/80 rounded-lg p-3 md:p-4 border border-border/50 mb-3">
                       <p className="font-semibold text-sm md:text-base mb-2 flex items-center gap-2">
                         <Euro className="w-4 h-4 text-primary" />
-                        Accordi di Pagamento:
+                        {t('configurator.summary.paymentTerms.title')}
                       </p>
                       <div className="space-y-1.5 text-xs md:text-sm text-muted-foreground">
                         <div className="flex items-center gap-2">
                           <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                          <span><strong>50% acconto</strong> alla conferma dell'ordine</span>
+                          <span><strong>{t('configurator.summary.paymentTerms.deposit')}</strong> {t('configurator.summary.paymentTerms.depositDescription')}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                          <span><strong>50% saldo</strong> al completamento del forno (pronto per la consegna)</span>
+                          <span><strong>{t('configurator.summary.paymentTerms.balance')}</strong> {t('configurator.summary.paymentTerms.balanceDescription')}</span>
                         </div>
                       </div>
                     </div>

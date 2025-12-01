@@ -900,8 +900,21 @@
       "onSitePrice": "Prix Construction sur Place",
       "discount5": "Réduction 5% (réserver maintenant)",
       "savings": "Vous économisez",
-      "total": "Total",
-      "depositAmount": "Montant de l'Acompte (1%)"
+      "total": "Total:",
+      "buildType": "Type:",
+      "depositAmount": "Montant de l'Acompte (1%)",
+      "discount": {
+        "title": "Réduction Spéciale 5% - Offre Limitée!",
+        "description": "Bloquez votre commande maintenant et économisez",
+        "discountedPrice": "Prix réduit:"
+      },
+      "paymentTerms": {
+        "title": "Conditions de Paiement:",
+        "deposit": "50% d'acompte",
+        "depositDescription": "à la confirmation de la commande",
+        "balance": "50% solde",
+        "balanceDescription": "à l'achèvement du four (prêt pour la livraison)"
+      }
     },
     "benefits": {
       "deposit": "Acompte 1% entièrement remboursable sous 7 jours",

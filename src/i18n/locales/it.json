@@ -919,8 +919,21 @@
       "onSitePrice": "Prezzo Costruzione sul Posto",
       "discount5": "Sconto 5% (prenota subito)",
       "savings": "Risparmi",
-      "total": "Totale",
-      "depositAmount": "Importo Acconto (1%)"
+      "total": "Totale:",
+      "buildType": "Tipologia:",
+      "depositAmount": "Importo Acconto (1%)",
+      "discount": {
+        "title": "Sconto Speciale 5% - Offerta a Tempo!",
+        "description": "Blocca ora il tuo ordine e risparmia",
+        "discountedPrice": "Prezzo scontato:"
+      },
+      "paymentTerms": {
+        "title": "Accordi di Pagamento:",
+        "deposit": "50% acconto",
+        "depositDescription": "alla conferma dell'ordine",
+        "balance": "50% saldo",
+        "balanceDescription": "al completamento del forno (pronto per la consegna)"
+      }
     },
     "benefits": {
       "deposit": "Acconto 1% completamente rimborsabile entro 7 giorni",
