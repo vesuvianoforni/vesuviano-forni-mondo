@@ -33,6 +33,12 @@ verify_jwt = false
 [functions.import-lead-from-erp]
 verify_jwt = false
 
+[functions.sync-to-erp]
+verify_jwt = false
+
+[functions.get-session-updates]
+verify_jwt = false
+
 [functions.request-new-link]
 verify_jwt = false
 
