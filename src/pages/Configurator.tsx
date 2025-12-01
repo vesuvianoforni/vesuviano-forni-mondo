@@ -16,6 +16,7 @@ import ArchitettoAI from '@/components/configurator/ArchitettoAI';
 import Video360Modal from '@/components/Video360Modal';
 import ConfiguratorLanguageSelector from '@/components/ConfiguratorLanguageSelector';
 import ImageZoomModal from '@/components/ImageZoomModal';
+import { syncEventToERP } from '@/services/erpSyncService';
 
 interface ConfiguratorOven {
   id: string;
@@ -149,6 +150,28 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         setCustomerName(customerInfo.name);
         setCustomerEmail(customerInfo.email);
         setCustomerPhone(customerInfo.phone);
+
+        // Track and sync link opened
+        if (!data.is_used) {
+          await supabase
+            .from('configurator_sessions')
+            .update({ 
+              is_used: true,
+              last_opened_at: new Date().toISOString()
+            })
+            .eq('id', sessionId);
+
+          // Sync to ERP
+          await syncEventToERP({
+            session_id: sessionId,
+            event_type: 'link_opened',
+            event_data: {
+              customer_name: data.customer_name,
+              customer_email: data.customer_email,
+              price_list: data.price_list
+            }
+          });
+        }
       }
     } catch (error) {
       console.error('Error loading session:', error);
@@ -418,21 +441,33 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     }
   };
 
-  // Track selections
+  // Track selections and sync to ERP
   useEffect(() => {
-    if (selectedModel) trackAction('model_selected', { model: selectedModel });
+    if (selectedModel && sessionId) {
+      trackAction('model_selected', { model: selectedModel });
+      syncEventToERP({ session_id: sessionId, event_type: 'model_selected', event_data: { model: selectedModel } });
+    }
   }, [selectedModel]);
 
   useEffect(() => {
-    if (selectedFuelType) trackAction('fuel_selected', { fuelType: selectedFuelType });
+    if (selectedFuelType && sessionId) {
+      trackAction('fuel_selected', { fuelType: selectedFuelType });
+      syncEventToERP({ session_id: sessionId, event_type: 'fuel_selected', event_data: { fuelType: selectedFuelType } });
+    }
   }, [selectedFuelType]);
 
   useEffect(() => {
-    if (selectedDiameter) trackAction('size_selected', { diameter: selectedDiameter });
+    if (selectedDiameter && sessionId) {
+      trackAction('size_selected', { diameter: selectedDiameter });
+      syncEventToERP({ session_id: sessionId, event_type: 'size_selected', event_data: { diameter: selectedDiameter } });
+    }
   }, [selectedDiameter]);
 
   useEffect(() => {
-    if (selectedCoating) trackAction('coating_selected', { coating: selectedCoating });
+    if (selectedCoating && sessionId) {
+      trackAction('coating_selected', { coating: selectedCoating });
+      syncEventToERP({ session_id: sessionId, event_type: 'coating_selected', event_data: { coating: selectedCoating } });
+    }
   }, [selectedCoating]);
 
   const handleSaveQuote = async () => {
@@ -468,6 +503,18 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
       // Update session if exists
       if (sessionId && quoteData) {
         await trackAction('quote_saved', { quoteId: quoteData.id, totalPrice: calculateTotal() });
+        
+        // Sync to ERP
+        await syncEventToERP({
+          session_id: sessionId,
+          event_type: 'quote_saved',
+          event_data: {
+            quoteId: quoteData.id,
+            totalPrice: calculateTotal(),
+            model: selectedOven.model_name,
+            fuelType: selectedFuelType
+          }
+        });
         
         await supabase
           .from('configurator_sessions')
@@ -583,10 +630,19 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           .eq('id', sessionId);
 
         // Esegui operazioni non-critiche in background (senza bloccare la UI)
-        // Email e tracking ERP vengono eseguiti in parallelo senza await
+        // Email, tracking e sync ERP vengono eseguiti in parallelo senza await
         Promise.all([
           sendConfigurationEmail('contact_request', quoteData.id),
-          trackAction('contact_requested', { contactMethod: selectedContactMethod })
+          trackAction('contact_requested', { contactMethod: selectedContactMethod }),
+          syncEventToERP({
+            session_id: sessionId,
+            event_type: 'contact_requested',
+            event_data: {
+              contactMethod: selectedContactMethod,
+              quoteId: quoteData.id,
+              totalPrice: total
+            }
+          })
         ]).catch(error => {
           console.error('Background operations error:', error);
           // Non bloccare l'utente in caso di errore nelle operazioni non-critiche
@@ -627,6 +683,16 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
             status: 'rejected'
           })
           .eq('id', sessionId);
+
+        // Sync to ERP
+        await syncEventToERP({
+          session_id: sessionId,
+          event_type: 'feedback_not_interested',
+          event_data: {
+            reasons: feedbackReasons,
+            otherReason: otherReason.trim()
+          }
+        });
       }
 
       toast.success(t('configurator.success.feedbackSent'));
@@ -696,6 +762,17 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
       // Update session if exists
       if (sessionId && quoteData) {
+        // Sync payment initiated to ERP
+        await syncEventToERP({
+          session_id: sessionId,
+          event_type: 'payment_initiated',
+          event_data: {
+            quoteId: quoteData.id,
+            totalPrice: totalForQuote,
+            depositAmount: Math.round(totalForQuote * 0.95 * 0.01)
+          }
+        });
+
         await supabase
           .from('configurator_sessions')
           .update({
@@ -1138,6 +1215,19 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               onRenderGenerated={(imageUrl, color) => {
                 setColorRenderImageUrl(imageUrl);
                 setSelectedColorForRender(color);
+                
+                // Track and sync color render generation
+                if (sessionId) {
+                  trackAction('color_render_generated', { color });
+                  syncEventToERP({
+                    session_id: sessionId,
+                    event_type: 'color_render_generated',
+                    event_data: {
+                      color,
+                      ovenModel: selectedOven.model_name
+                    }
+                  });
+                }
               }}
             />
 
@@ -1146,7 +1236,22 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               ovenName={selectedOven.model_name}
               ovenImageUrl={colorRenderImageUrl || selectedOvenData.coating?.image_url || selectedOven.image_url}
               onSpaceImageSelected={setSpaceImageUrl}
-              onRenderGenerated={setArchitectAIRenderUrl}
+              onRenderGenerated={(renderUrl) => {
+                setArchitectAIRenderUrl(renderUrl);
+                
+                // Track and sync AI render generation
+                if (sessionId) {
+                  trackAction('architect_ai_used', { renderUrl });
+                  syncEventToERP({
+                    session_id: sessionId,
+                    event_type: 'architect_ai_used',
+                    event_data: {
+                      ovenModel: selectedOven.model_name,
+                      hasCustomColor: !!colorRenderImageUrl
+                    }
+                  });
+                }
+              }}
             />
             
             <div className="border-t pt-4 md:pt-6">
