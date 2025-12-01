@@ -330,6 +330,50 @@ export type Database = {
           },
         ]
       }
+      email_history: {
+        Row: {
+          body: string
+          email_type: string
+          id: string
+          metadata: Json | null
+          sent_at: string
+          sent_from: string
+          sent_to: string
+          session_id: string
+          subject: string
+        }
+        Insert: {
+          body: string
+          email_type: string
+          id?: string
+          metadata?: Json | null
+          sent_at?: string
+          sent_from?: string
+          sent_to: string
+          session_id: string
+          subject: string
+        }
+        Update: {
+          body?: string
+          email_type?: string
+          id?: string
+          metadata?: Json | null
+          sent_at?: string
+          sent_from?: string
+          sent_to?: string
+          session_id?: string
+          subject?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_email_history_session"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "configurator_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ovens: {
         Row: {
           category: string
