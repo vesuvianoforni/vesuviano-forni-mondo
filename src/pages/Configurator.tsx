@@ -373,6 +373,52 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     }
   };
 
+  // Send complete configuration email with all images
+  const sendConfigurationEmail = async (actionType: 'contact_request' | 'deposit_paid', quoteId?: string) => {
+    if (!selectedOven || !selectedOvenData) return;
+
+    try {
+      const diameter = selectedOvenData.size?.diameter || selectedOven.diameter;
+      const ovenPrice = getOvenPrice();
+      const shippingPrice = deliveryOption === 'shipping' ? getShippingPrice(diameter) : 0;
+      const onSitePrice = buildType === 'on_site' ? getPrice('onSite') : 0;
+      const totalPrice = calculateTotal();
+      const discountedPrice = totalPrice * 0.95;
+
+      await supabase.functions.invoke('send-configuration-email', {
+        body: {
+          customerName: customerData?.name || customerName,
+          customerEmail: customerData?.email || customerEmail,
+          customerPhone: customerData?.phone || customerPhone,
+          modelName: selectedOven.model_name,
+          fuelType: selectedFuelType,
+          diameter,
+          pizzaCapacity: selectedOvenData.size?.pizza_capacity || selectedOven.pizza_capacity,
+          coating: selectedOvenData.coating?.name || selectedCoating,
+          buildType,
+          deliveryOption,
+          ovenPrice,
+          shippingPrice: deliveryOption === 'shipping' ? shippingPrice : undefined,
+          onSitePrice: buildType === 'on_site' ? onSitePrice : undefined,
+          totalPrice,
+          discountedPrice,
+          deliveryTimeWeeks: selectedOven.delivery_time_weeks,
+          priceList,
+          baseImageUrl: selectedOvenData.coating?.image_url || selectedOven.image_url,
+          colorRenderImageUrl: colorRenderImageUrl || undefined,
+          architectAIRenderUrl: architectAIRenderUrl || undefined,
+          actionType,
+          contactMethod: selectedContactMethod === 'whatsapp' ? 'WhatsApp' : selectedContactMethod === 'phone' ? 'Chiamata Telefonica' : undefined,
+          notes,
+        }
+      });
+
+      console.log('Configuration email sent successfully');
+    } catch (error) {
+      console.error('Error sending configuration email:', error);
+    }
+  };
+
   // Track selections
   useEffect(() => {
     if (selectedModel) trackAction('model_selected', { model: selectedModel });
@@ -512,24 +558,10 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           })
           .eq('id', sessionId);
 
-        // Send email with complete details
-        await supabase.functions.invoke('send-consultation-email', {
-          body: {
-            type: 'configurator_interest',
-            quoteId: quoteData.id,
-            ovenModel: selectedOven!.model_name,
-            diameter: selectedOven!.diameter,
-            pizzaCapacity: selectedOven!.pizza_capacity,
-            fuelType: selectedFuelType,
-            totalPrice: calculateTotal(),
-            deliveryOption: buildType === 'on_site' ? 'Costruito sul Posto' : 'Spedizione in Europa',
-            deliveryWeeks: selectedOven!.delivery_time_weeks,
-            customerName: customerData!.name,
-            customerEmail: customerData!.email,
-            customerPhone: customerData!.phone,
-            contactMethod: selectedContactMethod === 'whatsapp' ? 'WhatsApp' : 'Chiamata telefonica'
-          }
-        });
+        // Send complete configuration email with all details and images
+        await sendConfigurationEmail('contact_request', quoteData.id);
+
+        await trackAction('contact_requested', { contactMethod: selectedContactMethod });
       }
 
       setShowContactMethodModal(false);
@@ -667,6 +699,9 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
       // Redirect to Stripe Checkout
       if (checkoutData?.url) {
+        // Send complete configuration email before redirect
+        await sendConfigurationEmail('deposit_paid', quoteData.id);
+        
         window.location.href = checkoutData.url;
       } else {
         throw new Error('URL di pagamento non ricevuto');
