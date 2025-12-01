@@ -15,6 +15,7 @@ import ColorRenderGenerator from '@/components/configurator/ColorRenderGenerator
 import ArchitettoAI from '@/components/configurator/ArchitettoAI';
 import Video360Modal from '@/components/Video360Modal';
 import ConfiguratorLanguageSelector from '@/components/ConfiguratorLanguageSelector';
+import ImageZoomModal from '@/components/ImageZoomModal';
 
 interface ConfiguratorOven {
   id: string;
@@ -107,6 +108,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   const [showContactMethodModal, setShowContactMethodModal] = useState(false);
   const [selectedContactMethod, setSelectedContactMethod] = useState<'whatsapp' | 'phone' | ''>('');
   const [showThankYouMessage, setShowThankYouMessage] = useState(false);
+  const [zoomedImage, setZoomedImage] = useState<{ url: string; alt: string } | null>(null);
 
   useEffect(() => { 
     fetchData(); 
@@ -775,7 +777,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   onClick={() => { setSelectedModel(model); setSelectedFuelType(''); setSelectedDiameter(''); }}
                 >
                   <CardContent className="p-2 sm:p-3 md:p-4">
-                    <div className="aspect-square mb-2 sm:mb-2 md:mb-3 bg-muted rounded-lg overflow-hidden">
+                    <div 
+                      className="aspect-square mb-2 sm:mb-2 md:mb-3 bg-muted rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const imgUrl = ovens.find(o => o.model_name === model)?.image_url;
+                        if (imgUrl) setZoomedImage({ url: imgUrl, alt: model });
+                      }}
+                    >
                       <img 
                         src={ovens.find(o => o.model_name === model)?.image_url || '/placeholder.svg'} 
                         alt={model}
@@ -879,7 +888,13 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   onClick={() => setSelectedCoating(coating.name)}
                 >
                   <CardContent className="p-0">
-                    <div className="aspect-square relative">
+                    <div 
+                      className="aspect-square relative cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setZoomedImage({ url: coating.image_url, alt: coating.name });
+                      }}
+                    >
                       <img 
                         src={coating.image_url} 
                         alt={coating.name}
@@ -1009,7 +1024,11 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     <img 
                       src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
                       alt={selectedOven.model_name}
-                      className="w-full h-full object-contain p-2 sm:p-4"
+                      className="w-full h-full object-contain p-2 sm:p-4 cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => setZoomedImage({ 
+                        url: selectedOvenData.coating?.image_url || selectedOven.image_url, 
+                        alt: selectedOven.model_name 
+                      })}
                     />
                   )}
                 </div>
@@ -1019,7 +1038,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   (selectedOven.additional_images && selectedOven.additional_images.length > 0)) && (
                   <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
                     {(selectedOvenData.coating?.render_images || selectedOven.additional_images || []).map((img: string, index: number) => (
-                      <div key={index} className="aspect-square relative overflow-hidden rounded border cursor-pointer hover:opacity-80 transition-opacity bg-muted">
+                      <div 
+                        key={index} 
+                        className="aspect-square relative overflow-hidden rounded border cursor-pointer hover:opacity-80 transition-opacity bg-muted"
+                        onClick={() => setZoomedImage({ 
+                          url: img, 
+                          alt: `${selectedOven.model_name} - ${t('configurator.media.viewAlt')} ${index + 1}` 
+                        })}
+                      >
                         <img 
                           src={img} 
                           alt={`${selectedOven.model_name} - ${t('configurator.media.viewAlt')} ${index + 1}`}
@@ -1057,7 +1083,13 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 
                 {/* Header con immagine e titolo */}
                 <div className="flex items-start gap-4">
-                  <div className="w-20 h-20 md:w-28 md:h-28 bg-background rounded-xl overflow-hidden flex-shrink-0 shadow-md border border-border">
+                  <div 
+                    className="w-20 h-20 md:w-28 md:h-28 bg-background rounded-xl overflow-hidden flex-shrink-0 shadow-md border border-border cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setZoomedImage({ 
+                      url: selectedOvenData.coating?.image_url || selectedOven.image_url, 
+                      alt: selectedOven.model_name 
+                    })}
+                  >
                     <img 
                       src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
                       alt={selectedOven.model_name} 
@@ -1454,6 +1486,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Image Zoom Modal */}
+        <ImageZoomModal
+          isOpen={!!zoomedImage}
+          onClose={() => setZoomedImage(null)}
+          imageUrl={zoomedImage?.url || ''}
+          imageAlt={zoomedImage?.alt || ''}
+        />
       </div>
     </div>
   );
