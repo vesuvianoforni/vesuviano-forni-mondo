@@ -869,6 +869,8 @@
   },
   "configurator": {
     "loading": "Caricamento...",
+    "title": "Configuratore Forni",
+    "subtitle": "Configura il tuo forno perfetto",
     "buildType": {
       "title": "Come preferisci il tuo forno?",
       "readyToUse": "Già Pronto all'Uso",
@@ -880,6 +882,16 @@
     "selectFuel": "Seleziona Alimentazione",
     "selectSize": "Seleziona Dimensione",
     "selectCoating": "Seleziona Rivestimento",
+    "steps": {
+      "chooseFuel": "Scegli l'Alimentazione",
+      "chooseDiameter": "Scegli il Diametro",
+      "chooseCoating": "Scegli il Rivestimento"
+    },
+    "preview": {
+      "fuelTypes": "Alimentazioni",
+      "diameters": "Diametri",
+      "coatings": "Rivestimenti"
+    },
     "fuelTypes": {
       "Legna": "Legna",
       "Gas": "Gas",

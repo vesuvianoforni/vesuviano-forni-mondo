@@ -850,6 +850,8 @@
   },
   "configurator": {
     "loading": "Chargement...",
+    "title": "Configurateur de Fours",
+    "subtitle": "Configurez votre four parfait",
     "buildType": {
       "title": "Comment préférez-vous votre four?",
       "readyToUse": "Prêt à l'Emploi",
@@ -861,6 +863,16 @@
     "selectFuel": "Sélectionner l'Alimentation",
     "selectSize": "Sélectionner la Taille",
     "selectCoating": "Sélectionner le Revêtement",
+    "steps": {
+      "chooseFuel": "Choisir l'Alimentation",
+      "chooseDiameter": "Choisir le Diamètre",
+      "chooseCoating": "Choisir le Revêtement"
+    },
+    "preview": {
+      "fuelTypes": "Alimentations",
+      "diameters": "Diamètres",
+      "coatings": "Revêtements"
+    },
     "fuelTypes": {
       "Legna": "Bois",
       "Gas": "Gaz",
