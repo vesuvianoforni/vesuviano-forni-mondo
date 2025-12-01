@@ -904,5 +904,108 @@
   },
   "footer": {
     "rights": "All rights reserved"
+  },
+  "configurator": {
+    "loading": "Loading...",
+    "buildType": {
+      "title": "How do you prefer your oven?",
+      "readyToUse": "Ready to Use",
+      "readyToUseDesc": "Shipped pre-assembled, ready for installation",
+      "builtOnSite": "Built on Site",
+      "builtOnSiteDesc": "Assembled directly at your location"
+    },
+    "selectModel": "Select Model",
+    "selectFuel": "Select Fuel Type",
+    "selectSize": "Select Size",
+    "selectCoating": "Select Coating",
+    "fuelTypes": {
+      "Legna": "Wood",
+      "Gas": "Gas",
+      "Elettrico": "Electric"
+    },
+    "view360": "View 360° Video",
+    "viewPhotos": "View Photos",
+    "deliveryOptions": {
+      "title": "Delivery Options",
+      "shipping": "Shipping to Europe",
+      "pickupSite": "Pickup at installation site"
+    },
+    "summary": {
+      "title": "Configuration Summary",
+      "model": "Model",
+      "fuel": "Fuel Type",
+      "size": "Size",
+      "diameter": "Diameter",
+      "capacity": "Capacity",
+      "coating": "Coating",
+      "deliveryTime": "Delivery Time",
+      "weeks": "weeks",
+      "ovenPrice": "Oven Price",
+      "shippingPrice": "Shipping Cost",
+      "onSitePrice": "On-Site Build Price",
+      "discount5": "5% Discount (book now)",
+      "savings": "You Save",
+      "total": "Total",
+      "depositAmount": "Deposit Amount (1%)"
+    },
+    "benefits": {
+      "deposit": "1% deposit fully refundable within 7 days",
+      "support": "Our team will call you within 24h to support you",
+      "production": "Your oven production starts tomorrow"
+    },
+    "cta": {
+      "payDeposit": "Pay 1% Deposit — Your oven production starts tomorrow! Don't waste time",
+      "interested": "I want to be contacted",
+      "notInterested": "Not interested"
+    },
+    "contactMethod": {
+      "title": "How do you prefer to be contacted?",
+      "whatsapp": "WhatsApp",
+      "phone": "Phone Call",
+      "submit": "Submit Request"
+    },
+    "thankYou": {
+      "title": "Thank you for your interest!",
+      "message": "Our sales team will contact you within 24 hours via {method}."
+    },
+    "feedback": {
+      "title": "Why are you not interested?",
+      "subtitle": "Your feedback helps us improve",
+      "reasons": {
+        "tooExpensive": "Too expensive",
+        "tooLong": "Takes too long",
+        "urgent": "I need it urgently",
+        "dontLike": "I don't like it",
+        "noModel": "Model not available",
+        "otherSupplier": "I prefer another supplier"
+      },
+      "otherReason": "Other reason...",
+      "submit": "Send Feedback",
+      "submitting": "Sending..."
+    },
+    "errors": {
+      "loadingError": "Loading error",
+      "completeConfig": "Complete the configuration",
+      "missingCustomer": "Customer data missing",
+      "selectContactMethod": "Select a contact method",
+      "savingError": "Error saving"
+    },
+    "success": {
+      "thankYouInterest": "Thank you for your interest! We will contact you soon.",
+      "quoteSaved": "Quote saved!",
+      "feedbackSent": "Thank you for your feedback!"
+    },
+    "expired": {
+      "greeting": "Hello {name}",
+      "greetingGeneric": "Hello",
+      "message": "This link has expired. Request a new link from our sales team, it will be provided shortly.",
+      "returnHome": "Return to Home",
+      "requestNew": "Request New Link",
+      "requesting": "Sending...",
+      "invalidLink": "Invalid link",
+      "requestSent": "Request sent! Our sales team will contact you shortly.",
+      "requestError": "Error sending request",
+      "missingData": "Customer data missing"
+    }
   }
 }

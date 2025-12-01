@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -70,6 +71,7 @@ interface ConfiguratorProps {
 }
 
 const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
+  const { t, i18n } = useTranslation();
   const [ovens, setOvens] = useState<ConfiguratorOven[]>([]);
   const [options, setOptions] = useState<ConfiguratorOption[]>([]);
   const [loading, setLoading] = useState(true);
@@ -108,6 +110,15 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   useEffect(() => { 
     fetchData(); 
     if (sessionId) loadSessionData();
+  }, []);
+
+  // Auto-detect browser language
+  useEffect(() => {
+    const browserLang = navigator.language.split('-')[0];
+    const supportedLangs = ['it', 'en', 'fr'];
+    if (supportedLangs.includes(browserLang) && i18n.language !== browserLang) {
+      i18n.changeLanguage(browserLang);
+    }
   }, []);
 
   const loadSessionData = async () => {
@@ -150,7 +161,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
       setOvens((ovensResult.data as unknown as ConfiguratorOven[]) || []);
       setOptions(optionsResult.data || []);
     } catch (error) {
-      toast.error('Errore nel caricamento');
+      toast.error(t('configurator.errors.loadingError'));
     } finally {
       setLoading(false);
     }
@@ -375,7 +386,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   }, [selectedCoating]);
 
   const handleSaveQuote = async () => {
-    if (!selectedOven) { toast.error('Completa la configurazione'); return; }
+    if (!selectedOven) { toast.error(t('configurator.errors.completeConfig')); return; }
     setSavingQuote(true);
     try {
       const { data: quoteData, error: quoteError } = await supabase.from('configurator_quotes').insert({
@@ -425,13 +436,13 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         });
       }
       
-      toast.success(sessionId ? 'Grazie per il tuo interesse! Ti contatteremo presto.' : 'Preventivo salvato!');
+      toast.success(sessionId ? t('configurator.success.thankYouInterest') : t('configurator.success.quoteSaved'));
       setShowQuoteModal(false);
       setSelectedModel(''); setSelectedFuelType(''); setSelectedDiameter('');
       setDeliveryOption('');
       setCustomerName(''); setCustomerEmail(''); setCustomerPhone(''); setNotes('');
     } catch (error) {
-      toast.error('Errore nel salvare');
+      toast.error(t('configurator.errors.savingError'));
     } finally {
       setSavingQuote(false);
     }
@@ -439,12 +450,12 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
   const handleInterestedClick = async () => {
     if (!selectedOven) {
-      toast.error('Completa la configurazione');
+      toast.error(t('configurator.errors.completeConfig'));
       return;
     }
 
     if (!customerData?.name || !customerData?.email || !customerData?.phone) {
-      toast.error('Dati cliente mancanti');
+      toast.error(t('configurator.errors.missingCustomer'));
       return;
     }
 
@@ -454,7 +465,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
   const handleContactMethodSubmit = async () => {
     if (!selectedContactMethod) {
-      toast.error('Seleziona un metodo di contatto');
+      toast.error(t('configurator.errors.selectContactMethod'));
       return;
     }
 
@@ -520,7 +531,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
       setShowThankYouMessage(true);
     } catch (error) {
       console.error('Error saving interested status:', error);
-      toast.error('Errore durante il salvataggio');
+      toast.error(t('configurator.errors.savingError'));
     } finally {
       setSavingQuote(false);
     }
@@ -528,7 +539,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
   const handleNotInterestedSubmit = async () => {
     if (feedbackReasons.length === 0 && !otherReason.trim()) {
-      toast.error('Seleziona almeno una motivazione o inserisci un commento');
+      toast.error(t('configurator.feedback.subtitle'));
       return;
     }
 
@@ -551,13 +562,13 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           .eq('id', sessionId);
       }
 
-      toast.success('Grazie per il tuo feedback!');
+      toast.success(t('configurator.success.feedbackSent'));
       setShowNotInterestedModal(false);
       setFeedbackReasons([]);
       setOtherReason('');
     } catch (error) {
       console.error('Error saving feedback:', error);
-      toast.error('Errore durante l\'invio del feedback');
+      toast.error(t('configurator.errors.savingError'));
     } finally {
       setSavingFeedback(false);
     }
@@ -573,7 +584,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
   const handleDepositPayment = async () => {
     if (!selectedOven || !customerData?.name || !customerData?.email || !customerData?.phone) {
-      toast.error('Completa tutti i dati richiesti');
+      toast.error(t('configurator.errors.completeConfig'));
       return;
     }
 
@@ -669,11 +680,11 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
     <div className="min-h-screen bg-background py-4 sm:py-6 md:py-12 px-3 sm:px-4 pb-24 md:pb-12">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-4 sm:mb-6 md:mb-12">
-          <h1 className="text-xl sm:text-2xl md:text-4xl font-bold mb-1 sm:mb-2">Configuratore Forni</h1>
+          <h1 className="text-xl sm:text-2xl md:text-4xl font-bold mb-1 sm:mb-2">{t('configurator.selectModel')}</h1>
           {customerData ? (
             <div className="space-y-1 sm:space-y-2">
               <p className="text-muted-foreground text-sm sm:text-base md:text-lg">
-                Configura il tuo forno perfetto, <span className="font-semibold text-foreground">{customerData.name}</span>
+                {t('configurator.selectModel')}, <span className="font-semibold text-foreground">{customerData.name}</span>
               </p>
               <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 items-center justify-center text-xs sm:text-sm text-muted-foreground">
                 <span className="flex items-center gap-1">
@@ -686,13 +697,13 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               </div>
             </div>
           ) : (
-            <p className="text-muted-foreground text-xs sm:text-sm md:text-base">Configura il tuo forno perfetto</p>
+            <p className="text-muted-foreground text-xs sm:text-sm md:text-base">{t('configurator.selectModel')}</p>
           )}
         </div>
         
         {/* Step 0: Build Type Selection */}
         <div className="mb-4 sm:mb-6 md:mb-8">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">1. Come preferisci il tuo forno?</h2>
+          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">1. {t('configurator.buildType.title')}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-3xl mx-auto">
             <Card 
               className={`cursor-pointer transition-all hover:shadow-lg active:scale-[0.98] ${buildType === 'ready_to_use' ? 'ring-2 ring-primary' : ''}`}
