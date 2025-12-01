@@ -1100,6 +1100,108 @@
         "generated": "Render generato con successo!",
         "downloaded": "Download completato!"
       }
+    },
+    "colorRender": {
+      "title": "Render Real Time",
+      "subtitle": "Visualizza il forno con il colore selezionato in tempo reale",
+      "selectedCoating": "Rivestimento selezionato:",
+      "desiredColor": "Colore desiderato",
+      "customColor": "Colore Personalizzato",
+      "customColorPlaceholder": "Es: Rosso Ferrari, Blu Oceano, Verde Bosco...",
+      "customColorDescription": "Descrivi il colore che desideri (max 50 caratteri)",
+      "selected": "Selezionato:",
+      "generateButton": "Genera Render Real Time",
+      "generateDescription": "Visualizza il render del forno nel colore selezionato",
+      "downloadButton": "Scarica Immagine",
+      "colors": {
+        "Nero": "Nero",
+        "Bianco": "Bianco",
+        "Rosso Mattone": "Rosso Mattone",
+        "Grigio Pietra": "Grigio Pietra",
+        "Terracotta": "Terracotta",
+        "Beige": "Beige",
+        "Marrone": "Marrone",
+        "Verde Oliva": "Verde Oliva"
+      },
+      "errors": {
+        "selectColor": "Seleziona un colore o inserisci un colore personalizzato!",
+        "maxLength": "Il colore personalizzato non può superare i 50 caratteri",
+        "invalidChars": "Il colore può contenere solo lettere, numeri, spazi e trattini"
+      },
+      "success": {
+        "generated": "Render generato con successo!",
+        "downloaded": "Download avviato!"
+      }
+    },
+    "architectAI": {
+      "title": "Architetto AI",
+      "subtitle": "Inserisci il forno nel tuo ambiente con l'intelligenza artificiale",
+      "takePhoto": "Scatta una Foto",
+      "takePhotoDescription": "Usa la fotocamera",
+      "uploadImage": "Carica Immagine",
+      "uploadImageDescription": "Dal tuo dispositivo",
+      "or": "OPPURE",
+      "generateButton": "Genera Render con AI",
+      "downloadButton": "Scarica Render",
+      "errors": {
+        "noImage": "Carica prima una foto del tuo ambiente",
+        "generationFailed": "Errore nella generazione del render"
+      },
+      "success": {
+        "generated": "Render generato con successo!",
+        "downloaded": "Download completato!"
+      }
+    }
+  },
+  "colorRender": {
+    "title": "Render Real Time",
+    "subtitle": "Visualizza il forno con il colore selezionato in tempo reale",
+    "selectedCoating": "Rivestimento selezionato:",
+    "desiredColor": "Colore desiderato",
+    "customColor": "Colore Personalizzato",
+    "customColorPlaceholder": "Es: Rosso Ferrari, Blu Oceano, Verde Bosco...",
+    "customColorDescription": "Descrivi il colore che desideri (max 50 caratteri)",
+    "selected": "Selezionato:",
+    "generateButton": "Genera Render Real Time",
+    "generateDescription": "Visualizza il render del forno nel colore selezionato",
+    "downloadButton": "Scarica Immagine",
+    "colors": {
+      "Nero": "Nero",
+      "Bianco": "Bianco",
+      "Rosso Mattone": "Rosso Mattone",
+      "Grigio Pietra": "Grigio Pietra",
+      "Terracotta": "Terracotta",
+      "Beige": "Beige",
+      "Marrone": "Marrone",
+      "Verde Oliva": "Verde Oliva"
+    },
+    "errors": {
+      "selectColor": "Seleziona un colore o inserisci un colore personalizzato!",
+      "maxLength": "Il colore personalizzato non può superare i 50 caratteri",
+      "invalidChars": "Il colore può contenere solo lettere, numeri, spazi e trattini"
+    },
+    "success": {
+      "generated": "Render generato con successo!",
+      "downloaded": "Download avviato!"
+    }
+  },
+  "architectAI": {
+    "title": "Architetto AI",
+    "subtitle": "Inserisci il forno nel tuo ambiente con l'intelligenza artificiale",
+    "takePhoto": "Scatta una Foto",
+    "takePhotoDescription": "Usa la fotocamera",
+    "uploadImage": "Carica Immagine",
+    "uploadImageDescription": "Dal tuo dispositivo",
+    "or": "OPPURE",
+    "generateButton": "Genera Render con AI",
+    "downloadButton": "Scarica Render",
+    "errors": {
+      "noImage": "Carica prima una foto del tuo ambiente",
+      "generationFailed": "Errore nella generazione del render"
+    },
+    "success": {
+      "generated": "Render generato con successo!",
+      "downloaded": "Download completato!"
     }
   }
 }
