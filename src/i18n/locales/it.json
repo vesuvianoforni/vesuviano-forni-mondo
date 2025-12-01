@@ -872,9 +872,9 @@
     "buildType": {
       "title": "Come preferisci il tuo forno?",
       "readyToUse": "Già Pronto all'Uso",
-      "readyToUseDesc": "Spedito pre-assemblato, pronto per l'installazione",
+      "readyToUseDesc": "Forno costruito artigianalmente nel nostro laboratorio e spedito pronto all'uso. Richiede spazio adeguato per il passaggio.",
       "builtOnSite": "Costruito sul Posto",
-      "builtOnSiteDesc": "Assemblato direttamente nella tua location"
+      "builtOnSiteDesc": "Il forno viene costruito direttamente presso la tua sede dai nostri artigiani esperti. Ideale per spazi ridotti o installazioni personalizzate."
     },
     "selectModel": "Seleziona il Modello",
     "selectFuel": "Seleziona Alimentazione",

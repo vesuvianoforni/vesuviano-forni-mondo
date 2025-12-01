@@ -853,9 +853,9 @@
     "buildType": {
       "title": "Comment préférez-vous votre four?",
       "readyToUse": "Prêt à l'Emploi",
-      "readyToUseDesc": "Expédié pré-assemblé, prêt pour l'installation",
+      "readyToUseDesc": "Four construit artisanalement dans notre laboratoire et expédié prêt à l'emploi. Nécessite un espace adéquat pour le passage.",
       "builtOnSite": "Construit sur Place",
-      "builtOnSiteDesc": "Assemblé directement chez vous"
+      "builtOnSiteDesc": "Le four est construit directement chez vous par nos artisans experts. Idéal pour les espaces réduits ou les installations personnalisées."
     },
     "selectModel": "Sélectionner le Modèle",
     "selectFuel": "Sélectionner l'Alimentation",
