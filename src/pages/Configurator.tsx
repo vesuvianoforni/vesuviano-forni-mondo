@@ -111,7 +111,6 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   const [selectedContactMethod, setSelectedContactMethod] = useState<'whatsapp' | 'phone' | ''>('');
   const [showThankYouMessage, setShowThankYouMessage] = useState(false);
   const [zoomedImage, setZoomedImage] = useState<{ url: string; alt: string } | null>(null);
-  const [pressedImage, setPressedImage] = useState<{ url: string; alt: string } | null>(null);
 
   useEffect(() => { 
     fetchData(); 
@@ -1108,17 +1107,10 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     {/* Immagine principale */}
                     <div 
                       className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border cursor-pointer select-none active:scale-95 transition-transform"
-                      onMouseDown={() => setPressedImage({ 
+                      onClick={() => setZoomedImage({ 
                         url: selectedOvenData.coating?.image_url || selectedOven.image_url, 
                         alt: selectedOven.model_name 
                       })}
-                      onMouseUp={() => setPressedImage(null)}
-                      onMouseLeave={() => setPressedImage(null)}
-                      onTouchStart={() => setPressedImage({ 
-                        url: selectedOvenData.coating?.image_url || selectedOven.image_url, 
-                        alt: selectedOven.model_name 
-                      })}
-                      onTouchEnd={() => setPressedImage(null)}
                     >
                       <img 
                         src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
@@ -1131,17 +1123,10 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     {colorRenderImageUrl && (
                       <div 
                         className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border relative cursor-pointer select-none active:scale-95 transition-transform"
-                        onMouseDown={() => setPressedImage({ 
+                        onClick={() => setZoomedImage({ 
                           url: colorRenderImageUrl, 
                           alt: `${selectedOven.model_name} - ${selectedColorForRender}` 
                         })}
-                        onMouseUp={() => setPressedImage(null)}
-                        onMouseLeave={() => setPressedImage(null)}
-                        onTouchStart={() => setPressedImage({ 
-                          url: colorRenderImageUrl, 
-                          alt: `${selectedOven.model_name} - ${selectedColorForRender}` 
-                        })}
-                        onTouchEnd={() => setPressedImage(null)}
                       >
                         <img 
                           src={colorRenderImageUrl} 
@@ -1160,17 +1145,10 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     {architectAIRenderUrl && (
                       <div 
                         className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border relative cursor-pointer select-none active:scale-95 transition-transform"
-                        onMouseDown={() => setPressedImage({ 
+                        onClick={() => setZoomedImage({ 
                           url: architectAIRenderUrl, 
                           alt: `${selectedOven.model_name} - Architetto AI` 
                         })}
-                        onMouseUp={() => setPressedImage(null)}
-                        onMouseLeave={() => setPressedImage(null)}
-                        onTouchStart={() => setPressedImage({ 
-                          url: architectAIRenderUrl, 
-                          alt: `${selectedOven.model_name} - Architetto AI` 
-                        })}
-                        onTouchEnd={() => setPressedImage(null)}
                       >
                         <img 
                           src={architectAIRenderUrl} 
@@ -1585,17 +1563,6 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           imageUrl={zoomedImage?.url || ''}
           imageAlt={zoomedImage?.alt || ''}
         />
-
-        {/* Pressed Image Preview Overlay */}
-        {pressedImage && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 animate-in fade-in duration-200">
-            <img
-              src={pressedImage.url}
-              alt={pressedImage.alt}
-              className="max-w-[90vw] max-h-[90vh] object-contain"
-            />
-          </div>
-        )}
       </div>
     </div>
   );
