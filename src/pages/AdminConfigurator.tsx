@@ -10,6 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import EditOvenModal from '@/components/admin/EditOvenModal';
 import { AddOvenModal } from '@/components/admin/AddOvenModal';
+import EditOptionModal from '@/components/admin/EditOptionModal';
+import AddOptionModal from '@/components/admin/AddOptionModal';
 import { LogOut, Edit, Plus, Trash2, TrendingUp, Users, CheckCircle, Clock, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
@@ -22,6 +24,8 @@ const AdminConfigurator = () => {
   const [loading, setLoading] = useState(true);
   const [editingOven, setEditingOven] = useState<any>(null);
   const [showAddOven, setShowAddOven] = useState(false);
+  const [editingOption, setEditingOption] = useState<any>(null);
+  const [showAddOption, setShowAddOption] = useState(false);
   const [sessions, setSessions] = useState<any[]>([]);
 
   useEffect(() => { 
@@ -96,6 +100,25 @@ const AdminConfigurator = () => {
     } catch (error) {
       console.error('Errore eliminazione forno:', error);
       toast.error('Errore durante l\'eliminazione del forno');
+    }
+  };
+
+  const handleDeleteOption = async (optionId: string) => {
+    if (!confirm('Sei sicuro di voler eliminare questa opzione?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('configurator_options')
+        .delete()
+        .eq('id', optionId);
+
+      if (error) throw error;
+
+      toast.success('Opzione eliminata con successo');
+      fetchData();
+    } catch (error) {
+      console.error('Errore eliminazione opzione:', error);
+      toast.error('Errore durante l\'eliminazione dell\'opzione');
     }
   };
 
@@ -319,10 +342,22 @@ const AdminConfigurator = () => {
           </TabsContent>
           <TabsContent value="options">
             <Card>
-              <CardHeader><CardTitle>Opzioni Disponibili</CardTitle></CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Opzioni Disponibili</CardTitle>
+                <Button onClick={() => setShowAddOption(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Aggiungi Opzione
+                </Button>
+              </CardHeader>
               <Table>
                 <TableHeader>
-                  <TableRow><TableHead>Nome</TableHead><TableHead>Tipo</TableHead><TableHead>Prezzo</TableHead><TableHead>Stato</TableHead></TableRow>
+                  <TableRow>
+                    <TableHead>Nome</TableHead>
+                    <TableHead>Tipo</TableHead>
+                    <TableHead>Prezzo</TableHead>
+                    <TableHead>Stato</TableHead>
+                    <TableHead>Azioni</TableHead>
+                  </TableRow>
                 </TableHeader>
                 <TableBody>
                   {options.map((opt: any) => (
@@ -330,7 +365,26 @@ const AdminConfigurator = () => {
                       <TableCell>{opt.name}</TableCell>
                       <TableCell>{opt.type}</TableCell>
                       <TableCell>€{opt.price}</TableCell>
-                      <TableCell><Badge variant={opt.is_active ? 'default' : 'secondary'}>{opt.is_active ? 'Attivo' : 'Inattivo'}</Badge></TableCell>
+                      <TableCell>
+                        <Badge variant={opt.is_active ? 'default' : 'secondary'}>
+                          {opt.is_active ? 'Attivo' : 'Inattivo'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="ghost" onClick={() => setEditingOption(opt)}>
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            onClick={() => handleDeleteOption(opt.id)}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -371,6 +425,21 @@ const AdminConfigurator = () => {
         <AddOvenModal
           open={showAddOven}
           onClose={() => setShowAddOven(false)}
+          onSuccess={fetchData}
+        />
+      )}
+      {editingOption && (
+        <EditOptionModal
+          option={editingOption}
+          open={!!editingOption}
+          onClose={() => setEditingOption(null)}
+          onUpdate={fetchData}
+        />
+      )}
+      {showAddOption && (
+        <AddOptionModal
+          open={showAddOption}
+          onClose={() => setShowAddOption(false)}
           onSuccess={fetchData}
         />
       )}
