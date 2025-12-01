@@ -215,6 +215,14 @@ const SessionsCRM = () => {
         </Badge>
       );
     }
+    if (session.status === 'link_renewal_requested') {
+      return (
+        <Badge className="bg-amber-600 hover:bg-amber-700 text-white">
+          <RefreshCw className="w-3 h-3 mr-1" />
+          Rinnovo Richiesto
+        </Badge>
+      );
+    }
     if (session.status === 'interested' || session.feedback_status === 'interested') {
       return (
         <Badge className="bg-orange-600 hover:bg-orange-700 text-white">
@@ -274,8 +282,9 @@ const SessionsCRM = () => {
 
   const groupSessionsByStatus = () => {
     const groups = {
-      nuovo: sessions.filter(s => !s.is_used),
-      aperto: sessions.filter(s => s.is_used && !s.feedback_status && s.status !== 'payment_initiated' && !s.configurator_quotes?.payment_completed),
+      nuovo: sessions.filter(s => !s.is_used && s.status !== 'link_renewal_requested'),
+      aperto: sessions.filter(s => s.is_used && !s.feedback_status && s.status !== 'payment_initiated' && s.status !== 'link_renewal_requested' && !s.configurator_quotes?.payment_completed),
+      rinnovoRichiesto: sessions.filter(s => s.status === 'link_renewal_requested'),
       interessato: sessions.filter(s => (s.status === 'interested' || s.feedback_status === 'interested') && !s.configurator_quotes?.payment_completed),
       pagamento: sessions.filter(s => s.status === 'payment_initiated' && !s.configurator_quotes?.payment_completed),
       pagato: sessions.filter(s => s.configurator_quotes?.payment_completed),
@@ -308,6 +317,7 @@ const SessionsCRM = () => {
           style={{
           borderLeftColor: session.configurator_quotes?.payment_completed ? '#16a34a' : 
                            session.status === 'payment_initiated' ? '#2563eb' :
+                           session.status === 'link_renewal_requested' ? '#d97706' :
                            session.status === 'interested' || session.feedback_status === 'interested' ? '#ea580c' :
                            session.feedback_status === 'not_interested' ? '#dc2626' :
                            session.is_used ? '#57534e' : '#e5e7eb'
@@ -678,6 +688,25 @@ const SessionsCRM = () => {
                   {kanbanGroups.aperto.length === 0 && (
                     <div className="text-center p-8 text-sm text-muted-foreground bg-muted/30 rounded-lg border-2 border-dashed">
                       Nessuna sessione aperta
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Colonna Rinnovo Richiesto */}
+              <div className="w-[280px] flex-shrink-0 space-y-3">
+                <div className="bg-card border-2 rounded-lg p-3 sticky top-0 z-10 shadow-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-3 h-3 rounded-full bg-amber-600"></div>
+                    <h3 className="font-semibold text-sm">Rinnovo Richiesto</h3>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{kanbanGroups.rinnovoRichiesto.length} link</p>
+                </div>
+                <div className="space-y-3">
+                  {kanbanGroups.rinnovoRichiesto.map(session => renderSessionCard(session, true))}
+                  {kanbanGroups.rinnovoRichiesto.length === 0 && (
+                    <div className="text-center p-8 text-sm text-muted-foreground bg-muted/30 rounded-lg border-2 border-dashed">
+                      Nessun rinnovo richiesto
                     </div>
                   )}
                 </div>
