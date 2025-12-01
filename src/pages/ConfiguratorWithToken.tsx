@@ -1,5 +1,6 @@
 import { useParams, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { supabase } from "@/integrations/supabase/client";
 import Configurator from "./Configurator";
 import { toast } from "sonner";
@@ -14,6 +15,7 @@ import { Button } from "@/components/ui/button";
 
 export default function ConfiguratorWithToken() {
   const { token } = useParams();
+  const { t, i18n } = useTranslation();
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState(false);
@@ -22,6 +24,15 @@ export default function ConfiguratorWithToken() {
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [requestingNewLink, setRequestingNewLink] = useState(false);
+
+  // Auto-detect browser language
+  useEffect(() => {
+    const browserLang = navigator.language.split('-')[0];
+    const supportedLangs = ['it', 'en', 'fr'];
+    if (supportedLangs.includes(browserLang) && i18n.language !== browserLang) {
+      i18n.changeLanguage(browserLang);
+    }
+  }, []);
 
   useEffect(() => {
     const validateToken = async () => {
@@ -77,7 +88,7 @@ export default function ConfiguratorWithToken() {
 
   const handleRequestNewLink = async () => {
     if (!customerName || !customerEmail || !customerPhone) {
-      toast.error("Dati cliente mancanti");
+      toast.error(t('configurator.expired.missingData'));
       return;
     }
 
@@ -94,13 +105,13 @@ export default function ConfiguratorWithToken() {
 
       if (error) throw error;
 
-      toast.success("Richiesta inviata! Un nostro commerciale ti contatterà a breve.");
+      toast.success(t('configurator.expired.requestSent'));
       setTimeout(() => {
         window.location.href = "/";
       }, 2000);
     } catch (error) {
       console.error("Error requesting new link:", error);
-      toast.error("Errore nell'invio della richiesta");
+      toast.error(t('configurator.expired.requestError'));
     } finally {
       setRequestingNewLink(false);
     }
@@ -111,7 +122,7 @@ export default function ConfiguratorWithToken() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p>Caricamento...</p>
+          <p>{t('configurator.loading')}</p>
         </div>
       </div>
     );
@@ -126,10 +137,10 @@ export default function ConfiguratorWithToken() {
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle className="text-xl">
-                {customerName ? `Ciao ${customerName}` : "Ciao"}
+                {customerName ? t('configurator.expired.greeting', { name: customerName }) : t('configurator.expired.greetingGeneric')}
               </DialogTitle>
               <DialogDescription className="text-base pt-4">
-                Questo link è scaduto. Richiedi un nuovo link ai nostri commerciali, ti verrà fornito a breve.
+                {t('configurator.expired.message')}
               </DialogDescription>
             </DialogHeader>
             <div className="flex gap-3 justify-end pt-4">
@@ -137,20 +148,20 @@ export default function ConfiguratorWithToken() {
                 variant="outline" 
                 onClick={() => window.location.href = "/"}
               >
-                Torna alla Home
+                {t('configurator.expired.returnHome')}
               </Button>
               <Button 
                 onClick={handleRequestNewLink}
                 disabled={requestingNewLink || !customerEmail}
               >
-                {requestingNewLink ? "Invio..." : "Richiedi Nuovo Link"}
+                {requestingNewLink ? t('configurator.expired.requesting') : t('configurator.expired.requestNew')}
               </Button>
             </div>
           </DialogContent>
         </Dialog>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <p>Link non valido</p>
+            <p>{t('configurator.expired.invalidLink')}</p>
           </div>
         </div>
       </>

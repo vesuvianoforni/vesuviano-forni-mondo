@@ -866,5 +866,108 @@
   },
   "footer": {
     "rights": "Tutti i diritti riservati"
+  },
+  "configurator": {
+    "loading": "Caricamento...",
+    "buildType": {
+      "title": "Come preferisci il tuo forno?",
+      "readyToUse": "Già Pronto all'Uso",
+      "readyToUseDesc": "Spedito pre-assemblato, pronto per l'installazione",
+      "builtOnSite": "Costruito sul Posto",
+      "builtOnSiteDesc": "Assemblato direttamente nella tua location"
+    },
+    "selectModel": "Seleziona il Modello",
+    "selectFuel": "Seleziona Alimentazione",
+    "selectSize": "Seleziona Dimensione",
+    "selectCoating": "Seleziona Rivestimento",
+    "fuelTypes": {
+      "Legna": "Legna",
+      "Gas": "Gas",
+      "Elettrico": "Elettrico"
+    },
+    "view360": "Vedi Video 360°",
+    "viewPhotos": "Vedi Foto",
+    "deliveryOptions": {
+      "title": "Opzioni di Consegna",
+      "shipping": "Spedizione in Europa",
+      "pickupSite": "Ritiro presso il sito di installazione"
+    },
+    "summary": {
+      "title": "Riepilogo Configurazione",
+      "model": "Modello",
+      "fuel": "Alimentazione",
+      "size": "Dimensione",
+      "diameter": "Diametro",
+      "capacity": "Capacità",
+      "coating": "Rivestimento",
+      "deliveryTime": "Tempo di Consegna",
+      "weeks": "settimane",
+      "ovenPrice": "Prezzo Forno",
+      "shippingPrice": "Costo Spedizione",
+      "onSitePrice": "Prezzo Costruzione sul Posto",
+      "discount5": "Sconto 5% (prenota subito)",
+      "savings": "Risparmi",
+      "total": "Totale",
+      "depositAmount": "Importo Acconto (1%)"
+    },
+    "benefits": {
+      "deposit": "Acconto 1% completamente rimborsabile entro 7 giorni",
+      "support": "Chiamata del nostro team entro 24h per supportarti",
+      "production": "La produzione del tuo forno inizia domani"
+    },
+    "cta": {
+      "payDeposit": "Paga Acconto 1% — La produzione del tuo forno inizia da domani! Non perdi tempo",
+      "interested": "Voglio essere contattato",
+      "notInterested": "Non sono interessato"
+    },
+    "contactMethod": {
+      "title": "Come preferisci essere contattato?",
+      "whatsapp": "WhatsApp",
+      "phone": "Chiamata Telefonica",
+      "submit": "Invia Richiesta"
+    },
+    "thankYou": {
+      "title": "Grazie per il tuo interesse!",
+      "message": "Il nostro team commerciale ti contatterà entro 24 ore tramite {method}."
+    },
+    "feedback": {
+      "title": "Perché non sei interessato?",
+      "subtitle": "Il tuo feedback ci aiuta a migliorare",
+      "reasons": {
+        "tooExpensive": "Troppo caro",
+        "tooLong": "Troppo tempo per realizzare",
+        "urgent": "Mi serve urgente",
+        "dontLike": "Non mi piace",
+        "noModel": "Non c'è il modello che cerco",
+        "otherSupplier": "Preferisco un altro fornitore"
+      },
+      "otherReason": "Altro motivo...",
+      "submit": "Invia Feedback",
+      "submitting": "Invio..."
+    },
+    "errors": {
+      "loadingError": "Errore nel caricamento",
+      "completeConfig": "Completa la configurazione",
+      "missingCustomer": "Dati cliente mancanti",
+      "selectContactMethod": "Seleziona un metodo di contatto",
+      "savingError": "Errore nel salvare"
+    },
+    "success": {
+      "thankYouInterest": "Grazie per il tuo interesse! Ti contatteremo presto.",
+      "quoteSaved": "Preventivo salvato!",
+      "feedbackSent": "Grazie per il tuo feedback!"
+    },
+    "expired": {
+      "greeting": "Ciao {name}",
+      "greetingGeneric": "Ciao",
+      "message": "Questo link è scaduto. Richiedi un nuovo link ai nostri commerciali, ti verrà fornito a breve.",
+      "returnHome": "Torna alla Home",
+      "requestNew": "Richiedi Nuovo Link",
+      "requesting": "Invio...",
+      "invalidLink": "Link non valido",
+      "requestSent": "Richiesta inviata! Un nostro commerciale ti contatterà a breve.",
+      "requestError": "Errore nell'invio della richiesta",
+      "missingData": "Dati cliente mancanti"
+    }
   }
 }

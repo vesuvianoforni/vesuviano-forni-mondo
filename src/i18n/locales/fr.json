@@ -847,5 +847,108 @@
   },
   "footer": {
     "rights": "Tous droits réservés"
+  },
+  "configurator": {
+    "loading": "Chargement...",
+    "buildType": {
+      "title": "Comment préférez-vous votre four?",
+      "readyToUse": "Prêt à l'Emploi",
+      "readyToUseDesc": "Expédié pré-assemblé, prêt pour l'installation",
+      "builtOnSite": "Construit sur Place",
+      "builtOnSiteDesc": "Assemblé directement chez vous"
+    },
+    "selectModel": "Sélectionner le Modèle",
+    "selectFuel": "Sélectionner l'Alimentation",
+    "selectSize": "Sélectionner la Taille",
+    "selectCoating": "Sélectionner le Revêtement",
+    "fuelTypes": {
+      "Legna": "Bois",
+      "Gas": "Gaz",
+      "Elettrico": "Électrique"
+    },
+    "view360": "Voir Vidéo 360°",
+    "viewPhotos": "Voir Photos",
+    "deliveryOptions": {
+      "title": "Options de Livraison",
+      "shipping": "Expédition en Europe",
+      "pickupSite": "Retrait sur le site d'installation"
+    },
+    "summary": {
+      "title": "Résumé de Configuration",
+      "model": "Modèle",
+      "fuel": "Alimentation",
+      "size": "Taille",
+      "diameter": "Diamètre",
+      "capacity": "Capacité",
+      "coating": "Revêtement",
+      "deliveryTime": "Délai de Livraison",
+      "weeks": "semaines",
+      "ovenPrice": "Prix du Four",
+      "shippingPrice": "Frais d'Expédition",
+      "onSitePrice": "Prix Construction sur Place",
+      "discount5": "Réduction 5% (réserver maintenant)",
+      "savings": "Vous économisez",
+      "total": "Total",
+      "depositAmount": "Montant de l'Acompte (1%)"
+    },
+    "benefits": {
+      "deposit": "Acompte 1% entièrement remboursable sous 7 jours",
+      "support": "Appel de notre équipe dans les 24h pour vous soutenir",
+      "production": "La production de votre four commence demain"
+    },
+    "cta": {
+      "payDeposit": "Payer Acompte 1% — La production de votre four commence demain! Ne perdez pas de temps",
+      "interested": "Je veux être contacté",
+      "notInterested": "Pas intéressé"
+    },
+    "contactMethod": {
+      "title": "Comment préférez-vous être contacté?",
+      "whatsapp": "WhatsApp",
+      "phone": "Appel Téléphonique",
+      "submit": "Envoyer la Demande"
+    },
+    "thankYou": {
+      "title": "Merci pour votre intérêt!",
+      "message": "Notre équipe commerciale vous contactera dans les 24 heures par {method}."
+    },
+    "feedback": {
+      "title": "Pourquoi n'êtes-vous pas intéressé?",
+      "subtitle": "Votre retour nous aide à améliorer",
+      "reasons": {
+        "tooExpensive": "Trop cher",
+        "tooLong": "Prend trop de temps",
+        "urgent": "J'en ai besoin urgemment",
+        "dontLike": "Je n'aime pas",
+        "noModel": "Modèle non disponible",
+        "otherSupplier": "Je préfère un autre fournisseur"
+      },
+      "otherReason": "Autre raison...",
+      "submit": "Envoyer Retour",
+      "submitting": "Envoi..."
+    },
+    "errors": {
+      "loadingError": "Erreur de chargement",
+      "completeConfig": "Complétez la configuration",
+      "missingCustomer": "Données client manquantes",
+      "selectContactMethod": "Sélectionnez une méthode de contact",
+      "savingError": "Erreur lors de l'enregistrement"
+    },
+    "success": {
+      "thankYouInterest": "Merci pour votre intérêt! Nous vous contacterons bientôt.",
+      "quoteSaved": "Devis enregistré!",
+      "feedbackSent": "Merci pour votre retour!"
+    },
+    "expired": {
+      "greeting": "Bonjour {name}",
+      "greetingGeneric": "Bonjour",
+      "message": "Ce lien a expiré. Demandez un nouveau lien à notre équipe commerciale, il sera fourni sous peu.",
+      "returnHome": "Retour à l'Accueil",
+      "requestNew": "Demander un Nouveau Lien",
+      "requesting": "Envoi...",
+      "invalidLink": "Lien invalide",
+      "requestSent": "Demande envoyée! Notre équipe commerciale vous contactera sous peu.",
+      "requestError": "Erreur lors de l'envoi de la demande",
+      "missingData": "Données client manquantes"
+    }
   }
 }
