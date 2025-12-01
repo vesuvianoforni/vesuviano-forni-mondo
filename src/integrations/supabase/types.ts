@@ -256,6 +256,7 @@ export type Database = {
           customer_info: Json | null
           customer_name: string | null
           customer_phone: string | null
+          erp_webhook_url: string | null
           expires_at: string | null
           feedback_date: string | null
           feedback_reason: string | null
@@ -277,6 +278,7 @@ export type Database = {
           customer_info?: Json | null
           customer_name?: string | null
           customer_phone?: string | null
+          erp_webhook_url?: string | null
           expires_at?: string | null
           feedback_date?: string | null
           feedback_reason?: string | null
@@ -298,6 +300,7 @@ export type Database = {
           customer_info?: Json | null
           customer_name?: string | null
           customer_phone?: string | null
+          erp_webhook_url?: string | null
           expires_at?: string | null
           feedback_date?: string | null
           feedback_reason?: string | null

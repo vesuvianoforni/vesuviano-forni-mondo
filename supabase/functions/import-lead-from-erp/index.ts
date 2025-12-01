@@ -25,7 +25,7 @@ Deno.serve(async (req) => {
     }
 
     // Parse request body
-    const { name, email, phone, pipeline_id, price_list = 'A' } = await req.json();
+    const { name, email, phone, pipeline_id, price_list = 'A', erp_webhook_url } = await req.json();
 
     // Validate required fields
     if (!name || !email || !phone) {
@@ -90,6 +90,7 @@ Deno.serve(async (req) => {
         is_used: false,
         customer_info: customerInfo,
         created_by: null, // Imported from ERP, not created by admin
+        erp_webhook_url: erp_webhook_url || null,
       })
       .select()
       .single();
