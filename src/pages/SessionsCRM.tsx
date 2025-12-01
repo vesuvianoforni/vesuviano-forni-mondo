@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, Mail, Trash2, Search } from 'lucide-react';
+import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, Mail, Trash2, Search, Send } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Input } from '@/components/ui/input';
@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
+import { SendLinkEmailModal } from '@/components/admin/SendLinkEmailModal';
 
 interface SessionData {
   id: string;
@@ -52,6 +53,7 @@ const SessionsCRM = () => {
   const [priceList, setPriceList] = useState('A');
   const [selectedSession, setSelectedSession] = useState<SessionData | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [emailModalSession, setEmailModalSession] = useState<SessionData | null>(null);
 
   useEffect(() => {
     loadSessions();
@@ -113,37 +115,8 @@ const SessionsCRM = () => {
     }
   };
 
-  const sendEmailToCustomer = async (session: SessionData) => {
-    try {
-      const configuratorLink = `https://www.vesuvianoforni.com/configuratore/${session.token}`;
-      
-      toast.loading('Invio email in corso...');
-
-      const { data, error } = await supabase.functions.invoke('send-configurator-link', {
-        body: {
-          customerName: session.customer_name,
-          customerEmail: session.customer_email,
-          configuratorLink: configuratorLink,
-          priceList: session.price_list
-        }
-      });
-
-      if (error) throw error;
-
-      // Mark link as sent
-      await supabase
-        .from('configurator_sessions')
-        .update({ link_sent: true })
-        .eq('id', session.id);
-
-      toast.dismiss();
-      toast.success(`Email inviata con successo a ${session.customer_email}!`);
-      loadSessions();
-    } catch (error) {
-      console.error('Error sending email:', error);
-      toast.dismiss();
-      toast.error('Errore nell\'invio dell\'email. Riprova più tardi.');
-    }
+  const sendEmailToCustomer = (session: SessionData) => {
+    setEmailModalSession(session);
   };
 
   const toggleLinkSent = async (sessionId: string, currentValue: boolean) => {
@@ -1118,6 +1091,17 @@ const SessionsCRM = () => {
             )}
           </DialogContent>
         </Dialog>
+
+        {emailModalSession && (
+          <SendLinkEmailModal
+            isOpen={!!emailModalSession}
+            onClose={() => {
+              setEmailModalSession(null);
+              loadSessions();
+            }}
+            session={emailModalSession}
+          />
+        )}
       </div>
     </div>
   );
