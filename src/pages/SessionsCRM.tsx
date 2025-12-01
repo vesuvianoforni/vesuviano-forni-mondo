@@ -218,6 +218,27 @@ const SessionsCRM = () => {
     }
   };
 
+  const migrateLinkSentData = async () => {
+    if (!confirm('Vuoi migrare tutti i link marcati come "inviati" a "inviati via email"? Questa operazione aggiorna tutti i record dove link_sent = true.')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('configurator_sessions')
+        .update({ sent_via_email: true })
+        .eq('link_sent', true);
+
+      if (error) throw error;
+
+      toast.success('Migrazione completata con successo!');
+      loadSessions();
+    } catch (error) {
+      console.error('Error migrating data:', error);
+      toast.error('Errore nella migrazione dei dati');
+    }
+  };
+
   const getStatusBadge = (session: SessionData, compact = false) => {
     if (session.configurator_quotes?.payment_completed) {
       return (
@@ -699,10 +720,16 @@ const SessionsCRM = () => {
         </div>
 
         {!showNewLinkForm ? (
-          <Button onClick={() => setShowNewLinkForm(true)} className="mb-6">
-            <Plus className="w-4 h-4 mr-2" />
-            Genera Nuovo Link
-          </Button>
+          <div className="flex gap-3 mb-6">
+            <Button onClick={() => setShowNewLinkForm(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Genera Nuovo Link
+            </Button>
+            <Button onClick={migrateLinkSentData} variant="outline">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Migra Dati Email
+            </Button>
+          </div>
         ) : (
           <Card className="mb-6">
             <CardHeader>
