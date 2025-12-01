@@ -109,6 +109,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   const [selectedContactMethod, setSelectedContactMethod] = useState<'whatsapp' | 'phone' | ''>('');
   const [showThankYouMessage, setShowThankYouMessage] = useState(false);
   const [zoomedImage, setZoomedImage] = useState<{ url: string; alt: string } | null>(null);
+  const [pressedImage, setPressedImage] = useState<{ url: string; alt: string } | null>(null);
 
   useEffect(() => { 
     fetchData(); 
@@ -1064,28 +1065,54 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               <h3 className="font-semibold mb-3 md:mb-4 text-lg md:text-xl">{t('configurator.configuration.title')}</h3>
               <div className="bg-gradient-to-br from-background to-muted/30 rounded-xl p-4 md:p-6 space-y-4 md:space-y-5 border-2 border-primary/10 shadow-lg">
                 
-                {/* Header con immagini e titolo */}
+                 {/* Header con immagini e titolo */}
                 <div className="space-y-4">
                   {/* Galleria immagini */}
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                     {/* Immagine principale */}
-                    <div className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border">
+                    <div 
+                      className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border cursor-pointer select-none active:scale-95 transition-transform"
+                      onMouseDown={() => setPressedImage({ 
+                        url: selectedOvenData.coating?.image_url || selectedOven.image_url, 
+                        alt: selectedOven.model_name 
+                      })}
+                      onMouseUp={() => setPressedImage(null)}
+                      onMouseLeave={() => setPressedImage(null)}
+                      onTouchStart={() => setPressedImage({ 
+                        url: selectedOvenData.coating?.image_url || selectedOven.image_url, 
+                        alt: selectedOven.model_name 
+                      })}
+                      onTouchEnd={() => setPressedImage(null)}
+                    >
                       <img 
                         src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
                         alt={selectedOven.model_name} 
-                        className="w-full h-full object-contain p-2" 
+                        className="w-full h-full object-contain p-2 pointer-events-none" 
                       />
                     </div>
                     
                     {/* Immagine con colore personalizzato se disponibile */}
                     {colorRenderImageUrl && (
-                      <div className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border relative">
+                      <div 
+                        className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border relative cursor-pointer select-none active:scale-95 transition-transform"
+                        onMouseDown={() => setPressedImage({ 
+                          url: colorRenderImageUrl, 
+                          alt: `${selectedOven.model_name} - ${selectedColorForRender}` 
+                        })}
+                        onMouseUp={() => setPressedImage(null)}
+                        onMouseLeave={() => setPressedImage(null)}
+                        onTouchStart={() => setPressedImage({ 
+                          url: colorRenderImageUrl, 
+                          alt: `${selectedOven.model_name} - ${selectedColorForRender}` 
+                        })}
+                        onTouchEnd={() => setPressedImage(null)}
+                      >
                         <img 
                           src={colorRenderImageUrl} 
                           alt={`${selectedOven.model_name} - ${selectedColorForRender}`} 
-                          className="w-full h-full object-contain p-2" 
+                          className="w-full h-full object-contain p-2 pointer-events-none" 
                         />
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 pointer-events-none">
                           <p className="text-white text-[10px] md:text-xs font-medium text-center">
                             {selectedColorForRender}
                           </p>
@@ -1095,13 +1122,26 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     
                     {/* Render Architetto AI se disponibile */}
                     {architectAIRenderUrl && (
-                      <div className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border relative">
+                      <div 
+                        className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border relative cursor-pointer select-none active:scale-95 transition-transform"
+                        onMouseDown={() => setPressedImage({ 
+                          url: architectAIRenderUrl, 
+                          alt: `${selectedOven.model_name} - Architetto AI` 
+                        })}
+                        onMouseUp={() => setPressedImage(null)}
+                        onMouseLeave={() => setPressedImage(null)}
+                        onTouchStart={() => setPressedImage({ 
+                          url: architectAIRenderUrl, 
+                          alt: `${selectedOven.model_name} - Architetto AI` 
+                        })}
+                        onTouchEnd={() => setPressedImage(null)}
+                      >
                         <img 
                           src={architectAIRenderUrl} 
                           alt={`${selectedOven.model_name} - Architetto AI`} 
-                          className="w-full h-full object-cover" 
+                          className="w-full h-full object-cover pointer-events-none" 
                         />
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 pointer-events-none">
                           <p className="text-white text-[10px] md:text-xs font-medium text-center">
                             Architetto AI
                           </p>
@@ -1509,6 +1549,17 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           imageUrl={zoomedImage?.url || ''}
           imageAlt={zoomedImage?.alt || ''}
         />
+
+        {/* Pressed Image Preview Overlay */}
+        {pressedImage && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 animate-in fade-in duration-200">
+            <img
+              src={pressedImage.url}
+              alt={pressedImage.alt}
+              className="max-w-[90vw] max-h-[90vh] object-contain"
+            />
+          </div>
+        )}
       </div>
     </div>
   );
