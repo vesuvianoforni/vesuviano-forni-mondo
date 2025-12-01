@@ -1082,14 +1082,12 @@ const SessionsCRM = () => {
                                 {action.type === 'architect_ai_used' && 'Ha usato Architetto AI'}
                                 {action.type === 'quote_saved' && 'Ha salvato il preventivo'}
                               </div>
-                              {action.data && (
-                                <div className="text-xs text-muted-foreground mt-1">
-                                  {action.data.model_name && `Modello: ${action.data.model_name}`}
-                                  {action.data.fuel_type && ` • Alimentazione: ${action.data.fuel_type}`}
-                                  {action.data.diameter && ` • Diametro: ${action.data.diameter}cm`}
-                                  {action.data.coating && ` • Rivestimento: ${action.data.coating}`}
-                                </div>
-                              )}
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {action.model && <span>Modello: {action.model}</span>}
+                                {action.fuelType && <span> • Alimentazione: {action.fuelType}</span>}
+                                {action.diameter && <span> • Diametro: {action.diameter}cm</span>}
+                                {action.coating && <span> • Rivestimento: {action.coating}</span>}
+                              </div>
                               {action.timestamp && (
                                 <div className="text-xs text-muted-foreground mt-1">
                                   {format(new Date(action.timestamp), 'dd/MM/yyyy, HH:mm:ss', { locale: it })}
