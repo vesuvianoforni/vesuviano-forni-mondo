@@ -44,3 +44,6 @@ verify_jwt = false
 
 [functions.send-configurator-link]
 verify_jwt = false
+
+[functions.generate-conversion-message]
+verify_jwt = false

@@ -12,7 +12,8 @@ import EditOvenModal from '@/components/admin/EditOvenModal';
 import { AddOvenModal } from '@/components/admin/AddOvenModal';
 import EditOptionModal from '@/components/admin/EditOptionModal';
 import AddOptionModal from '@/components/admin/AddOptionModal';
-import { LogOut, Edit, Plus, Trash2, TrendingUp, Users, CheckCircle, Clock, ArrowRight, Search } from 'lucide-react';
+import { AIConversionMessageModal } from '@/components/admin/AIConversionMessageModal';
+import { LogOut, Edit, Plus, Trash2, TrendingUp, Users, CheckCircle, Clock, ArrowRight, Search, Sparkles } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Input } from '@/components/ui/input';
@@ -29,6 +30,8 @@ const AdminConfigurator = () => {
   const [showAddOption, setShowAddOption] = useState(false);
   const [sessions, setSessions] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [selectedSessionId, setSelectedSessionId] = useState<string>('');
 
   useEffect(() => { 
     fetchData(); 
@@ -222,6 +225,7 @@ const AdminConfigurator = () => {
                 <TableHead>Stato</TableHead>
                 <TableHead>Data Creazione</TableHead>
                 <TableHead>Ultimo Accesso</TableHead>
+                <TableHead>Azioni</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -259,6 +263,21 @@ const AdminConfigurator = () => {
                         ? format(new Date(session.last_opened_at), 'dd/MM/yy HH:mm', { locale: it })
                         : '-'
                       }
+                    </TableCell>
+                    <TableCell>
+                      {session.customer_email && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            setSelectedSessionId(session.id);
+                            setAiModalOpen(true);
+                          }}
+                          title="Genera messaggio AI di conversione"
+                        >
+                          <Sparkles className="w-4 h-4" />
+                        </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 );
@@ -477,6 +496,13 @@ const AdminConfigurator = () => {
           onSuccess={fetchData}
         />
       )}
+      
+      <AIConversionMessageModal
+        open={aiModalOpen}
+        onOpenChange={setAiModalOpen}
+        sessionId={selectedSessionId}
+        language="it"
+      />
     </div>
   );
 };
