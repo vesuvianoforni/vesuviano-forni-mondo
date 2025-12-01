@@ -56,7 +56,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send email to both sales team and info email
     const emailResponse = await resend.emails.send({
       from: "Vesuviano Configuratore <noreply@vesuvianoforni.com>",
-      to: ["info@vesuvianoforni.com", "commerciale@vesuviano.it"],
+      to: ["info@vesuvianoforni.com"],
       subject: `Richiesta Rinnovo Link Configuratore - ${customerName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
