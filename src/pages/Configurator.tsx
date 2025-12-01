@@ -519,20 +519,25 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
       return;
     }
 
+    if (!selectedOven || !selectedOvenData) {
+      toast.error(t('configurator.errors.completeConfig'));
+      return;
+    }
+
     setSavingQuote(true);
     try {
       // Save quote
       const { data: quoteData, error: quoteError } = await supabase
         .from('configurator_quotes')
         .insert({
-          oven_id: selectedOven!.id,
+          oven_id: selectedOven.id,
           has_installation: buildType === 'on_site',
           has_gas: selectedFuelType === 'Gas',
           total_price: calculateTotal(),
-          delivery_time_weeks: selectedOven!.delivery_time_weeks,
-          customer_name: customerData!.name,
-          customer_email: customerData!.email,
-          customer_phone: customerData!.phone,
+          delivery_time_weeks: selectedOven.delivery_time_weeks,
+          customer_name: customerData.name,
+          customer_email: customerData.email,
+          customer_phone: customerData.phone,
           notes: `Metodo di contatto preferito: ${selectedContactMethod === 'whatsapp' ? 'WhatsApp' : 'Chiamata telefonica'}${notes ? '\n' + notes : ''}`
         })
         .select()
@@ -549,9 +554,9 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
             status: 'interested',
             feedback_status: 'interested',
             customer_info: {
-              name: customerData!.name,
-              email: customerData!.email,
-              phone: customerData!.phone,
+              name: customerData.name,
+              email: customerData.email,
+              phone: customerData.phone,
               contact_method: selectedContactMethod
             }
           })
