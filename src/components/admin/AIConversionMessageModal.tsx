@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -27,6 +27,13 @@ export const AIConversionMessageModal = ({
   const [message, setMessage] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerName, setCustomerName] = useState("");
+
+  // Auto-generate message when modal opens
+  React.useEffect(() => {
+    if (open && sessionId && !message) {
+      generateMessage();
+    }
+  }, [open, sessionId]);
 
   const generateMessage = async () => {
     setIsGenerating(true);
@@ -127,30 +134,14 @@ export const AIConversionMessageModal = ({
         </DialogHeader>
 
         <div className="space-y-4">
-          {!message && (
-            <div className="text-center py-8">
-              <Button 
-                onClick={generateMessage} 
-                disabled={isGenerating}
-                size="lg"
-                className="gap-2"
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    {language === 'it' ? 'Generazione in corso...' :
-                     language === 'en' ? 'Generating...' :
-                     'Génération en cours...'}
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-5 w-5" />
-                    {language === 'it' ? 'Genera Messaggio Personalizzato' :
-                     language === 'en' ? 'Generate Personalized Message' :
-                     'Générer un Message Personnalisé'}
-                  </>
-                )}
-              </Button>
+          {isGenerating && !message && (
+            <div className="text-center py-12">
+              <Loader2 className="h-12 w-12 animate-spin mx-auto mb-4 text-primary" />
+              <p className="text-muted-foreground">
+                {language === 'it' ? 'Generazione messaggio personalizzato in corso...' :
+                 language === 'en' ? 'Generating personalized message...' :
+                 'Génération du message personnalisé en cours...'}
+              </p>
             </div>
           )}
 
