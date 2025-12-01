@@ -949,6 +949,75 @@
       "requestSent": "Demande envoyée! Notre équipe commerciale vous contactera sous peu.",
       "requestError": "Erreur lors de l'envoi de la demande",
       "missingData": "Données client manquantes"
+    },
+    "steps": {
+      "chooseModel": "Choisir le Modèle",
+      "chooseFuel": "Choisir l'Alimentation",
+      "chooseDiameter": "Choisir le Diamètre",
+      "chooseCoating": "Choisir le Revêtement",
+      "additionalOptions": "Options Supplémentaires et Résumé"
+    },
+    "preview": {
+      "fuelTypes": "Types d'alimentation:",
+      "dimensions": "Dimensions:"
+    },
+    "delivery": {
+      "spaceRequired": "Espace de passage requis:",
+      "shippingEurope": "Expédition en Europe",
+      "shippingDescription": "Expédition avec emballage en caisse en bois",
+      "selectDelivery": "Sélectionnez une option de livraison pour continuer",
+      "chooseBuildType": "Choisissez comment vous préférez votre four pour commencer"
+    },
+    "media": {
+      "videoNotSupported": "Votre navigateur ne supporte pas la balise vidéo.",
+      "viewAlt": "Vue"
+    },
+    "price": {
+      "total": "Prix Total",
+      "oven": "Four:",
+      "shipping": "Expédition:",
+      "discount": "Réduction 5% (réserver maintenant)",
+      "youSave": "Vous économisez"
+    },
+    "configuration": {
+      "title": "Résumé de Configuration",
+      "description": "Four à bois artisanal construit avec des matériaux de haute qualité. Idéal pour la cuisson professionnelle de pizza napolitaine et de produits de boulangerie.",
+      "pizzas": "Nombre de pizzas:",
+      "deliveryTime": "Délai de livraison:",
+      "coating": "Revêtement:"
+    },
+    "payment": {
+      "title": "Payer l'Acompte et Commencer la Production Immédiatement",
+      "benefit1": "Acompte 1% entièrement remboursable sous 7 jours",
+      "benefit2": "Notre équipe vous appellera dans les 24h pour vous soutenir dans la finalisation",
+      "benefit3": "La production de votre four commence demain",
+      "depositButton": "Payer l'Acompte 1% et Commencer la Production",
+      "interestedButton": "Je suis intéressé - Je veux être contacté",
+      "interestedButtonShort": "Je suis intéressé",
+      "interestedButtonShortSub": "Demander un contact",
+      "notInterestedButton": "Pas intéressé",
+      "needHelp": "Besoin d'assistance?",
+      "teamWillCall": "Notre équipe vous appellera pour répondre à toutes vos questions"
+    },
+    "modals": {
+      "quote": {
+        "title": "Demander un Devis",
+        "name": "Nom",
+        "email": "Email",
+        "phone": "Téléphone",
+        "notes": "Notes",
+        "submit": "Envoyer la Demande",
+        "submitting": "Envoi..."
+      },
+      "notInterested": {
+        "title": "Aidez-nous à améliorer",
+        "description": "Nous sommes désolés que vous ne soyez pas intéressé. Que pouvons-nous améliorer?",
+        "mainReason": "Quelle est la raison principale?",
+        "otherComments": "Autres commentaires ou suggestions:",
+        "otherPlaceholder": "Partagez d'autres détails qui pourraient nous aider...",
+        "submit": "Envoyer le Retour",
+        "submitting": "Envoi..."
+      }
     }
   }
 }

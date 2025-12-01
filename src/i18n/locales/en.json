@@ -1006,6 +1006,75 @@
       "requestSent": "Request sent! Our sales team will contact you shortly.",
       "requestError": "Error sending request",
       "missingData": "Customer data missing"
+    },
+    "steps": {
+      "chooseModel": "Choose Model",
+      "chooseFuel": "Choose Fuel Type",
+      "chooseDiameter": "Choose Diameter",
+      "chooseCoating": "Choose Coating",
+      "additionalOptions": "Additional Options and Summary"
+    },
+    "preview": {
+      "fuelTypes": "Fuel Types:",
+      "dimensions": "Dimensions:"
+    },
+    "delivery": {
+      "spaceRequired": "Required passage space:",
+      "shippingEurope": "Shipping to Europe",
+      "shippingDescription": "Shipping with wooden crate packaging",
+      "selectDelivery": "Select a delivery option to proceed",
+      "chooseBuildType": "Choose how you prefer your oven to start"
+    },
+    "media": {
+      "videoNotSupported": "Your browser does not support the video tag.",
+      "viewAlt": "View"
+    },
+    "price": {
+      "total": "Total Price",
+      "oven": "Oven:",
+      "shipping": "Shipping:",
+      "discount": "5% Discount (book now)",
+      "youSave": "You Save"
+    },
+    "configuration": {
+      "title": "Configuration Summary",
+      "description": "Artisan wood-fired oven built with high-quality materials. Ideal for professional Neapolitan pizza and baked goods cooking.",
+      "pizzas": "Number of pizzas:",
+      "deliveryTime": "Delivery time:",
+      "coating": "Coating:"
+    },
+    "payment": {
+      "title": "Pay Deposit and Start Production Immediately",
+      "benefit1": "1% deposit fully refundable within 7 days",
+      "benefit2": "Our team will call you within 24h to support you in finalizing",
+      "benefit3": "Your oven production starts tomorrow",
+      "depositButton": "Pay 1% Deposit and Start Production",
+      "interestedButton": "I'm interested - I want to be contacted",
+      "interestedButtonShort": "I'm interested",
+      "interestedButtonShortSub": "Request contact",
+      "notInterestedButton": "Not interested",
+      "needHelp": "Need assistance?",
+      "teamWillCall": "Our team will call you to answer all your questions"
+    },
+    "modals": {
+      "quote": {
+        "title": "Request Quote",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "notes": "Notes",
+        "submit": "Send Request",
+        "submitting": "Sending..."
+      },
+      "notInterested": {
+        "title": "Help us improve",
+        "description": "We're sorry you're not interested. What can we improve?",
+        "mainReason": "What is the main reason?",
+        "otherComments": "Other comments or suggestions:",
+        "otherPlaceholder": "Share other details that could help us...",
+        "submit": "Send Feedback",
+        "submitting": "Sending..."
+      }
     }
   }
 }

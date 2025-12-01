@@ -14,6 +14,7 @@ import { Flame, Clock, Euro, Pizza, PlayCircle, Image as ImageIcon, Sparkles, Ph
 import ColorRenderGenerator from '@/components/configurator/ColorRenderGenerator';
 import ArchitettoAI from '@/components/configurator/ArchitettoAI';
 import Video360Modal from '@/components/Video360Modal';
+import ConfiguratorLanguageSelector from '@/components/ConfiguratorLanguageSelector';
 
 interface ConfiguratorOven {
   id: string;
@@ -679,6 +680,11 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
   return (
     <div className="min-h-screen bg-background py-4 sm:py-6 md:py-12 px-3 sm:px-4 pb-24 md:pb-12">
       <div className="max-w-7xl mx-auto">
+        {/* Language Selector */}
+        <div className="flex justify-end mb-4">
+          <ConfiguratorLanguageSelector />
+        </div>
+        
         <div className="text-center mb-4 sm:mb-6 md:mb-12">
           <h1 className="text-xl sm:text-2xl md:text-4xl font-bold mb-1 sm:mb-2">{t('configurator.selectModel')}</h1>
           {customerData ? (
@@ -783,17 +789,17 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     {/* Anteprima configurazioni */}
                     <div className="border-t pt-2 sm:pt-3 space-y-1.5 sm:space-y-2">
                       <div>
-                        <p className="text-[10px] sm:text-xs font-medium text-muted-foreground mb-0.5 sm:mb-1">Alimentazioni:</p>
+                        <p className="text-[10px] sm:text-xs font-medium text-muted-foreground mb-0.5 sm:mb-1">{t('configurator.preview.fuelTypes')}</p>
                         <div className="flex flex-wrap gap-0.5 sm:gap-1">
                           {preview.fuelTypes.map(fuel => (
                             <span key={fuel} className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-vesuviano-50 text-vesuviano-700 rounded-full">
-                              {fuel}
+                              {t(`configurator.fuelTypes.${fuel}`)}
                             </span>
                           ))}
                         </div>
                       </div>
                       <div>
-                        <p className="text-[10px] sm:text-xs font-medium text-muted-foreground mb-0.5 sm:mb-1">Dimensioni:</p>
+                        <p className="text-[10px] sm:text-xs font-medium text-muted-foreground mb-0.5 sm:mb-1">{t('configurator.preview.dimensions')}</p>
                         <div className="flex flex-wrap gap-0.5 sm:gap-1">
                           {preview.diameters.map(diameter => (
                             <span key={diameter} className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-stone-100 text-stone-700 rounded-full">
@@ -814,7 +820,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         {/* Step 2: Fuel Type Selection */}
         {selectedModel && (
           <div className="mb-4 sm:mb-6 md:mb-8">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">3. Scegli l'Alimentazione</h2>
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">3. {t('configurator.steps.chooseFuel')}</h2>
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
               {availableFuelTypes.map(fuel => (
                 <Card 
@@ -824,7 +830,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 >
                   <CardContent className="p-3 sm:p-4 md:p-6 text-center">
                     <Flame className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 mx-auto mb-1 sm:mb-2" />
-                    <h3 className="font-semibold text-xs sm:text-sm md:text-base">{fuel}</h3>
+                    <h3 className="font-semibold text-xs sm:text-sm md:text-base">{t(`configurator.fuelTypes.${fuel}`)}</h3>
                   </CardContent>
                 </Card>
               ))}
@@ -835,7 +841,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         {/* Step 3: Diameter Selection */}
         {selectedFuelType && availableDiameters.length > 0 && (
           <div className="mb-4 sm:mb-6 md:mb-8">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">4. Scegli il Diametro</h2>
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">4. {t('configurator.steps.chooseDiameter')}</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
               {availableDiameters.map(diameter => {
                 const modelOven = ovens.find(o => o.model_name === selectedModel);
@@ -866,7 +872,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         {/* Step 4: Coating Selection (if new structure) */}
         {selectedDiameter && availableCoatings.length > 0 && (
           <div className="mb-4 sm:mb-6 md:mb-8">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">5. Scegli il Rivestimento</h2>
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 md:mb-4">5. {t('configurator.steps.chooseCoating')}</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
               {availableCoatings.map(coating => (
                 <Card 
@@ -896,14 +902,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         {selectedOvenData && (availableCoatings.length === 0 || selectedCoating) && (
           <Card className="mb-4 sm:mb-6">
             <CardHeader className="px-4 sm:px-6 py-3 sm:py-4">
-              <CardTitle className="text-lg sm:text-xl md:text-2xl">{availableCoatings.length > 0 ? '6' : '5'}. Opzioni Aggiuntive e Riepilogo</CardTitle>
+              <CardTitle className="text-lg sm:text-xl md:text-2xl">{availableCoatings.length > 0 ? '6' : '5'}. {t('configurator.steps.additionalOptions')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
               {/* Prezzo Totale - Sempre visibile in alto */}
               <div className="bg-gradient-to-r from-primary/10 to-primary/5 border-2 border-primary/20 rounded-lg p-4 sm:p-6 shadow-lg mb-6">
                 <div className="flex items-center justify-between gap-4">
                   <div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mb-1">Prezzo Totale</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-1">{t('configurator.price.total')}</p>
                     <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">
                       €{calculateTotal().toFixed(2)}
                     </p>
@@ -913,11 +919,11 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 {deliveryOption === 'shipping' && (
                   <div className="mt-3 pt-3 border-t border-primary/20">
                     <div className="flex items-center justify-between text-xs sm:text-sm">
-                      <span className="text-muted-foreground">Forno:</span>
+                      <span className="text-muted-foreground">{t('configurator.price.oven')}</span>
                       <span className="font-semibold">€{getOvenPrice().toFixed(2)}</span>
                     </div>
                     <div className="flex items-center justify-between text-xs sm:text-sm mt-1">
-                      <span className="text-muted-foreground">Spedizione:</span>
+                      <span className="text-muted-foreground">{t('configurator.price.shipping')}</span>
                       <span className="font-semibold">
                         +€{getShippingPrice(selectedOvenData.size?.diameter || selectedOven.diameter).toFixed(2)}
                       </span>
@@ -928,11 +934,11 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
               {buildType === 'ready_to_use' && (
                 <div>
-                  <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Opzioni di Consegna</h3>
+                  <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">{t('configurator.deliveryOptions.title')}</h3>
                   {selectedOvenData?.size?.passage_space_cm && (
                     <div className="mb-3 p-2 sm:p-3 bg-blue-50 border border-blue-200 rounded-md">
                       <p className="text-xs sm:text-sm text-blue-900">
-                        <strong>Spazio necessario per il passaggio:</strong> {selectedOvenData.size.passage_space_cm} cm
+                        <strong>{t('configurator.delivery.spaceRequired')}</strong> {selectedOvenData.size.passage_space_cm} cm
                       </p>
                     </div>
                   )}
@@ -943,8 +949,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <Label className="cursor-pointer font-medium text-sm sm:text-base">Spedizione in Europa</Label>
-                          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">Spedizione con imballaggio cassonato in legno</p>
+                          <Label className="cursor-pointer font-medium text-sm sm:text-base">{t('configurator.delivery.shippingEurope')}</Label>
+                          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">{t('configurator.delivery.shippingDescription')}</p>
                           <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2 text-primary">
                             +€{getShippingPrice(selectedOvenData.size?.diameter || selectedOven.diameter).toFixed(2)}
                           </p>
@@ -997,107 +1003,107 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         playsInline
                         controls
                         className="w-full h-full object-contain"
-                        src={selectedOvenData.coating?.video_url_360 || selectedOven.video_url_360}
-                      >
-                        Il tuo browser non supporta il tag video.
-                      </video>
-                    ) : (
-                      <img 
-                        src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
-                        alt={selectedOven.model_name}
-                        className="w-full h-full object-contain p-2 sm:p-4"
-                      />
-                    )}
-                  </div>
-                  
-                  {/* Additional Images */}
-                  {showPhotoGallery && ((selectedOvenData.coating?.render_images && selectedOvenData.coating.render_images.length > 0) ||
-                    (selectedOven.additional_images && selectedOven.additional_images.length > 0)) && (
-                    <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
-                      {(selectedOvenData.coating?.render_images || selectedOven.additional_images || []).map((img: string, index: number) => (
-                        <div key={index} className="aspect-square relative overflow-hidden rounded border cursor-pointer hover:opacity-80 transition-opacity bg-muted">
-                          <img 
-                            src={img} 
-                            alt={`${selectedOven.model_name} - Vista ${index + 1}`}
-                            className="w-full h-full object-contain p-1"
-                          />
-                        </div>
-                      ))}
-                    </div>
+                      src={selectedOvenData.coating?.video_url_360 || selectedOven.video_url_360}
+                    >
+                      {t('configurator.media.videoNotSupported')}
+                    </video>
+                  ) : (
+                    <img 
+                      src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
+                      alt={selectedOven.model_name}
+                      className="w-full h-full object-contain p-2 sm:p-4"
+                    />
                   )}
                 </div>
-              </div>
-
-              {/* Color Render Generator */}
-              <ColorRenderGenerator
-                ovenName={selectedOven.model_name}
-                ovenImageUrl={selectedOvenData.coating?.image_url || selectedOven.image_url}
-                selectedCoating={selectedCoating}
-                onRenderGenerated={(imageUrl, color) => {
-                  setColorRenderImageUrl(imageUrl);
-                  setSelectedColorForRender(color);
-                }}
-              />
-
-              {/* Architetto AI */}
-              <ArchitettoAI
-                ovenName={selectedOven.model_name}
-                ovenImageUrl={colorRenderImageUrl || selectedOvenData.coating?.image_url || selectedOven.image_url}
-                onSpaceImageSelected={setSpaceImageUrl}
-                onRenderGenerated={setArchitectAIRenderUrl}
-              />
-              
-              <div className="border-t pt-4 md:pt-6">
-                <h3 className="font-semibold mb-3 md:mb-4 text-lg md:text-xl">Riepilogo Configurazione</h3>
-                <div className="bg-gradient-to-br from-background to-muted/30 rounded-xl p-4 md:p-6 space-y-4 md:space-y-5 border-2 border-primary/10 shadow-lg">
-                  
-                  {/* Header con immagine e titolo */}
-                  <div className="flex items-start gap-4">
-                    <div className="w-20 h-20 md:w-28 md:h-28 bg-background rounded-xl overflow-hidden flex-shrink-0 shadow-md border border-border">
-                      <img 
-                        src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
-                        alt={selectedOven.model_name} 
-                        className="w-full h-full object-contain p-2" 
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-bold text-lg md:text-xl mb-2">{selectedOven.model_name}</h4>
-                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-3">
-                        {selectedOven.description || 'Forno a legna artigianale costruito con materiali di alta qualità. Ideale per cottura professionale di pizza napoletana e prodotti da forno.'}
-                      </p>
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="flex items-center gap-2 text-xs md:text-sm">
-                          <Flame className="w-4 h-4 text-primary" />
-                          <span className="font-medium">{selectedFuelType}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs md:text-sm">
-                          <Pizza className="w-4 h-4 text-primary" />
-                          <span className="font-medium">
-                            {selectedOvenData.size?.diameter || selectedOven.diameter}cm
-                          </span>
-                        </div>
+                
+                {/* Additional Images */}
+                {showPhotoGallery && ((selectedOvenData.coating?.render_images && selectedOvenData.coating.render_images.length > 0) ||
+                  (selectedOven.additional_images && selectedOven.additional_images.length > 0)) && (
+                  <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
+                    {(selectedOvenData.coating?.render_images || selectedOven.additional_images || []).map((img: string, index: number) => (
+                      <div key={index} className="aspect-square relative overflow-hidden rounded border cursor-pointer hover:opacity-80 transition-opacity bg-muted">
+                        <img 
+                          src={img} 
+                          alt={`${selectedOven.model_name} - ${t('configurator.media.viewAlt')} ${index + 1}`}
+                          className="w-full h-full object-contain p-1"
+                        />
                       </div>
-                      {selectedCoating && (
-                        <div className="text-xs md:text-sm mt-2 px-2 py-1 bg-primary/10 rounded-md inline-block">
-                          <span className="font-medium">Rivestimento:</span> {selectedCoating}
-                        </div>
-                      )}
-                    </div>
+                    ))}
                   </div>
+                )}
+              </div>
+            </div>
 
-                  {/* Dettagli tecnici */}
-                  <div className="bg-background/80 rounded-lg p-3 md:p-4 space-y-2 border border-border/50">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Numero pizze:</span>
-                      <span className="font-semibold">{selectedOvenData.size?.pizza_capacity || selectedOven.pizza_capacity}</span>
+            {/* Color Render Generator */}
+            <ColorRenderGenerator
+              ovenName={selectedOven.model_name}
+              ovenImageUrl={selectedOvenData.coating?.image_url || selectedOven.image_url}
+              selectedCoating={selectedCoating}
+              onRenderGenerated={(imageUrl, color) => {
+                setColorRenderImageUrl(imageUrl);
+                setSelectedColorForRender(color);
+              }}
+            />
+
+            {/* Architetto AI */}
+            <ArchitettoAI
+              ovenName={selectedOven.model_name}
+              ovenImageUrl={colorRenderImageUrl || selectedOvenData.coating?.image_url || selectedOven.image_url}
+              onSpaceImageSelected={setSpaceImageUrl}
+              onRenderGenerated={setArchitectAIRenderUrl}
+            />
+            
+            <div className="border-t pt-4 md:pt-6">
+              <h3 className="font-semibold mb-3 md:mb-4 text-lg md:text-xl">{t('configurator.configuration.title')}</h3>
+              <div className="bg-gradient-to-br from-background to-muted/30 rounded-xl p-4 md:p-6 space-y-4 md:space-y-5 border-2 border-primary/10 shadow-lg">
+                
+                {/* Header con immagine e titolo */}
+                <div className="flex items-start gap-4">
+                  <div className="w-20 h-20 md:w-28 md:h-28 bg-background rounded-xl overflow-hidden flex-shrink-0 shadow-md border border-border">
+                    <img 
+                      src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
+                      alt={selectedOven.model_name} 
+                      className="w-full h-full object-contain p-2" 
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-bold text-lg md:text-xl mb-2">{selectedOven.model_name}</h4>
+                    <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-3">
+                      {selectedOven.description || t('configurator.configuration.description')}
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="flex items-center gap-2 text-xs md:text-sm">
+                        <Flame className="w-4 h-4 text-primary" />
+                        <span className="font-medium">{t(`configurator.fuelTypes.${selectedFuelType}`)}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs md:text-sm">
+                        <Pizza className="w-4 h-4 text-primary" />
+                        <span className="font-medium">
+                          {selectedOvenData.size?.diameter || selectedOven.diameter}cm
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
-                        Tempo di consegna:
-                      </span>
-                      <span className="font-semibold">{selectedOven.delivery_time_weeks} settimane</span>
-                    </div>
+                    {selectedCoating && (
+                      <div className="text-xs md:text-sm mt-2 px-2 py-1 bg-primary/10 rounded-md inline-block">
+                        <span className="font-medium">{t('configurator.configuration.coating')}</span> {selectedCoating}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Dettagli tecnici */}
+                <div className="bg-background/80 rounded-lg p-3 md:p-4 space-y-2 border border-border/50">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">{t('configurator.configuration.pizzas')}</span>
+                    <span className="font-semibold">{selectedOvenData.size?.pizza_capacity || selectedOven.pizza_capacity}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground flex items-center gap-2">
+                      <Clock className="w-4 h-4" />
+                      {t('configurator.configuration.deliveryTime')}
+                    </span>
+                    <span className="font-semibold">{selectedOven.delivery_time_weeks} {t('configurator.summary.weeks')}</span>
+                  </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">Tipologia:</span>
                       <span className="font-semibold">
@@ -1162,25 +1168,25 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                       <div className="flex flex-col items-center gap-1">
                         <span className="flex items-center gap-2">
                           <Euro className="w-5 h-5" />
-                          Paga Acconto 1% per Bloccare il Tuo Ordine
+                          {t('configurator.payment.depositButton')}
                         </span>
                         <span className="text-xs md:text-sm font-semibold opacity-90">
-                          La produzione del tuo forno inizia da domani! Non perdi tempo
+                          {t('configurator.cta.payDeposit').split(' — ')[1]}
                         </span>
                       </div>
                     </Button>
                     <div className="space-y-2 mt-2">
                       <p className="text-xs text-center text-muted-foreground">
-                        Acconto simbolico di €{(calculateTotal() * 0.95 * 0.01).toFixed(2)} per riservare subito il tuo forno
+                        {t('configurator.summary.depositAmount')}: €{(calculateTotal() * 0.95 * 0.01).toFixed(2)}
                       </p>
                       <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 space-y-1.5">
                         <p className="text-xs md:text-sm text-blue-900 dark:text-blue-100 flex items-start gap-2">
                           <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0">✓</span>
-                          <span>Verrai <strong>contattato dal nostro responsabile clienti entro 24 ore</strong> per supporto alla finalizzazione</span>
+                          <span>{t('configurator.payment.benefit2')}</span>
                         </p>
                         <p className="text-xs md:text-sm text-blue-900 dark:text-blue-100 flex items-start gap-2">
                           <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0">✓</span>
-                          <span>Acconto <strong>100% rimborsabile entro 7 giorni</strong></span>
+                          <span>{t('configurator.payment.benefit1')}</span>
                         </p>
                       </div>
                     </div>
@@ -1194,10 +1200,10 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         variant="outline"
                       >
                         <Phone className="w-4 h-4 mr-2" />
-                        Voglio Essere Contattato
+                        {t('configurator.cta.interested')}
                       </Button>
                       <p className="text-xs text-center text-muted-foreground mt-2">
-                        Il nostro team ti chiamerà per rispondere a tutte le tue domande
+                        {t('configurator.payment.teamWillCall')}
                       </p>
                     </div>
 
@@ -1209,7 +1215,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         size="sm"
                         variant="ghost"
                       >
-                        Non sono interessato
+                        {t('configurator.cta.notInterested')}
                       </Button>
                     </div>
                   </div>
@@ -1218,15 +1224,15 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               {/* Bottoni feedback */}
               {sessionId && (buildType === 'on_site' || deliveryOption) && (
                 <div className="border-t pt-3 sm:pt-4 md:pt-6 mt-3 sm:mt-4 md:mt-6 space-y-2 sm:space-y-3">
-                  <h3 className="font-semibold text-center mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base md:text-lg">Hai bisogno di assistenza?</h3>
+                  <h3 className="font-semibold text-center mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base md:text-lg">{t('configurator.payment.needHelp')}</h3>
                   <Button 
                     onClick={handleInterestedClick}
                     className="w-full text-xs sm:text-sm md:text-base h-12 sm:h-auto" 
                     size="lg"
                     variant="default"
                   >
-                    <span className="hidden sm:inline">Sono interessato - Fammi contattare dal vostro responsabile clienti</span>
-                    <span className="sm:hidden leading-tight">Sono interessato<br/>Richiedi contatto</span>
+                    <span className="hidden sm:inline">{t('configurator.payment.interestedButton')}</span>
+                    <span className="sm:hidden leading-tight">{t('configurator.payment.interestedButtonShort')}<br/>{t('configurator.payment.interestedButtonShortSub')}</span>
                   </Button>
                   <Button 
                     onClick={() => setShowNotInterestedModal(true)}
@@ -1234,25 +1240,25 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     size="lg"
                     variant="outline"
                   >
-                    Non sono interessato
+                    {t('configurator.payment.notInterestedButton')}
                   </Button>
                 </div>
               )}
               {!deliveryOption && buildType === 'ready_to_use' && sessionId && (
-                <p className="text-xs sm:text-sm text-center text-muted-foreground mt-4 sm:mt-6">Seleziona un'opzione di consegna per procedere</p>
+                <p className="text-xs sm:text-sm text-center text-muted-foreground mt-4 sm:mt-6">{t('configurator.delivery.selectDelivery')}</p>
               )}
               {!buildType && sessionId && (
-                <p className="text-xs sm:text-sm text-center text-muted-foreground mt-4 sm:mt-6">Scegli come preferisci il tuo forno per iniziare</p>
+                <p className="text-xs sm:text-sm text-center text-muted-foreground mt-4 sm:mt-6">{t('configurator.delivery.chooseBuildType')}</p>
               )}
             </CardContent>
           </Card>
         )}
         <Dialog open={showQuoteModal} onOpenChange={setShowQuoteModal}>
           <DialogContent className="max-w-md mx-4">
-            <DialogHeader><DialogTitle className="text-lg sm:text-xl">Richiedi Preventivo</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle className="text-lg sm:text-xl">{t('configurator.modals.quote.title')}</DialogTitle></DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label>Nome</Label>
+                <Label>{t('configurator.modals.quote.name')}</Label>
                 <Input 
                   value={customerName} 
                   onChange={(e) => setCustomerName(e.target.value)}
@@ -1261,7 +1267,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 />
               </div>
               <div>
-                <Label>Email</Label>
+                <Label>{t('configurator.modals.quote.email')}</Label>
                 <Input 
                   type="email" 
                   value={customerEmail} 
@@ -1271,7 +1277,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 />
               </div>
               <div>
-                <Label>Telefono</Label>
+                <Label>{t('configurator.modals.quote.phone')}</Label>
                 <Input 
                   value={customerPhone} 
                   onChange={(e) => setCustomerPhone(e.target.value)}
@@ -1279,8 +1285,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   className={customerData ? "bg-muted" : ""}
                 />
               </div>
-              <div><Label>Note</Label><Textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} /></div>
-              <Button onClick={handleSaveQuote} className="w-full" disabled={savingQuote}>{savingQuote ? 'Invio...' : 'Invia Richiesta'}</Button>
+              <div><Label>{t('configurator.modals.quote.notes')}</Label><Textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} /></div>
+              <Button onClick={handleSaveQuote} className="w-full" disabled={savingQuote}>{savingQuote ? t('configurator.modals.quote.submitting') : t('configurator.modals.quote.submit')}</Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -1289,29 +1295,24 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
         <Dialog open={showNotInterestedModal} onOpenChange={setShowNotInterestedModal}>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>Aiutaci a migliorare</DialogTitle>
+              <DialogTitle>{t('configurator.modals.notInterested.title')}</DialogTitle>
               <DialogDescription>
-                Ci dispiace che non sia interessato. Cosa possiamo migliorare?
+                {t('configurator.modals.notInterested.description')}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div className="space-y-3">
-                <Label>Qual è il motivo principale?</Label>
-                {[
-                  'Troppo caro',
-                  'Troppo tempo per realizzare',
-                  'Mi serve urgente',
-                  'Non mi piace',
-                  'Non c\'è il modello che cerco',
-                  'Preferisco un altro fornitore'
-                ].map((reason) => (
-                  <div key={reason} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={reason}
-                      checked={feedbackReasons.includes(reason)}
-                      onCheckedChange={() => toggleFeedbackReason(reason)}
-                    />
-                    <label
+                <Label>{t('configurator.modals.notInterested.mainReason')}</Label>
+                {Object.keys(t('configurator.feedback.reasons', { returnObjects: true })).map((key) => {
+                  const reason = t(`configurator.feedback.reasons.${key}`);
+                  return (
+                    <div key={reason} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={reason}
+                        checked={feedbackReasons.includes(reason)}
+                        onCheckedChange={() => toggleFeedbackReason(reason)}
+                      />
+                      <label
                       htmlFor={reason}
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                     >
