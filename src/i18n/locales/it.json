@@ -968,6 +968,75 @@
       "requestSent": "Richiesta inviata! Un nostro commerciale ti contatterà a breve.",
       "requestError": "Errore nell'invio della richiesta",
       "missingData": "Dati cliente mancanti"
+    },
+    "steps": {
+      "chooseModel": "Scegli il Modello",
+      "chooseFuel": "Scegli l'Alimentazione",
+      "chooseDiameter": "Scegli il Diametro",
+      "chooseCoating": "Scegli il Rivestimento",
+      "additionalOptions": "Opzioni Aggiuntive e Riepilogo"
+    },
+    "preview": {
+      "fuelTypes": "Alimentazioni:",
+      "dimensions": "Dimensioni:"
+    },
+    "delivery": {
+      "spaceRequired": "Spazio necessario per il passaggio:",
+      "shippingEurope": "Spedizione in Europa",
+      "shippingDescription": "Spedizione con imballaggio cassonato in legno",
+      "selectDelivery": "Seleziona un'opzione di consegna per procedere",
+      "chooseBuildType": "Scegli come preferisci il tuo forno per iniziare"
+    },
+    "media": {
+      "videoNotSupported": "Il tuo browser non supporta il tag video.",
+      "viewAlt": "Vista"
+    },
+    "price": {
+      "total": "Prezzo Totale",
+      "oven": "Forno:",
+      "shipping": "Spedizione:",
+      "discount": "Sconto 5% (prenota subito)",
+      "youSave": "Risparmi"
+    },
+    "configuration": {
+      "title": "Riepilogo Configurazione",
+      "description": "Forno a legna artigianale costruito con materiali di alta qualità. Ideale per cottura professionale di pizza napoletana e prodotti da forno.",
+      "pizzas": "Numero pizze:",
+      "deliveryTime": "Tempo di consegna:",
+      "coating": "Rivestimento:"
+    },
+    "payment": {
+      "title": "Paga Acconto e Inizia Subito la Produzione",
+      "benefit1": "Acconto 1% completamente rimborsabile entro 7 giorni",
+      "benefit2": "Il nostro team ti chiamerà entro 24h per supportarti nella finalizzazione",
+      "benefit3": "La produzione del tuo forno inizia domani",
+      "depositButton": "Paga Acconto 1% e Inizia la Produzione",
+      "interestedButton": "Sono interessato - Voglio essere contattato",
+      "interestedButtonShort": "Sono interessato",
+      "interestedButtonShortSub": "Richiedi contatto",
+      "notInterestedButton": "Non sono interessato",
+      "needHelp": "Hai bisogno di assistenza?",
+      "teamWillCall": "Il nostro team ti chiamerà per rispondere a tutte le tue domande"
+    },
+    "modals": {
+      "quote": {
+        "title": "Richiedi Preventivo",
+        "name": "Nome",
+        "email": "Email",
+        "phone": "Telefono",
+        "notes": "Note",
+        "submit": "Invia Richiesta",
+        "submitting": "Invio..."
+      },
+      "notInterested": {
+        "title": "Aiutaci a migliorare",
+        "description": "Ci dispiace che non sia interessato. Cosa possiamo migliorare?",
+        "mainReason": "Qual è il motivo principale?",
+        "otherComments": "Altri commenti o suggerimenti:",
+        "otherPlaceholder": "Condividi altri dettagli che potrebbero aiutarci...",
+        "submit": "Invia Feedback",
+        "submitting": "Invio..."
+      }
     }
   }
 }
