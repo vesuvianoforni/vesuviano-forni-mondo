@@ -37,7 +37,8 @@ serve(async (req) => {
             model_name,
             fuel_type,
             diameter,
-            pizza_capacity
+            pizza_capacity,
+            coatings
           )
         )
       `)
@@ -54,10 +55,28 @@ serve(async (req) => {
     const actions = session.customer_actions || [];
     const quote = session.configurator_quotes?.[0];
     
+    // Extract detailed oven configuration from actions
     let ovenDetails = '';
+    let coatingInfo = '';
+    let fuelTypeInfo = '';
+    
     if (quote?.configurator_ovens) {
       const oven = quote.configurator_ovens;
-      ovenDetails = `Modello: ${oven.model_name}, Diametro: ${oven.diameter}cm, Capacità: ${oven.pizza_capacity} pizze, Combustibile: ${oven.fuel_type.join('/')}`;
+      ovenDetails = `Modello: ${oven.model_name}, Diametro: ${oven.diameter}cm, Capacità: ${oven.pizza_capacity} pizze`;
+      
+      // Get fuel type from actions or quote
+      const fuelAction = actions.find((a: any) => a.type === 'fuel_selected');
+      if (fuelAction?.fuelType) {
+        fuelTypeInfo = `Alimentazione: ${fuelAction.fuelType}`;
+      } else if (oven.fuel_type) {
+        fuelTypeInfo = `Alimentazione: ${oven.fuel_type.join('/')}`;
+      }
+      
+      // Get coating from actions
+      const coatingAction = actions.find((a: any) => a.type === 'coating_selected');
+      if (coatingAction?.coating) {
+        coatingInfo = `Rivestimento: ${coatingAction.coating}`;
+      }
     }
 
     const activitySummary = actions.map((a: any) => `${a.action}: ${a.details || ''}`).join(', ');
@@ -68,13 +87,15 @@ serve(async (req) => {
 Regole:
 - Usa un tono professionale ma caldo e personale
 - Indirizza il cliente per nome
-- Fai riferimento specifico al modello di forno che ha visto
+- Fai riferimento SPECIFICO al modello, dimensioni, rivestimento scelto e prezzo
+- Menziona TUTTI i dettagli tecnici forniti (diametro, capacità pizze, alimentazione, rivestimento)
+- Includi il prezzo specifico se disponibile
 - Crea urgenza senza essere aggressivo
-- Evidenzia i benefici chiave del prodotto
+- Evidenzia i benefici chiave del prodotto scelto
 - Includi una call-to-action chiara
-- Lunghezza: 150-200 parole
+- Lunghezza: 200-250 parole
 - Non usare formule troppo commerciali
-- Oggetto email: max 60 caratteri, accattivante
+- Oggetto email: max 60 caratteri, accattivante e personalizzato
 
 Formato risposta (JSON):
 {
@@ -87,13 +108,15 @@ Formato risposta (JSON):
 Rules:
 - Use a professional but warm and personal tone
 - Address the customer by name
-- Make specific reference to the oven model they viewed
+- Make SPECIFIC reference to the model, dimensions, coating chosen and price
+- Mention ALL technical details provided (diameter, pizza capacity, fuel type, coating)
+- Include the specific price if available
 - Create urgency without being aggressive
-- Highlight key product benefits
+- Highlight key benefits of the chosen product
 - Include a clear call-to-action
-- Length: 150-200 words
+- Length: 200-250 words
 - Don't use overly commercial formulas
-- Email subject: max 60 characters, catchy
+- Email subject: max 60 characters, catchy and personalized
 
 Response format (JSON):
 {
@@ -105,13 +128,15 @@ Response format (JSON):
 Règles:
 - Utilisez un ton professionnel mais chaleureux et personnel
 - Adressez-vous au client par son nom
-- Faites référence spécifique au modèle de four qu'il a vu
+- Faites référence SPÉCIFIQUE au modèle, dimensions, revêtement choisi et prix
+- Mentionnez TOUS les détails techniques fournis (diamètre, capacité pizzas, alimentation, revêtement)
+- Incluez le prix spécifique si disponible
 - Créez l'urgence sans être agressif
-- Mettez en évidence les avantages clés du produit
+- Mettez en évidence les avantages clés du produit choisi
 - Incluez un appel à l'action clair
-- Longueur: 150-200 mots
+- Longueur: 200-250 mots
 - N'utilisez pas de formules trop commerciales
-- Objet email: max 60 caractères, accrocheur
+- Objet email: max 60 caractères, accrocheur et personnalisé
 
 Format de réponse (JSON):
 {
@@ -125,29 +150,41 @@ Format de réponse (JSON):
 Cliente: ${customerName}
 Status: ${status}
 ${ovenDetails ? `Forno configurato: ${ovenDetails}` : 'Nessun forno configurato ancora'}
-${quote?.total_price ? `Prezzo preventivo: €${quote.total_price}` : ''}
+${fuelTypeInfo ? fuelTypeInfo : ''}
+${coatingInfo ? coatingInfo : ''}
+${quote?.total_price ? `Prezzo preventivo: €${quote.total_price.toLocaleString('it-IT')}` : ''}
+${quote?.has_gas ? 'Con kit gas' : ''}
+${quote?.has_installation ? 'Con installazione' : ''}
 Attività: ${activitySummary || 'Ha visitato il configuratore'}
 
-Personalizza il messaggio in base al comportamento del cliente.`
+IMPORTANTE: Menziona TUTTI i dettagli specifici forniti (modello, diametro, rivestimento, prezzo) nel messaggio per renderlo personale e convincente.`
       : language === 'en'
       ? `Generate a conversion message for:
 
 Customer: ${customerName}
 Status: ${status}
 ${ovenDetails ? `Configured oven: ${ovenDetails}` : 'No oven configured yet'}
-${quote?.total_price ? `Quote price: €${quote.total_price}` : ''}
+${fuelTypeInfo ? fuelTypeInfo : ''}
+${coatingInfo ? coatingInfo : ''}
+${quote?.total_price ? `Quote price: €${quote.total_price.toLocaleString('en-US')}` : ''}
+${quote?.has_gas ? 'With gas kit' : ''}
+${quote?.has_installation ? 'With installation' : ''}
 Activity: ${activitySummary || 'Visited the configurator'}
 
-Personalize the message based on customer behavior.`
+IMPORTANT: Mention ALL specific details provided (model, diameter, coating, price) in the message to make it personal and convincing.`
       : `Générez un message de conversion pour:
 
 Client: ${customerName}
 Statut: ${status}
 ${ovenDetails ? `Four configuré: ${ovenDetails}` : 'Aucun four configuré pour le moment'}
-${quote?.total_price ? `Prix du devis: €${quote.total_price}` : ''}
+${fuelTypeInfo ? fuelTypeInfo : ''}
+${coatingInfo ? coatingInfo : ''}
+${quote?.total_price ? `Prix du devis: €${quote.total_price.toLocaleString('fr-FR')}` : ''}
+${quote?.has_gas ? 'Avec kit gaz' : ''}
+${quote?.has_installation ? 'Avec installation' : ''}
 Activité: ${activitySummary || 'A visité le configurateur'}
 
-Personnalisez le message en fonction du comportement du client.`;
+IMPORTANT: Mentionnez TOUS les détails spécifiques fournis (modèle, diamètre, revêtement, prix) dans le message pour le rendre personnel et convaincant.`;
 
     // Call Lovable AI
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');

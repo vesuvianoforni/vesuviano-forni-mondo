@@ -371,7 +371,7 @@ const SessionsCRM = () => {
       return (
         <Card 
           key={session.id} 
-          className="hover:shadow-lg transition-all border-l-4 cursor-pointer" 
+          className="hover:shadow-lg transition-all border-l-4 cursor-pointer mb-3" 
           onClick={() => setSelectedSession(session)}
           style={{
           borderLeftColor: session.configurator_quotes?.payment_completed ? '#16a34a' : 
@@ -381,7 +381,7 @@ const SessionsCRM = () => {
                            session.feedback_status === 'not_interested' ? '#dc2626' :
                            session.is_used ? '#57534e' : '#e5e7eb'
         }}>
-          <CardContent className="p-4">
+          <CardContent className="p-5">
             <div className="space-y-3">
               {/* Header with status and price list */}
               <div className="flex items-start justify-between gap-2">
