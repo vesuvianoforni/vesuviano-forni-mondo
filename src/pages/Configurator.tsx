@@ -1064,18 +1064,56 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
               <h3 className="font-semibold mb-3 md:mb-4 text-lg md:text-xl">{t('configurator.configuration.title')}</h3>
               <div className="bg-gradient-to-br from-background to-muted/30 rounded-xl p-4 md:p-6 space-y-4 md:space-y-5 border-2 border-primary/10 shadow-lg">
                 
-                {/* Header con immagine e titolo */}
-                <div className="flex items-start gap-4">
-                  <div className="w-20 h-20 md:w-28 md:h-28 bg-background rounded-xl overflow-hidden flex-shrink-0 shadow-md border border-border">
-                    <img 
-                      src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
-                      alt={selectedOven.model_name} 
-                      className="w-full h-full object-contain p-2" 
-                    />
+                {/* Header con immagini e titolo */}
+                <div className="space-y-4">
+                  {/* Galleria immagini */}
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {/* Immagine principale */}
+                    <div className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border">
+                      <img 
+                        src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
+                        alt={selectedOven.model_name} 
+                        className="w-full h-full object-contain p-2" 
+                      />
+                    </div>
+                    
+                    {/* Immagine con colore personalizzato se disponibile */}
+                    {colorRenderImageUrl && (
+                      <div className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border relative">
+                        <img 
+                          src={colorRenderImageUrl} 
+                          alt={`${selectedOven.model_name} - ${selectedColorForRender}`} 
+                          className="w-full h-full object-contain p-2" 
+                        />
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                          <p className="text-white text-[10px] md:text-xs font-medium text-center">
+                            {selectedColorForRender}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Render Architetto AI se disponibile */}
+                    {architectAIRenderUrl && (
+                      <div className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border relative">
+                        <img 
+                          src={architectAIRenderUrl} 
+                          alt={`${selectedOven.model_name} - Architetto AI`} 
+                          className="w-full h-full object-cover" 
+                        />
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                          <p className="text-white text-[10px] md:text-xs font-medium text-center">
+                            Architetto AI
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-lg md:text-xl mb-2">{selectedOven.model_name}</h4>
-                    <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-3">
+                  
+                  {/* Informazioni modello */}
+                  <div className="space-y-3">
+                    <h4 className="font-bold text-lg md:text-xl">{selectedOven.model_name}</h4>
+                    <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                       {selectedOven.description || t('configurator.configuration.description')}
                     </p>
                     <div className="grid grid-cols-2 gap-2">
