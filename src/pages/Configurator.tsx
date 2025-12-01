@@ -631,6 +631,13 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
       return;
     }
 
+    // Validazione semplice dell'email per evitare errori Stripe
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(customerData.email)) {
+      toast.error('Per procedere al pagamento inserisci una email valida (es. nome@dominio.com)');
+      return;
+    }
+
     try {
       setSavingQuote(true);
 
