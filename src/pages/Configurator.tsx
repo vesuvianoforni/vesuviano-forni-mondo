@@ -777,14 +777,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   onClick={() => { setSelectedModel(model); setSelectedFuelType(''); setSelectedDiameter(''); }}
                 >
                   <CardContent className="p-2 sm:p-3 md:p-4">
-                    <div 
-                      className="aspect-square mb-2 sm:mb-2 md:mb-3 bg-muted rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const imgUrl = ovens.find(o => o.model_name === model)?.image_url;
-                        if (imgUrl) setZoomedImage({ url: imgUrl, alt: model });
-                      }}
-                    >
+                    <div className="aspect-square mb-2 sm:mb-2 md:mb-3 bg-muted rounded-lg overflow-hidden">
                       <img 
                         src={ovens.find(o => o.model_name === model)?.image_url || '/placeholder.svg'} 
                         alt={model}
@@ -888,13 +881,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   onClick={() => setSelectedCoating(coating.name)}
                 >
                   <CardContent className="p-0">
-                    <div 
-                      className="aspect-square relative cursor-pointer hover:opacity-90 transition-opacity"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setZoomedImage({ url: coating.image_url, alt: coating.name });
-                      }}
-                    >
+                    <div className="aspect-square relative">
                       <img 
                         src={coating.image_url} 
                         alt={coating.name}
@@ -1024,11 +1011,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     <img 
                       src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
                       alt={selectedOven.model_name}
-                      className="w-full h-full object-contain p-2 sm:p-4 cursor-pointer hover:opacity-90 transition-opacity"
-                      onClick={() => setZoomedImage({ 
-                        url: selectedOvenData.coating?.image_url || selectedOven.image_url, 
-                        alt: selectedOven.model_name 
-                      })}
+                      className="w-full h-full object-contain p-2 sm:p-4"
                     />
                   )}
                 </div>
@@ -1083,13 +1066,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 
                 {/* Header con immagine e titolo */}
                 <div className="flex items-start gap-4">
-                  <div 
-                    className="w-20 h-20 md:w-28 md:h-28 bg-background rounded-xl overflow-hidden flex-shrink-0 shadow-md border border-border cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setZoomedImage({ 
-                      url: selectedOvenData.coating?.image_url || selectedOven.image_url, 
-                      alt: selectedOven.model_name 
-                    })}
-                  >
+                  <div className="w-20 h-20 md:w-28 md:h-28 bg-background rounded-xl overflow-hidden flex-shrink-0 shadow-md border border-border">
                     <img 
                       src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
                       alt={selectedOven.model_name} 
