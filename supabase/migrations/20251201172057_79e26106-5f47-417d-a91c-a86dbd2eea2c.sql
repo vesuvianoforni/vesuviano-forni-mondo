@@ -1,0 +1,1 @@
+ALTER TABLE public.email_history ENABLE ROW LEVEL SECURITY
