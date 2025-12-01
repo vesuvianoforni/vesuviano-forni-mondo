@@ -956,9 +956,22 @@
       "shippingPrice": "Shipping Cost",
       "onSitePrice": "On-Site Build Price",
       "discount5": "5% Discount (book now)",
-      "savings": "You Save",
-      "total": "Total",
-      "depositAmount": "Deposit Amount (1%)"
+      "savings": "You save",
+      "total": "Total:",
+      "buildType": "Type:",
+      "depositAmount": "Deposit Amount (1%)",
+      "discount": {
+        "title": "Special 5% Discount - Limited Time Offer!",
+        "description": "Lock in your order now and save",
+        "discountedPrice": "Discounted price:"
+      },
+      "paymentTerms": {
+        "title": "Payment Terms:",
+        "deposit": "50% deposit",
+        "depositDescription": "upon order confirmation",
+        "balance": "50% balance",
+        "balanceDescription": "upon oven completion (ready for delivery)"
+      }
     },
     "benefits": {
       "deposit": "1% deposit fully refundable within 7 days",
