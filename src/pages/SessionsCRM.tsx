@@ -33,6 +33,8 @@ interface SessionData {
   quote_id: string | null;
   customer_info: any;
   link_sent: boolean;
+  sent_via_email: boolean;
+  sent_via_whatsapp: boolean;
   configurator_quotes?: {
     id: string;
     total_price: number;
@@ -119,19 +121,36 @@ const SessionsCRM = () => {
     setEmailModalSession(session);
   };
 
-  const toggleLinkSent = async (sessionId: string, currentValue: boolean) => {
+  const toggleSentViaEmail = async (sessionId: string, currentValue: boolean) => {
     try {
       const { error } = await supabase
         .from('configurator_sessions')
-        .update({ link_sent: !currentValue })
+        .update({ sent_via_email: !currentValue })
         .eq('id', sessionId);
 
       if (error) throw error;
 
-      toast.success(currentValue ? 'Link marcato come non inviato' : 'Link marcato come inviato');
+      toast.success(currentValue ? 'Rimosso invio email' : 'Marcato come inviato via email');
       loadSessions();
     } catch (error) {
-      console.error('Error updating link_sent:', error);
+      console.error('Error updating sent_via_email:', error);
+      toast.error('Errore nell\'aggiornamento dello stato');
+    }
+  };
+
+  const toggleSentViaWhatsApp = async (sessionId: string, currentValue: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('configurator_sessions')
+        .update({ sent_via_whatsapp: !currentValue })
+        .eq('id', sessionId);
+
+      if (error) throw error;
+
+      toast.success(currentValue ? 'Rimosso invio WhatsApp' : 'Marcato come inviato via WhatsApp');
+      loadSessions();
+    } catch (error) {
+      console.error('Error updating sent_via_whatsapp:', error);
       toast.error('Errore nell\'aggiornamento dello stato');
     }
   };
@@ -445,22 +464,37 @@ const SessionsCRM = () => {
                 </div>
               )}
 
-              {/* Link sent checkbox */}
+              {/* Delivery method checkboxes */}
               <div 
-                className="flex items-center gap-2 text-xs"
+                className="space-y-2"
                 onClick={(e) => e.stopPropagation()}
               >
-                <Checkbox
-                  id={`link-sent-${session.id}`}
-                  checked={session.link_sent}
-                  onCheckedChange={() => toggleLinkSent(session.id, session.link_sent)}
-                />
-                <label
-                  htmlFor={`link-sent-${session.id}`}
-                  className="cursor-pointer select-none"
-                >
-                  Link inviato al cliente
-                </label>
+                <div className="flex items-center gap-2 text-xs">
+                  <Checkbox
+                    id={`sent-email-${session.id}`}
+                    checked={session.sent_via_email}
+                    onCheckedChange={() => toggleSentViaEmail(session.id, session.sent_via_email)}
+                  />
+                  <label
+                    htmlFor={`sent-email-${session.id}`}
+                    className="cursor-pointer select-none"
+                  >
+                    📧 Inviato via Email
+                  </label>
+                </div>
+                <div className="flex items-center gap-2 text-xs">
+                  <Checkbox
+                    id={`sent-whatsapp-${session.id}`}
+                    checked={session.sent_via_whatsapp}
+                    onCheckedChange={() => toggleSentViaWhatsApp(session.id, session.sent_via_whatsapp)}
+                  />
+                  <label
+                    htmlFor={`sent-whatsapp-${session.id}`}
+                    className="cursor-pointer select-none"
+                  >
+                    💬 Inviato via WhatsApp
+                  </label>
+                </div>
               </div>
 
               {/* Order info for paid */}
@@ -510,22 +544,37 @@ const SessionsCRM = () => {
                 </div>
               )}
 
-              {/* Link sent checkbox */}
+              {/* Delivery method checkboxes */}
               <div 
-                className="flex items-center gap-2 text-sm"
+                className="space-y-2"
                 onClick={(e) => e.stopPropagation()}
               >
-                <Checkbox
-                  id={`link-sent-list-${session.id}`}
-                  checked={session.link_sent}
-                  onCheckedChange={() => toggleLinkSent(session.id, session.link_sent)}
-                />
-                <label
-                  htmlFor={`link-sent-list-${session.id}`}
-                  className="cursor-pointer select-none"
-                >
-                  Link inviato al cliente
-                </label>
+                <div className="flex items-center gap-2 text-sm">
+                  <Checkbox
+                    id={`sent-email-list-${session.id}`}
+                    checked={session.sent_via_email}
+                    onCheckedChange={() => toggleSentViaEmail(session.id, session.sent_via_email)}
+                  />
+                  <label
+                    htmlFor={`sent-email-list-${session.id}`}
+                    className="cursor-pointer select-none"
+                  >
+                    📧 Inviato via Email
+                  </label>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Checkbox
+                    id={`sent-whatsapp-list-${session.id}`}
+                    checked={session.sent_via_whatsapp}
+                    onCheckedChange={() => toggleSentViaWhatsApp(session.id, session.sent_via_whatsapp)}
+                  />
+                  <label
+                    htmlFor={`sent-whatsapp-list-${session.id}`}
+                    className="cursor-pointer select-none"
+                  >
+                    💬 Inviato via WhatsApp
+                  </label>
+                </div>
               </div>
 
               <div className="pt-2 border-t">
@@ -981,19 +1030,34 @@ const SessionsCRM = () => {
                         </div>
                       )}
                       
-                      {/* Link sent checkbox */}
-                      <div className="flex items-center gap-2 px-3 py-2">
-                        <Checkbox
-                          id={`link-sent-modal-${selectedSession.id}`}
-                          checked={selectedSession.link_sent}
-                          onCheckedChange={() => toggleLinkSent(selectedSession.id, selectedSession.link_sent)}
-                        />
-                        <label
-                          htmlFor={`link-sent-modal-${selectedSession.id}`}
-                          className="cursor-pointer select-none text-sm font-medium"
-                        >
-                          Link inviato al cliente
-                        </label>
+                      {/* Delivery method checkboxes */}
+                      <div className="space-y-2 px-3 py-2">
+                        <div className="flex items-center gap-2">
+                          <Checkbox
+                            id={`sent-email-modal-${selectedSession.id}`}
+                            checked={selectedSession.sent_via_email}
+                            onCheckedChange={() => toggleSentViaEmail(selectedSession.id, selectedSession.sent_via_email)}
+                          />
+                          <label
+                            htmlFor={`sent-email-modal-${selectedSession.id}`}
+                            className="cursor-pointer select-none text-sm font-medium"
+                          >
+                            📧 Inviato via Email
+                          </label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Checkbox
+                            id={`sent-whatsapp-modal-${selectedSession.id}`}
+                            checked={selectedSession.sent_via_whatsapp}
+                            onCheckedChange={() => toggleSentViaWhatsApp(selectedSession.id, selectedSession.sent_via_whatsapp)}
+                          />
+                          <label
+                            htmlFor={`sent-whatsapp-modal-${selectedSession.id}`}
+                            className="cursor-pointer select-none text-sm font-medium"
+                          >
+                            💬 Inviato via WhatsApp
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>

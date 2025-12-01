@@ -267,6 +267,8 @@ export type Database = {
           link_sent: boolean
           price_list: string
           quote_id: string | null
+          sent_via_email: boolean | null
+          sent_via_whatsapp: boolean | null
           status: string
           token: string
         }
@@ -289,6 +291,8 @@ export type Database = {
           link_sent?: boolean
           price_list?: string
           quote_id?: string | null
+          sent_via_email?: boolean | null
+          sent_via_whatsapp?: boolean | null
           status?: string
           token: string
         }
@@ -311,6 +315,8 @@ export type Database = {
           link_sent?: boolean
           price_list?: string
           quote_id?: string | null
+          sent_via_email?: boolean | null
+          sent_via_whatsapp?: boolean | null
           status?: string
           token?: string
         }
