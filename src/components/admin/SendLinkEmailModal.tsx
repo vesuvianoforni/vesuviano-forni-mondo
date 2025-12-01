@@ -91,10 +91,13 @@ export const SendLinkEmailModal = ({ isOpen, onClose, session }: SendLinkEmailMo
 
       if (error) throw error;
 
-      // Update link_sent status
+      // Update sent_via_email status
       await supabase
         .from('configurator_sessions')
-        .update({ link_sent: true })
+        .update({ 
+          link_sent: true,
+          sent_via_email: true 
+        })
         .eq('token', session.token);
 
       toast.success('Email inviata con successo!');
