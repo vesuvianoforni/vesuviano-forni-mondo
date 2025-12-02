@@ -465,10 +465,23 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
   useEffect(() => {
     if (selectedCoating && sessionId) {
-      trackAction('coating_selected', { coating: selectedCoating });
-      syncEventToERP({ session_id: sessionId, event_type: 'coating_selected', event_data: { coating: selectedCoating } });
+      const totalPrice = calculateTotal();
+      trackAction('coating_selected', { 
+        coating: selectedCoating,
+        totalPrice: totalPrice,
+        buildType: buildType
+      });
+      syncEventToERP({ 
+        session_id: sessionId, 
+        event_type: 'coating_selected', 
+        event_data: { 
+          coating: selectedCoating,
+          totalPrice: totalPrice,
+          buildType: buildType
+        } 
+      });
     }
-  }, [selectedCoating]);
+  }, [selectedCoating, buildType]);
 
   const handleSaveQuote = async () => {
     if (!selectedOven) { toast.error(t('configurator.errors.completeConfig')); return; }
