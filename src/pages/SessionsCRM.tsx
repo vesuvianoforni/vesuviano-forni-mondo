@@ -371,7 +371,7 @@ const SessionsCRM = () => {
       return (
         <Card 
           key={session.id} 
-          className="hover:shadow-lg transition-all border-l-4 cursor-pointer mb-3" 
+          className="hover:shadow-lg transition-all border-l-4 cursor-pointer mb-4" 
           onClick={() => setSelectedSession(session)}
           style={{
           borderLeftColor: session.configurator_quotes?.payment_completed ? '#16a34a' : 
@@ -381,87 +381,89 @@ const SessionsCRM = () => {
                            session.feedback_status === 'not_interested' ? '#dc2626' :
                            session.is_used ? '#57534e' : '#e5e7eb'
         }}>
-          <CardContent className="p-5">
-            <div className="space-y-3">
-              {/* Header with status and price list */}
-              <div className="flex items-start justify-between gap-2">
+          <CardContent className="p-4">
+            <div className="space-y-4">
+              {/* Header with status badge and price list */}
+              <div className="flex items-start justify-between gap-3 pb-3 border-b">
                 <div className="flex flex-col gap-2 min-w-0 flex-1">
                   {getStatusBadge(session, true)}
                   <Badge variant="outline" className="w-fit text-xs">
                     Listino {session.price_list}
                   </Badge>
                 </div>
-                <div className="flex gap-1 flex-shrink-0">
-                  {session.customer_email && (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedSessionId(session.id);
-                        setAiModalOpen(true);
-                      }}
-                      title="Genera messaggio AI"
-                      className="h-8 w-8 p-0"
-                    >
-                      <Sparkles className="w-3.5 h-3.5" />
-                    </Button>
-                  )}
+              </div>
+
+              {/* Action buttons row */}
+              <div className="flex gap-1.5 justify-end border-b pb-3">
+                {session.customer_email && (
                   <Button
                     size="sm"
                     variant="ghost"
                     onClick={(e) => {
                       e.stopPropagation();
-                      sendEmailToCustomer(session);
+                      setSelectedSessionId(session.id);
+                      setAiModalOpen(true);
                     }}
-                    title="Invia email"
+                    title="Genera messaggio AI"
                     className="h-8 w-8 p-0"
                   >
-                    <Mail className="w-3.5 h-3.5" />
+                    <Sparkles className="w-4 h-4" />
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      copyLink(session.token);
-                    }}
-                    title="Copia link"
-                    className="h-8 w-8 p-0"
-                  >
-                    <Copy className="w-3.5 h-3.5" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      regenerateLink(session.id);
-                    }}
-                    title="Rigenera link"
-                    className="h-8 w-8 p-0"
-                  >
-                    <RefreshCw className="w-3.5 h-3.5" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      deleteSession(session.id, session.customer_name || 'Cliente');
-                    }}
-                    title="Elimina sessione"
-                    className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </Button>
-                </div>
+                )}
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    sendEmailToCustomer(session);
+                  }}
+                  title="Invia email"
+                  className="h-8 w-8 p-0"
+                >
+                  <Mail className="w-4 h-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    copyLink(session.token);
+                  }}
+                  title="Copia link"
+                  className="h-8 w-8 p-0"
+                >
+                  <Copy className="w-4 h-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    regenerateLink(session.id);
+                  }}
+                  title="Rigenera link"
+                  className="h-8 w-8 p-0"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteSession(session.id, session.customer_name || 'Cliente');
+                  }}
+                  title="Elimina sessione"
+                  className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
               </div>
 
               {/* Customer info */}
-              <div className="min-w-0">
-                <h4 className="font-semibold text-sm truncate">{session.customer_name || 'Nome non disponibile'}</h4>
-                <div className="text-xs text-muted-foreground space-y-0.5 mt-1">
+              <div className="min-w-0 space-y-2">
+                <h4 className="font-semibold text-base leading-tight">{session.customer_name || 'Nome non disponibile'}</h4>
+                <div className="text-xs text-muted-foreground space-y-1.5">
                   {session.customer_email && (
                     <div className="truncate" title={session.customer_email}>{session.customer_email}</div>
                   )}
@@ -470,24 +472,24 @@ const SessionsCRM = () => {
               </div>
 
               {/* Date info */}
-              <div className="text-xs text-muted-foreground">
+              <div className="text-xs text-muted-foreground pt-2 border-t">
                 <div>Creato: {format(new Date(session.created_at), 'dd/MM/yy HH:mm', { locale: it })}</div>
               </div>
 
               {/* Link status indicator */}
               {session.is_used && (
-                <div className="flex items-center gap-1.5 text-xs text-green-600 bg-green-50 dark:bg-green-950 px-2 py-1 rounded">
-                  <Check className="w-3 h-3" />
+                <div className="flex items-center gap-1.5 text-xs font-medium text-green-600 bg-green-50 dark:bg-green-950 px-2.5 py-1.5 rounded">
+                  <Check className="w-3.5 h-3.5" />
                   Link utilizzato
                 </div>
               )}
 
               {/* Delivery method checkboxes */}
               <div 
-                className="space-y-2"
+                className="space-y-2.5 pt-3 border-t"
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="flex items-center gap-2 text-xs">
+                <div className="flex items-center gap-2.5 text-xs">
                   <Checkbox
                     id={`sent-email-${session.id}`}
                     checked={session.sent_via_email}
@@ -495,12 +497,12 @@ const SessionsCRM = () => {
                   />
                   <label
                     htmlFor={`sent-email-${session.id}`}
-                    className="cursor-pointer select-none"
+                    className="cursor-pointer select-none leading-none"
                   >
                     Inviato via Email
                   </label>
                 </div>
-                <div className="flex items-center gap-2 text-xs">
+                <div className="flex items-center gap-2.5 text-xs">
                   <Checkbox
                     id={`sent-whatsapp-${session.id}`}
                     checked={session.sent_via_whatsapp}
@@ -508,7 +510,7 @@ const SessionsCRM = () => {
                   />
                   <label
                     htmlFor={`sent-whatsapp-${session.id}`}
-                    className="cursor-pointer select-none"
+                    className="cursor-pointer select-none leading-none"
                   >
                     Inviato via WhatsApp
                   </label>
