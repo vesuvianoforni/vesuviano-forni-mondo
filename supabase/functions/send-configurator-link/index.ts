@@ -176,7 +176,7 @@ const getEmailTemplate = (name: string, link: string, language: 'it' | 'en' | 'f
               <p><strong>Vesuviano Forni</strong></p>
               <p>Forni Artigianali dal Vesuvio</p>
               <p>Via Sant'Anastasia 123, Napoli, Italia</p>
-              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 <a href="tel:+390811234567">+39 081 123 4567</a></p>
+              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 081 123 4567</p>
               <p style="margin-top: 15px;">🌐 <a href="https://www.vesuvianoforni.com">www.vesuvianoforni.com</a></p>
             </div>
           </div>
@@ -341,7 +341,7 @@ const getEmailTemplate = (name: string, link: string, language: 'it' | 'en' | 'f
               <p><strong>Vesuviano Forni</strong></p>
               <p>Artisanal Ovens from Vesuvius</p>
               <p>Via Sant'Anastasia 123, Naples, Italy</p>
-              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 <a href="tel:+390811234567">+39 081 123 4567</a></p>
+              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 081 123 4567</p>
               <p style="margin-top: 15px;">🌐 <a href="https://www.vesuvianoforni.com">www.vesuvianoforni.com</a></p>
             </div>
           </div>
@@ -506,7 +506,7 @@ const getEmailTemplate = (name: string, link: string, language: 'it' | 'en' | 'f
               <p><strong>Vesuviano Forni</strong></p>
               <p>Fours Artisanaux du Vésuve</p>
               <p>Via Sant'Anastasia 123, Naples, Italie</p>
-              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 <a href="tel:+390811234567">+39 081 123 4567</a></p>
+              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 081 123 4567</p>
               <p style="margin-top: 15px;">🌐 <a href="https://www.vesuvianoforni.com">www.vesuvianoforni.com</a></p>
             </div>
           </div>
@@ -532,7 +532,7 @@ const handler = async (req: Request): Promise<Response> => {
     const template = getEmailTemplate(customerName, configuratorLink, language);
 
     const emailResponse = await resend.emails.send({
-      from: 'Vesuviano Forni <noreply@vesuvianoforni.com>',
+      from: 'Vesuviano Forni <info@vesuvianoforni.com>',
       to: [customerEmail],
       subject: template.subject,
       html: template.html,
