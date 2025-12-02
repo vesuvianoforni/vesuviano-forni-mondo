@@ -27,6 +27,7 @@ export const AIConversionMessageModal = ({
   const [message, setMessage] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerName, setCustomerName] = useState("");
+  const [ovenImageUrl, setOvenImageUrl] = useState("");
 
   // Auto-generate message when modal opens
   React.useEffect(() => {
@@ -48,6 +49,7 @@ export const AIConversionMessageModal = ({
       setMessage(data.message);
       setCustomerEmail(data.customerEmail);
       setCustomerName(data.customerName);
+      setOvenImageUrl(data.ovenImageUrl || "");
       
       toast.success(
         language === 'it' ? 'Messaggio generato con successo!' :
@@ -88,6 +90,11 @@ export const AIConversionMessageModal = ({
                 <h1 style="color: white; margin: 0;">Vesuviano Forni</h1>
               </div>
               <div style="padding: 30px; background: #f9f9f9;">
+                ${ovenImageUrl ? `
+                  <div style="text-align: center; margin-bottom: 25px;">
+                    <img src="${ovenImageUrl}" alt="Il tuo forno Vesuviano" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                  </div>
+                ` : ''}
                 <p style="white-space: pre-wrap; line-height: 1.6; color: #333;">${message}</p>
               </div>
               <div style="padding: 20px; background: #333; text-align: center;">
@@ -147,6 +154,29 @@ export const AIConversionMessageModal = ({
 
           {message && (
             <>
+              {ovenImageUrl && (
+                <div className="mb-4">
+                  <Label>
+                    {language === 'it' ? '🔥 Forno Configurato' :
+                     language === 'en' ? '🔥 Configured Oven' :
+                     '🔥 Four Configuré'}
+                  </Label>
+                  <div className="mt-2 text-center bg-muted/30 rounded-lg p-4">
+                    <img 
+                      src={ovenImageUrl} 
+                      alt="Forno configurato" 
+                      className="max-w-full h-auto rounded-lg mx-auto shadow-md"
+                      style={{ maxHeight: '300px' }}
+                    />
+                    <p className="text-xs text-muted-foreground mt-2">
+                      {language === 'it' ? 'Questa immagine sarà inclusa nell\'email' :
+                       language === 'en' ? 'This image will be included in the email' :
+                       'Cette image sera incluse dans l\'email'}
+                    </p>
+                  </div>
+                </div>
+              )}
+
               <div>
                 <Label htmlFor="email">
                   {language === 'it' ? 'Email Cliente' :
