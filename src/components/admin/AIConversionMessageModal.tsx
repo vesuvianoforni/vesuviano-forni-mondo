@@ -135,12 +135,7 @@ export const AIConversionMessageModal = ({
     }
   }, [sessionId]);
 
-  // Auto-generate message when modal opens
-  React.useEffect(() => {
-    if (open && sessionId && !message) {
-      generateMessage();
-    }
-  }, [open, sessionId, message]);
+  // Remove auto-generate - user must select language first and click generate
 
   const generateMessage = async () => {
     setIsGenerating(true);
@@ -246,6 +241,18 @@ export const AIConversionMessageModal = ({
                 <SelectItem value="fr">🇫🇷 Français</SelectItem>
               </SelectContent>
             </Select>
+            
+            {/* Generate button - only show when no message yet */}
+            {!message && !isGenerating && (
+              <Button 
+                onClick={generateMessage} 
+                className="w-full mt-4"
+                disabled={isGenerating}
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                Genera Messaggio AI
+              </Button>
+            )}
           </div>
 
           {isGenerating && !message && (
