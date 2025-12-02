@@ -60,10 +60,11 @@ export const AIConversionMessageModal = ({
       );
     } catch (error: any) {
       console.error('Error generating message:', error);
+      const errorMessage = error.message || error.error || 'Unknown error';
       toast.error(
-        selectedLanguage === 'it' ? 'Errore nella generazione del messaggio' :
-        selectedLanguage === 'en' ? 'Error generating message' :
-        'Erreur lors de la génération du message'
+        selectedLanguage === 'it' ? `Errore: ${errorMessage}` :
+        selectedLanguage === 'en' ? `Error: ${errorMessage}` :
+        `Erreur: ${errorMessage}`
       );
     } finally {
       setIsGenerating(false);

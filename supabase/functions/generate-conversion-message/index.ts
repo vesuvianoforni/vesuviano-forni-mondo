@@ -238,7 +238,32 @@ Email max 120 mots avec salutation, choix spécifiques, émotion et appel à l'a
     }
 
     const aiData = await aiResponse.json();
-    const generatedContent = JSON.parse(aiData.choices[0].message.content);
+    
+    // Extract and parse JSON content with robust error handling
+    let generatedContent;
+    try {
+      const rawContent = aiData.choices[0].message.content;
+      console.log('Raw AI response:', rawContent);
+      
+      // Try to extract JSON if it's wrapped in markdown code blocks or text
+      let jsonString = rawContent;
+      const jsonMatch = rawContent.match(/```json\s*([\s\S]*?)\s*```/) || 
+                       rawContent.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        jsonString = jsonMatch[1] || jsonMatch[0];
+      }
+      
+      generatedContent = JSON.parse(jsonString);
+      
+      // Validate required fields
+      if (!generatedContent.subject || !generatedContent.message) {
+        throw new Error('Missing required fields in AI response');
+      }
+    } catch (parseError) {
+      console.error('JSON parsing error:', parseError);
+      console.error('Failed to parse content:', aiData.choices[0].message.content);
+      throw new Error('AI generated invalid response format');
+    }
 
     // Get oven image URL
     let ovenImageUrl = '';
