@@ -1478,29 +1478,6 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   </div>
                 </div>
               </div>
-              {/* Bottoni feedback */}
-              {sessionId && (buildType === 'on_site' || deliveryOption) && (
-                <div className="border-t pt-3 sm:pt-4 md:pt-6 mt-3 sm:mt-4 md:mt-6 space-y-2 sm:space-y-3">
-                  <h3 className="font-semibold text-center mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base md:text-lg">{t('configurator.payment.needHelp')}</h3>
-                  <Button 
-                    onClick={handleInterestedClick}
-                    className="w-full text-xs sm:text-sm md:text-base h-12 sm:h-auto" 
-                    size="lg"
-                    variant="default"
-                  >
-                    <span className="hidden sm:inline">{t('configurator.payment.interestedButton')}</span>
-                    <span className="sm:hidden leading-tight">{t('configurator.payment.interestedButtonShort')}<br/>{t('configurator.payment.interestedButtonShortSub')}</span>
-                  </Button>
-                  <Button 
-                    onClick={() => setShowNotInterestedModal(true)}
-                    className="w-full text-xs sm:text-sm md:text-base" 
-                    size="lg"
-                    variant="outline"
-                  >
-                    {t('configurator.payment.notInterestedButton')}
-                  </Button>
-                </div>
-              )}
               {!deliveryOption && buildType === 'ready_to_use' && sessionId && (
                 <p className="text-xs sm:text-sm text-center text-muted-foreground mt-4 sm:mt-6">{t('configurator.delivery.selectDelivery')}</p>
               )}
