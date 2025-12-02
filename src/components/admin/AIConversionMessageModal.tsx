@@ -31,12 +31,23 @@ export const AIConversionMessageModal = ({
   const [ovenImageUrl, setOvenImageUrl] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState(initialLanguage);
 
+  // Reset state when sessionId changes
+  React.useEffect(() => {
+    if (sessionId) {
+      setMessage("");
+      setSubject("");
+      setCustomerEmail("");
+      setCustomerName("");
+      setOvenImageUrl("");
+    }
+  }, [sessionId]);
+
   // Auto-generate message when modal opens
   React.useEffect(() => {
     if (open && sessionId && !message) {
       generateMessage();
     }
-  }, [open, sessionId]);
+  }, [open, sessionId, message]);
 
   const generateMessage = async () => {
     setIsGenerating(true);
