@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, Mail, Trash2, Search, Send, Sparkles } from 'lucide-react';
+import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, Mail, Trash2, Search, Send, Sparkles, MessageSquare } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Input } from '@/components/ui/input';
@@ -16,6 +16,16 @@ import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { SendLinkEmailModal } from '@/components/admin/SendLinkEmailModal';
 import { AIConversionMessageModal } from '@/components/admin/AIConversionMessageModal';
+import { ScrollArea } from '@/components/ui/scroll-area';
+
+interface EmailHistoryItem {
+  id: string;
+  sent_at: string;
+  email_type: string;
+  subject: string;
+  body: string;
+  sent_to: string;
+}
 
 interface SessionData {
   id: string;
@@ -59,6 +69,8 @@ const SessionsCRM = () => {
   const [emailModalSession, setEmailModalSession] = useState<SessionData | null>(null);
   const [aiModalOpen, setAiModalOpen] = useState(false);
   const [selectedSessionId, setSelectedSessionId] = useState<string>('');
+  const [emailHistory, setEmailHistory] = useState<EmailHistoryItem[]>([]);
+  const [loadingEmailHistory, setLoadingEmailHistory] = useState(false);
 
   useEffect(() => {
     loadSessions();
@@ -178,6 +190,34 @@ const SessionsCRM = () => {
     navigator.clipboard.writeText(link);
     toast.success('Link copiato!');
   };
+
+  // Load email history when a session is selected
+  useEffect(() => {
+    const loadEmailHistory = async () => {
+      if (!selectedSession) {
+        setEmailHistory([]);
+        return;
+      }
+      
+      setLoadingEmailHistory(true);
+      try {
+        const { data, error } = await supabase
+          .from('email_history')
+          .select('id, sent_at, email_type, subject, body, sent_to')
+          .eq('session_id', selectedSession.id)
+          .order('sent_at', { ascending: false });
+        
+        if (error) throw error;
+        setEmailHistory(data || []);
+      } catch (error) {
+        console.error('Error loading email history:', error);
+      } finally {
+        setLoadingEmailHistory(false);
+      }
+    };
+
+    loadEmailHistory();
+  }, [selectedSession?.id]);
 
   const regenerateLink = async (sessionId: string) => {
     if (!confirm('Rigenerare il link? Il vecchio link non funzionerà più.')) return;
@@ -1049,6 +1089,42 @@ const SessionsCRM = () => {
                     <div className="text-sm text-muted-foreground mt-1">{selectedSession.feedback_reason}</div>
                   </div>
                 )}
+
+                {/* Email History Section */}
+                <Separator />
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <MessageSquare className="w-4 h-4" />
+                    <span className="text-sm font-medium">Cronologia Email Follow-up</span>
+                    <Badge variant="outline" className="ml-auto">{emailHistory.length}</Badge>
+                  </div>
+                  
+                  {loadingEmailHistory ? (
+                    <p className="text-sm text-muted-foreground">Caricamento...</p>
+                  ) : emailHistory.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">Nessuna email inviata</p>
+                  ) : (
+                    <ScrollArea className="max-h-[200px]">
+                      <div className="space-y-3">
+                        {emailHistory.map((email) => (
+                          <div key={email.id} className="bg-muted/30 rounded-lg p-3 space-y-1">
+                            <div className="flex items-center justify-between">
+                              <Badge variant="secondary" className="text-xs">
+                                {email.email_type === 'ai_sales' ? 'AI Sales' : 
+                                 email.email_type === 'link' ? 'Invio Link' : email.email_type}
+                              </Badge>
+                              <span className="text-xs text-muted-foreground">
+                                {format(new Date(email.sent_at), 'dd/MM/yyyy HH:mm', { locale: it })}
+                              </span>
+                            </div>
+                            <p className="text-sm font-medium">{email.subject}</p>
+                            <p className="text-xs text-muted-foreground">A: {email.sent_to}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  )}
+                </div>
               </div>
             </div>
           )}

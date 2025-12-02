@@ -1,7 +1,11 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+
+const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -151,6 +155,36 @@ const handler = async (req: Request): Promise<Response> => {
       });
 
       console.log("AI Sales email sent successfully:", emailResponse);
+
+      // Salva nella cronologia email se abbiamo un sessionId
+      if (data.sessionId) {
+        try {
+          const supabase = createClient(supabaseUrl, supabaseServiceKey);
+          
+          const { error: historyError } = await supabase
+            .from('email_history')
+            .insert({
+              session_id: data.sessionId,
+              email_type: 'ai_sales',
+              subject: data.subject!,
+              body: data.message!,
+              sent_to: data.to!,
+              sent_from: 'info@vesuvianoforni.com',
+              metadata: {
+                ovenImageUrl: data.ovenImageUrl,
+                resendEmailId: emailResponse.data?.id
+              }
+            });
+          
+          if (historyError) {
+            console.error("Error saving email history:", historyError);
+          } else {
+            console.log("Email history saved successfully");
+          }
+        } catch (historyErr) {
+          console.error("Error saving email history:", historyErr);
+        }
+      }
 
       return new Response(
         JSON.stringify({ 
