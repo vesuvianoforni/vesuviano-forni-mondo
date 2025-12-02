@@ -70,29 +70,37 @@ serve(async (req) => {
                    paymentAction?.totalPrice || paymentAction?.total_price;
     }
     
-    // Extract detailed oven configuration from actions
-    let ovenDetails = '';
-    let coatingInfo = '';
-    let fuelTypeInfo = '';
+    // Extract detailed oven configuration from actions with better parsing
+    let modelName = '';
+    let diameter = '';
+    let fuelType = '';
+    let coating = '';
     
-    if (quote?.configurator_ovens) {
-      const oven = quote.configurator_ovens;
-      ovenDetails = `Modello: ${oven.model_name}, Diametro: ${oven.diameter}cm, Capacità: ${oven.pizza_capacity} pizze`;
-      
-      // Get fuel type from actions or quote
-      const fuelAction = actions.find((a: any) => a.type === 'fuel_selected');
-      if (fuelAction?.fuelType) {
-        fuelTypeInfo = `Alimentazione: ${fuelAction.fuelType}`;
-      } else if (oven.fuel_type) {
-        fuelTypeInfo = `Alimentazione: ${oven.fuel_type.join('/')}`;
+    // Parse actions to extract all configuration details
+    for (const action of actions) {
+      if (action.action === 'Modello' || action.type === 'model_selected') {
+        modelName = action.details || action.model || '';
       }
-      
-      // Get coating from actions
-      const coatingAction = actions.find((a: any) => a.type === 'coating_selected');
-      if (coatingAction?.coating) {
-        coatingInfo = `Rivestimento: ${coatingAction.coating}`;
+      if (action.action === 'Diametro' || action.type === 'size_selected') {
+        diameter = action.details || action.diameter || '';
+      }
+      if (action.action === 'Alimentazione' || action.type === 'fuel_selected') {
+        fuelType = action.details || action.fuelType || '';
+      }
+      if (action.action === 'Rivestimento' || action.type === 'coating_selected') {
+        coating = action.details || action.coating || '';
       }
     }
+    
+    // Fallback to quote data if actions don't have the info
+    if (!modelName && quote?.configurator_ovens) {
+      modelName = quote.configurator_ovens.model_name;
+    }
+    if (!diameter && quote?.configurator_ovens) {
+      diameter = `${quote.configurator_ovens.diameter}cm`;
+    }
+    
+    console.log('Extracted configuration:', { modelName, diameter, fuelType, coating });
 
     const activitySummary = actions.map((a: any) => `${a.action}: ${a.details || ''}`).join(', ');
     
@@ -150,47 +158,56 @@ Format JSON:
     const userPrompt = language === 'it'
       ? `Cliente: ${customerName}
 
-SCELTE SPECIFICHE FATTE:
-${ovenDetails ? `🔥 ${ovenDetails}` : 'Nessun modello scelto'}
-${fuelTypeInfo ? `⚡ ${fuelTypeInfo}` : ''}
-${coatingInfo ? `🎨 ${coatingInfo}` : ''}
-${totalPrice ? `💰 Prezzo totale: €${Number(totalPrice).toLocaleString('it-IT')}` : ''}
+CONFIGURAZIONE SELEZIONATA DAL CLIENTE:
+${modelName ? `🔥 Modello: ${modelName}` : '❌ Nessun modello'}
+${diameter ? `📏 Diametro: ${diameter}` : ''}
+${fuelType ? `⚡ Alimentazione: ${fuelType}` : ''}
+${coating ? `🎨 Rivestimento: ${coating}` : ''}
+${totalPrice ? `💰 Prezzo: €${Number(totalPrice).toLocaleString('it-IT')}` : ''}
 
-Genera email BREVE (max 120 parole):
-1. Saluto con "${customerName}"
-2. CITA LE SUE SCELTE ESATTE: "${ovenDetails || 'modello'}", "${fuelTypeInfo || 'alimentazione'}", "${coatingInfo || 'rivestimento'}"
-3. MENZIONA PREZZO: €${totalPrice ? Number(totalPrice).toLocaleString('it-IT') : 'X.XXX'}
-4. Tocca emozione: il suo sogno pizzeria
-5. Call-to-action: "Ti chiamo per finalizzare"`
+IMPORTANTE: Devi citare ESATTAMENTE le scelte fatte:
+- Modello: "${modelName}"
+- Diametro: "${diameter}"
+- Alimentazione: "${fuelType}"
+- Rivestimento: "${coating}"
+- Prezzo: €${totalPrice ? Number(totalPrice).toLocaleString('it-IT') : 'X.XXX'}
+
+Email max 120 parole con saluto, scelte specifiche, emozione e call-to-action.`
       : language === 'en'
       ? `Customer: ${customerName}
 
-SPECIFIC CHOICES MADE:
-${ovenDetails ? `🔥 ${ovenDetails}` : 'No model selected'}
-${fuelTypeInfo ? `⚡ ${fuelTypeInfo}` : ''}
-${coatingInfo ? `🎨 ${coatingInfo}` : ''}
-${totalPrice ? `💰 Total price: €${Number(totalPrice).toLocaleString('en-US')}` : ''}
+CUSTOMER SELECTED CONFIGURATION:
+${modelName ? `🔥 Model: ${modelName}` : '❌ No model'}
+${diameter ? `📏 Diameter: ${diameter}` : ''}
+${fuelType ? `⚡ Fuel: ${fuelType}` : ''}
+${coating ? `🎨 Coating: ${coating}` : ''}
+${totalPrice ? `💰 Price: €${Number(totalPrice).toLocaleString('en-US')}` : ''}
 
-Generate SHORT email (max 120 words):
-1. Greeting with "${customerName}"
-2. CITE THEIR EXACT CHOICES: "${ovenDetails || 'model'}", "${fuelTypeInfo || 'fuel type'}", "${coatingInfo || 'coating'}"
-3. MENTION PRICE: €${totalPrice ? Number(totalPrice).toLocaleString('en-US') : 'X,XXX'}
-4. Touch emotion: their pizzeria dream
-5. Call-to-action: "I'll call you to finalize"`
+CRITICAL: You must cite EXACTLY what they chose:
+- Model: "${modelName}"
+- Diameter: "${diameter}"
+- Fuel: "${fuelType}"
+- Coating: "${coating}"
+- Price: €${totalPrice ? Number(totalPrice).toLocaleString('en-US') : 'X,XXX'}
+
+Email max 120 words with greeting, specific choices, emotion and call-to-action.`
       : `Client: ${customerName}
 
-CHOIX SPÉCIFIQUES FAITS:
-${ovenDetails ? `🔥 ${ovenDetails}` : 'Aucun modèle sélectionné'}
-${fuelTypeInfo ? `⚡ ${fuelTypeInfo}` : ''}
-${coatingInfo ? `🎨 ${coatingInfo}` : ''}
-${totalPrice ? `💰 Prix total: €${Number(totalPrice).toLocaleString('fr-FR')}` : ''}
+CONFIGURATION SÉLECTIONNÉE PAR LE CLIENT:
+${modelName ? `🔥 Modèle: ${modelName}` : '❌ Aucun modèle'}
+${diameter ? `📏 Diamètre: ${diameter}` : ''}
+${fuelType ? `⚡ Alimentation: ${fuelType}` : ''}
+${coating ? `🎨 Revêtement: ${coating}` : ''}
+${totalPrice ? `💰 Prix: €${Number(totalPrice).toLocaleString('fr-FR')}` : ''}
 
-Générez email COURT (max 120 mots):
-1. Salutation avec "${customerName}"
-2. CITEZ SES CHOIX EXACTS: "${ovenDetails || 'modèle'}", "${fuelTypeInfo || 'alimentation'}", "${coatingInfo || 'revêtement'}"
-3. MENTIONNEZ PRIX: €${totalPrice ? Number(totalPrice).toLocaleString('fr-FR') : 'X.XXX'}
-4. Touchez émotion: son rêve pizzeria
-5. Appel à l'action: "Je vous appelle pour finaliser"`;
+CRITIQUE: Vous devez citer EXACTEMENT ce qu'il a choisi:
+- Modèle: "${modelName}"
+- Diamètre: "${diameter}"
+- Alimentation: "${fuelType}"
+- Revêtement: "${coating}"
+- Prix: €${totalPrice ? Number(totalPrice).toLocaleString('fr-FR') : 'X.XXX'}
+
+Email max 120 mots avec salutation, choix spécifiques, émotion et appel à l'action.`;
 
     // Call Lovable AI
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
