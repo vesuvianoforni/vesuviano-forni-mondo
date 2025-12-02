@@ -301,6 +301,8 @@ const SessionsCRM = () => {
     const sizeAction = actions.find((a: any) => a.type === 'size_selected');
     const coatingAction = actions.find((a: any) => a.type === 'coating_selected');
     const quoteAction = actions.find((a: any) => a.type === 'quote_saved');
+    const contactAction = actions.find((a: any) => a.type === 'contact_requested');
+    const paymentAction = actions.find((a: any) => a.type === 'payment_initiated');
     
     const actionTypes = new Set(actions.map((a: any) => a.type));
     
@@ -311,11 +313,40 @@ const SessionsCRM = () => {
     if (actionTypes.has('color_render_generated')) summary.push('✓ Ha generato render colore');
     if (actionTypes.has('architect_ai_used')) summary.push('✓ Ha usato Architetto AI');
     
-    // Show price if available
+    // Show price if available - try multiple sources
+    let priceFound = false;
+    
+    // Try from quote action first
     if (quoteAction?.totalPrice) {
-      summary.push(`💰 Prezzo: €${quoteAction.totalPrice.toLocaleString('it-IT')}`);
-    } else if (session.configurator_quotes?.total_price) {
-      summary.push(`💰 Prezzo: €${session.configurator_quotes.total_price.toLocaleString('it-IT')}`);
+      summary.push(`💰 Prezzo: €${Number(quoteAction.totalPrice).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+      priceFound = true;
+    } else if (quoteAction?.total_price) {
+      summary.push(`💰 Prezzo: €${Number(quoteAction.total_price).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+      priceFound = true;
+    }
+    
+    // Try from contact action
+    if (!priceFound && contactAction?.totalPrice) {
+      summary.push(`💰 Prezzo: €${Number(contactAction.totalPrice).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+      priceFound = true;
+    } else if (!priceFound && contactAction?.total_price) {
+      summary.push(`💰 Prezzo: €${Number(contactAction.total_price).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+      priceFound = true;
+    }
+    
+    // Try from payment action
+    if (!priceFound && paymentAction?.totalPrice) {
+      summary.push(`💰 Prezzo: €${Number(paymentAction.totalPrice).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+      priceFound = true;
+    } else if (!priceFound && paymentAction?.total_price) {
+      summary.push(`💰 Prezzo: €${Number(paymentAction.total_price).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+      priceFound = true;
+    }
+    
+    // Finally try from configurator_quotes table
+    if (!priceFound && session.configurator_quotes?.total_price) {
+      summary.push(`💰 Prezzo: €${Number(session.configurator_quotes.total_price).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+      priceFound = true;
     }
 
     return (
