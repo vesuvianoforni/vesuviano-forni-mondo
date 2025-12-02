@@ -64,6 +64,90 @@ const SessionsCRM = () => {
     loadSessions();
   }, []);
 
+  // Real-time subscription for session updates
+  useEffect(() => {
+    console.log('Setting up real-time subscription...');
+    
+    const channel = supabase
+      .channel('configurator-sessions-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
+          schema: 'public',
+          table: 'configurator_sessions'
+        },
+        async (payload) => {
+          console.log('Real-time update received:', payload);
+          
+          if (payload.eventType === 'INSERT') {
+            // Fetch the new session with related data
+            const { data: newSession, error } = await supabase
+              .from('configurator_sessions')
+              .select(`
+                *,
+                configurator_quotes (
+                  id,
+                  total_price,
+                  status,
+                  payment_completed
+                )
+              `)
+              .eq('id', payload.new.id)
+              .single();
+
+            if (!error && newSession) {
+              setSessions(prev => [newSession as SessionData, ...prev]);
+              toast.success('Nuova sessione creata!');
+            }
+          } else if (payload.eventType === 'UPDATE') {
+            // Fetch the updated session with related data
+            const { data: updatedSession, error } = await supabase
+              .from('configurator_sessions')
+              .select(`
+                *,
+                configurator_quotes (
+                  id,
+                  total_price,
+                  status,
+                  payment_completed
+                )
+              `)
+              .eq('id', payload.new.id)
+              .single();
+
+            if (!error && updatedSession) {
+              setSessions(prev => 
+                prev.map(session => 
+                  session.id === updatedSession.id ? updatedSession as SessionData : session
+                )
+              );
+              
+              // Update selected session if it's the one being viewed
+              if (selectedSession?.id === updatedSession.id) {
+                setSelectedSession(updatedSession as SessionData);
+              }
+            }
+          } else if (payload.eventType === 'DELETE') {
+            setSessions(prev => prev.filter(session => session.id !== payload.old.id));
+            
+            // Close detail modal if the deleted session was being viewed
+            if (selectedSession?.id === payload.old.id) {
+              setSelectedSession(null);
+            }
+            
+            toast.info('Sessione eliminata');
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      console.log('Cleaning up real-time subscription...');
+      supabase.removeChannel(channel);
+    };
+  }, [selectedSession]);
+
   const loadSessions = async () => {
     try {
       const { data, error } = await supabase
