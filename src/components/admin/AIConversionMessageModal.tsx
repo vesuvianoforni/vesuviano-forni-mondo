@@ -276,7 +276,7 @@ export const AIConversionMessageModal = ({
                 </div>
               )}
 
-              <div>
+              <div className="mb-4">
                 <Label htmlFor="email">Email Cliente</Label>
                 <Input
                   id="email"
@@ -287,7 +287,7 @@ export const AIConversionMessageModal = ({
                 />
               </div>
 
-              <div>
+              <div className="mb-4">
                 <Label htmlFor="subject">Oggetto</Label>
                 <Input
                   id="subject"
@@ -297,20 +297,20 @@ export const AIConversionMessageModal = ({
                 />
               </div>
 
-              <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "edit" | "preview")} className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="edit" className="flex items-center gap-2">
-                    <Edit className="h-4 w-4" />
-                    Modifica
-                  </TabsTrigger>
-                  <TabsTrigger value="preview" className="flex items-center gap-2">
-                    <Eye className="h-4 w-4" />
-                    Anteprima HTML
-                  </TabsTrigger>
-                </TabsList>
+              <div className="space-y-4">
+                <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "edit" | "preview")} className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 mb-4">
+                    <TabsTrigger value="edit" className="flex items-center gap-2">
+                      <Edit className="h-4 w-4" />
+                      Modifica
+                    </TabsTrigger>
+                    <TabsTrigger value="preview" className="flex items-center gap-2">
+                      <Eye className="h-4 w-4" />
+                      Anteprima HTML
+                    </TabsTrigger>
+                  </TabsList>
 
-                <TabsContent value="edit" className="mt-4">
-                  <div>
+                  <TabsContent value="edit" className="mt-0 space-y-2">
                     <Label htmlFor="message">Messaggio</Label>
                     <Textarea
                       id="message"
@@ -319,28 +319,26 @@ export const AIConversionMessageModal = ({
                       rows={12}
                       className="font-sans"
                     />
-                    <p className="text-xs text-muted-foreground mt-2">
+                    <p className="text-xs text-muted-foreground">
                       💡 Il messaggio verrà inviato in formato HTML professionale con logo Vesuviano e link WhatsApp cliccabile
                     </p>
-                  </div>
-                </TabsContent>
+                  </TabsContent>
 
-                <TabsContent value="preview" className="mt-4">
-                  <div>
+                  <TabsContent value="preview" className="mt-0 space-y-2">
                     <Label>Anteprima Email</Label>
-                    <div className="mt-2 border rounded-lg overflow-hidden bg-muted/20" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                    <div className="border rounded-lg overflow-hidden bg-muted/20" style={{ maxHeight: '500px', overflowY: 'auto' }}>
                       <iframe
                         srcDoc={generateEmailPreview()}
                         style={{ width: '100%', height: '500px', border: 'none' }}
                         title="Anteprima Email"
                       />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-2">
+                    <p className="text-xs text-muted-foreground">
                       📧 Questa è l'anteprima esatta di come apparirà l'email al cliente
                     </p>
-                  </div>
-                </TabsContent>
-              </Tabs>
+                  </TabsContent>
+                </Tabs>
+              </div>
             </>
           )}
         </div>
