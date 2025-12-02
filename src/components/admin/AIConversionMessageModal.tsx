@@ -96,27 +96,11 @@ export const AIConversionMessageModal = ({
     try {
       const { error } = await supabase.functions.invoke('send-configuration-email', {
         body: {
+          emailType: 'ai_sales',
           to: customerEmail,
           subject: subject,
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <div style="background: linear-gradient(135deg, #8B4513 0%, #CD5C5C 100%); padding: 30px; text-align: center;">
-                <h1 style="color: white; margin: 0;">Vesuviano Forni</h1>
-              </div>
-              <div style="padding: 30px; background: #f9f9f9;">
-                ${ovenImageUrl ? `
-                  <div style="text-align: center; margin-bottom: 25px;">
-                    <img src="${ovenImageUrl}" alt="Il tuo forno Vesuviano" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-                  </div>
-                ` : ''}
-                <p style="white-space: pre-wrap; line-height: 1.6; color: #333;">${message}</p>
-              </div>
-              <div style="padding: 20px; background: #333; text-align: center;">
-                <p style="color: #fff; margin: 0;">Vesuviano Forni - Sant'Anastasia, Napoli</p>
-                <p style="color: #fff; margin: 5px 0 0 0;">info@vesuvianoforni.com</p>
-              </div>
-            </div>
-          `,
+          message: message,
+          ovenImageUrl: ovenImageUrl,
           sessionId: sessionId
         }
       });
@@ -229,6 +213,9 @@ export const AIConversionMessageModal = ({
                   rows={12}
                   className="font-sans"
                 />
+                <p className="text-xs text-muted-foreground mt-2">
+                  💡 Il messaggio verrà inviato in formato HTML professionale con logo Vesuviano e link WhatsApp cliccabile
+                </p>
               </div>
             </>
           )}
