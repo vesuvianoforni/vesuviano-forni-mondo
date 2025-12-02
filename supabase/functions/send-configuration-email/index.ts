@@ -70,7 +70,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="max-width: 650px; margin: 0 auto; background: white;">
             <!-- Header con logo -->
             <div style="background: linear-gradient(135deg, #8B4513 0%, #CD5C5C 100%); padding: 40px 30px; text-align: center;">
-              <img src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/vesuviano-logo-bianco.png" alt="Vesuviano Forni" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
+              <img src="https://www.vesuvianoforni.com/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano Forni" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
               <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600;">Vesuviano Forni</h1>
               <p style="color: #fef2f2; margin: 10px 0 0 0; font-size: 14px;">L'arte della tradizione napoletana</p>
             </div>
@@ -112,7 +112,7 @@ const handler = async (req: Request): Promise<Response> => {
                 </tr>
                 <tr>
                   <td style="padding: 12px 0; text-align: center;">
-                    <a href="https://api.whatsapp.com/send?phone=393509286941&text=Ciao%20Vesuviano%20Forni%2C%20" 
+                    <a href="https://www.vesuvianoforni.com/contatti?whatsapp=true" 
                        style="display: inline-block; background: #25D366; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 15px;">
                       💬 Scrivimi su WhatsApp
                     </a>
@@ -120,12 +120,12 @@ const handler = async (req: Request): Promise<Response> => {
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; text-align: center; color: #666;">
-                    <a href="tel:+393509286941" style="color: #2563eb; text-decoration: none;">📱 +39 350 928 6941</a> (mobile)
+                    📱 +39 350 928 6941 (mobile)
                   </td>
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; text-align: center; color: #666;">
-                    <a href="tel:08119231684" style="color: #2563eb; text-decoration: none;">☎️ 081 192 31684</a>
+                    ☎️ 081 192 31684
                   </td>
                 </tr>
                 <tr>
