@@ -55,6 +55,21 @@ serve(async (req) => {
     const actions = session.customer_actions || [];
     const quote = session.configurator_quotes?.[0];
     
+    // Extract price from multiple sources
+    let totalPrice = quote?.total_price;
+    if (!totalPrice) {
+      // Try to get price from actions (coating_selected, quote_saved, contact_requested, payment_initiated)
+      const coatingAction = actions.find((a: any) => a.type === 'coating_selected');
+      const quoteAction = actions.find((a: any) => a.type === 'quote_saved');
+      const contactAction = actions.find((a: any) => a.type === 'contact_requested');
+      const paymentAction = actions.find((a: any) => a.type === 'payment_initiated');
+      
+      totalPrice = coatingAction?.totalPrice || coatingAction?.total_price ||
+                   quoteAction?.totalPrice || quoteAction?.total_price ||
+                   contactAction?.totalPrice || contactAction?.total_price ||
+                   paymentAction?.totalPrice || paymentAction?.total_price;
+    }
+    
     // Extract detailed oven configuration from actions
     let ovenDetails = '';
     let coatingInfo = '';
@@ -152,7 +167,7 @@ Status: ${status}
 ${ovenDetails ? `Forno configurato: ${ovenDetails}` : 'Nessun forno configurato ancora'}
 ${fuelTypeInfo ? fuelTypeInfo : ''}
 ${coatingInfo ? coatingInfo : ''}
-${quote?.total_price ? `Prezzo preventivo: €${quote.total_price.toLocaleString('it-IT')}` : ''}
+${totalPrice ? `Prezzo preventivo: €${Number(totalPrice).toLocaleString('it-IT')}` : ''}
 ${quote?.has_gas ? 'Con kit gas' : ''}
 ${quote?.has_installation ? 'Con installazione' : ''}
 Attività: ${activitySummary || 'Ha visitato il configuratore'}
@@ -166,7 +181,7 @@ Status: ${status}
 ${ovenDetails ? `Configured oven: ${ovenDetails}` : 'No oven configured yet'}
 ${fuelTypeInfo ? fuelTypeInfo : ''}
 ${coatingInfo ? coatingInfo : ''}
-${quote?.total_price ? `Quote price: €${quote.total_price.toLocaleString('en-US')}` : ''}
+${totalPrice ? `Quote price: €${Number(totalPrice).toLocaleString('en-US')}` : ''}
 ${quote?.has_gas ? 'With gas kit' : ''}
 ${quote?.has_installation ? 'With installation' : ''}
 Activity: ${activitySummary || 'Visited the configurator'}
@@ -179,7 +194,7 @@ Statut: ${status}
 ${ovenDetails ? `Four configuré: ${ovenDetails}` : 'Aucun four configuré pour le moment'}
 ${fuelTypeInfo ? fuelTypeInfo : ''}
 ${coatingInfo ? coatingInfo : ''}
-${quote?.total_price ? `Prix du devis: €${quote.total_price.toLocaleString('fr-FR')}` : ''}
+${totalPrice ? `Prix du devis: €${Number(totalPrice).toLocaleString('fr-FR')}` : ''}
 ${quote?.has_gas ? 'Avec kit gaz' : ''}
 ${quote?.has_installation ? 'Avec installation' : ''}
 Activité: ${activitySummary || 'A visité le configurateur'}
