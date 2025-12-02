@@ -105,7 +105,7 @@ serve(async (req) => {
     const activitySummary = actions.map((a: any) => `${a.action}: ${a.details || ''}`).join(', ');
     
     const systemPrompt = language === 'it' 
-      ? `Sei un esperto venditore di forni a legna Vesuviano. Genera un'email BREVE e PERSONALIZZATA per convertire il cliente.
+      ? `Sei un esperto venditore di forni a legna Vesuviano. Genera un'email BREVE e PERSONALIZZATA per il cliente.
 
 REGOLE CRITICHE:
 - Lunghezza: MASSIMO 100-120 parole
@@ -113,16 +113,27 @@ REGOLE CRITICHE:
 - CITA ESATTAMENTE le scelte fatte: modello specifico, diametro (es. 100cm), rivestimento scelto (es. Mosaico), alimentazione (legna/gas/elettrico)
 - INDICA IL PREZZO: "il tuo forno configurato a €X.XXX"
 - Tono emozionale ma conciso: parla del suo sogno pizzeria
-- Call-to-action chiara: "Ti chiamo per finalizzare"
+- CHIEDI cosa potrebbe convincerlo a finalizzare l'acquisto (dubbi, domande, condizioni speciali)
+- INCLUDI SEMPRE la firma completa in calce con tutti i contatti
 - Oggetto: max 50 caratteri con nome cliente
+
+Firma obbligatoria:
+
+Bruno Nardello
+www.vesuvianoforni.com
+info@vesuvianoforni.com
+WhatsApp: https://api.whatsapp.com/send?phone=393509286941&text=Ciao%20Vesuviano%20Forni%2C%20
+Tel: +393509286941 (mobile)
+Tel: 08119231684
+Naples - Italy
 
 Formato JSON:
 {
   "subject": "Oggetto con nome cliente",
-  "message": "Messaggio breve e specifico"
+  "message": "Messaggio breve e specifico con firma completa"
 }`
       : language === 'en'
-      ? `You are an expert Vesuviano wood-fired oven seller. Generate a SHORT and PERSONALIZED email to convert the customer.
+      ? `You are an expert Vesuviano wood-fired oven seller. Generate a SHORT and PERSONALIZED email for the customer.
 
 CRITICAL RULES:
 - Length: MAX 100-120 words
@@ -130,15 +141,26 @@ CRITICAL RULES:
 - CITE EXACTLY their choices: specific model, diameter (e.g. 100cm), chosen coating (e.g. Mosaic), fuel type (wood/gas/electric)
 - STATE THE PRICE: "your configured oven at €X,XXX"
 - Emotional but concise tone: speak to their pizzeria dream
-- Clear call-to-action: "I'll call you to finalize"
+- ASK what could convince them to finalize the purchase (doubts, questions, special conditions)
+- ALWAYS INCLUDE the complete signature at the bottom with all contacts
 - Subject: max 50 characters with customer name
+
+Required signature:
+
+Bruno Nardello
+www.vesuvianoforni.com
+info@vesuvianoforni.com
+WhatsApp: https://api.whatsapp.com/send?phone=393509286941&text=Ciao%20Vesuviano%20Forni%2C%20
+Tel: +393509286941 (mobile)
+Tel: 08119231684
+Naples - Italy
 
 JSON format:
 {
   "subject": "Subject with customer name",
-  "message": "Short and specific message"
+  "message": "Short and specific message with complete signature"
 }`
-      : `Vous êtes un expert vendeur de fours à bois Vesuviano. Générez un email COURT et PERSONNALISÉ pour convertir le client.
+      : `Vous êtes un expert vendeur de fours à bois Vesuviano. Générez un email COURT et PERSONNALISÉ pour le client.
 
 RÈGLES CRITIQUES:
 - Longueur: MAX 100-120 mots
@@ -146,13 +168,24 @@ RÈGLES CRITIQUES:
 - CITEZ EXACTEMENT ses choix: modèle spécifique, diamètre (ex. 100cm), revêtement choisi (ex. Mosaïque), alimentation (bois/gaz/électrique)
 - INDIQUEZ LE PRIX: "votre four configuré à €X.XXX"
 - Ton émotionnel mais concis: parlez de son rêve pizzeria
-- Appel à l'action clair: "Je vous appelle pour finaliser"
+- DEMANDEZ ce qui pourrait le convaincre de finaliser l'achat (doutes, questions, conditions spéciales)
+- INCLUEZ TOUJOURS la signature complète en bas avec tous les contacts
 - Objet: max 50 caractères avec nom client
+
+Signature obligatoire:
+
+Bruno Nardello
+www.vesuvianoforni.com
+info@vesuvianoforni.com
+WhatsApp: https://api.whatsapp.com/send?phone=393509286941&text=Ciao%20Vesuviano%20Forni%2C%20
+Tél: +393509286941 (mobile)
+Tél: 08119231684
+Naples - Italy
 
 Format JSON:
 {
   "subject": "Objet avec nom client",
-  "message": "Message court et spécifique"
+  "message": "Message court et spécifique avec signature complète"
 }`;
 
     const userPrompt = language === 'it'
@@ -172,7 +205,12 @@ IMPORTANTE: Devi citare ESATTAMENTE le scelte fatte:
 - Rivestimento: "${coating}"
 - Prezzo: €${totalPrice ? Number(totalPrice).toLocaleString('it-IT') : 'X.XXX'}
 
-Email max 120 parole con saluto, scelte specifiche, emozione e call-to-action.`
+Email max 120 parole che:
+1. Saluta il cliente per nome
+2. Cita le sue scelte specifiche
+3. Crea connessione emotiva
+4. Chiede cosa potrebbe convincerlo a finalizzare
+5. Termina SEMPRE con la firma completa con tutti i contatti`
       : language === 'en'
       ? `Customer: ${customerName}
 
@@ -190,7 +228,12 @@ CRITICAL: You must cite EXACTLY what they chose:
 - Coating: "${coating}"
 - Price: €${totalPrice ? Number(totalPrice).toLocaleString('en-US') : 'X,XXX'}
 
-Email max 120 words with greeting, specific choices, emotion and call-to-action.`
+Email max 120 words that:
+1. Greets the customer by name
+2. Cites their specific choices
+3. Creates emotional connection
+4. Asks what could convince them to finalize
+5. ALWAYS ends with complete signature with all contacts`
       : `Client: ${customerName}
 
 CONFIGURATION SÉLECTIONNÉE PAR LE CLIENT:
@@ -207,7 +250,12 @@ CRITIQUE: Vous devez citer EXACTEMENT ce qu'il a choisi:
 - Revêtement: "${coating}"
 - Prix: €${totalPrice ? Number(totalPrice).toLocaleString('fr-FR') : 'X.XXX'}
 
-Email max 120 mots avec salutation, choix spécifiques, émotion et appel à l'action.`;
+Email max 120 mots qui:
+1. Salue le client par son nom
+2. Cite ses choix spécifiques
+3. Crée une connexion émotionnelle
+4. Demande ce qui pourrait le convaincre de finaliser
+5. Se termine TOUJOURS par la signature complète avec tous les contacts`;
 
     // Call Lovable AI
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
