@@ -9,29 +9,38 @@ const corsHeaders = {
 };
 
 interface ConfigurationEmailData {
-  customerName: string;
-  customerEmail: string;
-  customerPhone: string;
-  modelName: string;
-  fuelType: string;
-  diameter: number;
-  pizzaCapacity: string;
-  coating: string;
-  buildType: string;
+  // Per email di configurazione
+  customerName?: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  modelName?: string;
+  fuelType?: string;
+  diameter?: number;
+  pizzaCapacity?: string;
+  coating?: string;
+  buildType?: string;
   deliveryOption?: string;
-  ovenPrice: number;
+  ovenPrice?: number;
   shippingPrice?: number;
   onSitePrice?: number;
-  totalPrice: number;
-  discountedPrice: number;
-  deliveryTimeWeeks: number;
-  priceList: string;
-  baseImageUrl: string;
+  totalPrice?: number;
+  discountedPrice?: number;
+  deliveryTimeWeeks?: number;
+  priceList?: string;
+  baseImageUrl?: string;
   colorRenderImageUrl?: string;
   architectAIRenderUrl?: string;
-  actionType: 'contact_request' | 'deposit_paid';
+  actionType?: 'contact_request' | 'deposit_paid';
   contactMethod?: string;
   notes?: string;
+  
+  // Per email AI di conversione
+  emailType?: 'configuration' | 'ai_sales';
+  to?: string;
+  subject?: string;
+  message?: string;
+  ovenImageUrl?: string;
+  sessionId?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -42,6 +51,121 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const data: ConfigurationEmailData = await req.json();
 
+    console.log("Sending email, type:", data.emailType || 'configuration');
+
+    // Se è un'email AI di conversione, usa il template specifico
+    if (data.emailType === 'ai_sales') {
+      const aiEmailHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333; margin: 0; padding: 0; background-color: #f5f5f5;">
+          <div style="max-width: 650px; margin: 0 auto; background: white;">
+            <!-- Header con logo -->
+            <div style="background: linear-gradient(135deg, #8B4513 0%, #CD5C5C 100%); padding: 40px 30px; text-align: center;">
+              <img src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/vesuviano-logo-bianco.png" alt="Vesuviano Forni" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
+              <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600;">Vesuviano Forni</h1>
+              <p style="color: #fef2f2; margin: 10px 0 0 0; font-size: 14px;">L'arte della tradizione napoletana</p>
+            </div>
+
+            <!-- Corpo del messaggio -->
+            <div style="padding: 40px 30px;">
+              ${data.ovenImageUrl ? `
+              <div style="text-align: center; margin-bottom: 30px;">
+                <img src="${data.ovenImageUrl}" alt="Il tuo forno Vesuviano" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+              </div>
+              ` : ''}
+              
+              <div style="color: #333; font-size: 16px; line-height: 1.8;">
+                ${data.message?.replace(/\n/g, '<br/>')}
+              </div>
+            </div>
+
+            <!-- Footer con contatti -->
+            <div style="background: #f8f8f8; padding: 30px; border-top: 3px solid #8B4513;">
+              <div style="text-align: center; margin-bottom: 20px;">
+                <h3 style="color: #8B4513; margin: 0 0 15px 0; font-size: 18px;">Parliamone insieme</h3>
+              </div>
+              
+              <table style="width: 100%; max-width: 500px; margin: 0 auto;">
+                <tr>
+                  <td style="padding: 8px 0; text-align: center;">
+                    <strong style="color: #8B4513;">Bruno Nardello</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; text-align: center;">
+                    <a href="https://www.vesuvianoforni.com" style="color: #2563eb; text-decoration: none;">www.vesuvianoforni.com</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; text-align: center;">
+                    <a href="mailto:info@vesuvianoforni.com" style="color: #2563eb; text-decoration: none;">info@vesuvianoforni.com</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 0; text-align: center;">
+                    <a href="https://api.whatsapp.com/send?phone=393509286941&text=Ciao%20Vesuviano%20Forni%2C%20" 
+                       style="display: inline-block; background: #25D366; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 15px;">
+                      💬 Scrivimi su WhatsApp
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; text-align: center; color: #666;">
+                    <a href="tel:+393509286941" style="color: #2563eb; text-decoration: none;">📱 +39 350 928 6941</a> (mobile)
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; text-align: center; color: #666;">
+                    <a href="tel:08119231684" style="color: #2563eb; text-decoration: none;">☎️ 081 192 31684</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 0; text-align: center; color: #888; font-size: 14px;">
+                    📍 Naples - Italy
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- Footer finale -->
+            <div style="background: #333; padding: 20px; text-align: center;">
+              <p style="color: #fff; margin: 0; font-size: 12px;">
+                © ${new Date().getFullYear()} Vesuviano Forni - Forni a legna artigianali dal cuore del Vesuvio
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      const emailResponse = await resend.emails.send({
+        from: "Bruno Nardello - Vesuviano Forni <info@vesuvianoforni.com>",
+        to: [data.to!],
+        subject: data.subject!,
+        html: aiEmailHtml,
+      });
+
+      console.log("AI Sales email sent successfully:", emailResponse);
+
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          message: "Email inviata con successo",
+          emailId: emailResponse.data?.id 
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    // Altrimenti procedi con l'email di configurazione normale
     console.log("Sending configuration email for:", data.customerName);
 
     // Determina il titolo in base al tipo di azione
@@ -228,7 +352,7 @@ const handler = async (req: Request): Promise<Response> => {
       html: emailHtml,
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    console.log("Configuration email sent successfully:", emailResponse);
 
     return new Response(
       JSON.stringify({ 
