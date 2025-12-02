@@ -24,6 +24,7 @@ import AdminLogin from "./pages/AdminLogin";
 import CreateAdmin from "./pages/CreateAdmin";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import SessionsCRM from "./pages/SessionsCRM";
+import ContattiRedirect from "./pages/ContattiRedirect";
 
 const queryClient = new QueryClient();
 
@@ -100,6 +101,7 @@ const App = () => {
             <Route path="/configuratore" element={<Configurator />} />
             <Route path="/configuratore/:token" element={<ConfiguratorWithToken />} />
             <Route path="/success" element={<PaymentSuccess />} />
+            <Route path="/contatti" element={<ContattiRedirect />} />
             <Route path="/admin/create" element={<CreateAdmin />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/configuratore" element={<AdminConfigurator />} />
