@@ -1146,6 +1146,17 @@ const SessionsCRM = () => {
         onOpenChange={setAiModalOpen}
         sessionId={selectedSessionId}
         language="it"
+        onEmailSent={async () => {
+          // Reload email history for the current session
+          if (selectedSession) {
+            const { data } = await supabase
+              .from('email_history')
+              .select('id, sent_at, email_type, subject, body, sent_to')
+              .eq('session_id', selectedSession.id)
+              .order('sent_at', { ascending: false });
+            setEmailHistory(data || []);
+          }
+        }}
       />
     </div>
   );

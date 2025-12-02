@@ -15,13 +15,15 @@ interface AIConversionMessageModalProps {
   onOpenChange: (open: boolean) => void;
   sessionId: string;
   language?: string;
+  onEmailSent?: () => void;
 }
 
 export const AIConversionMessageModal = ({
   open,
   onOpenChange,
   sessionId,
-  language: initialLanguage = 'it'
+  language: initialLanguage = 'it',
+  onEmailSent
 }: AIConversionMessageModalProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSending, setIsSending] = useState(false);
@@ -201,6 +203,7 @@ export const AIConversionMessageModal = ({
         'Email envoyé avec succès!'
       );
       
+      onEmailSent?.();
       onOpenChange(false);
     } catch (error: any) {
       console.error('Error sending email:', error);
