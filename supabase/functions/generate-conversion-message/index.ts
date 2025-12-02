@@ -97,133 +97,100 @@ serve(async (req) => {
     const activitySummary = actions.map((a: any) => `${a.action}: ${a.details || ''}`).join(', ');
     
     const systemPrompt = language === 'it' 
-      ? `Sei un esperto venditore di forni a legna professionali per pizzerie. Il tuo compito è generare un messaggio email persuasivo, emozionale e personalizzato per convertire un potenziale cliente.
+      ? `Sei un esperto venditore di forni a legna Vesuviano. Genera un'email BREVE e PERSONALIZZATA per convertire il cliente.
 
-Regole per il messaggio:
-- USA SEMPRE il nome E cognome del cliente per personalizzare (es. "Caro Mario Rossi")
-- Fai riferimento SPECIFICO e DETTAGLIATO al forno che ha configurato (modello, diametro, capacità pizze, rivestimento)
-- Menziona il PREZZO ESATTO che ha visualizzato con la formula "il forno che hai configurato a €X.XXX"
-- Usa un approccio EMOZIONALE che parla dei sogni del cliente (successo della pizzeria, qualità del prodotto, tradizione napoletana)
-- Crea un'immagine vivida: "Immagina il tuo forno [rivestimento] con diametro [X]cm che produce [Y] pizze perfette ogni servizio"
-- Enfatizza il valore artigianale e l'unicità del forno Vesuviano
-- Includi vantaggi concreti: tradizione napoletana, qualità dei materiali, supporto post-vendita
-- Crea urgenza con frasi come "questa configurazione personalizzata", "l'opportunità di avere il tuo forno"
-- Chiusura con call-to-action chiara e calda (es. "Parliamone insieme", "Ti chiamo per finalizzare")
-- Lunghezza: 250-300 parole
-- Tono: professionale ma caloroso, mai aggressivo
-- Oggetto email: max 60 caratteri, emozionale e personalizzato con nome cliente
+REGOLE CRITICHE:
+- Lunghezza: MASSIMO 100-120 parole
+- USA il nome completo del cliente (es. "Caro Mario Rossi")
+- CITA ESATTAMENTE le scelte fatte: modello specifico, diametro (es. 100cm), rivestimento scelto (es. Mosaico), alimentazione (legna/gas/elettrico)
+- INDICA IL PREZZO: "il tuo forno configurato a €X.XXX"
+- Tono emozionale ma conciso: parla del suo sogno pizzeria
+- Call-to-action chiara: "Ti chiamo per finalizzare"
+- Oggetto: max 50 caratteri con nome cliente
 
-Formato risposta (JSON):
+Formato JSON:
 {
-  "subject": "Oggetto email con nome cliente",
-  "message": "Corpo del messaggio emozionale e personalizzato"
+  "subject": "Oggetto con nome cliente",
+  "message": "Messaggio breve e specifico"
 }`
       : language === 'en'
-      ? `You are an expert seller of professional wood-fired ovens for pizzerias. Your task is to generate a persuasive, emotional and personalized email message to convert a potential customer.
+      ? `You are an expert Vesuviano wood-fired oven seller. Generate a SHORT and PERSONALIZED email to convert the customer.
 
-Message rules:
-- ALWAYS use customer's first name AND last name for personalization (e.g. "Dear John Smith")
-- Make SPECIFIC and DETAILED reference to the oven they configured (model, diameter, pizza capacity, coating)
-- Mention the EXACT PRICE they viewed with formula "the oven you configured at €X,XXX"
-- Use an EMOTIONAL approach that speaks to customer's dreams (pizzeria success, product quality, Neapolitan tradition)
-- Create vivid imagery: "Imagine your [coating] oven with [X]cm diameter producing [Y] perfect pizzas every service"
-- Emphasize artisanal value and uniqueness of Vesuviano ovens
-- Include concrete benefits: Neapolitan tradition, material quality, post-sale support
-- Create urgency with phrases like "this personalized configuration", "the opportunity to have your oven"
-- Close with clear and warm call-to-action (e.g. "Let's talk about it", "I'll call you to finalize")
-- Length: 250-300 words
-- Tone: professional but warm, never aggressive
-- Email subject: max 60 characters, emotional and personalized with customer name
+CRITICAL RULES:
+- Length: MAX 100-120 words
+- USE customer's full name (e.g. "Dear John Smith")
+- CITE EXACTLY their choices: specific model, diameter (e.g. 100cm), chosen coating (e.g. Mosaic), fuel type (wood/gas/electric)
+- STATE THE PRICE: "your configured oven at €X,XXX"
+- Emotional but concise tone: speak to their pizzeria dream
+- Clear call-to-action: "I'll call you to finalize"
+- Subject: max 50 characters with customer name
 
-Response format (JSON):
+JSON format:
 {
-  "subject": "Email subject with customer name",
-  "message": "Emotional and personalized message body"
+  "subject": "Subject with customer name",
+  "message": "Short and specific message"
 }`
-      : `Vous êtes un expert en vente de fours à bois professionnels pour pizzerias. Votre tâche est de générer un message email persuasif, émotionnel et personnalisé pour convertir un client potentiel.
+      : `Vous êtes un expert vendeur de fours à bois Vesuviano. Générez un email COURT et PERSONNALISÉ pour convertir le client.
 
-Règles du message:
-- Utilisez TOUJOURS le prénom ET nom du client pour personnaliser (ex. "Cher Jean Dupont")
-- Faites référence SPÉCIFIQUE et DÉTAILLÉE au four qu'il a configuré (modèle, diamètre, capacité pizzas, revêtement)
-- Mentionnez le PRIX EXACT qu'il a vu avec formule "le four que vous avez configuré à €X.XXX"
-- Utilisez une approche ÉMOTIONNELLE qui parle des rêves du client (succès pizzeria, qualité produit, tradition napolitaine)
-- Créez une image vivante: "Imaginez votre four [revêtement] de diamètre [X]cm produisant [Y] pizzas parfaites chaque service"
-- Soulignez la valeur artisanale et l'unicité des fours Vesuviano
-- Incluez avantages concrets: tradition napolitaine, qualité matériaux, support après-vente
-- Créez l'urgence avec phrases comme "cette configuration personnalisée", "l'opportunité d'avoir votre four"
-- Clôture avec appel à l'action clair et chaleureux (ex. "Parlons-en ensemble", "Je vous appelle pour finaliser")
-- Longueur: 250-300 mots
-- Ton: professionnel mais chaleureux, jamais agressif
-- Objet email: max 60 caractères, émotionnel et personnalisé avec nom client
+RÈGLES CRITIQUES:
+- Longueur: MAX 100-120 mots
+- UTILISEZ le nom complet (ex. "Cher Jean Dupont")
+- CITEZ EXACTEMENT ses choix: modèle spécifique, diamètre (ex. 100cm), revêtement choisi (ex. Mosaïque), alimentation (bois/gaz/électrique)
+- INDIQUEZ LE PRIX: "votre four configuré à €X.XXX"
+- Ton émotionnel mais concis: parlez de son rêve pizzeria
+- Appel à l'action clair: "Je vous appelle pour finaliser"
+- Objet: max 50 caractères avec nom client
 
-Format de réponse (JSON):
+Format JSON:
 {
-  "subject": "Objet email avec nom client",
-  "message": "Corps du message émotionnel et personnalisé"
+  "subject": "Objet avec nom client",
+  "message": "Message court et spécifique"
 }`;
 
     const userPrompt = language === 'it'
-      ? `Genera un messaggio di conversione EMOZIONALE E DETTAGLIATO per:
+      ? `Cliente: ${customerName}
 
-Cliente: ${customerName}
-Status: ${status}
-${ovenDetails ? `✅ FORNO CONFIGURATO: ${ovenDetails}` : 'Nessun forno configurato ancora'}
-${fuelTypeInfo ? `🔥 ${fuelTypeInfo}` : ''}
+SCELTE SPECIFICHE FATTE:
+${ovenDetails ? `🔥 ${ovenDetails}` : 'Nessun modello scelto'}
+${fuelTypeInfo ? `⚡ ${fuelTypeInfo}` : ''}
 ${coatingInfo ? `🎨 ${coatingInfo}` : ''}
-${totalPrice ? `💰 PREZZO PREVENTIVO: €${Number(totalPrice).toLocaleString('it-IT')}` : ''}
-${quote?.has_gas ? '⚙️ Con kit gas' : ''}
-${quote?.has_installation ? '🔧 Con installazione' : ''}
-Attività: ${activitySummary || 'Ha visitato il configuratore'}
+${totalPrice ? `💰 Prezzo totale: €${Number(totalPrice).toLocaleString('it-IT')}` : ''}
 
-IMPORTANTE ISTRUZIONI:
-1. USA il nome completo "${customerName}" nella formula di apertura (es. "Caro ${customerName}")
-2. DESCRIVI IN DETTAGLIO il forno che ha configurato: modello, diametro ${ovenDetails ? ovenDetails.match(/Diametro: (\d+)cm/)?.[1] + 'cm' : ''}, capacità pizze, rivestimento scelto
-3. MENZIONA SEMPRE IL PREZZO ESATTO: "il forno che hai configurato a €${totalPrice ? Number(totalPrice).toLocaleString('it-IT') : 'X.XXX'}"
-4. USA un taglio EMOZIONALE: parla dei sogni del cliente, del successo della sua pizzeria, della tradizione napoletana
-5. CREA UN'IMMAGINE VIVIDA del suo forno in azione nella sua pizzeria
-6. Enfatizza l'ARTIGIANALITÀ e UNICITÀ di ogni forno Vesuviano
-7. Chiudi con call-to-action calorosa e personale`
+Genera email BREVE (max 120 parole):
+1. Saluto con "${customerName}"
+2. CITA LE SUE SCELTE ESATTE: "${ovenDetails || 'modello'}", "${fuelTypeInfo || 'alimentazione'}", "${coatingInfo || 'rivestimento'}"
+3. MENZIONA PREZZO: €${totalPrice ? Number(totalPrice).toLocaleString('it-IT') : 'X.XXX'}
+4. Tocca emozione: il suo sogno pizzeria
+5. Call-to-action: "Ti chiamo per finalizzare"`
       : language === 'en'
-      ? `Generate an EMOTIONAL AND DETAILED conversion message for:
+      ? `Customer: ${customerName}
 
-Customer: ${customerName}
-Status: ${status}
-${ovenDetails ? `✅ CONFIGURED OVEN: ${ovenDetails}` : 'No oven configured yet'}
-${fuelTypeInfo ? `🔥 ${fuelTypeInfo}` : ''}
+SPECIFIC CHOICES MADE:
+${ovenDetails ? `🔥 ${ovenDetails}` : 'No model selected'}
+${fuelTypeInfo ? `⚡ ${fuelTypeInfo}` : ''}
 ${coatingInfo ? `🎨 ${coatingInfo}` : ''}
-${totalPrice ? `💰 QUOTE PRICE: €${Number(totalPrice).toLocaleString('en-US')}` : ''}
-${quote?.has_gas ? '⚙️ With gas kit' : ''}
-${quote?.has_installation ? '🔧 With installation' : ''}
-Activity: ${activitySummary || 'Visited the configurator'}
+${totalPrice ? `💰 Total price: €${Number(totalPrice).toLocaleString('en-US')}` : ''}
 
-IMPORTANT INSTRUCTIONS:
-1. USE the full name "${customerName}" in opening (e.g. "Dear ${customerName}")
-2. DESCRIBE IN DETAIL the oven they configured: model, diameter, pizza capacity, chosen coating
-3. ALWAYS MENTION THE EXACT PRICE: "the oven you configured at €${totalPrice ? Number(totalPrice).toLocaleString('en-US') : 'X,XXX'}"
-4. USE an EMOTIONAL approach: speak about customer's dreams, pizzeria success, Neapolitan tradition
-5. CREATE A VIVID IMAGE of their oven in action in their pizzeria
-6. Emphasize the CRAFTSMANSHIP and UNIQUENESS of each Vesuviano oven
-7. Close with warm and personal call-to-action`
-      : `Générez un message de conversion ÉMOTIONNEL ET DÉTAILLÉ pour:
+Generate SHORT email (max 120 words):
+1. Greeting with "${customerName}"
+2. CITE THEIR EXACT CHOICES: "${ovenDetails || 'model'}", "${fuelTypeInfo || 'fuel type'}", "${coatingInfo || 'coating'}"
+3. MENTION PRICE: €${totalPrice ? Number(totalPrice).toLocaleString('en-US') : 'X,XXX'}
+4. Touch emotion: their pizzeria dream
+5. Call-to-action: "I'll call you to finalize"`
+      : `Client: ${customerName}
 
-Client: ${customerName}
-Statut: ${status}
-${ovenDetails ? `✅ FOUR CONFIGURÉ: ${ovenDetails}` : 'Aucun four configuré pour le moment'}
-${fuelTypeInfo ? `🔥 ${fuelTypeInfo}` : ''}
+CHOIX SPÉCIFIQUES FAITS:
+${ovenDetails ? `🔥 ${ovenDetails}` : 'Aucun modèle sélectionné'}
+${fuelTypeInfo ? `⚡ ${fuelTypeInfo}` : ''}
 ${coatingInfo ? `🎨 ${coatingInfo}` : ''}
-${totalPrice ? `💰 PRIX DU DEVIS: €${Number(totalPrice).toLocaleString('fr-FR')}` : ''}
-${quote?.has_gas ? '⚙️ Avec kit gaz' : ''}
-${quote?.has_installation ? '🔧 Avec installation' : ''}
-Activité: ${activitySummary || 'A visité le configurateur'}
+${totalPrice ? `💰 Prix total: €${Number(totalPrice).toLocaleString('fr-FR')}` : ''}
 
-INSTRUCTIONS IMPORTANTES:
-1. UTILISEZ le nom complet "${customerName}" dans l'ouverture (ex. "Cher ${customerName}")
-2. DÉCRIVEZ EN DÉTAIL le four qu'il a configuré: modèle, diamètre, capacité pizzas, revêtement choisi
-3. MENTIONNEZ TOUJOURS LE PRIX EXACT: "le four que vous avez configuré à €${totalPrice ? Number(totalPrice).toLocaleString('fr-FR') : 'X.XXX'}"
-4. UTILISEZ une approche ÉMOTIONNELLE: parlez des rêves du client, du succès de sa pizzeria, de la tradition napolitaine
-5. CRÉEZ UNE IMAGE VIVANTE de son four en action dans sa pizzeria
-6. Soulignez l'ARTISANAT et l'UNICITÉ de chaque four Vesuviano
-7. Terminez par un appel à l'action chaleureux et personnel`;
+Générez email COURT (max 120 mots):
+1. Salutation avec "${customerName}"
+2. CITEZ SES CHOIX EXACTS: "${ovenDetails || 'modèle'}", "${fuelTypeInfo || 'alimentation'}", "${coatingInfo || 'revêtement'}"
+3. MENTIONNEZ PRIX: €${totalPrice ? Number(totalPrice).toLocaleString('fr-FR') : 'X.XXX'}
+4. Touchez émotion: son rêve pizzeria
+5. Appel à l'action: "Je vous appelle pour finaliser"`;
 
     // Call Lovable AI
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
