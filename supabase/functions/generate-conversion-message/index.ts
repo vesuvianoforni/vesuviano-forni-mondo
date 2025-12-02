@@ -38,7 +38,8 @@ serve(async (req) => {
             fuel_type,
             diameter,
             pizza_capacity,
-            coatings
+            coatings,
+            image_url
           )
         )
       `)
