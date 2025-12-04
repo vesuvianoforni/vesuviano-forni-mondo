@@ -245,20 +245,30 @@ const SessionsCRM = () => {
   };
 
   const processRenewalRequest = async (session: SessionData) => {
-    if (!confirm(`Processare il rinnovo per ${session.customer_name}? Il link verrà rigenerato e inviato.`)) return;
+    if (!confirm(`Processare il rinnovo per ${session.customer_name}? Il link verrà rigenerato.`)) return;
 
     try {
       const newToken = generateToken();
       
-      // Update session: reset to draft status and generate new token
+      // Add renewal action to existing customer_actions
+      const existingActions = session.customer_actions || [];
+      const renewalAction = {
+        type: 'link_renewed',
+        timestamp: new Date().toISOString(),
+        oldToken: session.token,
+        newToken: newToken,
+        renewedBy: 'admin'
+      };
+      const updatedActions = [...existingActions, renewalAction];
+      
+      // Update session: keep in "aperto" state but with new token
       const { error: updateError } = await supabase
         .from('configurator_sessions')
         .update({ 
           token: newToken,
-          status: 'draft',
-          is_used: false,
-          last_opened_at: null,
-          customer_actions: []
+          status: 'draft', // Reset status but keep is_used true
+          is_used: true,   // Keep as used so it stays in "Aperto"
+          customer_actions: updatedActions
         })
         .eq('id', session.id);
 
@@ -271,7 +281,7 @@ const SessionsCRM = () => {
           session_id: session.id,
           email_type: 'renewal_processed',
           subject: 'Rinnovo Link Configuratore',
-          body: `Link rinnovato per ${session.customer_name}. Nuovo token: ${newToken}`,
+          body: `Link rinnovato per ${session.customer_name}. Nuovo token generato.`,
           sent_to: session.customer_email || 'N/A',
           sent_from: 'info@vesuvianoforni.com'
         });
@@ -284,7 +294,7 @@ const SessionsCRM = () => {
       const link = `https://www.vesuvianoforni.com/configuratore/${newToken}`;
       await navigator.clipboard.writeText(link);
 
-      toast.success('Rinnovo processato! Link copiato negli appunti.');
+      toast.success('Rinnovo processato! Link copiato negli appunti. La sessione è tornata in "Aperto".');
       loadSessions();
     } catch (error) {
       console.error('Error processing renewal:', error);
@@ -484,6 +494,14 @@ const SessionsCRM = () => {
     if (coatingAction) summary.push(`Rivestimento: ${coatingAction.coating || 'N/A'}`);
     if (actionTypes.has('color_render_generated')) summary.push('✓ Ha generato render colore');
     if (actionTypes.has('architect_ai_used')) summary.push('✓ Ha usato Architetto AI');
+    
+    // Show link renewals
+    const renewalActions = actions.filter((a: any) => a.type === 'link_renewed');
+    if (renewalActions.length > 0) {
+      const lastRenewal = renewalActions[renewalActions.length - 1];
+      const renewalDate = lastRenewal.timestamp ? format(new Date(lastRenewal.timestamp), 'dd/MM/yy HH:mm', { locale: it }) : '';
+      summary.push(`🔄 Link rinnovato ${renewalActions.length > 1 ? `(${renewalActions.length}x)` : ''} ${renewalDate}`);
+    }
     
     // Show price if available - try multiple sources, now including coating_selected
     let priceFound = false;
