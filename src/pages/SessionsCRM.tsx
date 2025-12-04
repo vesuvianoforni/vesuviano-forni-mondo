@@ -244,6 +244,54 @@ const SessionsCRM = () => {
     }
   };
 
+  const processRenewalRequest = async (session: SessionData) => {
+    if (!confirm(`Processare il rinnovo per ${session.customer_name}? Il link verrà rigenerato e inviato.`)) return;
+
+    try {
+      const newToken = generateToken();
+      
+      // Update session: reset to draft status and generate new token
+      const { error: updateError } = await supabase
+        .from('configurator_sessions')
+        .update({ 
+          token: newToken,
+          status: 'draft',
+          is_used: false,
+          last_opened_at: null,
+          customer_actions: []
+        })
+        .eq('id', session.id);
+
+      if (updateError) throw updateError;
+
+      // Track the renewal in email_history
+      const { error: historyError } = await supabase
+        .from('email_history')
+        .insert({
+          session_id: session.id,
+          email_type: 'renewal_processed',
+          subject: 'Rinnovo Link Configuratore',
+          body: `Link rinnovato per ${session.customer_name}. Nuovo token: ${newToken}`,
+          sent_to: session.customer_email || 'N/A',
+          sent_from: 'info@vesuvianoforni.com'
+        });
+
+      if (historyError) {
+        console.error('Error tracking renewal in history:', historyError);
+      }
+
+      // Copy new link to clipboard
+      const link = `https://www.vesuvianoforni.com/configuratore/${newToken}`;
+      await navigator.clipboard.writeText(link);
+
+      toast.success('Rinnovo processato! Link copiato negli appunti.');
+      loadSessions();
+    } catch (error) {
+      console.error('Error processing renewal:', error);
+      toast.error('Errore nel processare il rinnovo');
+    }
+  };
+
   const sendEmailToCustomer = (session: SessionData) => {
     setEmailModalSession(session);
   };
@@ -623,6 +671,21 @@ const SessionsCRM = () => {
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
+
+              {/* Process renewal button for renewal requested sessions */}
+              {session.status === 'link_renewal_requested' && (
+                <div className="pb-3 border-b" onClick={(e) => e.stopPropagation()}>
+                  <Button
+                    size="sm"
+                    variant="default"
+                    onClick={() => processRenewalRequest(session)}
+                    className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                  >
+                    <Send className="w-4 h-4 mr-2" />
+                    Processa Rinnovo
+                  </Button>
+                </div>
+              )}
 
               {/* Customer info */}
               <div className="min-w-0 space-y-2">
