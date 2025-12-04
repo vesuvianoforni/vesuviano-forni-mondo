@@ -261,13 +261,14 @@ const SessionsCRM = () => {
       };
       const updatedActions = [...existingActions, renewalAction];
       
-      // Update session: keep in "aperto" state but with new token
+      // Update session: move to "aperto" state with new token and track renewal
       const { error: updateError } = await supabase
         .from('configurator_sessions')
         .update({ 
           token: newToken,
-          status: 'draft', // Reset status but keep is_used true
-          is_used: true,   // Keep as used so it stays in "Aperto"
+          status: 'draft',
+          is_used: true,
+          feedback_status: null,  // Clear feedback to ensure it goes to "Aperto"
           customer_actions: updatedActions
         })
         .eq('id', session.id);
