@@ -366,7 +366,7 @@ const handler = async (req: Request): Promise<Response> => {
             <h3 style="color: #1f2937; margin-top: 0;">📞 Contatti Vesuviano</h3>
             <p style="margin: 5px 0;">
               <strong>Email:</strong> <a href="mailto:info@vesuvianoforni.com" style="color: #2563eb;">info@vesuvianoforni.com</a><br/>
-              <strong>Telefono:</strong> <a href="tel:+393509286941" style="color: #2563eb;">+39 350 928 6941</a><br/>
+              <strong>Telefono:</strong> <a href="tel:+390819231684" style="color: #2563eb;">081 19231684</a><br/>
               <strong>Website:</strong> <a href="https://www.vesuvianoforni.com" style="color: #2563eb;">www.vesuvianoforni.com</a>
             </p>
           </div>

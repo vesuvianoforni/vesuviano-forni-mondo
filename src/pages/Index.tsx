@@ -357,11 +357,11 @@ const Index = () => {
                 </li>
                 <li>
                   <a 
-                    href="tel:+393509286941" 
+                    href="tel:+390819231684" 
                     className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                   >
                     <span>📞</span>
-                    +39 350 928 6941
+                    081 19231684
                   </a>
                 </li>
                 <li>
