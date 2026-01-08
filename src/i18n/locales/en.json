@@ -402,7 +402,7 @@
       "title": "Our Services",
       "directTitle": "Direct Contact",
       "phone": "Phone",
-      "phoneNumber": "+39 350 928 6941",
+      "phoneNumber": "081 19231684",
       "email": "Email",
       "emailAddress": "info@vesuvianoforni.com",
       "laboratory": "Laboratory",
@@ -415,7 +415,7 @@
       "success": "🔥 Request Sent Successfully!",
       "successDescription": "We have sent you a confirmation email. We will contact you within 24 hours for your free consultation.",
       "error": "Sending Error",
-      "errorDescription": "An issue occurred. Please try again or contact us directly at +39 350 928 6941",
+      "errorDescription": "An issue occurred. Please try again or contact us directly at 081 19231684",
       "privacy": "We will contact you within 24 hours. Your data is protected and will not be shared with third parties.",
       "catalogDownloaded": "Catalog Downloaded!",
       "catalogSuccess": "The full catalog has been downloaded to your device."
