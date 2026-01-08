@@ -120,7 +120,7 @@ const handler = async (req: Request): Promise<Response> => {
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; text-align: center; color: #666;">
-                    📱 +39 350 928 6941 (mobile)
+                    📞 081 19231684
                   </td>
                 </tr>
                 <tr>

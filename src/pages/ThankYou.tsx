@@ -64,7 +64,7 @@ const ThankYou = ({ lang }: ThankYouProps) => {
               <Phone className="text-vesuviano-600 flex-shrink-0" size={24} />
               <div className="text-left">
                 <p className="font-semibold text-sm">{t('thankYou.phone')}</p>
-                <p className="text-sm text-gray-600">+39 350 928 6941</p>
+                <p className="text-sm text-gray-600">081 19231684</p>
               </div>
             </div>
             <div className="flex items-center justify-center space-x-3 p-4 bg-white rounded-lg border">

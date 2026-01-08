@@ -105,7 +105,7 @@ const LocalizedVesuvioBuono = ({ lang }: LocalizedVesuvioBuonoProps) => {
                 <h4 className="font-semibold mb-4">{t('header.contact')}</h4>
                 <ul className="space-y-2 text-sm text-stone-400">
                   <li>info@vesuvianoforni.com</li>
-                  <li>+39 350 928 6941</li>
+                  <li>081 19231684</li>
                   <li>{t('craftsmanship.laboratory.location')}</li>
                 </ul>
               </div>
