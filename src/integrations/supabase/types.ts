@@ -437,6 +437,57 @@ export type Database = {
         }
         Relationships: []
       }
+      website_leads: {
+        Row: {
+          city: string | null
+          company: string | null
+          created_at: string
+          email: string | null
+          first_name: string | null
+          form_type: string
+          id: string
+          last_name: string | null
+          metadata: Json | null
+          notes: string | null
+          oven_type: string | null
+          phone: string | null
+          status: string
+          website: string | null
+        }
+        Insert: {
+          city?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          first_name?: string | null
+          form_type: string
+          id?: string
+          last_name?: string | null
+          metadata?: Json | null
+          notes?: string | null
+          oven_type?: string | null
+          phone?: string | null
+          status?: string
+          website?: string | null
+        }
+        Update: {
+          city?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          first_name?: string | null
+          form_type?: string
+          id?: string
+          last_name?: string | null
+          metadata?: Json | null
+          notes?: string | null
+          oven_type?: string | null
+          phone?: string | null
+          status?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

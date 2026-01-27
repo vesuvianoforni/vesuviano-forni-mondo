@@ -198,6 +198,35 @@ ${JSON.stringify(data, null, 2)}
         `
     }
 
+    // Salva il lead nel database website_leads
+    try {
+      const { error: leadError } = await supabase
+        .from('website_leads')
+        .insert({
+          form_type: formType,
+          first_name: data.firstName || null,
+          last_name: data.lastName || null,
+          email: data.email || null,
+          phone: data.phone || data.phoneNumber || null,
+          city: data.city || null,
+          company: data.company || null,
+          website: data.website || null,
+          oven_type: data.ovenType || null,
+          notes: data.notes || data.message || null,
+          metadata: data,
+          status: 'new'
+        })
+
+      if (leadError) {
+        console.error('Error saving website lead:', leadError)
+      } else {
+        console.log('Website lead saved successfully')
+      }
+    } catch (leadDbError) {
+      console.error('Database error saving lead:', leadDbError)
+    }
+
+
     // Complete HTML template per notifica aziendale
     const companyHtmlTemplate = `
       <!DOCTYPE html>
