@@ -13,6 +13,7 @@ import { AddOvenModal } from '@/components/admin/AddOvenModal';
 import EditOptionModal from '@/components/admin/EditOptionModal';
 import AddOptionModal from '@/components/admin/AddOptionModal';
 import { AIConversionMessageModal } from '@/components/admin/AIConversionMessageModal';
+import { WebsiteLeadsSection } from '@/components/admin/WebsiteLeadsSection';
 import { LogOut, Edit, Plus, Trash2, TrendingUp, Users, CheckCircle, Clock, ArrowRight, Search, Sparkles } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
@@ -290,7 +291,12 @@ const AdminConfigurator = () => {
             </div>
           )}
         </Card>
-        
+
+        {/* Website Leads Section */}
+        <div className="mb-8">
+          <WebsiteLeadsSection />
+        </div>
+
         {ovens.length === 0 && <InitConfiguratorData />}
         <Tabs defaultValue="ovens">
           <TabsList className="mb-6">
