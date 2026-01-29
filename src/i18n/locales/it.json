@@ -727,7 +727,7 @@
       "specs": {
         "material": {
           "label": "Materiale Camera",
-          "value": "Pietra refrattaria rotante"
+          "value": "Pietra refrattaria"
         },
         "temperature": {
           "label": "Temperatura Massima",
@@ -739,7 +739,7 @@
         },
         "capacity": {
           "label": "Capacità",
-          "value": "10-20 pizze simultaneamente"
+          "value": "5/6 pizze"
         },
         "rotation": {
           "label": "Rotazione",

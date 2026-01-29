@@ -765,7 +765,7 @@
       "specs": {
         "material": {
           "label": "Chamber Material",
-          "value": "Rotating refractory stone"
+          "value": "Refractory stone"
         },
         "temperature": {
           "label": "Maximum Temperature",
@@ -777,7 +777,7 @@
         },
         "capacity": {
           "label": "Capacity",
-          "value": "10-20 pizzas simultaneously"
+          "value": "5/6 pizzas"
         },
         "rotation": {
           "label": "Rotation",

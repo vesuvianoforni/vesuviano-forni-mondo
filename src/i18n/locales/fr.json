@@ -708,7 +708,7 @@
       "specs": {
         "material": {
           "label": "Matériau de la Chambre",
-          "value": "Pierre réfractaire rotative"
+          "value": "Pierre réfractaire"
         },
         "temperature": {
           "label": "Température Maximale",
@@ -720,7 +720,7 @@
         },
         "capacity": {
           "label": "Capacité",
-          "value": "10-20 pizzas simultanément"
+          "value": "5/6 pizzas"
         },
         "rotation": {
           "label": "Rotation",
