@@ -29,7 +29,7 @@ const ConsultationModal = ({ isOpen, onClose }: ConsultationModalProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.city) {
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone) {
       toast({
         title: t('consultationModal.messages.requiredFields'),
         description: t('consultationModal.messages.fillRequired'),
@@ -148,7 +148,6 @@ const ConsultationModal = ({ isOpen, onClose }: ConsultationModalProps) => {
               type="text"
               value={formData.city}
               onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
-              required
               placeholder={t('consultationModal.form.cityPlaceholder')}
             />
           </div>

@@ -46,8 +46,7 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
     return formData.firstName.trim() !== '' &&
            formData.lastName.trim() !== '' &&
            formData.email.trim() !== '' &&
-           formData.phone.trim() !== '' &&
-           formData.city.trim() !== '';
+           formData.phone.trim() !== '';
   };
 
   const handleDownload = async (e: React.FormEvent) => {
@@ -183,14 +182,13 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="city">{t('downloadDatasheet.city')} *</Label>
+              <Label htmlFor="city">{t('downloadDatasheet.city')}</Label>
               <Input
                 id="city"
                 name="city"
                 value={formData.city}
                 onChange={handleInputChange}
                 placeholder={t('downloadDatasheet.cityPlaceholder')}
-                required
               />
             </div>
           </div>
