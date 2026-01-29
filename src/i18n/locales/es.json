@@ -632,7 +632,7 @@
       "specs": {
         "material": {
           "label": "Material de la Cámara",
-          "value": "Piedra refractaria rotativa"
+          "value": "Piedra refractaria"
         },
         "temperature": {
           "label": "Temperatura Máxima",
@@ -644,7 +644,7 @@
         },
         "capacity": {
           "label": "Capacidad",
-          "value": "10-20 pizzas simultáneamente"
+          "value": "5/6 pizzas"
         },
         "rotation": {
           "label": "Rotación",

@@ -641,7 +641,7 @@
       "specs": {
         "material": {
           "label": "Kammermaterial",
-          "value": "Rotierender feuerfester Stein"
+          "value": "Feuerfester Stein"
         },
         "temperature": {
           "label": "Maximale Temperatur",
@@ -653,7 +653,7 @@
         },
         "capacity": {
           "label": "Kapazität",
-          "value": "10-20 Pizzen gleichzeitig"
+          "value": "5/6 Pizzen"
         },
         "rotation": {
           "label": "Rotation",
