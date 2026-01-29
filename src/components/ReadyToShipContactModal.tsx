@@ -50,8 +50,7 @@ const ReadyToShipContactModal = ({
     return formData.firstName.trim() !== '' &&
            formData.lastName.trim() !== '' &&
            formData.email.trim() !== '' &&
-           formData.phone.trim() !== '' &&
-           formData.city.trim() !== '';
+           formData.phone.trim() !== '';
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -183,14 +182,13 @@ const ReadyToShipContactModal = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="city">{t('readyToShip.modal.city')} *</Label>
+            <Label htmlFor="city">{t('readyToShip.modal.city')}</Label>
             <Input
               id="city"
               name="city"
               type="text"
               value={formData.city}
               onChange={handleInputChange}
-              required
               placeholder="Napoli"
             />
           </div>
