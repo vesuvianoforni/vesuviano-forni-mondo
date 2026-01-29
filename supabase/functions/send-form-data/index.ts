@@ -232,6 +232,8 @@ ${JSON.stringify(data, null, 2)}
 
     // Sync lead to external CRM via webhook (fire and forget)
     const crmWebhookUrl = Deno.env.get('CRM_WEBHOOK_URL')
+    console.log('CRM_WEBHOOK_URL configured:', crmWebhookUrl ? 'Yes' : 'No')
+    
     if (crmWebhookUrl) {
       const crmPayload = {
         id: savedLeadId,
@@ -250,6 +252,8 @@ ${JSON.stringify(data, null, 2)}
         created_at: new Date().toISOString()
       }
 
+      console.log('Sending CRM webhook payload:', JSON.stringify(crmPayload))
+
       // Fire and forget - don't await to not block the main flow
       fetch(crmWebhookUrl, {
         method: 'POST',
@@ -258,8 +262,14 @@ ${JSON.stringify(data, null, 2)}
         },
         body: JSON.stringify(crmPayload)
       })
-        .then(res => console.log('CRM webhook response status:', res.status))
-        .catch(err => console.error('CRM webhook error:', err))
+        .then(res => {
+          console.log('CRM webhook response status:', res.status)
+          return res.text()
+        })
+        .then(text => console.log('CRM webhook response body:', text))
+        .catch(err => console.error('CRM webhook error:', err.message || err))
+    } else {
+      console.log('CRM_WEBHOOK_URL not configured, skipping CRM sync')
     }
 
 
