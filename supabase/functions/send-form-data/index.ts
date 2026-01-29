@@ -199,8 +199,9 @@ ${JSON.stringify(data, null, 2)}
     }
 
     // Salva il lead nel database website_leads
+    let savedLeadId: string | null = null
     try {
-      const { error: leadError } = await supabase
+      const { data: insertedLead, error: leadError } = await supabase
         .from('website_leads')
         .insert({
           form_type: formType,
@@ -216,14 +217,49 @@ ${JSON.stringify(data, null, 2)}
           metadata: data,
           status: 'new'
         })
+        .select('id')
+        .single()
 
       if (leadError) {
         console.error('Error saving website lead:', leadError)
       } else {
-        console.log('Website lead saved successfully')
+        savedLeadId = insertedLead?.id || null
+        console.log('Website lead saved successfully with id:', savedLeadId)
       }
     } catch (leadDbError) {
       console.error('Database error saving lead:', leadDbError)
+    }
+
+    // Sync lead to external CRM via webhook (fire and forget)
+    const crmWebhookUrl = Deno.env.get('CRM_WEBHOOK_URL')
+    if (crmWebhookUrl) {
+      const crmPayload = {
+        id: savedLeadId,
+        source: 'vesuviano_website',
+        form_type: formType,
+        first_name: data.firstName || null,
+        last_name: data.lastName || null,
+        email: data.email || null,
+        phone: data.phone || data.phoneNumber || null,
+        city: data.city || null,
+        company: data.company || null,
+        website: data.website || null,
+        oven_type: data.ovenType || null,
+        notes: data.notes || data.message || null,
+        metadata: data,
+        created_at: new Date().toISOString()
+      }
+
+      // Fire and forget - don't await to not block the main flow
+      fetch(crmWebhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(crmPayload)
+      })
+        .then(res => console.log('CRM webhook response status:', res.status))
+        .catch(err => console.error('CRM webhook error:', err))
     }
 
 
