@@ -272,6 +272,50 @@ ${JSON.stringify(data, null, 2)}
       console.log('CRM_WEBHOOK_URL not configured, skipping CRM sync')
     }
 
+    // Sync lead to external ERP via webhook (fire and forget)
+    const erpWebhookUrl = Deno.env.get('ERP_WEBHOOK_URL')
+    console.log('ERP_WEBHOOK_URL configured:', erpWebhookUrl ? 'Yes' : 'No')
+    
+    if (erpWebhookUrl) {
+      const erpPayload = {
+        id: savedLeadId,
+        source: 'vesuviano_website',
+        event_type: 'website_lead_created',
+        form_type: formType,
+        customer_name: data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : data.firstName || data.lastName || null,
+        first_name: data.firstName || null,
+        last_name: data.lastName || null,
+        email: data.email || null,
+        phone: data.phone || data.phoneNumber || null,
+        city: data.city || null,
+        company: data.company || null,
+        website: data.website || null,
+        oven_type: data.ovenType || null,
+        notes: data.notes || data.message || null,
+        metadata: data,
+        timestamp: new Date().toISOString()
+      }
+
+      console.log('Sending ERP webhook payload:', JSON.stringify(erpPayload))
+
+      // Fire and forget - don't await to not block the main flow
+      fetch(erpWebhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(erpPayload)
+      })
+        .then(res => {
+          console.log('ERP webhook response status:', res.status)
+          return res.text()
+        })
+        .then(text => console.log('ERP webhook response body:', text))
+        .catch(err => console.error('ERP webhook error:', err.message || err))
+    } else {
+      console.log('ERP_WEBHOOK_URL not configured, skipping ERP sync')
+    }
+
 
     // Complete HTML template per notifica aziendale
     const companyHtmlTemplate = `
