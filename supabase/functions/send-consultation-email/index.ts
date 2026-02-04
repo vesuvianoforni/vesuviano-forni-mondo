@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "npm:resend@2.0.0"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -7,6 +8,11 @@ const corsHeaders = {
 }
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'))
+
+// Initialize Supabase client
+const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
 interface ConsultationFormData {
   name: string
@@ -586,6 +592,88 @@ serve(async (req) => {
     })
 
     console.log('Company notification email sent:', companyEmailResult)
+
+    // Save lead to website_leads table
+    let savedLeadId: string | null = null
+    try {
+      const nameParts = formData.name?.split(' ') || []
+      const firstName = nameParts[0] || null
+      const lastName = nameParts.slice(1).join(' ') || null
+      
+      const { data: insertedLead, error: leadError } = await supabase
+        .from('website_leads')
+        .insert({
+          form_type: 'consultation',
+          first_name: firstName,
+          last_name: lastName,
+          email: formData.email || null,
+          phone: formData.phone || null,
+          city: formData.country || null,
+          company: formData.company || null,
+          oven_type: formData.ovenType || null,
+          notes: formData.message || null,
+          metadata: formData,
+          status: 'new'
+        })
+        .select('id')
+        .single()
+
+      if (leadError) {
+        console.error('Error saving website lead:', leadError)
+      } else {
+        savedLeadId = insertedLead?.id || null
+        console.log('Website lead saved successfully with id:', savedLeadId)
+      }
+    } catch (leadDbError) {
+      console.error('Database error saving lead:', leadDbError)
+    }
+
+    // Sync lead to external ERP via webhook (fire and forget)
+    const erpWebhookUrl = Deno.env.get('ERP_WEBHOOK_URL')
+    console.log('ERP_WEBHOOK_URL configured:', erpWebhookUrl ? 'Yes' : 'No')
+    
+    if (erpWebhookUrl) {
+      const nameParts = formData.name?.split(' ') || []
+      const firstName = nameParts[0] || null
+      const lastName = nameParts.slice(1).join(' ') || null
+      
+      const erpPayload = {
+        id: savedLeadId,
+        source: 'vesuviano_website',
+        event_type: 'website_lead_created',
+        form_type: 'consultation',
+        customer_name: formData.name || null,
+        first_name: firstName,
+        last_name: lastName,
+        email: formData.email || null,
+        phone: formData.phone || null,
+        city: formData.country || null,
+        company: formData.company || null,
+        oven_type: formData.ovenType || null,
+        notes: formData.message || null,
+        metadata: formData,
+        timestamp: new Date().toISOString()
+      }
+
+      console.log('Sending ERP webhook payload:', JSON.stringify(erpPayload))
+
+      // Fire and forget - don't await to not block the main flow
+      fetch(erpWebhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(erpPayload)
+      })
+        .then(res => {
+          console.log('ERP webhook response status:', res.status)
+          return res.text()
+        })
+        .then(text => console.log('ERP webhook response body:', text))
+        .catch(err => console.error('ERP webhook error:', err.message || err))
+    } else {
+      console.log('ERP_WEBHOOK_URL not configured, skipping ERP sync')
+    }
 
     return new Response(
       JSON.stringify({ 
