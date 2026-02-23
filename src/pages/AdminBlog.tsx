@@ -9,9 +9,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ArrowLeft, Plus, Pencil, Trash2, Eye, Sparkles, Image, Loader2, Upload } from 'lucide-react';
+import { ArrowLeft, Plus, Pencil, Trash2, Eye, Sparkles, Image, Loader2, Upload, BarChart3, CheckCircle2, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import type { BlogPost } from '@/hooks/useBlogPosts';
+import { calculateSEOScore, getGradeColor, type SEOResult } from '@/utils/seoScore';
 
 const LANGS = ['it', 'en', 'fr', 'de', 'es'] as const;
 const CATEGORIES = ['general', 'guide', 'ricette', 'novita', 'tecnica'];
@@ -218,6 +219,7 @@ const AdminBlog = () => {
               <tr className="border-b bg-muted/50">
                 <th className="text-left p-3">Titolo</th>
                 <th className="text-left p-3">Categoria</th>
+                <th className="text-center p-3">SEO</th>
                 <th className="text-left p-3">Stato</th>
                 <th className="text-left p-3">Data</th>
                 <th className="text-right p-3">Azioni</th>
@@ -225,13 +227,20 @@ const AdminBlog = () => {
             </thead>
             <tbody>
               {isLoading ? (
-                <tr><td colSpan={5} className="p-6 text-center text-muted-foreground">Caricamento...</td></tr>
+                <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">Caricamento...</td></tr>
               ) : posts?.length === 0 ? (
-                <tr><td colSpan={5} className="p-6 text-center text-muted-foreground">Nessun articolo</td></tr>
-              ) : posts?.map((post) => (
+                <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">Nessun articolo</td></tr>
+              ) : posts?.map((post) => {
+                const seo = calculateSEOScore(post);
+                return (
                 <tr key={post.id} className="border-b hover:bg-muted/30">
                   <td className="p-3 font-medium">{post.title_it}</td>
                   <td className="p-3">{post.category}</td>
+                  <td className="p-3 text-center">
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${getGradeColor(seo.grade)}`}>
+                      {seo.grade} · {seo.score}%
+                    </span>
+                  </td>
                   <td className="p-3">
                     <span className={`px-2 py-1 rounded-full text-xs ${post.is_published ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
                       {post.is_published ? 'Pubblicato' : 'Bozza'}
@@ -254,7 +263,8 @@ const AdminBlog = () => {
                     </Button>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -447,6 +457,34 @@ const AdminBlog = () => {
                     <Label>Pubblicato</Label>
                   </div>
                 </div>
+
+                {/* SEO Score Panel */}
+                {(() => {
+                  const seo = calculateSEOScore(editingPost, activeLang);
+                  return (
+                    <details className="border rounded-lg" open>
+                      <summary className="px-4 py-3 cursor-pointer text-sm font-medium flex items-center gap-2">
+                        <BarChart3 className="h-4 w-4" />
+                        SEO Score: <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${getGradeColor(seo.grade)}`}>{seo.grade} · {seo.score}%</span>
+                      </summary>
+                      <div className="px-4 pb-4 grid gap-1.5">
+                        {seo.checks.map((check, i) => (
+                          <div key={i} className="flex items-center gap-2 text-sm">
+                            {check.passed ? (
+                              <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
+                            ) : (
+                              <XCircle className="h-4 w-4 text-red-400 shrink-0" />
+                            )}
+                            <span className={check.passed ? 'text-foreground' : 'text-muted-foreground'}>
+                              {check.label}
+                            </span>
+                            <span className="text-xs text-muted-foreground ml-auto">{check.detail}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </details>
+                  );
+                })()}
 
                 {/* Inline Preview */}
                 {editingPost.id && (editingPost as any)[`content_${activeLang}`] && (
