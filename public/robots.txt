@@ -5,8 +5,9 @@ Allow: /
 Allow: /lovable-uploads/
 Allow: /src/assets/
 
-# Sitemap location
+# Sitemap location (dynamic, includes blog posts)
 Sitemap: https://www.vesuvianoforni.com/sitemap.xml
+Sitemap: https://jnujnosymfrkfbarfgka.supabase.co/functions/v1/generate-sitemap
 
 # Crawl-delay for bots (respectful crawling)
 Crawl-delay: 1
