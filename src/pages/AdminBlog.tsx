@@ -448,6 +448,25 @@ const AdminBlog = () => {
                   </div>
                 </div>
 
+                {/* Inline Preview */}
+                {editingPost.id && (editingPost as any)[`content_${activeLang}`] && (
+                  <details className="border rounded-lg">
+                    <summary className="px-4 py-3 cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
+                      👁️ Anteprima contenuto ({activeLang.toUpperCase()})
+                    </summary>
+                    <div className="px-4 pb-4">
+                      {editingPost.featured_image && (
+                        <img src={editingPost.featured_image} alt="Cover" className="w-full max-h-48 object-cover rounded-lg mb-4" />
+                      )}
+                      <h2 className="text-xl font-bold mb-2">{(editingPost as any)[`title_${activeLang}`]}</h2>
+                      <div
+                        className="prose prose-sm max-w-none"
+                        dangerouslySetInnerHTML={{ __html: (editingPost as any)[`content_${activeLang}`] || '' }}
+                      />
+                    </div>
+                  </details>
+                )}
+
                 <Button
                   className="w-full"
                   onClick={() => saveMutation.mutate(editingPost)}
