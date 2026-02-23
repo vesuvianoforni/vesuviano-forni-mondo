@@ -467,13 +467,24 @@ const AdminBlog = () => {
                   </details>
                 )}
 
-                <Button
-                  className="w-full"
-                  onClick={() => saveMutation.mutate(editingPost)}
-                  disabled={saveMutation.isPending}
-                >
-                  {saveMutation.isPending ? 'Salvataggio...' : 'Salva Articolo'}
-                </Button>
+                <div className="flex gap-3">
+                  {editingPost.id && (
+                    <Button
+                      variant="outline"
+                      className="flex-1"
+                      onClick={() => window.open(`/it/blog/${(editingPost as any).slug_it}${editingPost.is_published ? '' : '?preview=true'}`, '_blank')}
+                    >
+                      <Eye className="h-4 w-4 mr-2" /> Anteprima
+                    </Button>
+                  )}
+                  <Button
+                    className="flex-1"
+                    onClick={() => saveMutation.mutate(editingPost)}
+                    disabled={saveMutation.isPending}
+                  >
+                    {saveMutation.isPending ? 'Salvataggio...' : editingPost.is_published ? '✅ Salva e Pubblica' : '💾 Salva Bozza'}
+                  </Button>
+                </div>
               </div>
             )}
           </DialogContent>
