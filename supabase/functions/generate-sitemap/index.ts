@@ -5,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const DOMAIN = "https://www.vesuvianoforni.com";
+const DOMAIN = "https://vesuvianoforni.com";
 const LANGS = ["it", "en", "fr", "de", "es"] as const;
 
 const staticPages = [
