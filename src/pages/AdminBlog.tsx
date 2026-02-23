@@ -124,13 +124,24 @@ const AdminBlog = () => {
         author: 'Vesuviano',
         is_published: false,
       };
-      setEditingPost(newPost);
+      
+      // Auto-save as draft
+      const { id, created_at, updated_at, ...rest } = newPost as any;
+      const { data: savedData, error: saveError } = await supabase
+        .from('blog_posts')
+        .insert([rest])
+        .select()
+        .single();
+      if (saveError) throw saveError;
+
+      queryClient.invalidateQueries({ queryKey: ['admin-blog-posts'] });
+      setEditingPost(savedData);
       setShowAIDialog(false);
       setIsDialogOpen(true);
       setAiTopic('');
       setAiKeywords('');
       setAiTone('');
-      toast.success('Articolo generato! Rivedi e salva.');
+      toast.success('Articolo generato e salvato in bozza!');
     } catch (e: any) {
       toast.error(e?.message || 'Errore nella generazione');
     } finally {
