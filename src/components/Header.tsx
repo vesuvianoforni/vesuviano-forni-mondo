@@ -82,6 +82,7 @@ const Header = () => {
     { href: "#oven-gallery", label: t('header.gallery'), type: 'anchor' },
     { href: "#rivestimenti", label: "Rivestimenti", type: 'anchor' },
     { href: "#clients-map", label: "Clienti", type: 'anchor' },
+    { href: `/${currentLang}/blog`, label: "Blog", type: 'link' },
     { href: "#consultation", label: t('header.contact'), type: 'anchor' }
   ];
 
