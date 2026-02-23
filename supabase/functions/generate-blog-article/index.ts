@@ -27,14 +27,30 @@ serve(async (req) => {
 Your task is to generate a complete, SEO-optimized blog article in ALL 5 languages: Italian, English, French, German, Spanish.
 
 For EACH language, produce:
-- slug: URL-friendly slug in that language (lowercase, hyphens, no special chars)
+- slug: URL-friendly slug in that language (lowercase, hyphens, no special chars, NO accented characters — use ascii only)
 - title: SEO title (max 60 chars) with primary keyword
 - meta_description: compelling meta description (max 155 chars) with call-to-action
 - content: full HTML article (1200-2000 words) with:
   - <h2> and <h3> headings with keywords
   - Short paragraphs (2-3 sentences)
   - Bullet lists where appropriate
-  - Internal linking suggestions as <a href="/LANG/...">
+  - Internal links using the FULL domain https://vesuvianoforni.com as base URL. Use the correct language prefix. Examples:
+    - Italian: <a href="https://vesuvianoforni.com/it/forni-tradizionali">forni tradizionali</a>
+    - English: <a href="https://vesuvianoforni.com/en/traditional-ovens">traditional ovens</a>
+    - French: <a href="https://vesuvianoforni.com/fr/fours-traditionnels">fours traditionnels</a>
+    - German: <a href="https://vesuvianoforni.com/de/traditionelle-oefen">traditionelle Öfen</a>
+    - Spanish: <a href="https://vesuvianoforni.com/es/hornos-tradicionales">hornos tradicionales</a>
+  - Available pages per language (use the correct lang prefix):
+    - Home: /{lang}
+    - Traditional ovens: /it/forni-tradizionali, /en/traditional-ovens, /fr/fours-traditionnels, /de/traditionelle-oefen, /es/hornos-tradicionales
+    - Gas ovens: /it/forni-gas, /en/gas-ovens, /fr/fours-gaz, /de/gasoefen, /es/hornos-gas
+    - Electric ovens: /it/forni-elettrici, /en/electric-ovens, /fr/fours-electriques, /de/elektrooefen, /es/hornos-electricos
+    - Rotating ovens: /it/forni-rotanti, /en/rotating-ovens, /fr/fours-rotatifs, /de/drehoefen, /es/hornos-rotativos
+    - VesuvioBuono: /it/sistema-vesuviobuono, /en/vesuviobuono-system, /fr/systeme-vesuviobuono, /de/vesuviobuono-system, /es/sistema-vesuviobuono
+    - Ready to ship: /it/pronta-consegna, /en/ready-to-ship, /fr/pret-a-expedier, /de/versandfertig, /es/listo-para-enviar
+    - Architetto AI: /it/architettoai, /en/architettoai, /fr/architettoai, /de/architettoai, /es/architettoai
+    - Blog: /it/blog, /en/blog, /fr/blog, /de/blog, /es/blog
+  - IMPORTANT: Always use https://vesuvianoforni.com as base domain for ALL internal links. Never use relative paths.
   - Natural keyword density (1-2%)
   - Engaging intro and strong conclusion with CTA
   - Semantic HTML (<p>, <ul>, <li>, <strong>, <em>)
@@ -46,7 +62,7 @@ Company details to reference naturally:
 - Location: Sant'Anastasia, at the foot of Mount Vesuvius
 - Products: wood-fired, gas, electric, and rotating pizza ovens
 - USP: handcrafted refractory bricks, artisan tradition, international shipping
-- Website sections: configurator, Architetto AI, VesuvioBuono model`;
+- Website: https://vesuvianoforni.com`;
 
     const userPrompt = `Generate a complete SEO blog article about: "${topic}"
 ${keywords ? `Target keywords: ${keywords}` : ""}
