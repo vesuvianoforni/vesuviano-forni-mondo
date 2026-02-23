@@ -5,29 +5,135 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Pool of existing site images to use as base for AI cover generation
-const SITE_IMAGES = [
-  "/lovable-uploads/vesuviobuono-forno-legna.jpg",
-  "/lovable-uploads/vesuviobuono-pizza-perfetta.jpg",
-  "/lovable-uploads/vesuviobuono-forno-azione.jpg",
-  "/lovable-uploads/vesuviobuono-verde-dettaglio.jpg",
-  "/lovable-uploads/vesuviobuono-verde-mosaico.jpg",
-  "/lovable-uploads/vesuviobuono-osteria-pizza.jpg",
-  "/lovable-uploads/forno-gas-mosaico-azzurro.jpg",
-  "/lovable-uploads/forno-mosaico-bianco.jpg",
-  "/lovable-uploads/forno-mosaico-rosso.jpg",
-  "/lovable-uploads/forno-arancione-terra-del-gusto.png",
-  "/lovable-uploads/artigiano-lavorazione.jpg",
-  "/lovable-uploads/artigiano-mani-argilla.jpg",
-  "/lovable-uploads/mattoni-refrattari-hero.jpg",
-  "/lovable-uploads/laboratorio-sant-anastasia.png",
-  "/lovable-uploads/forni-colorati-showroom.png",
-  "/lovable-uploads/vesuviobuono-marrone-aperto.jpg",
-  "/lovable-uploads/vesuviobuono-zero-emissioni.jpg",
-  "/lovable-uploads/forno-nero-elegante.png",
-  "/lovable-uploads/metallico-design-ar.jpg",
-  "/lovable-uploads/tradizionale-cupola-ar.jpg",
-];
+// Full portfolio of site images organized by category for variety
+const IMAGE_POOL: Record<string, string[]> = {
+  gas: [
+    "/lovable-uploads/forno-gas-mosaico-azzurro.jpg",
+    "/lovable-uploads/forno-gas-verde-mosaico.png",
+    "/lovable-uploads/forno-mosaico-bianco.jpg",
+    "/lovable-uploads/forno-mosaico-rosso.jpg",
+    "/lovable-uploads/forno-mosaico-nero-beige.jpg",
+    "/lovable-uploads/forno-mosaico-grigio-nero.jpg",
+  ],
+  electric: [
+    "/lovable-uploads/forno-nero-elegante.png",
+    "/lovable-uploads/forno-nero-metallico-nuovo.png",
+    "/lovable-uploads/forno-metallo-nero.png",
+    "/lovable-uploads/forno-metallo-nero-nuovo.png",
+    "/lovable-uploads/forno-bianco-moderno.png",
+  ],
+  rotante: [
+    "/lovable-uploads/metallico-design-ar.jpg",
+    "/lovable-uploads/forno-rotativo-mosaico-nero.jpg",
+    "/lovable-uploads/forno-rotativo-mosaico.png",
+    "/lovable-uploads/forno-metallo-bianco.png",
+    "/lovable-uploads/forno-metallo-bianco-nuovo.png",
+  ],
+  vesuviobuono: [
+    "/lovable-uploads/vesuviobuono-zero-emissioni.jpg",
+    "/lovable-uploads/vesuviobuono-forno-legna.jpg",
+    "/lovable-uploads/vesuviobuono-verde-dettaglio.jpg",
+    "/lovable-uploads/vesuviobuono-verde-mosaico.jpg",
+    "/lovable-uploads/vesuviobuono-marrone-aperto.jpg",
+    "/lovable-uploads/vesuviobuono-marrone-completo.jpg",
+    "/lovable-uploads/vesuviobuono-ostepizza-aperto.jpg",
+    "/lovable-uploads/vesuviobuono-ostepizza-completo.png",
+    "/lovable-uploads/vesuviobuono-dettaglio-bocca.jpg",
+  ],
+  pizza: [
+    "/lovable-uploads/vesuviobuono-pizza-perfetta.jpg",
+    "/lovable-uploads/vesuviobuono-forno-azione.jpg",
+    "/lovable-uploads/vesuviobuono-osteria-pizza.jpg",
+    "/lovable-uploads/pizza-vico-event.png",
+    "/lovable-uploads/forno-arancione-terra-del-gusto.png",
+  ],
+  artigianato: [
+    "/lovable-uploads/artigiano-lavorazione.jpg",
+    "/lovable-uploads/artigiano-mani-argilla.jpg",
+    "/lovable-uploads/mattoni-refrattari-hero.jpg",
+    "/lovable-uploads/laboratorio-sant-anastasia.png",
+  ],
+  design: [
+    "/lovable-uploads/forno-mosaico-rosso.jpg",
+    "/lovable-uploads/forno-mosaico-bianco.jpg",
+    "/lovable-uploads/forno-mosaico-nero-beige.jpg",
+    "/lovable-uploads/forno-mosaico-grigio-nero.jpg",
+    "/lovable-uploads/forno-gas-verde-mosaico.png",
+    "/lovable-uploads/forno-gas-mosaico-azzurro.jpg",
+    "/lovable-uploads/forno-rotativo-mosaico.png",
+    "/lovable-uploads/vesuviobuono-verde-mosaico.jpg",
+    "/lovable-uploads/forni-colorati-showroom.png",
+  ],
+  showroom: [
+    "/lovable-uploads/forni-colorati-showroom.png",
+    "/lovable-uploads/logistica-internazionale-nyc.png",
+    "/lovable-uploads/pizza-vico-event.png",
+    "/lovable-uploads/laboratorio-sant-anastasia.png",
+  ],
+  pronta_consegna: [
+    "/lovable-uploads/forno-pronta-consegna-1.png",
+    "/lovable-uploads/forno-pronta-consegna-2.png",
+    "/lovable-uploads/forno-pronta-consegna-3.png",
+    "/lovable-uploads/forno-pronta-consegna-4.png",
+    "/lovable-uploads/forno-pronta-consegna-5.png",
+  ],
+  tradizionale: [
+    "/lovable-uploads/tradizionale-cupola-ar.jpg",
+    "/lovable-uploads/vesuviobuono-forno-legna.jpg",
+    "/lovable-uploads/vesuviobuono-marrone-aperto.jpg",
+    "/lovable-uploads/vesuviobuono-marrone-completo.jpg",
+    "/lovable-uploads/mattoni-refrattari-hero.jpg",
+    "/lovable-uploads/forno-arancione-terra-del-gusto.png",
+  ],
+  metallico: [
+    "/lovable-uploads/forno-metallo-bianco.png",
+    "/lovable-uploads/forno-metallo-bianco-nuovo.png",
+    "/lovable-uploads/forno-metallo-nero.png",
+    "/lovable-uploads/forno-metallo-nero-nuovo.png",
+    "/lovable-uploads/forno-nero-metallico-nuovo.png",
+    "/lovable-uploads/metallico-design-ar.jpg",
+    "/lovable-uploads/forno-bianco-moderno.png",
+  ],
+};
+
+// Flat list of ALL images for generic fallback
+const ALL_IMAGES = [...new Set(Object.values(IMAGE_POOL).flat())];
+
+function pickRandom<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// Match topic to multiple relevant categories, then pick randomly from the combined pool
+function selectImage(topic: string): string {
+  const t = topic.toLowerCase();
+  const matched: string[] = [];
+
+  const keywords: Record<string, string[]> = {
+    gas: ["gas", "bruciatore", "fiamma"],
+    electric: ["elettric", "electric", "électrique", "elektrisch"],
+    rotante: ["rotan", "rotativ", "rotating", "tournant", "drehend"],
+    vesuviobuono: ["vesuviobuono", "vesuvio buono", "emissioni", "sostenibil", "ecolog", "green"],
+    pizza: ["pizza", "cottura", "ricett", "cuoci", "cuocere", "cooking", "baking", "recette"],
+    artigianato: ["artigian", "handcraft", "artisan", "fatto a mano", "handmade", "lavorazione", "tradizion"],
+    design: ["design", "mosaico", "rivestiment", "colore", "color", "personalizzaz", "custom"],
+    showroom: ["showroom", "evento", "event", "fiera", "exhibition", "esposiz"],
+    pronta_consegna: ["pronta consegna", "ready to ship", "immediat", "disponibil", "stock"],
+    tradizionale: ["tradizional", "legna", "wood", "cupola", "napoletan", "classico"],
+    metallico: ["metallic", "acciaio", "steel", "inox", "moderno", "modern", "professionale"],
+  };
+
+  for (const [cat, kws] of Object.entries(keywords)) {
+    if (kws.some(kw => t.includes(kw))) {
+      matched.push(...(IMAGE_POOL[cat] || []));
+    }
+  }
+
+  // Deduplicate
+  const unique = [...new Set(matched)];
+  
+  // If matches found, pick randomly from them; otherwise pick from entire portfolio
+  return pickRandom(unique.length > 0 ? unique : ALL_IMAGES);
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -45,34 +151,7 @@ serve(async (req) => {
       });
     }
 
-    // Pick a relevant base image based on topic keywords
-    const topicLower = topic.toLowerCase();
-    let baseImage: string;
-    
-    if (topicLower.includes("gas")) {
-      baseImage = SITE_IMAGES[6]; // forno gas mosaico
-    } else if (topicLower.includes("elettric")) {
-      baseImage = SITE_IMAGES[17]; // forno nero elegante
-    } else if (topicLower.includes("rotan") || topicLower.includes("rotativ")) {
-      baseImage = SITE_IMAGES[18]; // metallico design
-    } else if (topicLower.includes("vesuviobuono") || topicLower.includes("emissioni") || topicLower.includes("sostenibil")) {
-      baseImage = SITE_IMAGES[16]; // zero emissioni
-    } else if (topicLower.includes("pizza") || topicLower.includes("cottura") || topicLower.includes("ricett")) {
-      baseImage = SITE_IMAGES[1]; // pizza perfetta
-    } else if (topicLower.includes("artigian") || topicLower.includes("tradizi") || topicLower.includes("napol")) {
-      baseImage = SITE_IMAGES[10]; // artigiano lavorazione
-    } else if (topicLower.includes("laboratorio") || topicLower.includes("produzion")) {
-      baseImage = SITE_IMAGES[13]; // laboratorio
-    } else if (topicLower.includes("design") || topicLower.includes("mosaico") || topicLower.includes("rivestiment")) {
-      baseImage = SITE_IMAGES[8]; // mosaico rosso
-    } else if (topicLower.includes("refrattari") || topicLower.includes("material")) {
-      baseImage = SITE_IMAGES[12]; // mattoni refrattari
-    } else {
-      // Random pick for generic topics
-      baseImage = SITE_IMAGES[Math.floor(Math.random() * SITE_IMAGES.length)];
-    }
-
-    // Construct the full public URL for the base image
+    const baseImage = selectImage(topic);
     const siteUrl = "https://vesuviano-forni-mondo.lovable.app";
     const baseImageUrl = `${siteUrl}${baseImage}`;
 
@@ -122,13 +201,11 @@ Do NOT add any text or overlays. Keep the oven/subject as the hero element but m
       throw new Error("No image returned from AI");
     }
 
-    // Upload to Supabase storage
     const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Convert base64 to bytes
     const base64Data = imageUrl.split(",")[1];
     const binaryString = atob(base64Data);
     const bytes = new Uint8Array(binaryString.length);
