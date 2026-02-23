@@ -64,8 +64,7 @@ const AdminLogin = () => {
         }
 
         toast.success('Login effettuato con successo');
-        // Temporaneamente commentato per sviluppo
-        // navigate('/admin/configuratore');
+        navigate('/admin/configuratore');
       }
     } catch (error: any) {
       toast.error(error.message || 'Errore durante il login');
