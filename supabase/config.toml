@@ -47,3 +47,9 @@ verify_jwt = false
 
 [functions.generate-conversion-message]
 verify_jwt = false
+
+[functions.generate-blog-article]
+verify_jwt = false
+
+[functions.generate-blog-cover]
+verify_jwt = false
