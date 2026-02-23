@@ -71,6 +71,7 @@ Respond ONLY with a valid JSON object (no markdown, no code blocks) with this ex
       },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
+        max_tokens: 16000,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -96,16 +97,36 @@ Respond ONLY with a valid JSON object (no markdown, no code blocks) with this ex
 
     const data = await response.json();
     const raw = data.choices?.[0]?.message?.content || "";
+    const finishReason = data.choices?.[0]?.finish_reason;
+    
+    if (finishReason === "length") {
+      console.error("AI response was truncated (finish_reason=length)");
+      throw new Error("La risposta AI è stata troncata. Riprova con un argomento più specifico.");
+    }
     
     // Strip markdown code blocks if present
-    const cleaned = raw.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
+    let cleaned = raw.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
+    
+    // Try to extract JSON object from the response
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      cleaned = jsonMatch[0];
+    }
     
     let article;
     try {
       article = JSON.parse(cleaned);
     } catch {
       console.error("Failed to parse AI response:", cleaned.substring(0, 500));
-      throw new Error("AI returned invalid JSON");
+      throw new Error("AI returned invalid JSON. Riprova.");
+    }
+    
+    // Validate required fields
+    const requiredFields = ["slug_it", "title_it", "content_it"];
+    for (const field of requiredFields) {
+      if (!article[field]) {
+        throw new Error(`Missing required field: ${field}`);
+      }
     }
 
     return new Response(JSON.stringify({ success: true, article }), {
