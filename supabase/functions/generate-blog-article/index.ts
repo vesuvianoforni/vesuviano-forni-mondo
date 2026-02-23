@@ -71,7 +71,7 @@ Respond ONLY with a valid JSON object (no markdown, no code blocks) with this ex
       },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
-        max_tokens: 16000,
+        max_tokens: 40000,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -121,12 +121,21 @@ Respond ONLY with a valid JSON object (no markdown, no code blocks) with this ex
       throw new Error("AI returned invalid JSON. Riprova.");
     }
     
-    // Validate required fields
-    const requiredFields = ["slug_it", "title_it", "content_it"];
-    for (const field of requiredFields) {
-      if (!article[field]) {
-        throw new Error(`Missing required field: ${field}`);
+    // Validate required fields for ALL languages
+    const langs = ["it", "en", "fr", "de", "es"];
+    const fieldTypes = ["slug", "title", "content"];
+    const missingFields: string[] = [];
+    for (const lang of langs) {
+      for (const ft of fieldTypes) {
+        const key = `${ft}_${lang}`;
+        if (!article[key] || (typeof article[key] === "string" && article[key].trim().length < 5)) {
+          missingFields.push(key);
+        }
       }
+    }
+    if (missingFields.length > 0) {
+      console.error("Missing or empty fields:", missingFields.join(", "));
+      throw new Error(`Articolo incompleto: mancano ${missingFields.join(", ")}. Riprova.`);
     }
 
     return new Response(JSON.stringify({ success: true, article }), {
