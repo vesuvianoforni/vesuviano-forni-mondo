@@ -14,7 +14,8 @@ interface BlogPostProps {
 
 const BlogPostPage = ({ lang }: BlogPostProps) => {
   const { slug } = useParams<{ slug: string }>();
-  const { data: post, isLoading, error } = useBlogPost(slug || '', lang);
+  const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true';
+  const { data: post, isLoading, error } = useBlogPost(slug || '', lang, isPreview);
 
   if (isLoading) {
     return (

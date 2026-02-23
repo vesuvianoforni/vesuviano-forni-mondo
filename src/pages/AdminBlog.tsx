@@ -241,7 +241,7 @@ const AdminBlog = () => {
                     {post.published_at ? new Date(post.published_at).toLocaleDateString('it') : '-'}
                   </td>
                   <td className="p-3 text-right space-x-2">
-                    <Button variant="ghost" size="sm" onClick={() => window.open(`/it/blog/${post.slug_it}`, '_blank')}>
+                    <Button variant="ghost" size="sm" onClick={() => window.open(`/it/blog/${post.slug_it}?preview=true`, '_blank')}>
                       <Eye className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="sm" onClick={() => openEdit(post)}>
