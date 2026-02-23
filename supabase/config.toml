@@ -62,3 +62,6 @@ verify_jwt = false
 
 [functions.render-blog-post]
 verify_jwt = false
+
+[functions.fix-blog-links]
+verify_jwt = false
