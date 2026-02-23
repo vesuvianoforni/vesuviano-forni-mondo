@@ -40,6 +40,7 @@ const AdminBlog = () => {
   const [isGeneratingArticle, setIsGeneratingArticle] = useState(false);
   const [isGeneratingCover, setIsGeneratingCover] = useState(false);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [coverTopic, setCoverTopic] = useState('');
   const coverInputRef = useRef<HTMLInputElement>(null);
   const { data: posts, isLoading } = useQuery({
     queryKey: ['admin-blog-posts'],
@@ -152,7 +153,7 @@ const AdminBlog = () => {
 
   const generateCover = async () => {
     if (!editingPost) return;
-    const topic = editingPost.title_it || editingPost.title_en || 'pizza oven';
+    const topic = coverTopic.trim() || editingPost.title_it || editingPost.title_en || 'pizza oven';
     setIsGeneratingCover(true);
     try {
       const { data, error } = await supabase.functions.invoke('generate-blog-cover', {
@@ -417,6 +418,14 @@ const AdminBlog = () => {
                           <Upload className="h-4 w-4" />
                         )}
                       </Button>
+                    </div>
+                    <div className="flex gap-2 mt-2">
+                      <Input
+                        value={coverTopic}
+                        onChange={(e) => setCoverTopic(e.target.value)}
+                        placeholder="Topic per l'AI (es. forno a gas mosaico, pizzeria napoletana...)"
+                        className="flex-1"
+                      />
                       <Button
                         variant="outline"
                         onClick={generateCover}
@@ -425,10 +434,13 @@ const AdminBlog = () => {
                         {isGeneratingCover ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
                         ) : (
-                          <><Image className="h-4 w-4 mr-1" /> AI</>
+                          <><Image className="h-4 w-4 mr-1" /> Genera AI</>
                         )}
                       </Button>
                     </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Inserisci un topic per guidare la scelta della foto base. Se vuoto, usa il titolo dell'articolo.
+                    </p>
                     {editingPost.featured_image && (
                       <img src={editingPost.featured_image} alt="Cover preview" className="mt-2 rounded-lg max-h-32 object-cover" />
                     )}
