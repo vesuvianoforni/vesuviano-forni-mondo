@@ -64,19 +64,22 @@ export const useBlogPosts = (category?: string) => {
   });
 };
 
-export const useBlogPost = (slug: string, lang: string) => {
+export const useBlogPost = (slug: string, lang: string, preview = false) => {
   const slugField = getSlugField(lang);
   
   return useQuery({
-    queryKey: ['blog-post', slug, lang],
+    queryKey: ['blog-post', slug, lang, preview],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('blog_posts')
         .select('*')
-        .eq(slugField, slug)
-        .eq('is_published', true)
-        .single();
+        .eq(slugField, slug);
 
+      if (!preview) {
+        query = query.eq('is_published', true);
+      }
+
+      const { data, error } = await query.single();
       if (error) throw error;
       return data as BlogPost;
     },
