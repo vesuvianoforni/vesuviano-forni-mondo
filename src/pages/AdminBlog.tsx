@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ArrowLeft, Plus, Pencil, Trash2, Eye, Sparkles, Image, Loader2 } from 'lucide-react';
+import { ArrowLeft, Plus, Pencil, Trash2, Eye, Sparkles, Image, Loader2, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import type { BlogPost } from '@/hooks/useBlogPosts';
 
@@ -38,7 +38,8 @@ const AdminBlog = () => {
   const [aiTone, setAiTone] = useState('');
   const [isGeneratingArticle, setIsGeneratingArticle] = useState(false);
   const [isGeneratingCover, setIsGeneratingCover] = useState(false);
-
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const coverInputRef = useRef<HTMLInputElement>(null);
   const { data: posts, isLoading } = useQuery({
     queryKey: ['admin-blog-posts'],
     queryFn: async () => {
@@ -154,6 +155,30 @@ const AdminBlog = () => {
       toast.error(e?.message || 'Errore nella generazione immagine');
     } finally {
       setIsGeneratingCover(false);
+    }
+  };
+
+  const uploadCover = async (file: File) => {
+    if (!editingPost) return;
+    setIsUploadingCover(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const fileName = `blog-cover-${Date.now()}.${ext}`;
+      const { error: uploadError } = await supabase.storage
+        .from('oven-gallery')
+        .upload(fileName, file, { upsert: true });
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from('oven-gallery')
+        .getPublicUrl(fileName);
+
+      setEditingPost({ ...editingPost, featured_image: urlData.publicUrl });
+      toast.success('Immagine caricata!');
+    } catch (e: any) {
+      toast.error(e?.message || 'Errore nel caricamento');
+    } finally {
+      setIsUploadingCover(false);
     }
   };
 
@@ -348,6 +373,29 @@ const AdminBlog = () => {
                         placeholder="https://..."
                         className="flex-1"
                       />
+                      <input
+                        ref={coverInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) uploadCover(file);
+                          e.target.value = '';
+                        }}
+                      />
+                      <Button
+                        variant="outline"
+                        onClick={() => coverInputRef.current?.click()}
+                        disabled={isUploadingCover}
+                        title="Carica immagine"
+                      >
+                        {isUploadingCover ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Upload className="h-4 w-4" />
+                        )}
+                      </Button>
                       <Button
                         variant="outline"
                         onClick={generateCover}
