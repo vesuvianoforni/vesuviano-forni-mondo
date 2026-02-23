@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Calendar, ArrowLeft, Tag, User } from 'lucide-react';
 import Header from '@/components/Header';
@@ -14,7 +14,8 @@ interface BlogPostProps {
 
 const BlogPostPage = ({ lang }: BlogPostProps) => {
   const { slug } = useParams<{ slug: string }>();
-  const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true';
+  const [searchParams] = useSearchParams();
+  const isPreview = searchParams.get('preview') === 'true';
   const { data: post, isLoading, error } = useBlogPost(slug || '', lang, isPreview);
 
   if (isLoading) {
