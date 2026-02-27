@@ -16,7 +16,7 @@ interface SendLinkRequest {
 }
 
 const getEmailTemplate = (name: string, link: string, language: 'it' | 'en' | 'fr') => {
-  const logoUrl = 'https://www.vesuvianoforni.com/lovable-uploads/vesuviano-logo-bianco.png';
+  const logoUrl = 'https://vesuvianoforni.com/lovable-uploads/vesuviano-logo-bianco.png';
   
   const templates = {
     it: {
@@ -177,7 +177,7 @@ const getEmailTemplate = (name: string, link: string, language: 'it' | 'en' | 'f
               <p>Forni Artigianali dal Vesuvio</p>
               <p>Via Sant'Anastasia 123, Napoli, Italia</p>
               <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 081 123 4567</p>
-              <p style="margin-top: 15px;">🌐 <a href="https://www.vesuvianoforni.com">www.vesuvianoforni.com</a></p>
+              <p style="margin-top: 15px;">🌐 <a href="https://vesuvianoforni.com">vesuvianoforni.com</a></p>
             </div>
           </div>
         </body>
@@ -342,7 +342,7 @@ const getEmailTemplate = (name: string, link: string, language: 'it' | 'en' | 'f
               <p>Artisanal Ovens from Vesuvius</p>
               <p>Via Sant'Anastasia 123, Naples, Italy</p>
               <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 081 123 4567</p>
-              <p style="margin-top: 15px;">🌐 <a href="https://www.vesuvianoforni.com">www.vesuvianoforni.com</a></p>
+              <p style="margin-top: 15px;">🌐 <a href="https://vesuvianoforni.com">vesuvianoforni.com</a></p>
             </div>
           </div>
         </body>
@@ -507,7 +507,7 @@ const getEmailTemplate = (name: string, link: string, language: 'it' | 'en' | 'f
               <p>Fours Artisanaux du Vésuve</p>
               <p>Via Sant'Anastasia 123, Naples, Italie</p>
               <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 081 123 4567</p>
-              <p style="margin-top: 15px;">🌐 <a href="https://www.vesuvianoforni.com">www.vesuvianoforni.com</a></p>
+              <p style="margin-top: 15px;">🌐 <a href="https://vesuvianoforni.com">vesuvianoforni.com</a></p>
             </div>
           </div>
         </body>

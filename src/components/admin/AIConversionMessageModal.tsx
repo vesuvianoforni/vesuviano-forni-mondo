@@ -80,7 +80,7 @@ export const AIConversionMessageModal = ({
               </tr>
               <tr>
                 <td style="padding: 8px 0; text-align: center;">
-                  <a href="https://www.vesuvianoforni.com" style="color: #2563eb; text-decoration: none;">www.vesuvianoforni.com</a>
+                  <a href="https://vesuvianoforni.com" style="color: #2563eb; text-decoration: none;">vesuvianoforni.com</a>
                 </td>
               </tr>
               <tr>

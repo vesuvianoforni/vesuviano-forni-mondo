@@ -116,7 +116,7 @@ serve(async (req) => {
       feedback_status: session.feedback_status,
       feedback_reason: session.feedback_reason,
       pipeline_id: session.customer_info?.pipeline_id || null,
-      configurator_link: `https://www.vesuvianoforni.com/configuratore/${session.token}`,
+      configurator_link: `https://vesuvianoforni.com/configuratore/${session.token}`,
       
       // Extract summary data from customer actions
       summary: {
