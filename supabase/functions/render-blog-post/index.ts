@@ -32,7 +32,6 @@ function buildHtml(post: Record<string, unknown>, lang: string, slug: string): s
     it: "it_IT", en: "en_US", fr: "fr_FR", de: "de_DE", es: "es_ES",
   };
 
-  // Hreflang links
   const hreflangLinks = LANGS.map((l) => {
     const altSlug = getField(post, "slug", l);
     return `<link rel="alternate" hreflang="${l}" href="${DOMAIN}/${l}/blog/${altSlug}" />`;
@@ -40,7 +39,6 @@ function buildHtml(post: Record<string, unknown>, lang: string, slug: string): s
 
   const xDefaultSlug = getField(post, "slug", "it");
 
-  // JSON-LD Article
   const articleLd = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "Article",
@@ -59,7 +57,6 @@ function buildHtml(post: Record<string, unknown>, lang: string, slug: string): s
     inLanguage: lang,
   });
 
-  // JSON-LD Breadcrumb
   const breadcrumbLd = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -82,8 +79,6 @@ function buildHtml(post: Record<string, unknown>, lang: string, slug: string): s
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${escapeHtml(title)} - Vesuviano</title>
     <meta name="description" content="${escapeHtml(description)}" />
-
-    <!-- Open Graph -->
     <meta property="og:title" content="${escapeHtml(title)}" />
     <meta property="og:description" content="${escapeHtml(description)}" />
     <meta property="og:type" content="article" />
@@ -93,79 +88,44 @@ function buildHtml(post: Record<string, unknown>, lang: string, slug: string): s
     <meta property="og:locale" content="${ogLocaleMap[lang] || "it_IT"}" />
     ${post.published_at ? `<meta property="article:published_time" content="${post.published_at}" />` : ""}
     ${post.updated_at ? `<meta property="article:modified_time" content="${post.updated_at}" />` : ""}
-
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escapeHtml(title)}" />
     <meta name="twitter:description" content="${escapeHtml(description)}" />
     <meta name="twitter:image" content="${image}" />
-
-    <!-- Canonical & Hreflang -->
     <link rel="canonical" href="${articleUrl}" />
     ${hreflangLinks}
     <link rel="alternate" hreflang="x-default" href="${DOMAIN}/it/blog/${xDefaultSlug}" />
-
-    <!-- JSON-LD -->
     <script type="application/ld+json">${articleLd}</script>
     <script type="application/ld+json">${breadcrumbLd}</script>
-
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font-family: 'Georgia', serif; background: #faf9f7; color: #1a1a1a; line-height: 1.8; }
-      .header { background: #1a1a1a; padding: 16px 24px; text-align: center; }
-      .header a { color: #fff; text-decoration: none; font-size: 1.1rem; font-weight: bold; }
-      .hero-img { width: 100%; max-height: 480px; object-fit: cover; }
-      .container { max-width: 780px; margin: 0 auto; padding: 32px 20px; }
-      .breadcrumb { font-size: 0.85rem; color: #888; margin-bottom: 20px; }
-      .breadcrumb a { color: #c75b2a; text-decoration: none; }
-      h1 { font-size: 2.2rem; line-height: 1.25; margin-bottom: 16px; color: #1a1a1a; }
-      .meta { font-size: 0.85rem; color: #888; margin-bottom: 32px; }
-      .content { font-size: 1.08rem; }
-      .content h2 { font-size: 1.5rem; margin: 32px 0 12px; }
-      .content h3 { font-size: 1.25rem; margin: 24px 0 8px; }
-      .content p { margin-bottom: 16px; }
-      .content ul, .content ol { margin: 0 0 16px 24px; }
-      .content img { max-width: 100%; border-radius: 8px; margin: 16px 0; }
-      .back-link { display: inline-block; margin-top: 40px; color: #c75b2a; font-weight: bold; text-decoration: none; }
-      .footer { background: #1a1a1a; color: #aaa; text-align: center; padding: 24px; margin-top: 60px; font-size: 0.85rem; }
+      *{margin:0;padding:0;box-sizing:border-box}body{font-family:Georgia,serif;background:#faf9f7;color:#1a1a1a;line-height:1.8}.header{background:#1a1a1a;padding:16px 24px;text-align:center}.header a{color:#fff;text-decoration:none;font-size:1.1rem;font-weight:bold}.hero-img{width:100%;max-height:480px;object-fit:cover}.container{max-width:780px;margin:0 auto;padding:32px 20px}.breadcrumb{font-size:.85rem;color:#888;margin-bottom:20px}.breadcrumb a{color:#c75b2a;text-decoration:none}h1{font-size:2.2rem;line-height:1.25;margin-bottom:16px}.meta{font-size:.85rem;color:#888;margin-bottom:32px}.content{font-size:1.08rem}.content h2{font-size:1.5rem;margin:32px 0 12px}.content h3{font-size:1.25rem;margin:24px 0 8px}.content p{margin-bottom:16px}.content ul,.content ol{margin:0 0 16px 24px}.content img{max-width:100%;border-radius:8px;margin:16px 0}.back-link{display:inline-block;margin-top:40px;color:#c75b2a;font-weight:bold;text-decoration:none}.footer{background:#1a1a1a;color:#aaa;text-align:center;padding:24px;margin-top:60px;font-size:.85rem}
     </style>
 </head>
 <body>
-    <header class="header">
-      <a href="${DOMAIN}/${lang}">Vesuviano Forni</a>
-    </header>
-
+    <header class="header"><a href="${DOMAIN}/${lang}">Vesuviano Forni</a></header>
     ${image ? `<img class="hero-img" src="${image}" alt="${escapeHtml(title)}" />` : ""}
-
     <main class="container">
       <nav class="breadcrumb">
         <a href="${DOMAIN}/${lang}">Home</a> &rsaquo;
         <a href="${DOMAIN}/${lang}/blog">Blog</a> &rsaquo;
         <span>${escapeHtml(title)}</span>
       </nav>
-
       <article>
         <h1>${escapeHtml(title)}</h1>
         <div class="meta">
           ${post.published_at ? new Date(post.published_at as string).toLocaleDateString(lang) : ""} 
           ${post.author ? `&middot; ${escapeHtml(post.author as string)}` : ""}
         </div>
-        <div class="content">
-          ${content}
-        </div>
+        <div class="content">${content}</div>
       </article>
-
       <a class="back-link" href="${DOMAIN}/${lang}/blog">&larr; ${readMoreLabels[lang] || readMoreLabels.it}</a>
     </main>
-
-    <footer class="footer">
-      &copy; ${new Date().getFullYear()} Vesuviano Forni. All rights reserved.
-    </footer>
+    <footer class="footer">&copy; ${new Date().getFullYear()} Vesuviano Forni. All rights reserved.</footer>
 </body>
 </html>`;
 }
 
-Deno.serve(async (req) => {
+Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
