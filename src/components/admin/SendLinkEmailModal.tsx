@@ -74,7 +74,7 @@ export const SendLinkEmailModal = ({ isOpen, onClose, session }: SendLinkEmailMo
   const [showPreview, setShowPreview] = useState(false);
   const [sending, setSending] = useState(false);
 
-  const configuratorLink = `https://www.vesuvianoforni.com/configuratore/${session.token}`;
+  const configuratorLink = `https://vesuvianoforni.com/configuratore/${session.token}`;
   const preview = emailPreviews[language];
 
   const handleSendEmail = async () => {
@@ -214,7 +214,7 @@ export const SendLinkEmailModal = ({ isOpen, onClose, session }: SendLinkEmailMo
                       📧 info@vesuvianoforni.com | 📞 +39 081 123 4567
                     </p>
                     <p className="mt-2">
-                      🌐 <a href="https://www.vesuvianoforni.com" className="text-[#CD5C5C] no-underline">www.vesuvianoforni.com</a>
+                      🌐 <a href="https://vesuvianoforni.com" className="text-[#CD5C5C] no-underline">vesuvianoforni.com</a>
                     </p>
                   </div>
                 </CardContent>

@@ -48,7 +48,7 @@ export const SessionLinksManager = ({ onGenerateAIMessage }: SessionLinksManager
 
       if (error) throw error;
 
-      const link = `https://www.vesuvianoforni.com/configuratore/${token}`;
+      const link = `https://vesuvianoforni.com/configuratore/${token}`;
       await navigator.clipboard.writeText(link);
       
       // Invia l'email al cliente con il link
@@ -83,7 +83,7 @@ export const SessionLinksManager = ({ onGenerateAIMessage }: SessionLinksManager
   };
 
   const copyLink = async (token: string) => {
-    const link = `https://www.vesuvianoforni.com/configuratore/${token}`;
+    const link = `https://vesuvianoforni.com/configuratore/${token}`;
     await navigator.clipboard.writeText(link);
     toast.success("Link copiato!");
   };

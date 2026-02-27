@@ -391,7 +391,7 @@ ${JSON.stringify(data, null, 2)}
                   <p>I nostri forni Vesuviano combinano la tradizione artigianale napoletana con le tecnologie più moderne.</p>
                   <p><strong>Contattaci per una consulenza gratuita:</strong></p>
                   <p>📧 Email: <a href="mailto:info@abbattitorizapper.it">info@abbattitorizapper.it</a></p>
-                  <p>🌐 Sito web: <a href="https://www.vesuvianoforni.com">www.vesuvianoforni.com</a></p>
+                  <p>🌐 Sito web: <a href="https://vesuvianoforni.com">vesuvianoforni.com</a></p>
                 </div>
 
                 <p>Ti ringraziamo per l'interesse e restiamo a disposizione!</p>
@@ -399,7 +399,7 @@ ${JSON.stringify(data, null, 2)}
 
               <div class="footer">
                 <p>&copy; 2024 Vesuviano Forni - Eccellenza Artigianale Napoletana</p>
-                <p><a href="https://www.vesuvianoforni.com" style="color: #d97706;">www.vesuvianoforni.com</a></p>
+                <p><a href="https://vesuvianoforni.com" style="color: #d97706;">vesuvianoforni.com</a></p>
               </div>
             </div>
           </body>

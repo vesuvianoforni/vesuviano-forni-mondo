@@ -70,7 +70,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="max-width: 650px; margin: 0 auto; background: white;">
             <!-- Header con logo -->
             <div style="background: linear-gradient(135deg, #8B4513 0%, #CD5C5C 100%); padding: 40px 30px; text-align: center;">
-              <img src="https://www.vesuvianoforni.com/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano Forni" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
+              <img src="https://vesuvianoforni.com/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano Forni" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
               <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600;">Vesuviano Forni</h1>
               <p style="color: #fef2f2; margin: 10px 0 0 0; font-size: 14px;">L'arte della tradizione napoletana</p>
             </div>
@@ -102,7 +102,7 @@ const handler = async (req: Request): Promise<Response> => {
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; text-align: center;">
-                    <a href="https://www.vesuvianoforni.com" style="color: #2563eb; text-decoration: none;">www.vesuvianoforni.com</a>
+                    <a href="https://vesuvianoforni.com" style="color: #2563eb; text-decoration: none;">vesuvianoforni.com</a>
                   </td>
                 </tr>
                 <tr>
@@ -112,7 +112,7 @@ const handler = async (req: Request): Promise<Response> => {
                 </tr>
                 <tr>
                   <td style="padding: 12px 0; text-align: center;">
-                    <a href="https://www.vesuvianoforni.com/contatti?whatsapp=true" 
+                    <a href="https://vesuvianoforni.com/contatti?whatsapp=true" 
                        style="display: inline-block; background: #25D366; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 15px;">
                       💬 Scrivimi su WhatsApp
                     </a>
@@ -367,7 +367,7 @@ const handler = async (req: Request): Promise<Response> => {
             <p style="margin: 5px 0;">
               <strong>Email:</strong> <a href="mailto:info@vesuvianoforni.com" style="color: #2563eb;">info@vesuvianoforni.com</a><br/>
               <strong>Telefono:</strong> <a href="tel:+390819231684" style="color: #2563eb;">081 19231684</a><br/>
-              <strong>Website:</strong> <a href="https://www.vesuvianoforni.com" style="color: #2563eb;">www.vesuvianoforni.com</a>
+              <strong>Website:</strong> <a href="https://vesuvianoforni.com" style="color: #2563eb;">vesuvianoforni.com</a>
             </p>
           </div>
 

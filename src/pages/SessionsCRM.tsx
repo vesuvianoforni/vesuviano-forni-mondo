@@ -186,7 +186,7 @@ const SessionsCRM = () => {
   };
 
   const copyLink = (token: string) => {
-    const link = `https://www.vesuvianoforni.com/configuratore/${token}`;
+    const link = `https://vesuvianoforni.com/configuratore/${token}`;
     navigator.clipboard.writeText(link);
     toast.success('Link copiato!');
   };
@@ -292,7 +292,7 @@ const SessionsCRM = () => {
       }
 
       // Copy new link to clipboard
-      const link = `https://www.vesuvianoforni.com/configuratore/${newToken}`;
+      const link = `https://vesuvianoforni.com/configuratore/${newToken}`;
       await navigator.clipboard.writeText(link);
 
       toast.success('Rinnovo processato! Link copiato negli appunti. La sessione è tornata in "Aperto".');
@@ -367,7 +367,7 @@ const SessionsCRM = () => {
 
       if (error) throw error;
 
-      const link = `https://www.vesuvianoforni.com/configuratore/${token}`;
+      const link = `https://vesuvianoforni.com/configuratore/${token}`;
       await navigator.clipboard.writeText(link);
       
       toast.success('Link generato e copiato negli appunti!');
@@ -1138,7 +1138,7 @@ const SessionsCRM = () => {
                   <span className="text-sm font-medium">Link configuratore:</span>
                   <div className="flex items-center gap-2 mt-1">
                     <code className="text-xs bg-muted px-2 py-1 rounded flex-1 truncate">
-                      https://www.vesuvianoforni.com/configuratore/{selectedSession.token}
+                      https://vesuvianoforni.com/configuratore/{selectedSession.token}
                     </code>
                     <Button size="sm" variant="outline" onClick={() => copyLink(selectedSession.token)}>
                       <Copy className="w-3 h-3" />

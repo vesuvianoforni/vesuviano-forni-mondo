@@ -39,7 +39,7 @@ const setOrCreateMeta = (property: string, content: string, isName = false) => {
 
 const BlogSEO = ({ post, lang, isList }: BlogSEOProps) => {
   useEffect(() => {
-    const baseUrl = 'https://www.vesuvianoforni.com';
+    const baseUrl = 'https://vesuvianoforni.com';
 
     // Clean up previous SEO tags
     document.querySelectorAll('link[rel="alternate"][hreflang][data-blog]').forEach(el => el.remove());

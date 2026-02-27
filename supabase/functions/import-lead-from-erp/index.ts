@@ -106,7 +106,7 @@ Deno.serve(async (req) => {
     console.log('Session created successfully:', session.id);
 
     // Generate configurator link
-    const configuratorLink = `https://www.vesuvianoforni.com/configuratore/${token}`;
+    const configuratorLink = `https://vesuvianoforni.com/configuratore/${token}`;
 
     return new Response(
       JSON.stringify({

@@ -92,7 +92,7 @@ serve(async (req) => {
       } : null,
       feedback_status: session.feedback_status,
       feedback_reason: session.feedback_reason,
-      configurator_link: `https://www.vesuvianoforni.com/configuratore/${session.token}`
+      configurator_link: `https://vesuvianoforni.com/configuratore/${session.token}`
     };
 
     // Send to ERP webhook
