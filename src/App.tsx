@@ -92,6 +92,7 @@ const App = () => {
             <Route path="/fr/fours-rotatifs" element={<LocalizedRotatingOven lang="fr" />} />
             <Route path="/fr/systeme-vesuviobuono" element={<LocalizedVesuvioBuono lang="fr" />} />
             <Route path="/fr/pret-a-expedier" element={<LocalizedReadyToShip lang="fr" />} />
+            <Route path="/fr/bruleurs" element={<LocalizedBurners lang="fr" />} />
             <Route path="/fr/blog" element={<LocalizedBlogList lang="fr" />} />
             <Route path="/fr/blog/:slug" element={<LocalizedBlogPost lang="fr" />} />
             <Route path="/fr/thank-you-fr" element={<ThankYou lang="fr" />} />
