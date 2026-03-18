@@ -137,6 +137,7 @@ const ERPUtenti = () => {
                 <TableRow className="border-amber-900/20 hover:bg-transparent">
                   <TableHead className="text-amber-500/60">Email</TableHead>
                   <TableHead className="text-amber-500/60">User ID</TableHead>
+                  <TableHead className="text-amber-500/60">Ruolo</TableHead>
                   <TableHead className="text-amber-500/60">Data Assegnazione</TableHead>
                   <TableHead className="text-amber-500/60 text-right">Azioni</TableHead>
                 </TableRow>
