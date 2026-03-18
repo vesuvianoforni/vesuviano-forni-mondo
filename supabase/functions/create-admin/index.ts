@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
 
     if (roleError) throw roleError
 
-    console.log(`Admin user created: ${email}`)
+    console.log(`User created: ${email} with role: ${assignRole}`)
 
     return new Response(
       JSON.stringify({ 
