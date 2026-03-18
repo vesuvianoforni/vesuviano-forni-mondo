@@ -89,6 +89,10 @@ const ERPOrdini = () => {
   const [formData, setFormData] = useState(emptyOrder);
   const [saving, setSaving] = useState(false);
   const [showFromProforma, setShowFromProforma] = useState(false);
+  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+  const [uploadedDocs, setUploadedDocs] = useState<{ name: string; url: string }[]>([]);
+  const [uploadingDocs, setUploadingDocs] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => { fetchOrders(); fetchProformas(); }, []);
 
