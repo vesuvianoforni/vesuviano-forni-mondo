@@ -104,15 +104,57 @@ const AdminProforma = () => {
     setLoading(false);
   };
 
-  const addOvenItem = (oven: any) => {
+  // Build model+coating options from ovens with their sizes data
+  const ovenCoatingOptions = React.useMemo(() => {
+    const options: { key: string; oven: any; coating: string; image: string }[] = [];
+    const seen = new Set<string>();
+    ovens.forEach(oven => {
+      const sizes = (oven.sizes as any[]) || [];
+      sizes.forEach((size: any) => {
+        const coatings = (size.coatings as any[]) || [];
+        coatings.forEach((c: any) => {
+          const coatingName = c.name || c.coating || '';
+          const key = `${oven.model_name}-${coatingName}`;
+          if (!seen.has(key) && coatingName) {
+            seen.add(key);
+            options.push({
+              key: `${oven.id}__${coatingName}`,
+              oven,
+              coating: coatingName,
+              image: c.image || oven.image_url,
+            });
+          }
+        });
+      });
+      // Fallback: if no sizes/coatings, show model alone
+      if (sizes.length === 0 || sizes.every((s: any) => !(s.coatings as any[])?.length)) {
+        const key = `${oven.model_name}-default`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          options.push({
+            key: `${oven.id}__`,
+            oven,
+            coating: '',
+            image: oven.image_url,
+          });
+        }
+      }
+    });
+    return options;
+  }, [ovens]);
+
+  const addOvenItem = (optionKey: string) => {
+    const option = ovenCoatingOptions.find(o => o.key === optionKey);
+    if (!option) return;
+    const { oven, coating, image } = option;
     const newItem: ProformaItem = {
       item_type: 'oven',
       oven_id: oven.id,
       model_name: oven.model_name,
       fuel_type: oven.fuel_type?.[0] || '',
-      diameter: oven.diameter,
-      coating: '',
-      image_url: oven.image_url,
+      diameter: undefined,
+      coating: coating,
+      image_url: image,
       unit_price: oven.base_price_a || 0,
       quantity: 1,
       line_total: oven.base_price_a || 0,
@@ -404,17 +446,14 @@ const AdminProforma = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex flex-wrap gap-2">
-                  <Select onValueChange={(val) => {
-                    const oven = ovens.find(o => o.id === val);
-                    if (oven) addOvenItem(oven);
-                  }}>
-                    <SelectTrigger className="w-[250px]">
+                  <Select onValueChange={(val) => addOvenItem(val)}>
+                    <SelectTrigger className="w-[300px]">
                       <SelectValue placeholder="+ Aggiungi Forno" />
                     </SelectTrigger>
                     <SelectContent>
-                      {ovens.map(o => (
-                        <SelectItem key={o.id} value={o.id}>
-                          {o.model_name} - Ø{o.diameter}cm
+                      {ovenCoatingOptions.map(opt => (
+                        <SelectItem key={opt.key} value={opt.key}>
+                          {opt.oven.model_name}{opt.coating ? ` - ${opt.coating}` : ''}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -456,7 +495,7 @@ const AdminProforma = () => {
                         {item.image_url && (
                           <img src={item.image_url} alt="" className="w-20 h-20 object-cover rounded" />
                         )}
-                        <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-3">
                           <div>
                             <Label className="text-xs text-muted-foreground">Nome</Label>
                             <Input
@@ -478,8 +517,17 @@ const AdminProforma = () => {
                                 </Select>
                               </div>
                               <div>
+                                <Label className="text-xs text-muted-foreground">Diametro (cm)</Label>
+                                <Input
+                                  type="number"
+                                  value={item.diameter || ''}
+                                  onChange={(e) => updateItem(idx, 'diameter', parseInt(e.target.value) || null)}
+                                  placeholder="Es. 100"
+                                />
+                              </div>
+                              <div>
                                 <Label className="text-xs text-muted-foreground">Rivestimento</Label>
-                                <Input value={item.coating || ''} onChange={(e) => updateItem(idx, 'coating', e.target.value)} placeholder="Es. Mosaico Nero" />
+                                <Input value={item.coating || ''} readOnly className="bg-muted" />
                               </div>
                             </>
                           )}
