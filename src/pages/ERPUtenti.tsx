@@ -144,7 +144,8 @@ const ERPUtenti = () => {
               <TableBody>
                 {roles.map(r => (
                   <TableRow key={r.id} className="border-amber-900/10 hover:bg-amber-900/5">
-                    <TableCell className="text-amber-100 font-mono text-xs">{r.user_id.substring(0, 12)}...</TableCell>
+                    <TableCell className="text-amber-100 text-sm">{emailMap[r.user_id] || '—'}</TableCell>
+                    <TableCell className="text-amber-200/40 font-mono text-xs">{r.user_id.substring(0, 8)}...</TableCell>
                     <TableCell>{getRoleBadge(r.role)}</TableCell>
                     <TableCell className="text-amber-200/40 text-sm">{r.created_at ? new Date(r.created_at).toLocaleDateString('it-IT') : '—'}</TableCell>
                     <TableCell className="text-right">
