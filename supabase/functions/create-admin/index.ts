@@ -40,12 +40,12 @@ Deno.serve(async (req) => {
 
     if (userError) throw userError
 
-    // Assegna il ruolo admin
+    // Assegna il ruolo
     const { error: roleError } = await supabase
       .from('user_roles')
       .insert({
         user_id: userData.user.id,
-        role: 'admin'
+        role: assignRole
       })
 
     if (roleError) throw roleError
