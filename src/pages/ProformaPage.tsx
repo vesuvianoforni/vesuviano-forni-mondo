@@ -45,6 +45,7 @@ interface ProformaData {
 
 const ProformaPage = () => {
   const { token } = useParams<{ token: string }>();
+  const [searchParams] = useSearchParams();
   const [proforma, setProforma] = useState<ProformaData | null>(null);
   const [items, setItems] = useState<ProformaItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,8 +54,25 @@ const ProformaPage = () => {
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    if (token) loadProforma();
+    if (token) {
+      // If returning from Stripe, verify payment first
+      if (searchParams.get('payment') === 'success') {
+        verifyPayment().then(() => loadProforma());
+      } else {
+        loadProforma();
+      }
+    }
   }, [token]);
+
+  const verifyPayment = async () => {
+    try {
+      await supabase.functions.invoke('verify-proforma-payment', {
+        body: { proforma_id: '', token }
+      });
+    } catch (e) {
+      console.error('Verify payment error:', e);
+    }
+  };
 
   const loadProforma = async () => {
     setLoading(true);
