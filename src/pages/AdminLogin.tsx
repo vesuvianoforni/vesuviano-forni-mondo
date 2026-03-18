@@ -64,7 +64,7 @@ const AdminLogin = () => {
         }
 
         toast.success('Login effettuato con successo');
-        navigate('/admin/configuratore');
+        navigate('/erp');
       }
     } catch (error: any) {
       toast.error(error.message || 'Errore durante il login');

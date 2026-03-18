@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LocalizedIndex from "./pages/LocalizedIndex";
 import LocalizedArchitettoAI from "./pages/LocalizedArchitettoAI";
 import LocalizedTraditionalOven from "./pages/LocalizedTraditionalOven";
@@ -19,17 +19,22 @@ import BookAppointment from "./pages/BookAppointment";
 import Appointments from "./pages/Appointments";
 import Configurator from "./pages/Configurator";
 import ConfiguratorWithToken from "./pages/ConfiguratorWithToken";
-import AdminConfigurator from "./pages/AdminConfigurator";
 import AdminLogin from "./pages/AdminLogin";
 import CreateAdmin from "./pages/CreateAdmin";
 import PaymentSuccess from "./pages/PaymentSuccess";
-import SessionsCRM from "./pages/SessionsCRM";
 import ContattiRedirect from "./pages/ContattiRedirect";
 import LocalizedBlogList from "./pages/LocalizedBlogList";
 import LocalizedBlogPost from "./pages/LocalizedBlogPost";
-import AdminBlog from "./pages/AdminBlog";
-import AdminProforma from "./pages/AdminProforma";
 import ProformaPage from "./pages/ProformaPage";
+
+// ERP
+import ERPLayout from "./pages/ERPLayout";
+import ERPDashboard from "./pages/ERPDashboard";
+import AdminConfigurator from "./pages/AdminConfigurator";
+import SessionsCRM from "./pages/SessionsCRM";
+import AdminProforma from "./pages/AdminProforma";
+import AdminBlog from "./pages/AdminBlog";
+import ERPPlaceholder from "./components/erp/ERPPlaceholder";
 
 const queryClient = new QueryClient();
 
@@ -110,20 +115,38 @@ const App = () => {
             <Route path="/de/blog/:slug" element={<LocalizedBlogPost lang="de" />} />
             <Route path="/de/thank-you-de" element={<ThankYou lang="de" />} />
             
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            {/* Public pages */}
             <Route path="/book-a-slot-call" element={<BookAppointment />} />
             <Route path="/appointments" element={<Appointments />} />
             <Route path="/configuratore" element={<Configurator />} />
             <Route path="/configuratore/:token" element={<ConfiguratorWithToken />} />
             <Route path="/success" element={<PaymentSuccess />} />
             <Route path="/contatti" element={<ContattiRedirect />} />
-            <Route path="/admin/create" element={<CreateAdmin />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/configuratore" element={<AdminConfigurator />} />
-            <Route path="/admin/sessions-crm" element={<SessionsCRM />} />
-            <Route path="/admin/blog" element={<AdminBlog />} />
-            <Route path="/admin/proforma" element={<AdminProforma />} />
             <Route path="/proforma/:token" element={<ProformaPage />} />
+
+            {/* ERP */}
+            <Route path="/erp/login" element={<AdminLogin />} />
+            <Route path="/erp/create" element={<CreateAdmin />} />
+            <Route path="/erp" element={<ERPLayout />}>
+              <Route index element={<ERPDashboard />} />
+              <Route path="crm" element={<SessionsCRM />} />
+              <Route path="proforma" element={<AdminProforma />} />
+              <Route path="configuratore" element={<AdminConfigurator />} />
+              <Route path="blog" element={<AdminBlog />} />
+              <Route path="forni" element={<ERPPlaceholder title="Gestione Forni" description="Sezione per la gestione completa del catalogo forni, modelli, taglie e rivestimenti." />} />
+              <Route path="bruciatori" element={<ERPPlaceholder title="Gestione Bruciatori" description="Sezione per la gestione dei bruciatori, modelli e prezzi." />} />
+              <Route path="leads" element={<ERPPlaceholder title="Lead Sito Web" description="Gestione dei lead provenienti dal sito web e dai form di contatto." />} />
+              <Route path="ordini" element={<ERPPlaceholder title="Ordini" description="Gestione ordini, stato spedizioni e fatturazione." />} />
+            </Route>
+
+            {/* Legacy admin redirects */}
+            <Route path="/admin/login" element={<Navigate to="/erp/login" replace />} />
+            <Route path="/admin/configuratore" element={<Navigate to="/erp/configuratore" replace />} />
+            <Route path="/admin/sessions-crm" element={<Navigate to="/erp/crm" replace />} />
+            <Route path="/admin/blog" element={<Navigate to="/erp/blog" replace />} />
+            <Route path="/admin/proforma" element={<Navigate to="/erp/proforma" replace />} />
+            <Route path="/admin/create" element={<Navigate to="/erp/create" replace />} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
