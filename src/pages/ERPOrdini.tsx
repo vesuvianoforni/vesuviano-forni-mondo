@@ -294,6 +294,8 @@ const ERPOrdini = () => {
       status: order.status,
       payment_status: order.payment_status,
     });
+    setPendingFiles([]);
+    fetchOrderDocs(order.id);
     setShowCreateModal(true);
   };
 
