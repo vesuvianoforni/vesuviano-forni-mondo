@@ -236,7 +236,7 @@ const ERPOrdini = () => {
         if (error) throw error;
         toast.success('Ordine aggiornato');
       } else {
-        const { error } = await supabase.from('orders').insert({
+        const { data: newOrder, error } = await supabase.from('orders').insert({
           customer_name: formData.customer_name || null,
           company_name: formData.company_name || null,
           customer_email: formData.customer_email || null,
@@ -250,8 +250,12 @@ const ERPOrdini = () => {
           notes: formData.notes || null,
           status: formData.status,
           payment_status: formData.payment_status,
-        });
+        }).select().single();
         if (error) throw error;
+        // Upload pending files for the new order
+        if (newOrder && pendingFiles.length > 0) {
+          await uploadFilesToOrder(newOrder.id, pendingFiles);
+        }
         toast.success('Ordine creato');
       }
       setShowCreateModal(false);
