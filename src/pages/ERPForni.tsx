@@ -157,19 +157,17 @@ const ERPForni = () => {
         </CardContent>
       </Card>
 
-      {editingOven && (
-        <EditOvenModal
-          oven={editingOven}
-          onClose={() => setEditingOven(null)}
-          onSaved={fetchOvens}
-        />
-      )}
-      {showAddOven && (
-        <AddOvenModal
-          onClose={() => setShowAddOven(false)}
-          onSaved={fetchOvens}
-        />
-      )}
+      <EditOvenModal
+        oven={editingOven}
+        open={!!editingOven}
+        onClose={() => setEditingOven(null)}
+        onUpdate={fetchOvens}
+      />
+      <AddOvenModal
+        open={showAddOven}
+        onClose={() => setShowAddOven(false)}
+        onSuccess={fetchOvens}
+      />
     </div>
   );
 };
