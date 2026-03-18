@@ -1,0 +1,245 @@
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
+import Header from '@/components/Header';
+import ConsultationForm from '@/components/ConsultationForm';
+import WhatsAppButton from '@/components/WhatsAppButton';
+import ContactBar from '@/components/ContactBar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { supabase } from '@/integrations/supabase/client';
+import { Flame, Gauge, Zap, Settings } from 'lucide-react';
+import type { Json } from '@/integrations/supabase/types';
+
+interface BurnersPageProps {
+  lang: 'it' | 'en' | 'fr' | 'es' | 'de';
+}
+
+interface BurnerSpecs {
+  series?: string;
+  control?: string;
+  oven_sizes?: string;
+  power_kw?: number;
+  power_kcal?: number;
+  lpg_consumption?: string;
+  methane_consumption?: string;
+  compatible_ovens?: string;
+}
+
+const BurnersPage = ({ lang }: BurnersPageProps) => {
+  const { i18n, t } = useTranslation();
+
+  useEffect(() => {
+    i18n.changeLanguage(lang);
+    document.documentElement.lang = lang;
+    document.title = `${t('burners.pageTitle')} - Vesuviano`;
+  }, [lang, i18n, t]);
+
+  const { data: burners, isLoading } = useQuery({
+    queryKey: ['public-burners'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('burners')
+        .select('*')
+        .eq('is_active', true)
+        .order('name');
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const getSpecs = (specs: Json | null): BurnerSpecs => {
+    if (!specs || typeof specs !== 'object' || Array.isArray(specs)) return {};
+    return specs as unknown as BurnerSpecs;
+  };
+
+  const getSeriesIcon = (series?: string) => {
+    switch (series) {
+      case 'P': return <Flame className="h-5 w-5" />;
+      case 'D': return <Settings className="h-5 w-5" />;
+      case 'GOLD': return <Zap className="h-5 w-5" />;
+      default: return <Gauge className="h-5 w-5" />;
+    }
+  };
+
+  const getSeriesColor = (series?: string) => {
+    switch (series) {
+      case 'P': return 'bg-orange-100 text-orange-700';
+      case 'D': return 'bg-blue-100 text-blue-700';
+      case 'GOLD': return 'bg-yellow-100 text-yellow-800';
+      default: return 'bg-stone-100 text-stone-700';
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-white">
+      <Header />
+
+      {/* Hero Section */}
+      <section className="relative h-[50vh] min-h-[400px] overflow-hidden bg-charcoal-900">
+        <div className="absolute inset-0 bg-gradient-to-br from-charcoal-900 via-charcoal-800 to-vesuviano-900"></div>
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-vesuviano-500 rounded-full blur-[120px]"></div>
+          <div className="absolute bottom-10 right-20 w-96 h-96 bg-vesuviano-400 rounded-full blur-[150px]"></div>
+        </div>
+        <div className="relative h-full container mx-auto px-6 flex items-center">
+          <div className="max-w-3xl text-white">
+            <Badge className="mb-4 bg-vesuviano-500/20 text-vesuviano-300 border-vesuviano-500/30 text-sm">
+              {t('burners.badge')}
+            </Badge>
+            <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+              {t('burners.heroTitle')}
+            </h1>
+            <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-2xl">
+              {t('burners.heroSubtitle')}
+            </p>
+            <Button
+              size="lg"
+              className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-6 text-lg"
+              onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              {t('hero.freeConsultation')}
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Intro Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-6 max-w-4xl text-center">
+          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-6">
+            {t('burners.introTitle')}
+          </h2>
+          <p className="text-lg text-stone-600 leading-relaxed">
+            {t('burners.introText')}
+          </p>
+        </div>
+      </section>
+
+      {/* Series Overview */}
+      <section className="py-12 bg-stone-50">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="grid md:grid-cols-3 gap-6">
+            {['P', 'D', 'GOLD'].map((series) => (
+              <Card key={series} className="border-stone-200 hover:shadow-lg transition-shadow">
+                <CardContent className="p-6 text-center">
+                  <div className={`w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 ${getSeriesColor(series)}`}>
+                    {getSeriesIcon(series)}
+                  </div>
+                  <h3 className="font-playfair text-xl font-bold text-charcoal-900 mb-2">
+                    {t(`burners.series.${series}.title`)}
+                  </h3>
+                  <p className="text-stone-600 text-sm">
+                    {t(`burners.series.${series}.description`)}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Burners Catalog */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-12 text-center">
+            {t('burners.catalogTitle')}
+          </h2>
+
+          {isLoading ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-96 bg-stone-100 rounded-xl animate-pulse"></div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {burners?.map((burner) => {
+                const specs = getSpecs(burner.specifications);
+                return (
+                  <Card key={burner.id} className="overflow-hidden border-stone-200 hover:shadow-xl transition-all duration-300 group">
+                    <div className="relative h-56 bg-stone-100 overflow-hidden">
+                      {burner.image_url ? (
+                        <img
+                          src={burner.image_url}
+                          alt={burner.name}
+                          className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <Flame className="h-16 w-16 text-stone-300" />
+                        </div>
+                      )}
+                      {specs.series && (
+                        <Badge className={`absolute top-3 right-3 ${getSeriesColor(specs.series)}`}>
+                          {t('burners.seriesLabel')} {specs.series}
+                        </Badge>
+                      )}
+                    </div>
+                    <CardContent className="p-6">
+                      <h3 className="font-playfair text-xl font-bold text-charcoal-900 mb-2">
+                        {burner.name}
+                      </h3>
+                      {burner.description && (
+                        <p className="text-stone-600 text-sm mb-4 line-clamp-3">
+                          {burner.description}
+                        </p>
+                      )}
+                      <div className="space-y-2 text-sm">
+                        {specs.control && (
+                          <div className="flex justify-between">
+                            <span className="text-stone-500">{t('burners.specs.control')}</span>
+                            <span className="font-medium text-charcoal-900">{specs.control}</span>
+                          </div>
+                        )}
+                        {specs.power_kw && (
+                          <div className="flex justify-between">
+                            <span className="text-stone-500">{t('burners.specs.power')}</span>
+                            <span className="font-medium text-charcoal-900">{specs.power_kw} kW</span>
+                          </div>
+                        )}
+                        {specs.oven_sizes && (
+                          <div className="flex justify-between">
+                            <span className="text-stone-500">{t('burners.specs.ovenSizes')}</span>
+                            <span className="font-medium text-charcoal-900">Ø {specs.oven_sizes} cm</span>
+                          </div>
+                        )}
+                        {specs.lpg_consumption && (
+                          <div className="flex justify-between">
+                            <span className="text-stone-500">{t('burners.specs.consumption')}</span>
+                            <span className="font-medium text-charcoal-900">{specs.lpg_consumption}</span>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Consultation Form */}
+      <section id="consultation" className="py-20 bg-stone-50">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <div className="text-center mb-12">
+            <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-4">
+              {t('burners.ctaTitle')}
+            </h2>
+            <p className="text-lg text-stone-600">
+              {t('burners.ctaText')}
+            </p>
+          </div>
+          <ConsultationForm />
+        </div>
+      </section>
+
+      <WhatsAppButton />
+      <ContactBar />
+    </div>
+  );
+};
+
+export default BurnersPage;
