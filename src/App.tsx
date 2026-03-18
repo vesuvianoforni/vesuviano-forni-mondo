@@ -35,6 +35,8 @@ import SessionsCRM from "./pages/SessionsCRM";
 import AdminProforma from "./pages/AdminProforma";
 import AdminBlog from "./pages/AdminBlog";
 import ERPPlaceholder from "./components/erp/ERPPlaceholder";
+import ERPForni from "./pages/ERPForni";
+import ERPBruciatori from "./pages/ERPBruciatori";
 
 const queryClient = new QueryClient();
 
@@ -133,8 +135,8 @@ const App = () => {
               <Route path="proforma" element={<AdminProforma />} />
               <Route path="configuratore" element={<AdminConfigurator />} />
               <Route path="blog" element={<AdminBlog />} />
-              <Route path="forni" element={<ERPPlaceholder title="Gestione Forni" description="Sezione per la gestione completa del catalogo forni, modelli, taglie e rivestimenti." />} />
-              <Route path="bruciatori" element={<ERPPlaceholder title="Gestione Bruciatori" description="Sezione per la gestione dei bruciatori, modelli e prezzi." />} />
+              <Route path="forni" element={<ERPForni />} />
+              <Route path="bruciatori" element={<ERPBruciatori />} />
               <Route path="leads" element={<ERPPlaceholder title="Lead Sito Web" description="Gestione dei lead provenienti dal sito web e dai form di contatto." />} />
               <Route path="ordini" element={<ERPPlaceholder title="Ordini" description="Gestione ordini, stato spedizioni e fatturazione." />} />
             </Route>
