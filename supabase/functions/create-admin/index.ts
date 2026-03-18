@@ -11,7 +11,8 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { email, password, secret } = await req.json()
+    const { email, password, secret, role } = await req.json()
+    const assignRole = role || 'admin'
 
     // Verifica il secret per prevenire accessi non autorizzati
     if (secret !== 'Zapper2019!') {
