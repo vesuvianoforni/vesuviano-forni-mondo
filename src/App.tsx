@@ -35,6 +35,8 @@ import SessionsCRM from "./pages/SessionsCRM";
 import AdminProforma from "./pages/AdminProforma";
 import AdminBlog from "./pages/AdminBlog";
 import ERPPlaceholder from "./components/erp/ERPPlaceholder";
+import ERPForni from "./pages/ERPForni";
+import ERPBruciatori from "./pages/ERPBruciatori";
 
 const queryClient = new QueryClient();
 
