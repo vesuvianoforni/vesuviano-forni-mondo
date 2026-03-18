@@ -91,7 +91,7 @@ const AdminConfigurator = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate('/admin/login');
+    navigate('/erp/login');
   };
 
   const handleDeleteOven = async (ovenId: string) => {
