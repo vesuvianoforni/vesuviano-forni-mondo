@@ -116,10 +116,76 @@ const ERPOrdini = () => {
     setProformas(data || []);
   };
 
+  // Document handling
+  const fetchOrderDocs = async (orderId: string) => {
+    const { data, error } = await supabase.storage
+      .from('order-documents')
+      .list(orderId);
+    if (data && !error) {
+      setUploadedDocs(data.map(f => ({
+        name: f.name,
+        url: supabase.storage.from('order-documents').getPublicUrl(`${orderId}/${f.name}`).data.publicUrl,
+      })));
+    } else {
+      setUploadedDocs([]);
+    }
+  };
+
+  const uploadFilesToOrder = async (orderId: string, files: File[]) => {
+    setUploadingDocs(true);
+    for (const file of files) {
+      const safeName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+      const { error } = await supabase.storage
+        .from('order-documents')
+        .upload(`${orderId}/${safeName}`, file, { upsert: true });
+      if (error) toast.error(`Errore upload ${file.name}`);
+    }
+    setUploadingDocs(false);
+    await fetchOrderDocs(orderId);
+    setPendingFiles([]);
+  };
+
+  const deleteDoc = async (orderId: string, fileName: string) => {
+    const { error } = await supabase.storage
+      .from('order-documents')
+      .remove([`${orderId}/${fileName}`]);
+    if (error) toast.error('Errore eliminazione');
+    else await fetchOrderDocs(orderId);
+  };
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length === 0) return;
+    if (selectedOrder) {
+      uploadFilesToOrder(selectedOrder.id, files);
+    } else {
+      setPendingFiles(prev => [...prev, ...files]);
+    }
+  }, [selectedOrder]);
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    if (selectedOrder) {
+      uploadFilesToOrder(selectedOrder.id, files);
+    } else {
+      setPendingFiles(prev => [...prev, ...files]);
+    }
+    e.target.value = '';
+  };
+
+  const removePendingFile = (idx: number) => {
+    setPendingFiles(prev => prev.filter((_, i) => i !== idx));
+  };
+
   const handleCreateManual = () => {
     setFormData(emptyOrder);
     setShowFromProforma(false);
     setSelectedOrder(null);
+    setPendingFiles([]);
+    setUploadedDocs([]);
     setShowCreateModal(true);
   };
 
