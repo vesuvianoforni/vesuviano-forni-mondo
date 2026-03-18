@@ -88,11 +88,7 @@ const AdminProforma = () => {
   }, []);
 
   const checkAuth = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      navigate('/admin/login');
-      return;
-    }
+    // Auth is handled by ERPLayout
   };
 
   const loadData = async () => {
