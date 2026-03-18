@@ -503,6 +503,180 @@ export type Database = {
           },
         ]
       }
+      order_items: {
+        Row: {
+          burner_id: string | null
+          coating: string | null
+          created_at: string
+          description: string | null
+          diameter: number | null
+          fuel_type: string | null
+          id: string
+          image_url: string | null
+          item_type: string
+          line_total: number
+          model_name: string | null
+          order_id: string
+          oven_id: string | null
+          quantity: number
+          sort_order: number
+          unit_price: number
+        }
+        Insert: {
+          burner_id?: string | null
+          coating?: string | null
+          created_at?: string
+          description?: string | null
+          diameter?: number | null
+          fuel_type?: string | null
+          id?: string
+          image_url?: string | null
+          item_type?: string
+          line_total?: number
+          model_name?: string | null
+          order_id: string
+          oven_id?: string | null
+          quantity?: number
+          sort_order?: number
+          unit_price?: number
+        }
+        Update: {
+          burner_id?: string | null
+          coating?: string | null
+          created_at?: string
+          description?: string | null
+          diameter?: number | null
+          fuel_type?: string | null
+          id?: string
+          image_url?: string | null
+          item_type?: string
+          line_total?: number
+          model_name?: string | null
+          order_id?: string
+          oven_id?: string | null
+          quantity?: number
+          sort_order?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_burner_id_fkey"
+            columns: ["burner_id"]
+            isOneToOne: false
+            referencedRelation: "burners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_oven_id_fkey"
+            columns: ["oven_id"]
+            isOneToOne: false
+            referencedRelation: "configurator_ovens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          balance_due: number
+          billing_address: string | null
+          carrier: string | null
+          company_name: string | null
+          created_at: string
+          created_by: string | null
+          customer_email: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          delivered_at: string | null
+          delivery_address: string | null
+          deposit_paid: number
+          estimated_delivery: string | null
+          id: string
+          invoice_date: string | null
+          invoice_number: string | null
+          notes: string | null
+          order_number: string
+          payment_status: string
+          proforma_id: string | null
+          shipped_at: string | null
+          status: string
+          total_amount: number
+          tracking_number: string | null
+          updated_at: string
+          vat_number: string | null
+        }
+        Insert: {
+          balance_due?: number
+          billing_address?: string | null
+          carrier?: string | null
+          company_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivered_at?: string | null
+          delivery_address?: string | null
+          deposit_paid?: number
+          estimated_delivery?: string | null
+          id?: string
+          invoice_date?: string | null
+          invoice_number?: string | null
+          notes?: string | null
+          order_number?: string
+          payment_status?: string
+          proforma_id?: string | null
+          shipped_at?: string | null
+          status?: string
+          total_amount?: number
+          tracking_number?: string | null
+          updated_at?: string
+          vat_number?: string | null
+        }
+        Update: {
+          balance_due?: number
+          billing_address?: string | null
+          carrier?: string | null
+          company_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivered_at?: string | null
+          delivery_address?: string | null
+          deposit_paid?: number
+          estimated_delivery?: string | null
+          id?: string
+          invoice_date?: string | null
+          invoice_number?: string | null
+          notes?: string | null
+          order_number?: string
+          payment_status?: string
+          proforma_id?: string | null
+          shipped_at?: string | null
+          status?: string
+          total_amount?: number
+          tracking_number?: string | null
+          updated_at?: string
+          vat_number?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_proforma_id_fkey"
+            columns: ["proforma_id"]
+            isOneToOne: false
+            referencedRelation: "proformas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ovens: {
         Row: {
           category: string
