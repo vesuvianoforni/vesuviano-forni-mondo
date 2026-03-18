@@ -28,6 +28,8 @@ import ContattiRedirect from "./pages/ContattiRedirect";
 import LocalizedBlogList from "./pages/LocalizedBlogList";
 import LocalizedBlogPost from "./pages/LocalizedBlogPost";
 import AdminBlog from "./pages/AdminBlog";
+import AdminProforma from "./pages/AdminProforma";
+import ProformaPage from "./pages/ProformaPage";
 
 const queryClient = new QueryClient();
 
