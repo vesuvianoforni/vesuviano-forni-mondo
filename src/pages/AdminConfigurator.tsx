@@ -202,10 +202,16 @@ const AdminConfigurator = () => {
         <Card className="mb-8">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Ultime Interazioni</CardTitle>
-            <Button onClick={() => navigate('/admin/sessions-crm')} variant="outline" size="sm">
-              Visualizza CRM Completo
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => navigate('/admin/proforma')} variant="outline" size="sm">
+                <FileText className="w-4 h-4 mr-2" />
+                Pro-Forma
+              </Button>
+              <Button onClick={() => navigate('/admin/sessions-crm')} variant="outline" size="sm">
+                Visualizza CRM Completo
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
           </CardHeader>
           <div className="px-6 pb-4">
             <div className="relative">
