@@ -14,7 +14,7 @@ import EditOptionModal from '@/components/admin/EditOptionModal';
 import AddOptionModal from '@/components/admin/AddOptionModal';
 import { AIConversionMessageModal } from '@/components/admin/AIConversionMessageModal';
 import { WebsiteLeadsSection } from '@/components/admin/WebsiteLeadsSection';
-import { LogOut, Edit, Plus, Trash2, TrendingUp, Users, CheckCircle, Clock, ArrowRight, Search, Sparkles } from 'lucide-react';
+import { LogOut, Edit, Plus, Trash2, TrendingUp, Users, CheckCircle, Clock, ArrowRight, Search, Sparkles, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Input } from '@/components/ui/input';
