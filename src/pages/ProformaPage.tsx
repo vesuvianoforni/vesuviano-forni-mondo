@@ -67,7 +67,7 @@ const ProformaPage = () => {
   const verifyPayment = async () => {
     try {
       await supabase.functions.invoke('verify-proforma-payment', {
-        body: { proforma_id: '', token }
+        body: { token }
       });
     } catch (e) {
       console.error('Verify payment error:', e);

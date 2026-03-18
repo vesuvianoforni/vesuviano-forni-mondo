@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { proforma_id, token } = await req.json();
+    const { token } = await req.json();
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
@@ -23,7 +23,6 @@ serve(async (req) => {
     const { data: proforma, error } = await supabase
       .from("proformas")
       .select("*")
-      .eq("id", proforma_id)
       .eq("token", token)
       .single();
 
