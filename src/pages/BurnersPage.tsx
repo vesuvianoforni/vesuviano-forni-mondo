@@ -119,9 +119,9 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
 
       {/* Series Overview */}
       <section className="py-12 bg-stone-50">
-        <div className="container mx-auto px-6 max-w-6xl">
-          <div className="grid md:grid-cols-3 gap-6">
-            {['P', 'D', 'GOLD'].map((series) => (
+        <div className="container mx-auto px-6 max-w-4xl">
+          <div className="grid md:grid-cols-2 gap-6">
+            {['P', 'D'].map((series) => (
               <Card key={series} className="border-stone-200 hover:shadow-lg transition-shadow">
                 <CardContent className="p-6 text-center">
                   <div className={`w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 ${getSeriesColor(series)}`}>
