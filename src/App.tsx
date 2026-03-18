@@ -64,6 +64,7 @@ const App = () => {
             <Route path="/it/forni-rotanti" element={<LocalizedRotatingOven lang="it" />} />
             <Route path="/it/sistema-vesuviobuono" element={<LocalizedVesuvioBuono lang="it" />} />
             <Route path="/it/pronta-consegna" element={<LocalizedReadyToShip lang="it" />} />
+            <Route path="/it/bruciatori" element={<LocalizedBurners lang="it" />} />
             <Route path="/it/blog" element={<LocalizedBlogList lang="it" />} />
             <Route path="/it/blog/:slug" element={<LocalizedBlogPost lang="it" />} />
             <Route path="/it/thank-you-it" element={<ThankYou lang="it" />} />
