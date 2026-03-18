@@ -12,9 +12,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { Plus, Trash2, ArrowLeft, FileText, Copy, ExternalLink, Send, Eye, Edit, Loader2 } from 'lucide-react';
+import { Plus, Trash2, ArrowLeft, FileText, Copy, ExternalLink, Loader2, Globe, DollarSign } from 'lucide-react';
 import { format } from 'date-fns';
-import { it } from 'date-fns/locale';
+import { it as itLocale } from 'date-fns/locale';
 
 interface ProformaItem {
   id?: string;
@@ -38,6 +38,7 @@ interface ProformaItem {
 interface Proforma {
   id: string;
   token: string;
+  proforma_number: string | null;
   customer_name: string | null;
   company_name: string | null;
   customer_email: string | null;
@@ -51,9 +52,28 @@ interface Proforma {
   payment_option: string;
   payment_status: string;
   status: string;
+  language: string;
+  currency: string;
   valid_until: string | null;
   created_at: string;
 }
+
+const LANGUAGES = [
+  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
+];
+
+const CURRENCIES = [
+  { code: 'EUR', symbol: '€', name: 'Euro' },
+  { code: 'USD', symbol: '$', name: 'US Dollar' },
+  { code: 'GBP', symbol: '£', name: 'British Pound' },
+  { code: 'CHF', symbol: 'CHF', name: 'Franco Svizzero' },
+];
+
+const getCurrencySymbol = (code: string) => CURRENCIES.find(c => c.code === code)?.symbol || '€';
 
 const AdminProforma = () => {
   const navigate = useNavigate();
@@ -75,6 +95,8 @@ const AdminProforma = () => {
   const [deliveryDays, setDeliveryDays] = useState('');
   const [paymentOption, setPaymentOption] = useState('deposit_5');
   const [items, setItems] = useState<ProformaItem[]>([]);
+  const [language, setLanguage] = useState('it');
+  const [currency, setCurrency] = useState('EUR');
 
   // Burner form state
   const [burnerName, setBurnerName] = useState('');
@@ -83,13 +105,8 @@ const AdminProforma = () => {
   const [burnerImageUrl, setBurnerImageUrl] = useState('');
 
   useEffect(() => {
-    checkAuth();
     loadData();
   }, []);
-
-  const checkAuth = async () => {
-    // Auth is handled by ERPLayout
-  };
 
   const loadData = async () => {
     setLoading(true);
@@ -104,7 +121,6 @@ const AdminProforma = () => {
     setLoading(false);
   };
 
-  // Build model+coating options from ovens with their sizes data
   const ovenCoatingOptions = React.useMemo(() => {
     const options: { key: string; oven: any; coating: string; image: string }[] = [];
     const seen = new Set<string>();
@@ -126,7 +142,6 @@ const AdminProforma = () => {
           }
         });
       });
-      // Fallback: if no sizes/coatings, show model alone
       if (sizes.length === 0 || sizes.every((s: any) => !(s.coatings as any[])?.length)) {
         const key = `${oven.model_name}-default`;
         if (!seen.has(key)) {
@@ -206,6 +221,7 @@ const AdminProforma = () => {
   const totalPrice = items.reduce((sum, item) => sum + item.line_total, 0);
   const depositPercentage = paymentOption === 'deposit_5' ? 5 : 50;
   const depositAmount = totalPrice * (depositPercentage / 100);
+  const sym = getCurrencySymbol(currency);
 
   const handleCreateProforma = async () => {
     if (items.length === 0) {
@@ -228,8 +244,10 @@ const AdminProforma = () => {
           deposit_amount: depositAmount,
           delivery_days: deliveryDays ? parseInt(deliveryDays) : null,
           payment_option: paymentOption,
+          language,
+          currency,
           status: 'sent',
-        })
+        } as any)
         .select()
         .single();
 
@@ -306,6 +324,8 @@ const AdminProforma = () => {
     setDeliveryDays('');
     setPaymentOption('deposit_5');
     setItems([]);
+    setLanguage('it');
+    setCurrency('EUR');
     setShowCreateForm(false);
   };
 
@@ -333,23 +353,23 @@ const AdminProforma = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-7xl">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => navigate('/erp')}>
-              <ArrowLeft className="w-4 h-4 mr-2" /> Indietro
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" onClick={() => navigate('/erp')}>
+              <ArrowLeft className="w-4 h-4" />
             </Button>
-            <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
-              <FileText className="w-8 h-8" /> Pro-Forma
+            <h1 className="text-xl sm:text-3xl font-bold text-foreground flex items-center gap-2">
+              <FileText className="w-6 h-6 sm:w-8 sm:h-8" /> Pro-Forma
             </h1>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setShowBurnerForm(true)}>
-              <Plus className="w-4 h-4 mr-2" /> Nuovo Bruciatore
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Button variant="outline" size="sm" onClick={() => setShowBurnerForm(true)} className="flex-1 sm:flex-none">
+              <Plus className="w-4 h-4 mr-1" /> Bruciatore
             </Button>
-            <Button onClick={() => setShowCreateForm(true)}>
-              <Plus className="w-4 h-4 mr-2" /> Nuova Pro-Forma
+            <Button size="sm" onClick={() => setShowCreateForm(true)} className="flex-1 sm:flex-none">
+              <Plus className="w-4 h-4 mr-1" /> Nuova
             </Button>
           </div>
         </div>
@@ -357,48 +377,95 @@ const AdminProforma = () => {
         {/* Proformas List */}
         {!showCreateForm && (
           <Card>
-            <CardHeader>
-              <CardTitle>Pro-Forma Inviate</CardTitle>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">Pro-Forma Inviate</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0 sm:p-6">
               {proformas.length === 0 ? (
                 <p className="text-muted-foreground text-center py-8">Nessuna pro-forma creata ancora</p>
               ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Data</TableHead>
-                      <TableHead>Cliente</TableHead>
-                      <TableHead>Azienda</TableHead>
-                      <TableHead>Totale</TableHead>
-                      <TableHead>Deposito</TableHead>
-                      <TableHead>Stato</TableHead>
-                      <TableHead>Azioni</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {proformas.map((p) => (
-                      <TableRow key={p.id}>
-                        <TableCell>{format(new Date(p.created_at), 'dd/MM/yyyy', { locale: it })}</TableCell>
-                        <TableCell>{p.customer_name || '-'}</TableCell>
-                        <TableCell>{p.company_name || '-'}</TableCell>
-                        <TableCell>€{p.total_price.toLocaleString('it-IT')}</TableCell>
-                        <TableCell>{p.deposit_percentage}% (€{p.deposit_amount.toLocaleString('it-IT')})</TableCell>
-                        <TableCell>{getStatusBadge(p.status, p.payment_status)}</TableCell>
-                        <TableCell>
-                          <div className="flex gap-1">
-                            <Button size="sm" variant="ghost" onClick={() => copyLink(p.token)}>
-                              <Copy className="w-4 h-4" />
+                <>
+                  {/* Desktop table */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>N°</TableHead>
+                          <TableHead>Data</TableHead>
+                          <TableHead>Cliente</TableHead>
+                          <TableHead>Azienda</TableHead>
+                          <TableHead>Totale</TableHead>
+                          <TableHead>Deposito</TableHead>
+                          <TableHead>Lingua</TableHead>
+                          <TableHead>Stato</TableHead>
+                          <TableHead>Azioni</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {proformas.map((p) => {
+                          const pSym = getCurrencySymbol((p as any).currency || 'EUR');
+                          const lang = LANGUAGES.find(l => l.code === ((p as any).language || 'it'));
+                          return (
+                            <TableRow key={p.id}>
+                              <TableCell className="font-mono text-xs">{p.proforma_number || '-'}</TableCell>
+                              <TableCell>{format(new Date(p.created_at), 'dd/MM/yyyy', { locale: itLocale })}</TableCell>
+                              <TableCell>{p.customer_name || '-'}</TableCell>
+                              <TableCell>{p.company_name || '-'}</TableCell>
+                              <TableCell>{pSym}{p.total_price.toLocaleString('it-IT')}</TableCell>
+                              <TableCell>{p.deposit_percentage}% ({pSym}{p.deposit_amount.toLocaleString('it-IT')})</TableCell>
+                              <TableCell>{lang?.flag || '🇮🇹'}</TableCell>
+                              <TableCell>{getStatusBadge(p.status, p.payment_status)}</TableCell>
+                              <TableCell>
+                                <div className="flex gap-1">
+                                  <Button size="sm" variant="ghost" onClick={() => copyLink(p.token)}>
+                                    <Copy className="w-4 h-4" />
+                                  </Button>
+                                  <Button size="sm" variant="ghost" onClick={() => window.open(`/proforma/${p.token}`, '_blank')}>
+                                    <ExternalLink className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </div>
+                  {/* Mobile cards */}
+                  <div className="md:hidden space-y-3 p-3">
+                    {proformas.map((p) => {
+                      const pSym = getCurrencySymbol((p as any).currency || 'EUR');
+                      const lang = LANGUAGES.find(l => l.code === ((p as any).language || 'it'));
+                      return (
+                        <div key={p.id} className="border rounded-lg p-3 space-y-2">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <span className="font-mono text-xs text-muted-foreground">{p.proforma_number || '-'}</span>
+                              <p className="font-semibold text-sm">{p.customer_name || 'N/A'}</p>
+                              {p.company_name && <p className="text-xs text-muted-foreground">{p.company_name}</p>}
+                            </div>
+                            <div className="text-right">
+                              {getStatusBadge(p.status, p.payment_status)}
+                              <p className="text-sm font-bold mt-1">{pSym}{p.total_price.toLocaleString('it-IT')}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between text-xs text-muted-foreground">
+                            <span>{format(new Date(p.created_at), 'dd/MM/yyyy')}</span>
+                            <span>{lang?.flag} Dep. {p.deposit_percentage}%</span>
+                          </div>
+                          <div className="flex gap-2 pt-1">
+                            <Button size="sm" variant="outline" className="flex-1 h-8 text-xs" onClick={() => copyLink(p.token)}>
+                              <Copy className="w-3 h-3 mr-1" /> Copia Link
                             </Button>
-                            <Button size="sm" variant="ghost" onClick={() => window.open(`/proforma/${p.token}`, '_blank')}>
-                              <ExternalLink className="w-4 h-4" />
+                            <Button size="sm" variant="outline" className="flex-1 h-8 text-xs" onClick={() => window.open(`/proforma/${p.token}`, '_blank')}>
+                              <ExternalLink className="w-3 h-3 mr-1" /> Apri
                             </Button>
                           </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
               )}
             </CardContent>
           </Card>
@@ -406,48 +473,81 @@ const AdminProforma = () => {
 
         {/* Create Form */}
         {showCreateForm && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
+            {/* Language & Currency */}
             <Card>
-              <CardHeader>
-                <CardTitle>Dati Cliente</CardTitle>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Globe className="w-5 h-5" /> Lingua & Valuta
+                </CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <CardContent className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>Nome Cliente</Label>
+                  <Label className="text-xs">Lingua documento</Label>
+                  <Select value={language} onValueChange={setLanguage}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {LANGUAGES.map(l => (
+                        <SelectItem key={l.code} value={l.code}>{l.flag} {l.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-xs">Valuta</Label>
+                  <Select value={currency} onValueChange={setCurrency}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {CURRENCIES.map(c => (
+                        <SelectItem key={c.code} value={c.code}>{c.symbol} {c.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Dati Cliente</CardTitle>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-xs">Nome Cliente</Label>
                   <Input value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Mario Rossi" />
                 </div>
                 <div>
-                  <Label>Ragione Sociale (opzionale)</Label>
+                  <Label className="text-xs">Ragione Sociale</Label>
                   <Input value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder="Pizzeria Da Mario SRL" />
                 </div>
                 <div>
-                  <Label>Email</Label>
+                  <Label className="text-xs">Email</Label>
                   <Input value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder="mario@email.com" />
                 </div>
                 <div>
-                  <Label>Telefono</Label>
+                  <Label className="text-xs">Telefono</Label>
                   <Input value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} placeholder="+39 333..." />
                 </div>
                 <div>
-                  <Label>P.IVA (opzionale)</Label>
+                  <Label className="text-xs">P.IVA</Label>
                   <Input value={vatNumber} onChange={(e) => setVatNumber(e.target.value)} placeholder="IT12345678901" />
                 </div>
                 <div>
-                  <Label>Note</Label>
-                  <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Note aggiuntive..." />
+                  <Label className="text-xs">Note</Label>
+                  <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Note aggiuntive..." rows={2} />
                 </div>
               </CardContent>
             </Card>
 
             {/* Products */}
             <Card>
-              <CardHeader>
-                <CardTitle>Prodotti</CardTitle>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Prodotti</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <Select onValueChange={(val) => addOvenItem(val)}>
-                    <SelectTrigger className="w-[300px]">
+                    <SelectTrigger className="w-full sm:w-[300px]">
                       <SelectValue placeholder="+ Aggiungi Forno" />
                     </SelectTrigger>
                     <SelectContent>
@@ -463,24 +563,24 @@ const AdminProforma = () => {
                     const burner = burners.find(b => b.id === val);
                     if (burner) addBurnerItem(burner);
                   }}>
-                    <SelectTrigger className="w-[250px]">
+                    <SelectTrigger className="w-full sm:w-[250px]">
                       <SelectValue placeholder="+ Aggiungi Bruciatore" />
                     </SelectTrigger>
                     <SelectContent>
                       {burners.length === 0 ? (
-                        <SelectItem value="none" disabled>Nessun bruciatore disponibile</SelectItem>
+                        <SelectItem value="none" disabled>Nessun bruciatore</SelectItem>
                       ) : (
                         burners.map(b => (
                           <SelectItem key={b.id} value={b.id}>
-                            {b.name} - €{b.price}
+                            {b.name} - {sym}{b.price}
                           </SelectItem>
                         ))
                       )}
                     </SelectContent>
                   </Select>
 
-                  <Button variant="outline" onClick={addCustomItem}>
-                    <Plus className="w-4 h-4 mr-2" /> Prodotto Personalizzato
+                  <Button variant="outline" onClick={addCustomItem} className="w-full sm:w-auto">
+                    <Plus className="w-4 h-4 mr-1" /> Personalizzato
                   </Button>
                 </div>
 
@@ -491,24 +591,32 @@ const AdminProforma = () => {
                 ) : (
                   <div className="space-y-3">
                     {items.map((item, idx) => (
-                      <div key={idx} className="border rounded-lg p-4 flex flex-col md:flex-row gap-4 items-start">
-                        {item.image_url && (
-                          <img src={item.image_url} alt="" className="w-20 h-20 object-cover rounded" />
-                        )}
-                        <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-3">
-                          <div>
-                            <Label className="text-xs text-muted-foreground">Nome</Label>
-                            <Input
-                              value={item.model_name || item.custom_name || ''}
-                              onChange={(e) => updateItem(idx, item.item_type === 'custom' ? 'custom_name' : 'model_name', e.target.value)}
-                            />
+                      <div key={idx} className="border rounded-lg p-3 space-y-3">
+                        <div className="flex items-start gap-3">
+                          {item.image_url && (
+                            <img src={item.image_url} alt="" className="w-14 h-14 sm:w-20 sm:h-20 object-cover rounded flex-shrink-0" />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-start">
+                              <Input
+                                value={item.model_name || item.custom_name || ''}
+                                onChange={(e) => updateItem(idx, item.item_type === 'custom' ? 'custom_name' : 'model_name', e.target.value)}
+                                className="font-semibold text-sm h-8"
+                              />
+                              <Button variant="ghost" size="sm" onClick={() => removeItem(idx)} className="ml-2 flex-shrink-0">
+                                <Trash2 className="w-4 h-4 text-destructive" />
+                              </Button>
+                            </div>
                           </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                           {item.item_type === 'oven' && (
                             <>
                               <div>
-                                <Label className="text-xs text-muted-foreground">Alimentazione</Label>
+                                <Label className="text-[10px] text-muted-foreground">Alimentazione</Label>
                                 <Select value={item.fuel_type || ''} onValueChange={(v) => updateItem(idx, 'fuel_type', v)}>
-                                  <SelectTrigger><SelectValue /></SelectTrigger>
+                                  <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                                   <SelectContent>
                                     <SelectItem value="Legna">Legna</SelectItem>
                                     <SelectItem value="Gas">Gas</SelectItem>
@@ -517,43 +625,44 @@ const AdminProforma = () => {
                                 </Select>
                               </div>
                               <div>
-                                <Label className="text-xs text-muted-foreground">Diametro (cm)</Label>
+                                <Label className="text-[10px] text-muted-foreground">Ø cm</Label>
                                 <Input
                                   type="number"
+                                  className="h-8 text-xs"
                                   value={item.diameter || ''}
                                   onChange={(e) => updateItem(idx, 'diameter', parseInt(e.target.value) || null)}
-                                  placeholder="Es. 100"
+                                  placeholder="100"
                                 />
                               </div>
                               <div>
-                                <Label className="text-xs text-muted-foreground">Rivestimento</Label>
-                                <Input value={item.coating || ''} readOnly className="bg-muted" />
+                                <Label className="text-[10px] text-muted-foreground">Rivestimento</Label>
+                                <Input value={item.coating || ''} readOnly className="bg-muted h-8 text-xs" />
                               </div>
                             </>
                           )}
                           <div>
-                            <Label className="text-xs text-muted-foreground">Prezzo unitario (€)</Label>
+                            <Label className="text-[10px] text-muted-foreground">Prezzo ({sym})</Label>
                             <Input
                               type="number"
+                              className="h-8 text-xs"
                               value={item.unit_price}
                               onChange={(e) => updateItem(idx, 'unit_price', parseFloat(e.target.value) || 0)}
                             />
                           </div>
                           <div>
-                            <Label className="text-xs text-muted-foreground">Quantità</Label>
+                            <Label className="text-[10px] text-muted-foreground">Qtà</Label>
                             <Input
                               type="number"
                               min={1}
+                              className="h-8 text-xs"
                               value={item.quantity}
                               onChange={(e) => updateItem(idx, 'quantity', parseInt(e.target.value) || 1)}
                             />
                           </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <span className="font-semibold whitespace-nowrap">€{item.line_total.toLocaleString('it-IT')}</span>
-                          <Button variant="ghost" size="sm" onClick={() => removeItem(idx)}>
-                            <Trash2 className="w-4 h-4 text-destructive" />
-                          </Button>
+                        
+                        <div className="text-right">
+                          <span className="font-bold text-sm">{sym}{item.line_total.toLocaleString('it-IT')}</span>
                         </div>
                       </div>
                     ))}
@@ -564,12 +673,12 @@ const AdminProforma = () => {
 
             {/* Payment Terms */}
             <Card>
-              <CardHeader>
-                <CardTitle>Condizioni di Pagamento</CardTitle>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Condizioni di Pagamento</CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <Label>Opzione Pagamento</Label>
+                  <Label className="text-xs">Opzione Pagamento</Label>
                   <Select value={paymentOption} onValueChange={setPaymentOption}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -579,22 +688,22 @@ const AdminProforma = () => {
                   </Select>
                 </div>
                 <div>
-                  <Label>Giorni per consegna (se 50%)</Label>
+                  <Label className="text-xs">Giorni consegna (se 50%)</Label>
                   <Input
                     type="number"
                     value={deliveryDays}
                     onChange={(e) => setDeliveryDays(e.target.value)}
-                    placeholder="Es. 30"
+                    placeholder="30"
                   />
                 </div>
-                <div className="flex flex-col justify-end">
-                  <div className="text-sm text-muted-foreground">Totale: <span className="text-lg font-bold text-foreground">€{totalPrice.toLocaleString('it-IT')}</span></div>
-                  <div className="text-sm text-muted-foreground">Deposito {depositPercentage}%: <span className="font-semibold text-foreground">€{depositAmount.toLocaleString('it-IT')}</span></div>
+                <div className="flex flex-col justify-end bg-muted/50 rounded-lg p-3">
+                  <div className="text-sm text-muted-foreground">Totale: <span className="text-lg font-bold text-foreground">{sym}{totalPrice.toLocaleString('it-IT')}</span></div>
+                  <div className="text-sm text-muted-foreground">Deposito {depositPercentage}%: <span className="font-semibold text-foreground">{sym}{depositAmount.toLocaleString('it-IT')}</span></div>
                 </div>
               </CardContent>
             </Card>
 
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-3 pb-8">
               <Button variant="outline" onClick={resetForm}>Annulla</Button>
               <Button onClick={handleCreateProforma} disabled={saving}>
                 {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
@@ -624,7 +733,7 @@ const AdminProforma = () => {
                 <Input type="number" value={burnerPrice} onChange={(e) => setBurnerPrice(e.target.value)} placeholder="500" />
               </div>
               <div>
-                <Label>URL Immagine (opzionale)</Label>
+                <Label>URL Immagine</Label>
                 <Input value={burnerImageUrl} onChange={(e) => setBurnerImageUrl(e.target.value)} placeholder="https://..." />
               </div>
               <Button onClick={handleCreateBurner} className="w-full">Salva Bruciatore</Button>

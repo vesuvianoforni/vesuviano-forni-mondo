@@ -813,6 +813,7 @@ export type Database = {
           company_name: string | null
           created_at: string
           created_by: string | null
+          currency: string
           customer_email: string | null
           customer_name: string | null
           customer_phone: string | null
@@ -820,10 +821,12 @@ export type Database = {
           deposit_amount: number
           deposit_percentage: number
           id: string
+          language: string
           notes: string | null
           payment_completed_at: string | null
           payment_option: string
           payment_status: string
+          proforma_number: string | null
           status: string
           stripe_session_id: string | null
           token: string
@@ -837,6 +840,7 @@ export type Database = {
           company_name?: string | null
           created_at?: string
           created_by?: string | null
+          currency?: string
           customer_email?: string | null
           customer_name?: string | null
           customer_phone?: string | null
@@ -844,10 +848,12 @@ export type Database = {
           deposit_amount?: number
           deposit_percentage?: number
           id?: string
+          language?: string
           notes?: string | null
           payment_completed_at?: string | null
           payment_option?: string
           payment_status?: string
+          proforma_number?: string | null
           status?: string
           stripe_session_id?: string | null
           token?: string
@@ -861,6 +867,7 @@ export type Database = {
           company_name?: string | null
           created_at?: string
           created_by?: string | null
+          currency?: string
           customer_email?: string | null
           customer_name?: string | null
           customer_phone?: string | null
@@ -868,10 +875,12 @@ export type Database = {
           deposit_amount?: number
           deposit_percentage?: number
           id?: string
+          language?: string
           notes?: string | null
           payment_completed_at?: string | null
           payment_option?: string
           payment_status?: string
+          proforma_number?: string | null
           status?: string
           stripe_session_id?: string | null
           token?: string
