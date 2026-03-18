@@ -140,6 +140,42 @@ export type Database = {
         }
         Relationships: []
       }
+      burners: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          price: number
+          specifications: Json | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          price?: number
+          specifications?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          price?: number
+          specifications?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       configurator_options: {
         Row: {
           created_at: string
@@ -506,6 +542,169 @@ export type Database = {
           specifications?: Json | null
           subcategory?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      proforma_items: {
+        Row: {
+          ai_render_url: string | null
+          burner_id: string | null
+          coating: string | null
+          created_at: string
+          custom_description: string | null
+          custom_name: string | null
+          diameter: number | null
+          fuel_type: string | null
+          id: string
+          image_url: string | null
+          item_type: string
+          line_total: number
+          model_name: string | null
+          oven_id: string | null
+          proforma_id: string
+          quantity: number
+          sort_order: number
+          specifications: Json | null
+          unit_price: number
+        }
+        Insert: {
+          ai_render_url?: string | null
+          burner_id?: string | null
+          coating?: string | null
+          created_at?: string
+          custom_description?: string | null
+          custom_name?: string | null
+          diameter?: number | null
+          fuel_type?: string | null
+          id?: string
+          image_url?: string | null
+          item_type?: string
+          line_total?: number
+          model_name?: string | null
+          oven_id?: string | null
+          proforma_id: string
+          quantity?: number
+          sort_order?: number
+          specifications?: Json | null
+          unit_price?: number
+        }
+        Update: {
+          ai_render_url?: string | null
+          burner_id?: string | null
+          coating?: string | null
+          created_at?: string
+          custom_description?: string | null
+          custom_name?: string | null
+          diameter?: number | null
+          fuel_type?: string | null
+          id?: string
+          image_url?: string | null
+          item_type?: string
+          line_total?: number
+          model_name?: string | null
+          oven_id?: string | null
+          proforma_id?: string
+          quantity?: number
+          sort_order?: number
+          specifications?: Json | null
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proforma_items_burner_id_fkey"
+            columns: ["burner_id"]
+            isOneToOne: false
+            referencedRelation: "burners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "proforma_items_oven_id_fkey"
+            columns: ["oven_id"]
+            isOneToOne: false
+            referencedRelation: "configurator_ovens"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "proforma_items_proforma_id_fkey"
+            columns: ["proforma_id"]
+            isOneToOne: false
+            referencedRelation: "proformas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      proformas: {
+        Row: {
+          billing_address: string | null
+          company_name: string | null
+          created_at: string
+          created_by: string | null
+          customer_email: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          delivery_days: number | null
+          deposit_amount: number
+          deposit_percentage: number
+          id: string
+          notes: string | null
+          payment_completed_at: string | null
+          payment_option: string
+          payment_status: string
+          status: string
+          stripe_session_id: string | null
+          token: string
+          total_price: number
+          updated_at: string
+          valid_until: string | null
+          vat_number: string | null
+        }
+        Insert: {
+          billing_address?: string | null
+          company_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivery_days?: number | null
+          deposit_amount?: number
+          deposit_percentage?: number
+          id?: string
+          notes?: string | null
+          payment_completed_at?: string | null
+          payment_option?: string
+          payment_status?: string
+          status?: string
+          stripe_session_id?: string | null
+          token?: string
+          total_price?: number
+          updated_at?: string
+          valid_until?: string | null
+          vat_number?: string | null
+        }
+        Update: {
+          billing_address?: string | null
+          company_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivery_days?: number | null
+          deposit_amount?: number
+          deposit_percentage?: number
+          id?: string
+          notes?: string | null
+          payment_completed_at?: string | null
+          payment_option?: string
+          payment_status?: string
+          status?: string
+          stripe_session_id?: string | null
+          token?: string
+          total_price?: number
+          updated_at?: string
+          valid_until?: string | null
+          vat_number?: string | null
         }
         Relationships: []
       }
