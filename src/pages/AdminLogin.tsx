@@ -51,15 +51,13 @@ const AdminLogin = () => {
         const { data: roles, error: rolesError } = await supabase
           .from('user_roles')
           .select('role')
-          .eq('user_id', authData.user.id)
-          .eq('role', 'admin')
-          .maybeSingle();
+          .eq('user_id', authData.user.id);
 
         if (rolesError) throw rolesError;
 
-        if (!roles) {
+        if (!roles || roles.length === 0) {
           await supabase.auth.signOut();
-          toast.error('Non hai i permessi di amministratore');
+          toast.error('Non hai i permessi per accedere all\'ERP');
           return;
         }
 

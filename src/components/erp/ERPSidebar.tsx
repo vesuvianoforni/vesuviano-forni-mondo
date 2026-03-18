@@ -9,6 +9,7 @@ import {
   Flame,
   LogOut,
   Truck,
+  ShieldCheck,
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -45,6 +46,7 @@ const contentItems = [
 
 const operationsItems = [
   { title: 'Ordini', url: '/erp/ordini', icon: Truck },
+  { title: 'Utenti', url: '/erp/utenti', icon: ShieldCheck },
 ];
 
 export function ERPSidebar() {

@@ -11,7 +11,8 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { email, password, secret } = await req.json()
+    const { email, password, secret, role } = await req.json()
+    const assignRole = role || 'admin'
 
     // Verifica il secret per prevenire accessi non autorizzati
     if (secret !== 'Zapper2019!') {
@@ -39,17 +40,17 @@ Deno.serve(async (req) => {
 
     if (userError) throw userError
 
-    // Assegna il ruolo admin
+    // Assegna il ruolo
     const { error: roleError } = await supabase
       .from('user_roles')
       .insert({
         user_id: userData.user.id,
-        role: 'admin'
+        role: assignRole
       })
 
     if (roleError) throw roleError
 
-    console.log(`Admin user created: ${email}`)
+    console.log(`User created: ${email} with role: ${assignRole}`)
 
     return new Response(
       JSON.stringify({ 

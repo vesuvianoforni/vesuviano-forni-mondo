@@ -17,6 +17,15 @@ const ERPLayout = () => {
         navigate('/erp/login');
         return;
       }
+      // Check if user has any ERP role
+      const { data: roles } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id);
+      if (!roles || roles.length === 0) {
+        navigate('/erp/login');
+        return;
+      }
       setAuthenticated(true);
       setLoading(false);
     };
