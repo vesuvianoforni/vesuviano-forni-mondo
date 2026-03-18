@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import { Plus, Search, Loader2, Truck, Package, FileText, Eye, Edit, Trash2, ArrowRight } from 'lucide-react';
+import { Plus, Search, Loader2, Truck, Package, FileText, Eye, Edit, Trash2, ArrowRight, Upload, X, Download, File } from 'lucide-react';
 import { format } from 'date-fns';
 
 const ORDER_STATUSES = [
@@ -89,6 +89,10 @@ const ERPOrdini = () => {
   const [formData, setFormData] = useState(emptyOrder);
   const [saving, setSaving] = useState(false);
   const [showFromProforma, setShowFromProforma] = useState(false);
+  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+  const [uploadedDocs, setUploadedDocs] = useState<{ name: string; url: string }[]>([]);
+  const [uploadingDocs, setUploadingDocs] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => { fetchOrders(); fetchProformas(); }, []);
 
@@ -112,10 +116,76 @@ const ERPOrdini = () => {
     setProformas(data || []);
   };
 
+  // Document handling
+  const fetchOrderDocs = async (orderId: string) => {
+    const { data, error } = await supabase.storage
+      .from('order-documents')
+      .list(orderId);
+    if (data && !error) {
+      setUploadedDocs(data.map(f => ({
+        name: f.name,
+        url: supabase.storage.from('order-documents').getPublicUrl(`${orderId}/${f.name}`).data.publicUrl,
+      })));
+    } else {
+      setUploadedDocs([]);
+    }
+  };
+
+  const uploadFilesToOrder = async (orderId: string, files: File[]) => {
+    setUploadingDocs(true);
+    for (const file of files) {
+      const safeName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+      const { error } = await supabase.storage
+        .from('order-documents')
+        .upload(`${orderId}/${safeName}`, file, { upsert: true });
+      if (error) toast.error(`Errore upload ${file.name}`);
+    }
+    setUploadingDocs(false);
+    await fetchOrderDocs(orderId);
+    setPendingFiles([]);
+  };
+
+  const deleteDoc = async (orderId: string, fileName: string) => {
+    const { error } = await supabase.storage
+      .from('order-documents')
+      .remove([`${orderId}/${fileName}`]);
+    if (error) toast.error('Errore eliminazione');
+    else await fetchOrderDocs(orderId);
+  };
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length === 0) return;
+    if (selectedOrder) {
+      uploadFilesToOrder(selectedOrder.id, files);
+    } else {
+      setPendingFiles(prev => [...prev, ...files]);
+    }
+  }, [selectedOrder]);
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    if (selectedOrder) {
+      uploadFilesToOrder(selectedOrder.id, files);
+    } else {
+      setPendingFiles(prev => [...prev, ...files]);
+    }
+    e.target.value = '';
+  };
+
+  const removePendingFile = (idx: number) => {
+    setPendingFiles(prev => prev.filter((_, i) => i !== idx));
+  };
+
   const handleCreateManual = () => {
     setFormData(emptyOrder);
     setShowFromProforma(false);
     setSelectedOrder(null);
+    setPendingFiles([]);
+    setUploadedDocs([]);
     setShowCreateModal(true);
   };
 
@@ -166,7 +236,7 @@ const ERPOrdini = () => {
         if (error) throw error;
         toast.success('Ordine aggiornato');
       } else {
-        const { error } = await supabase.from('orders').insert({
+        const { data: newOrder, error } = await supabase.from('orders').insert({
           customer_name: formData.customer_name || null,
           company_name: formData.company_name || null,
           customer_email: formData.customer_email || null,
@@ -180,8 +250,12 @@ const ERPOrdini = () => {
           notes: formData.notes || null,
           status: formData.status,
           payment_status: formData.payment_status,
-        });
+        }).select().single();
         if (error) throw error;
+        // Upload pending files for the new order
+        if (newOrder && pendingFiles.length > 0) {
+          await uploadFilesToOrder(newOrder.id, pendingFiles);
+        }
         toast.success('Ordine creato');
       }
       setShowCreateModal(false);
@@ -224,6 +298,8 @@ const ERPOrdini = () => {
       status: order.status,
       payment_status: order.payment_status,
     });
+    setPendingFiles([]);
+    fetchOrderDocs(order.id);
     setShowCreateModal(true);
   };
 
@@ -329,6 +405,79 @@ const ERPOrdini = () => {
 
       <div><Label className="text-amber-200/60 text-xs">Note</Label>
         <Textarea value={formData.notes} onChange={e => setFormData(p => ({ ...p, notes: e.target.value }))} className="bg-[#1a1a1a] border-amber-900/30 text-amber-100" rows={3} /></div>
+
+      {/* Documents Drag & Drop */}
+      <h3 className="text-amber-400 font-semibold text-sm mt-4 flex items-center gap-2">
+        <FileText className="w-4 h-4" /> Documenti
+      </h3>
+      <div
+        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={handleDrop}
+        className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer ${
+          isDragging
+            ? 'border-amber-500 bg-amber-500/10'
+            : 'border-amber-900/30 bg-[#1a1a1a] hover:border-amber-700/50'
+        }`}
+        onClick={() => document.getElementById('order-doc-input')?.click()}
+      >
+        <input
+          id="order-doc-input"
+          type="file"
+          multiple
+          className="hidden"
+          onChange={handleFileInput}
+          accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.zip"
+        />
+        <Upload className={`w-8 h-8 mx-auto mb-2 ${isDragging ? 'text-amber-400' : 'text-amber-500/40'}`} />
+        <p className="text-amber-200/60 text-sm">
+          {isDragging ? 'Rilascia i file qui' : 'Trascina documenti qui o clicca per caricare'}
+        </p>
+        <p className="text-amber-500/30 text-xs mt-1">PDF, DOC, XLS, immagini, ZIP</p>
+        {uploadingDocs && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-lg">
+            <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
+          </div>
+        )}
+      </div>
+
+      {/* Pending files (new order) */}
+      {pendingFiles.length > 0 && (
+        <div className="space-y-1">
+          <p className="text-amber-200/40 text-xs">File in attesa (saranno caricati al salvataggio):</p>
+          {pendingFiles.map((f, i) => (
+            <div key={i} className="flex items-center gap-2 text-sm text-amber-200/80 bg-[#1a1a1a] rounded px-3 py-1.5 border border-amber-900/20">
+              <File className="w-3.5 h-3.5 text-amber-500/60 flex-shrink-0" />
+              <span className="truncate flex-1">{f.name}</span>
+              <span className="text-amber-500/40 text-xs">{(f.size / 1024).toFixed(0)} KB</span>
+              <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-red-400 hover:text-red-300" onClick={(e) => { e.stopPropagation(); removePendingFile(i); }}>
+                <X className="w-3.5 h-3.5" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Uploaded docs (existing order) */}
+      {selectedOrder && uploadedDocs.length > 0 && (
+        <div className="space-y-1">
+          <p className="text-amber-200/40 text-xs">Documenti caricati:</p>
+          {uploadedDocs.map((doc) => (
+            <div key={doc.name} className="flex items-center gap-2 text-sm text-amber-200/80 bg-[#1a1a1a] rounded px-3 py-1.5 border border-amber-900/20">
+              <File className="w-3.5 h-3.5 text-amber-500/60 flex-shrink-0" />
+              <span className="truncate flex-1">{doc.name}</span>
+              <a href={doc.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-amber-400 hover:text-amber-200">
+                  <Download className="w-3.5 h-3.5" />
+                </Button>
+              </a>
+              <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-red-400 hover:text-red-300" onClick={(e) => { e.stopPropagation(); deleteDoc(selectedOrder.id, doc.name); }}>
+                <X className="w-3.5 h-3.5" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 
