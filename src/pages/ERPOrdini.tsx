@@ -405,6 +405,79 @@ const ERPOrdini = () => {
 
       <div><Label className="text-amber-200/60 text-xs">Note</Label>
         <Textarea value={formData.notes} onChange={e => setFormData(p => ({ ...p, notes: e.target.value }))} className="bg-[#1a1a1a] border-amber-900/30 text-amber-100" rows={3} /></div>
+
+      {/* Documents Drag & Drop */}
+      <h3 className="text-amber-400 font-semibold text-sm mt-4 flex items-center gap-2">
+        <FileText className="w-4 h-4" /> Documenti
+      </h3>
+      <div
+        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={handleDrop}
+        className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer ${
+          isDragging
+            ? 'border-amber-500 bg-amber-500/10'
+            : 'border-amber-900/30 bg-[#1a1a1a] hover:border-amber-700/50'
+        }`}
+        onClick={() => document.getElementById('order-doc-input')?.click()}
+      >
+        <input
+          id="order-doc-input"
+          type="file"
+          multiple
+          className="hidden"
+          onChange={handleFileInput}
+          accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.zip"
+        />
+        <Upload className={`w-8 h-8 mx-auto mb-2 ${isDragging ? 'text-amber-400' : 'text-amber-500/40'}`} />
+        <p className="text-amber-200/60 text-sm">
+          {isDragging ? 'Rilascia i file qui' : 'Trascina documenti qui o clicca per caricare'}
+        </p>
+        <p className="text-amber-500/30 text-xs mt-1">PDF, DOC, XLS, immagini, ZIP</p>
+        {uploadingDocs && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-lg">
+            <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
+          </div>
+        )}
+      </div>
+
+      {/* Pending files (new order) */}
+      {pendingFiles.length > 0 && (
+        <div className="space-y-1">
+          <p className="text-amber-200/40 text-xs">File in attesa (saranno caricati al salvataggio):</p>
+          {pendingFiles.map((f, i) => (
+            <div key={i} className="flex items-center gap-2 text-sm text-amber-200/80 bg-[#1a1a1a] rounded px-3 py-1.5 border border-amber-900/20">
+              <File className="w-3.5 h-3.5 text-amber-500/60 flex-shrink-0" />
+              <span className="truncate flex-1">{f.name}</span>
+              <span className="text-amber-500/40 text-xs">{(f.size / 1024).toFixed(0)} KB</span>
+              <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-red-400 hover:text-red-300" onClick={(e) => { e.stopPropagation(); removePendingFile(i); }}>
+                <X className="w-3.5 h-3.5" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Uploaded docs (existing order) */}
+      {selectedOrder && uploadedDocs.length > 0 && (
+        <div className="space-y-1">
+          <p className="text-amber-200/40 text-xs">Documenti caricati:</p>
+          {uploadedDocs.map((doc) => (
+            <div key={doc.name} className="flex items-center gap-2 text-sm text-amber-200/80 bg-[#1a1a1a] rounded px-3 py-1.5 border border-amber-900/20">
+              <File className="w-3.5 h-3.5 text-amber-500/60 flex-shrink-0" />
+              <span className="truncate flex-1">{doc.name}</span>
+              <a href={doc.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-amber-400 hover:text-amber-200">
+                  <Download className="w-3.5 h-3.5" />
+                </Button>
+              </a>
+              <Button size="sm" variant="ghost" className="h-6 w-6 p-0 text-red-400 hover:text-red-300" onClick={(e) => { e.stopPropagation(); deleteDoc(selectedOrder.id, doc.name); }}>
+                <X className="w-3.5 h-3.5" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 
