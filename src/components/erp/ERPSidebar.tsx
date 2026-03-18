@@ -9,6 +9,7 @@ import {
   Flame,
   LogOut,
   Truck,
+  ShieldCheck,
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
