@@ -67,7 +67,7 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
     switch (series) {
       case 'P': return 'bg-orange-100 text-orange-700';
       case 'D': return 'bg-blue-100 text-blue-700';
-      case 'GOLD': return 'bg-yellow-100 text-yellow-800';
+      default: return 'bg-stone-100 text-stone-700';
       default: return 'bg-stone-100 text-stone-700';
     }
   };
