@@ -78,6 +78,7 @@ const App = () => {
             <Route path="/en/rotating-ovens" element={<LocalizedRotatingOven lang="en" />} />
             <Route path="/en/vesuviobuono-system" element={<LocalizedVesuvioBuono lang="en" />} />
             <Route path="/en/ready-to-ship" element={<LocalizedReadyToShip lang="en" />} />
+            <Route path="/en/burners" element={<LocalizedBurners lang="en" />} />
             <Route path="/en/blog" element={<LocalizedBlogList lang="en" />} />
             <Route path="/en/blog/:slug" element={<LocalizedBlogPost lang="en" />} />
             <Route path="/en/thank-you-en" element={<ThankYou lang="en" />} />
