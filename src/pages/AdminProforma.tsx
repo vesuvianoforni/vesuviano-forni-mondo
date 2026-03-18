@@ -88,11 +88,7 @@ const AdminProforma = () => {
   }, []);
 
   const checkAuth = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      navigate('/admin/login');
-      return;
-    }
+    // Auth is handled by ERPLayout
   };
 
   const loadData = async () => {
@@ -299,7 +295,7 @@ const AdminProforma = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => navigate('/admin/configuratore')}>
+            <Button variant="ghost" onClick={() => navigate('/erp')}>
               <ArrowLeft className="w-4 h-4 mr-2" /> Indietro
             </Button>
             <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">

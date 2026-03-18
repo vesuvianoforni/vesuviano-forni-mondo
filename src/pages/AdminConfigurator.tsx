@@ -91,7 +91,7 @@ const AdminConfigurator = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate('/admin/login');
+    navigate('/erp/login');
   };
 
   const handleDeleteOven = async (ovenId: string) => {
@@ -203,11 +203,11 @@ const AdminConfigurator = () => {
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Ultime Interazioni</CardTitle>
             <div className="flex gap-2">
-              <Button onClick={() => navigate('/admin/proforma')} variant="outline" size="sm">
+              <Button onClick={() => navigate('/erp/proforma')} variant="outline" size="sm">
                 <FileText className="w-4 h-4 mr-2" />
                 Pro-Forma
               </Button>
-              <Button onClick={() => navigate('/admin/sessions-crm')} variant="outline" size="sm">
+              <Button onClick={() => navigate('/erp/crm')} variant="outline" size="sm">
                 Visualizza CRM Completo
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>

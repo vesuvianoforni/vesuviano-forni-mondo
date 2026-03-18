@@ -32,7 +32,7 @@ const CreateAdmin = () => {
 
       toast.success('Utente admin creato con successo! Ora puoi effettuare il login.');
       setTimeout(() => {
-        navigate('/admin/login');
+        navigate('/erp/login');
       }, 2000);
     } catch (error: any) {
       toast.error(error.message || 'Errore durante la creazione');

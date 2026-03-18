@@ -903,7 +903,7 @@ const SessionsCRM = () => {
       <div className="border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={() => navigate('/admin/configurator')}>
+            <Button variant="ghost" size="sm" onClick={() => navigate('/erp')}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Torna al Dashboard
             </Button>
