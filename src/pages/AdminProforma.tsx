@@ -495,7 +495,7 @@ const AdminProforma = () => {
                         {item.image_url && (
                           <img src={item.image_url} alt="" className="w-20 h-20 object-cover rounded" />
                         )}
-                        <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-3">
                           <div>
                             <Label className="text-xs text-muted-foreground">Nome</Label>
                             <Input
