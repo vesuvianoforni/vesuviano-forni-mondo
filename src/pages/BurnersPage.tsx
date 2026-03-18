@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
-import { Flame, Gauge, Zap, Settings } from 'lucide-react';
+import { Flame, Gauge, Settings } from 'lucide-react';
 import type { Json } from '@/integrations/supabase/types';
 
 interface BurnersPageProps {
@@ -75,8 +75,8 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-charcoal-900 via-charcoal-800 to-stone-900"></div>
+      <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 overflow-hidden bg-stone-900">
+        <div className="absolute inset-0 bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900"></div>
         <div className="absolute inset-0">
           <div className="absolute top-20 left-10 w-72 h-72 bg-vesuviano-500/15 rounded-full blur-[120px]"></div>
           <div className="absolute bottom-10 right-20 w-96 h-96 bg-vesuviano-400/10 rounded-full blur-[150px]"></div>
@@ -106,10 +106,10 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
       {/* Intro Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-6 max-w-4xl text-center">
-          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-6">
+          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-foreground mb-6">
             {t('burners.introTitle')}
           </h2>
-          <p className="text-lg text-stone-600 leading-relaxed">
+          <p className="text-lg text-muted-foreground leading-relaxed">
             {t('burners.introText')}
           </p>
         </div>
@@ -125,10 +125,10 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
                   <div className={`w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 ${getSeriesColor(series)}`}>
                     {getSeriesIcon(series)}
                   </div>
-                  <h3 className="font-playfair text-xl font-bold text-charcoal-900 mb-2">
+                  <h3 className="font-playfair text-xl font-bold text-foreground mb-2">
                     {t(`burners.series.${series}.title`)}
                   </h3>
-                  <p className="text-stone-600 text-sm">
+                  <p className="text-muted-foreground text-sm">
                     {t(`burners.series.${series}.description`)}
                   </p>
                 </CardContent>
@@ -141,7 +141,7 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
       {/* Burners Catalog */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-6 max-w-6xl">
-          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-12 text-center">
+          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-foreground mb-12 text-center">
             {t('burners.catalogTitle')}
           </h2>
 
@@ -176,37 +176,37 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
                       )}
                     </div>
                     <CardContent className="p-6">
-                      <h3 className="font-playfair text-xl font-bold text-charcoal-900 mb-2">
+                      <h3 className="font-playfair text-xl font-bold text-foreground mb-2">
                         {burner.name}
                       </h3>
                       {burner.description && (
-                        <p className="text-stone-600 text-sm mb-4 line-clamp-3">
+                        <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
                           {burner.description}
                         </p>
                       )}
                       <div className="space-y-2 text-sm">
                         {specs.control && (
                           <div className="flex justify-between">
-                            <span className="text-stone-500">{t('burners.specs.control')}</span>
-                            <span className="font-medium text-charcoal-900">{specs.control}</span>
+                            <span className="text-muted-foreground">{t('burners.specs.control')}</span>
+                            <span className="font-medium text-foreground">{specs.control}</span>
                           </div>
                         )}
                         {specs.power_kw && (
                           <div className="flex justify-between">
-                            <span className="text-stone-500">{t('burners.specs.power')}</span>
-                            <span className="font-medium text-charcoal-900">{specs.power_kw} kW</span>
+                            <span className="text-muted-foreground">{t('burners.specs.power')}</span>
+                            <span className="font-medium text-foreground">{specs.power_kw} kW</span>
                           </div>
                         )}
                         {specs.oven_sizes && (
                           <div className="flex justify-between">
-                            <span className="text-stone-500">{t('burners.specs.ovenSizes')}</span>
-                            <span className="font-medium text-charcoal-900">Ø {specs.oven_sizes} cm</span>
+                            <span className="text-muted-foreground">{t('burners.specs.ovenSizes')}</span>
+                            <span className="font-medium text-foreground">Ø {specs.oven_sizes} cm</span>
                           </div>
                         )}
                         {specs.lpg_consumption && (
                           <div className="flex justify-between">
-                            <span className="text-stone-500">{t('burners.specs.consumption')}</span>
-                            <span className="font-medium text-charcoal-900">{specs.lpg_consumption}</span>
+                            <span className="text-muted-foreground">{t('burners.specs.consumption')}</span>
+                            <span className="font-medium text-foreground">{specs.lpg_consumption}</span>
                           </div>
                         )}
                       </div>
@@ -223,10 +223,10 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
       <section id="consultation" className="py-20 bg-stone-50">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-12">
-            <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-4">
+            <h2 className="font-playfair text-3xl md:text-4xl font-bold text-foreground mb-4">
               {t('burners.ctaTitle')}
             </h2>
-            <p className="text-lg text-stone-600">
+            <p className="text-lg text-muted-foreground">
               {t('burners.ctaText')}
             </p>
           </div>
