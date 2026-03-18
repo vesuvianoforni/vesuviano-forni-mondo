@@ -58,7 +58,7 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
     switch (series) {
       case 'P': return <Flame className="h-5 w-5" />;
       case 'D': return <Settings className="h-5 w-5" />;
-      case 'GOLD': return <Zap className="h-5 w-5" />;
+      default: return <Gauge className="h-5 w-5" />;
       default: return <Gauge className="h-5 w-5" />;
     }
   };
