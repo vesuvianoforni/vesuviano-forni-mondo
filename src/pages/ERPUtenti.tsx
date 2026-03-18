@@ -26,6 +26,7 @@ const ROLES = [
 
 const ERPUtenti = () => {
   const [roles, setRoles] = useState<UserRole[]>([]);
+  const [emailMap, setEmailMap] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -42,7 +43,19 @@ const ERPUtenti = () => {
       .select('*')
       .order('created_at', { ascending: false });
     if (error) toast.error('Errore caricamento ruoli');
-    setRoles((data as UserRole[]) || []);
+    const rolesData = (data as UserRole[]) || [];
+    setRoles(rolesData);
+
+    // Fetch emails via security definer function
+    if (rolesData.length > 0) {
+      const userIds = rolesData.map(r => r.user_id);
+      const { data: emailData } = await supabase.rpc('get_user_emails', { user_ids: userIds });
+      if (emailData) {
+        const map: Record<string, string> = {};
+        (emailData as any[]).forEach(e => { map[e.user_id] = e.email; });
+        setEmailMap(map);
+      }
+    }
     setLoading(false);
   };
 
