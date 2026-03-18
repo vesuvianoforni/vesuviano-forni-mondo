@@ -28,6 +28,8 @@ import ContattiRedirect from "./pages/ContattiRedirect";
 import LocalizedBlogList from "./pages/LocalizedBlogList";
 import LocalizedBlogPost from "./pages/LocalizedBlogPost";
 import AdminBlog from "./pages/AdminBlog";
+import AdminProforma from "./pages/AdminProforma";
+import ProformaPage from "./pages/ProformaPage";
 
 const queryClient = new QueryClient();
 
@@ -120,6 +122,8 @@ const App = () => {
             <Route path="/admin/configuratore" element={<AdminConfigurator />} />
             <Route path="/admin/sessions-crm" element={<SessionsCRM />} />
             <Route path="/admin/blog" element={<AdminBlog />} />
+            <Route path="/admin/proforma" element={<AdminProforma />} />
+            <Route path="/proforma/:token" element={<ProformaPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

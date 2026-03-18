@@ -14,7 +14,7 @@ import EditOptionModal from '@/components/admin/EditOptionModal';
 import AddOptionModal from '@/components/admin/AddOptionModal';
 import { AIConversionMessageModal } from '@/components/admin/AIConversionMessageModal';
 import { WebsiteLeadsSection } from '@/components/admin/WebsiteLeadsSection';
-import { LogOut, Edit, Plus, Trash2, TrendingUp, Users, CheckCircle, Clock, ArrowRight, Search, Sparkles } from 'lucide-react';
+import { LogOut, Edit, Plus, Trash2, TrendingUp, Users, CheckCircle, Clock, ArrowRight, Search, Sparkles, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Input } from '@/components/ui/input';
@@ -202,10 +202,16 @@ const AdminConfigurator = () => {
         <Card className="mb-8">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Ultime Interazioni</CardTitle>
-            <Button onClick={() => navigate('/admin/sessions-crm')} variant="outline" size="sm">
-              Visualizza CRM Completo
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => navigate('/admin/proforma')} variant="outline" size="sm">
+                <FileText className="w-4 h-4 mr-2" />
+                Pro-Forma
+              </Button>
+              <Button onClick={() => navigate('/admin/sessions-crm')} variant="outline" size="sm">
+                Visualizza CRM Completo
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
           </CardHeader>
           <div className="px-6 pb-4">
             <div className="relative">

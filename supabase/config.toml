@@ -65,3 +65,9 @@ verify_jwt = false
 
 [functions.fix-blog-links]
 verify_jwt = false
+
+[functions.create-proforma-payment]
+verify_jwt = false
+
+[functions.verify-proforma-payment]
+verify_jwt = false
