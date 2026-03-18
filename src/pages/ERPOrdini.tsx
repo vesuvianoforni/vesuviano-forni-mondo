@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import { Plus, Search, Loader2, Truck, Package, FileText, Eye, Edit, Trash2, ArrowRight } from 'lucide-react';
+import { Plus, Search, Loader2, Truck, Package, FileText, Eye, Edit, Trash2, ArrowRight, Upload, X, Download, File } from 'lucide-react';
 import { format } from 'date-fns';
 
 const ORDER_STATUSES = [
