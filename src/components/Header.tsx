@@ -64,6 +64,13 @@ const Header = () => {
         'fr': '/fr/fours-rotatifs',
         'es': '/es/hornos-rotativos',
         'de': '/de/drehoefen'
+      },
+      'burners': {
+        'it': '/it/bruciatori',
+        'en': '/en/burners',
+        'fr': '/fr/bruleurs',
+        'es': '/es/quemadores',
+        'de': '/de/brenner'
       }
     };
     return paths[ovenType]?.[currentLang] || paths[ovenType]?.['it'] || '/';
