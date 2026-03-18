@@ -26,6 +26,7 @@ const ROLES = [
 
 const ERPUtenti = () => {
   const [roles, setRoles] = useState<UserRole[]>([]);
+  const [emailMap, setEmailMap] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -42,7 +43,19 @@ const ERPUtenti = () => {
       .select('*')
       .order('created_at', { ascending: false });
     if (error) toast.error('Errore caricamento ruoli');
-    setRoles((data as UserRole[]) || []);
+    const rolesData = (data as UserRole[]) || [];
+    setRoles(rolesData);
+
+    // Fetch emails via security definer function
+    if (rolesData.length > 0) {
+      const userIds = rolesData.map(r => r.user_id);
+      const { data: emailData } = await supabase.rpc('get_user_emails', { user_ids: userIds });
+      if (emailData) {
+        const map: Record<string, string> = {};
+        (emailData as any[]).forEach(e => { map[e.user_id] = e.email; });
+        setEmailMap(map);
+      }
+    }
     setLoading(false);
   };
 
@@ -122,6 +135,7 @@ const ERPUtenti = () => {
             <Table>
               <TableHeader>
                 <TableRow className="border-amber-900/20 hover:bg-transparent">
+                  <TableHead className="text-amber-500/60">Email</TableHead>
                   <TableHead className="text-amber-500/60">User ID</TableHead>
                   <TableHead className="text-amber-500/60">Ruolo</TableHead>
                   <TableHead className="text-amber-500/60">Data Assegnazione</TableHead>
@@ -131,7 +145,8 @@ const ERPUtenti = () => {
               <TableBody>
                 {roles.map(r => (
                   <TableRow key={r.id} className="border-amber-900/10 hover:bg-amber-900/5">
-                    <TableCell className="text-amber-100 font-mono text-xs">{r.user_id.substring(0, 12)}...</TableCell>
+                    <TableCell className="text-amber-100 text-sm">{emailMap[r.user_id] || '—'}</TableCell>
+                    <TableCell className="text-amber-200/40 font-mono text-xs">{r.user_id.substring(0, 8)}...</TableCell>
                     <TableCell>{getRoleBadge(r.role)}</TableCell>
                     <TableCell className="text-amber-200/40 text-sm">{r.created_at ? new Date(r.created_at).toLocaleDateString('it-IT') : '—'}</TableCell>
                     <TableCell className="text-right">
