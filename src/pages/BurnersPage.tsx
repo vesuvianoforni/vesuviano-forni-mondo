@@ -77,21 +77,21 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative h-[50vh] min-h-[400px] overflow-hidden bg-charcoal-900">
-        <div className="absolute inset-0 bg-gradient-to-br from-charcoal-900 via-charcoal-800 to-vesuviano-900"></div>
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-vesuviano-500 rounded-full blur-[120px]"></div>
-          <div className="absolute bottom-10 right-20 w-96 h-96 bg-vesuviano-400 rounded-full blur-[150px]"></div>
+      <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-charcoal-900 via-charcoal-800 to-stone-900"></div>
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-vesuviano-500/15 rounded-full blur-[120px]"></div>
+          <div className="absolute bottom-10 right-20 w-96 h-96 bg-vesuviano-400/10 rounded-full blur-[150px]"></div>
         </div>
-        <div className="relative h-full container mx-auto px-6 flex items-center">
-          <div className="max-w-3xl text-white">
+        <div className="relative container mx-auto px-6">
+          <div className="max-w-3xl">
             <Badge className="mb-4 bg-vesuviano-500/20 text-vesuviano-300 border-vesuviano-500/30 text-sm">
               {t('burners.badge')}
             </Badge>
-            <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
               {t('burners.heroTitle')}
             </h1>
-            <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-2xl">
+            <p className="text-xl md:text-2xl text-stone-300 mb-8 max-w-2xl">
               {t('burners.heroSubtitle')}
             </p>
             <Button
