@@ -1254,5 +1254,37 @@
       "generated": "Render generated successfully!",
       "downloaded": "Download completed!"
     }
+  },
+  "burners": {
+    "pageTitle": "Gas Burners for Ovens",
+    "badge": "Gas Technology",
+    "heroTitle": "Professional Gas Burners",
+    "heroSubtitle": "Atmospheric and digital burners designed for professional pizza ovens. Maximum efficiency, precise temperature control.",
+    "introTitle": "Technology at the Service of Tradition",
+    "introText": "Our gas burners are specifically designed for professional pizza ovens. From the manual P Series to the GOLD Series with advanced digital control, we offer solutions for every professional need.",
+    "series": {
+      "P": {
+        "title": "P Series — Atmospheric",
+        "description": "Multi-gas atmospheric burners with manual regulation. Reliable and simple solution for ovens up to 100 cm."
+      },
+      "D": {
+        "title": "D Series — Digital",
+        "description": "Burners with electronic ignition and digital temperature control. Advanced precision and automation."
+      },
+      "GOLD": {
+        "title": "GOLD Series — Premium",
+        "description": "Top-of-the-range line with advanced combustion technology. Maximum power and energy efficiency."
+      }
+    },
+    "catalogTitle": "Burner Catalog",
+    "seriesLabel": "Series",
+    "specs": {
+      "control": "Control",
+      "power": "Power",
+      "ovenSizes": "Oven Diameter",
+      "consumption": "LPG Consumption"
+    },
+    "ctaTitle": "Need a Burner?",
+    "ctaText": "Contact us for a free consultation and find the perfect burner for your oven."
   }
 }

@@ -771,5 +771,37 @@
   },
   "footer": {
     "rights": "Todos los derechos reservados"
+  },
+  "burners": {
+    "pageTitle": "Quemadores de Gas para Hornos",
+    "badge": "Tecnología de Gas",
+    "heroTitle": "Quemadores de Gas Profesionales",
+    "heroSubtitle": "Quemadores atmosféricos y digitales diseñados para hornos de pizza profesionales. Máxima eficiencia, control preciso de temperatura.",
+    "introTitle": "Tecnología al Servicio de la Tradición",
+    "introText": "Nuestros quemadores de gas están diseñados específicamente para hornos de pizza profesionales. Desde la Serie P manual hasta la Serie GOLD con control digital avanzado, ofrecemos soluciones para cada necesidad profesional.",
+    "series": {
+      "P": {
+        "title": "Serie P — Atmosférica",
+        "description": "Quemadores atmosféricos multigas con regulación manual. Solución fiable y sencilla para hornos de hasta 100 cm."
+      },
+      "D": {
+        "title": "Serie D — Digital",
+        "description": "Quemadores con encendido electrónico y control digital de temperatura. Precisión y automatización avanzadas."
+      },
+      "GOLD": {
+        "title": "Serie GOLD — Premium",
+        "description": "La gama alta con tecnología de combustión avanzada. Máxima potencia y eficiencia energética."
+      }
+    },
+    "catalogTitle": "Catálogo de Quemadores",
+    "seriesLabel": "Serie",
+    "specs": {
+      "control": "Control",
+      "power": "Potencia",
+      "ovenSizes": "Diámetro del Horno",
+      "consumption": "Consumo GLP"
+    },
+    "ctaTitle": "¿Necesitas un Quemador?",
+    "ctaText": "Contáctanos para una consulta gratuita y encuentra el quemador perfecto para tu horno."
   }
 }

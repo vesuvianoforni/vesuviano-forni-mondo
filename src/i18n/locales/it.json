@@ -1216,5 +1216,37 @@
       "generated": "Render generato con successo!",
       "downloaded": "Download completato!"
     }
+  },
+  "burners": {
+    "pageTitle": "Bruciatori a Gas per Forni",
+    "badge": "Tecnologia a Gas",
+    "heroTitle": "Bruciatori a Gas Professionali",
+    "heroSubtitle": "Bruciatori atmosferici e digitali progettati per forni a pizza professionali. Massima efficienza, controllo preciso della temperatura.",
+    "introTitle": "Tecnologia al Servizio della Tradizione",
+    "introText": "I nostri bruciatori a gas sono progettati specificamente per forni a pizza professionali. Dalla Serie P manuale alla Serie GOLD con controllo digitale avanzato, offriamo soluzioni per ogni esigenza professionale.",
+    "series": {
+      "P": {
+        "title": "Serie P — Atmosferica",
+        "description": "Bruciatori atmosferici multigas con regolazione manuale. Soluzione affidabile e semplice per forni fino a 100 cm."
+      },
+      "D": {
+        "title": "Serie D — Digitale",
+        "description": "Bruciatori con accensione elettronica e controllo digitale della temperatura. Precisione e automazione avanzata."
+      },
+      "GOLD": {
+        "title": "Serie GOLD — Premium",
+        "description": "La linea top di gamma con tecnologia di combustione avanzata. Massima potenza e efficienza energetica."
+      }
+    },
+    "catalogTitle": "Catalogo Bruciatori",
+    "seriesLabel": "Serie",
+    "specs": {
+      "control": "Controllo",
+      "power": "Potenza",
+      "ovenSizes": "Diametro Forno",
+      "consumption": "Consumo GPL"
+    },
+    "ctaTitle": "Hai Bisogno di un Bruciatore?",
+    "ctaText": "Contattaci per una consulenza gratuita e trova il bruciatore perfetto per il tuo forno."
   }
 }

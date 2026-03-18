@@ -1197,5 +1197,37 @@
       "generated": "Rendu généré avec succès!",
       "downloaded": "Téléchargement terminé!"
     }
+  },
+  "burners": {
+    "pageTitle": "Brûleurs à Gaz pour Fours",
+    "badge": "Technologie à Gaz",
+    "heroTitle": "Brûleurs à Gaz Professionnels",
+    "heroSubtitle": "Brûleurs atmosphériques et numériques conçus pour les fours à pizza professionnels. Efficacité maximale, contrôle précis de la température.",
+    "introTitle": "La Technologie au Service de la Tradition",
+    "introText": "Nos brûleurs à gaz sont spécifiquement conçus pour les fours à pizza professionnels. De la Série P manuelle à la Série GOLD avec contrôle numérique avancé, nous proposons des solutions pour chaque besoin professionnel.",
+    "series": {
+      "P": {
+        "title": "Série P — Atmosphérique",
+        "description": "Brûleurs atmosphériques multigaz avec régulation manuelle. Solution fiable et simple pour les fours jusqu'à 100 cm."
+      },
+      "D": {
+        "title": "Série D — Numérique",
+        "description": "Brûleurs avec allumage électronique et contrôle numérique de la température. Précision et automatisation avancées."
+      },
+      "GOLD": {
+        "title": "Série GOLD — Premium",
+        "description": "La gamme haut de gamme avec technologie de combustion avancée. Puissance maximale et efficacité énergétique."
+      }
+    },
+    "catalogTitle": "Catalogue Brûleurs",
+    "seriesLabel": "Série",
+    "specs": {
+      "control": "Contrôle",
+      "power": "Puissance",
+      "ovenSizes": "Diamètre du Four",
+      "consumption": "Consommation GPL"
+    },
+    "ctaTitle": "Besoin d'un Brûleur ?",
+    "ctaText": "Contactez-nous pour une consultation gratuite et trouvez le brûleur parfait pour votre four."
   }
 }
