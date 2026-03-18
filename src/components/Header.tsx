@@ -64,6 +64,13 @@ const Header = () => {
         'fr': '/fr/fours-rotatifs',
         'es': '/es/hornos-rotativos',
         'de': '/de/drehoefen'
+      },
+      'burners': {
+        'it': '/it/bruciatori',
+        'en': '/en/burners',
+        'fr': '/fr/bruleurs',
+        'es': '/es/quemadores',
+        'de': '/de/brenner'
       }
     };
     return paths[ovenType]?.[currentLang] || paths[ovenType]?.['it'] || '/';
@@ -74,7 +81,8 @@ const Header = () => {
     { key: 'gas', label: t('products.gas.title'), path: getOvenPath('gas') },
     { key: 'electric', label: t('products.electric.title'), path: getOvenPath('electric') },
     { key: 'rotating', label: t('products.rotating.title'), path: getOvenPath('rotating') },
-    { key: 'vesuviobuono', label: t('products.vesuviobuono.title'), path: getVesuvioBuonoPath() }
+    { key: 'vesuviobuono', label: t('products.vesuviobuono.title'), path: getVesuvioBuonoPath() },
+    { key: 'burners', label: t('burners.pageTitle'), path: getOvenPath('burners') }
   ];
 
   const navItems: Array<{ href: string; label: string; type: 'anchor' | 'link' }> = [

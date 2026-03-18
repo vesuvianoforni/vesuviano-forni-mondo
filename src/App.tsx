@@ -11,6 +11,7 @@ import LocalizedElectricOven from "./pages/LocalizedElectricOven";
 import LocalizedRotatingOven from "./pages/LocalizedRotatingOven";
 import LocalizedVesuvioBuono from "./pages/LocalizedVesuvioBuono";
 import LocalizedReadyToShip from "./pages/LocalizedReadyToShip";
+import LocalizedBurners from "./pages/LocalizedBurners";
 import LanguageRedirect from "./pages/LanguageRedirect";
 import ArchitettoAIRedirect from "./pages/ArchitettoAIRedirect";
 import ThankYou from "./pages/ThankYou";
@@ -63,6 +64,7 @@ const App = () => {
             <Route path="/it/forni-rotanti" element={<LocalizedRotatingOven lang="it" />} />
             <Route path="/it/sistema-vesuviobuono" element={<LocalizedVesuvioBuono lang="it" />} />
             <Route path="/it/pronta-consegna" element={<LocalizedReadyToShip lang="it" />} />
+            <Route path="/it/bruciatori" element={<LocalizedBurners lang="it" />} />
             <Route path="/it/blog" element={<LocalizedBlogList lang="it" />} />
             <Route path="/it/blog/:slug" element={<LocalizedBlogPost lang="it" />} />
             <Route path="/it/thank-you-it" element={<ThankYou lang="it" />} />
@@ -76,6 +78,7 @@ const App = () => {
             <Route path="/en/rotating-ovens" element={<LocalizedRotatingOven lang="en" />} />
             <Route path="/en/vesuviobuono-system" element={<LocalizedVesuvioBuono lang="en" />} />
             <Route path="/en/ready-to-ship" element={<LocalizedReadyToShip lang="en" />} />
+            <Route path="/en/burners" element={<LocalizedBurners lang="en" />} />
             <Route path="/en/blog" element={<LocalizedBlogList lang="en" />} />
             <Route path="/en/blog/:slug" element={<LocalizedBlogPost lang="en" />} />
             <Route path="/en/thank-you-en" element={<ThankYou lang="en" />} />
@@ -89,6 +92,7 @@ const App = () => {
             <Route path="/fr/fours-rotatifs" element={<LocalizedRotatingOven lang="fr" />} />
             <Route path="/fr/systeme-vesuviobuono" element={<LocalizedVesuvioBuono lang="fr" />} />
             <Route path="/fr/pret-a-expedier" element={<LocalizedReadyToShip lang="fr" />} />
+            <Route path="/fr/bruleurs" element={<LocalizedBurners lang="fr" />} />
             <Route path="/fr/blog" element={<LocalizedBlogList lang="fr" />} />
             <Route path="/fr/blog/:slug" element={<LocalizedBlogPost lang="fr" />} />
             <Route path="/fr/thank-you-fr" element={<ThankYou lang="fr" />} />
@@ -102,6 +106,7 @@ const App = () => {
             <Route path="/es/hornos-rotativos" element={<LocalizedRotatingOven lang="es" />} />
             <Route path="/es/sistema-vesuviobuono" element={<LocalizedVesuvioBuono lang="es" />} />
             <Route path="/es/listo-para-enviar" element={<LocalizedReadyToShip lang="es" />} />
+            <Route path="/es/quemadores" element={<LocalizedBurners lang="es" />} />
             <Route path="/es/blog" element={<LocalizedBlogList lang="es" />} />
             <Route path="/es/blog/:slug" element={<LocalizedBlogPost lang="es" />} />
             <Route path="/es/thank-you-es" element={<ThankYou lang="es" />} />
@@ -115,6 +120,7 @@ const App = () => {
             <Route path="/de/drehoefen" element={<LocalizedRotatingOven lang="de" />} />
             <Route path="/de/vesuviobuono-system" element={<LocalizedVesuvioBuono lang="de" />} />
             <Route path="/de/versandfertig" element={<LocalizedReadyToShip lang="de" />} />
+            <Route path="/de/brenner" element={<LocalizedBurners lang="de" />} />
             <Route path="/de/blog" element={<LocalizedBlogList lang="de" />} />
             <Route path="/de/blog/:slug" element={<LocalizedBlogPost lang="de" />} />
             <Route path="/de/thank-you-de" element={<ThankYou lang="de" />} />

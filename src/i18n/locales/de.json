@@ -780,5 +780,37 @@
   },
   "footer": {
     "rights": "Alle Rechte vorbehalten"
+  },
+  "burners": {
+    "pageTitle": "Gasbrenner für Öfen",
+    "badge": "Gastechnologie",
+    "heroTitle": "Professionelle Gasbrenner",
+    "heroSubtitle": "Atmosphärische und digitale Brenner für professionelle Pizzaöfen. Maximale Effizienz, präzise Temperaturkontrolle.",
+    "introTitle": "Technologie im Dienste der Tradition",
+    "introText": "Unsere Gasbrenner sind speziell für professionelle Pizzaöfen entwickelt. Von der manuellen P-Serie bis zur GOLD-Serie mit fortschrittlicher digitaler Steuerung bieten wir Lösungen für jeden professionellen Bedarf.",
+    "series": {
+      "P": {
+        "title": "Serie P — Atmosphärisch",
+        "description": "Multigas-Atmosphärenbrenner mit manueller Regelung. Zuverlässige und einfache Lösung für Öfen bis 100 cm."
+      },
+      "D": {
+        "title": "Serie D — Digital",
+        "description": "Brenner mit elektronischer Zündung und digitaler Temperatursteuerung. Fortschrittliche Präzision und Automatisierung."
+      },
+      "GOLD": {
+        "title": "Serie GOLD — Premium",
+        "description": "Die Spitzenklasse mit fortschrittlicher Verbrennungstechnologie. Maximale Leistung und Energieeffizienz."
+      }
+    },
+    "catalogTitle": "Brenner-Katalog",
+    "seriesLabel": "Serie",
+    "specs": {
+      "control": "Steuerung",
+      "power": "Leistung",
+      "ovenSizes": "Ofendurchmesser",
+      "consumption": "LPG-Verbrauch"
+    },
+    "ctaTitle": "Brauchen Sie einen Brenner?",
+    "ctaText": "Kontaktieren Sie uns für eine kostenlose Beratung und finden Sie den perfekten Brenner für Ihren Ofen."
   }
 }
