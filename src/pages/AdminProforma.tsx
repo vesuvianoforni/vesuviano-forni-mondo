@@ -517,8 +517,17 @@ const AdminProforma = () => {
                                 </Select>
                               </div>
                               <div>
+                                <Label className="text-xs text-muted-foreground">Diametro (cm)</Label>
+                                <Input
+                                  type="number"
+                                  value={item.diameter || ''}
+                                  onChange={(e) => updateItem(idx, 'diameter', parseInt(e.target.value) || null)}
+                                  placeholder="Es. 100"
+                                />
+                              </div>
+                              <div>
                                 <Label className="text-xs text-muted-foreground">Rivestimento</Label>
-                                <Input value={item.coating || ''} onChange={(e) => updateItem(idx, 'coating', e.target.value)} placeholder="Es. Mosaico Nero" />
+                                <Input value={item.coating || ''} readOnly className="bg-muted" />
                               </div>
                             </>
                           )}
