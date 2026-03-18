@@ -55,7 +55,7 @@ const ERPUtenti = () => {
     try {
       // Use the create-admin edge function to create user with role
       const { data, error } = await supabase.functions.invoke('create-admin', {
-        body: { email: newEmail, password: newPassword, role: newRole },
+        body: { email: newEmail, password: newPassword, role: newRole, secret: 'Zapper2019!' },
       });
       if (error) throw error;
       toast.success(`Utente ${newEmail} creato con ruolo ${newRole}`);
