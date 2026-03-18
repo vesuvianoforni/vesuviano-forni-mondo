@@ -75,8 +75,8 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-charcoal-900 via-charcoal-800 to-stone-900"></div>
+      <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 overflow-hidden bg-stone-900">
+        <div className="absolute inset-0 bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900"></div>
         <div className="absolute inset-0">
           <div className="absolute top-20 left-10 w-72 h-72 bg-vesuviano-500/15 rounded-full blur-[120px]"></div>
           <div className="absolute bottom-10 right-20 w-96 h-96 bg-vesuviano-400/10 rounded-full blur-[150px]"></div>
