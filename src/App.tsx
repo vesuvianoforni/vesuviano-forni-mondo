@@ -120,6 +120,7 @@ const App = () => {
             <Route path="/de/drehoefen" element={<LocalizedRotatingOven lang="de" />} />
             <Route path="/de/vesuviobuono-system" element={<LocalizedVesuvioBuono lang="de" />} />
             <Route path="/de/versandfertig" element={<LocalizedReadyToShip lang="de" />} />
+            <Route path="/de/brenner" element={<LocalizedBurners lang="de" />} />
             <Route path="/de/blog" element={<LocalizedBlogList lang="de" />} />
             <Route path="/de/blog/:slug" element={<LocalizedBlogPost lang="de" />} />
             <Route path="/de/thank-you-de" element={<ThankYou lang="de" />} />
