@@ -37,6 +37,8 @@ import AdminBlog from "./pages/AdminBlog";
 import ERPPlaceholder from "./components/erp/ERPPlaceholder";
 import ERPForni from "./pages/ERPForni";
 import ERPBruciatori from "./pages/ERPBruciatori";
+import ERPOrdini from "./pages/ERPOrdini";
+import ERPUtenti from "./pages/ERPUtenti";
 
 const queryClient = new QueryClient();
 
