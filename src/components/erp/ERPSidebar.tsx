@@ -45,6 +45,7 @@ const contentItems = [
 
 const operationsItems = [
   { title: 'Ordini', url: '/erp/ordini', icon: Truck },
+  { title: 'Utenti', url: '/erp/utenti', icon: ShieldCheck },
 ];
 
 export function ERPSidebar() {
