@@ -446,17 +446,14 @@ const AdminProforma = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex flex-wrap gap-2">
-                  <Select onValueChange={(val) => {
-                    const oven = ovens.find(o => o.id === val);
-                    if (oven) addOvenItem(oven);
-                  }}>
-                    <SelectTrigger className="w-[250px]">
+                  <Select onValueChange={(val) => addOvenItem(val)}>
+                    <SelectTrigger className="w-[300px]">
                       <SelectValue placeholder="+ Aggiungi Forno" />
                     </SelectTrigger>
                     <SelectContent>
-                      {ovens.map(o => (
-                        <SelectItem key={o.id} value={o.id}>
-                          {o.model_name} - Ø{o.diameter}cm
+                      {ovenCoatingOptions.map(opt => (
+                        <SelectItem key={opt.key} value={opt.key}>
+                          {opt.oven.model_name}{opt.coating ? ` - ${opt.coating}` : ''}
                         </SelectItem>
                       ))}
                     </SelectContent>
