@@ -25,7 +25,7 @@ const ERPListini = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedOven, setExpandedOven] = useState<string | null>(null);
   const [editedPrices, setEditedPrices] = useState<Record<string, any>>({});
-  const [editedBurnerPrices, setEditedBurnerPrices] = useState<Record<string, number>>({});
+  const [editedBurnerPrices, setEditedBurnerPrices] = useState<Record<string, Record<string, number>>>({});
 
   useEffect(() => { fetchData(); }, []);
 
@@ -52,10 +52,10 @@ const ERPListini = () => {
     }));
   };
 
-  const handleBurnerPriceChange = (burnerId: string, value: string) => {
+  const handleBurnerPriceChange = (burnerId: string, list: 'A' | 'B' | 'C', value: string) => {
     setEditedBurnerPrices(prev => ({
       ...prev,
-      [burnerId]: value === '' ? 0 : Number(value),
+      [burnerId]: { ...(prev[burnerId] || {}), [list]: value === '' ? 0 : Number(value) },
     }));
   };
 
@@ -105,20 +105,31 @@ const ERPListini = () => {
   };
 
   const saveBurnerPrice = async (burner: any) => {
-    if (editedBurnerPrices[burner.id] === undefined) {
+    const changes = editedBurnerPrices[burner.id];
+    if (!changes || Object.keys(changes).length === 0) {
       toast.info('Nessuna modifica');
       return;
     }
     setSaving(burner.id);
     try {
+      const updateData: any = {};
+      if (changes.A !== undefined) updateData.price = changes.A;
+      if (changes.B !== undefined) updateData.price_b = changes.B;
+      if (changes.C !== undefined) updateData.price_c = changes.C;
+
       const { error } = await supabase
         .from('burners')
-        .update({ price: editedBurnerPrices[burner.id] })
+        .update(updateData)
         .eq('id', burner.id);
       if (error) throw error;
-      setBurners(prev => prev.map(b => b.id === burner.id ? { ...b, price: editedBurnerPrices[burner.id] } : b));
+      setBurners(prev => prev.map(b => b.id === burner.id ? {
+        ...b,
+        ...(changes.A !== undefined && { price: changes.A }),
+        ...(changes.B !== undefined && { price_b: changes.B }),
+        ...(changes.C !== undefined && { price_c: changes.C }),
+      } : b));
       setEditedBurnerPrices(prev => { const n = { ...prev }; delete n[burner.id]; return n; });
-      toast.success(`Prezzo ${burner.name} salvato`);
+      toast.success(`Prezzi ${burner.name} salvati`);
     } catch (e: any) {
       toast.error('Errore: ' + e.message);
     } finally {
@@ -312,13 +323,15 @@ const ERPListini = () => {
           <h2 className="text-lg font-semibold text-amber-200 mb-3 flex items-center gap-2">
             <Flame className="w-5 h-5" /> Bruciatori
           </h2>
-          <Card className="bg-[#1a1a1a] border-amber-900/20">
+           <Card className="bg-[#1a1a1a] border-amber-900/20">
             <CardContent className="p-4">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-gray-400 text-xs border-b border-amber-900/10">
                     <th className="text-left py-2">Bruciatore</th>
-                    <th className="text-center py-2 w-32">Prezzo (€)</th>
+                    <th className="text-center py-2 w-28">Listino A (€)</th>
+                    <th className="text-center py-2 w-28">Listino B (€)</th>
+                    <th className="text-center py-2 w-28">Listino C (€)</th>
                     <th className="w-20"></th>
                   </tr>
                 </thead>
@@ -329,16 +342,24 @@ const ERPListini = () => {
                         {b.image_url && <img src={b.image_url} alt={b.name} className="w-8 h-8 rounded object-cover" />}
                         {b.name}
                       </td>
-                      <td className="py-2 text-center">
-                        <Input
-                          type="number"
-                          value={editedBurnerPrices[b.id] !== undefined ? editedBurnerPrices[b.id] : b.price}
-                          onChange={(e) => handleBurnerPriceChange(b.id, e.target.value)}
-                          className="h-7 text-xs text-center bg-[#111] border-amber-900/15 text-amber-100 w-24 mx-auto [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        />
-                      </td>
+                      {(['A', 'B', 'C'] as const).map(list => {
+                        const priceKey = list === 'A' ? 'price' : `price_${list.toLowerCase()}`;
+                        const currentVal = editedBurnerPrices[b.id]?.[list] !== undefined
+                          ? editedBurnerPrices[b.id][list]
+                          : (b as any)[priceKey] || 0;
+                        return (
+                          <td key={list} className="py-2 text-center">
+                            <Input
+                              type="number"
+                              value={currentVal}
+                              onChange={(e) => handleBurnerPriceChange(b.id, list, e.target.value)}
+                              className="h-7 text-xs text-center bg-[#111] border-amber-900/15 text-amber-100 w-24 mx-auto [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            />
+                          </td>
+                        );
+                      })}
                       <td className="py-2 text-right">
-                        {editedBurnerPrices[b.id] !== undefined && (
+                        {editedBurnerPrices[b.id] && Object.keys(editedBurnerPrices[b.id]).length > 0 && (
                           <Button size="sm" onClick={() => saveBurnerPrice(b)} disabled={saving === b.id} className="bg-amber-600 hover:bg-amber-700 text-xs h-7">
                             {saving === b.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
                           </Button>
