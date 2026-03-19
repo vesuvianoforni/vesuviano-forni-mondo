@@ -378,6 +378,7 @@ const AdminProforma = () => {
     setLanguage('it');
     setCurrency('EUR');
     setPriceList('A');
+    setDiscountPercentage(0);
     setShowCreateForm(false);
   };
 
