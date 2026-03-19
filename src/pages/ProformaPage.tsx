@@ -38,6 +38,8 @@ interface ProformaData {
   total_price: number;
   deposit_percentage: number;
   deposit_amount: number;
+  discount_percentage: number;
+  discount_amount: number;
   delivery_days: number | null;
   payment_option: string;
   payment_status: string;
