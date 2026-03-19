@@ -257,6 +257,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     confirmConfig: 'Confirmar y Pagar',
     preSelected: 'Pre-seleccionado',
     changeSelection: 'Cambiar',
+    subtotal: 'Subtotal',
+    discount: 'Descuento',
   },
 };
 
