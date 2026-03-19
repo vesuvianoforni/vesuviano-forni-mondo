@@ -925,13 +925,12 @@ const ProformaPage = () => {
       </div>
 
       {/* Image Zoom Modal */}
-      {zoomedImage && (
-        <ImageZoomModal
-          imageUrl={zoomedImage.url}
-          alt={zoomedImage.alt}
-          onClose={() => setZoomedImage(null)}
-        />
-      )}
+      <ImageZoomModal
+        isOpen={!!zoomedImage}
+        imageUrl={zoomedImage?.url || ''}
+        imageAlt={zoomedImage?.alt || ''}
+        onClose={() => setZoomedImage(null)}
+      />
     </div>
   );
 };
