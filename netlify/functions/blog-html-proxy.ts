@@ -14,6 +14,16 @@ const HOP_BY_HOP_HEADERS = new Set([
   "content-encoding",
 ]);
 
+const BLOCKED_UPSTREAM_HEADERS = new Set([
+  "content-type",
+  "x-content-type-options",
+  "x-served-by",
+  "x-sb-edge-region",
+  "sb-gateway-version",
+  "sb-project-ref",
+  "sb-request-id",
+]);
+
 type NetlifyEvent = {
   queryStringParameters?: Record<string, string | undefined>;
 };
@@ -28,9 +38,9 @@ function buildHtmlError(statusCode: number, message: string): NetlifyResponse {
   return {
     statusCode,
     headers: {
-      "Content-Type": "text/html; charset=utf-8",
-      "X-Content-Type-Options": "nosniff",
-      "Cache-Control": "no-store",
+      "content-type": "text/html; charset=utf-8",
+      "x-content-type-options": "nosniff",
+      "cache-control": "no-store",
     },
     body: `<!DOCTYPE html><html><body><h1>${statusCode} - ${message}</h1></body></html>`,
   };
@@ -62,13 +72,14 @@ export const handler = async (event: NetlifyEvent): Promise<NetlifyResponse> => 
     const headers: Record<string, string> = {};
 
     upstreamResponse.headers.forEach((value, key) => {
-      if (!HOP_BY_HOP_HEADERS.has(key.toLowerCase())) {
-        headers[key] = value;
-      }
+      const normalizedKey = key.toLowerCase();
+      if (HOP_BY_HOP_HEADERS.has(normalizedKey)) return;
+      if (BLOCKED_UPSTREAM_HEADERS.has(normalizedKey)) return;
+      headers[normalizedKey] = value;
     });
 
-    headers["Content-Type"] = "text/html; charset=utf-8";
-    headers["X-Content-Type-Options"] = "nosniff";
+    headers["content-type"] = "text/html; charset=utf-8";
+    headers["x-content-type-options"] = "nosniff";
 
     return {
       statusCode: upstreamResponse.status,
