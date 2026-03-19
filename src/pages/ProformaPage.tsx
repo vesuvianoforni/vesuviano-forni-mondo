@@ -876,6 +876,20 @@ const ProformaPage = () => {
 
             <Separator className="bg-amber-900/30" />
 
+            {discountPct > 0 && (
+              <>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">{t.subtotal}</span>
+                  <span className="text-gray-400">{formatPrice(currentSubtotal)}</span>
+                </div>
+                <div className="flex justify-between text-sm text-green-400">
+                  <span>{t.discount} ({discountPct}%)</span>
+                  <span>-{formatPrice(currentDiscount)}</span>
+                </div>
+                <Separator className="bg-amber-900/30" />
+              </>
+            )}
+
             <div className="flex justify-between text-lg">
               <span className="text-gray-300">{t.total}</span>
               <span className="font-bold text-xl sm:text-2xl text-amber-100">{formatPrice(currentTotal)}</span>
