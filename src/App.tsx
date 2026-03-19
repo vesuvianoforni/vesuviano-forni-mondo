@@ -146,6 +146,7 @@ const App = () => {
               <Route path="blog" element={<AdminBlog />} />
               <Route path="forni" element={<ERPForni />} />
               <Route path="bruciatori" element={<ERPBruciatori />} />
+              <Route path="listini" element={<ERPListini />} />
               <Route path="leads" element={<ERPPlaceholder title="Lead Sito Web" description="Gestione dei lead provenienti dal sito web e dai form di contatto." />} />
               <Route path="ordini" element={<ERPOrdini />} />
               <Route path="utenti" element={<ERPUtenti />} />

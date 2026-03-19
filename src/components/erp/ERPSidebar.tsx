@@ -37,6 +37,7 @@ const mainItems = [
 const catalogItems = [
   { title: 'Forni', url: '/erp/forni', icon: Flame },
   { title: 'Bruciatori', url: '/erp/bruciatori', icon: Package },
+  { title: 'Listini', url: '/erp/listini', icon: TrendingUp },
 ];
 
 const contentItems = [
