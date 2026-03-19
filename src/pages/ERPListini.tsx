@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { DollarSign, Save, Loader2, Search, ChevronDown, ChevronRight, Flame } from 'lucide-react';
+import { DollarSign, Save, Loader2, Search, ChevronDown, ChevronRight, Flame, ImagePlus } from 'lucide-react';
 
 type PriceListCode = 'A' | 'B' | 'C';
 type PriceField = 'base' | 'gas' | 'electric' | 'onSite';
