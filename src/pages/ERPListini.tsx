@@ -323,13 +323,15 @@ const ERPListini = () => {
           <h2 className="text-lg font-semibold text-amber-200 mb-3 flex items-center gap-2">
             <Flame className="w-5 h-5" /> Bruciatori
           </h2>
-          <Card className="bg-[#1a1a1a] border-amber-900/20">
+           <Card className="bg-[#1a1a1a] border-amber-900/20">
             <CardContent className="p-4">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-gray-400 text-xs border-b border-amber-900/10">
                     <th className="text-left py-2">Bruciatore</th>
-                    <th className="text-center py-2 w-32">Prezzo (€)</th>
+                    <th className="text-center py-2 w-28">Listino A (€)</th>
+                    <th className="text-center py-2 w-28">Listino B (€)</th>
+                    <th className="text-center py-2 w-28">Listino C (€)</th>
                     <th className="w-20"></th>
                   </tr>
                 </thead>
@@ -340,16 +342,24 @@ const ERPListini = () => {
                         {b.image_url && <img src={b.image_url} alt={b.name} className="w-8 h-8 rounded object-cover" />}
                         {b.name}
                       </td>
-                      <td className="py-2 text-center">
-                        <Input
-                          type="number"
-                          value={editedBurnerPrices[b.id] !== undefined ? editedBurnerPrices[b.id] : b.price}
-                          onChange={(e) => handleBurnerPriceChange(b.id, e.target.value)}
-                          className="h-7 text-xs text-center bg-[#111] border-amber-900/15 text-amber-100 w-24 mx-auto [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        />
-                      </td>
+                      {(['A', 'B', 'C'] as const).map(list => {
+                        const priceKey = list === 'A' ? 'price' : `price_${list.toLowerCase()}`;
+                        const currentVal = editedBurnerPrices[b.id]?.[list] !== undefined
+                          ? editedBurnerPrices[b.id][list]
+                          : (b as any)[priceKey] || 0;
+                        return (
+                          <td key={list} className="py-2 text-center">
+                            <Input
+                              type="number"
+                              value={currentVal}
+                              onChange={(e) => handleBurnerPriceChange(b.id, list, e.target.value)}
+                              className="h-7 text-xs text-center bg-[#111] border-amber-900/15 text-amber-100 w-24 mx-auto [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            />
+                          </td>
+                        );
+                      })}
                       <td className="py-2 text-right">
-                        {editedBurnerPrices[b.id] !== undefined && (
+                        {editedBurnerPrices[b.id] && Object.keys(editedBurnerPrices[b.id]).length > 0 && (
                           <Button size="sm" onClick={() => saveBurnerPrice(b)} disabled={saving === b.id} className="bg-amber-600 hover:bg-amber-700 text-xs h-7">
                             {saving === b.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
                           </Button>
