@@ -10,6 +10,7 @@ import {
   LogOut,
   Truck,
   ShieldCheck,
+  DollarSign,
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
