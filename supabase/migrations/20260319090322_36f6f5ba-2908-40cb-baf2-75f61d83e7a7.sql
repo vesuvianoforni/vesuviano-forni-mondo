@@ -1,0 +1,1 @@
+ALTER TABLE public.proformas ADD COLUMN IF NOT EXISTS price_list text NOT NULL DEFAULT 'A';

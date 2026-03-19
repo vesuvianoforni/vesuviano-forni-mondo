@@ -826,6 +826,7 @@ export type Database = {
           payment_completed_at: string | null
           payment_option: string
           payment_status: string
+          price_list: string
           proforma_number: string | null
           status: string
           stripe_session_id: string | null
@@ -853,6 +854,7 @@ export type Database = {
           payment_completed_at?: string | null
           payment_option?: string
           payment_status?: string
+          price_list?: string
           proforma_number?: string | null
           status?: string
           stripe_session_id?: string | null
@@ -880,6 +882,7 @@ export type Database = {
           payment_completed_at?: string | null
           payment_option?: string
           payment_status?: string
+          price_list?: string
           proforma_number?: string | null
           status?: string
           stripe_session_id?: string | null

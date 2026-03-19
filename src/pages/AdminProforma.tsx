@@ -54,6 +54,7 @@ interface Proforma {
   status: string;
   language: string;
   currency: string;
+  price_list: string;
   valid_until: string | null;
   created_at: string;
 }
@@ -71,6 +72,12 @@ const CURRENCIES = [
   { code: 'USD', symbol: '$', name: 'US Dollar' },
   { code: 'GBP', symbol: '£', name: 'British Pound' },
   { code: 'CHF', symbol: 'CHF', name: 'Franco Svizzero' },
+];
+
+const PRICE_LISTS = [
+  { code: 'A', name: 'Listino A' },
+  { code: 'B', name: 'Listino B' },
+  { code: 'C', name: 'Listino C' },
 ];
 
 const getCurrencySymbol = (code: string) => CURRENCIES.find(c => c.code === code)?.symbol || '€';
@@ -97,6 +104,7 @@ const AdminProforma = () => {
   const [items, setItems] = useState<ProformaItem[]>([]);
   const [language, setLanguage] = useState('it');
   const [currency, setCurrency] = useState('EUR');
+  const [priceList, setPriceList] = useState('A');
 
   // Burner form state
   const [burnerName, setBurnerName] = useState('');
@@ -121,61 +129,73 @@ const AdminProforma = () => {
     setLoading(false);
   };
 
-  const ovenCoatingOptions = React.useMemo(() => {
-    const options: { key: string; oven: any; coating: string; image: string }[] = [];
+  // Get unique model names
+  const uniqueModels = React.useMemo(() => {
     const seen = new Set<string>();
-    ovens.forEach(oven => {
-      const sizes = (oven.sizes as any[]) || [];
-      sizes.forEach((size: any) => {
-        const coatings = (size.coatings as any[]) || [];
-        coatings.forEach((c: any) => {
-          const coatingName = c.name || c.coating || '';
-          const key = `${oven.model_name}-${coatingName}`;
-          if (!seen.has(key) && coatingName) {
-            seen.add(key);
-            options.push({
-              key: `${oven.id}__${coatingName}`,
-              oven,
-              coating: coatingName,
-              image: c.image || oven.image_url,
-            });
-          }
-        });
-      });
-      if (sizes.length === 0 || sizes.every((s: any) => !(s.coatings as any[])?.length)) {
-        const key = `${oven.model_name}-default`;
-        if (!seen.has(key)) {
-          seen.add(key);
-          options.push({
-            key: `${oven.id}__`,
-            oven,
-            coating: '',
-            image: oven.image_url,
-          });
-        }
-      }
+    return ovens.filter(oven => {
+      if (seen.has(oven.model_name)) return false;
+      seen.add(oven.model_name);
+      return true;
     });
-    return options;
   }, [ovens]);
 
-  const addOvenItem = (optionKey: string) => {
-    const option = ovenCoatingOptions.find(o => o.key === optionKey);
-    if (!option) return;
-    const { oven, coating, image } = option;
+  // Get available fuel types, sizes, and coatings for a model
+  const getModelConfig = (modelName: string) => {
+    const modelOvens = ovens.filter(o => o.model_name === modelName);
+    const fuelTypes = Array.from(new Set(modelOvens.flatMap((o: any) => o.fuel_type || [])));
+    const sizes: { diameter: number; coatings: any[] }[] = [];
+    modelOvens.forEach((oven: any) => {
+      if (oven.sizes && oven.sizes.length > 0) {
+        oven.sizes.forEach((size: any) => {
+          if (!sizes.find(s => s.diameter === size.diameter)) {
+            sizes.push({ diameter: size.diameter, coatings: size.coatings || [] });
+          }
+        });
+      }
+    });
+    return { fuelTypes, sizes, firstOven: modelOvens[0] };
+  };
+
+  const addModelItem = (modelName: string) => {
+    const config = getModelConfig(modelName);
+    if (!config.firstOven) return;
+
     const newItem: ProformaItem = {
       item_type: 'oven',
-      oven_id: oven.id,
-      model_name: oven.model_name,
-      fuel_type: oven.fuel_type?.[0] || '',
-      diameter: undefined,
-      coating: coating,
-      image_url: image,
-      unit_price: oven.base_price_a || 0,
+      oven_id: config.firstOven.id,
+      model_name: modelName,
+      fuel_type: config.fuelTypes[0] || '',
+      diameter: config.sizes[0]?.diameter || config.firstOven.diameter,
+      coating: config.sizes[0]?.coatings?.[0]?.name || '',
+      image_url: config.sizes[0]?.coatings?.[0]?.image_url || config.firstOven.image_url,
+      unit_price: 0,
       quantity: 1,
-      line_total: oven.base_price_a || 0,
+      line_total: 0,
       sort_order: items.length,
     };
+
+    // Calculate price from configurator data
+    const price = getOvenPriceFromConfig(config.firstOven, newItem.fuel_type || '', newItem.diameter || 0, newItem.coating || '', priceList);
+    newItem.unit_price = price;
+    newItem.line_total = price;
+
     setItems([...items, newItem]);
+  };
+
+  const getOvenPriceFromConfig = (oven: any, fuelType: string, diameter: number, coatingName: string, pl: string) => {
+    if (!oven?.sizes) return oven?.base_price_a || 0;
+    const size = oven.sizes.find((s: any) => s.diameter === diameter);
+    if (!size) return oven.base_price_a || 0;
+    const coating = size.coatings?.find((c: any) => c.name === coatingName) || size.coatings?.[0];
+    if (!coating?.prices) return oven.base_price_a || 0;
+    
+    const priceKey = `list${pl}` as string;
+    const prices = coating.prices[priceKey];
+    if (!prices) return oven.base_price_a || 0;
+    
+    if (fuelType === 'Gas') return prices.gas || prices.base || 0;
+    if (fuelType === 'Elettrico') return prices.electric || prices.base || 0;
+    return prices.base || 0;
   };
 
   const addBurnerItem = (burner: any) => {
@@ -208,6 +228,31 @@ const AdminProforma = () => {
   const updateItem = (index: number, field: string, value: any) => {
     const updated = [...items];
     (updated[index] as any)[field] = value;
+    
+    // Recalculate price when oven config changes
+    if (updated[index].item_type === 'oven' && ['fuel_type', 'diameter', 'coating'].includes(field)) {
+      const item = updated[index];
+      const oven = ovens.find(o => o.model_name === item.model_name);
+      if (oven) {
+        // If diameter changed, update available coatings
+        if (field === 'diameter') {
+          const size = oven.sizes?.find((s: any) => s.diameter === value);
+          if (size?.coatings?.[0]) {
+            item.coating = size.coatings[0].name;
+            item.image_url = size.coatings[0].image_url || oven.image_url;
+          }
+        }
+        if (field === 'coating') {
+          const size = oven.sizes?.find((s: any) => s.diameter === item.diameter);
+          const coat = size?.coatings?.find((c: any) => c.name === value);
+          if (coat?.image_url) item.image_url = coat.image_url;
+        }
+        const price = getOvenPriceFromConfig(oven, item.fuel_type || '', item.diameter || 0, item.coating || '', priceList);
+        item.unit_price = price;
+        item.line_total = price * item.quantity;
+      }
+    }
+    
     if (field === 'unit_price' || field === 'quantity') {
       updated[index].line_total = updated[index].unit_price * updated[index].quantity;
     }
@@ -246,6 +291,7 @@ const AdminProforma = () => {
           payment_option: paymentOption,
           language,
           currency,
+          price_list: priceList,
           status: 'sent',
         } as any)
         .select()
@@ -326,6 +372,7 @@ const AdminProforma = () => {
     setItems([]);
     setLanguage('it');
     setCurrency('EUR');
+    setPriceList('A');
     setShowCreateForm(false);
   };
 
@@ -474,14 +521,14 @@ const AdminProforma = () => {
         {/* Create Form */}
         {showCreateForm && (
           <div className="space-y-4 sm:space-y-6">
-            {/* Language & Currency */}
+            {/* Language, Currency & Price List */}
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Globe className="w-5 h-5" /> Lingua & Valuta
+                  <Globe className="w-5 h-5" /> Lingua, Valuta & Listino
                 </CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-2 gap-4">
+              <CardContent className="grid grid-cols-3 gap-4">
                 <div>
                   <Label className="text-xs">Lingua documento</Label>
                   <Select value={language} onValueChange={setLanguage}>
@@ -500,6 +547,27 @@ const AdminProforma = () => {
                     <SelectContent>
                       {CURRENCIES.map(c => (
                         <SelectItem key={c.code} value={c.code}>{c.symbol} {c.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-xs">Listino Prezzi</Label>
+                  <Select value={priceList} onValueChange={(v) => {
+                    setPriceList(v);
+                    // Recalculate all oven prices
+                    setItems(prev => prev.map(item => {
+                      if (item.item_type !== 'oven') return item;
+                      const oven = ovens.find(o => o.model_name === item.model_name);
+                      if (!oven) return item;
+                      const price = getOvenPriceFromConfig(oven, item.fuel_type || '', item.diameter || 0, item.coating || '', v);
+                      return { ...item, unit_price: price, line_total: price * item.quantity };
+                    }));
+                  }}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {PRICE_LISTS.map(p => (
+                        <SelectItem key={p.code} value={p.code}>{p.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -546,14 +614,14 @@ const AdminProforma = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex flex-col sm:flex-row gap-2">
-                  <Select onValueChange={(val) => addOvenItem(val)}>
+                  <Select onValueChange={(val) => addModelItem(val)}>
                     <SelectTrigger className="w-full sm:w-[300px]">
-                      <SelectValue placeholder="+ Aggiungi Forno" />
+                      <SelectValue placeholder="+ Aggiungi Modello Forno" />
                     </SelectTrigger>
                     <SelectContent>
-                      {ovenCoatingOptions.map(opt => (
-                        <SelectItem key={opt.key} value={opt.key}>
-                          {opt.oven.model_name}{opt.coating ? ` - ${opt.coating}` : ''}
+                      {uniqueModels.map(oven => (
+                        <SelectItem key={oven.id} value={oven.model_name}>
+                          {oven.model_name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -590,82 +658,146 @@ const AdminProforma = () => {
                   <p className="text-muted-foreground text-center py-4">Nessun prodotto aggiunto</p>
                 ) : (
                   <div className="space-y-3">
-                    {items.map((item, idx) => (
-                      <div key={idx} className="border rounded-lg p-3 space-y-3">
-                        <div className="flex items-start gap-3">
-                          {item.image_url && (
-                            <img src={item.image_url} alt="" className="w-14 h-14 sm:w-20 sm:h-20 object-cover rounded flex-shrink-0" />
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex justify-between items-start">
-                              <Input
-                                value={item.model_name || item.custom_name || ''}
-                                onChange={(e) => updateItem(idx, item.item_type === 'custom' ? 'custom_name' : 'model_name', e.target.value)}
-                                className="font-semibold text-sm h-8"
-                              />
-                              <Button variant="ghost" size="sm" onClick={() => removeItem(idx)} className="ml-2 flex-shrink-0">
-                                <Trash2 className="w-4 h-4 text-destructive" />
-                              </Button>
+                    {items.map((item, idx) => {
+                      const ovenData = item.item_type === 'oven' ? ovens.find(o => o.model_name === item.model_name) : null;
+                      const config = ovenData ? getModelConfig(ovenData.model_name) : null;
+                      const selectedSize = config?.sizes?.find(s => s.diameter === item.diameter);
+
+                      return (
+                        <div key={idx} className="border rounded-lg p-3 space-y-3">
+                          <div className="flex items-start gap-3">
+                            {item.image_url && (
+                              <img src={item.image_url} alt="" className="w-14 h-14 sm:w-20 sm:h-20 object-cover rounded flex-shrink-0" />
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <p className="font-semibold text-sm">{item.model_name || item.custom_name}</p>
+                                  {item.item_type === 'oven' && (
+                                    <p className="text-xs text-muted-foreground">
+                                      {item.fuel_type} • Ø{item.diameter}cm • {item.coating}
+                                    </p>
+                                  )}
+                                  {item.custom_description && (
+                                    <p className="text-xs text-muted-foreground">{item.custom_description}</p>
+                                  )}
+                                </div>
+                                <Button variant="ghost" size="sm" onClick={() => removeItem(idx)} className="ml-2 flex-shrink-0">
+                                  <Trash2 className="w-4 h-4 text-destructive" />
+                                </Button>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                          {item.item_type === 'oven' && (
-                            <>
+                          
+                          {item.item_type === 'oven' && config && (
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                               <div>
                                 <Label className="text-[10px] text-muted-foreground">Alimentazione</Label>
                                 <Select value={item.fuel_type || ''} onValueChange={(v) => updateItem(idx, 'fuel_type', v)}>
                                   <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="Legna">Legna</SelectItem>
-                                    <SelectItem value="Gas">Gas</SelectItem>
-                                    <SelectItem value="Elettrico">Elettrico</SelectItem>
+                                    {config.fuelTypes.map(f => (
+                                      <SelectItem key={f} value={f}>{f}</SelectItem>
+                                    ))}
                                   </SelectContent>
                                 </Select>
                               </div>
                               <div>
-                                <Label className="text-[10px] text-muted-foreground">Ø cm</Label>
-                                <Input
-                                  type="number"
-                                  className="h-8 text-xs"
-                                  value={item.diameter || ''}
-                                  onChange={(e) => updateItem(idx, 'diameter', parseInt(e.target.value) || null)}
-                                  placeholder="100"
-                                />
+                                <Label className="text-[10px] text-muted-foreground">Dimensione</Label>
+                                <Select value={String(item.diameter || '')} onValueChange={(v) => updateItem(idx, 'diameter', parseInt(v))}>
+                                  <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                                  <SelectContent>
+                                    {config.sizes.map(s => (
+                                      <SelectItem key={s.diameter} value={String(s.diameter)}>Ø {s.diameter}cm</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
                               </div>
                               <div>
                                 <Label className="text-[10px] text-muted-foreground">Rivestimento</Label>
-                                <Input value={item.coating || ''} readOnly className="bg-muted h-8 text-xs" />
+                                <Select value={item.coating || ''} onValueChange={(v) => updateItem(idx, 'coating', v)}>
+                                  <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                                  <SelectContent>
+                                    {(selectedSize?.coatings || []).map((c: any) => (
+                                      <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
                               </div>
-                            </>
+                              <div>
+                                <Label className="text-[10px] text-muted-foreground">Prezzo ({sym})</Label>
+                                <Input
+                                  type="number"
+                                  className="h-8 text-xs"
+                                  value={item.unit_price}
+                                  onChange={(e) => updateItem(idx, 'unit_price', parseFloat(e.target.value) || 0)}
+                                />
+                              </div>
+                            </div>
                           )}
-                          <div>
-                            <Label className="text-[10px] text-muted-foreground">Prezzo ({sym})</Label>
-                            <Input
-                              type="number"
-                              className="h-8 text-xs"
-                              value={item.unit_price}
-                              onChange={(e) => updateItem(idx, 'unit_price', parseFloat(e.target.value) || 0)}
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-[10px] text-muted-foreground">Qtà</Label>
-                            <Input
-                              type="number"
-                              min={1}
-                              className="h-8 text-xs"
-                              value={item.quantity}
-                              onChange={(e) => updateItem(idx, 'quantity', parseInt(e.target.value) || 1)}
-                            />
+
+                          {item.item_type === 'burner' && (
+                            <div className="grid grid-cols-2 gap-2">
+                              <div>
+                                <Label className="text-[10px] text-muted-foreground">Prezzo ({sym})</Label>
+                                <Input
+                                  type="number"
+                                  className="h-8 text-xs"
+                                  value={item.unit_price}
+                                  onChange={(e) => updateItem(idx, 'unit_price', parseFloat(e.target.value) || 0)}
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-[10px] text-muted-foreground">Qtà</Label>
+                                <Input
+                                  type="number"
+                                  min={1}
+                                  className="h-8 text-xs"
+                                  value={item.quantity}
+                                  onChange={(e) => updateItem(idx, 'quantity', parseInt(e.target.value) || 1)}
+                                />
+                              </div>
+                            </div>
+                          )}
+
+                          {item.item_type === 'custom' && (
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                              <div className="col-span-2 sm:col-span-1">
+                                <Label className="text-[10px] text-muted-foreground">Nome</Label>
+                                <Input
+                                  className="h-8 text-xs"
+                                  value={item.custom_name || ''}
+                                  onChange={(e) => updateItem(idx, 'custom_name', e.target.value)}
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-[10px] text-muted-foreground">Prezzo ({sym})</Label>
+                                <Input
+                                  type="number"
+                                  className="h-8 text-xs"
+                                  value={item.unit_price}
+                                  onChange={(e) => updateItem(idx, 'unit_price', parseFloat(e.target.value) || 0)}
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-[10px] text-muted-foreground">Qtà</Label>
+                                <Input
+                                  type="number"
+                                  min={1}
+                                  className="h-8 text-xs"
+                                  value={item.quantity}
+                                  onChange={(e) => updateItem(idx, 'quantity', parseInt(e.target.value) || 1)}
+                                />
+                              </div>
+                            </div>
+                          )}
+                          
+                          <div className="text-right">
+                            <span className="font-bold text-sm">{sym}{item.line_total.toLocaleString('it-IT')}</span>
                           </div>
                         </div>
-                        
-                        <div className="text-right">
-                          <span className="font-bold text-sm">{sym}{item.line_total.toLocaleString('it-IT')}</span>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </CardContent>
