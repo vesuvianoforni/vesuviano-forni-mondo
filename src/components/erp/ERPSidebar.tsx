@@ -10,6 +10,7 @@ import {
   LogOut,
   Truck,
   ShieldCheck,
+  DollarSign,
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -37,6 +38,7 @@ const mainItems = [
 const catalogItems = [
   { title: 'Forni', url: '/erp/forni', icon: Flame },
   { title: 'Bruciatori', url: '/erp/bruciatori', icon: Package },
+  { title: 'Listini', url: '/erp/listini', icon: DollarSign },
 ];
 
 const contentItems = [
