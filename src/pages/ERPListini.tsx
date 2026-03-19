@@ -308,7 +308,30 @@ const ERPListini = () => {
                               {size.coatings.map((c: any, cIdx: number) => (
                                 <tr key={cIdx} className="border-t border-amber-900/10">
                                   <td className="py-1.5 pr-3 text-amber-100 flex items-center gap-2">
-                                    {c.image_url && <img src={c.image_url} alt={c.name} className="w-7 h-7 rounded object-cover flex-shrink-0" />}
+                                    <label className="relative cursor-pointer group flex-shrink-0">
+                                      <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={(e) => {
+                                          const file = e.target.files?.[0];
+                                          if (file) handleCoatingImageChange(oven, sIdx, cIdx, file);
+                                          e.target.value = '';
+                                        }}
+                                      />
+                                      {c.image_url ? (
+                                        <div className="relative w-7 h-7">
+                                          <img src={c.image_url} alt={c.name} className="w-7 h-7 rounded object-cover" />
+                                          <div className="absolute inset-0 bg-black/50 rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                            <ImagePlus className="w-3.5 h-3.5 text-white" />
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        <div className="w-7 h-7 rounded border border-dashed border-amber-700/40 flex items-center justify-center hover:border-amber-500 transition-colors">
+                                          <ImagePlus className="w-3.5 h-3.5 text-amber-600" />
+                                        </div>
+                                      )}
+                                    </label>
                                     <span className="truncate text-xs">{c.name}</span>
                                   </td>
                                   {PRICE_LISTS.map(pl => {
