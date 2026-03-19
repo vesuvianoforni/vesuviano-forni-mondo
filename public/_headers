@@ -1,0 +1,19 @@
+/it/blog/*
+  Content-Type: text/html; charset=utf-8
+  X-Content-Type-Options: nosniff
+
+/en/blog/*
+  Content-Type: text/html; charset=utf-8
+  X-Content-Type-Options: nosniff
+
+/fr/blog/*
+  Content-Type: text/html; charset=utf-8
+  X-Content-Type-Options: nosniff
+
+/de/blog/*
+  Content-Type: text/html; charset=utf-8
+  X-Content-Type-Options: nosniff
+
+/es/blog/*
+  Content-Type: text/html; charset=utf-8
+  X-Content-Type-Options: nosniff
