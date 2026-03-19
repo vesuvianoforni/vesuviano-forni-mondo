@@ -546,7 +546,10 @@ const ProformaPage = () => {
   if (!proforma) return null;
 
   const isPaid = proforma.payment_status === 'paid';
-  const currentTotal = calculateTotal();
+  const currentSubtotal = calculateTotal();
+  const discountPct = (proforma as any).discount_percentage || 0;
+  const currentDiscount = currentSubtotal * (discountPct / 100);
+  const currentTotal = currentSubtotal - currentDiscount;
   const currentDeposit = currentTotal * (proforma.deposit_percentage / 100);
 
   return (
