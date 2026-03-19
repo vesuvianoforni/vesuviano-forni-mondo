@@ -489,11 +489,15 @@ const ProformaPage = () => {
       }
     }
 
-    // Update proforma total
-    const newTotal = calculateTotal();
+    // Update proforma total (with discount applied)
+    const newSubtotal = calculateTotal();
+    const discPct = (proforma as any).discount_percentage || 0;
+    const newDiscount = newSubtotal * (discPct / 100);
+    const newTotal = newSubtotal - newDiscount;
     const newDeposit = newTotal * (proforma.deposit_percentage / 100);
     await supabase.from('proformas').update({
       total_price: newTotal,
+      discount_amount: newDiscount,
       deposit_amount: newDeposit,
     }).eq('id', proforma.id);
 
