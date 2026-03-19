@@ -1,7 +1,7 @@
 /sitemap.xml  https://lgueucxznbqgvhpjzurf.supabase.co/functions/v1/generate-sitemap  200
-/it/blog/:slug  /.netlify/edge-functions/blog-html-proxy?lang=it&slug=:slug  200
-/en/blog/:slug  /.netlify/edge-functions/blog-html-proxy?lang=en&slug=:slug  200
-/fr/blog/:slug  /.netlify/edge-functions/blog-html-proxy?lang=fr&slug=:slug  200
-/de/blog/:slug  /.netlify/edge-functions/blog-html-proxy?lang=de&slug=:slug  200
-/es/blog/:slug  /.netlify/edge-functions/blog-html-proxy?lang=es&slug=:slug  200
+/it/blog/:slug  https://lgueucxznbqgvhpjzurf.supabase.co/functions/v1/render-blog-post?lang=it&slug=:slug  200
+/en/blog/:slug  https://lgueucxznbqgvhpjzurf.supabase.co/functions/v1/render-blog-post?lang=en&slug=:slug  200
+/fr/blog/:slug  https://lgueucxznbqgvhpjzurf.supabase.co/functions/v1/render-blog-post?lang=fr&slug=:slug  200
+/de/blog/:slug  https://lgueucxznbqgvhpjzurf.supabase.co/functions/v1/render-blog-post?lang=de&slug=:slug  200
+/es/blog/:slug  https://lgueucxznbqgvhpjzurf.supabase.co/functions/v1/render-blog-post?lang=es&slug=:slug  200
 /*    /index.html   200
