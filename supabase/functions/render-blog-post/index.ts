@@ -126,6 +126,12 @@ function buildHtml(post: Record<string, unknown>, lang: string, slug: string): s
 }
 
 Deno.serve(async (req: Request) => {
+  const htmlHeaders = {
+    ...corsHeaders,
+    "Content-Type": "text/html; charset=utf-8",
+    "X-Content-Type-Options": "nosniff",
+  };
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -136,11 +142,17 @@ Deno.serve(async (req: Request) => {
     const slug = url.searchParams.get("slug");
 
     if (!slug) {
-      return new Response("Missing slug parameter", { status: 400, headers: corsHeaders });
+      return new Response("<html><body><h1>400 - Missing slug</h1></body></html>", {
+        status: 400,
+        headers: htmlHeaders,
+      });
     }
 
     if (!LANGS.includes(lang)) {
-      return new Response("Invalid language", { status: 400, headers: corsHeaders });
+      return new Response("<html><body><h1>400 - Invalid language</h1></body></html>", {
+        status: 400,
+        headers: htmlHeaders,
+      });
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -155,20 +167,25 @@ Deno.serve(async (req: Request) => {
       .single();
 
     if (error || !post) {
-      return new Response("Post not found", { status: 404, headers: corsHeaders });
+      return new Response("<html><body><h1>404 - Post not found</h1></body></html>", {
+        status: 404,
+        headers: htmlHeaders,
+      });
     }
 
     const html = buildHtml(post, lang, slug);
 
     return new Response(html, {
       headers: {
-        ...corsHeaders,
-        "Content-Type": "text/html; charset=utf-8",
+        ...htmlHeaders,
         "Cache-Control": "public, max-age=3600, s-maxage=86400",
       },
     });
   } catch (err) {
     console.error("Render blog post error:", err);
-    return new Response("Internal Server Error", { status: 500, headers: corsHeaders });
+    return new Response("<html><body><h1>500 - Internal Server Error</h1></body></html>", {
+      status: 500,
+      headers: htmlHeaders,
+    });
   }
 });
