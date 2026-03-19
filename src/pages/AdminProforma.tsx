@@ -265,8 +265,10 @@ const AdminProforma = () => {
   };
 
   const totalPrice = items.reduce((sum, item) => sum + item.line_total, 0);
+  const discountAmount = totalPrice * (discountPercentage / 100);
+  const discountedTotal = totalPrice - discountAmount;
   const depositPercentage = paymentOption === 'deposit_5' ? 5 : 50;
-  const depositAmount = totalPrice * (depositPercentage / 100);
+  const depositAmount = discountedTotal * (depositPercentage / 100);
   const sym = getCurrencySymbol(currency);
 
   const handleCreateProforma = async () => {
