@@ -52,10 +52,10 @@ const ERPListini = () => {
     }));
   };
 
-  const handleBurnerPriceChange = (burnerId: string, value: string) => {
+  const handleBurnerPriceChange = (burnerId: string, list: 'A' | 'B' | 'C', value: string) => {
     setEditedBurnerPrices(prev => ({
       ...prev,
-      [burnerId]: value === '' ? 0 : Number(value),
+      [burnerId]: { ...(prev[burnerId] || {}), [list]: value === '' ? 0 : Number(value) },
     }));
   };
 
