@@ -25,7 +25,7 @@ const ERPListini = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedOven, setExpandedOven] = useState<string | null>(null);
   const [editedPrices, setEditedPrices] = useState<Record<string, any>>({});
-  const [editedBurnerPrices, setEditedBurnerPrices] = useState<Record<string, number>>({});
+  const [editedBurnerPrices, setEditedBurnerPrices] = useState<Record<string, Record<string, number>>>({});
 
   useEffect(() => { fetchData(); }, []);
 
