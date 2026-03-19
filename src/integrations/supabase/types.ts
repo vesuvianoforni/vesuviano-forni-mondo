@@ -826,6 +826,8 @@ export type Database = {
           delivery_days: number | null
           deposit_amount: number
           deposit_percentage: number
+          discount_amount: number | null
+          discount_percentage: number | null
           id: string
           language: string
           notes: string | null
@@ -854,6 +856,8 @@ export type Database = {
           delivery_days?: number | null
           deposit_amount?: number
           deposit_percentage?: number
+          discount_amount?: number | null
+          discount_percentage?: number | null
           id?: string
           language?: string
           notes?: string | null
@@ -882,6 +886,8 @@ export type Database = {
           delivery_days?: number | null
           deposit_amount?: number
           deposit_percentage?: number
+          discount_amount?: number | null
+          discount_percentage?: number | null
           id?: string
           language?: string
           notes?: string | null
