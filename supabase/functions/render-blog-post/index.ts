@@ -126,14 +126,17 @@ function buildHtml(post: Record<string, unknown>, lang: string, slug: string): s
 }
 
 function htmlResponse(body: string, status = 200, extraHeaders: Record<string, string> = {}): Response {
-  const headers = new Headers({
-    "Content-Type": "text/html; charset=utf-8",
-    "X-Content-Type-Options": "nosniff",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-    ...extraHeaders,
+  const encodedBody = new TextEncoder().encode(body);
+  return new Response(encodedBody, {
+    status,
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "X-Content-Type-Options": "nosniff",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+      ...extraHeaders,
+    },
   });
-  return new Response(body, { status, headers });
 }
 
 Deno.serve(async (req: Request) => {
