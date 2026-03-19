@@ -105,6 +105,7 @@ const AdminProforma = () => {
   const [language, setLanguage] = useState('it');
   const [currency, setCurrency] = useState('EUR');
   const [priceList, setPriceList] = useState('A');
+  const [discountPercentage, setDiscountPercentage] = useState(0);
 
   // Burner form state
   const [burnerName, setBurnerName] = useState('');
