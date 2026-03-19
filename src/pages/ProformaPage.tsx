@@ -223,6 +223,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     confirmConfig: 'Bestätigen & Bezahlen',
     preSelected: 'Vorausgewählt',
     changeSelection: 'Ändern',
+    subtotal: 'Zwischensumme',
+    discount: 'Rabatt',
   },
   es: {
     proforma: 'Factura Pro-Forma',
