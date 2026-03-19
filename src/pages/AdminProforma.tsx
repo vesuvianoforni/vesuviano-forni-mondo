@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { Plus, Trash2, ArrowLeft, FileText, Copy, ExternalLink, Loader2, Globe, DollarSign } from 'lucide-react';
+import { Plus, Trash2, ArrowLeft, FileText, Copy, ExternalLink, Loader2, Globe, DollarSign, Percent } from 'lucide-react';
 import { format } from 'date-fns';
 import { it as itLocale } from 'date-fns/locale';
 
