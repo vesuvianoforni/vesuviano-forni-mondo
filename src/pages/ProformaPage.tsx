@@ -155,6 +155,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     confirmConfig: 'Confirm Configuration & Pay',
     preSelected: 'Pre-selected',
     changeSelection: 'Change',
+    subtotal: 'Subtotal',
+    discount: 'Discount',
   },
   fr: {
     proforma: 'Facture Pro-Forma',
