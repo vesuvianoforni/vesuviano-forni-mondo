@@ -153,6 +153,44 @@ const ERPListini = () => {
     return c && Object.keys(c).length > 0;
   };
 
+  const handleCoatingImageChange = async (oven: any, sIdx: number, cIdx: number, file: File) => {
+    try {
+      const fileName = `coating-${oven.id}-${sIdx}-${cIdx}-${Date.now()}.${file.name.split('.').pop()}`;
+      const { data, error } = await supabase.storage.from('oven-images').upload(fileName, file, { upsert: true });
+      if (error) {
+        // Fallback: use a data URL if storage not available
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          const dataUrl = e.target?.result as string;
+          await updateCoatingImage(oven, sIdx, cIdx, dataUrl);
+        };
+        reader.readAsDataURL(file);
+        return;
+      }
+      const { data: urlData } = supabase.storage.from('oven-images').getPublicUrl(fileName);
+      await updateCoatingImage(oven, sIdx, cIdx, urlData.publicUrl);
+    } catch (e: any) {
+      toast.error('Errore upload: ' + e.message);
+    }
+  };
+
+  const updateCoatingImage = async (oven: any, sIdx: number, cIdx: number, imageUrl: string) => {
+    const updatedSizes = JSON.parse(JSON.stringify(oven.sizes || []));
+    if (updatedSizes[sIdx]?.coatings?.[cIdx]) {
+      updatedSizes[sIdx].coatings[cIdx].image_url = imageUrl;
+    }
+    const { error } = await supabase
+      .from('configurator_ovens')
+      .update({ sizes: updatedSizes })
+      .eq('id', oven.id);
+    if (error) {
+      toast.error('Errore salvataggio immagine');
+      return;
+    }
+    setOvens(prev => prev.map(o => o.id === oven.id ? { ...o, sizes: updatedSizes } : o));
+    toast.success('Immagine rivestimento aggiornata');
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
