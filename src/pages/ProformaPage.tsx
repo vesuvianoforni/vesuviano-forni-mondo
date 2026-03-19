@@ -612,26 +612,11 @@ const ProformaPage = () => {
                 )}
               </div>
 
-              {/* Fuel Type Selection */}
-              {availableFuelTypes.length > 1 && !isPaid && (
-                <div>
-                  <h3 className="text-sm font-semibold text-amber-200 mb-3">{t.selectFuel}</h3>
-                  <div className="grid grid-cols-3 gap-2">
-                    {availableFuelTypes.map(fuel => (
-                      <button
-                        key={fuel}
-                        onClick={() => updateItemConfig(item.id, { fuelType: fuel })}
-                        className={`p-3 rounded-lg border text-center transition-all ${
-                          config.fuelType === fuel
-                            ? 'border-amber-500 bg-amber-900/30 text-amber-100'
-                            : 'border-gray-700 bg-[#222] text-gray-300 hover:border-amber-700'
-                        }`}
-                      >
-                        <Flame className="w-5 h-5 mx-auto mb-1" />
-                        <span className="text-xs font-medium">{fuel}</span>
-                      </button>
-                    ))}
-                  </div>
+              {/* Fuel Type Display (read-only, set by admin) */}
+              {config.fuelType && (
+                <div className="flex items-center gap-2 bg-amber-900/20 rounded-lg px-4 py-2">
+                  <Flame className="w-4 h-4 text-amber-400" />
+                  <span className="text-sm font-medium text-amber-100">{t.selectFuel}: <strong>{config.fuelType}</strong></span>
                 </div>
               )}
 
@@ -788,8 +773,8 @@ const ProformaPage = () => {
           );
         })}
 
-        {/* Burner Selection */}
-        {burners.length > 0 && !isPaid && (
+        {/* Burner Selection - only show for Gas/Elettrico fuel types */}
+        {burners.length > 0 && !isPaid && items.some(i => i.item_type === 'oven' && itemConfigs[i.id]?.fuelType && itemConfigs[i.id].fuelType !== 'Legna') && (
           <div>
             <h3 className="text-lg font-semibold text-amber-100 mb-4">{t.selectBurner}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
