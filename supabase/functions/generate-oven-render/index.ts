@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { ovenName, color, imageUrl } = await req.json();
+    const { ovenName, color, imageUrl, coatingType } = await req.json();
     
     if (!ovenName || !color || !imageUrl) {
       return new Response(
@@ -29,9 +29,13 @@ serve(async (req) => {
       );
     }
 
-    const prompt = `Change the color/finish of this pizza oven to ${color}. Maintain the exact same shape, structure, proportions, and lighting. Only change the exterior color/coating to ${color}, keeping all other details identical. The result should look natural and professionally rendered with the new ${color} finish.`;
+    const coatingDescription = coatingType 
+      ? `The oven currently has a "${coatingType}" coating/finish. You MUST preserve this exact same coating texture and pattern (e.g. if it's mosaic tiles, keep the mosaic tiles; if it's smooth paint, keep smooth paint; if it's stone texture, keep stone texture). `
+      : '';
 
-    console.log('Editing oven image with color:', color);
+    const prompt = `Change ONLY the color of this pizza oven to ${color}. ${coatingDescription}CRITICAL INSTRUCTIONS: 1) DO NOT change the surface texture, coating type, or material pattern - preserve them EXACTLY as in the original photo. 2) If the oven has mosaic tiles, the result MUST still show mosaic tiles. 3) If the oven has a smooth painted surface, keep it smooth. 4) Maintain the exact same shape, structure, proportions, shadows, and lighting. 5) Only the COLOR/HUE should change, nothing else. The result should look like the exact same oven photographed with a different color applied to its existing coating.`;
+
+    console.log('Editing oven image with color:', color, 'coating:', coatingType || 'not specified');
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',

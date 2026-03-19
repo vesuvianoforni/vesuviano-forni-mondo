@@ -75,7 +75,8 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
         body: {
           ovenName,
           color: colorToUse,
-          imageUrl: ovenImageUrl
+          imageUrl: ovenImageUrl,
+          coatingType: selectedCoating || undefined
         }
       });
       
