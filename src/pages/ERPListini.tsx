@@ -105,20 +105,31 @@ const ERPListini = () => {
   };
 
   const saveBurnerPrice = async (burner: any) => {
-    if (editedBurnerPrices[burner.id] === undefined) {
+    const changes = editedBurnerPrices[burner.id];
+    if (!changes || Object.keys(changes).length === 0) {
       toast.info('Nessuna modifica');
       return;
     }
     setSaving(burner.id);
     try {
+      const updateData: any = {};
+      if (changes.A !== undefined) updateData.price = changes.A;
+      if (changes.B !== undefined) updateData.price_b = changes.B;
+      if (changes.C !== undefined) updateData.price_c = changes.C;
+
       const { error } = await supabase
         .from('burners')
-        .update({ price: editedBurnerPrices[burner.id] })
+        .update(updateData)
         .eq('id', burner.id);
       if (error) throw error;
-      setBurners(prev => prev.map(b => b.id === burner.id ? { ...b, price: editedBurnerPrices[burner.id] } : b));
+      setBurners(prev => prev.map(b => b.id === burner.id ? {
+        ...b,
+        ...(changes.A !== undefined && { price: changes.A }),
+        ...(changes.B !== undefined && { price_b: changes.B }),
+        ...(changes.C !== undefined && { price_c: changes.C }),
+      } : b));
       setEditedBurnerPrices(prev => { const n = { ...prev }; delete n[burner.id]; return n; });
-      toast.success(`Prezzo ${burner.name} salvato`);
+      toast.success(`Prezzi ${burner.name} salvati`);
     } catch (e: any) {
       toast.error('Errore: ' + e.message);
     } finally {

@@ -1,0 +1,3 @@
+ALTER TABLE public.burners
+ADD COLUMN IF NOT EXISTS price_b numeric DEFAULT 0,
+ADD COLUMN IF NOT EXISTS price_c numeric DEFAULT 0;
