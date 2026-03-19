@@ -125,13 +125,21 @@ function buildHtml(post: Record<string, unknown>, lang: string, slug: string): s
 </html>`;
 }
 
-Deno.serve(async (req: Request) => {
-  const htmlHeaders = {
-    ...corsHeaders,
-    "Content-Type": "text/html; charset=utf-8",
-    "X-Content-Type-Options": "nosniff",
-  };
+function htmlResponse(body: string, status = 200, extraHeaders: Record<string, string> = {}): Response {
+  const encodedBody = new TextEncoder().encode(body);
+  return new Response(encodedBody, {
+    status,
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "X-Content-Type-Options": "nosniff",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+      ...extraHeaders,
+    },
+  });
+}
 
+Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -142,17 +150,11 @@ Deno.serve(async (req: Request) => {
     const slug = url.searchParams.get("slug");
 
     if (!slug) {
-      return new Response("<html><body><h1>400 - Missing slug</h1></body></html>", {
-        status: 400,
-        headers: htmlHeaders,
-      });
+      return htmlResponse("<html><body><h1>400 - Missing slug</h1></body></html>", 400);
     }
 
     if (!LANGS.includes(lang)) {
-      return new Response("<html><body><h1>400 - Invalid language</h1></body></html>", {
-        status: 400,
-        headers: htmlHeaders,
-      });
+      return htmlResponse("<html><body><h1>400 - Invalid language</h1></body></html>", 400);
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -167,25 +169,16 @@ Deno.serve(async (req: Request) => {
       .single();
 
     if (error || !post) {
-      return new Response("<html><body><h1>404 - Post not found</h1></body></html>", {
-        status: 404,
-        headers: htmlHeaders,
-      });
+      return htmlResponse("<html><body><h1>404 - Post not found</h1></body></html>", 404);
     }
 
     const html = buildHtml(post, lang, slug);
 
-    return new Response(html, {
-      headers: {
-        ...htmlHeaders,
-        "Cache-Control": "public, max-age=3600, s-maxage=86400",
-      },
+    return htmlResponse(html, 200, {
+      "Cache-Control": "public, max-age=3600, s-maxage=86400",
     });
   } catch (err) {
     console.error("Render blog post error:", err);
-    return new Response("<html><body><h1>500 - Internal Server Error</h1></body></html>", {
-      status: 500,
-      headers: htmlHeaders,
-    });
+    return htmlResponse("<html><body><h1>500 - Internal Server Error</h1></body></html>", 500);
   }
 });
