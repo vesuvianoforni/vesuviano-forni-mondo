@@ -25,6 +25,8 @@ const BLOCKED_UPSTREAM_HEADERS = new Set([
 ]);
 
 type NetlifyEvent = {
+  path?: string;
+  rawUrl?: string;
   queryStringParameters?: Record<string, string | undefined>;
 };
 
@@ -33,6 +35,26 @@ type NetlifyResponse = {
   headers: Record<string, string>;
   body: string;
 };
+
+// Parse lang and slug from the original request path: /:lang/blog/:slug
+const BLOG_PATH_RE = /^\/(it|en|fr|de|es)\/blog\/([^/?#]+)/;
+
+function parseFromPath(event: NetlifyEvent): { lang: string; slug: string } | null {
+  const path = event.path || "";
+  const match = path.match(BLOG_PATH_RE);
+  if (match) {
+    return { lang: match[1], slug: match[2] };
+  }
+  // Try rawUrl as fallback
+  if (event.rawUrl) {
+    try {
+      const url = new URL(event.rawUrl);
+      const m = url.pathname.match(BLOG_PATH_RE);
+      if (m) return { lang: m[1], slug: m[2] };
+    } catch { /* ignore */ }
+  }
+  return null;
+}
 
 function buildHtmlError(statusCode: number, message: string): NetlifyResponse {
   return {
@@ -48,17 +70,32 @@ function buildHtmlError(statusCode: number, message: string): NetlifyResponse {
 
 export const handler = async (event: NetlifyEvent): Promise<NetlifyResponse> => {
   try {
-    const langRaw = event.queryStringParameters?.lang ?? "it";
-    const slug = event.queryStringParameters?.slug;
+    // Try query params first (from _redirects interpolation), then fallback to path parsing
+    let lang = event.queryStringParameters?.lang;
+    let slug = event.queryStringParameters?.slug;
+
+    // If slug is missing or is literally ":slug" (not interpolated), parse from path
+    if (!slug || slug === ":slug") {
+      const parsed = parseFromPath(event);
+      if (parsed) {
+        lang = parsed.lang;
+        slug = parsed.slug;
+      }
+    }
 
     if (!slug) {
+      console.error("blog-html-proxy: no slug found", {
+        path: event.path,
+        rawUrl: event.rawUrl,
+        qsp: event.queryStringParameters,
+      });
       return buildHtmlError(400, "Missing slug");
     }
 
-    const lang = SUPPORTED_LANGS.has(langRaw) ? langRaw : "it";
+    const safeLang = lang && SUPPORTED_LANGS.has(lang) ? lang : "it";
 
     const upstreamUrl = new URL(SUPABASE_RENDER_URL);
-    upstreamUrl.searchParams.set("lang", lang);
+    upstreamUrl.searchParams.set("lang", safeLang);
     upstreamUrl.searchParams.set("slug", slug);
 
     const upstreamResponse = await fetch(upstreamUrl.toString(), {
