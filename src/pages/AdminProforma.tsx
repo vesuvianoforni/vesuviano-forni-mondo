@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { Plus, Trash2, ArrowLeft, FileText, Copy, ExternalLink, Loader2, Globe, DollarSign } from 'lucide-react';
+import { Plus, Trash2, ArrowLeft, FileText, Copy, ExternalLink, Loader2, Globe, DollarSign, Percent } from 'lucide-react';
 import { format } from 'date-fns';
 import { it as itLocale } from 'date-fns/locale';
 
@@ -105,6 +105,7 @@ const AdminProforma = () => {
   const [language, setLanguage] = useState('it');
   const [currency, setCurrency] = useState('EUR');
   const [priceList, setPriceList] = useState('A');
+  const [discountPercentage, setDiscountPercentage] = useState(0);
 
   // Burner form state
   const [burnerName, setBurnerName] = useState('');
@@ -264,8 +265,10 @@ const AdminProforma = () => {
   };
 
   const totalPrice = items.reduce((sum, item) => sum + item.line_total, 0);
+  const discountAmount = totalPrice * (discountPercentage / 100);
+  const discountedTotal = totalPrice - discountAmount;
   const depositPercentage = paymentOption === 'deposit_5' ? 5 : 50;
-  const depositAmount = totalPrice * (depositPercentage / 100);
+  const depositAmount = discountedTotal * (depositPercentage / 100);
   const sym = getCurrencySymbol(currency);
 
   const handleCreateProforma = async () => {
@@ -284,9 +287,11 @@ const AdminProforma = () => {
           customer_phone: customerPhone || null,
           vat_number: vatNumber || null,
           notes: notes || null,
-          total_price: totalPrice,
+          total_price: discountedTotal,
           deposit_percentage: depositPercentage,
           deposit_amount: depositAmount,
+          discount_percentage: discountPercentage,
+          discount_amount: discountAmount,
           delivery_days: deliveryDays ? parseInt(deliveryDays) : null,
           payment_option: paymentOption,
           language,
@@ -373,6 +378,7 @@ const AdminProforma = () => {
     setLanguage('it');
     setCurrency('EUR');
     setPriceList('A');
+    setDiscountPercentage(0);
     setShowCreateForm(false);
   };
 
@@ -808,29 +814,60 @@ const AdminProforma = () => {
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg">Condizioni di Pagamento</CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <Label className="text-xs">Opzione Pagamento</Label>
-                  <Select value={paymentOption} onValueChange={setPaymentOption}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="deposit_5">5% deposito (blocca offerta)</SelectItem>
-                      <SelectItem value="deposit_50">50% acconto (spedizione rapida)</SelectItem>
-                    </SelectContent>
-                  </Select>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <Label className="text-xs">Opzione Pagamento</Label>
+                    <Select value={paymentOption} onValueChange={setPaymentOption}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="deposit_5">5% deposito (blocca offerta)</SelectItem>
+                        <SelectItem value="deposit_50">50% acconto (spedizione rapida)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label className="text-xs">Giorni consegna (se 50%)</Label>
+                    <Input
+                      type="number"
+                      value={deliveryDays}
+                      onChange={(e) => setDeliveryDays(e.target.value)}
+                      placeholder="30"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs flex items-center gap-1"><Percent className="w-3 h-3" /> Sconto (%)</Label>
+                    <Input
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={discountPercentage || ''}
+                      onChange={(e) => setDiscountPercentage(Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)))}
+                      placeholder="0"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-xs">Giorni consegna (se 50%)</Label>
-                  <Input
-                    type="number"
-                    value={deliveryDays}
-                    onChange={(e) => setDeliveryDays(e.target.value)}
-                    placeholder="30"
-                  />
-                </div>
-                <div className="flex flex-col justify-end bg-muted/50 rounded-lg p-3">
-                  <div className="text-sm text-muted-foreground">Totale: <span className="text-lg font-bold text-foreground">{sym}{totalPrice.toLocaleString('it-IT')}</span></div>
-                  <div className="text-sm text-muted-foreground">Deposito {depositPercentage}%: <span className="font-semibold text-foreground">{sym}{depositAmount.toLocaleString('it-IT')}</span></div>
+
+                <div className="bg-muted/50 rounded-lg p-4 space-y-1">
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>Subtotale</span>
+                    <span>{sym}{totalPrice.toLocaleString('it-IT')}</span>
+                  </div>
+                  {discountPercentage > 0 && (
+                    <div className="flex justify-between text-sm text-green-600">
+                      <span>Sconto ({discountPercentage}%)</span>
+                      <span>-{sym}{discountAmount.toLocaleString('it-IT')}</span>
+                    </div>
+                  )}
+                  <Separator className="my-2" />
+                  <div className="flex justify-between text-sm">
+                    <span className="font-medium">Totale</span>
+                    <span className="text-lg font-bold text-foreground">{sym}{discountedTotal.toLocaleString('it-IT')}</span>
+                  </div>
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>Deposito {depositPercentage}%</span>
+                    <span className="font-semibold text-foreground">{sym}{depositAmount.toLocaleString('it-IT')}</span>
+                  </div>
                 </div>
               </CardContent>
             </Card>

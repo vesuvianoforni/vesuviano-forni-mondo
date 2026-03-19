@@ -38,6 +38,8 @@ interface ProformaData {
   total_price: number;
   deposit_percentage: number;
   deposit_amount: number;
+  discount_percentage: number;
+  discount_amount: number;
   delivery_days: number | null;
   payment_option: string;
   payment_status: string;
@@ -119,6 +121,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     confirmConfig: 'Conferma Configurazione e Paga',
     preSelected: 'Pre-selezionato',
     changeSelection: 'Cambia',
+    subtotal: 'Subtotale',
+    discount: 'Sconto',
   },
   en: {
     proforma: 'Pro-Forma Invoice',
@@ -151,6 +155,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     confirmConfig: 'Confirm Configuration & Pay',
     preSelected: 'Pre-selected',
     changeSelection: 'Change',
+    subtotal: 'Subtotal',
+    discount: 'Discount',
   },
   fr: {
     proforma: 'Facture Pro-Forma',
@@ -183,6 +189,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     confirmConfig: 'Confirmer et Payer',
     preSelected: 'Pré-sélectionné',
     changeSelection: 'Modifier',
+    subtotal: 'Sous-total',
+    discount: 'Remise',
   },
   de: {
     proforma: 'Pro-Forma Rechnung',
@@ -215,6 +223,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     confirmConfig: 'Bestätigen & Bezahlen',
     preSelected: 'Vorausgewählt',
     changeSelection: 'Ändern',
+    subtotal: 'Zwischensumme',
+    discount: 'Rabatt',
   },
   es: {
     proforma: 'Factura Pro-Forma',
@@ -247,6 +257,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     confirmConfig: 'Confirmar y Pagar',
     preSelected: 'Pre-seleccionado',
     changeSelection: 'Cambiar',
+    subtotal: 'Subtotal',
+    discount: 'Descuento',
   },
 };
 
@@ -477,11 +489,15 @@ const ProformaPage = () => {
       }
     }
 
-    // Update proforma total
-    const newTotal = calculateTotal();
+    // Update proforma total (with discount applied)
+    const newSubtotal = calculateTotal();
+    const discPct = (proforma as any).discount_percentage || 0;
+    const newDiscount = newSubtotal * (discPct / 100);
+    const newTotal = newSubtotal - newDiscount;
     const newDeposit = newTotal * (proforma.deposit_percentage / 100);
     await supabase.from('proformas').update({
       total_price: newTotal,
+      discount_amount: newDiscount,
       deposit_amount: newDeposit,
     }).eq('id', proforma.id);
 
@@ -534,7 +550,10 @@ const ProformaPage = () => {
   if (!proforma) return null;
 
   const isPaid = proforma.payment_status === 'paid';
-  const currentTotal = calculateTotal();
+  const currentSubtotal = calculateTotal();
+  const discountPct = (proforma as any).discount_percentage || 0;
+  const currentDiscount = currentSubtotal * (discountPct / 100);
+  const currentTotal = currentSubtotal - currentDiscount;
   const currentDeposit = currentTotal * (proforma.deposit_percentage / 100);
 
   return (
@@ -860,6 +879,20 @@ const ProformaPage = () => {
             </div>
 
             <Separator className="bg-amber-900/30" />
+
+            {discountPct > 0 && (
+              <>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">{t.subtotal}</span>
+                  <span className="text-gray-400">{formatPrice(currentSubtotal)}</span>
+                </div>
+                <div className="flex justify-between text-sm text-green-400">
+                  <span>{t.discount} ({discountPct}%)</span>
+                  <span>-{formatPrice(currentDiscount)}</span>
+                </div>
+                <Separator className="bg-amber-900/30" />
+              </>
+            )}
 
             <div className="flex justify-between text-lg">
               <span className="text-gray-300">{t.total}</span>
