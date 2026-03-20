@@ -33,6 +33,7 @@ interface ProformaItem {
   line_total: number;
   specifications?: any;
   sort_order: number;
+  price_manually_set?: boolean;
 }
 
 interface Proforma {
@@ -230,7 +231,12 @@ const AdminProforma = () => {
     const updated = [...items];
     (updated[index] as any)[field] = value;
     
-    // Recalculate price when oven config changes
+    // If user manually changes unit_price, mark it as manually set
+    if (field === 'unit_price') {
+      updated[index].price_manually_set = true;
+    }
+    
+    // Recalculate price when oven config changes, but ONLY if price was not manually set
     if (updated[index].item_type === 'oven' && ['fuel_type', 'diameter', 'coating'].includes(field)) {
       const item = updated[index];
       const oven = ovens.find(o => o.model_name === item.model_name);
@@ -248,9 +254,12 @@ const AdminProforma = () => {
           const coat = size?.coatings?.find((c: any) => c.name === value);
           if (coat?.image_url) item.image_url = coat.image_url;
         }
-        const price = getOvenPriceFromConfig(oven, item.fuel_type || '', item.diameter || 0, item.coating || '', priceList);
-        item.unit_price = price;
-        item.line_total = price * item.quantity;
+        // Only auto-update price if not manually overridden
+        if (!item.price_manually_set) {
+          const price = getOvenPriceFromConfig(oven, item.fuel_type || '', item.diameter || 0, item.coating || '', priceList);
+          item.unit_price = price;
+          item.line_total = price * item.quantity;
+        }
       }
     }
     
