@@ -490,9 +490,9 @@ const ProformaPage = () => {
             model_name: burner.name,
             custom_description: burner.description,
             image_url: burner.image_url,
-            unit_price: burner.price,
+            unit_price: getBurnerPrice(burner, pl),
             quantity: 1,
-            line_total: burner.price,
+            line_total: getBurnerPrice(burner, pl),
             sort_order: items.length,
           });
         }
