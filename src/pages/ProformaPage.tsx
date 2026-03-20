@@ -818,7 +818,7 @@ const ProformaPage = () => {
                     {burner.description && (
                       <p className="text-xs text-gray-400 line-clamp-2 mt-0.5">{burner.description}</p>
                     )}
-                    <p className="text-sm font-bold text-amber-400 mt-1">{formatPrice(burner.price)}</p>
+                    <p className="text-sm font-bold text-amber-400 mt-1">{formatPrice(getBurnerPrice(burner, pl))}</p>
                   </div>
                 </button>
               ))}
