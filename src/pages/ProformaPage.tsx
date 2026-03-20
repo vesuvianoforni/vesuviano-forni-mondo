@@ -479,8 +479,8 @@ const ProformaPage = () => {
             model_name: burner.name,
             custom_description: burner.description,
             image_url: burner.image_url,
-            unit_price: burner.price,
-            line_total: burner.price,
+            unit_price: getBurnerPrice(burner, pl),
+            line_total: getBurnerPrice(burner, pl),
           }).eq('id', existingBurnerItem.id);
         } else {
           await supabase.from('proforma_items').insert({
