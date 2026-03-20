@@ -86,8 +86,16 @@ interface BurnerData {
   name: string;
   description: string | null;
   price: number;
+  price_b: number | null;
+  price_c: number | null;
   image_url: string | null;
 }
+
+const getBurnerPrice = (burner: BurnerData, priceList: string): number => {
+  if (priceList === 'C' && burner.price_c != null) return burner.price_c;
+  if (priceList === 'B' && burner.price_b != null) return burner.price_b;
+  return burner.price;
+};
 
 const TRANSLATIONS: Record<string, Record<string, string>> = {
   it: {
