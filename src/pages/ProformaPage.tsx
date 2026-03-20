@@ -86,8 +86,16 @@ interface BurnerData {
   name: string;
   description: string | null;
   price: number;
+  price_b: number | null;
+  price_c: number | null;
   image_url: string | null;
 }
+
+const getBurnerPrice = (burner: BurnerData, priceList: string): number => {
+  if (priceList === 'C' && burner.price_c != null) return burner.price_c;
+  if (priceList === 'B' && burner.price_b != null) return burner.price_b;
+  return burner.price;
+};
 
 const TRANSLATIONS: Record<string, Record<string, string>> = {
   it: {
@@ -410,10 +418,12 @@ const ProformaPage = () => {
           total += item.line_total;
         }
       } else if (item.item_type === 'burner') {
-        // Use selected burner price
+        // Use selected burner price or item's saved price
         if (selectedBurnerId) {
           const burner = burners.find(b => b.id === selectedBurnerId);
-          total += (burner?.price || item.unit_price) * item.quantity;
+          total += (burner ? getBurnerPrice(burner, pl) : item.unit_price) * item.quantity;
+        } else {
+          total += item.unit_price * item.quantity;
         }
       } else {
         total += item.line_total;
@@ -423,7 +433,7 @@ const ProformaPage = () => {
     // If customer selected a burner but there wasn't one in the original items
     if (selectedBurnerId && !items.find(i => i.item_type === 'burner')) {
       const burner = burners.find(b => b.id === selectedBurnerId);
-      if (burner) total += burner.price;
+      if (burner) total += getBurnerPrice(burner, pl);
     }
 
     return total;
@@ -469,8 +479,8 @@ const ProformaPage = () => {
             model_name: burner.name,
             custom_description: burner.description,
             image_url: burner.image_url,
-            unit_price: burner.price,
-            line_total: burner.price,
+            unit_price: getBurnerPrice(burner, pl),
+            line_total: getBurnerPrice(burner, pl),
           }).eq('id', existingBurnerItem.id);
         } else {
           await supabase.from('proforma_items').insert({
@@ -480,9 +490,9 @@ const ProformaPage = () => {
             model_name: burner.name,
             custom_description: burner.description,
             image_url: burner.image_url,
-            unit_price: burner.price,
+            unit_price: getBurnerPrice(burner, pl),
             quantity: 1,
-            line_total: burner.price,
+            line_total: getBurnerPrice(burner, pl),
             sort_order: items.length,
           });
         }
@@ -808,7 +818,7 @@ const ProformaPage = () => {
                     {burner.description && (
                       <p className="text-xs text-gray-400 line-clamp-2 mt-0.5">{burner.description}</p>
                     )}
-                    <p className="text-sm font-bold text-amber-400 mt-1">{formatPrice(burner.price)}</p>
+                    <p className="text-sm font-bold text-amber-400 mt-1">{formatPrice(getBurnerPrice(burner, pl))}</p>
                   </div>
                 </button>
               ))}
@@ -849,12 +859,15 @@ const ProformaPage = () => {
                   </div>
                 );
               })}
-              {selectedBurnerId && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-300">{t.burner}: {burners.find(b => b.id === selectedBurnerId)?.name}</span>
-                  <span className="text-amber-200 font-semibold">{formatPrice(burners.find(b => b.id === selectedBurnerId)?.price || 0)}</span>
-                </div>
-              )}
+              {selectedBurnerId && (() => {
+                const burner = burners.find(b => b.id === selectedBurnerId);
+                return burner ? (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-300">{t.burner}: {burner.name}</span>
+                    <span className="text-amber-200 font-semibold">{formatPrice(getBurnerPrice(burner, pl))}</span>
+                  </div>
+                ) : null;
+              })()}
               {items.filter(i => i.item_type === 'custom').map(item => (
                 <div key={item.id} className="flex justify-between text-sm">
                   <span className="text-gray-300">{item.custom_name}</span>
