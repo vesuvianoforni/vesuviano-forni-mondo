@@ -859,12 +859,15 @@ const ProformaPage = () => {
                   </div>
                 );
               })}
-              {selectedBurnerId && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-300">{t.burner}: {burners.find(b => b.id === selectedBurnerId)?.name}</span>
-                  <span className="text-amber-200 font-semibold">{formatPrice(burners.find(b => b.id === selectedBurnerId)?.price || 0)}</span>
-                </div>
-              )}
+              {selectedBurnerId && (() => {
+                const burner = burners.find(b => b.id === selectedBurnerId);
+                return burner ? (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-300">{t.burner}: {burner.name}</span>
+                    <span className="text-amber-200 font-semibold">{formatPrice(getBurnerPrice(burner, pl))}</span>
+                  </div>
+                ) : null;
+              })()}
               {items.filter(i => i.item_type === 'custom').map(item => (
                 <div key={item.id} className="flex justify-between text-sm">
                   <span className="text-gray-300">{item.custom_name}</span>
