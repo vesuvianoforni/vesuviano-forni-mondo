@@ -33,6 +33,7 @@ interface ProformaItem {
   line_total: number;
   specifications?: any;
   sort_order: number;
+  price_manually_set?: boolean;
 }
 
 interface Proforma {
