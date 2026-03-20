@@ -433,7 +433,7 @@ const ProformaPage = () => {
     // If customer selected a burner but there wasn't one in the original items
     if (selectedBurnerId && !items.find(i => i.item_type === 'burner')) {
       const burner = burners.find(b => b.id === selectedBurnerId);
-      if (burner) total += burner.price;
+      if (burner) total += getBurnerPrice(burner, pl);
     }
 
     return total;
