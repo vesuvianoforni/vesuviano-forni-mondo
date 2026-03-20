@@ -418,10 +418,12 @@ const ProformaPage = () => {
           total += item.line_total;
         }
       } else if (item.item_type === 'burner') {
-        // Use selected burner price
+        // Use selected burner price or item's saved price
         if (selectedBurnerId) {
           const burner = burners.find(b => b.id === selectedBurnerId);
-          total += (burner?.price || item.unit_price) * item.quantity;
+          total += (burner ? getBurnerPrice(burner, pl) : item.unit_price) * item.quantity;
+        } else {
+          total += item.unit_price * item.quantity;
         }
       } else {
         total += item.line_total;
