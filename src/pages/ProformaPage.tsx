@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { Loader2, FileText, Palette, CreditCard, Check, Truck, Shield, Flame, Pizza, PlayCircle, Image as ImageIcon } from 'lucide-react';
+import { Loader2, FileText, Palette, CreditCard, Check, Truck, Shield, Flame, Pizza, PlayCircle, Image as ImageIcon, Download } from 'lucide-react';
 import ColorRenderGenerator from '@/components/configurator/ColorRenderGenerator';
 import ImageZoomModal from '@/components/ImageZoomModal';
 
@@ -67,6 +67,7 @@ interface OvenModel {
   sizes?: Array<{
     diameter: number;
     pizza_capacity: string;
+    datasheet_url?: string;
     coatings: Array<{
       name: string;
       image_url: string;
@@ -131,6 +132,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     changeSelection: 'Cambia',
     subtotal: 'Subtotale',
     discount: 'Sconto',
+    downloadDatasheet: 'Scarica Scheda Tecnica',
   },
   en: {
     proforma: 'Pro-Forma Invoice',
@@ -165,6 +167,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     changeSelection: 'Change',
     subtotal: 'Subtotal',
     discount: 'Discount',
+    downloadDatasheet: 'Download Technical Datasheet',
   },
   fr: {
     proforma: 'Facture Pro-Forma',
@@ -199,6 +202,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     changeSelection: 'Modifier',
     subtotal: 'Sous-total',
     discount: 'Remise',
+    downloadDatasheet: 'Télécharger la Fiche Technique',
   },
   de: {
     proforma: 'Pro-Forma Rechnung',
@@ -233,6 +237,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     changeSelection: 'Ändern',
     subtotal: 'Zwischensumme',
     discount: 'Rabatt',
+    downloadDatasheet: 'Technisches Datenblatt Herunterladen',
   },
   es: {
     proforma: 'Factura Pro-Forma',
@@ -267,6 +272,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     changeSelection: 'Cambiar',
     subtotal: 'Subtotal',
     discount: 'Descuento',
+    downloadDatasheet: 'Descargar Ficha Técnica',
   },
 };
 
@@ -760,6 +766,19 @@ const ProformaPage = () => {
                       </div>
                       <p className="text-2xl font-bold text-amber-400">{formatPrice(itemPrice)}</p>
                     </div>
+
+                    {/* Datasheet Download */}
+                    {selectedSize?.datasheet_url && (
+                      <a
+                        href={selectedSize.datasheet_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 bg-[#1a1a1a] hover:bg-amber-900/30 border border-amber-900/30 rounded-lg p-3 transition-colors"
+                      >
+                        <Download className="w-4 h-4 text-amber-400" />
+                        <span className="text-sm font-medium text-amber-200">{t.downloadDatasheet}</span>
+                      </a>
+                    )}
                   </CardContent>
                 </Card>
               )}
