@@ -803,7 +803,7 @@ const ProformaPage = () => {
         })}
 
         {/* Burner Selection - only show for Gas/Elettrico fuel types */}
-        {burners.length > 0 && !isPaid && items.some(i => i.item_type === 'oven' && itemConfigs[i.id]?.fuelType && itemConfigs[i.id].fuelType !== 'Legna') && (
+        {burners.length > 0 && !isPaid && items.some(i => i.item_type === 'oven' && itemConfigs[i.id]?.fuelType && itemConfigs[i.id].fuelType !== 'Legna' && itemConfigs[i.id].fuelType !== 'Elettrico') && (
           <div>
             <h3 className="text-lg font-semibold text-amber-100 mb-4">{t.selectBurner}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
