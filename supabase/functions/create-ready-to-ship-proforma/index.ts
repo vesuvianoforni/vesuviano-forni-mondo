@@ -49,6 +49,50 @@ serve(async (req) => {
       )
     }
 
+    // Fetch datasheet URL from configurator_ovens if linked
+    let datasheetUrl: string | null = null
+    if (rtsOven.oven_id) {
+      const { data: configOven } = await supabase
+        .from('configurator_ovens')
+        .select('sizes, model_name')
+        .eq('id', rtsOven.oven_id)
+        .single()
+
+      if (configOven?.sizes) {
+        // Find matching size by diameter
+        const matchingSize = (configOven.sizes as any[]).find(
+          (s: any) => s.diameter === rtsOven.diameter
+        )
+        if (matchingSize?.datasheet_url) {
+          datasheetUrl = matchingSize.datasheet_url
+        }
+      }
+    }
+
+    // If no linked oven, try to find by model name
+    if (!datasheetUrl) {
+      const { data: configOvens } = await supabase
+        .from('configurator_ovens')
+        .select('sizes, model_name')
+        .eq('is_active', true)
+
+      if (configOvens) {
+        for (const oven of configOvens) {
+          if (rtsOven.model_name.toLowerCase().includes(oven.model_name.toLowerCase())) {
+            const matchingSize = (oven.sizes as any[] || []).find(
+              (s: any) => s.diameter === rtsOven.diameter
+            )
+            if (matchingSize?.datasheet_url) {
+              datasheetUrl = matchingSize.datasheet_url
+              break
+            }
+          }
+        }
+      }
+    }
+
+    console.log('Datasheet URL found:', datasheetUrl)
+
     // Use sale_price if available, otherwise list_price
     const ovenPrice = rtsOven.sale_price || rtsOven.list_price || 0
     const customerName = `${firstName} ${lastName}`
@@ -165,6 +209,14 @@ serve(async (req) => {
                 <p style="margin: 5px 0;"><strong>Rivestimento:</strong> ${rtsOven.coating || 'Standard'}</p>
                 <p style="margin: 5px 0;"><strong>Combustibile:</strong> ${rtsOven.fuel_type || 'Legna/Gas'}</p>
               </div>
+
+              ${datasheetUrl ? `
+              <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 20px; margin: 20px 0; text-align: center;">
+                <p style="margin: 0 0 12px 0; font-size: 15px; color: #1e40af; font-weight: 600;">📄 Scheda Tecnica</p>
+                <p style="margin: 0 0 15px 0; font-size: 13px; color: #3b82f6;">Scarica la scheda tecnica completa del tuo forno</p>
+                <a href="${datasheetUrl}" style="display: inline-block; background: #2563eb; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">⬇️ Scarica Scheda Tecnica PDF</a>
+              </div>
+              ` : ''}
 
               <div class="price-box">
                 <p style="margin: 0 0 5px 0; font-size: 14px; opacity: 0.9;">Prezzo forno Pronta Consegna</p>
