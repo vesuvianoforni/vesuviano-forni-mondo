@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Loader2 } from "lucide-react";
+import { Loader2, Shield, Clock, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -16,6 +16,8 @@ interface ReadyToShipContactModalProps {
   productCode: string;
   productDiameter: string;
   productCoating: string;
+  productId?: string;
+  productPrice?: number;
 }
 
 const ReadyToShipContactModal = ({ 
@@ -24,7 +26,9 @@ const ReadyToShipContactModal = ({
   productName,
   productCode, 
   productDiameter, 
-  productCoating 
+  productCoating,
+  productId,
+  productPrice,
 }: ReadyToShipContactModalProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -40,10 +44,7 @@ const ReadyToShipContactModal = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const isFormValid = () => {
@@ -68,31 +69,60 @@ const ReadyToShipContactModal = ({
     setIsSubmitting(true);
 
     try {
-      const fullFormData = {
-        name: `${formData.firstName} ${formData.lastName}`,
-        email: formData.email,
-        phone: formData.phone,
-        country: formData.city,
-        ovenType: `${productName} - ${productCode} (${productDiameter} - ${productCoating})`,
-        message: `Richiesta informazioni per forno pronta consegna: ${productName} (Codice: ${productCode}). Diametro: ${productDiameter}, Rivestimento: ${productCoating}`
-      };
+      if (productId) {
+        // New flow: auto-create proforma via edge function
+        const { data, error } = await supabase.functions.invoke('create-ready-to-ship-proforma', {
+          body: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            phone: formData.phone,
+            city: formData.city,
+            readyToShipOvenId: productId,
+            language: i18n.language || 'it',
+          }
+        });
 
-      const { data, error } = await supabase.functions.invoke('send-consultation-email', {
-        body: fullFormData
-      });
+        if (error) throw error;
 
-      if (error) throw error;
+        const currentLang = i18n.language || 'it';
+        const thankYouRoutes: Record<string, string> = {
+          'it': '/it/thank-you-it',
+          'en': '/en/thank-you-en',
+          'fr': '/fr/thank-you-fr',
+          'es': '/es/thank-you-es',
+          'de': '/de/thank-you-de'
+        };
+        
+        navigate(thankYouRoutes[currentLang] || '/it/thank-you-it');
+      } else {
+        // Fallback: old consultation email flow
+        const fullFormData = {
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          phone: formData.phone,
+          country: formData.city,
+          ovenType: `${productName} - ${productCode} (${productDiameter} - ${productCoating})`,
+          message: `Richiesta informazioni per forno pronta consegna: ${productName} (Codice: ${productCode}). Diametro: ${productDiameter}, Rivestimento: ${productCoating}`
+        };
 
-      const currentLang = i18n.language || 'it';
-      const thankYouRoutes: Record<string, string> = {
-        'it': '/it/thank-you-it',
-        'en': '/en/thank-you-en',
-        'fr': '/fr/thank-you-fr',
-        'es': '/es/thank-you-es',
-        'de': '/de/thank-you-de'
-      };
-      
-      navigate(thankYouRoutes[currentLang] || '/it/thank-you-it');
+        const { error } = await supabase.functions.invoke('send-consultation-email', {
+          body: fullFormData
+        });
+
+        if (error) throw error;
+
+        const currentLang = i18n.language || 'it';
+        const thankYouRoutes: Record<string, string> = {
+          'it': '/it/thank-you-it',
+          'en': '/en/thank-you-en',
+          'fr': '/fr/thank-you-fr',
+          'es': '/es/thank-you-es',
+          'de': '/de/thank-you-de'
+        };
+        
+        navigate(thankYouRoutes[currentLang] || '/it/thank-you-it');
+      }
     } catch (error) {
       console.error("Errore invio richiesta:", error);
       toast({
@@ -117,14 +147,30 @@ const ReadyToShipContactModal = ({
         <div className="bg-vesuviano-50 border border-vesuviano-200 rounded-lg p-4 mb-4">
           <p className="text-sm font-semibold text-vesuviano-900 mb-1">{t('readyToShip.modal.selectedOven')}:</p>
           <p className="text-sm text-vesuviano-800">{productName}</p>
-          <div className="mt-2">
-            <span className="inline-block bg-vesuviano-200 text-vesuviano-900 text-xs font-bold px-2 py-1 rounded">
-              {t('readyToShip.productCode')}: {productCode}
-            </span>
-          </div>
           <p className="text-xs text-vesuviano-700 mt-2">
             {t('readyToShip.diameter')}: {productDiameter} • {t('readyToShip.coating')}: {productCoating}
           </p>
+          {productPrice && productPrice > 0 && (
+            <p className="text-lg font-bold text-vesuviano-700 mt-2">
+              €{productPrice.toLocaleString('it-IT', { minimumFractionDigits: 2 })}
+            </p>
+          )}
+        </div>
+
+        {/* Trust badges */}
+        <div className="grid grid-cols-3 gap-2 mb-4">
+          <div className="flex flex-col items-center text-center p-2 bg-emerald-50 rounded-lg">
+            <Shield className="h-5 w-5 text-emerald-600 mb-1" />
+            <span className="text-[10px] font-medium text-emerald-800">100% Rimborsabile</span>
+          </div>
+          <div className="flex flex-col items-center text-center p-2 bg-amber-50 rounded-lg">
+            <Clock className="h-5 w-5 text-amber-600 mb-1" />
+            <span className="text-[10px] font-medium text-amber-800">Riservato 7 giorni</span>
+          </div>
+          <div className="flex flex-col items-center text-center p-2 bg-blue-50 rounded-lg">
+            <CreditCard className="h-5 w-5 text-blue-600 mb-1" />
+            <span className="text-[10px] font-medium text-blue-800">Deposito 5%</span>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -208,6 +254,11 @@ const ReadyToShipContactModal = ({
               t('readyToShip.modal.submit')
             )}
           </Button>
+
+          <p className="text-xs text-muted-foreground text-center">
+            Riceverai una pro-forma via email con il link per il deposito del 5%.
+            Il deposito è 100% rimborsabile e riserva il forno per 7 giorni.
+          </p>
         </form>
       </DialogContent>
     </Dialog>
