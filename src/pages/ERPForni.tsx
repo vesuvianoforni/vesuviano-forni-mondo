@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner';
 import EditOvenModal from '@/components/admin/EditOvenModal';
 import { AddOvenModal } from '@/components/admin/AddOvenModal';
-import { Plus, Trash2, Edit, Search, Flame, Loader2, ChevronDown, ChevronRight, DollarSign } from 'lucide-react';
+import { Plus, Trash2, Edit, Search, Flame, Loader2, ChevronDown, ChevronRight, DollarSign, FileText } from 'lucide-react';
 
 const PRICE_LISTS = [
   { code: 'A', name: 'Listino A' },
@@ -214,6 +214,11 @@ const ERPForni = () => {
                               Ø {size.diameter}cm — {size.pizza_capacity} pizze
                               {size.can_be_built_on_site && <Badge className="ml-2 bg-blue-700/20 text-blue-300 text-xs">Costruibile sul posto</Badge>}
                               {size.passage_space_cm && <span className="ml-2 text-gray-400 text-xs font-normal">Passaggio: {size.passage_space_cm}cm</span>}
+                              {size.datasheet_url && (
+                                <a href={size.datasheet_url} target="_blank" rel="noopener noreferrer" className="ml-2 inline-flex items-center gap-1 text-blue-400 hover:text-blue-300 text-xs font-normal">
+                                  <FileText className="w-3 h-3" /> Scheda Tecnica
+                                </a>
+                              )}
                             </div>
                             {size.coatings?.length > 0 ? (
                               <div className="overflow-x-auto">
