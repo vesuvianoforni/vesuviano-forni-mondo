@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { proforma_id, token, payment_method } = await req.json();
+    const { proforma_id, token } = await req.json();
 
     if (!proforma_id || !token) {
       return new Response(JSON.stringify({ error: "Missing proforma_id or token" }), {
@@ -70,40 +70,7 @@ serve(async (req) => {
     };
     const stripeCurrency = currencyMap[proforma.currency] || "eur";
 
-    // Map currency to bank transfer type
-    const bankTransferTypeMap: Record<string, { type: string; country_key?: string; country?: string }> = {
-      "eur": { type: "eu_bank_transfer", country_key: "eu_bank_transfer", country: "IT" },
-      "gbp": { type: "gb_bank_transfer" },
-      "usd": { type: "us_bank_transfer" },
-    };
-
-    const isBankTransfer = payment_method === "bank_transfer";
-
-    let stripeCustomerId: string | undefined;
-
-    if (isBankTransfer) {
-      // Bank transfer requires a Stripe customer
-      const customerEmail = proforma.customer_email || undefined;
-      
-      if (customerEmail) {
-        const customers = await stripe.customers.list({ email: customerEmail, limit: 1 });
-        if (customers.data.length > 0) {
-          stripeCustomerId = customers.data[0].id;
-        }
-      }
-
-      if (!stripeCustomerId) {
-        const newCustomer = await stripe.customers.create({
-          name: `${customerName}${companyName}`,
-          email: customerEmail,
-          phone: proforma.customer_phone || undefined,
-        });
-        stripeCustomerId = newCustomer.id;
-      }
-    }
-
-    // Build session params
-    const sessionParams: any = {
+    const session = await stripe.checkout.sessions.create({
       line_items: [
         {
           price_data: {
@@ -118,38 +85,15 @@ serve(async (req) => {
         },
       ],
       mode: "payment",
+      payment_method_types: ["card"],
+      customer_email: proforma.customer_email || undefined,
       success_url: `${req.headers.get("origin")}/proforma/${token}?payment=success`,
       cancel_url: `${req.headers.get("origin")}/proforma/${token}?payment=cancelled`,
       metadata: {
         proforma_id: proforma.id,
         token: proforma.token,
       },
-    };
-
-    if (isBankTransfer) {
-      sessionParams.customer = stripeCustomerId;
-      sessionParams.payment_method_types = ["customer_balance"];
-      
-      const btConfig = bankTransferTypeMap[stripeCurrency];
-      if (btConfig) {
-        const bankTransferObj: any = { type: btConfig.type };
-        if (btConfig.country_key && btConfig.country) {
-          bankTransferObj[btConfig.country_key] = { country: btConfig.country };
-        }
-        sessionParams.payment_method_options = {
-          customer_balance: {
-            funding_type: "bank_transfer",
-            bank_transfer: bankTransferObj,
-          },
-        };
-      }
-    } else {
-      // Card payment
-      sessionParams.payment_method_types = ["card"];
-      sessionParams.customer_email = proforma.customer_email || undefined;
-    }
-
-    const session = await stripe.checkout.sessions.create(sessionParams);
+    });
 
     // Save stripe session id
     await supabase
