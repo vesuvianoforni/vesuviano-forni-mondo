@@ -462,12 +462,14 @@ const ProformaPage = () => {
           total += item.line_total;
         }
       } else if (item.item_type === 'burner') {
-        // Use selected burner price or item's saved price
-        if (selectedBurnerId) {
-          const burner = burners.find(b => b.id === selectedBurnerId);
-          total += (burner ? getBurnerPrice(burner, pl) : item.unit_price) * item.quantity;
-        } else {
-          total += item.unit_price * item.quantity;
+        // Only include burner cost if burners are applicable (not for Legna/Elettrico)
+        if (shouldShowBurners) {
+          if (selectedBurnerId) {
+            const burner = burners.find(b => b.id === selectedBurnerId);
+            total += (burner ? getBurnerPrice(burner, pl) : item.unit_price) * item.quantity;
+          } else {
+            total += item.unit_price * item.quantity;
+          }
         }
       } else {
         total += item.line_total;
@@ -475,7 +477,7 @@ const ProformaPage = () => {
     });
 
     // If customer selected a burner but there wasn't one in the original items
-    if (selectedBurnerId && !items.find(i => i.item_type === 'burner')) {
+    if (shouldShowBurners && selectedBurnerId && !items.find(i => i.item_type === 'burner')) {
       const burner = burners.find(b => b.id === selectedBurnerId);
       if (burner) total += getBurnerPrice(burner, pl);
     }
@@ -916,7 +918,7 @@ const ProformaPage = () => {
                   </div>
                 );
               })}
-              {selectedBurnerId && (() => {
+              {shouldShowBurners && selectedBurnerId && (() => {
                 const burner = burners.find(b => b.id === selectedBurnerId);
                 return burner ? (
                   <div className="flex justify-between text-sm">
