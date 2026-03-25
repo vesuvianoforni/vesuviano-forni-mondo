@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { Loader2, FileText, Palette, CreditCard, Check, Truck, Shield, Flame, Pizza, PlayCircle, Image as ImageIcon } from 'lucide-react';
+import { Loader2, FileText, Palette, CreditCard, Check, Truck, Shield, Flame, Pizza, PlayCircle, Image as ImageIcon, Download } from 'lucide-react';
 import ColorRenderGenerator from '@/components/configurator/ColorRenderGenerator';
 import ImageZoomModal from '@/components/ImageZoomModal';
 
@@ -67,6 +67,7 @@ interface OvenModel {
   sizes?: Array<{
     diameter: number;
     pizza_capacity: string;
+    datasheet_url?: string;
     coatings: Array<{
       name: string;
       image_url: string;
