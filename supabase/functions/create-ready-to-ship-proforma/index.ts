@@ -114,6 +114,7 @@ serve(async (req) => {
         language,
         currency: 'EUR',
         price_list: 'A',
+        bank_account: language === 'en' ? 'wise_uk' : 'intesa',
         status: 'sent',
         valid_until: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       })

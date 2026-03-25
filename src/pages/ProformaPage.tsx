@@ -50,6 +50,7 @@ interface ProformaData {
   price_list: string;
   valid_until: string | null;
   created_at: string;
+  bank_account?: string;
 }
 
 interface OvenModel {
@@ -1150,7 +1151,7 @@ const ProformaPage = () => {
                   <div className="bg-gray-800/80 border border-amber-600/30 rounded-lg p-4 sm:p-5 space-y-3 text-sm animate-in fade-in slide-in-from-top-2 duration-200">
                     <h4 className="text-amber-400 font-semibold text-base">{t.bankDetailsTitle}</h4>
                     <div className="space-y-2 text-gray-300">
-                      {lang === 'en' ? (
+                      {(proforma?.bank_account === 'wise_uk' || (!proforma?.bank_account && lang === 'en')) ? (
                         <>
                           {/* UK Wise Account for English proformas */}
                           <div className="flex justify-between">
