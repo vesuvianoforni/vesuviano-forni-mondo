@@ -910,6 +910,8 @@ export type Database = {
         Row: {
           coating: string | null
           created_at: string
+          delivery_description: string | null
+          delivery_price: number | null
           description: string | null
           diameter: number
           fuel_type: string | null
@@ -926,6 +928,8 @@ export type Database = {
         Insert: {
           coating?: string | null
           created_at?: string
+          delivery_description?: string | null
+          delivery_price?: number | null
           description?: string | null
           diameter: number
           fuel_type?: string | null
@@ -942,6 +946,8 @@ export type Database = {
         Update: {
           coating?: string | null
           created_at?: string
+          delivery_description?: string | null
+          delivery_price?: number | null
           description?: string | null
           diameter?: number
           fuel_type?: string | null

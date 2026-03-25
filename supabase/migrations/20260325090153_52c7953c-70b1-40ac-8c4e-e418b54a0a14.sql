@@ -1,0 +1,1 @@
+ALTER TABLE public.ready_to_ship_ovens ADD COLUMN delivery_price numeric DEFAULT 0, ADD COLUMN delivery_description text DEFAULT NULL;

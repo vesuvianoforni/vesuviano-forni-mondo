@@ -207,6 +207,8 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
     list_price: 0,
     sale_price: null as number | null,
     images: [] as string[],
+    delivery_price: 0,
+    delivery_description: '',
   });
   const [uploading, setUploading] = useState(false);
 
@@ -224,9 +226,11 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
         list_price: item.list_price,
         sale_price: item.sale_price,
         images: item.images || [],
+        delivery_price: (item as any).delivery_price || 0,
+        delivery_description: (item as any).delivery_description || '',
       });
     } else {
-      setForm({ model_name: '', oven_id: '', diameter: 0, coating: '', fuel_type: '', description: '', list_price: 0, sale_price: null, images: [] });
+      setForm({ model_name: '', oven_id: '', diameter: 0, coating: '', fuel_type: '', description: '', list_price: 0, sale_price: null, images: [], delivery_price: 0, delivery_description: '' });
     }
   }, [item, open]);
 
@@ -314,6 +318,8 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
       list_price: form.list_price,
       sale_price: form.sale_price,
       images: form.images,
+      delivery_price: form.delivery_price || 0,
+      delivery_description: form.delivery_description || null,
     };
 
     try {
@@ -408,6 +414,27 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
                 type="number"
                 value={form.sale_price ?? ''}
                 onChange={e => setForm(prev => ({ ...prev, sale_price: e.target.value ? parseFloat(e.target.value) : null }))}
+              />
+            </div>
+          </div>
+
+          {/* Delivery */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Prezzo Consegna (€)</Label>
+              <Input
+                type="number"
+                value={form.delivery_price || ''}
+                onChange={e => setForm(prev => ({ ...prev, delivery_price: parseFloat(e.target.value) || 0 }))}
+                placeholder="0"
+              />
+            </div>
+            <div>
+              <Label>Descrizione Consegna</Label>
+              <Input
+                value={form.delivery_description}
+                onChange={e => setForm(prev => ({ ...prev, delivery_description: e.target.value }))}
+                placeholder="es. Consegna in tutta Italia"
               />
             </div>
           </div>
