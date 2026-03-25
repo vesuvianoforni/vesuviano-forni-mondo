@@ -217,6 +217,8 @@ serve(async (req) => {
                 <a href="${datasheetUrl}" style="display: inline-block; background: #2563eb; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">⬇️ Scarica Scheda Tecnica PDF</a>
               </div>
               ` : ''}
+
+              <div class="price-box">
                 <p style="margin: 0 0 5px 0; font-size: 14px; opacity: 0.9;">Prezzo forno Pronta Consegna</p>
                 <div class="price-amount">€${priceFormatted}</div>
                 ${rtsOven.sale_price && rtsOven.list_price > rtsOven.sale_price ? `<p style="margin: 8px 0 0 0; font-size: 14px; text-decoration: line-through; opacity: 0.7;">€${rtsOven.list_price.toLocaleString('it-IT', { minimumFractionDigits: 2 })}</p>` : ''}
