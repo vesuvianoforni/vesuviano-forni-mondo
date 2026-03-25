@@ -36,6 +36,7 @@ interface SizeOption {
   passage_space_cm: number | null;
   can_be_built_on_site: boolean;
   datasheet_url?: string;
+  datasheet_urls?: { it?: string; en?: string; fr?: string; de?: string; es?: string };
 }
 
 const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) => {
@@ -57,7 +58,8 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     coatings: [],
     passage_space_cm: null,
     can_be_built_on_site: true,
-    datasheet_url: ''
+    datasheet_url: '',
+    datasheet_urls: {}
   });
 
   const [newCoating, setNewCoating] = useState<Coating>({
@@ -139,7 +141,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
       return;
     }
     setFormData(prev => ({ ...prev, sizes: [...prev.sizes, { ...newSize }] }));
-    setNewSize({ diameter: 0, pizza_capacity: "", coatings: [], passage_space_cm: null, can_be_built_on_site: true, datasheet_url: '' });
+    setNewSize({ diameter: 0, pizza_capacity: "", coatings: [], passage_space_cm: null, can_be_built_on_site: true, datasheet_url: '', datasheet_urls: {} });
     toast.success("Dimensione aggiunta");
   };
 
