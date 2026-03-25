@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Plus, Trash2, Edit, Video, Upload } from 'lucide-react';
+import { Plus, Trash2, Edit, Video, Upload, FileText } from 'lucide-react';
 
 interface EditOvenModalProps {
   oven: any;
@@ -35,6 +35,7 @@ interface SizeOption {
   coatings: Coating[];
   passage_space_cm: number | null;
   can_be_built_on_site: boolean;
+  datasheet_url?: string;
 }
 
 const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) => {
@@ -55,7 +56,8 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     pizza_capacity: "",
     coatings: [],
     passage_space_cm: null,
-    can_be_built_on_site: true
+    can_be_built_on_site: true,
+    datasheet_url: ''
   });
 
   const [newCoating, setNewCoating] = useState<Coating>({
@@ -137,7 +139,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
       return;
     }
     setFormData(prev => ({ ...prev, sizes: [...prev.sizes, { ...newSize }] }));
-    setNewSize({ diameter: 0, pizza_capacity: "", coatings: [], passage_space_cm: null, can_be_built_on_site: true });
+    setNewSize({ diameter: 0, pizza_capacity: "", coatings: [], passage_space_cm: null, can_be_built_on_site: true, datasheet_url: '' });
     toast.success("Dimensione aggiunta");
   };
 
