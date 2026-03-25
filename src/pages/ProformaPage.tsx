@@ -766,6 +766,19 @@ const ProformaPage = () => {
                       </div>
                       <p className="text-2xl font-bold text-amber-400">{formatPrice(itemPrice)}</p>
                     </div>
+
+                    {/* Datasheet Download */}
+                    {selectedSize?.datasheet_url && (
+                      <a
+                        href={selectedSize.datasheet_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 bg-[#1a1a1a] hover:bg-amber-900/30 border border-amber-900/30 rounded-lg p-3 transition-colors"
+                      >
+                        <Download className="w-4 h-4 text-amber-400" />
+                        <span className="text-sm font-medium text-amber-200">{t.downloadDatasheet}</span>
+                      </a>
+                    )}
                   </CardContent>
                 </Card>
               )}
