@@ -140,6 +140,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     termsCourier: 'Generalmente, il corriere vi contatterà 1/2 giorni prima della consegna.',
     termsDelay: 'La data di consegna prevista indicata può variare di 5/7 giorni a causa di ritardi doganali nell\'analisi merce o a causa di ritardi nel trasporto.',
     termsRefund: 'Qualora l\'acquirente avesse intenzione di ritirare l\'ordine prima della partenza del forno, avrà diritto al 90% della quota di deposito versata.',
+    paymentMethodTitle: 'Modalità di Pagamento',
+    paymentMethodDeposit: 'Il deposito si paga con carta di credito/debito tramite Stripe.',
+    paymentMethodBalance: 'Il saldo restante si paga tramite bonifico bancario o app WIRE.',
   },
   en: {
     proforma: 'Pro-Forma Invoice',
@@ -182,6 +185,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     termsCourier: 'Generally, the carrier will contact you 1-2 days before delivery.',
     termsDelay: 'The indicated expected delivery date may vary by 5-7 days due to customs delays in goods analysis or transport delays.',
     termsRefund: 'Should the buyer wish to withdraw the order before the oven is shipped, they will be entitled to 90% of the deposit paid.',
+    paymentMethodTitle: 'Payment Methods',
+    paymentMethodDeposit: 'The deposit is paid by credit/debit card via Stripe.',
+    paymentMethodBalance: 'The remaining balance is paid via bank transfer or WIRE app.',
   },
   fr: {
     proforma: 'Facture Pro-Forma',
@@ -224,6 +230,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     termsCourier: 'Généralement, le transporteur vous contactera 1 à 2 jours avant la livraison.',
     termsDelay: 'La date de livraison prévue indiquée peut varier de 5 à 7 jours en raison de retards douaniers dans l\'analyse des marchandises ou de retards de transport.',
     termsRefund: 'Si l\'acheteur souhaite annuler la commande avant l\'expédition du four, il aura droit à 90% du dépôt versé.',
+    paymentMethodTitle: 'Modes de Paiement',
+    paymentMethodDeposit: 'L\'acompte est payé par carte de crédit/débit via Stripe.',
+    paymentMethodBalance: 'Le solde restant est payé par virement bancaire ou application WIRE.',
   },
   de: {
     proforma: 'Pro-Forma Rechnung',
@@ -266,6 +275,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     termsCourier: 'In der Regel wird der Spediteur Sie 1-2 Tage vor der Lieferung kontaktieren.',
     termsDelay: 'Das angegebene voraussichtliche Lieferdatum kann aufgrund von Zollverzögerungen bei der Warenprüfung oder Transportverzögerungen um 5-7 Tage abweichen.',
     termsRefund: 'Sollte der Käufer die Bestellung vor dem Versand des Ofens stornieren wollen, hat er Anspruch auf 90% der geleisteten Anzahlung.',
+    paymentMethodTitle: 'Zahlungsmethoden',
+    paymentMethodDeposit: 'Die Anzahlung wird per Kredit-/Debitkarte über Stripe bezahlt.',
+    paymentMethodBalance: 'Der Restbetrag wird per Banküberweisung oder WIRE-App bezahlt.',
   },
   es: {
     proforma: 'Factura Pro-Forma',
@@ -308,6 +320,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     termsCourier: 'Generalmente, el transportista le contactará 1-2 días antes de la entrega.',
     termsDelay: 'La fecha de entrega prevista indicada puede variar en 5-7 días debido a retrasos aduaneros en el análisis de mercancías o retrasos en el transporte.',
     termsRefund: 'Si el comprador desea retirar el pedido antes del envío del horno, tendrá derecho al 90% del depósito abonado.',
+    paymentMethodTitle: 'Métodos de Pago',
+    paymentMethodDeposit: 'El depósito se paga con tarjeta de crédito/débito a través de Stripe.',
+    paymentMethodBalance: 'El saldo restante se paga mediante transferencia bancaria o aplicación WIRE.',
   },
 };
 
@@ -995,6 +1010,17 @@ const ProformaPage = () => {
                 <p className="text-xs sm:text-sm text-gray-400">{proforma.notes}</p>
               </div>
             )}
+
+            {/* Payment Methods */}
+            <div className="bg-[#1a1a1a] rounded-lg p-3 sm:p-4 space-y-2">
+              <h4 className="font-semibold text-amber-200 text-xs sm:text-sm flex items-center gap-2">
+                <CreditCard className="w-4 h-4" /> {t.paymentMethodTitle}
+              </h4>
+              <ul className="space-y-1.5 text-[10px] sm:text-xs text-gray-400 list-disc list-inside">
+                <li>{t.paymentMethodDeposit}</li>
+                <li>{t.paymentMethodBalance}</li>
+              </ul>
+            </div>
 
             {/* Terms and Conditions */}
             <div className="bg-[#1a1a1a] rounded-lg p-3 sm:p-4 space-y-3">
