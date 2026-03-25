@@ -49,6 +49,50 @@ serve(async (req) => {
       )
     }
 
+    // Fetch datasheet URL from configurator_ovens if linked
+    let datasheetUrl: string | null = null
+    if (rtsOven.oven_id) {
+      const { data: configOven } = await supabase
+        .from('configurator_ovens')
+        .select('sizes, model_name')
+        .eq('id', rtsOven.oven_id)
+        .single()
+
+      if (configOven?.sizes) {
+        // Find matching size by diameter
+        const matchingSize = (configOven.sizes as any[]).find(
+          (s: any) => s.diameter === rtsOven.diameter
+        )
+        if (matchingSize?.datasheet_url) {
+          datasheetUrl = matchingSize.datasheet_url
+        }
+      }
+    }
+
+    // If no linked oven, try to find by model name
+    if (!datasheetUrl) {
+      const { data: configOvens } = await supabase
+        .from('configurator_ovens')
+        .select('sizes, model_name')
+        .eq('is_active', true)
+
+      if (configOvens) {
+        for (const oven of configOvens) {
+          if (rtsOven.model_name.toLowerCase().includes(oven.model_name.toLowerCase())) {
+            const matchingSize = (oven.sizes as any[] || []).find(
+              (s: any) => s.diameter === rtsOven.diameter
+            )
+            if (matchingSize?.datasheet_url) {
+              datasheetUrl = matchingSize.datasheet_url
+              break
+            }
+          }
+        }
+      }
+    }
+
+    console.log('Datasheet URL found:', datasheetUrl)
+
     // Use sale_price if available, otherwise list_price
     const ovenPrice = rtsOven.sale_price || rtsOven.list_price || 0
     const customerName = `${firstName} ${lastName}`
