@@ -1,0 +1,6 @@
+INSERT INTO public.ready_to_ship_ovens (model_name, diameter, coating, fuel_type, list_price, images, is_sold, description) VALUES 
+('Forno Pronta Consegna Mosaico Argentato', 120, 'Mosaico Argentato/Grigio', 'Legna/Gas', 0, ARRAY['/lovable-uploads/forno-pronta-consegna-1.png'], false, 'Forno professionale pronta consegna'),
+('Forno Pronta Consegna Mosaico Azzurro/Nero', 130, 'Mosaico Azzurro/Nero', 'Legna/Gas', 0, ARRAY['/lovable-uploads/forno-pronta-consegna-2.png'], true, 'Forno professionale pronta consegna'),
+('Forno Pronta Consegna Mosaico Azzurro', 120, 'Mosaico Azzurro', 'Legna/Gas', 0, ARRAY['/lovable-uploads/forno-pronta-consegna-3.png'], true, 'Forno professionale pronta consegna'),
+('Forno Pronta Consegna Mosaico Azzurro/Oro', 100, 'Mosaico Azzurro/Oro', 'Legna/Gas', 0, ARRAY['/lovable-uploads/forno-pronta-consegna-4.png'], false, 'Forno professionale pronta consegna'),
+('Forno Pronta Consegna Mosaico Bianco', 120, 'Mosaico Bianco', 'Legna/Gas', 0, ARRAY['/lovable-uploads/forno-pronta-consegna-5.png'], true, 'Forno professionale pronta consegna');
