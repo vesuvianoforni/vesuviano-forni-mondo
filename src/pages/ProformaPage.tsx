@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { Loader2, FileText, Palette, CreditCard, Check, Truck, Shield, Flame, Pizza, PlayCircle, Image as ImageIcon, Download, Landmark } from 'lucide-react';
+import { Loader2, FileText, Palette, CreditCard, Check, Truck, Shield, Flame, Pizza, PlayCircle, Image as ImageIcon, Download, Landmark, Copy } from 'lucide-react';
 import ColorRenderGenerator from '@/components/configurator/ColorRenderGenerator';
 import ImageZoomModal from '@/components/ImageZoomModal';
 
@@ -131,7 +131,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     burner: 'Bruciatore',
     confirmConfig: 'Conferma Configurazione e Paga',
     payByCard: 'Paga con Carta',
+    cardFeeNote: '+3,5% costo transazione carta',
     payByBankTransfer: 'Paga con Bonifico Bancario',
+    bankTransferNoFee: 'Nessun costo aggiuntivo',
     orPayWith: 'oppure',
     bankDetailsTitle: 'Coordinate Bancarie per Bonifico',
     bankDetailsHolder: 'Intestatario',
@@ -140,6 +142,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     bankDetailsBIC: 'BIC/SWIFT',
     bankDetailsCausale: 'Causale',
     bankDetailsCausaleValue: 'Inserire il numero di proforma come causale del bonifico.',
+    bankDetailsWiseTip: 'Per bonifici internazionali consigliamo di utilizzare Wise (wise.com) per commissioni ridotte e tempi rapidi.',
+    copied: 'Copiato!',
     preSelected: 'Pre-selezionato',
     changeSelection: 'Cambia',
     subtotal: 'Subtotale',
@@ -186,7 +190,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     burner: 'Burner',
     confirmConfig: 'Confirm Configuration & Pay',
     payByCard: 'Pay by Card',
+    cardFeeNote: '+3.5% card transaction fee',
     payByBankTransfer: 'Pay by Bank Transfer',
+    bankTransferNoFee: 'No additional fees',
     orPayWith: 'or',
     bankDetailsTitle: 'Bank Transfer Details',
     bankDetailsHolder: 'Account Holder',
@@ -195,6 +201,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     bankDetailsBIC: 'BIC/SWIFT',
     bankDetailsCausale: 'Reference',
     bankDetailsCausaleValue: 'Please use the proforma number as the payment reference.',
+    bankDetailsWiseTip: 'For international transfers we recommend using Wise (wise.com) for lower fees and faster processing.',
+    copied: 'Copied!',
     preSelected: 'Pre-selected',
     changeSelection: 'Change',
     subtotal: 'Subtotal',
@@ -241,7 +249,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     burner: 'Brûleur',
     confirmConfig: 'Confirmer et Payer',
     payByCard: 'Payer par Carte',
+    cardFeeNote: '+3,5% frais de transaction carte',
     payByBankTransfer: 'Payer par Virement Bancaire',
+    bankTransferNoFee: 'Aucun frais supplémentaire',
     orPayWith: 'ou',
     bankDetailsTitle: 'Coordonnées Bancaires pour Virement',
     bankDetailsHolder: 'Titulaire',
@@ -250,6 +260,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     bankDetailsBIC: 'BIC/SWIFT',
     bankDetailsCausale: 'Référence',
     bankDetailsCausaleValue: 'Veuillez indiquer le numéro de proforma comme référence du virement.',
+    bankDetailsWiseTip: 'Pour les virements internationaux, nous recommandons Wise (wise.com) pour des frais réduits et un traitement rapide.',
+    copied: 'Copié !',
     preSelected: 'Pré-sélectionné',
     changeSelection: 'Modifier',
     subtotal: 'Sous-total',
@@ -296,7 +308,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     burner: 'Brenner',
     confirmConfig: 'Bestätigen & Bezahlen',
     payByCard: 'Mit Karte bezahlen',
+    cardFeeNote: '+3,5% Kartentransaktionsgebühr',
     payByBankTransfer: 'Per Banküberweisung bezahlen',
+    bankTransferNoFee: 'Keine zusätzlichen Gebühren',
     orPayWith: 'oder',
     bankDetailsTitle: 'Bankverbindung für Überweisung',
     bankDetailsHolder: 'Kontoinhaber',
@@ -305,6 +319,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     bankDetailsBIC: 'BIC/SWIFT',
     bankDetailsCausale: 'Verwendungszweck',
     bankDetailsCausaleValue: 'Bitte geben Sie die Proforma-Nummer als Verwendungszweck an.',
+    bankDetailsWiseTip: 'Für internationale Überweisungen empfehlen wir Wise (wise.com) für niedrigere Gebühren und schnellere Abwicklung.',
+    copied: 'Kopiert!',
     preSelected: 'Vorausgewählt',
     changeSelection: 'Ändern',
     subtotal: 'Zwischensumme',
@@ -351,7 +367,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     burner: 'Quemador',
     confirmConfig: 'Confirmar y Pagar',
     payByCard: 'Pagar con Tarjeta',
+    cardFeeNote: '+3,5% coste de transacción con tarjeta',
     payByBankTransfer: 'Pagar por Transferencia Bancaria',
+    bankTransferNoFee: 'Sin costes adicionales',
     orPayWith: 'o',
     bankDetailsTitle: 'Datos Bancarios para Transferencia',
     bankDetailsHolder: 'Titular',
@@ -360,6 +378,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     bankDetailsBIC: 'BIC/SWIFT',
     bankDetailsCausale: 'Concepto',
     bankDetailsCausaleValue: 'Indique el número de proforma como concepto de la transferencia.',
+    bankDetailsWiseTip: 'Para transferencias internacionales recomendamos usar Wise (wise.com) para comisiones reducidas y rapidez.',
+    copied: '¡Copiado!',
     preSelected: 'Pre-seleccionado',
     changeSelection: 'Cambiar',
     subtotal: 'Subtotal',
@@ -1085,37 +1105,19 @@ const ProformaPage = () => {
             </div>
 
             {!isPaid && (
-              <div className="space-y-3">
-                <Button
-                  onClick={() => handlePayDeposit()}
-                  disabled={paying}
-                  className="w-full bg-amber-600 hover:bg-amber-700 text-white text-base sm:text-lg py-5 sm:py-6"
-                >
-                  {paying ? (
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  ) : (
-                    <CreditCard className="w-5 h-5 mr-2" />
-                  )}
-                  {t.payByCard} — {formatPrice(currentDeposit)}
-                </Button>
-
-                <div className="flex items-center gap-3">
-                  <Separator className="flex-1 bg-gray-700" />
-                  <span className="text-xs text-gray-500 uppercase">{t.orPayWith}</span>
-                  <Separator className="flex-1 bg-gray-700" />
-                </div>
-
+              <div className="space-y-4">
+                {/* Bank Transfer - Recommended */}
                 <Button
                   onClick={() => setShowBankDetails(!showBankDetails)}
-                  variant="outline"
-                  className="w-full border-amber-600/50 text-amber-200 hover:bg-amber-900/30 text-base sm:text-lg py-5 sm:py-6"
+                  className="w-full bg-amber-600 hover:bg-amber-700 text-white text-base sm:text-lg py-5 sm:py-6"
                 >
                   <Landmark className="w-5 h-5 mr-2" />
                   {t.payByBankTransfer} — {formatPrice(currentDeposit)}
                 </Button>
+                <p className="text-center text-green-400 text-xs -mt-2">✓ {t.bankTransferNoFee}</p>
 
                 {showBankDetails && (
-                  <div className="bg-gray-800/80 border border-amber-600/30 rounded-lg p-4 sm:p-5 space-y-3 text-sm">
+                  <div className="bg-gray-800/80 border border-amber-600/30 rounded-lg p-4 sm:p-5 space-y-3 text-sm animate-in fade-in slide-in-from-top-2 duration-200">
                     <h4 className="text-amber-400 font-semibold text-base">{t.bankDetailsTitle}</h4>
                     <div className="space-y-2 text-gray-300">
                       <div className="flex justify-between">
@@ -1126,9 +1128,20 @@ const ProformaPage = () => {
                         <span className="text-gray-500">{t.bankDetailsBank}:</span>
                         <span className="font-medium">Intesa San Paolo</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between items-center">
                         <span className="text-gray-500">{t.bankDetailsIBAN}:</span>
-                        <span className="font-mono font-medium text-right text-xs sm:text-sm">IT12P0306976451100000003224</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-medium text-right text-xs sm:text-sm">IT12P0306976451100000003224</span>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText('IT12P0306976451100000003224');
+                              toast.success(t.copied);
+                            }}
+                            className="text-amber-400 hover:text-amber-300 p-1"
+                          >
+                            <Copy className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-500">{t.bankDetailsBIC}:</span>
@@ -1145,9 +1158,38 @@ const ProformaPage = () => {
                       <div className="mt-2 text-amber-400 font-semibold text-base">
                         {t.total}: {formatPrice(currentDeposit)}
                       </div>
+                      <Separator className="bg-gray-700" />
+                      <div className="bg-blue-900/30 border border-blue-500/20 rounded-md p-3 flex items-start gap-2">
+                        <span className="text-blue-400 text-lg mt-0.5">💡</span>
+                        <p className="text-blue-300 text-xs leading-relaxed">
+                          {t.bankDetailsWiseTip}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 )}
+
+                <div className="flex items-center gap-3">
+                  <Separator className="flex-1 bg-gray-700" />
+                  <span className="text-xs text-gray-500 uppercase">{t.orPayWith}</span>
+                  <Separator className="flex-1 bg-gray-700" />
+                </div>
+
+                {/* Card Payment */}
+                <Button
+                  onClick={() => handlePayDeposit()}
+                  disabled={paying}
+                  variant="outline"
+                  className="w-full border-gray-600 text-gray-300 hover:bg-gray-800 text-base sm:text-lg py-5 sm:py-6"
+                >
+                  {paying ? (
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  ) : (
+                    <CreditCard className="w-5 h-5 mr-2" />
+                  )}
+                  {t.payByCard} — {formatPrice(Math.round(currentDeposit * 1.035 * 100) / 100)}
+                </Button>
+                <p className="text-center text-gray-500 text-xs -mt-2">{t.cardFeeNote}</p>
               </div>
             )}
           </CardContent>
