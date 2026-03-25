@@ -63,8 +63,8 @@ serve(async (req) => {
         const matchingSize = (configOven.sizes as any[]).find(
           (s: any) => s.diameter === rtsOven.diameter
         )
-        if (matchingSize?.datasheet_url) {
-          datasheetUrl = matchingSize.datasheet_url
+        if (matchingSize?.datasheet_urls || matchingSize?.datasheet_url) {
+          datasheetUrl = matchingSize.datasheet_urls || { it: matchingSize.datasheet_url }
         }
       }
     }
@@ -82,8 +82,8 @@ serve(async (req) => {
             const matchingSize = (oven.sizes as any[] || []).find(
               (s: any) => s.diameter === rtsOven.diameter
             )
-            if (matchingSize?.datasheet_url) {
-              datasheetUrl = matchingSize.datasheet_url
+            if (matchingSize?.datasheet_urls || matchingSize?.datasheet_url) {
+              datasheetUrl = matchingSize.datasheet_urls || { it: matchingSize.datasheet_url }
               break
             }
           }

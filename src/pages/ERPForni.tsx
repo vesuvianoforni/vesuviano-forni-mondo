@@ -214,10 +214,19 @@ const ERPForni = () => {
                               Ø {size.diameter}cm — {size.pizza_capacity} pizze
                               {size.can_be_built_on_site && <Badge className="ml-2 bg-blue-700/20 text-blue-300 text-xs">Costruibile sul posto</Badge>}
                               {size.passage_space_cm && <span className="ml-2 text-gray-400 text-xs font-normal">Passaggio: {size.passage_space_cm}cm</span>}
-                              {size.datasheet_url && (
-                                <a href={size.datasheet_url} target="_blank" rel="noopener noreferrer" className="ml-2 inline-flex items-center gap-1 text-blue-400 hover:text-blue-300 text-xs font-normal">
-                                  <FileText className="w-3 h-3" /> Scheda Tecnica
-                                </a>
+                              {(size.datasheet_url || size.datasheet_urls) && (
+                                <span className="ml-2 inline-flex items-center gap-1 text-blue-400 text-xs font-normal">
+                                  <FileText className="w-3 h-3" /> 
+                                  {(() => {
+                                    const urls = size.datasheet_urls || {};
+                                    const langs = ['it', 'en', 'fr', 'de', 'es'].filter(l => urls[l] || (l === 'it' && size.datasheet_url));
+                                    return langs.map(l => (
+                                      <a key={l} href={urls[l] || size.datasheet_url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 uppercase underline">
+                                        {l}
+                                      </a>
+                                    ));
+                                  })()}
+                                </span>
                               )}
                             </div>
                             {size.coatings?.length > 0 ? (
