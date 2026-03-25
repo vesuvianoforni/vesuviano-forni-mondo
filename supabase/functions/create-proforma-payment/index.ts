@@ -53,7 +53,8 @@ serve(async (req) => {
       apiVersion: "2025-08-27.basil",
     });
 
-    const depositAmountCents = Math.round(proforma.deposit_amount * 100);
+    const depositWithFee = proforma.deposit_amount * 1.035;
+    const depositAmountCents = Math.round(depositWithFee * 100);
     const depositLabel = proforma.payment_option === "deposit_5"
       ? "Deposito 5% - Blocca Offerta"
       : "Acconto 50% - Spedizione Rapida";
