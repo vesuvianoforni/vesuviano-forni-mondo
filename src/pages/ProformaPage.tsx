@@ -132,6 +132,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     changeSelection: 'Cambia',
     subtotal: 'Subtotale',
     discount: 'Sconto',
+    downloadDatasheet: 'Scarica Scheda Tecnica',
   },
   en: {
     proforma: 'Pro-Forma Invoice',
@@ -166,6 +167,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     changeSelection: 'Change',
     subtotal: 'Subtotal',
     discount: 'Discount',
+    downloadDatasheet: 'Download Technical Datasheet',
   },
   fr: {
     proforma: 'Facture Pro-Forma',
@@ -200,6 +202,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     changeSelection: 'Modifier',
     subtotal: 'Sous-total',
     discount: 'Remise',
+    downloadDatasheet: 'Télécharger la Fiche Technique',
   },
   de: {
     proforma: 'Pro-Forma Rechnung',
@@ -234,6 +237,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     changeSelection: 'Ändern',
     subtotal: 'Zwischensumme',
     discount: 'Rabatt',
+    downloadDatasheet: 'Technisches Datenblatt Herunterladen',
   },
   es: {
     proforma: 'Factura Pro-Forma',
@@ -268,6 +272,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     changeSelection: 'Cambiar',
     subtotal: 'Subtotal',
     discount: 'Descuento',
+    downloadDatasheet: 'Descargar Ficha Técnica',
   },
 };
 
