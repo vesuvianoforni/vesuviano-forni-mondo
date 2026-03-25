@@ -515,7 +515,7 @@ const ProformaPage = () => {
     return total;
   };
 
-  const handlePayDeposit = async () => {
+  const handlePayDeposit = async (paymentMethod: 'card' | 'bank_transfer' = 'card') => {
     if (!proforma) return;
 
     // Save customer's configuration first
