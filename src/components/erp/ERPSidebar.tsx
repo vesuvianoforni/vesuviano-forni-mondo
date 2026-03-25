@@ -11,6 +11,7 @@ import {
   Truck,
   ShieldCheck,
   DollarSign,
+  PackageCheck,
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -38,6 +39,7 @@ const mainItems = [
 const catalogItems = [
   { title: 'Forni', url: '/erp/forni', icon: Flame },
   { title: 'Bruciatori', url: '/erp/bruciatori', icon: Package },
+  { title: 'Pronta Consegna', url: '/erp/pronta-consegna', icon: PackageCheck },
   { title: 'Listini', url: '/erp/listini', icon: DollarSign },
 ];
 
