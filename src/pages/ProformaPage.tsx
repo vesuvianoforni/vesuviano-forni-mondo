@@ -1011,6 +1011,17 @@ const ProformaPage = () => {
               </div>
             )}
 
+            {/* Payment Methods */}
+            <div className="bg-[#1a1a1a] rounded-lg p-3 sm:p-4 space-y-2">
+              <h4 className="font-semibold text-amber-200 text-xs sm:text-sm flex items-center gap-2">
+                <CreditCard className="w-4 h-4" /> {t.paymentMethodTitle}
+              </h4>
+              <ul className="space-y-1.5 text-[10px] sm:text-xs text-gray-400 list-disc list-inside">
+                <li>{t.paymentMethodDeposit}</li>
+                <li>{t.paymentMethodBalance}</li>
+              </ul>
+            </div>
+
             {/* Terms and Conditions */}
             <div className="bg-[#1a1a1a] rounded-lg p-3 sm:p-4 space-y-3">
               <h4 className="font-semibold text-amber-200 text-xs sm:text-sm">{t.termsTitle}</h4>
