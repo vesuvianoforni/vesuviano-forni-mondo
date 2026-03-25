@@ -61,12 +61,21 @@ serve(async (req) => {
     const customerName = proforma.customer_name || "Cliente";
     const companyName = proforma.company_name ? ` (${proforma.company_name})` : "";
 
+    // Map proforma currency to Stripe currency code
+    const currencyMap: Record<string, string> = {
+      "EUR": "eur",
+      "USD": "usd",
+      "GBP": "gbp",
+      "CHF": "chf",
+    };
+    const stripeCurrency = currencyMap[proforma.currency] || "eur";
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
         {
           price_data: {
-            currency: "eur",
+            currency: stripeCurrency,
             product_data: {
               name: `${depositLabel} — Vesuviano Forni`,
               description: `Pro-Forma per ${customerName}${companyName}`,
