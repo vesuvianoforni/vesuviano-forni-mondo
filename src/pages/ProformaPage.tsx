@@ -930,12 +930,18 @@ const ProformaPage = () => {
 
             <div className="space-y-3">
               {proforma.payment_option === 'deposit_5' ? (
-                <div className="bg-amber-900/20 rounded-lg p-3 sm:p-4">
+                <div className="bg-amber-900/20 rounded-lg p-3 sm:p-4 space-y-2">
                   <h4 className="font-semibold text-amber-200 flex items-center gap-2 text-sm sm:text-base">
                     <Shield className="w-4 h-4 sm:w-5 sm:h-5" /> {t.lockOffer} 5%
                   </h4>
-                  <p className="text-xs sm:text-sm text-gray-400 mt-1">
-                    {t.pay} <span className="text-amber-300 font-bold">{formatPrice(currentDeposit)}</span> {t.lockOfferDesc}
+                  <p className="text-xs sm:text-sm text-gray-400">
+                    1️⃣ {t.pay} <span className="text-amber-300 font-bold">{formatPrice(currentDeposit)}</span> {t.lockOfferDesc}
+                  </p>
+                  <p className="text-xs sm:text-sm text-gray-400">
+                    2️⃣ {t.lockOfferStep2} <span className="text-amber-300 font-bold">{formatPrice(currentTotal * 0.45)}</span>
+                  </p>
+                  <p className="text-xs sm:text-sm text-gray-400">
+                    3️⃣ {t.lockOfferStep3} <span className="text-amber-300 font-bold">{formatPrice(currentTotal * 0.50)}</span>
                   </p>
                 </div>
               ) : (
