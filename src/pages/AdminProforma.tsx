@@ -107,6 +107,7 @@ const AdminProforma = () => {
   const [currency, setCurrency] = useState('EUR');
   const [priceList, setPriceList] = useState('A');
   const [discountPercentage, setDiscountPercentage] = useState(0);
+  const [bankAccount, setBankAccount] = useState('intesa');
 
   // Burner form state
   const [burnerName, setBurnerName] = useState('');
@@ -306,6 +307,7 @@ const AdminProforma = () => {
           language,
           currency,
           price_list: priceList,
+          bank_account: bankAccount,
           status: 'sent',
         } as any)
         .select()
@@ -566,6 +568,26 @@ const AdminProforma = () => {
                     </SelectContent>
                   </Select>
                 </div>
+                <div>
+                  <Label className="text-xs">Conto Bancario</Label>
+                  <Select value={bankAccount} onValueChange={setBankAccount}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="intesa">🇮🇹 Intesa San Paolo</SelectItem>
+                      <SelectItem value="wise_uk">🇬🇧 Wise UK</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <DollarSign className="w-5 h-5" /> Listino Prezzi
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 gap-4">
                 <div>
                   <Label className="text-xs">Listino Prezzi</Label>
                   <Select value={priceList} onValueChange={(v) => {

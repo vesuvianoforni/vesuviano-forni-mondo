@@ -1,0 +1,1 @@
+ALTER TABLE public.proformas ADD COLUMN bank_account text NOT NULL DEFAULT 'intesa';

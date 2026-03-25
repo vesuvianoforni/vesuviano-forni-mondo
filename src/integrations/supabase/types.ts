@@ -815,6 +815,7 @@ export type Database = {
       }
       proformas: {
         Row: {
+          bank_account: string
           billing_address: string | null
           company_name: string | null
           created_at: string
@@ -845,6 +846,7 @@ export type Database = {
           vat_number: string | null
         }
         Insert: {
+          bank_account?: string
           billing_address?: string | null
           company_name?: string | null
           created_at?: string
@@ -875,6 +877,7 @@ export type Database = {
           vat_number?: string | null
         }
         Update: {
+          bank_account?: string
           billing_address?: string | null
           company_name?: string | null
           created_at?: string
