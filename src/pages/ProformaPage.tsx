@@ -1192,8 +1192,6 @@ const ProformaPage = () => {
                 <p className="text-center text-gray-500 text-xs -mt-2">{t.cardFeeNote}</p>
               </div>
             )}
-              </div>
-            )}
           </CardContent>
         </Card>
 
