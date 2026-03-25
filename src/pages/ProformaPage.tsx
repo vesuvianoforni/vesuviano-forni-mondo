@@ -551,7 +551,7 @@ const ProformaPage = () => {
     return total;
   };
 
-  const handlePayDeposit = async (paymentMethod: 'card' | 'bank_transfer' = 'card') => {
+  const handlePayDeposit = async () => {
     if (!proforma) return;
 
     // Save customer's configuration first
@@ -627,7 +627,7 @@ const ProformaPage = () => {
     setPaying(true);
     try {
       const { data, error } = await supabase.functions.invoke('create-proforma-payment', {
-        body: { proforma_id: proforma.id, token: proforma.token, payment_method: paymentMethod },
+        body: { proforma_id: proforma.id, token: proforma.token },
       });
       if (error) throw error;
       if (data?.url) {
@@ -1087,7 +1087,7 @@ const ProformaPage = () => {
             {!isPaid && (
               <div className="space-y-3">
                 <Button
-                  onClick={() => handlePayDeposit('card')}
+                  onClick={() => handlePayDeposit()}
                   disabled={paying}
                   className="w-full bg-amber-600 hover:bg-amber-700 text-white text-base sm:text-lg py-5 sm:py-6"
                 >
@@ -1106,18 +1106,48 @@ const ProformaPage = () => {
                 </div>
 
                 <Button
-                  onClick={() => handlePayDeposit('bank_transfer')}
-                  disabled={paying}
+                  onClick={() => setShowBankDetails(!showBankDetails)}
                   variant="outline"
                   className="w-full border-amber-600/50 text-amber-200 hover:bg-amber-900/30 text-base sm:text-lg py-5 sm:py-6"
                 >
-                  {paying ? (
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  ) : (
-                    <Landmark className="w-5 h-5 mr-2" />
-                  )}
+                  <Landmark className="w-5 h-5 mr-2" />
                   {t.payByBankTransfer} — {formatPrice(currentDeposit)}
                 </Button>
+
+                {showBankDetails && (
+                  <div className="bg-gray-800/80 border border-amber-600/30 rounded-lg p-4 sm:p-5 space-y-3 text-sm">
+                    <h4 className="text-amber-400 font-semibold text-base">{t.bankDetailsTitle}</h4>
+                    <div className="space-y-2 text-gray-300">
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">{t.bankDetailsHolder}:</span>
+                        <span className="font-medium text-right">UNITA 1 di Stanislao Elefante</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">{t.bankDetailsBank}:</span>
+                        <span className="font-medium">Intesa San Paolo</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">{t.bankDetailsIBAN}:</span>
+                        <span className="font-mono font-medium text-right text-xs sm:text-sm">IT12P0306976451100000003224</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">{t.bankDetailsBIC}:</span>
+                        <span className="font-mono font-medium">BCITITMM</span>
+                      </div>
+                      <Separator className="bg-gray-700" />
+                      <div>
+                        <span className="text-gray-500">{t.bankDetailsCausale}:</span>
+                        <p className="text-amber-300 mt-1 font-medium">
+                          {proforma.proforma_number || proforma.id}
+                        </p>
+                        <p className="text-gray-400 text-xs mt-1">{t.bankDetailsCausaleValue}</p>
+                      </div>
+                      <div className="mt-2 text-amber-400 font-semibold text-base">
+                        {t.total}: {formatPrice(currentDeposit)}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </CardContent>
