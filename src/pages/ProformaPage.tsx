@@ -1105,37 +1105,19 @@ const ProformaPage = () => {
             </div>
 
             {!isPaid && (
-              <div className="space-y-3">
-                <Button
-                  onClick={() => handlePayDeposit()}
-                  disabled={paying}
-                  className="w-full bg-amber-600 hover:bg-amber-700 text-white text-base sm:text-lg py-5 sm:py-6"
-                >
-                  {paying ? (
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  ) : (
-                    <CreditCard className="w-5 h-5 mr-2" />
-                  )}
-                  {t.payByCard} — {formatPrice(currentDeposit)}
-                </Button>
-
-                <div className="flex items-center gap-3">
-                  <Separator className="flex-1 bg-gray-700" />
-                  <span className="text-xs text-gray-500 uppercase">{t.orPayWith}</span>
-                  <Separator className="flex-1 bg-gray-700" />
-                </div>
-
+              <div className="space-y-4">
+                {/* Bank Transfer - Recommended */}
                 <Button
                   onClick={() => setShowBankDetails(!showBankDetails)}
-                  variant="outline"
-                  className="w-full border-amber-600/50 text-amber-200 hover:bg-amber-900/30 text-base sm:text-lg py-5 sm:py-6"
+                  className="w-full bg-amber-600 hover:bg-amber-700 text-white text-base sm:text-lg py-5 sm:py-6"
                 >
                   <Landmark className="w-5 h-5 mr-2" />
                   {t.payByBankTransfer} — {formatPrice(currentDeposit)}
                 </Button>
+                <p className="text-center text-green-400 text-xs -mt-2">✓ {t.bankTransferNoFee}</p>
 
                 {showBankDetails && (
-                  <div className="bg-gray-800/80 border border-amber-600/30 rounded-lg p-4 sm:p-5 space-y-3 text-sm">
+                  <div className="bg-gray-800/80 border border-amber-600/30 rounded-lg p-4 sm:p-5 space-y-3 text-sm animate-in fade-in slide-in-from-top-2 duration-200">
                     <h4 className="text-amber-400 font-semibold text-base">{t.bankDetailsTitle}</h4>
                     <div className="space-y-2 text-gray-300">
                       <div className="flex justify-between">
@@ -1146,9 +1128,20 @@ const ProformaPage = () => {
                         <span className="text-gray-500">{t.bankDetailsBank}:</span>
                         <span className="font-medium">Intesa San Paolo</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between items-center">
                         <span className="text-gray-500">{t.bankDetailsIBAN}:</span>
-                        <span className="font-mono font-medium text-right text-xs sm:text-sm">IT12P0306976451100000003224</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-medium text-right text-xs sm:text-sm">IT12P0306976451100000003224</span>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText('IT12P0306976451100000003224');
+                              toast.success(t.copied);
+                            }}
+                            className="text-amber-400 hover:text-amber-300 p-1"
+                          >
+                            <Copy className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-500">{t.bankDetailsBIC}:</span>
@@ -1165,9 +1158,40 @@ const ProformaPage = () => {
                       <div className="mt-2 text-amber-400 font-semibold text-base">
                         {t.total}: {formatPrice(currentDeposit)}
                       </div>
+                      <Separator className="bg-gray-700" />
+                      <div className="bg-blue-900/30 border border-blue-500/20 rounded-md p-3 flex items-start gap-2">
+                        <span className="text-blue-400 text-lg mt-0.5">💡</span>
+                        <p className="text-blue-300 text-xs leading-relaxed">
+                          {t.bankDetailsWiseTip}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 )}
+
+                <div className="flex items-center gap-3">
+                  <Separator className="flex-1 bg-gray-700" />
+                  <span className="text-xs text-gray-500 uppercase">{t.orPayWith}</span>
+                  <Separator className="flex-1 bg-gray-700" />
+                </div>
+
+                {/* Card Payment */}
+                <Button
+                  onClick={() => handlePayDeposit()}
+                  disabled={paying}
+                  variant="outline"
+                  className="w-full border-gray-600 text-gray-300 hover:bg-gray-800 text-base sm:text-lg py-5 sm:py-6"
+                >
+                  {paying ? (
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  ) : (
+                    <CreditCard className="w-5 h-5 mr-2" />
+                  )}
+                  {t.payByCard} — {formatPrice(Math.round(currentDeposit * 1.035 * 100) / 100)}
+                </Button>
+                <p className="text-center text-gray-500 text-xs -mt-2">{t.cardFeeNote}</p>
+              </div>
+            )}
               </div>
             )}
           </CardContent>
