@@ -591,7 +591,7 @@ const ProformaPage = () => {
     setPaying(true);
     try {
       const { data, error } = await supabase.functions.invoke('create-proforma-payment', {
-        body: { proforma_id: proforma.id, token: proforma.token },
+        body: { proforma_id: proforma.id, token: proforma.token, payment_method: paymentMethod },
       });
       if (error) throw error;
       if (data?.url) {
