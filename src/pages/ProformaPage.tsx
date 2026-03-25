@@ -133,6 +133,13 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     payByCard: 'Paga con Carta',
     payByBankTransfer: 'Paga con Bonifico Bancario',
     orPayWith: 'oppure',
+    bankDetailsTitle: 'Coordinate Bancarie per Bonifico',
+    bankDetailsHolder: 'Intestatario',
+    bankDetailsBank: 'Banca',
+    bankDetailsIBAN: 'IBAN',
+    bankDetailsBIC: 'BIC/SWIFT',
+    bankDetailsCausale: 'Causale',
+    bankDetailsCausaleValue: 'Inserire il numero di proforma come causale del bonifico.',
     preSelected: 'Pre-selezionato',
     changeSelection: 'Cambia',
     subtotal: 'Subtotale',
@@ -181,6 +188,13 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     payByCard: 'Pay by Card',
     payByBankTransfer: 'Pay by Bank Transfer',
     orPayWith: 'or',
+    bankDetailsTitle: 'Bank Transfer Details',
+    bankDetailsHolder: 'Account Holder',
+    bankDetailsBank: 'Bank',
+    bankDetailsIBAN: 'IBAN',
+    bankDetailsBIC: 'BIC/SWIFT',
+    bankDetailsCausale: 'Reference',
+    bankDetailsCausaleValue: 'Please use the proforma number as the payment reference.',
     preSelected: 'Pre-selected',
     changeSelection: 'Change',
     subtotal: 'Subtotal',
@@ -229,6 +243,13 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     payByCard: 'Payer par Carte',
     payByBankTransfer: 'Payer par Virement Bancaire',
     orPayWith: 'ou',
+    bankDetailsTitle: 'Coordonnées Bancaires pour Virement',
+    bankDetailsHolder: 'Titulaire',
+    bankDetailsBank: 'Banque',
+    bankDetailsIBAN: 'IBAN',
+    bankDetailsBIC: 'BIC/SWIFT',
+    bankDetailsCausale: 'Référence',
+    bankDetailsCausaleValue: 'Veuillez indiquer le numéro de proforma comme référence du virement.',
     preSelected: 'Pré-sélectionné',
     changeSelection: 'Modifier',
     subtotal: 'Sous-total',
@@ -277,6 +298,13 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     payByCard: 'Mit Karte bezahlen',
     payByBankTransfer: 'Per Banküberweisung bezahlen',
     orPayWith: 'oder',
+    bankDetailsTitle: 'Bankverbindung für Überweisung',
+    bankDetailsHolder: 'Kontoinhaber',
+    bankDetailsBank: 'Bank',
+    bankDetailsIBAN: 'IBAN',
+    bankDetailsBIC: 'BIC/SWIFT',
+    bankDetailsCausale: 'Verwendungszweck',
+    bankDetailsCausaleValue: 'Bitte geben Sie die Proforma-Nummer als Verwendungszweck an.',
     preSelected: 'Vorausgewählt',
     changeSelection: 'Ändern',
     subtotal: 'Zwischensumme',
@@ -325,6 +353,13 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     payByCard: 'Pagar con Tarjeta',
     payByBankTransfer: 'Pagar por Transferencia Bancaria',
     orPayWith: 'o',
+    bankDetailsTitle: 'Datos Bancarios para Transferencia',
+    bankDetailsHolder: 'Titular',
+    bankDetailsBank: 'Banco',
+    bankDetailsIBAN: 'IBAN',
+    bankDetailsBIC: 'BIC/SWIFT',
+    bankDetailsCausale: 'Concepto',
+    bankDetailsCausaleValue: 'Indique el número de proforma como concepto de la transferencia.',
     preSelected: 'Pre-seleccionado',
     changeSelection: 'Cambiar',
     subtotal: 'Subtotal',
@@ -368,6 +403,7 @@ const ProformaPage = () => {
   const [itemConfigs, setItemConfigs] = useState<Record<string, ItemConfig>>({});
   const [selectedBurnerId, setSelectedBurnerId] = useState<string | null>(null);
   const [zoomedImage, setZoomedImage] = useState<{ url: string; alt: string } | null>(null);
+  const [showBankDetails, setShowBankDetails] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -515,7 +551,7 @@ const ProformaPage = () => {
     return total;
   };
 
-  const handlePayDeposit = async (paymentMethod: 'card' | 'bank_transfer' = 'card') => {
+  const handlePayDeposit = async () => {
     if (!proforma) return;
 
     // Save customer's configuration first
@@ -591,7 +627,7 @@ const ProformaPage = () => {
     setPaying(true);
     try {
       const { data, error } = await supabase.functions.invoke('create-proforma-payment', {
-        body: { proforma_id: proforma.id, token: proforma.token, payment_method: paymentMethod },
+        body: { proforma_id: proforma.id, token: proforma.token },
       });
       if (error) throw error;
       if (data?.url) {
@@ -1051,7 +1087,7 @@ const ProformaPage = () => {
             {!isPaid && (
               <div className="space-y-3">
                 <Button
-                  onClick={() => handlePayDeposit('card')}
+                  onClick={() => handlePayDeposit()}
                   disabled={paying}
                   className="w-full bg-amber-600 hover:bg-amber-700 text-white text-base sm:text-lg py-5 sm:py-6"
                 >
@@ -1070,18 +1106,48 @@ const ProformaPage = () => {
                 </div>
 
                 <Button
-                  onClick={() => handlePayDeposit('bank_transfer')}
-                  disabled={paying}
+                  onClick={() => setShowBankDetails(!showBankDetails)}
                   variant="outline"
                   className="w-full border-amber-600/50 text-amber-200 hover:bg-amber-900/30 text-base sm:text-lg py-5 sm:py-6"
                 >
-                  {paying ? (
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  ) : (
-                    <Landmark className="w-5 h-5 mr-2" />
-                  )}
+                  <Landmark className="w-5 h-5 mr-2" />
                   {t.payByBankTransfer} — {formatPrice(currentDeposit)}
                 </Button>
+
+                {showBankDetails && (
+                  <div className="bg-gray-800/80 border border-amber-600/30 rounded-lg p-4 sm:p-5 space-y-3 text-sm">
+                    <h4 className="text-amber-400 font-semibold text-base">{t.bankDetailsTitle}</h4>
+                    <div className="space-y-2 text-gray-300">
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">{t.bankDetailsHolder}:</span>
+                        <span className="font-medium text-right">UNITA 1 di Stanislao Elefante</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">{t.bankDetailsBank}:</span>
+                        <span className="font-medium">Intesa San Paolo</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">{t.bankDetailsIBAN}:</span>
+                        <span className="font-mono font-medium text-right text-xs sm:text-sm">IT12P0306976451100000003224</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">{t.bankDetailsBIC}:</span>
+                        <span className="font-mono font-medium">BCITITMM</span>
+                      </div>
+                      <Separator className="bg-gray-700" />
+                      <div>
+                        <span className="text-gray-500">{t.bankDetailsCausale}:</span>
+                        <p className="text-amber-300 mt-1 font-medium">
+                          {proforma.proforma_number || proforma.id}
+                        </p>
+                        <p className="text-gray-400 text-xs mt-1">{t.bankDetailsCausaleValue}</p>
+                      </div>
+                      <div className="mt-2 text-amber-400 font-semibold text-base">
+                        {t.total}: {formatPrice(currentDeposit)}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </CardContent>
