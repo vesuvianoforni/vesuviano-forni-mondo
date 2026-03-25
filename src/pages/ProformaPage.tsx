@@ -443,6 +443,9 @@ const ProformaPage = () => {
     }));
   };
 
+  // Check if burners should be available based on fuel types
+  const shouldShowBurners = items.some(i => i.item_type === 'oven' && itemConfigs[i.id]?.fuelType && itemConfigs[i.id].fuelType !== 'Legna' && itemConfigs[i.id].fuelType !== 'Elettrico');
+
   // Calculate total from current configurations
   const calculateTotal = () => {
     if (!proforma) return 0;
