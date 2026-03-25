@@ -195,14 +195,16 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     payByBankTransfer: 'Pay by Bank Transfer',
     bankTransferNoFee: 'No additional fees',
     orPayWith: 'or',
-    bankDetailsTitle: 'Bank Transfer Details',
+    bankDetailsTitle: 'Bank Transfer Details (via Wise)',
     bankDetailsHolder: 'Account Holder',
     bankDetailsBank: 'Bank',
     bankDetailsIBAN: 'IBAN',
     bankDetailsBIC: 'BIC/SWIFT',
     bankDetailsCausale: 'Reference',
     bankDetailsCausaleValue: 'Please use the proforma number as the payment reference.',
-    bankDetailsWiseTip: 'For international transfers we recommend using Wise (wise.com) for lower fees and faster processing.',
+    bankDetailsWiseTip: 'We use Wise for fast international payments with very low fees.',
+    bankDetailsAccountNumber: 'Account Number',
+    bankDetailsSortCode: 'Sort Code',
     copied: 'Copied!',
     preSelected: 'Pre-selected',
     changeSelection: 'Change',
@@ -1148,33 +1150,81 @@ const ProformaPage = () => {
                   <div className="bg-gray-800/80 border border-amber-600/30 rounded-lg p-4 sm:p-5 space-y-3 text-sm animate-in fade-in slide-in-from-top-2 duration-200">
                     <h4 className="text-amber-400 font-semibold text-base">{t.bankDetailsTitle}</h4>
                     <div className="space-y-2 text-gray-300">
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">{t.bankDetailsHolder}:</span>
-                        <span className="font-medium text-right">UNITA 1 di Stanislao Elefante</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">{t.bankDetailsBank}:</span>
-                        <span className="font-medium">Intesa San Paolo</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-500">{t.bankDetailsIBAN}:</span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono font-medium text-right text-xs sm:text-sm">IT12P0306976451100000003224</span>
-                          <button
-                            onClick={() => {
-                              navigator.clipboard.writeText('IT12P0306976451100000003224');
-                              toast.success(t.copied);
-                            }}
-                            className="text-amber-400 hover:text-amber-300 p-1"
-                          >
-                            <Copy className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">{t.bankDetailsBIC}:</span>
-                        <span className="font-mono font-medium">BCITITMM</span>
-                      </div>
+                      {lang === 'en' ? (
+                        <>
+                          {/* UK Wise Account for English proformas */}
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">{t.bankDetailsHolder}:</span>
+                            <span className="font-medium text-right">Unita 1 di Stanislao Elefante</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-500">{(t as any).bankDetailsAccountNumber || 'Account Number'}:</span>
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono font-medium">62531858</span>
+                              <button
+                                onClick={() => { navigator.clipboard.writeText('62531858'); toast.success(t.copied); }}
+                                className="text-amber-400 hover:text-amber-300 p-1"
+                              >
+                                <Copy className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">{(t as any).bankDetailsSortCode || 'Sort Code'}:</span>
+                            <span className="font-mono font-medium">60-84-64</span>
+                          </div>
+                          <Separator className="bg-gray-700/50" />
+                          <p className="text-gray-500 text-xs italic">For international Swift transfers:</p>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-500">{t.bankDetailsIBAN}:</span>
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono font-medium text-right text-xs sm:text-sm">GB61 TRWI 6084 6462 5318 58</span>
+                              <button
+                                onClick={() => { navigator.clipboard.writeText('GB61TRWI60846462531858'); toast.success(t.copied); }}
+                                className="text-amber-400 hover:text-amber-300 p-1"
+                              >
+                                <Copy className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">{t.bankDetailsBIC}:</span>
+                            <span className="font-mono font-medium">TRWIGB2LXXX</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">{t.bankDetailsBank}:</span>
+                            <span className="font-medium text-right text-xs">Wise Payments Limited, London, UK</span>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          {/* Italian Intesa San Paolo for all other languages */}
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">{t.bankDetailsHolder}:</span>
+                            <span className="font-medium text-right">UNITA 1 di Stanislao Elefante</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">{t.bankDetailsBank}:</span>
+                            <span className="font-medium">Intesa San Paolo</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-500">{t.bankDetailsIBAN}:</span>
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono font-medium text-right text-xs sm:text-sm">IT12P0306976451100000003224</span>
+                              <button
+                                onClick={() => { navigator.clipboard.writeText('IT12P0306976451100000003224'); toast.success(t.copied); }}
+                                className="text-amber-400 hover:text-amber-300 p-1"
+                              >
+                                <Copy className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">{t.bankDetailsBIC}:</span>
+                            <span className="font-mono font-medium">BCITITMM</span>
+                          </div>
+                        </>
+                      )}
                       <Separator className="bg-gray-700" />
                       <div>
                         <span className="text-gray-500">{t.bankDetailsCausale}:</span>
