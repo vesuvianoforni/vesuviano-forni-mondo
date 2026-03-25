@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { Loader2, FileText, Palette, CreditCard, Check, Truck, Shield, Flame, Pizza, PlayCircle, Image as ImageIcon, Download } from 'lucide-react';
+import { Loader2, FileText, Palette, CreditCard, Check, Truck, Shield, Flame, Pizza, PlayCircle, Image as ImageIcon, Download, Landmark } from 'lucide-react';
 import ColorRenderGenerator from '@/components/configurator/ColorRenderGenerator';
 import ImageZoomModal from '@/components/ImageZoomModal';
 
@@ -130,6 +130,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     configureYourOven: 'Configura il Tuo Forno',
     burner: 'Bruciatore',
     confirmConfig: 'Conferma Configurazione e Paga',
+    payByCard: 'Paga con Carta',
+    payByBankTransfer: 'Paga con Bonifico Bancario',
+    orPayWith: 'oppure',
     preSelected: 'Pre-selezionato',
     changeSelection: 'Cambia',
     subtotal: 'Subtotale',
@@ -175,6 +178,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     configureYourOven: 'Configure Your Oven',
     burner: 'Burner',
     confirmConfig: 'Confirm Configuration & Pay',
+    payByCard: 'Pay by Card',
+    payByBankTransfer: 'Pay by Bank Transfer',
+    orPayWith: 'or',
     preSelected: 'Pre-selected',
     changeSelection: 'Change',
     subtotal: 'Subtotal',
@@ -220,6 +226,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     configureYourOven: 'Configurez Votre Four',
     burner: 'Brûleur',
     confirmConfig: 'Confirmer et Payer',
+    payByCard: 'Payer par Carte',
+    payByBankTransfer: 'Payer par Virement Bancaire',
+    orPayWith: 'ou',
     preSelected: 'Pré-sélectionné',
     changeSelection: 'Modifier',
     subtotal: 'Sous-total',
@@ -265,6 +274,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     configureYourOven: 'Konfigurieren Sie Ihren Ofen',
     burner: 'Brenner',
     confirmConfig: 'Bestätigen & Bezahlen',
+    payByCard: 'Mit Karte bezahlen',
+    payByBankTransfer: 'Per Banküberweisung bezahlen',
+    orPayWith: 'oder',
     preSelected: 'Vorausgewählt',
     changeSelection: 'Ändern',
     subtotal: 'Zwischensumme',
@@ -310,6 +322,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     configureYourOven: 'Configura Tu Horno',
     burner: 'Quemador',
     confirmConfig: 'Confirmar y Pagar',
+    payByCard: 'Pagar con Tarjeta',
+    payByBankTransfer: 'Pagar por Transferencia Bancaria',
+    orPayWith: 'o',
     preSelected: 'Pre-seleccionado',
     changeSelection: 'Cambiar',
     subtotal: 'Subtotal',
@@ -500,7 +515,7 @@ const ProformaPage = () => {
     return total;
   };
 
-  const handlePayDeposit = async () => {
+  const handlePayDeposit = async (paymentMethod: 'card' | 'bank_transfer' = 'card') => {
     if (!proforma) return;
 
     // Save customer's configuration first
@@ -576,7 +591,7 @@ const ProformaPage = () => {
     setPaying(true);
     try {
       const { data, error } = await supabase.functions.invoke('create-proforma-payment', {
-        body: { proforma_id: proforma.id, token: proforma.token },
+        body: { proforma_id: proforma.id, token: proforma.token, payment_method: paymentMethod },
       });
       if (error) throw error;
       if (data?.url) {
@@ -1034,18 +1049,40 @@ const ProformaPage = () => {
             </div>
 
             {!isPaid && (
-              <Button
-                onClick={handlePayDeposit}
-                disabled={paying}
-                className="w-full bg-amber-600 hover:bg-amber-700 text-white text-base sm:text-lg py-5 sm:py-6"
-              >
-                {paying ? (
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                ) : (
-                  <CreditCard className="w-5 h-5 mr-2" />
-                )}
-                {t.confirmConfig} — {formatPrice(currentDeposit)}
-              </Button>
+              <div className="space-y-3">
+                <Button
+                  onClick={() => handlePayDeposit('card')}
+                  disabled={paying}
+                  className="w-full bg-amber-600 hover:bg-amber-700 text-white text-base sm:text-lg py-5 sm:py-6"
+                >
+                  {paying ? (
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  ) : (
+                    <CreditCard className="w-5 h-5 mr-2" />
+                  )}
+                  {t.payByCard} — {formatPrice(currentDeposit)}
+                </Button>
+
+                <div className="flex items-center gap-3">
+                  <Separator className="flex-1 bg-gray-700" />
+                  <span className="text-xs text-gray-500 uppercase">{t.orPayWith}</span>
+                  <Separator className="flex-1 bg-gray-700" />
+                </div>
+
+                <Button
+                  onClick={() => handlePayDeposit('bank_transfer')}
+                  disabled={paying}
+                  variant="outline"
+                  className="w-full border-amber-600/50 text-amber-200 hover:bg-amber-900/30 text-base sm:text-lg py-5 sm:py-6"
+                >
+                  {paying ? (
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  ) : (
+                    <Landmark className="w-5 h-5 mr-2" />
+                  )}
+                  {t.payByBankTransfer} — {formatPrice(currentDeposit)}
+                </Button>
+              </div>
             )}
           </CardContent>
         </Card>
