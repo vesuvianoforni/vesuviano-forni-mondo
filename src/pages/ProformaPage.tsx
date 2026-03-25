@@ -135,6 +135,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     subtotal: 'Subtotale',
     discount: 'Sconto',
     downloadDatasheet: 'Scarica Scheda Tecnica',
+    termsTitle: 'Termini e Condizioni',
+    termsPallet: 'La consegna ed il posizionamento del forno prevedono comunque l\'utilizzo da parte del ricevente di un transpallet con capacità di carico di 2000kg per lo spostamento interno. È pertanto fortemente consigliato prevedere la disponibilità vostra di un transpallet con capacità di carico indicata entro la data di consegna prevista.',
+    termsCourier: 'Generalmente, il corriere vi contatterà 1/2 giorni prima della consegna.',
+    termsDelay: 'La data di consegna prevista indicata può variare di 5/7 giorni a causa di ritardi doganali nell\'analisi merce o a causa di ritardi nel trasporto.',
+    termsRefund: 'Qualora l\'acquirente avesse intenzione di ritirare l\'ordine prima della partenza del forno, avrà diritto al 90% della quota di deposito versata.',
   },
   en: {
     proforma: 'Pro-Forma Invoice',
@@ -172,6 +177,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     subtotal: 'Subtotal',
     discount: 'Discount',
     downloadDatasheet: 'Download Technical Datasheet',
+    termsTitle: 'Terms and Conditions',
+    termsPallet: 'Delivery and positioning of the oven require the recipient to have a pallet jack with a load capacity of 2000kg for internal movement. It is therefore strongly recommended to ensure the availability of a pallet jack with the indicated load capacity by the expected delivery date.',
+    termsCourier: 'Generally, the carrier will contact you 1-2 days before delivery.',
+    termsDelay: 'The indicated expected delivery date may vary by 5-7 days due to customs delays in goods analysis or transport delays.',
+    termsRefund: 'Should the buyer wish to withdraw the order before the oven is shipped, they will be entitled to 90% of the deposit paid.',
   },
   fr: {
     proforma: 'Facture Pro-Forma',
@@ -209,6 +219,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     subtotal: 'Sous-total',
     discount: 'Remise',
     downloadDatasheet: 'Télécharger la Fiche Technique',
+    termsTitle: 'Conditions Générales',
+    termsPallet: 'La livraison et le positionnement du four nécessitent l\'utilisation par le destinataire d\'un transpalette d\'une capacité de charge de 2000 kg pour le déplacement interne. Il est donc fortement recommandé de prévoir la disponibilité d\'un transpalette avec la capacité de charge indiquée avant la date de livraison prévue.',
+    termsCourier: 'Généralement, le transporteur vous contactera 1 à 2 jours avant la livraison.',
+    termsDelay: 'La date de livraison prévue indiquée peut varier de 5 à 7 jours en raison de retards douaniers dans l\'analyse des marchandises ou de retards de transport.',
+    termsRefund: 'Si l\'acheteur souhaite annuler la commande avant l\'expédition du four, il aura droit à 90% du dépôt versé.',
   },
   de: {
     proforma: 'Pro-Forma Rechnung',
@@ -246,6 +261,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     subtotal: 'Zwischensumme',
     discount: 'Rabatt',
     downloadDatasheet: 'Technisches Datenblatt Herunterladen',
+    termsTitle: 'Allgemeine Geschäftsbedingungen',
+    termsPallet: 'Die Lieferung und Positionierung des Ofens erfordern die Verwendung eines Hubwagens mit einer Tragfähigkeit von 2000 kg durch den Empfänger für die interne Bewegung. Es wird daher dringend empfohlen, die Verfügbarkeit eines Hubwagens mit der angegebenen Tragfähigkeit bis zum voraussichtlichen Lieferdatum sicherzustellen.',
+    termsCourier: 'In der Regel wird der Spediteur Sie 1-2 Tage vor der Lieferung kontaktieren.',
+    termsDelay: 'Das angegebene voraussichtliche Lieferdatum kann aufgrund von Zollverzögerungen bei der Warenprüfung oder Transportverzögerungen um 5-7 Tage abweichen.',
+    termsRefund: 'Sollte der Käufer die Bestellung vor dem Versand des Ofens stornieren wollen, hat er Anspruch auf 90% der geleisteten Anzahlung.',
   },
   es: {
     proforma: 'Factura Pro-Forma',
@@ -283,6 +303,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     subtotal: 'Subtotal',
     discount: 'Descuento',
     downloadDatasheet: 'Descargar Ficha Técnica',
+    termsTitle: 'Términos y Condiciones',
+    termsPallet: 'La entrega y colocación del horno requieren el uso por parte del destinatario de un transpaleta con capacidad de carga de 2000 kg para el movimiento interno. Por lo tanto, se recomienda encarecidamente prever la disponibilidad de un transpaleta con la capacidad de carga indicada antes de la fecha de entrega prevista.',
+    termsCourier: 'Generalmente, el transportista le contactará 1-2 días antes de la entrega.',
+    termsDelay: 'La fecha de entrega prevista indicada puede variar en 5-7 días debido a retrasos aduaneros en el análisis de mercancías o retrasos en el transporte.',
+    termsRefund: 'Si el comprador desea retirar el pedido antes del envío del horno, tendrá derecho al 90% del depósito abonado.',
   },
 };
 
@@ -965,6 +990,17 @@ const ProformaPage = () => {
                 <p className="text-xs sm:text-sm text-gray-400">{proforma.notes}</p>
               </div>
             )}
+
+            {/* Terms and Conditions */}
+            <div className="bg-[#1a1a1a] rounded-lg p-3 sm:p-4 space-y-3">
+              <h4 className="font-semibold text-amber-200 text-xs sm:text-sm">{t.termsTitle}</h4>
+              <ul className="space-y-2 text-[10px] sm:text-xs text-gray-500 list-disc list-inside">
+                <li>{t.termsPallet}</li>
+                <li>{t.termsCourier}</li>
+                <li>{t.termsDelay}</li>
+                <li>{t.termsRefund}</li>
+              </ul>
+            </div>
 
             {!isPaid && (
               <Button
