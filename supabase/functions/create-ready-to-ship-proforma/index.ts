@@ -210,7 +210,13 @@ serve(async (req) => {
                 <p style="margin: 5px 0;"><strong>Combustibile:</strong> ${rtsOven.fuel_type || 'Legna/Gas'}</p>
               </div>
 
-              <div class="price-box">
+              ${datasheetUrl ? `
+              <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 20px; margin: 20px 0; text-align: center;">
+                <p style="margin: 0 0 12px 0; font-size: 15px; color: #1e40af; font-weight: 600;">📄 Scheda Tecnica</p>
+                <p style="margin: 0 0 15px 0; font-size: 13px; color: #3b82f6;">Scarica la scheda tecnica completa del tuo forno</p>
+                <a href="${datasheetUrl}" style="display: inline-block; background: #2563eb; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">⬇️ Scarica Scheda Tecnica PDF</a>
+              </div>
+              ` : ''}
                 <p style="margin: 0 0 5px 0; font-size: 14px; opacity: 0.9;">Prezzo forno Pronta Consegna</p>
                 <div class="price-amount">€${priceFormatted}</div>
                 ${rtsOven.sale_price && rtsOven.list_price > rtsOven.sale_price ? `<p style="margin: 8px 0 0 0; font-size: 14px; text-decoration: line-through; opacity: 0.7;">€${rtsOven.list_price.toLocaleString('it-IT', { minimumFractionDigits: 2 })}</p>` : ''}
