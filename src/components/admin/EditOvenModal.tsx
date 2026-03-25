@@ -459,6 +459,54 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                           <Label className="cursor-pointer text-xs">Costruibile sul posto</Label>
                         </div>
                       </div>
+                      {/* Datasheet Upload */}
+                      <div className="mt-2">
+                        <Label className="text-xs flex items-center gap-1"><FileText className="w-3 h-3" /> Scheda Tecnica (PDF)</Label>
+                        <div className="flex items-center gap-2 mt-1">
+                          {size.datasheet_url ? (
+                            <>
+                              <a href={size.datasheet_url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 underline truncate max-w-[200px]">
+                                Visualizza PDF
+                              </a>
+                              <Button type="button" variant="ghost" size="sm" className="h-6 px-2 text-red-400" onClick={() => {
+                                const newSizes = [...formData.sizes];
+                                newSizes[sizeIdx].datasheet_url = '';
+                                setFormData(prev => ({ ...prev, sizes: newSizes }));
+                              }}>
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
+                            </>
+                          ) : (
+                            <div
+                              className="border border-dashed border-border rounded p-2 text-center cursor-pointer hover:border-primary transition-colors flex-1"
+                              onClick={() => document.getElementById(`datasheet-upload-${sizeIdx}`)?.click()}
+                            >
+                              <span className="text-xs text-muted-foreground">Carica PDF scheda tecnica</span>
+                            </div>
+                          )}
+                          <input
+                            id={`datasheet-upload-${sizeIdx}`}
+                            type="file"
+                            accept=".pdf"
+                            className="hidden"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                try {
+                                  const url = await uploadFile(file, 'datasheets');
+                                  const newSizes = [...formData.sizes];
+                                  newSizes[sizeIdx].datasheet_url = url;
+                                  setFormData(prev => ({ ...prev, sizes: newSizes }));
+                                  toast.success('Scheda tecnica caricata!');
+                                } catch (error) {
+                                  console.error('Error uploading datasheet:', error);
+                                  toast.error("Errore nel caricamento della scheda tecnica");
+                                }
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
                     </div>
                     <Button 
                       type="button" 
