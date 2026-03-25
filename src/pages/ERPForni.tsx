@@ -220,7 +220,6 @@ const ERPForni = () => {
                                 </a>
                               )}
                             </div>
-                            </div>
                             {size.coatings?.length > 0 ? (
                               <div className="overflow-x-auto">
                                 <table className="w-full text-sm">
