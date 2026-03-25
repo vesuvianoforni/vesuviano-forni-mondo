@@ -906,6 +906,65 @@ export type Database = {
         }
         Relationships: []
       }
+      ready_to_ship_ovens: {
+        Row: {
+          coating: string | null
+          created_at: string
+          description: string | null
+          diameter: number
+          fuel_type: string | null
+          id: string
+          images: string[] | null
+          is_sold: boolean
+          list_price: number
+          model_name: string
+          oven_id: string | null
+          sale_price: number | null
+          sold_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          coating?: string | null
+          created_at?: string
+          description?: string | null
+          diameter: number
+          fuel_type?: string | null
+          id?: string
+          images?: string[] | null
+          is_sold?: boolean
+          list_price?: number
+          model_name: string
+          oven_id?: string | null
+          sale_price?: number | null
+          sold_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          coating?: string | null
+          created_at?: string
+          description?: string | null
+          diameter?: number
+          fuel_type?: string | null
+          id?: string
+          images?: string[] | null
+          is_sold?: boolean
+          list_price?: number
+          model_name?: string
+          oven_id?: string | null
+          sale_price?: number | null
+          sold_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ready_to_ship_ovens_oven_id_fkey"
+            columns: ["oven_id"]
+            isOneToOne: false
+            referencedRelation: "configurator_ovens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string | null
