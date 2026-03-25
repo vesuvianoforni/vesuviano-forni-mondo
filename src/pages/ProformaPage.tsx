@@ -1106,10 +1106,32 @@ const ProformaPage = () => {
 
             {!isPaid && (
               <div className="space-y-4">
-                {/* Bank Transfer - Recommended */}
+                {/* Card Payment - Primary */}
+                <Button
+                  onClick={() => handlePayDeposit()}
+                  disabled={paying}
+                  className="w-full bg-amber-600 hover:bg-amber-700 text-white text-base sm:text-lg py-5 sm:py-6"
+                >
+                  {paying ? (
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  ) : (
+                    <CreditCard className="w-5 h-5 mr-2" />
+                  )}
+                  {t.payByCard} — {formatPrice(Math.round(currentDeposit * 1.035 * 100) / 100)}
+                </Button>
+                <p className="text-center text-gray-400 text-xs -mt-2">{t.cardFeeNote}</p>
+
+                <div className="flex items-center gap-3">
+                  <Separator className="flex-1 bg-gray-700" />
+                  <span className="text-xs text-gray-500 uppercase">{t.orPayWith}</span>
+                  <Separator className="flex-1 bg-gray-700" />
+                </div>
+
+                {/* Bank Transfer - Secondary */}
                 <Button
                   onClick={() => setShowBankDetails(!showBankDetails)}
-                  className="w-full bg-amber-600 hover:bg-amber-700 text-white text-base sm:text-lg py-5 sm:py-6"
+                  variant="outline"
+                  className="w-full border-gray-600 text-gray-300 hover:bg-gray-800 text-base sm:text-lg py-5 sm:py-6"
                 >
                   <Landmark className="w-5 h-5 mr-2" />
                   {t.payByBankTransfer} — {formatPrice(currentDeposit)}
@@ -1168,28 +1190,6 @@ const ProformaPage = () => {
                     </div>
                   </div>
                 )}
-
-                <div className="flex items-center gap-3">
-                  <Separator className="flex-1 bg-gray-700" />
-                  <span className="text-xs text-gray-500 uppercase">{t.orPayWith}</span>
-                  <Separator className="flex-1 bg-gray-700" />
-                </div>
-
-                {/* Card Payment */}
-                <Button
-                  onClick={() => handlePayDeposit()}
-                  disabled={paying}
-                  variant="outline"
-                  className="w-full border-gray-600 text-gray-300 hover:bg-gray-800 text-base sm:text-lg py-5 sm:py-6"
-                >
-                  {paying ? (
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  ) : (
-                    <CreditCard className="w-5 h-5 mr-2" />
-                  )}
-                  {t.payByCard} — {formatPrice(Math.round(currentDeposit * 1.035 * 100) / 100)}
-                </Button>
-                <p className="text-center text-gray-500 text-xs -mt-2">{t.cardFeeNote}</p>
               </div>
             )}
           </CardContent>
