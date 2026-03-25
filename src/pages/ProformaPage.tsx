@@ -1049,18 +1049,40 @@ const ProformaPage = () => {
             </div>
 
             {!isPaid && (
-              <Button
-                onClick={handlePayDeposit}
-                disabled={paying}
-                className="w-full bg-amber-600 hover:bg-amber-700 text-white text-base sm:text-lg py-5 sm:py-6"
-              >
-                {paying ? (
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                ) : (
-                  <CreditCard className="w-5 h-5 mr-2" />
-                )}
-                {t.confirmConfig} — {formatPrice(currentDeposit)}
-              </Button>
+              <div className="space-y-3">
+                <Button
+                  onClick={() => handlePayDeposit('card')}
+                  disabled={paying}
+                  className="w-full bg-amber-600 hover:bg-amber-700 text-white text-base sm:text-lg py-5 sm:py-6"
+                >
+                  {paying ? (
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  ) : (
+                    <CreditCard className="w-5 h-5 mr-2" />
+                  )}
+                  {t.payByCard} — {formatPrice(currentDeposit)}
+                </Button>
+
+                <div className="flex items-center gap-3">
+                  <Separator className="flex-1 bg-gray-700" />
+                  <span className="text-xs text-gray-500 uppercase">{t.orPayWith}</span>
+                  <Separator className="flex-1 bg-gray-700" />
+                </div>
+
+                <Button
+                  onClick={() => handlePayDeposit('bank_transfer')}
+                  disabled={paying}
+                  variant="outline"
+                  className="w-full border-amber-600/50 text-amber-200 hover:bg-amber-900/30 text-base sm:text-lg py-5 sm:py-6"
+                >
+                  {paying ? (
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  ) : (
+                    <Landmark className="w-5 h-5 mr-2" />
+                  )}
+                  {t.payByBankTransfer} — {formatPrice(currentDeposit)}
+                </Button>
+              </div>
             )}
           </CardContent>
         </Card>
