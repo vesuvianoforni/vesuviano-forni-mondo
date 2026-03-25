@@ -443,6 +443,9 @@ const ProformaPage = () => {
     }));
   };
 
+  // Check if burners should be available based on fuel types
+  const shouldShowBurners = items.some(i => i.item_type === 'oven' && itemConfigs[i.id]?.fuelType && itemConfigs[i.id].fuelType !== 'Legna' && itemConfigs[i.id].fuelType !== 'Elettrico');
+
   // Calculate total from current configurations
   const calculateTotal = () => {
     if (!proforma) return 0;
@@ -459,12 +462,14 @@ const ProformaPage = () => {
           total += item.line_total;
         }
       } else if (item.item_type === 'burner') {
-        // Use selected burner price or item's saved price
-        if (selectedBurnerId) {
-          const burner = burners.find(b => b.id === selectedBurnerId);
-          total += (burner ? getBurnerPrice(burner, pl) : item.unit_price) * item.quantity;
-        } else {
-          total += item.unit_price * item.quantity;
+        // Only include burner cost if burners are applicable (not for Legna/Elettrico)
+        if (shouldShowBurners) {
+          if (selectedBurnerId) {
+            const burner = burners.find(b => b.id === selectedBurnerId);
+            total += (burner ? getBurnerPrice(burner, pl) : item.unit_price) * item.quantity;
+          } else {
+            total += item.unit_price * item.quantity;
+          }
         }
       } else {
         total += item.line_total;
@@ -472,7 +477,7 @@ const ProformaPage = () => {
     });
 
     // If customer selected a burner but there wasn't one in the original items
-    if (selectedBurnerId && !items.find(i => i.item_type === 'burner')) {
+    if (shouldShowBurners && selectedBurnerId && !items.find(i => i.item_type === 'burner')) {
       const burner = burners.find(b => b.id === selectedBurnerId);
       if (burner) total += getBurnerPrice(burner, pl);
     }
@@ -838,7 +843,7 @@ const ProformaPage = () => {
         })}
 
         {/* Burner Selection - only show for Gas/Elettrico fuel types */}
-        {burners.length > 0 && !isPaid && items.some(i => i.item_type === 'oven' && itemConfigs[i.id]?.fuelType && itemConfigs[i.id].fuelType !== 'Legna' && itemConfigs[i.id].fuelType !== 'Elettrico') && (
+        {burners.length > 0 && !isPaid && shouldShowBurners && (
           <div>
             <h3 className="text-lg font-semibold text-amber-100 mb-4">{t.selectBurner}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -913,7 +918,7 @@ const ProformaPage = () => {
                   </div>
                 );
               })}
-              {selectedBurnerId && (() => {
+              {shouldShowBurners && selectedBurnerId && (() => {
                 const burner = burners.find(b => b.id === selectedBurnerId);
                 return burner ? (
                   <div className="flex justify-between text-sm">
