@@ -68,6 +68,7 @@ interface OvenModel {
     diameter: number;
     pizza_capacity: string;
     datasheet_url?: string;
+    datasheet_urls?: { it?: string; en?: string; fr?: string; de?: string; es?: string };
     coatings: Array<{
       name: string;
       image_url: string;
@@ -894,17 +895,22 @@ const ProformaPage = () => {
                     </div>
 
                     {/* Datasheet Download */}
-                    {selectedSize?.datasheet_url && (
-                      <a
-                        href={selectedSize.datasheet_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 bg-[#1a1a1a] hover:bg-amber-900/30 border border-amber-900/30 rounded-lg p-3 transition-colors"
-                      >
-                        <Download className="w-4 h-4 text-amber-400" />
-                        <span className="text-sm font-medium text-amber-200">{t.downloadDatasheet}</span>
-                      </a>
-                    )}
+                    {(() => {
+                      const urls = selectedSize?.datasheet_urls || {};
+                      const datasheetUrl = urls[lang as keyof typeof urls] || urls['en'] || selectedSize?.datasheet_url;
+                      if (!datasheetUrl) return null;
+                      return (
+                        <a
+                          href={datasheetUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center gap-2 bg-[#1a1a1a] hover:bg-amber-900/30 border border-amber-900/30 rounded-lg p-3 transition-colors"
+                        >
+                          <Download className="w-4 h-4 text-amber-400" />
+                          <span className="text-sm font-medium text-amber-200">{t.downloadDatasheet}</span>
+                        </a>
+                      );
+                    })()}
                   </CardContent>
                 </Card>
               )}
