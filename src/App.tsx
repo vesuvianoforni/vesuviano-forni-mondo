@@ -41,6 +41,7 @@ import ERPBruciatori from "./pages/ERPBruciatori";
 import ERPListini from "./pages/ERPListini";
 import ERPOrdini from "./pages/ERPOrdini";
 import ERPUtenti from "./pages/ERPUtenti";
+import ERPProntaConsegna from "./pages/ERPProntaConsegna";
 
 const queryClient = new QueryClient();
 
@@ -150,6 +151,7 @@ const App = () => {
               <Route path="leads" element={<ERPPlaceholder title="Lead Sito Web" description="Gestione dei lead provenienti dal sito web e dai form di contatto." />} />
               <Route path="ordini" element={<ERPOrdini />} />
               <Route path="utenti" element={<ERPUtenti />} />
+              <Route path="pronta-consegna" element={<ERPProntaConsegna />} />
             </Route>
 
             {/* Legacy admin redirects */}
