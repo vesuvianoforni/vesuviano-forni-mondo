@@ -196,9 +196,7 @@ const AdminProforma = () => {
     const prices = coating.prices[priceKey];
     if (!prices) return oven.base_price_a || 0;
     
-    if (fuelType === 'Gas') return prices.gas || prices.base || 0;
-    if (fuelType === 'Elettrico') return prices.electric || prices.base || 0;
-    return prices.base || 0;
+    return prices.price || prices.base || 0;
   };
 
   const addBurnerItem = (burner: any) => {
