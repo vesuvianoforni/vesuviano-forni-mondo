@@ -239,7 +239,7 @@ const AdminProforma = () => {
     }
     
     // Recalculate price when oven config changes, but ONLY if price was not manually set
-    if (updated[index].item_type === 'oven' && ['diameter', 'coating'].includes(field)) {
+    if (updated[index].item_type === 'oven' && ['fuel_type', 'diameter', 'coating'].includes(field)) {
       const item = updated[index];
       const oven = ovens.find(o => o.model_name === item.model_name);
       if (oven) {
@@ -727,8 +727,25 @@ const AdminProforma = () => {
                             </div>
                           </div>
                           
-                          {item.item_type === 'oven' && config && (
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {item.item_type === 'oven' && config && (() => {
+                            // Filter fuel types: exclude Gas (gas = legna + burner add-on)
+                            const availableFuels = config.fuelTypes.filter(f => !f.toLowerCase().includes('gas'));
+                            const showFuelSelector = availableFuels.length > 1;
+                            return (
+                            <div className={`grid grid-cols-2 ${showFuelSelector ? 'sm:grid-cols-4' : 'sm:grid-cols-3'} gap-2`}>
+                              {showFuelSelector && (
+                                <div>
+                                  <Label className="text-[10px] text-muted-foreground">Tipo</Label>
+                                  <Select value={item.fuel_type || ''} onValueChange={(v) => updateItem(idx, 'fuel_type', v)}>
+                                    <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                      {availableFuels.map(f => (
+                                        <SelectItem key={f} value={f}>{f}</SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              )}
                               <div>
                                 <Label className="text-[10px] text-muted-foreground">Dimensione</Label>
                                 <Select value={String(item.diameter || '')} onValueChange={(v) => updateItem(idx, 'diameter', parseInt(v))}>
@@ -761,7 +778,8 @@ const AdminProforma = () => {
                                 />
                               </div>
                             </div>
-                          )}
+                            );
+                          })()}
 
                           {item.item_type === 'burner' && (
                             <div className="grid grid-cols-2 gap-2">
