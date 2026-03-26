@@ -236,7 +236,7 @@ const AdminProforma = () => {
     }
     
     // Recalculate price when oven config changes, but ONLY if price was not manually set
-    if (updated[index].item_type === 'oven' && ['fuel_type', 'diameter', 'coating'].includes(field)) {
+    if (updated[index].item_type === 'oven' && ['diameter', 'coating'].includes(field)) {
       const item = updated[index];
       const oven = ovens.find(o => o.model_name === item.model_name);
       if (oven) {
