@@ -710,7 +710,7 @@ const AdminProforma = () => {
                                   <p className="font-semibold text-sm">{item.model_name || item.custom_name}</p>
                                   {item.item_type === 'oven' && (
                                     <p className="text-xs text-muted-foreground">
-                                      {item.fuel_type} • Ø{item.diameter}cm • {item.coating}
+                                      Ø{item.diameter}cm • {item.coating}
                                     </p>
                                   )}
                                   {item.custom_description && (
@@ -725,18 +725,7 @@ const AdminProforma = () => {
                           </div>
                           
                           {item.item_type === 'oven' && config && (
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                              <div>
-                                <Label className="text-[10px] text-muted-foreground">Alimentazione</Label>
-                                <Select value={item.fuel_type || ''} onValueChange={(v) => updateItem(idx, 'fuel_type', v)}>
-                                  <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
-                                  <SelectContent>
-                                    {config.fuelTypes.map(f => (
-                                      <SelectItem key={f} value={f}>{f}</SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                               <div>
                                 <Label className="text-[10px] text-muted-foreground">Dimensione</Label>
                                 <Select value={String(item.diameter || '')} onValueChange={(v) => updateItem(idx, 'diameter', parseInt(v))}>
