@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { DollarSign, Save, Loader2, Search, ChevronDown, ChevronRight, Flame, ImagePlus } from 'lucide-react';
 
 type PriceListCode = 'A' | 'B' | 'C';
-type PriceField = 'price' | 'onSite';
+type PriceField = 'price' | 'electric' | 'onSite';
 
 const PRICE_LISTS: { code: PriceListCode; name: string }[] = [
   { code: 'A', name: 'Listino A' },
