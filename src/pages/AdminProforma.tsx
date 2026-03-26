@@ -196,6 +196,9 @@ const AdminProforma = () => {
     const prices = coating.prices[priceKey];
     if (!prices) return oven.base_price_a || 0;
     
+    // Electric and rotating ovens have their own prices
+    if (fuelType?.toLowerCase().includes('elettric') && prices.electric) return prices.electric;
+    if (fuelType?.toLowerCase().includes('rotant') && prices.rotating) return prices.rotating;
     return prices.price || prices.base || 0;
   };
 
