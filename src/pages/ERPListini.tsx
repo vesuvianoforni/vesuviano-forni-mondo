@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { DollarSign, Save, Loader2, Search, ChevronDown, ChevronRight, Flame, ImagePlus } from 'lucide-react';
 
 type PriceListCode = 'A' | 'B' | 'C';
-type PriceField = 'price' | 'onSite';
+type PriceField = 'price' | 'electric' | 'rotating' | 'onSite';
 
 const PRICE_LISTS: { code: PriceListCode; name: string }[] = [
   { code: 'A', name: 'Listino A' },
@@ -273,7 +273,27 @@ const ERPListini = () => {
 
               {isExpanded && hasSizes && (
                 <CardContent className="pt-0 pb-4 px-4">
-                  {oven.sizes.map((size: any, sIdx: number) => (
+                  {oven.sizes.map((size: any, sIdx: number) => {
+                    const hasElectric = Array.isArray(oven.fuel_type) && oven.fuel_type.some((f: string) => f?.toLowerCase().includes('elettric'));
+                    const hasRotating = oven.model_name?.toLowerCase().includes('rotant');
+                    
+                    const getFields = (): PriceField[] => {
+                      const fields: PriceField[] = ['price'];
+                      if (hasElectric) fields.push('electric');
+                      if (hasRotating) fields.push('rotating');
+                      if (size.can_be_built_on_site) fields.push('onSite');
+                      return fields;
+                    };
+                    const fields = getFields();
+                    
+                    const fieldLabels: Record<PriceField, string> = {
+                      price: 'Legna',
+                      electric: 'Elettrico',
+                      rotating: 'Rotante',
+                      onSite: 'Sul Posto',
+                    };
+
+                    return (
                     <div key={sIdx} className="mb-4 last:mb-0">
                       <div className="text-amber-300 font-semibold text-sm mb-2 flex items-center gap-2">
                         Ø {size.diameter}cm — {size.pizza_capacity} pizze
@@ -287,7 +307,7 @@ const ERPListini = () => {
                               <tr className="text-gray-400 text-xs border-b border-amber-900/10">
                                 <th className="text-left py-1.5 pr-3 w-40">Rivestimento</th>
                                 {PRICE_LISTS.map(pl => (
-                                  <th key={pl.code} colSpan={size.can_be_built_on_site ? 2 : 1} className="text-center py-1.5 px-1 border-l border-amber-900/10">
+                                  <th key={pl.code} colSpan={fields.length} className="text-center py-1.5 px-1 border-l border-amber-900/10">
                                     {pl.name}
                                   </th>
                                 ))}
@@ -296,8 +316,11 @@ const ERPListini = () => {
                                 <th></th>
                                 {PRICE_LISTS.map(pl => (
                                   <React.Fragment key={pl.code}>
-                                    <th className="text-center py-1 px-1 border-l border-amber-900/10">Prezzo</th>
-                                    {size.can_be_built_on_site && <th className="text-center py-1 px-1">Sul Posto</th>}
+                                    {fields.map((field, fIdx) => (
+                                      <th key={field} className={`text-center py-1 px-1 ${fIdx === 0 ? 'border-l border-amber-900/10' : ''}`}>
+                                        {fieldLabels[field]}
+                                      </th>
+                                    ))}
                                   </React.Fragment>
                                 ))}
                               </tr>
@@ -334,9 +357,6 @@ const ERPListini = () => {
                                   </td>
                                   {PRICE_LISTS.map(pl => {
                                     const prices = c.prices?.[`list${pl.code}`] || {};
-                                    const fields: PriceField[] = size.can_be_built_on_site
-                                      ? ['price', 'onSite']
-                                      : ['price'];
                                     return (
                                       <React.Fragment key={pl.code}>
                                         {fields.map((field, fIdx) => (
@@ -362,7 +382,9 @@ const ERPListini = () => {
                         <p className="text-gray-500 text-xs">Nessun rivestimento configurato</p>
                       )}
                     </div>
-                  ))}
+                    );
+                  })}
+
                 </CardContent>
               )}
             </Card>
