@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { DollarSign, Save, Loader2, Search, ChevronDown, ChevronRight, Flame, ImagePlus } from 'lucide-react';
 
 type PriceListCode = 'A' | 'B' | 'C';
-type PriceField = 'base' | 'gas' | 'electric' | 'onSite';
+type PriceField = 'price' | 'onSite';
 
 const PRICE_LISTS: { code: PriceListCode; name: string }[] = [
   { code: 'A', name: 'Listino A' },
@@ -287,7 +287,7 @@ const ERPListini = () => {
                               <tr className="text-gray-400 text-xs border-b border-amber-900/10">
                                 <th className="text-left py-1.5 pr-3 w-40">Rivestimento</th>
                                 {PRICE_LISTS.map(pl => (
-                                  <th key={pl.code} colSpan={size.can_be_built_on_site ? 4 : 3} className="text-center py-1.5 px-1 border-l border-amber-900/10">
+                                  <th key={pl.code} colSpan={size.can_be_built_on_site ? 2 : 1} className="text-center py-1.5 px-1 border-l border-amber-900/10">
                                     {pl.name}
                                   </th>
                                 ))}
@@ -296,10 +296,8 @@ const ERPListini = () => {
                                 <th></th>
                                 {PRICE_LISTS.map(pl => (
                                   <React.Fragment key={pl.code}>
-                                    <th className="text-center py-1 px-1 border-l border-amber-900/10">Base</th>
-                                    <th className="text-center py-1 px-1">Gas</th>
-                                    <th className="text-center py-1 px-1">Elett.</th>
-                                    {size.can_be_built_on_site && <th className="text-center py-1 px-1">Posto</th>}
+                                    <th className="text-center py-1 px-1 border-l border-amber-900/10">Prezzo</th>
+                                    {size.can_be_built_on_site && <th className="text-center py-1 px-1">Sul Posto</th>}
                                   </React.Fragment>
                                 ))}
                               </tr>
@@ -337,8 +335,8 @@ const ERPListini = () => {
                                   {PRICE_LISTS.map(pl => {
                                     const prices = c.prices?.[`list${pl.code}`] || {};
                                     const fields: PriceField[] = size.can_be_built_on_site
-                                      ? ['base', 'gas', 'electric', 'onSite']
-                                      : ['base', 'gas', 'electric'];
+                                      ? ['price', 'onSite']
+                                      : ['price'];
                                     return (
                                       <React.Fragment key={pl.code}>
                                         {fields.map((field, fIdx) => (
