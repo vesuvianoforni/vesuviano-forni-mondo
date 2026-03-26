@@ -382,7 +382,9 @@ const ERPListini = () => {
                         <p className="text-gray-500 text-xs">Nessun rivestimento configurato</p>
                       )}
                     </div>
-                  ))}
+                    );
+                  })}
+
                 </CardContent>
               )}
             </Card>
