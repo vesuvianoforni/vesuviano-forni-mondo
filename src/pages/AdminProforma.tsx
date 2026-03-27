@@ -577,7 +577,8 @@ const AdminProforma = () => {
                   <Select value={bankAccount} onValueChange={setBankAccount}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="intesa">🇮🇹 Intesa San Paolo</SelectItem>
+                      <SelectItem value="intesa">🇮🇹 Intesa San Paolo (Unita 1)</SelectItem>
+                      <SelectItem value="intesa_climatel">🇮🇹 Intesa San Paolo (Climatel)</SelectItem>
                       <SelectItem value="wise_uk">🇬🇧 Wise UK</SelectItem>
                     </SelectContent>
                   </Select>
