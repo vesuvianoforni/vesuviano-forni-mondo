@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { Plus, Trash2, ArrowLeft, FileText, Copy, ExternalLink, Loader2, Globe, DollarSign, Percent } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import { format } from 'date-fns';
 import { it as itLocale } from 'date-fns/locale';
 
@@ -278,7 +279,8 @@ const AdminProforma = () => {
   const totalPrice = items.reduce((sum, item) => sum + item.line_total, 0);
   const discountAmount = totalPrice * (discountPercentage / 100);
   const discountedTotal = totalPrice - discountAmount;
-  const depositPercentage = paymentOption === 'deposit_5' ? 5 : 50;
+  const [customDepositPct, setCustomDepositPct] = useState(5);
+  const depositPercentage = customDepositPct;
   const depositAmount = discountedTotal * (depositPercentage / 100);
   const sym = getCurrencySymbol(currency);
 
@@ -386,6 +388,7 @@ const AdminProforma = () => {
     setNotes('');
     setDeliveryDays('');
     setPaymentOption('deposit_5');
+    setCustomDepositPct(5);
     setItems([]);
     setLanguage('it');
     setCurrency('EUR');
@@ -731,7 +734,9 @@ const AdminProforma = () => {
                             // Filter fuel types: exclude Gas (gas = legna + burner add-on)
                             const availableFuels = config.fuelTypes.filter(f => !f.toLowerCase().includes('gas'));
                             const showFuelSelector = availableFuels.length > 1;
+                            const allowedSizes: number[] = (item.specifications as any)?.allowed_sizes || [];
                             return (
+                            <div className="space-y-3">
                             <div className={`grid grid-cols-2 ${showFuelSelector ? 'sm:grid-cols-4' : 'sm:grid-cols-3'} gap-2`}>
                               {showFuelSelector && (
                                 <div>
@@ -777,6 +782,47 @@ const AdminProforma = () => {
                                   onChange={(e) => updateItem(idx, 'unit_price', parseFloat(e.target.value) || 0)}
                                 />
                               </div>
+                            </div>
+
+                            {/* Allowed sizes for customer */}
+                            <div>
+                              <Label className="text-[10px] text-muted-foreground mb-1 block">Dimensioni selezionabili dal cliente</Label>
+                              <div className="flex flex-wrap gap-3">
+                                {config.sizes.map(s => {
+                                  const isAllowed = allowedSizes.length === 0 || allowedSizes.includes(s.diameter);
+                                  return (
+                                    <label key={s.diameter} className="flex items-center gap-1.5 text-xs cursor-pointer">
+                                      <Checkbox
+                                        checked={isAllowed && allowedSizes.length > 0}
+                                        onCheckedChange={(checked) => {
+                                          let newAllowed: number[];
+                                          if (allowedSizes.length === 0) {
+                                            // First time: select only this one (all were implicitly allowed)
+                                            newAllowed = checked ? [s.diameter] : config.sizes.map(sz => sz.diameter).filter(d => d !== s.diameter);
+                                          } else {
+                                            newAllowed = checked
+                                              ? [...allowedSizes, s.diameter]
+                                              : allowedSizes.filter(d => d !== s.diameter);
+                                          }
+                                          // Must keep at least 1
+                                          if (newAllowed.length === 0) return;
+                                          const updated = [...items];
+                                          updated[idx] = {
+                                            ...updated[idx],
+                                            specifications: { ...(updated[idx].specifications || {}), allowed_sizes: newAllowed },
+                                          };
+                                          setItems(updated);
+                                        }}
+                                      />
+                                      Ø {s.diameter}cm
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                              {allowedSizes.length === 0 && (
+                                <p className="text-[10px] text-muted-foreground mt-1">Tutte le dimensioni sono selezionabili. Clicca per limitare.</p>
+                              )}
+                            </div>
                             </div>
                             );
                           })()}
@@ -857,16 +903,31 @@ const AdminProforma = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <Label className="text-xs">Opzione Pagamento</Label>
-                    <Select value={paymentOption} onValueChange={setPaymentOption}>
+                    <Select value={paymentOption} onValueChange={(v) => {
+                      setPaymentOption(v);
+                      if (v === 'deposit_5') setCustomDepositPct(5);
+                      else if (v === 'deposit_50') setCustomDepositPct(50);
+                    }}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="deposit_5">5% deposito (blocca offerta)</SelectItem>
                         <SelectItem value="deposit_50">50% acconto (spedizione rapida)</SelectItem>
+                        <SelectItem value="custom">Percentuale custom</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div>
-                    <Label className="text-xs">Giorni consegna (se 50%)</Label>
+                    <Label className="text-xs">% Acconto</Label>
+                    <Input
+                      type="number"
+                      min={1}
+                      max={100}
+                      value={customDepositPct}
+                      onChange={(e) => setCustomDepositPct(Math.min(100, Math.max(1, parseFloat(e.target.value) || 5)))}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Giorni consegna</Label>
                     <Input
                       type="number"
                       value={deliveryDays}
@@ -874,6 +935,8 @@ const AdminProforma = () => {
                       placeholder="30"
                     />
                   </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <Label className="text-xs flex items-center gap-1"><Percent className="w-3 h-3" /> Sconto (%)</Label>
                     <Input
