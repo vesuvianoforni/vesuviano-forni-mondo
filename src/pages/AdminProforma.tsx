@@ -734,7 +734,9 @@ const AdminProforma = () => {
                             // Filter fuel types: exclude Gas (gas = legna + burner add-on)
                             const availableFuels = config.fuelTypes.filter(f => !f.toLowerCase().includes('gas'));
                             const showFuelSelector = availableFuels.length > 1;
+                            const allowedSizes: number[] = (item.specifications as any)?.allowed_sizes || [];
                             return (
+                            <div className="space-y-3">
                             <div className={`grid grid-cols-2 ${showFuelSelector ? 'sm:grid-cols-4' : 'sm:grid-cols-3'} gap-2`}>
                               {showFuelSelector && (
                                 <div>
@@ -780,6 +782,47 @@ const AdminProforma = () => {
                                   onChange={(e) => updateItem(idx, 'unit_price', parseFloat(e.target.value) || 0)}
                                 />
                               </div>
+                            </div>
+
+                            {/* Allowed sizes for customer */}
+                            <div>
+                              <Label className="text-[10px] text-muted-foreground mb-1 block">Dimensioni selezionabili dal cliente</Label>
+                              <div className="flex flex-wrap gap-3">
+                                {config.sizes.map(s => {
+                                  const isAllowed = allowedSizes.length === 0 || allowedSizes.includes(s.diameter);
+                                  return (
+                                    <label key={s.diameter} className="flex items-center gap-1.5 text-xs cursor-pointer">
+                                      <Checkbox
+                                        checked={isAllowed && allowedSizes.length > 0}
+                                        onCheckedChange={(checked) => {
+                                          let newAllowed: number[];
+                                          if (allowedSizes.length === 0) {
+                                            // First time: select only this one (all were implicitly allowed)
+                                            newAllowed = checked ? [s.diameter] : config.sizes.map(sz => sz.diameter).filter(d => d !== s.diameter);
+                                          } else {
+                                            newAllowed = checked
+                                              ? [...allowedSizes, s.diameter]
+                                              : allowedSizes.filter(d => d !== s.diameter);
+                                          }
+                                          // Must keep at least 1
+                                          if (newAllowed.length === 0) return;
+                                          const updated = [...items];
+                                          updated[idx] = {
+                                            ...updated[idx],
+                                            specifications: { ...(updated[idx].specifications || {}), allowed_sizes: newAllowed },
+                                          };
+                                          setItems(updated);
+                                        }}
+                                      />
+                                      Ø {s.diameter}cm
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                              {allowedSizes.length === 0 && (
+                                <p className="text-[10px] text-muted-foreground mt-1">Tutte le dimensioni sono selezionabili. Clicca per limitare.</p>
+                              )}
+                            </div>
                             </div>
                             );
                           })()}
