@@ -1201,9 +1201,35 @@ const ProformaPage = () => {
                             <span className="font-medium text-right text-xs">Wise Payments Limited, London, UK</span>
                           </div>
                         </>
+                      ) : proforma?.bank_account === 'intesa_climatel' ? (
+                        <>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">{t.bankDetailsHolder}:</span>
+                            <span className="font-medium text-right">CLIMATEL di Elefante Pasquale Elefante</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">{t.bankDetailsBank}:</span>
+                            <span className="font-medium text-right text-xs">Intesa Sanpaolo SPA — Via SS. Martiri, 13, Sant'Egidio del Monte Albino (SA)</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-500">{t.bankDetailsIBAN}:</span>
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono font-medium text-right text-xs sm:text-sm">IT82 S030 6976 4511 0000 0003 441</span>
+                              <button
+                                onClick={() => { navigator.clipboard.writeText('IT82S0306976451100000003441'); toast.success(t.copied); }}
+                                className="text-amber-400 hover:text-amber-300 p-1"
+                              >
+                                <Copy className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">{t.bankDetailsBIC}:</span>
+                            <span className="font-mono font-medium">BCITITMMXXX</span>
+                          </div>
+                        </>
                       ) : (
                         <>
-                          {/* Italian Intesa San Paolo for all other languages */}
                           <div className="flex justify-between">
                             <span className="text-gray-500">{t.bankDetailsHolder}:</span>
                             <span className="font-medium text-right">UNITA 1 di Stanislao Elefante</span>
