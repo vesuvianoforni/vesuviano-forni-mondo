@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { Plus, Trash2, ArrowLeft, FileText, Copy, ExternalLink, Loader2, Globe, DollarSign, Percent } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import { format } from 'date-fns';
 import { it as itLocale } from 'date-fns/locale';
 
@@ -278,7 +279,8 @@ const AdminProforma = () => {
   const totalPrice = items.reduce((sum, item) => sum + item.line_total, 0);
   const discountAmount = totalPrice * (discountPercentage / 100);
   const discountedTotal = totalPrice - discountAmount;
-  const depositPercentage = paymentOption === 'deposit_5' ? 5 : 50;
+  const [customDepositPct, setCustomDepositPct] = useState(5);
+  const depositPercentage = customDepositPct;
   const depositAmount = discountedTotal * (depositPercentage / 100);
   const sym = getCurrencySymbol(currency);
 
@@ -386,6 +388,7 @@ const AdminProforma = () => {
     setNotes('');
     setDeliveryDays('');
     setPaymentOption('deposit_5');
+    setCustomDepositPct(5);
     setItems([]);
     setLanguage('it');
     setCurrency('EUR');
