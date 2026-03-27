@@ -860,16 +860,31 @@ const AdminProforma = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <Label className="text-xs">Opzione Pagamento</Label>
-                    <Select value={paymentOption} onValueChange={setPaymentOption}>
+                    <Select value={paymentOption} onValueChange={(v) => {
+                      setPaymentOption(v);
+                      if (v === 'deposit_5') setCustomDepositPct(5);
+                      else if (v === 'deposit_50') setCustomDepositPct(50);
+                    }}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="deposit_5">5% deposito (blocca offerta)</SelectItem>
                         <SelectItem value="deposit_50">50% acconto (spedizione rapida)</SelectItem>
+                        <SelectItem value="custom">Percentuale custom</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div>
-                    <Label className="text-xs">Giorni consegna (se 50%)</Label>
+                    <Label className="text-xs">% Acconto</Label>
+                    <Input
+                      type="number"
+                      min={1}
+                      max={100}
+                      value={customDepositPct}
+                      onChange={(e) => setCustomDepositPct(Math.min(100, Math.max(1, parseFloat(e.target.value) || 5)))}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Giorni consegna</Label>
                     <Input
                       type="number"
                       value={deliveryDays}
@@ -877,6 +892,8 @@ const AdminProforma = () => {
                       placeholder="30"
                     />
                   </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <Label className="text-xs flex items-center gap-1"><Percent className="w-3 h-3" /> Sconto (%)</Label>
                     <Input
