@@ -740,7 +740,11 @@ const ProformaPage = () => {
             ovenModels.filter(o => o.model_name === item.model_name).flatMap(o => o.fuel_type)
           ));
           
-          const availableSizes = oven.sizes || [];
+          const allSizes = oven.sizes || [];
+          const allowedSizes: number[] = (item.specifications as any)?.allowed_sizes || [];
+          const availableSizes = allowedSizes.length > 0
+            ? allSizes.filter(s => allowedSizes.includes(s.diameter))
+            : allSizes;
           const selectedSize = availableSizes.find(s => s.diameter === config.diameter);
           const availableCoatings = selectedSize?.coatings || [];
           const selectedCoatingData = availableCoatings.find(c => c.name === config.coating) || availableCoatings[0];
