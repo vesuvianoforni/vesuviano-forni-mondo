@@ -231,7 +231,7 @@ const ProductCategories = () => {
                 size="lg"
                 variant="outline"
                 className="border-vesuviano-500 text-vesuviano-600 hover:bg-vesuviano-500 hover:text-white px-6 sm:px-8 py-2.5 sm:py-3 transition-all duration-300 text-sm sm:text-base"
-                onClick={() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => document.getElementById('oven-gallery')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 {t('products.customSolutions.viewGallery')}
               </Button>
