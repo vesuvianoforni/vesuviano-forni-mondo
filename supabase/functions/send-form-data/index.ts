@@ -254,20 +254,17 @@ ${JSON.stringify(data, null, 2)}
 
       console.log('Sending CRM webhook payload:', JSON.stringify(crmPayload))
 
-      // Fire and forget - don't await to not block the main flow
-      fetch(crmWebhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(crmPayload)
-      })
-        .then(res => {
-          console.log('CRM webhook response status:', res.status)
-          return res.text()
+      try {
+        const crmRes = await fetch(crmWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(crmPayload)
         })
-        .then(text => console.log('CRM webhook response body:', text))
-        .catch(err => console.error('CRM webhook error:', err.message || err))
+        const crmText = await crmRes.text()
+        console.log('CRM webhook response status:', crmRes.status, 'body:', crmText)
+      } catch (err) {
+        console.error('CRM webhook error:', err.message || err)
+      }
     } else {
       console.log('CRM_WEBHOOK_URL not configured, skipping CRM sync')
     }
