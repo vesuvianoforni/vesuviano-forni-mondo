@@ -530,6 +530,45 @@ serve(async (req) => {
 
     console.log('Ready-to-ship proforma created:', proforma.id)
 
+    // Sync lead to external ERP via webhook
+    const erpWebhookUrl = Deno.env.get('ERP_WEBHOOK_URL')
+    if (erpWebhookUrl) {
+      const erpPayload = {
+        source: 'vesuviano_website',
+        event_type: 'website_lead_created',
+        form_type: 'ready_to_ship',
+        customer_name: customerName,
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        phone,
+        city: city || null,
+        oven_type: `${rtsOven.model_name} - Ø${rtsOven.diameter}cm`,
+        notes: `Pronta consegna - ${rtsOven.coating || 'N/A'} - Pro-forma: ${proforma.proforma_number || proforma.id}`,
+        metadata: {
+          ready_to_ship_oven_id: readyToShipOvenId,
+          proforma_id: proforma.id,
+          proforma_number: proforma.proforma_number,
+          model_name: rtsOven.model_name,
+          diameter: rtsOven.diameter,
+          coating: rtsOven.coating,
+          price: effectivePrice,
+        },
+        timestamp: new Date().toISOString()
+      }
+
+      try {
+        const erpRes = await fetch(erpWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(erpPayload)
+        })
+        console.log('ERP webhook response:', erpRes.status)
+      } catch (err) {
+        console.error('ERP webhook error:', err.message || err)
+      }
+    }
+
     return new Response(
       JSON.stringify({
         success: true,
