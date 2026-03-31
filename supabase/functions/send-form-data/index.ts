@@ -295,20 +295,17 @@ ${JSON.stringify(data, null, 2)}
 
       console.log('Sending ERP webhook payload:', JSON.stringify(erpPayload))
 
-      // Fire and forget - don't await to not block the main flow
-      fetch(erpWebhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(erpPayload)
-      })
-        .then(res => {
-          console.log('ERP webhook response status:', res.status)
-          return res.text()
+      try {
+        const erpRes = await fetch(erpWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(erpPayload)
         })
-        .then(text => console.log('ERP webhook response body:', text))
-        .catch(err => console.error('ERP webhook error:', err.message || err))
+        const erpText = await erpRes.text()
+        console.log('ERP webhook response status:', erpRes.status, 'body:', erpText)
+      } catch (err) {
+        console.error('ERP webhook error:', err.message || err)
+      }
     } else {
       console.log('ERP_WEBHOOK_URL not configured, skipping ERP sync')
     }

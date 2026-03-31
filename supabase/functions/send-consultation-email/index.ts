@@ -628,7 +628,7 @@ serve(async (req) => {
       console.error('Database error saving lead:', leadDbError)
     }
 
-    // Sync lead to external ERP via webhook (fire and forget)
+    // Sync lead to external ERP via webhook
     const erpWebhookUrl = Deno.env.get('ERP_WEBHOOK_URL')
     console.log('ERP_WEBHOOK_URL configured:', erpWebhookUrl ? 'Yes' : 'No')
     
@@ -657,20 +657,17 @@ serve(async (req) => {
 
       console.log('Sending ERP webhook payload:', JSON.stringify(erpPayload))
 
-      // Fire and forget - don't await to not block the main flow
-      fetch(erpWebhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(erpPayload)
-      })
-        .then(res => {
-          console.log('ERP webhook response status:', res.status)
-          return res.text()
+      try {
+        const erpRes = await fetch(erpWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(erpPayload)
         })
-        .then(text => console.log('ERP webhook response body:', text))
-        .catch(err => console.error('ERP webhook error:', err.message || err))
+        const erpText = await erpRes.text()
+        console.log('ERP webhook response status:', erpRes.status, 'body:', erpText)
+      } catch (err) {
+        console.error('ERP webhook error:', err.message || err)
+      }
     } else {
       console.log('ERP_WEBHOOK_URL not configured, skipping ERP sync')
     }
