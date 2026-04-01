@@ -202,9 +202,9 @@ Do NOT add any text or overlays. Keep the oven/subject as the hero element but m
     }
 
     const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const sbUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(sbUrl, supabaseKey);
 
     const base64Data = imageUrl.split(",")[1];
     const binaryString = atob(base64Data);
