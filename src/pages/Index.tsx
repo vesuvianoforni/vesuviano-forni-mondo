@@ -16,6 +16,7 @@ import OvenDataInitializer from "@/components/OvenDataInitializer";
 import ConsultationForm from "@/components/ConsultationForm";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import FAQSection from "@/components/FAQSection";
+import HomeBlogSection from "@/components/HomeBlogSection";
 
 
 import WhatsAppButton from "@/components/WhatsAppButton";
