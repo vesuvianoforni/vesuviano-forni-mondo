@@ -152,8 +152,8 @@ serve(async (req) => {
     }
 
     const baseImage = selectImage(topic);
-    const siteUrl = "https://vesuviano-forni-mondo.lovable.app";
-    const baseImageUrl = `${siteUrl}${baseImage}`;
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") || "https://lgueucxznbqgvhpjzurf.supabase.co";
+    const baseImageUrl = `${supabaseUrl}/storage/v1/object/public${baseImage}`;
 
     console.log("Generating blog cover for topic:", topic, "using base image:", baseImage);
 
