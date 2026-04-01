@@ -16,6 +16,7 @@ import OvenDataInitializer from "@/components/OvenDataInitializer";
 import ConsultationForm from "@/components/ConsultationForm";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import FAQSection from "@/components/FAQSection";
+import HomeBlogSection from "@/components/HomeBlogSection";
 
 
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -235,6 +236,10 @@ const Index = () => {
           <ConsultationForm />
         </section>
         
+        <section id="blog" aria-label="Blog">
+          <HomeBlogSection />
+        </section>
+
         <section id="faq" aria-label="Domande frequenti">
           <FAQSection />
         </section>
