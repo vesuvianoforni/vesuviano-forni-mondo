@@ -236,6 +236,10 @@ const Index = () => {
           <ConsultationForm />
         </section>
         
+        <section id="blog" aria-label="Blog">
+          <HomeBlogSection />
+        </section>
+
         <section id="faq" aria-label="Domande frequenti">
           <FAQSection />
         </section>
