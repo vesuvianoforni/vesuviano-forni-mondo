@@ -5,134 +5,39 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Full portfolio of site images organized by category for variety
-const IMAGE_POOL: Record<string, string[]> = {
-  gas: [
-    "/lovable-uploads/forno-gas-mosaico-azzurro.jpg",
-    "/lovable-uploads/forno-gas-verde-mosaico.png",
-    "/lovable-uploads/forno-mosaico-bianco.jpg",
-    "/lovable-uploads/forno-mosaico-rosso.jpg",
-    "/lovable-uploads/forno-mosaico-nero-beige.jpg",
-    "/lovable-uploads/forno-mosaico-grigio-nero.jpg",
-  ],
-  electric: [
-    "/lovable-uploads/forno-nero-elegante.png",
-    "/lovable-uploads/forno-nero-metallico-nuovo.png",
-    "/lovable-uploads/forno-metallo-nero.png",
-    "/lovable-uploads/forno-metallo-nero-nuovo.png",
-    "/lovable-uploads/forno-bianco-moderno.png",
-  ],
-  rotante: [
-    "/lovable-uploads/metallico-design-ar.jpg",
-    "/lovable-uploads/forno-rotativo-mosaico-nero.jpg",
-    "/lovable-uploads/forno-rotativo-mosaico.png",
-    "/lovable-uploads/forno-metallo-bianco.png",
-    "/lovable-uploads/forno-metallo-bianco-nuovo.png",
-  ],
-  vesuviobuono: [
-    "/lovable-uploads/vesuviobuono-zero-emissioni.jpg",
-    "/lovable-uploads/vesuviobuono-forno-legna.jpg",
-    "/lovable-uploads/vesuviobuono-verde-dettaglio.jpg",
-    "/lovable-uploads/vesuviobuono-verde-mosaico.jpg",
-    "/lovable-uploads/vesuviobuono-marrone-aperto.jpg",
-    "/lovable-uploads/vesuviobuono-marrone-completo.jpg",
-    "/lovable-uploads/vesuviobuono-ostepizza-aperto.jpg",
-    "/lovable-uploads/vesuviobuono-ostepizza-completo.png",
-    "/lovable-uploads/vesuviobuono-dettaglio-bocca.jpg",
-  ],
-  pizza: [
-    "/lovable-uploads/vesuviobuono-pizza-perfetta.jpg",
-    "/lovable-uploads/vesuviobuono-forno-azione.jpg",
-    "/lovable-uploads/vesuviobuono-osteria-pizza.jpg",
-    "/lovable-uploads/pizza-vico-event.png",
-    "/lovable-uploads/forno-arancione-terra-del-gusto.png",
-  ],
-  artigianato: [
-    "/lovable-uploads/artigiano-lavorazione.jpg",
-    "/lovable-uploads/artigiano-mani-argilla.jpg",
-    "/lovable-uploads/mattoni-refrattari-hero.jpg",
-    "/lovable-uploads/laboratorio-sant-anastasia.png",
-  ],
-  design: [
-    "/lovable-uploads/forno-mosaico-rosso.jpg",
-    "/lovable-uploads/forno-mosaico-bianco.jpg",
-    "/lovable-uploads/forno-mosaico-nero-beige.jpg",
-    "/lovable-uploads/forno-mosaico-grigio-nero.jpg",
-    "/lovable-uploads/forno-gas-verde-mosaico.png",
-    "/lovable-uploads/forno-gas-mosaico-azzurro.jpg",
-    "/lovable-uploads/forno-rotativo-mosaico.png",
-    "/lovable-uploads/vesuviobuono-verde-mosaico.jpg",
-    "/lovable-uploads/forni-colorati-showroom.png",
-  ],
-  showroom: [
-    "/lovable-uploads/forni-colorati-showroom.png",
-    "/lovable-uploads/logistica-internazionale-nyc.png",
-    "/lovable-uploads/pizza-vico-event.png",
-    "/lovable-uploads/laboratorio-sant-anastasia.png",
-  ],
-  pronta_consegna: [
-    "/lovable-uploads/forno-pronta-consegna-1.png",
-    "/lovable-uploads/forno-pronta-consegna-2.png",
-    "/lovable-uploads/forno-pronta-consegna-3.png",
-    "/lovable-uploads/forno-pronta-consegna-4.png",
-    "/lovable-uploads/forno-pronta-consegna-5.png",
-  ],
-  tradizionale: [
-    "/lovable-uploads/tradizionale-cupola-ar.jpg",
-    "/lovable-uploads/vesuviobuono-forno-legna.jpg",
-    "/lovable-uploads/vesuviobuono-marrone-aperto.jpg",
-    "/lovable-uploads/vesuviobuono-marrone-completo.jpg",
-    "/lovable-uploads/mattoni-refrattari-hero.jpg",
-    "/lovable-uploads/forno-arancione-terra-del-gusto.png",
-  ],
-  metallico: [
-    "/lovable-uploads/forno-metallo-bianco.png",
-    "/lovable-uploads/forno-metallo-bianco-nuovo.png",
-    "/lovable-uploads/forno-metallo-nero.png",
-    "/lovable-uploads/forno-metallo-nero-nuovo.png",
-    "/lovable-uploads/forno-nero-metallico-nuovo.png",
-    "/lovable-uploads/metallico-design-ar.jpg",
-    "/lovable-uploads/forno-bianco-moderno.png",
-  ],
-};
-
-// Flat list of ALL images for generic fallback
-const ALL_IMAGES = [...new Set(Object.values(IMAGE_POOL).flat())];
-
-function pickRandom<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-// Match topic to multiple relevant categories, then pick randomly from the combined pool
-function selectImage(topic: string): string {
+// Map topic keywords to visual scene descriptions for the AI
+function buildScenePrompt(topic: string, style?: string): string {
   const t = topic.toLowerCase();
-  const matched: string[] = [];
+  let scene = "";
 
-  const keywords: Record<string, string[]> = {
-    gas: ["gas", "bruciatore", "fiamma"],
-    electric: ["elettric", "electric", "électrique", "elektrisch"],
-    rotante: ["rotan", "rotativ", "rotating", "tournant", "drehend"],
-    vesuviobuono: ["vesuviobuono", "vesuvio buono", "emissioni", "sostenibil", "ecolog", "green"],
-    pizza: ["pizza", "cottura", "ricett", "cuoci", "cuocere", "cooking", "baking", "recette"],
-    artigianato: ["artigian", "handcraft", "artisan", "fatto a mano", "handmade", "lavorazione", "tradizion"],
-    design: ["design", "mosaico", "rivestiment", "colore", "color", "personalizzaz", "custom"],
-    showroom: ["showroom", "evento", "event", "fiera", "exhibition", "esposiz"],
-    pronta_consegna: ["pronta consegna", "ready to ship", "immediat", "disponibil", "stock"],
-    tradizionale: ["tradizional", "legna", "wood", "cupola", "napoletan", "classico"],
-    metallico: ["metallic", "acciaio", "steel", "inox", "moderno", "modern", "professionale"],
-  };
-
-  for (const [cat, kws] of Object.entries(keywords)) {
-    if (kws.some(kw => t.includes(kw))) {
-      matched.push(...(IMAGE_POOL[cat] || []));
-    }
+  if (t.includes("gas") || t.includes("bruciatore") || t.includes("fiamma")) {
+    scene = "a beautiful artisan mosaic-tiled gas pizza oven with visible blue flames, in a professional pizzeria setting";
+  } else if (t.includes("elettric") || t.includes("electric")) {
+    scene = "a sleek modern black metal electric pizza oven in a contemporary restaurant kitchen";
+  } else if (t.includes("rotan") || t.includes("rotativ") || t.includes("rotating")) {
+    scene = "a professional rotating pizza oven with mosaic tiles, showing the rotating floor mechanism";
+  } else if (t.includes("vesuviobuono") || t.includes("emissioni") || t.includes("ecolog")) {
+    scene = "an eco-friendly wood-fired pizza oven with green mosaic tiles, in a garden setting with plants";
+  } else if (t.includes("pizza") || t.includes("cottura") || t.includes("ricett")) {
+    scene = "a perfectly baked Neapolitan pizza coming out of a traditional wood-fired oven with flames in the background";
+  } else if (t.includes("artigian") || t.includes("handcraft") || t.includes("tradizion")) {
+    scene = "artisan hands crafting refractory bricks for a pizza oven in an Italian workshop";
+  } else if (t.includes("design") || t.includes("mosaico") || t.includes("rivestiment") || t.includes("color")) {
+    scene = "a stunning colorful mosaic-tiled pizza oven in Mediterranean blue and terracotta tones";
+  } else if (t.includes("legna") || t.includes("wood") || t.includes("napoletan")) {
+    scene = "a traditional Neapolitan dome-shaped wood-fired pizza oven with burning logs inside";
+  } else if (t.includes("metallic") || t.includes("acciaio") || t.includes("modern") || t.includes("professionale")) {
+    scene = "a professional stainless steel pizza oven in a modern commercial kitchen";
+  } else {
+    scene = `a premium Italian artisan pizza oven related to: ${topic}`;
   }
 
-  // Deduplicate
-  const unique = [...new Set(matched)];
-  
-  // If matches found, pick randomly from them; otherwise pick from entire portfolio
-  return pickRandom(unique.length > 0 ? unique : ALL_IMAGES);
+  const styleDesc = style || "warm Mediterranean editorial look, professional food/lifestyle photography, golden hour lighting";
+
+  return `Generate a professional editorial blog cover image (16:9 landscape format) showing ${scene}. 
+Style: ${styleDesc}. 
+The image should look like a high-end magazine cover photo with warm color grading, beautiful composition, and soft natural lighting. 
+Do NOT add any text, watermarks, logos, or overlays. The image should be purely photographic.`;
 }
 
 serve(async (req) => {
@@ -151,17 +56,8 @@ serve(async (req) => {
       });
     }
 
-    const baseImage = selectImage(topic);
-    const supabaseUrl = Deno.env.get("SUPABASE_URL") || "https://lgueucxznbqgvhpjzurf.supabase.co";
-    const baseImageUrl = `${supabaseUrl}/storage/v1/object/public${baseImage}`;
-
-    console.log("Generating blog cover for topic:", topic, "using base image:", baseImage);
-
-    const editPrompt = `Transform this photo of an artisan Italian pizza oven into a professional editorial blog cover image. 
-Topic: "${topic}". 
-Style: ${style || "warm Mediterranean editorial look, professional food/lifestyle photography"}. 
-Make it 16:9 aspect ratio, add subtle warm color grading, enhance lighting to look like a high-end magazine cover. 
-Do NOT add any text or overlays. Keep the oven/subject as the hero element but make the overall composition feel like a premium blog header image.`;
+    const prompt = buildScenePrompt(topic, style);
+    console.log("Generating blog cover for topic:", topic);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -171,13 +67,7 @@ Do NOT add any text or overlays. Keep the oven/subject as the hero element but m
       },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash-image",
-        messages: [{
-          role: "user",
-          content: [
-            { type: "text", text: editPrompt },
-            { type: "image_url", image_url: { url: baseImageUrl } }
-          ]
-        }],
+        messages: [{ role: "user", content: prompt }],
         modalities: ["image", "text"],
       }),
     });
@@ -188,6 +78,11 @@ Do NOT add any text or overlays. Keep the oven/subject as the hero element but m
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded, please try again later." }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ error: "Credits exhausted, please add funds." }), {
+          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       throw new Error(`Image generation failed: ${response.status}`);
@@ -201,10 +96,12 @@ Do NOT add any text or overlays. Keep the oven/subject as the hero element but m
       throw new Error("No image returned from AI");
     }
 
+    // Upload to Supabase Storage
     const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
-    const sbUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(sbUrl, supabaseKey);
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
 
     const base64Data = imageUrl.split(",")[1];
     const binaryString = atob(base64Data);
@@ -228,7 +125,9 @@ Do NOT add any text or overlays. Keep the oven/subject as the hero element but m
       .from("oven-gallery")
       .getPublicUrl(fileName);
 
-    return new Response(JSON.stringify({ success: true, imageUrl: publicUrl.publicUrl, baseImage }), {
+    console.log("Blog cover generated successfully:", publicUrl.publicUrl);
+
+    return new Response(JSON.stringify({ success: true, imageUrl: publicUrl.publicUrl }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e: any) {
