@@ -136,15 +136,6 @@ const ReadyToShip = () => {
                       ))}
                     </ul>
 
-                    <div className="mb-4">
-                      <p className="text-xl font-bold text-vesuviano-600">{getDisplayPrice(product)}</p>
-                      {product.sale_price && product.list_price > product.sale_price && (
-                        <p className="text-sm text-stone-400 line-through">
-                          €{product.list_price.toLocaleString('it-IT', { minimumFractionDigits: 2 })}
-                        </p>
-                      )}
-                    </div>
-
                     {!product.is_sold ? (
                       <Button
                         className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white transition-all duration-300"
