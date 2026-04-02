@@ -293,10 +293,9 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
             </div>
 
             <Tabs defaultValue="wood" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="wood">{c.heating.tabs.wood}</TabsTrigger>
                 <TabsTrigger value="gas">{c.heating.tabs.gas}</TabsTrigger>
-                <TabsTrigger value="mix">{c.heating.tabs.mix}</TabsTrigger>
               </TabsList>
 
               <TabsContent value="wood" className="mt-6 space-y-6">
