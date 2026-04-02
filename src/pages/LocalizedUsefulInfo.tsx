@@ -257,9 +257,8 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
                 </li>
               ))}
             </ul>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-              <img src="https://www.astermforni.com/wp-content/uploads/TR1-D-K.jpg" alt="Oven lifting diagram 1" className="rounded-lg shadow-md w-full" loading="lazy" />
-              <img src="https://www.astermforni.com/wp-content/uploads/TR2-D-K.jpg" alt="Oven lifting diagram 2" className="rounded-lg shadow-md w-full" loading="lazy" />
+            <div className="mt-6">
+              <img src="/lovable-uploads/sollevamento-forno-diagramma.png" alt="Diagramma sollevamento forno Vesuviano" className="rounded-lg shadow-md w-full max-w-3xl mx-auto" loading="lazy" />
             </div>
           </section>
 
