@@ -17,6 +17,7 @@ import ConsultationForm from "@/components/ConsultationForm";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import FAQSection from "@/components/FAQSection";
 import HomeBlogSection from "@/components/HomeBlogSection";
+import WhereWeAre from "@/components/WhereWeAre";
 
 
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -68,6 +69,10 @@ const Index = () => {
       <main>
         <Hero />
         
+        <section id="where-we-are" aria-label="Dove siamo">
+          <WhereWeAre />
+        </section>
+
         <section id="products" aria-label="Categorie prodotti">
           <ProductCategories />
         </section>
