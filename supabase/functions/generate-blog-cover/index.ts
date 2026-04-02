@@ -15,6 +15,13 @@ Keep the oven as the main subject but enhance the scene with beautiful compositi
 Do NOT add any text, watermarks, logos, or overlays. The image should be purely photographic.`;
 }
 
+function ensureAbsoluteUrl(url: string): string {
+  if (!url) return "";
+  if (url.startsWith("http")) return url;
+  // Relative paths like /lovable-uploads/... need the domain
+  return `https://vesuvianoforni.com${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
 async function fetchReferenceImages(supabase: any, topic: string): Promise<string[]> {
   const urls: string[] = [];
 
@@ -27,9 +34,9 @@ async function fetchReferenceImages(supabase: any, topic: string): Promise<strin
 
   if (ovens?.length) {
     for (const oven of ovens) {
-      if (oven.image_url) urls.push(oven.image_url);
+      if (oven.image_url) urls.push(ensureAbsoluteUrl(oven.image_url));
       if (oven.additional_images?.length) {
-        urls.push(...oven.additional_images.slice(0, 2));
+        urls.push(...oven.additional_images.slice(0, 2).map(ensureAbsoluteUrl));
       }
     }
   }
@@ -48,9 +55,12 @@ async function fetchReferenceImages(supabase: any, topic: string): Promise<strin
     }
   }
 
+  // Filter out any empty URLs
+  const validUrls = urls.filter(u => u && u.startsWith("http"));
+
   // Pick a relevant image based on topic keywords, or random
   const t = topic.toLowerCase();
-  const scored = urls.map(url => {
+  const scored = validUrls.map(url => {
     const u = url.toLowerCase();
     let score = 0;
     if (t.includes("gas") && u.includes("gas")) score += 3;
