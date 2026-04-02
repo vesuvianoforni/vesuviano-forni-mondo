@@ -68,6 +68,10 @@ const Index = () => {
       <main>
         <Hero />
         
+        <section id="where-we-are" aria-label="Dove siamo">
+          <WhereWeAre />
+        </section>
+
         <section id="products" aria-label="Categorie prodotti">
           <ProductCategories />
         </section>
