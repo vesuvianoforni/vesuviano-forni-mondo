@@ -222,39 +222,71 @@ const Index = () => {
           </div>
         </section>
         
-        <section id="craftsmanship" aria-label="Artigianato napoletano">
-          <CraftsmanshipSection />
-        </section>
+        <LazySection minHeight="400px">
+          <Suspense fallback={null}>
+            <section id="craftsmanship" aria-label="Artigianato napoletano">
+              <CraftsmanshipSection />
+            </section>
+          </Suspense>
+        </LazySection>
         
-        <section id="services" aria-label="Servizi offerti">
-          <Services />
-        </section>
+        <LazySection minHeight="400px">
+          <Suspense fallback={null}>
+            <section id="services" aria-label="Servizi offerti">
+              <Services />
+            </section>
+          </Suspense>
+        </LazySection>
         
-        <section id="rivestimenti" aria-label="Rivestimenti forni">
-          <Rivestimenti />
-        </section>
+        <LazySection minHeight="400px">
+          <Suspense fallback={null}>
+            <section id="rivestimenti" aria-label="Rivestimenti forni">
+              <Rivestimenti />
+            </section>
+          </Suspense>
+        </LazySection>
         
-        <section id="clients-map" aria-label="Clienti nel mondo">
-          <ErrorBoundary fallback={<div className="container mx-auto px-6 py-8">Mappa temporaneamente non disponibile.</div>}>
-            <ClientsMap />
-          </ErrorBoundary>
-        </section>
+        <LazySection minHeight="500px">
+          <Suspense fallback={null}>
+            <section id="clients-map" aria-label="Clienti nel mondo">
+              <ErrorBoundary fallback={<div className="container mx-auto px-6 py-8">Mappa temporaneamente non disponibile.</div>}>
+                <ClientsMap />
+              </ErrorBoundary>
+            </section>
+          </Suspense>
+        </LazySection>
         
-        <section id="oven-gallery" aria-label="Galleria forni">
-          <OvenGallery />
-        </section>
+        <LazySection minHeight="400px">
+          <Suspense fallback={null}>
+            <section id="oven-gallery" aria-label="Galleria forni">
+              <OvenGallery />
+            </section>
+          </Suspense>
+        </LazySection>
         
-        <section id="consultation" aria-label="Modulo contatti">
-          <ConsultationForm />
-        </section>
+        <LazySection minHeight="400px">
+          <Suspense fallback={null}>
+            <section id="consultation" aria-label="Modulo contatti">
+              <ConsultationForm />
+            </section>
+          </Suspense>
+        </LazySection>
         
-        <section id="blog" aria-label="Blog">
-          <HomeBlogSection />
-        </section>
+        <LazySection minHeight="300px">
+          <Suspense fallback={null}>
+            <section id="blog" aria-label="Blog">
+              <HomeBlogSection />
+            </section>
+          </Suspense>
+        </LazySection>
 
-        <section id="faq" aria-label="Domande frequenti">
-          <FAQSection />
-        </section>
+        <LazySection minHeight="300px">
+          <Suspense fallback={null}>
+            <section id="faq" aria-label="Domande frequenti">
+              <FAQSection />
+            </section>
+          </Suspense>
+        </LazySection>
       </main>
       
       {/* Footer */}
