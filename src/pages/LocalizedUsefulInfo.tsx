@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
 import ContactBar from '@/components/ContactBar';
 import WhatsAppButton from '@/components/WhatsAppButton';
@@ -13,7 +14,7 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
-    i18n.changeLanguage(lang);
+    loadLanguage(lang);
   }, [lang, i18n]);
 
   const content = {
