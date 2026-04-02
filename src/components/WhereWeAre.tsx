@@ -20,9 +20,9 @@ const labels: Record<string, {
     subtitle: 'Radicati alle pendici del Vesuvio',
     description: 'I nostri laboratori sorgono ai piedi del famoso Vulcano Vesuvio, in Campania. Da qui nasce il nome "Vesuviano": un legame profondo con la terra vulcanica che ci circonda. Utilizziamo la sabbia vulcanica del Vesuvio nella produzione dei nostri forni, conferendo proprietà termiche uniche e un\'autenticità impossibile da replicare.',
     lab1: 'Laboratorio Sant\'Anastasia',
-    lab1desc: 'Sede principale di produzione e showroom',
-    lab2: 'Laboratorio Somma Vesuviana',
-    lab2desc: 'Centro di assemblaggio e logistica',
+    lab1desc: 'Laboratorio di produzione artigianale',
+    lab2: 'Laboratorio Boscoreale',
+    lab2desc: 'Laboratorio di produzione artigianale',
     volcanoTitle: 'Il Vulcano Vesuvio',
     volcanoDesc: 'I nostri laboratori sorgono alle sue pendici, dove la terra è ricca di minerali vulcanici',
     sandTitle: 'Sabbia Vulcanica',
@@ -33,9 +33,9 @@ const labels: Record<string, {
     subtitle: 'Rooted at the foot of Vesuvius',
     description: 'Our workshops are located at the foot of the famous Mount Vesuvius, in Campania. This is where the name "Vesuviano" comes from: a deep bond with the volcanic land that surrounds us. We use Vesuvius volcanic sand in the production of our ovens, giving them unique thermal properties and an authenticity impossible to replicate.',
     lab1: 'Sant\'Anastasia Workshop',
-    lab1desc: 'Main production facility and showroom',
-    lab2: 'Somma Vesuviana Workshop',
-    lab2desc: 'Assembly and logistics center',
+    lab1desc: 'Artisan production workshop',
+    lab2: 'Boscoreale Workshop',
+    lab2desc: 'Artisan production workshop',
     volcanoTitle: 'Mount Vesuvius',
     volcanoDesc: 'Our workshops sit at its slopes, where the soil is rich in volcanic minerals',
     sandTitle: 'Volcanic Sand',
@@ -46,9 +46,9 @@ const labels: Record<string, {
     subtitle: 'Enracinés au pied du Vésuve',
     description: 'Nos ateliers sont situés au pied du célèbre Vésuve, en Campanie. C\'est de là que vient le nom "Vesuviano" : un lien profond avec la terre volcanique qui nous entoure. Nous utilisons le sable volcanique du Vésuve dans la production de nos fours, leur conférant des propriétés thermiques uniques.',
     lab1: 'Atelier Sant\'Anastasia',
-    lab1desc: 'Siège principal de production et showroom',
-    lab2: 'Atelier Somma Vesuviana',
-    lab2desc: 'Centre d\'assemblage et logistique',
+    lab1desc: 'Atelier de production artisanale',
+    lab2: 'Atelier Boscoreale',
+    lab2desc: 'Atelier de production artisanale',
     volcanoTitle: 'Le Vésuve',
     volcanoDesc: 'Nos ateliers se trouvent à ses pieds, où la terre est riche en minéraux volcaniques',
     sandTitle: 'Sable Volcanique',
@@ -59,9 +59,9 @@ const labels: Record<string, {
     subtitle: 'Verwurzelt am Fuße des Vesuvs',
     description: 'Unsere Werkstätten befinden sich am Fuße des berühmten Vulkans Vesuv in Kampanien. Daher der Name "Vesuviano": eine tiefe Verbindung mit dem vulkanischen Land. Wir verwenden vulkanischen Sand des Vesuvs bei der Herstellung unserer Öfen, was ihnen einzigartige thermische Eigenschaften verleiht.',
     lab1: 'Werkstatt Sant\'Anastasia',
-    lab1desc: 'Hauptproduktionsstätte und Showroom',
-    lab2: 'Werkstatt Somma Vesuviana',
-    lab2desc: 'Montage- und Logistikzentrum',
+    lab1desc: 'Handwerkliche Produktionswerkstatt',
+    lab2: 'Werkstatt Boscoreale',
+    lab2desc: 'Handwerkliche Produktionswerkstatt',
     volcanoTitle: 'Der Vesuv',
     volcanoDesc: 'Unsere Werkstätten liegen an seinen Hängen, wo der Boden reich an vulkanischen Mineralien ist',
     sandTitle: 'Vulkansand',
@@ -72,9 +72,9 @@ const labels: Record<string, {
     subtitle: 'Arraigados a los pies del Vesubio',
     description: 'Nuestros talleres están ubicados a los pies del famoso Volcán Vesubio, en Campania. De aquí nace el nombre "Vesuviano": un vínculo profundo con la tierra volcánica que nos rodea. Utilizamos arena volcánica del Vesubio en la producción de nuestros hornos, otorgándoles propiedades térmicas únicas.',
     lab1: 'Taller Sant\'Anastasia',
-    lab1desc: 'Sede principal de producción y showroom',
-    lab2: 'Taller Somma Vesuviana',
-    lab2desc: 'Centro de ensamblaje y logística',
+    lab1desc: 'Taller de producción artesanal',
+    lab2: 'Taller Boscoreale',
+    lab2desc: 'Taller de producción artesanal',
     volcanoTitle: 'El Vesubio',
     volcanoDesc: 'Nuestros talleres se encuentran a sus pies, donde la tierra es rica en minerales volcánicos',
     sandTitle: 'Arena Volcánica',
@@ -119,7 +119,7 @@ const WhereWeAre = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
               <div className="absolute bottom-4 left-4 right-4 text-white">
-                <p className="text-sm font-medium opacity-90">📍 Sant'Anastasia & Somma Vesuviana (NA)</p>
+                <p className="text-sm font-medium opacity-90">📍 Sant'Anastasia & Boscoreale (NA)</p>
               </div>
             </div>
 
