@@ -64,15 +64,21 @@ const Index = () => {
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
-      <OvenDataInitializer />
+      <Suspense fallback={null}>
+        <OvenDataInitializer />
+      </Suspense>
       <Header />
       
       <main>
         <Hero />
         
-        <section id="where-we-are" aria-label="Dove siamo">
-          <WhereWeAre />
-        </section>
+        <LazySection minHeight="300px">
+          <Suspense fallback={null}>
+            <section id="where-we-are" aria-label="Dove siamo">
+              <WhereWeAre />
+            </section>
+          </Suspense>
+        </LazySection>
 
         <section id="products" aria-label="Categorie prodotti">
           <ProductCategories />
