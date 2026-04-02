@@ -263,16 +263,16 @@
     
     <!-- Critical CSS -->
     <style>
-      #root { opacity: 0; transition: opacity 0.15s ease-in; }
-      #root.ready { opacity: 1; }
-      /* Pre-render hero before React loads */
+      /* Hero pre-render: visible immediately, hidden once React paints */
       #hero-prerender {
-        position: fixed; top: 0; left: 0; right: 0;
-        height: 100vh; z-index: 0;
-        background: #1c1917 url('/hero.webp') center/cover no-repeat;
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        z-index: 0; background: #1c1917;
       }
-      #hero-prerender::after {
-        content: ''; position: absolute; inset: 0;
+      #hero-prerender img {
+        width: 100%; height: 100%; object-fit: cover;
+      }
+      #hero-prerender .overlay {
+        position: absolute; inset: 0;
         background: rgba(0,0,0,0.6);
       }
       #root.ready ~ #hero-prerender { display: none; }
@@ -287,7 +287,10 @@
     <!-- End Google Tag Manager (noscript) -->
     
     <div id="root"></div>
-    <div id="hero-prerender"></div>
+    <div id="hero-prerender">
+      <img src="/hero.webp" alt="Vesuviano Forni" width="1920" height="1080" fetchpriority="high" decoding="sync" />
+      <div class="overlay"></div>
+    </div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
