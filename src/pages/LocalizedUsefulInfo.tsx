@@ -274,9 +274,6 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
                 </li>
               ))}
             </ul>
-            <div className="mt-6">
-              <img src="https://www.astermforni.com/wp-content/uploads/Chimney_Calculations.jpg" alt="Chimney calculations diagram" className="rounded-lg shadow-md w-full max-w-lg mx-auto" loading="lazy" />
-            </div>
           </section>
 
           {/* Initial Heating */}
