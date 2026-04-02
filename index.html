@@ -291,6 +291,18 @@
     <link rel="preload" href="/lovable-uploads/vesuviano-logo-bianco.png" as="image" type="image/png">
     <link rel="preload" href="/src/assets/mattoni-refrattari-hero.jpg" as="image" type="image/jpeg">
     
+    <!-- Critical CSS to prevent FOUC (Flash of Unstyled Content) -->
+    <style>
+      #root:empty { display: none; }
+      #root {
+        opacity: 0;
+        transition: opacity 0.15s ease-in;
+      }
+      #root.ready {
+        opacity: 1;
+      }
+    </style>
+    
   </head>
 
   <body>
