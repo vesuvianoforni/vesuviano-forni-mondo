@@ -22,9 +22,11 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-select', '@radix-ui/react-tabs'],
-          'three-vendor': ['three', '@react-three/fiber', '@react-three/drei']
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-select', '@radix-ui/react-tabs', '@radix-ui/react-dropdown-menu'],
+          'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
+          'map-vendor': ['mapbox-gl'],
+          'i18n-vendor': ['i18next', 'react-i18next'],
         }
       }
     },

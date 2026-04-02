@@ -452,9 +452,11 @@ const Index = () => {
       
       
       {/* WhatsApp Button */}
-      <WhatsAppButton />
-      <ContactBar />
-      <ReadyToShipPopup />
+      <Suspense fallback={null}>
+        <WhatsAppButton />
+        <ContactBar />
+        <ReadyToShipPopup />
+      </Suspense>
     </div>
   );
 };
