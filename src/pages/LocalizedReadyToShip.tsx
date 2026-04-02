@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { loadLanguage } from '@/i18n/config';
 import ReadyToShip from './ReadyToShip';
 
 interface LocalizedReadyToShipProps {
@@ -11,7 +12,7 @@ const LocalizedReadyToShip = ({ lang }: LocalizedReadyToShipProps) => {
 
   useEffect(() => {
     if (i18n.language !== lang) {
-      i18n.changeLanguage(lang);
+      loadLanguage(lang);
     }
   }, [lang, i18n]);
 

@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
 import ConsultationForm from '@/components/ConsultationForm';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,7 @@ const LocalizedTraditionalOven = ({ lang }: LocalizedTraditionalOvenProps) => {
   const { i18n, t } = useTranslation();
 
   useEffect(() => {
-    i18n.changeLanguage(lang);
+    loadLanguage(lang);
     document.documentElement.lang = lang;
     document.title = `${t('products.traditional.title')} - Vesuviano`;
   }, [lang, i18n, t]);
