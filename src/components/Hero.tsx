@@ -17,11 +17,13 @@ const Hero = () => {
     <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden pt-20">
       {/* Background Image */}
       <div className="absolute inset-0">
-        <LazyImage
+        <img
           src={laboratorioHero}
           alt="Laboratorio artigianale Vesuviano - Produzione artigianale di forni napoletani a legna, gas ed elettrici"
           className="w-full h-full object-cover object-center"
-          priority={true}
+          fetchPriority="high"
+          decoding="sync"
+          loading="eager"
         />
         {/* Dark Overlay for better text readability */}
         <div className="absolute inset-0 bg-black/60"></div>
