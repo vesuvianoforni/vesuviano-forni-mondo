@@ -127,7 +127,7 @@ const Services = () => {
           
           <div className="relative rounded-2xl overflow-hidden shadow-2xl group">
             <img 
-              src="/lovable-uploads/logistica-internazionale-nyc.png"
+              src="/lovable-uploads/logistica-internazionale-nyc.webp"
               alt="Consegna forno Vesuviano a New York - Logistica internazionale efficace"
               className="w-full h-64 md:h-96 object-cover transition-transform duration-700 group-hover:scale-105"
             />

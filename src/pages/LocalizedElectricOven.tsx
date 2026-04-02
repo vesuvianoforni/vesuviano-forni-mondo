@@ -25,7 +25,7 @@ const LocalizedElectricOven = ({ lang }: LocalizedElectricOvenProps) => {
         {/* Hero Section */}
         <section className="relative h-[60vh] min-h-[500px] overflow-hidden">
           <img 
-            src="/lovable-uploads/forno-metallo-bianco-nuovo.png"
+            src="/lovable-uploads/forno-metallo-bianco-nuovo.webp"
             alt={t('products.electric.title')}
             className="absolute inset-0 w-full h-full object-cover"
           />
@@ -66,7 +66,7 @@ const LocalizedElectricOven = ({ lang }: LocalizedElectricOvenProps) => {
               </div>
               <div className="space-y-6">
                 <img 
-                  src="/lovable-uploads/forno-metallo-nero-nuovo.png"
+                  src="/lovable-uploads/forno-metallo-nero-nuovo.webp"
                   alt={t('products.electric.title')}
                   className="w-full h-80 object-cover rounded-lg shadow-lg"
                 />

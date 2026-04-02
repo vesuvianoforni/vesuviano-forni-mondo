@@ -147,7 +147,7 @@ export const ovenService = {
           name: 'Terra del Gusto Arancione',
           category: 'misto',
           subcategory: 'Verniciato Premium',
-          image_url: '/lovable-uploads/forno-arancione-terra-del-gusto.png',
+          image_url: '/lovable-uploads/forno-arancione-terra-del-gusto.webp',
           description: 'Forno verniciato arancione con design moderno "Terra del Gusto", perfetto per gas e legna',
           fuel_type: 'gas/legna',
           coating_type: 'verniciato',
@@ -192,7 +192,7 @@ export const ovenService = {
         name: 'VesuvioBuono Mosaico Verde',
         category: 'legna',
         subcategory: 'VesuvioBuono Professional',
-        image_url: '/lovable-uploads/vesuviobuono-verde-mosaico.jpg',
+        image_url: '/lovable-uploads/vesuviobuono-verde-mosaico.webp',
         description: 'Forno professionale VesuvioBuono con rivestimento a mosaico verde, ideale per pizzerie e ristoranti',
         specifications: {
           diameter: '120cm',

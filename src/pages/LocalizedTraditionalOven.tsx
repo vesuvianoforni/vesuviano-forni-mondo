@@ -25,7 +25,7 @@ const LocalizedTraditionalOven = ({ lang }: LocalizedTraditionalOvenProps) => {
         {/* Hero Section */}
         <section className="relative h-[60vh] min-h-[500px] overflow-hidden">
           <img 
-            src="/lovable-uploads/vesuviobuono-verde-mosaico.jpg"
+            src="/lovable-uploads/vesuviobuono-verde-mosaico.webp"
             alt={t('products.traditional.title')}
             className="absolute inset-0 w-full h-full object-cover"
           />

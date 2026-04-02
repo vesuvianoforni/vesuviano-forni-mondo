@@ -23,7 +23,7 @@ const OvenModelsInfo = () => {
           </div>
           <div className="text-center">
             <img 
-              src="/lovable-uploads/forno-arancione-terra-del-gusto.png" 
+              src="/lovable-uploads/forno-arancione-terra-del-gusto.webp" 
               alt="Verniciato" 
               className="w-16 h-16 md:w-24 md:h-24 object-cover mx-auto mb-3 md:mb-4 rounded-lg border border-stone-200"
             />
@@ -32,7 +32,7 @@ const OvenModelsInfo = () => {
           </div>
           <div className="text-center">
             <img 
-              src="/lovable-uploads/vesuviobuono-verde-mosaico.jpg" 
+              src="/lovable-uploads/vesuviobuono-verde-mosaico.webp" 
               alt="Mosaicato" 
               className="w-16 h-16 md:w-24 md:h-24 object-cover mx-auto mb-3 md:mb-4 rounded-lg border border-stone-200"
             />
