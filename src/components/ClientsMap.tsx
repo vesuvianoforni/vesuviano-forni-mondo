@@ -94,8 +94,8 @@ const ClientsMap = () => {
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: 'mapbox://styles/mapbox/light-v11',
-        center: [12.4964, 41.9028], // Rome, Italy
-        zoom: 4,
+        center: [-1.5, 50.5], // Focus on UK/Europe
+        zoom: 4.2,
         projection: 'globe' as any
       });
 
