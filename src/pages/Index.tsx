@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
@@ -7,22 +7,23 @@ import { Wand2, Eye, ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProductCategories from "@/components/ProductCategories";
-import CraftsmanshipSection from "@/components/CraftsmanshipSection";
-import Services from "@/components/Services";
-import Rivestimenti from "@/components/Rivestimenti";
-import ClientsMap from "@/components/ClientsMap";
-import OvenGallery from "@/components/OvenGallery";
-import OvenDataInitializer from "@/components/OvenDataInitializer";
-import ConsultationForm from "@/components/ConsultationForm";
+import LazySection from "@/components/LazySection";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import FAQSection from "@/components/FAQSection";
-import HomeBlogSection from "@/components/HomeBlogSection";
-import WhereWeAre from "@/components/WhereWeAre";
 
-
-import WhatsAppButton from "@/components/WhatsAppButton";
-import ContactBar from "@/components/ContactBar";
-import ReadyToShipPopup from "@/components/ReadyToShipPopup";
+// Lazy loaded below-fold components
+const CraftsmanshipSection = lazy(() => import("@/components/CraftsmanshipSection"));
+const Services = lazy(() => import("@/components/Services"));
+const Rivestimenti = lazy(() => import("@/components/Rivestimenti"));
+const ClientsMap = lazy(() => import("@/components/ClientsMap"));
+const OvenGallery = lazy(() => import("@/components/OvenGallery"));
+const OvenDataInitializer = lazy(() => import("@/components/OvenDataInitializer"));
+const ConsultationForm = lazy(() => import("@/components/ConsultationForm"));
+const FAQSection = lazy(() => import("@/components/FAQSection"));
+const HomeBlogSection = lazy(() => import("@/components/HomeBlogSection"));
+const WhereWeAre = lazy(() => import("@/components/WhereWeAre"));
+const WhatsAppButton = lazy(() => import("@/components/WhatsAppButton"));
+const ContactBar = lazy(() => import("@/components/ContactBar"));
+const ReadyToShipPopup = lazy(() => import("@/components/ReadyToShipPopup"));
 
 const Index = () => {
   const navigate = useNavigate();
