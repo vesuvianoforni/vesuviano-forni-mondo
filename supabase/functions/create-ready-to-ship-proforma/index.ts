@@ -552,7 +552,7 @@ serve(async (req) => {
           model_name: rtsOven.model_name,
           diameter: rtsOven.diameter,
           coating: rtsOven.coating,
-          price: effectivePrice,
+          price: ovenPrice,
         },
         timestamp: new Date().toISOString()
       }
