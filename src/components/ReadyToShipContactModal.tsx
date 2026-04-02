@@ -150,11 +150,6 @@ const ReadyToShipContactModal = ({
           <p className="text-xs text-vesuviano-700 mt-2">
             {t('readyToShip.diameter')}: {productDiameter} • {t('readyToShip.coating')}: {productCoating}
           </p>
-          {productPrice && productPrice > 0 && (
-            <p className="text-lg font-bold text-vesuviano-700 mt-2">
-              €{productPrice.toLocaleString('it-IT', { minimumFractionDigits: 2 })}
-            </p>
-          )}
         </div>
 
 
