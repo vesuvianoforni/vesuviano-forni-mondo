@@ -150,11 +150,6 @@ const ReadyToShipContactModal = ({
           <p className="text-xs text-vesuviano-700 mt-2">
             {t('readyToShip.diameter')}: {productDiameter} • {t('readyToShip.coating')}: {productCoating}
           </p>
-          {productPrice && productPrice > 0 && (
-            <p className="text-lg font-bold text-vesuviano-700 mt-2">
-              €{productPrice.toLocaleString('it-IT', { minimumFractionDigits: 2 })}
-            </p>
-          )}
         </div>
 
 
@@ -241,8 +236,7 @@ const ReadyToShipContactModal = ({
           </Button>
 
           <p className="text-xs text-muted-foreground text-center">
-            Riceverai una pro-forma via email con il link per il deposito del 5%.
-            Il deposito è 100% rimborsabile e riserva il forno per 7 giorni.
+            {t('readyToShip.modal.contactNote', 'An expert will contact you within 24 hours.')}
           </p>
         </form>
       </DialogContent>
