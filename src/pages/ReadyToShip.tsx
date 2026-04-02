@@ -43,11 +43,8 @@ const ReadyToShip = () => {
     fetchProducts();
   }, []);
 
-  const getDisplayPrice = (p: ReadyToShipOven) => {
-    const price = p.sale_price || p.list_price;
-    if (!price || price <= 0) return t('readyToShip.contactForPrice');
-    return `€${price.toLocaleString('it-IT', { minimumFractionDigits: 2 })}`;
-  };
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-50 to-stone-100">
@@ -135,15 +132,6 @@ const ReadyToShip = () => {
                         </li>
                       ))}
                     </ul>
-
-                    <div className="mb-4">
-                      <p className="text-xl font-bold text-vesuviano-600">{getDisplayPrice(product)}</p>
-                      {product.sale_price && product.list_price > product.sale_price && (
-                        <p className="text-sm text-stone-400 line-through">
-                          €{product.list_price.toLocaleString('it-IT', { minimumFractionDigits: 2 })}
-                        </p>
-                      )}
-                    </div>
 
                     {!product.is_sold ? (
                       <Button
