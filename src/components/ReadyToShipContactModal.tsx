@@ -157,21 +157,6 @@ const ReadyToShipContactModal = ({
           )}
         </div>
 
-        {/* Trust badges */}
-        <div className="grid grid-cols-3 gap-2 mb-4">
-          <div className="flex flex-col items-center text-center p-2 bg-emerald-50 rounded-lg">
-            <Shield className="h-5 w-5 text-emerald-600 mb-1" />
-            <span className="text-[10px] font-medium text-emerald-800">100% Rimborsabile</span>
-          </div>
-          <div className="flex flex-col items-center text-center p-2 bg-amber-50 rounded-lg">
-            <Clock className="h-5 w-5 text-amber-600 mb-1" />
-            <span className="text-[10px] font-medium text-amber-800">Riservato 7 giorni</span>
-          </div>
-          <div className="flex flex-col items-center text-center p-2 bg-blue-50 rounded-lg">
-            <CreditCard className="h-5 w-5 text-blue-600 mb-1" />
-            <span className="text-[10px] font-medium text-blue-800">Deposito 5%</span>
-          </div>
-        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
