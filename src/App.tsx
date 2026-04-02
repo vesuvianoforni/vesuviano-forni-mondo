@@ -12,6 +12,7 @@ import LocalizedRotatingOven from "./pages/LocalizedRotatingOven";
 import LocalizedVesuvioBuono from "./pages/LocalizedVesuvioBuono";
 import LocalizedReadyToShip from "./pages/LocalizedReadyToShip";
 import LocalizedBurners from "./pages/LocalizedBurners";
+import LocalizedUsefulInfo from "./pages/LocalizedUsefulInfo";
 import LanguageRedirect from "./pages/LanguageRedirect";
 import ArchitettoAIRedirect from "./pages/ArchitettoAIRedirect";
 import ThankYou from "./pages/ThankYou";
