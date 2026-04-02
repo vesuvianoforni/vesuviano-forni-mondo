@@ -66,7 +66,7 @@ const LocalizedTraditionalOven = ({ lang }: LocalizedTraditionalOvenProps) => {
               </div>
               <div className="space-y-6">
                 <img 
-                  src="/lovable-uploads/vesuviobuono-forno-legna.jpg"
+                  src="/lovable-uploads/vesuviobuono-forno-legna.webp"
                   alt={t('products.traditional.title')}
                   className="w-full h-80 object-cover rounded-lg shadow-lg"
                 />

@@ -205,7 +205,7 @@ export const ovenService = {
         name: 'VesuvioBuono Mosaico Marrone',
         category: 'legna',
         subcategory: 'VesuvioBuono Professional',
-        image_url: '/lovable-uploads/vesuviobuono-marrone-completo.jpg',
+        image_url: '/lovable-uploads/vesuviobuono-marrone-completo.webp',
         description: 'Forno VesuvioBuono con elegante mosaico marrone, dotato di sistema di combustione avanzato',
         specifications: {
           diameter: '130cm',
@@ -218,7 +218,7 @@ export const ovenService = {
         name: 'VesuvioBuono Osteria Pizza',
         category: 'legna',
         subcategory: 'Linea Osteria',
-        image_url: '/lovable-uploads/vesuviobuono-osteria-pizza.jpg',
+        image_url: '/lovable-uploads/vesuviobuono-osteria-pizza.webp',
         description: 'Forno della linea Osteria con mosaico sfumato, perfetto per l\'uso commerciale intensivo',
         specifications: {
           diameter: '140cm',

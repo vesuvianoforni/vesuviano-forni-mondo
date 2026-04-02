@@ -113,7 +113,7 @@ const WhereWeAre = () => {
             {/* Map Image */}
             <div className="relative rounded-2xl overflow-hidden shadow-xl group">
               <img
-                src="/lovable-uploads/vesuvio-mappa-laboratori.png"
+                src="/lovable-uploads/vesuvio-mappa-laboratori.webp"
                 alt="Mappa dei laboratori Vesuviano alle pendici del Vesuvio"
                 className="w-full h-full object-cover min-h-[320px] transition-transform duration-700 group-hover:scale-105"
               />

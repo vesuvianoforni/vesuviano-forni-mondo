@@ -25,7 +25,7 @@ const LocalizedRotatingOven = ({ lang }: LocalizedRotatingOvenProps) => {
         {/* Hero Section */}
         <section className="relative h-[60vh] min-h-[500px] overflow-hidden">
           <img 
-            src="/lovable-uploads/vesuviobuono-osteria-pizza.jpg"
+            src="/lovable-uploads/vesuviobuono-osteria-pizza.webp"
             alt={t('products.rotating.title')}
             className="absolute inset-0 w-full h-full object-cover"
           />
@@ -66,7 +66,7 @@ const LocalizedRotatingOven = ({ lang }: LocalizedRotatingOvenProps) => {
               </div>
               <div className="space-y-6">
                 <img 
-                  src="/lovable-uploads/vesuviobuono-marrone-completo.jpg"
+                  src="/lovable-uploads/vesuviobuono-marrone-completo.webp"
                   alt={t('products.rotating.title')}
                   className="w-full h-80 object-cover rounded-lg shadow-lg"
                 />
