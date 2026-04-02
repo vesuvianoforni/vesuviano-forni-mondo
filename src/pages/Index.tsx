@@ -17,6 +17,7 @@ import ConsultationForm from "@/components/ConsultationForm";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import FAQSection from "@/components/FAQSection";
 import HomeBlogSection from "@/components/HomeBlogSection";
+import WhereWeAre from "@/components/WhereWeAre";
 
 
 import WhatsAppButton from "@/components/WhatsAppButton";
