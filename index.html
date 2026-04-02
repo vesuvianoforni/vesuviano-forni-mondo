@@ -263,28 +263,16 @@
     
     <!-- Critical CSS -->
     <style>
-      /* React root invisible until hydrated — prerender shows through */
-      #root {
-        position: relative;
-        z-index: 1;
-        opacity: 0;
-      }
-      #root.ready {
-        opacity: 1;
-      }
+      /* React root invisible until hydrated */
+      #root { position: relative; z-index: 1; opacity: 0; }
+      #root.ready { opacity: 1; }
       /* Hero pre-render: paints immediately as LCP */
       #hero-prerender {
         position: fixed; top: 0; left: 0; right: 0; bottom: 0;
         z-index: 0; background: #1c1917;
       }
-      #hero-prerender img {
-        width: 100%; height: 100%; object-fit: cover;
-      }
-      #hero-prerender .overlay {
-        position: absolute; inset: 0;
-        background: rgba(0,0,0,0.6);
-      }
-      #root.ready ~ #hero-prerender { display: none; }
+      #hero-prerender img { width: 100%; height: 100%; object-fit: cover; }
+      #hero-prerender .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); }
     </style>
     
   </head>
