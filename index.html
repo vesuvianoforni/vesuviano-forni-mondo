@@ -2,33 +2,6 @@
 <!DOCTYPE html>
 <html lang="it" prefix="og: https://ogp.me/ns#">
   <head>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MDPBPR29');</script>
-    <!-- End Google Tag Manager -->
-    
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EJPHCZPXTR"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-EJPHCZPXTR');
-    </script>
-    
-    <!-- Microsoft Clarity -->
-    <script type="text/javascript">
-      (function(c,l,a,r,i,t,y){
-          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-      })(window, document, "clarity", "script", "tclp11ayhu");
-    </script>
-    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vesuviano | Forni Napoletani Professionali | Per Pizzerie e Ristoranti nel Mondo</title>
@@ -289,7 +262,7 @@
     
     <!-- Preload critical images -->
     <link rel="preload" href="/lovable-uploads/vesuviano-logo-bianco.png" as="image" type="image/png">
-    <link rel="preload" href="/src/assets/mattoni-refrattari-hero.jpg" as="image" type="image/jpeg">
+    <link rel="preload" href="/src/assets/laboratorio-artigianale-hero.webp" as="image" type="image/webp">
     
     <!-- Critical CSS to prevent FOUC (Flash of Unstyled Content) -->
     <style>
@@ -315,5 +288,34 @@
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Deferred analytics - loaded after page render -->
+    <script>
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          // Google Tag Manager
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-MDPBPR29');
+          
+          // Google Analytics
+          var ga=document.createElement('script');ga.async=true;
+          ga.src='https://www.googletagmanager.com/gtag/js?id=G-EJPHCZPXTR';
+          document.head.appendChild(ga);
+          window.dataLayer=window.dataLayer||[];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js',new Date());gtag('config','G-EJPHCZPXTR');
+          
+          // Microsoft Clarity
+          (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+          })(window,document,"clarity","script","tclp11ayhu");
+        }, 2000);
+      });
+    </script>
   </body>
 </html>

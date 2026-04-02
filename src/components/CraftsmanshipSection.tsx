@@ -62,7 +62,7 @@ const CraftsmanshipSection = () => {
             <div className="animate-slide-in-right">
               <div className="relative">
                 <img 
-                  src="/lovable-uploads/artigiano-mani-argilla.jpg" 
+                  src="/lovable-uploads/artigiano-mani-argilla.webp" 
                   alt="Mani esperte di artigiano napoletano che lavora l'argilla refrattaria"
                   className="w-full rounded-xl shadow-lg hover:scale-105 transition-transform duration-500"
                 />
@@ -93,7 +93,7 @@ const CraftsmanshipSection = () => {
                 </div>
                 <div className="relative">
                   <img 
-                    src="/lovable-uploads/laboratorio-sant-anastasia.png" 
+                    src="/lovable-uploads/laboratorio-sant-anastasia.webp" 
                     alt="Laboratorio artigianale Vesuviano a Sant'Anastasia, Napoli - produzione forni a legna"
                     className="w-full rounded-lg shadow-md hover:scale-105 transition-transform duration-500"
                   />

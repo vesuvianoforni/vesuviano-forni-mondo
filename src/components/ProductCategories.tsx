@@ -26,7 +26,7 @@ const ProductCategories = () => {
   const categories = [
     {
       key: 'traditional',
-      image: "/lovable-uploads/vesuviobuono-verde-mosaico.jpg",
+      image: "/lovable-uploads/vesuviobuono-verde-mosaico.webp",
       video: "/lovable-uploads/forno-360-video.mp4"
     },
     {
@@ -36,7 +36,7 @@ const ProductCategories = () => {
     },
     {
       key: 'electric',
-      image: "/lovable-uploads/forno-metallo-bianco-nuovo.png",
+      image: "/lovable-uploads/forno-metallo-bianco-nuovo.webp",
       video: "/lovable-uploads/forno-elettrico-360-video.mp4"
     },
     {
@@ -46,7 +46,7 @@ const ProductCategories = () => {
     },
     {
       key: 'vesuviobuono',
-      image: "/lovable-uploads/vesuviobuono-ostepizza-completo.png",
+      image: "/lovable-uploads/vesuviobuono-ostepizza-completo.webp",
       video: "/lovable-uploads/vesuviobuono-360-video.mp4"
     },
     {

@@ -10,17 +10,17 @@ const Rivestimenti = () => {
   const rivestimenti = [
     {
       key: 'verniciato',
-      image: "/lovable-uploads/forno-arancione-terra-del-gusto.png",
+      image: "/lovable-uploads/forno-arancione-terra-del-gusto.webp",
       colors: ['Rosso Vesuvio', 'Nero Antracite', 'Bianco Panna', 'Verde Oliva']
     },
     {
       key: 'mosaicato', 
-      image: "/lovable-uploads/vesuviobuono-verde-mosaico.jpg",
+      image: "/lovable-uploads/vesuviobuono-verde-mosaico.webp",
       colors: ['Mosaico Classico', 'Mosaico Moderno', 'Mosaico Artistico']
     },
     {
       key: 'ferro',
-      image: "/lovable-uploads/forno-nero-metallico-nuovo.png",
+      image: "/lovable-uploads/forno-nero-metallico-nuovo.webp",
       colors: ['Ferro Naturale', 'Ferro Ossidato', 'Ferro Spazzolato']
     },
     {
