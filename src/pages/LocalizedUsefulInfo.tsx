@@ -293,10 +293,9 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
             </div>
 
             <Tabs defaultValue="wood" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="wood">{c.heating.tabs.wood}</TabsTrigger>
                 <TabsTrigger value="gas">{c.heating.tabs.gas}</TabsTrigger>
-                <TabsTrigger value="mix">{c.heating.tabs.mix}</TabsTrigger>
               </TabsList>
 
               <TabsContent value="wood" className="mt-6 space-y-6">
@@ -334,25 +333,6 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
                 </div>
               </TabsContent>
 
-              <TabsContent value="mix" className="mt-6 space-y-6">
-                {gasDays.map((day, i) => (
-                  <div key={i} className="bg-white rounded-lg p-5 shadow-sm border border-stone-200">
-                    <h3 className="font-bold text-stone-800 mb-3">{day.title}</h3>
-                    <ul className="space-y-2">
-                      {day.steps.map((step, j) => (
-                        <li key={j} className="flex items-start gap-2 text-stone-700">
-                          <span className="text-vesuviano-500 font-bold">•</span>
-                          {step}
-                        </li>
-                      ))}
-                    </ul>
-                    <p className="mt-3 text-sm text-stone-500 italic">{mixNote}</p>
-                  </div>
-                ))}
-                <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
-                  <p className="font-bold text-red-700">⚠️ {c.gasWarning}</p>
-                </div>
-              </TabsContent>
             </Tabs>
           </section>
         </div>
