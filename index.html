@@ -258,19 +258,24 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
-    <!-- Preload critical images -->
-    <link rel="preload" href="/src/assets/laboratorio-artigianale-hero.webp" as="image" type="image/webp">
+    <!-- Preload hero image - highest priority for LCP -->
+    <link rel="preload" href="/hero.webp" as="image" type="image/webp" fetchpriority="high">
     
-    <!-- Critical CSS to prevent FOUC (Flash of Unstyled Content) -->
+    <!-- Critical CSS -->
     <style>
-      #root:empty { display: none; }
-      #root {
-        opacity: 0;
-        transition: opacity 0.15s ease-in;
+      #root { opacity: 0; transition: opacity 0.15s ease-in; }
+      #root.ready { opacity: 1; }
+      /* Pre-render hero before React loads */
+      #hero-prerender {
+        position: fixed; top: 0; left: 0; right: 0;
+        height: 100vh; z-index: 0;
+        background: #1c1917 url('/hero.webp') center/cover no-repeat;
       }
-      #root.ready {
-        opacity: 1;
+      #hero-prerender::after {
+        content: ''; position: absolute; inset: 0;
+        background: rgba(0,0,0,0.6);
       }
+      #root.ready ~ #hero-prerender { display: none; }
     </style>
     
   </head>
@@ -282,6 +287,7 @@
     <!-- End Google Tag Manager (noscript) -->
     
     <div id="root"></div>
+    <div id="hero-prerender"></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
