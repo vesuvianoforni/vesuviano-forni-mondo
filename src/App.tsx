@@ -131,6 +131,7 @@ const App = () => {
             <Route path="/de/blog" element={<LocalizedBlogList lang="de" />} />
             <Route path="/de/blog/:slug" element={<LocalizedBlogPost lang="de" />} />
             <Route path="/de/thank-you-de" element={<ThankYou lang="de" />} />
+            <Route path="/de/nuetzliche-informationen" element={<LocalizedUsefulInfo lang="de" />} />
             
             {/* Public pages */}
             <Route path="/book-a-slot-call" element={<BookAppointment />} />
