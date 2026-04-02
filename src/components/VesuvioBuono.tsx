@@ -212,7 +212,7 @@ const VesuvioBuono = () => {
                   <div className="bg-stone-100 rounded-lg p-3 hover:scale-105 transition-all duration-300">
                     <div className="aspect-square rounded overflow-hidden">
                       <img 
-                        src="/lovable-uploads/vesuviobuono-forno-legna.jpg" 
+                        src="/lovable-uploads/vesuviobuono-forno-legna.webp" 
                         alt="Installazione VesuvioBuono" 
                         className="w-full h-full object-cover"
                       />
@@ -222,7 +222,7 @@ const VesuvioBuono = () => {
                   <div className="bg-stone-100 rounded-lg p-3 hover:scale-105 transition-all duration-300">
                     <div className="aspect-square rounded overflow-hidden">
                       <img 
-                        src="/lovable-uploads/vesuviobuono-ostepizza-aperto.jpg" 
+                        src="/lovable-uploads/vesuviobuono-ostepizza-aperto.webp" 
                         alt="Certificazioni VesuvioBuono" 
                         className="w-full h-full object-cover"
                       />
@@ -418,7 +418,7 @@ const VesuvioBuono = () => {
                   <div className="bg-stone-800/50 rounded-xl p-6 border-2 border-vesuviano-400/40 shadow-2xl hover:scale-105 transition-all duration-300">
                     <div className="aspect-video rounded-lg overflow-hidden shadow-xl">
                       <img 
-                        src="/lovable-uploads/abbattitore-fuliggine-acqua.png" 
+                        src="/lovable-uploads/abbattitore-fuliggine-acqua.webp" 
                         alt="Abbattitore di Fuliggine ad Acqua - Sistema interno" 
                         className="w-full h-full object-cover"
                       />

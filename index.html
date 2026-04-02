@@ -257,11 +257,8 @@
     <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
     
     <!-- Preload critical images -->
-    <link rel="preload" href="/lovable-uploads/vesuviano-logo-bianco.png" as="image" type="image/png">
     <link rel="preload" href="/src/assets/laboratorio-artigianale-hero.webp" as="image" type="image/webp">
     
     <!-- Critical CSS to prevent FOUC (Flash of Unstyled Content) -->
@@ -291,6 +288,15 @@
     
     <!-- Deferred analytics - loaded after page render -->
     <script>
+      // Load fonts after first paint
+      requestAnimationFrame(function() {
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap';
+        document.head.appendChild(link);
+      });
+      
+      // Defer analytics
       window.addEventListener('load', function() {
         setTimeout(function() {
           // Google Tag Manager

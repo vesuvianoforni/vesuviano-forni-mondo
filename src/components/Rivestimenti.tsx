@@ -25,7 +25,7 @@ const Rivestimenti = () => {
     },
     {
       key: 'personalizzato',
-      image: "/lovable-uploads/vesuviobuono-osteria-pizza.jpg",
+      image: "/lovable-uploads/vesuviobuono-osteria-pizza.webp",
       colors: ['Su Misura', 'Design Esclusivo', 'Materiali Premium']
     }
   ];

@@ -24,6 +24,8 @@ const Hero = () => {
           fetchPriority="high"
           decoding="sync"
           loading="eager"
+          width={1920}
+          height={1080}
         />
         {/* Dark Overlay for better text readability */}
         <div className="absolute inset-0 bg-black/60"></div>

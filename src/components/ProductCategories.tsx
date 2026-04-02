@@ -31,7 +31,7 @@ const ProductCategories = () => {
     },
     {
       key: 'gas',
-      image: "/lovable-uploads/forno-gas-verde-mosaico.png",
+      image: "/lovable-uploads/forno-gas-verde-mosaico.webp",
       video: "/lovable-uploads/forno-gas-360-video.mp4"
     },
     {
@@ -41,7 +41,7 @@ const ProductCategories = () => {
     },
     {
       key: 'rotating',
-      image: "/lovable-uploads/forno-rotativo-mosaico-nero.jpg",
+      image: "/lovable-uploads/forno-rotativo-mosaico-nero.webp",
       video: "/lovable-uploads/forno-rotativo-360-video.mp4"
     },
     {
@@ -51,7 +51,7 @@ const ProductCategories = () => {
     },
     {
       key: 'consultation',
-      image: "/lovable-uploads/forni-colorati-showroom.png"
+      image: "/lovable-uploads/forni-colorati-showroom.webp"
     }
   ];
 
