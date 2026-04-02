@@ -6,7 +6,13 @@ import './i18n/config'
 
 createRoot(document.getElementById("root")!).render(<App />);
 
-// Mark root as ready after styles are applied
+// Mark root as ready and remove prerender hero
 requestAnimationFrame(() => {
-  document.getElementById("root")?.classList.add("ready");
+  const root = document.getElementById("root");
+  root?.classList.add("ready");
+  // Remove prerender hero after React has painted
+  const prerender = document.getElementById("hero-prerender");
+  if (prerender) {
+    prerender.remove();
+  }
 });

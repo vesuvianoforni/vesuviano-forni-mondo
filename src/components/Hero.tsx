@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowDown, Star } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import LazyImage from './LazyImage';
-import laboratorioHero from '@/assets/laboratorio-artigianale-hero.webp';
+// Hero image served from public/ for preloading
+const laboratorioHero = '/hero.webp';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const Hero = () => {
