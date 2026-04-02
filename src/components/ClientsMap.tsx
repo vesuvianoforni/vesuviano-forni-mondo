@@ -24,12 +24,24 @@ const ClientsMap = () => {
     { name: "Palermo", country: "Italia", lat: 38.1157, lng: 13.3615, count: 8, region: "italia" },
     { name: "Bari", country: "Italia", lat: 41.1171, lng: 16.8719, count: 10, region: "italia" },
     
-    // Europa
-    { name: "Parigi", country: "Francia", lat: 48.8566, lng: 2.3522, count: 6, region: "europa" },
-    { name: "Barcellona", country: "Spagna", lat: 41.3851, lng: 2.1734, count: 4, region: "europa" },
-    { name: "Berlino", country: "Germania", lat: 52.5200, lng: 13.4050, count: 3, region: "europa" },
-    { name: "Londra", country: "Regno Unito", lat: 51.5074, lng: -0.1278, count: 5, region: "europa" },
-    { name: "Amsterdam", country: "Paesi Bassi", lat: 52.3676, lng: 4.9041, count: 2, region: "europa" },
+    // Regno Unito - mercato forte
+    { name: "Londra", country: "Regno Unito", lat: 51.5074, lng: -0.1278, count: 12, region: "europa" },
+    { name: "Manchester", country: "Regno Unito", lat: 53.4808, lng: -2.2426, count: 7, region: "europa" },
+    { name: "Birmingham", country: "Regno Unito", lat: 52.4862, lng: -1.8904, count: 5, region: "europa" },
+    { name: "Edinburgh", country: "Regno Unito", lat: 55.9533, lng: -3.1883, count: 4, region: "europa" },
+    { name: "Bristol", country: "Regno Unito", lat: 51.4545, lng: -2.5879, count: 3, region: "europa" },
+    
+    // Europa continentale
+    { name: "Parigi", country: "Francia", lat: 48.8566, lng: 2.3522, count: 8, region: "europa" },
+    { name: "Lione", country: "Francia", lat: 45.7640, lng: 4.8357, count: 4, region: "europa" },
+    { name: "Barcellona", country: "Spagna", lat: 41.3851, lng: 2.1734, count: 5, region: "europa" },
+    { name: "Madrid", country: "Spagna", lat: 40.4168, lng: -3.7038, count: 4, region: "europa" },
+    { name: "Berlino", country: "Germania", lat: 52.5200, lng: 13.4050, count: 5, region: "europa" },
+    { name: "Monaco", country: "Germania", lat: 48.1351, lng: 11.5820, count: 3, region: "europa" },
+    { name: "Amsterdam", country: "Paesi Bassi", lat: 52.3676, lng: 4.9041, count: 3, region: "europa" },
+    { name: "Bruxelles", country: "Belgio", lat: 50.8503, lng: 4.3517, count: 2, region: "europa" },
+    { name: "Zurigo", country: "Svizzera", lat: 47.3769, lng: 8.5417, count: 3, region: "europa" },
+    { name: "Vienna", country: "Austria", lat: 48.2082, lng: 16.3738, count: 2, region: "europa" },
     
     // Mondo
     { name: "New York", country: "USA", lat: 40.7128, lng: -74.0060, count: 3, region: "mondo" },
