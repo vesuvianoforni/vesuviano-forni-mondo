@@ -43,11 +43,8 @@ const ReadyToShip = () => {
     fetchProducts();
   }, []);
 
-  const getDisplayPrice = (p: ReadyToShipOven) => {
-    const price = p.sale_price || p.list_price;
-    if (!price || price <= 0) return t('readyToShip.contactForPrice');
-    return `€${price.toLocaleString('it-IT', { minimumFractionDigits: 2 })}`;
-  };
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-50 to-stone-100">
