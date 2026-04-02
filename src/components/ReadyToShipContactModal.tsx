@@ -236,8 +236,7 @@ const ReadyToShipContactModal = ({
           </Button>
 
           <p className="text-xs text-muted-foreground text-center">
-            Riceverai una pro-forma via email con il link per il deposito del 5%.
-            Il deposito è 100% rimborsabile e riserva il forno per 7 giorni.
+            {t('readyToShip.modal.contactNote', 'An expert will contact you within 24 hours.')}
           </p>
         </form>
       </DialogContent>
