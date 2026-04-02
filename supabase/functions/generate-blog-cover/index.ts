@@ -1,43 +1,71 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Map topic keywords to visual scene descriptions for the AI
-function buildScenePrompt(topic: string, style?: string): string {
-  const t = topic.toLowerCase();
-  let scene = "";
-
-  if (t.includes("gas") || t.includes("bruciatore") || t.includes("fiamma")) {
-    scene = "a beautiful artisan mosaic-tiled gas pizza oven with visible blue flames, in a professional pizzeria setting";
-  } else if (t.includes("elettric") || t.includes("electric")) {
-    scene = "a sleek modern black metal electric pizza oven in a contemporary restaurant kitchen";
-  } else if (t.includes("rotan") || t.includes("rotativ") || t.includes("rotating")) {
-    scene = "a professional rotating pizza oven with mosaic tiles, showing the rotating floor mechanism";
-  } else if (t.includes("vesuviobuono") || t.includes("emissioni") || t.includes("ecolog")) {
-    scene = "an eco-friendly wood-fired pizza oven with green mosaic tiles, in a garden setting with plants";
-  } else if (t.includes("pizza") || t.includes("cottura") || t.includes("ricett")) {
-    scene = "a perfectly baked Neapolitan pizza coming out of a traditional wood-fired oven with flames in the background";
-  } else if (t.includes("artigian") || t.includes("handcraft") || t.includes("tradizion")) {
-    scene = "artisan hands crafting refractory bricks for a pizza oven in an Italian workshop";
-  } else if (t.includes("design") || t.includes("mosaico") || t.includes("rivestiment") || t.includes("color")) {
-    scene = "a stunning colorful mosaic-tiled pizza oven in Mediterranean blue and terracotta tones";
-  } else if (t.includes("legna") || t.includes("wood") || t.includes("napoletan")) {
-    scene = "a traditional Neapolitan dome-shaped wood-fired pizza oven with burning logs inside";
-  } else if (t.includes("metallic") || t.includes("acciaio") || t.includes("modern") || t.includes("professionale")) {
-    scene = "a professional stainless steel pizza oven in a modern commercial kitchen";
-  } else {
-    scene = `a premium Italian artisan pizza oven related to: ${topic}`;
-  }
-
+function buildEditPrompt(topic: string, style?: string): string {
   const styleDesc = style || "warm Mediterranean editorial look, professional food/lifestyle photography, golden hour lighting";
 
-  return `Generate a professional editorial blog cover image (16:9 landscape format) showing ${scene}. 
+  return `Transform this pizza oven photo into a professional editorial blog cover image (16:9 landscape format) about "${topic}". 
 Style: ${styleDesc}. 
-The image should look like a high-end magazine cover photo with warm color grading, beautiful composition, and soft natural lighting. 
+Keep the oven as the main subject but enhance the scene with beautiful composition, warm color grading, and soft natural lighting like a high-end magazine cover photo. 
 Do NOT add any text, watermarks, logos, or overlays. The image should be purely photographic.`;
+}
+
+async function fetchReferenceImages(supabase: any, topic: string): Promise<string[]> {
+  const urls: string[] = [];
+
+  // 1. Try configurator_ovens images (best quality product shots)
+  const { data: ovens } = await supabase
+    .from("configurator_ovens")
+    .select("image_url, additional_images")
+    .eq("is_active", true)
+    .limit(10);
+
+  if (ovens?.length) {
+    for (const oven of ovens) {
+      if (oven.image_url) urls.push(oven.image_url);
+      if (oven.additional_images?.length) {
+        urls.push(...oven.additional_images.slice(0, 2));
+      }
+    }
+  }
+
+  // 2. Also try oven-gallery bucket for more variety
+  const { data: files } = await supabase.storage
+    .from("oven-gallery")
+    .list("", { limit: 20, sortBy: { column: "created_at", order: "desc" } });
+
+  if (files?.length) {
+    for (const file of files) {
+      if (file.name && !file.name.startsWith("blog-covers/") && /\.(jpg|jpeg|png|webp)$/i.test(file.name)) {
+        const { data: urlData } = supabase.storage.from("oven-gallery").getPublicUrl(file.name);
+        if (urlData?.publicUrl) urls.push(urlData.publicUrl);
+      }
+    }
+  }
+
+  // Pick a relevant image based on topic keywords, or random
+  const t = topic.toLowerCase();
+  const scored = urls.map(url => {
+    const u = url.toLowerCase();
+    let score = 0;
+    if (t.includes("gas") && u.includes("gas")) score += 3;
+    if (t.includes("elettric") && (u.includes("elettric") || u.includes("electric"))) score += 3;
+    if (t.includes("rotan") && (u.includes("rotan") || u.includes("rotating"))) score += 3;
+    if (t.includes("legna") && (u.includes("legna") || u.includes("wood"))) score += 3;
+    if (t.includes("mosaico") && u.includes("mosaico")) score += 2;
+    return { url, score };
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+
+  // Return top 1-2 unique images
+  const unique = [...new Set(scored.map(s => s.url))];
+  return unique.slice(0, 2);
 }
 
 serve(async (req) => {
@@ -49,6 +77,11 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+
     const { topic, style } = await req.json();
     if (!topic) {
       return new Response(JSON.stringify({ error: "Missing topic" }), {
@@ -56,8 +89,32 @@ serve(async (req) => {
       });
     }
 
-    const prompt = buildScenePrompt(topic, style);
     console.log("Generating blog cover for topic:", topic);
+
+    // Fetch reference images from the site
+    const refImages = await fetchReferenceImages(supabase, topic);
+    console.log(`Found ${refImages.length} reference images`);
+
+    const prompt = buildEditPrompt(topic, style);
+
+    let messages: any[];
+
+    if (refImages.length > 0) {
+      // Use image editing mode with site photos as reference
+      const content: any[] = [{ type: "text", text: prompt }];
+      for (const imgUrl of refImages) {
+        content.push({
+          type: "image_url",
+          image_url: { url: imgUrl },
+        });
+      }
+      messages = [{ role: "user", content }];
+      console.log("Using reference images:", refImages);
+    } else {
+      // Fallback: generate from scratch
+      console.log("No reference images found, generating from scratch");
+      messages = [{ role: "user", content: prompt }];
+    }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -67,7 +124,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash-image",
-        messages: [{ role: "user", content: prompt }],
+        messages,
         modalities: ["image", "text"],
       }),
     });
@@ -97,12 +154,6 @@ serve(async (req) => {
     }
 
     // Upload to Supabase Storage
-    const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
-
     const base64Data = imageUrl.split(",")[1];
     const binaryString = atob(base64Data);
     const bytes = new Uint8Array(binaryString.length);
