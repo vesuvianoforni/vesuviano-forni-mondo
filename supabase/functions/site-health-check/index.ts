@@ -23,18 +23,30 @@ serve(async (req) => {
 
   const issues: string[] = []
 
-  // 1. Check if the website is reachable
-  try {
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 15000)
-    const siteRes = await fetch(SITE_URL, { signal: controller.signal })
-    clearTimeout(timeout)
-    
-    if (!siteRes.ok) {
-      issues.push(`⚠️ Sito web non raggiungibile - HTTP ${siteRes.status} ${siteRes.statusText}`)
+  // 1. Check if the website is reachable (with retry to avoid false positives)
+  let siteOk = false
+  let lastSiteError = ''
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 20000)
+      const siteRes = await fetch(SITE_URL, { signal: controller.signal })
+      clearTimeout(timeout)
+      
+      if (siteRes.ok) {
+        siteOk = true
+        break
+      } else {
+        lastSiteError = `HTTP ${siteRes.status} ${siteRes.statusText}`
+      }
+    } catch (err) {
+      lastSiteError = err instanceof Error ? err.message : String(err)
     }
-  } catch (err) {
-    issues.push(`🔴 Sito web DOWN - Errore: ${err instanceof Error ? err.message : String(err)}`)
+    // Wait 5s before retry
+    if (attempt < 3) await new Promise(r => setTimeout(r, 5000))
+  }
+  if (!siteOk) {
+    issues.push(`🔴 Sito web DOWN dopo 3 tentativi - Ultimo errore: ${lastSiteError}`)
   }
 
   // 2. Check Supabase database connectivity
