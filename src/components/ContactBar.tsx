@@ -26,6 +26,8 @@ const ContactBar = () => {
     const consultationSection = document.getElementById('consultation');
     if (consultationSection) {
       consultationSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.location.href = '/#consultation';
     }
   };
 
