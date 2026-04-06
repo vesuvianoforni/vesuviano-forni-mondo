@@ -60,12 +60,12 @@ const Hero = () => {
             className="border-2 border-white/60 bg-white/10 hover:bg-white/20 hover:border-white/80 backdrop-blur-md px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-medium w-full sm:w-auto"
           />
           <Button 
-            size="lg" 
-            variant="outline"
-            className="border-2 border-white/40 text-white bg-transparent hover:bg-white/10 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-medium transition-all duration-300 w-full sm:w-auto"
+            size="sm" 
+            variant="link"
+            className="text-white/80 hover:text-white text-xs sm:text-sm md:text-base font-medium transition-all duration-300 underline underline-offset-4 decoration-white/40 hover:decoration-white/80 px-0 h-auto py-1"
             onClick={scrollToProducts}
           >
-            {t('hero.discoverOvens')}
+            {t('hero.discoverOvens')} →
           </Button>
           
           {/* Customer Reviews Carousel */}
