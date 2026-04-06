@@ -6,6 +6,7 @@ import ConsultationForm from '@/components/ConsultationForm';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import ContactBar from '@/components/ContactBar';
 import { Button } from '@/components/ui/button';
+import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
