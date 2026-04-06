@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import CtaButton from './CtaButton';
 import { ArrowDown, Star } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import LazyImage from './LazyImage';
