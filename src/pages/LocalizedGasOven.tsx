@@ -4,6 +4,7 @@ import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
 import ConsultationForm from '@/components/ConsultationForm';
 import { Button } from '@/components/ui/button';
+import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface LocalizedGasOvenProps {
