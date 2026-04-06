@@ -6,6 +6,7 @@ import ConsultationForm from '@/components/ConsultationForm';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import ContactBar from '@/components/ContactBar';
 import { Button } from '@/components/ui/button';
+import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
@@ -92,13 +93,7 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
             <p className="text-xl md:text-2xl text-stone-300 mb-8 max-w-2xl">
               {t('burners.heroSubtitle')}
             </p>
-            <Button
-              size="lg"
-              className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-6 text-lg"
-              onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              {t('hero.freeConsultation')}
-            </Button>
+            <CtaButton dark className="px-8 py-6 text-lg" />
           </div>
         </div>
       </section>

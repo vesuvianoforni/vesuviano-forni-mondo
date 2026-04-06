@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import CtaButton from './CtaButton';
 import { useTranslation } from 'react-i18next';
 
 const Services = () => {
@@ -101,13 +102,7 @@ const Services = () => {
               <p className="text-stone-600 mb-6">
                 {t('services.cta.description')}
               </p>
-              <Button 
-                size="lg"
-                className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-3 transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                {t('services.cta.button')}
-              </Button>
+              <CtaButton className="px-8 py-3 hover:shadow-xl" />
             </div>
           </div>
         </div>

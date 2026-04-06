@@ -204,7 +204,7 @@ const ConsultationForm = () => {
                       type="submit" 
                       size="lg"
                       disabled={isSubmitting}
-                      className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 disabled:opacity-50 text-white text-base md:text-lg py-3 h-auto"
+                      className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 disabled:opacity-50 text-white text-base md:text-lg py-3 h-auto flex flex-col items-center gap-0.5"
                     >
                       {isSubmitting ? (
                         <>
@@ -212,7 +212,10 @@ const ConsultationForm = () => {
                           {t('consultation.form.submitting')}
                         </>
                       ) : (
-                        t('consultation.form.submit')
+                        <>
+                          <span>{t('cta.getQuote')}</span>
+                          <span className="text-xs font-normal opacity-80">{t('cta.getQuoteSubtext')}</span>
+                        </>
                       )}
                     </Button>
 

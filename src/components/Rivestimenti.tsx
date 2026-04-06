@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import CtaButton from './CtaButton';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from 'react-i18next';
@@ -149,13 +150,7 @@ const Rivestimenti = () => {
             </div>
 
             <div className="text-center mt-8">
-              <Button 
-                size="lg"
-                className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-3 transition-all duration-300 hover:scale-105"
-                onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                {t('rivestimenti.startCustomization', 'Inizia Personalizzazione')}
-              </Button>
+              <CtaButton className="px-8 py-3" />
             </div>
           </div>
         </div>

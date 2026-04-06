@@ -4,6 +4,7 @@ import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
 import ConsultationForm from '@/components/ConsultationForm';
 import { Button } from '@/components/ui/button';
+import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface LocalizedGasOvenProps {
@@ -39,13 +40,7 @@ const LocalizedGasOven = ({ lang }: LocalizedGasOvenProps) => {
               <p className="text-xl md:text-2xl text-white/90 mb-8">
                 {t('products.gas.subtitle')}
               </p>
-              <Button 
-                size="lg"
-                className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-6 text-lg"
-                onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                {t('hero.freeConsultation')}
-              </Button>
+              <CtaButton dark className="px-8 py-6 text-lg" />
             </div>
           </div>
         </section>

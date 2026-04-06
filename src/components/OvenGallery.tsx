@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import CtaButton from './CtaButton';
 import { useTranslation } from 'react-i18next';
 import { Loader2 } from "lucide-react";
 import ImageZoomModal from "./ImageZoomModal";
@@ -235,7 +236,7 @@ const OvenGallery = () => {
                       onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
                       className="w-full group-hover:bg-vesuviano-600 group-hover:text-white group-hover:border-vesuviano-600 transition-all"
                     >
-                      {t('ovenGallery.requestInfo')}
+                      {t('cta.getQuote')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -266,13 +267,7 @@ const OvenGallery = () => {
           <p className="text-stone-600 mb-6 max-w-xl mx-auto">
             {t('ovenGallery.cta.description')}
           </p>
-          <Button 
-            size="lg" 
-            className="bg-vesuviano-600 hover:bg-vesuviano-700"
-            onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            {t('ovenGallery.cta.button')}
-          </Button>
+          <CtaButton className="bg-vesuviano-600 hover:bg-vesuviano-700" />
         </div>
 
         {/* Image Zoom Modal */}

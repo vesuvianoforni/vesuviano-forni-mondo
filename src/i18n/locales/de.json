@@ -1,5 +1,9 @@
 
 {
+  "cta": {
+    "getQuote": "Angebot anfordern",
+    "getQuoteSubtext": "Preis innerhalb von 24h erhalten"
+  },
   "bookSlot": {
     "title": "Buchen Sie Ihren Termin",
     "subtitle": "Wählen Sie Ihr bevorzugtes Datum, Uhrzeit und Kontaktmethode",

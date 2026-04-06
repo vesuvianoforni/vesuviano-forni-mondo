@@ -1,5 +1,9 @@
 
 {
+  "cta": {
+    "getQuote": "Richiedi un preventivo",
+    "getQuoteSubtext": "Ricevi il prezzo in 24h"
+  },
   "bookSlot": {
     "title": "Prenota il Tuo Slot",
     "subtitle": "Scegli data, ora e modalità di contatto preferite",

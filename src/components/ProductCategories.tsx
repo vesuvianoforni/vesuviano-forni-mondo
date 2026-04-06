@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import CtaButton from './CtaButton';
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
@@ -220,13 +221,7 @@ const ProductCategories = () => {
               {t('products.customSolutions.description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <Button 
-                size="lg"
-                className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-6 sm:px-8 py-2.5 sm:py-3 transition-all duration-300 hover:scale-105 text-sm sm:text-base"
-                onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                {t('products.customSolutions.freeConsultation')}
-              </Button>
+              <CtaButton className="px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base" />
               <Button 
                 size="lg"
                 variant="outline"

@@ -1,5 +1,9 @@
 
 {
+  "cta": {
+    "getQuote": "Solicitar presupuesto",
+    "getQuoteSubtext": "Recibe el precio en 24h"
+  },
   "bookSlot": {
     "title": "Reserve Su Franja Horaria",
     "subtitle": "Elija su fecha, hora y método de contacto preferidos",
