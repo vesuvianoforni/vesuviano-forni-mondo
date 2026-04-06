@@ -156,7 +156,7 @@ const ConsultationModal = ({ isOpen, onClose }: ConsultationModalProps) => {
             type="submit" 
             size="lg"
             disabled={isSubmitting}
-            className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 disabled:opacity-50 text-white"
+            className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 disabled:opacity-50 text-white flex flex-col items-center gap-0.5"
           >
             {isSubmitting ? (
               <>
@@ -164,7 +164,10 @@ const ConsultationModal = ({ isOpen, onClose }: ConsultationModalProps) => {
                 {t('consultationModal.form.submitting')}
               </>
             ) : (
-              t('consultationModal.form.submit')
+              <>
+                <span>{t('cta.getQuote')}</span>
+                <span className="text-xs font-normal opacity-80">{t('cta.getQuoteSubtext')}</span>
+              </>
             )}
           </Button>
         </form>
