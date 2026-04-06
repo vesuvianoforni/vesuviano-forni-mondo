@@ -56,6 +56,7 @@ const Hero = () => {
 
         <div className="flex flex-col items-center gap-3 sm:gap-4 justify-center mb-6 sm:mb-8 animate-scale-in px-2 sm:px-4" style={{ animationDelay: '0.9s' }}>
           <CtaButton 
+            dark
             className="border-2 border-white/60 bg-white/10 hover:bg-white/20 hover:border-white/80 backdrop-blur-md px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 text-sm sm:text-base md:text-lg font-medium w-full sm:w-auto"
           />
           <Button 
