@@ -40,13 +40,7 @@ const LocalizedElectricOven = ({ lang }: LocalizedElectricOvenProps) => {
               <p className="text-xl md:text-2xl text-white/90 mb-8">
                 {t('products.electric.subtitle')}
               </p>
-              <Button 
-                size="lg"
-                className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-6 text-lg"
-                onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                {t('hero.freeConsultation')}
-              </Button>
+              <CtaButton className="px-8 py-6 text-lg" />
             </div>
           </div>
         </section>
