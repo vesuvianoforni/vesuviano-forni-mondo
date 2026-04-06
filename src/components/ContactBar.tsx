@@ -23,11 +23,28 @@ const ContactBar = () => {
   };
 
   const handleContactClick = () => {
-    const consultationSection = document.getElementById('consultation');
-    if (consultationSection) {
-      consultationSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const isHome = window.location.pathname === '/' || /^\/(it|en|fr|es|de)\/?$/.test(window.location.pathname);
+    
+    if (isHome) {
+      // On homepage: try to scroll, retry after lazy load
+      const scrollToConsultation = () => {
+        const el = document.getElementById('consultation');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      };
+      scrollToConsultation();
+      // Retry in case LazySection hasn't rendered yet
+      setTimeout(scrollToConsultation, 300);
+      setTimeout(scrollToConsultation, 800);
     } else {
-      window.location.href = '/#consultation';
+      // On subpages: check if section exists, otherwise go home
+      const el = document.getElementById('consultation');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.location.href = '/#consultation';
+      }
     }
   };
 
