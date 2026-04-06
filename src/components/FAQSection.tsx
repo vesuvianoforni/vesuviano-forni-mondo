@@ -96,13 +96,7 @@ const FAQSection = () => {
           <p className="text-stone-600 mb-6">
             {t('faq.cta.subtitle')}
           </p>
-          <Button 
-            onClick={scrollToContact}
-            size="lg"
-            className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            {t('faq.cta.button')}
-          </Button>
+          <CtaButton className="px-8 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl" />
         </div>
       </div>
     </section>

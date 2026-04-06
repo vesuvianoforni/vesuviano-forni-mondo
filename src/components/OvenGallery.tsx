@@ -266,13 +266,7 @@ const OvenGallery = () => {
           <p className="text-stone-600 mb-6 max-w-xl mx-auto">
             {t('ovenGallery.cta.description')}
           </p>
-          <Button 
-            size="lg" 
-            className="bg-vesuviano-600 hover:bg-vesuviano-700"
-            onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            {t('ovenGallery.cta.button')}
-          </Button>
+          <CtaButton className="bg-vesuviano-600 hover:bg-vesuviano-700" />
         </div>
 
         {/* Image Zoom Modal */}

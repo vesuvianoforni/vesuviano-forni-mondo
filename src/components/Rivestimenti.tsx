@@ -149,12 +149,7 @@ const Rivestimenti = () => {
             </div>
 
             <div className="text-center mt-8">
-              <Button 
-                size="lg"
-                className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-8 py-3 transition-all duration-300 hover:scale-105"
-                onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                {t('rivestimenti.startCustomization', 'Inizia Personalizzazione')}
+              <CtaButton className="px-8 py-3" />
               </Button>
             </div>
           </div>
