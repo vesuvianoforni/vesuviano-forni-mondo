@@ -14,6 +14,7 @@ interface ResultPreviewProps {
 }
 
 const ResultPreview = ({ generatedImage, isGenerating, selectedOvenData, onDownload }: ResultPreviewProps) => {
+  const { t } = useTranslation();
   return (
     <Card>
       <CardHeader className="pb-4">
