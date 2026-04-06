@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import OvenVisualizer from '@/components/OvenVisualizer';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import wiseLogo from '@/assets/wise-logo.png';
+import paypalLogo from '@/assets/paypal-logo.png';
 
 const ArchitettoAI = () => {
   const { t, i18n } = useTranslation();
