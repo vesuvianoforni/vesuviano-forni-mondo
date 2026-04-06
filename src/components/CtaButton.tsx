@@ -8,9 +8,10 @@ interface CtaButtonProps {
   variant?: "default" | "outline" | "ghost" | "link" | "destructive" | "secondary";
   onClick?: () => void;
   showSubtext?: boolean;
+  dark?: boolean;
 }
 
-const CtaButton = ({ className, size = "lg", variant, onClick, showSubtext = true }: CtaButtonProps) => {
+const CtaButton = ({ className, size = "lg", variant, onClick, showSubtext = true, dark = false }: CtaButtonProps) => {
   const { t } = useTranslation();
 
   const handleClick = () => {
@@ -35,7 +36,10 @@ const CtaButton = ({ className, size = "lg", variant, onClick, showSubtext = tru
         {t('cta.getQuote')}
       </Button>
       {showSubtext && (
-        <span className="text-xs text-muted-foreground font-medium">
+        <span className={cn(
+          "text-xs font-medium",
+          dark ? "text-white/70" : "text-muted-foreground"
+        )}>
           {t('cta.getQuoteSubtext')}
         </span>
       )}
