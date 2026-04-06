@@ -1,5 +1,9 @@
 
 {
+  "cta": {
+    "getQuote": "Get a quote",
+    "getQuoteSubtext": "Receive pricing within 24h"
+  },
   "bookSlot": {
     "title": "Book Your Call Slot",
     "subtitle": "Choose your preferred date, time and contact method",

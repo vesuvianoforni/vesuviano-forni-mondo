@@ -1,5 +1,9 @@
 
 {
+  "cta": {
+    "getQuote": "Demander un devis",
+    "getQuoteSubtext": "Recevez le prix en 24h"
+  },
   "bookSlot": {
     "title": "Réservez Votre Créneau",
     "subtitle": "Choisissez votre date, heure et méthode de contact préférées",
