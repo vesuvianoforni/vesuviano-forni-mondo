@@ -235,7 +235,7 @@ const OvenGallery = () => {
                       onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
                       className="w-full group-hover:bg-vesuviano-600 group-hover:text-white group-hover:border-vesuviano-600 transition-all"
                     >
-                      {t('ovenGallery.requestInfo')}
+                      {t('cta.getQuote')}
                     </Button>
                   </CardContent>
                 </Card>
