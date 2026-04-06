@@ -40,7 +40,7 @@ const LocalizedTraditionalOven = ({ lang }: LocalizedTraditionalOvenProps) => {
               <p className="text-xl md:text-2xl text-white/90 mb-8">
                 {t('products.traditional.subtitle')}
               </p>
-              <CtaButton className="px-8 py-6 text-lg" />
+              <CtaButton dark className="px-8 py-6 text-lg" />
             </div>
           </div>
         </section>
