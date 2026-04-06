@@ -461,8 +461,6 @@ const Index = () => {
         </div>
       </footer>
 
-import wiseLogo from '@/assets/wise-logo.png';
-import paypalLogo from '@/assets/paypal-logo.png';
 
       {/* WhatsApp Button */}
       <Suspense fallback={null}>
