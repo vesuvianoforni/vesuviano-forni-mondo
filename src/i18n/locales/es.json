@@ -327,6 +327,11 @@
     "email": "Email",
     "laboratory": "Laboratorio",
     "downloadCatalog": "Descargar Catálogo Completo",
+    "download": {
+      "title": "Ficha Técnica VesuvioBuono",
+      "description": "Descarga la ficha técnica completa de nuestro horno revolucionario de cero emisiones.",
+      "button": "Descargar PDF"
+    },
     "requestConsultation": "Solicitud de Consulta",
     "fullName": "Nombre Completo",
     "yourName": "Tu nombre",
