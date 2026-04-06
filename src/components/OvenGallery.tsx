@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import CtaButton from './CtaButton';
 import { useTranslation } from 'react-i18next';
 import { Loader2 } from "lucide-react";
 import ImageZoomModal from "./ImageZoomModal";

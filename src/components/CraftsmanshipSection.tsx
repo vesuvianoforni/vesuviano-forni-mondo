@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import CtaButton from './CtaButton';
 import { useTranslation } from 'react-i18next';
 
 const CraftsmanshipSection = () => {

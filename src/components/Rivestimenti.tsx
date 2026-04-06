@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import CtaButton from './CtaButton';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from 'react-i18next';
