@@ -73,7 +73,7 @@ const ResultPreview = ({ generatedImage, isGenerating, selectedOvenData, onDownl
                 className="flex-1 bg-vesuviano-500 hover:bg-vesuviano-600 text-sm"
                 onClick={() => document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                Richiedi Preventivo
+                {t('cta.getQuote')}
               </Button>
             </div>
           </div>
