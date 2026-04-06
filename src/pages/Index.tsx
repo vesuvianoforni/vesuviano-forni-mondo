@@ -1,5 +1,7 @@
 
 import React, { lazy, Suspense } from "react";
+import wiseLogo from '@/assets/wise-logo.png';
+import paypalLogo from '@/assets/paypal-logo.png';
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
@@ -428,8 +430,19 @@ const Index = () => {
             </div>
           </div>
           
+          {/* Payment Methods */}
+          <div className="border-t border-gray-800 pt-8 mb-6">
+            <div className="flex items-center justify-center gap-6">
+              <span className="text-xs text-gray-500 uppercase tracking-wider">Metodi di pagamento</span>
+              <div className="flex items-center gap-4">
+                <img src={wiseLogo} alt="Wise" loading="lazy" width={80} height={80} className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity" />
+                <img src={paypalLogo} alt="PayPal" loading="lazy" width={80} height={80} className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity" />
+              </div>
+            </div>
+          </div>
+          
           {/* Bottom Section */}
-          <div className="border-t border-gray-800 pt-8">
+          <div className="border-t border-gray-800 pt-6">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <div className="text-sm text-gray-500">
                 &copy; 2024 Vesuviano. Tutti i diritti riservati.
@@ -449,8 +462,8 @@ const Index = () => {
           </div>
         </div>
       </footer>
-      
-      
+
+
       {/* WhatsApp Button */}
       <Suspense fallback={null}>
         <WhatsAppButton />
