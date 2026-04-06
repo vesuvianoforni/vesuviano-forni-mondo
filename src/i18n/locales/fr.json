@@ -413,6 +413,11 @@
       "location": "Naples, Italie",
       "downloadCatalog": "Télécharger Catalogue Complet"
     },
+    "download": {
+      "title": "Fiche Technique VesuvioBuono",
+      "description": "Téléchargez la fiche technique complète de notre four révolutionnaire à zéro émission.",
+      "button": "Télécharger PDF"
+    },
     "messages": {
       "requiredFields": "Champs Obligatoires",
       "fillRequired": "Le Nom et l'Email sont requis pour envoyer la demande.",
