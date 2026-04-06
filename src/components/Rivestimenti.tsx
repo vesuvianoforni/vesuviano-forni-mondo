@@ -150,7 +150,6 @@ const Rivestimenti = () => {
 
             <div className="text-center mt-8">
               <CtaButton className="px-8 py-3" />
-              </Button>
             </div>
           </div>
         </div>
