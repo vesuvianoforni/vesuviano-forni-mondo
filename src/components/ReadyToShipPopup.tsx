@@ -49,6 +49,7 @@ const ReadyToShipPopup = () => {
             <DialogTitle>Pronta Consegna</DialogTitle>
             <DialogDescription>Forni pronti per la spedizione</DialogDescription>
           </VisuallyHidden>
+          <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium mb-4">
             <span className="animate-pulse">🔥</span>
             <span>{t('hero.readyToShip.subtitle')}</span>
           </div>
