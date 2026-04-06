@@ -413,6 +413,11 @@
       "location": "Naples, Italy",
       "downloadCatalog": "Download Full Catalog"
     },
+    "download": {
+      "title": "VesuvioBuono Technical Sheet",
+      "description": "Download the complete technical sheet of our revolutionary zero-emission oven.",
+      "button": "Download PDF"
+    },
     "messages": {
       "requiredFields": "Required Fields",
       "fillRequired": "Name and Email are required to send the request.",

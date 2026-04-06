@@ -336,6 +336,11 @@
     "email": "E-Mail",
     "laboratory": "Labor",
     "downloadCatalog": "Vollständigen Katalog Herunterladen",
+    "download": {
+      "title": "Technisches Datenblatt VesuvioBuono",
+      "description": "Laden Sie das vollständige Datenblatt unseres revolutionären Null-Emissions-Ofens herunter.",
+      "button": "PDF Herunterladen"
+    },
     "requestConsultation": "Beratungsanfrage",
     "fullName": "Vollständiger Name",
     "yourName": "Ihr Name",

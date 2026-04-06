@@ -411,6 +411,11 @@
       "location": "Napoli, Italia",
       "downloadCatalog": "Scarica Catalogo Completo"
     },
+    "download": {
+      "title": "Scheda Tecnica VesuvioBuono",
+      "description": "Scarica la scheda tecnica completa del nostro forno rivoluzionario a zero emissioni.",
+      "button": "Scarica PDF"
+    },
     "messages": {
       "requiredFields": "Campi Obbligatori",
       "fillRequired": "Nome e Email sono richiesti per inviare la richiesta.",
