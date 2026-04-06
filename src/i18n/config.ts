@@ -2,17 +2,13 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-// Only import Italian eagerly (fallback/default)
-import it from './locales/it.json';
+const loadedLanguages = new Set<string>();
 
-const loadedLanguages = new Set(['it']);
+const resources: Record<string, { translation: Record<string, unknown> }> = {};
 
-const resources: Record<string, { translation: Record<string, unknown> }> = {
-  it: { translation: it }
-};
-
-// Lazy load other languages on demand
+// All languages loaded dynamically
 const languageLoaders: Record<string, () => Promise<{ default: Record<string, unknown> }>> = {
+  it: () => import('./locales/it.json'),
   en: () => import('./locales/en.json'),
   fr: () => import('./locales/fr.json'),
   de: () => import('./locales/de.json'),
@@ -57,8 +53,6 @@ export const loadLanguage = async (lang: string) => {
 
 // Auto-load language from URL on init
 const detectedLang = detectLangFromPath();
-if (detectedLang !== 'it') {
-  loadLanguage(detectedLang);
-} 
+loadLanguage(detectedLang);
 
 export default i18n;
