@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import Header from '@/components/Header';
 import ConsultationForm from '@/components/ConsultationForm';
 import AIChatWidget from '@/components/chat/AIChatWidget';
-import ContactBar from '@/components/ContactBar';
+
 import { Button } from '@/components/ui/button';
 import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
