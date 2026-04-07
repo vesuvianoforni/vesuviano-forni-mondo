@@ -82,6 +82,7 @@ const Header = () => {
     { key: 'electric', label: t('products.electric.title'), path: getOvenPath('electric') },
     { key: 'rotating', label: t('products.rotating.title'), path: getOvenPath('rotating') },
     { key: 'vesuviobuono', label: t('products.vesuviobuono.title'), path: getVesuvioBuonoPath() },
+    { key: 'builtOnPlace', label: t('products.builtOnPlace.title'), path: '/built-on-place' },
     { key: 'burners', label: t('burners.pageTitle'), path: getOvenPath('burners') }
   ];
 
