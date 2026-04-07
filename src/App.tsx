@@ -153,6 +153,7 @@ const App = () => {
               <Route path="/success" element={<PaymentSuccess />} />
               <Route path="/contatti" element={<ContattiRedirect />} />
               <Route path="/proforma/:token" element={<ProformaPage />} />
+              <Route path="/built-on-place" element={<BuiltOnPlace />} />
 
               {/* ERP */}
               <Route path="/erp/login" element={<AdminLogin />} />
