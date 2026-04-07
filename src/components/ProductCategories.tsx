@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import CtaButton from './CtaButton';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
