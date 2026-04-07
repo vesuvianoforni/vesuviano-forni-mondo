@@ -186,7 +186,7 @@ const BuiltOnPlace = () => {
               {
                 title: "Authentic Craftsmanship",
                 desc: "Neapolitan master builders use techniques passed down through generations, with real volcanic sand from Mount Vesuvius.",
-                img: "https://xvccwwusmraonezalabc.supabase.co/storage/v1/object/public/oven-images/gallery/vesuviano-traditional-2.jpg",
+                img: "/lovable-uploads/authentic-craftsmanship.png",
               },
               {
                 title: "Superior Performance",
