@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import OvenVisualizer from '@/components/OvenVisualizer';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import AIChatWidget from '@/components/chat/AIChatWidget';
 import wiseLogo from '@/assets/wise-logo.png';
 import paypalLogo from '@/assets/paypal-logo.png';
 
