@@ -179,13 +179,13 @@ const BuiltOnPlace = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                title: "Perfect Fit",
-                desc: "Custom-built to your exact space and specifications. No compromises on size or design.",
+                title: "Fits Through Any Door",
+                desc: "Our ovens are assembled on-site, piece by piece. They pass through spaces as narrow as 45 cm — doorways where no pre-built oven could ever fit.",
                 img: "https://xvccwwusmraonezalabc.supabase.co/storage/v1/object/public/oven-images/gallery/vesuviano-traditional-1.jpg",
               },
               {
                 title: "Authentic Craftsmanship",
-                desc: "Neapolitan master builders use techniques passed down through generations, with real volcanic sand.",
+                desc: "Neapolitan master builders use techniques passed down through generations, with real volcanic sand from Mount Vesuvius.",
                 img: "https://xvccwwusmraonezalabc.supabase.co/storage/v1/object/public/oven-images/gallery/vesuviano-traditional-2.jpg",
               },
               {
