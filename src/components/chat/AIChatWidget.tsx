@@ -121,12 +121,10 @@ export default function AIChatWidget() {
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [showWhatsAppCta, setShowWhatsAppCta] = useState(false);
   const [showPulse, setShowPulse] = useState(true);
-  const [userMessageCount, setUserMessageCount] = useState(0);
   const [pendingMessage, setPendingMessage] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-open after 15 seconds
   useEffect(() => {
     if (hasAutoOpened) return;
     const timer = setTimeout(() => {
@@ -148,51 +146,21 @@ export default function AIChatWidget() {
     if (open) inputRef.current?.focus();
   }, [open]);
 
-  const handleContactSubmitted = (name: string) => {
-    setContactSubmitted(true);
-    setContactFormShown(false);
-    const thankYou = THANK_YOU[lang] || THANK_YOU.en;
-    const nameMsg = name ? thankYou.replace("!", ` ${name}!`) : thankYou;
-    setMessages((prev) => [
-      ...prev,
-      { role: "assistant", content: nameMsg },
-    ]);
-    setShowWhatsAppCta(true);
-    // Now send the pending message to AI
-    if (pendingMessage) {
-      const msgToSend = pendingMessage;
-      setPendingMessage(null);
-      setTimeout(() => sendToAI(msgToSend), 500);
-    }
-  };
-
-  const sendToAI = useCallback(
-    async (text: string) => {
-      if (!text.trim() || isLoading) return;
+  const callAI = useCallback(
+    async (allMessages: Msg[]) => {
       setIsLoading(true);
-
-      const currentMessages = messages;
-      // Find the user message already in messages list
-      let allMessages = currentMessages;
-      // If user message not yet in list, add it
-      if (currentMessages[currentMessages.length - 1]?.content !== text || currentMessages[currentMessages.length - 1]?.role !== "user") {
-        // Message should already be there from send(), but just in case
-      }
-
-      let assistantSoFar = "";
-
       let assistantSoFar = "";
 
       const upsertAssistant = (chunk: string) => {
         assistantSoFar += chunk;
         setMessages((prev) => {
           const last = prev[prev.length - 1];
-          if (last?.role === "assistant" && prev.length > allMessages.length) {
+          if (last?.role === "assistant" && assistantSoFar.startsWith(last.content.slice(0, 10))) {
             return prev.map((m, i) =>
               i === prev.length - 1 ? { ...m, content: assistantSoFar } : m
             );
           }
-          return [...prev.slice(0, allMessages.length), { role: "assistant", content: assistantSoFar }];
+          return [...prev, { role: "assistant", content: assistantSoFar }];
         });
       };
 
@@ -242,7 +210,52 @@ export default function AIChatWidget() {
         setIsLoading(false);
       }
     },
-    [messages, isLoading, lang]
+    [lang]
+  );
+
+  const handleContactSubmitted = useCallback((name: string) => {
+    setContactSubmitted(true);
+    setContactFormShown(false);
+    const thankYou = THANK_YOU[lang] || THANK_YOU.en;
+    const nameMsg = name ? thankYou.replace("!", ` ${name}!`) : thankYou;
+    setMessages((prev) => [...prev, { role: "assistant", content: nameMsg }]);
+    setShowWhatsAppCta(true);
+    // Send pending message to AI after a short delay
+    setPendingMessage((pending) => {
+      if (pending) {
+        setTimeout(() => {
+          setMessages((prev) => {
+            callAI(prev);
+            return prev;
+          });
+        }, 800);
+      }
+      return null;
+    });
+  }, [lang, callAI]);
+
+  const send = useCallback(
+    (text: string) => {
+      if (!text.trim() || isLoading) return;
+      const userMsg: Msg = { role: "user", content: text.trim() };
+      setInput("");
+
+      if (!contactSubmitted) {
+        // First message: show intro + form, don't call AI yet
+        const introMsg = INTRO_MESSAGES[lang] || INTRO_MESSAGES.en;
+        setMessages((prev) => [...prev, userMsg, { role: "assistant", content: introMsg }]);
+        setContactFormShown(true);
+        setPendingMessage(text.trim());
+      } else {
+        // Already submitted contact: call AI directly
+        setMessages((prev) => {
+          const updated = [...prev, userMsg];
+          callAI(updated);
+          return updated;
+        });
+      }
+    },
+    [isLoading, contactSubmitted, lang, callAI]
   );
 
   const renderMessageContent = (msg: Msg) => {
@@ -258,7 +271,6 @@ export default function AIChatWidget() {
 
   return (
     <>
-      {/* Desktop floating button */}
       <button
         onClick={() => setOpen((o) => !o)}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-vesuviano-500 text-white shadow-lg hover:shadow-xl transition-all flex items-center justify-center hover:scale-105 hidden md:flex"
@@ -270,7 +282,6 @@ export default function AIChatWidget() {
         {open ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
       </button>
 
-      {/* Mobile AI icon */}
       <button
         onClick={() => setOpen((o) => !o)}
         className="fixed bottom-20 right-4 z-50 w-12 h-12 rounded-full bg-vesuviano-500 text-white shadow-lg flex items-center justify-center md:hidden"
@@ -282,19 +293,13 @@ export default function AIChatWidget() {
         {open ? <X className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
       </button>
 
-      {/* Chat panel */}
       {open && (
         <div
           className="fixed bottom-24 right-4 md:bottom-24 md:right-6 z-50 w-[calc(100vw-2rem)] max-w-md bg-white border border-stone-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
           style={{ height: "min(500px, calc(100vh - 10rem))" }}
         >
-          {/* Header */}
           <div className="bg-vesuviano-500 text-white px-4 py-3 flex items-center gap-3">
-            <img 
-              src="/lovable-uploads/vesuviano-logo-bianco.png" 
-              alt="Vesuviano" 
-              className="h-6 w-auto"
-            />
+            <img src="/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano" className="h-6 w-auto" />
             <div>
               <p className="font-semibold text-sm">Assistente Vesuviano</p>
               <p className="text-xs opacity-80">AI Oven Consultant</p>
@@ -304,25 +309,15 @@ export default function AIChatWidget() {
             </button>
           </div>
 
-          {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.map((msg, i) => (
-              <div
-                key={i}
-                className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-              >
+              <div key={i} className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 {msg.role === "assistant" && (
                   <div className="w-7 h-7 rounded-full bg-vesuviano-100 flex items-center justify-center flex-shrink-0 mt-1">
                     <Bot className="w-4 h-4 text-vesuviano-600" />
                   </div>
                 )}
-                <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${
-                    msg.role === "user"
-                      ? "bg-vesuviano-500 text-white rounded-br-md"
-                      : "bg-stone-100 text-stone-800 rounded-bl-md"
-                  }`}
-                >
+                <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${msg.role === "user" ? "bg-vesuviano-500 text-white rounded-br-md" : "bg-stone-100 text-stone-800 rounded-bl-md"}`}>
                   {renderMessageContent(msg)}
                 </div>
                 {msg.role === "user" && (
@@ -333,12 +328,10 @@ export default function AIChatWidget() {
               </div>
             ))}
 
-            {/* Contact form after first message */}
             {contactFormShown && !contactSubmitted && (
               <ContactForm onSubmitted={handleContactSubmitted} lang={lang} />
             )}
 
-            {/* WhatsApp CTA */}
             {showWhatsAppCta && (
               <a
                 href="https://wa.link/a2959l"
@@ -368,7 +361,6 @@ export default function AIChatWidget() {
             <div ref={bottomRef} />
           </div>
 
-          {/* Input */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -382,13 +374,13 @@ export default function AIChatWidget() {
               onChange={(e) => setInput(e.target.value)}
               placeholder={lang === "it" ? "Scrivi il tuo messaggio..." : lang === "fr" ? "Écrivez votre message..." : lang === "de" ? "Schreiben Sie Ihre Nachricht..." : lang === "es" ? "Escribe tu mensaje..." : "Type your message..."}
               className="flex-1 bg-transparent text-sm outline-none placeholder:text-stone-400"
-              disabled={isLoading}
+              disabled={isLoading || (contactFormShown && !contactSubmitted)}
             />
             <Button
               type="submit"
               size="icon"
               variant="ghost"
-              disabled={!input.trim() || isLoading}
+              disabled={!input.trim() || isLoading || (contactFormShown && !contactSubmitted)}
               className="h-8 w-8 text-vesuviano-500 hover:text-vesuviano-600"
             >
               <Send className="w-4 h-4" />
