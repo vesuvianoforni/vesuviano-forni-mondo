@@ -360,8 +360,7 @@ const BuiltOnPlace = () => {
           <p className="text-white/80 mb-6">Starting from £13,500 · Free consultation · Handcrafted in Italy</p>
           <Button
             size="lg"
-            variant="outline"
-            className="border-white text-white hover:bg-white hover:text-vesuviano-600 text-lg px-10 py-6"
+            className="bg-white text-vesuviano-600 hover:bg-stone-100 text-lg px-10 py-6 font-bold"
             onClick={scrollToForm}
           >
             Get Your Free Quote Now
