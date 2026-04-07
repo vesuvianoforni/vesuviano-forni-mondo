@@ -24,7 +24,7 @@ const FAQSection = lazy(() => import("@/components/FAQSection"));
 const HomeBlogSection = lazy(() => import("@/components/HomeBlogSection"));
 const WhereWeAre = lazy(() => import("@/components/WhereWeAre"));
 const AIChatWidget = lazy(() => import("@/components/chat/AIChatWidget"));
-const ContactBar = lazy(() => import("@/components/ContactBar"));
+
 const ReadyToShipPopup = lazy(() => import("@/components/ReadyToShipPopup"));
 
 const Index = () => {
@@ -467,7 +467,7 @@ const Index = () => {
       {/* AI Chat Widget */}
       <Suspense fallback={null}>
         <AIChatWidget />
-        <ContactBar />
+        
         <ReadyToShipPopup />
       </Suspense>
     </div>
