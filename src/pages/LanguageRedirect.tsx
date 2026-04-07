@@ -1,18 +1,27 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+
+
+const SUPPORTED_LANGS = ['it', 'en', 'fr', 'de', 'es'];
+
+const detectBrowserLanguage = (): string => {
+  const browserLangs = navigator.languages || [navigator.language];
+  for (const bl of browserLangs) {
+    const short = bl.split('-')[0].toLowerCase();
+    if (SUPPORTED_LANGS.includes(short)) {
+      return short;
+    }
+  }
+  return 'it'; // fallback
+};
 
 const LanguageRedirect = () => {
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
 
   useEffect(() => {
-    const detectedLang = i18n.language || 'it';
-    const lang = detectedLang.split('-')[0]; // Get 'it' from 'it-IT'
-    
-    // Redirect to the detected language
+    const lang = detectBrowserLanguage();
     navigate(`/${lang}`, { replace: true });
-  }, [i18n.language, navigate]);
+  }, [navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-stone-50">
