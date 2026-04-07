@@ -54,7 +54,7 @@ const ProductCategories = () => {
     },
     {
       key: 'builtOnPlace',
-      image: "/lovable-uploads/forni-colorati-showroom.webp",
+      image: "/lovable-uploads/built-on-place-card.png",
       link: "/built-on-place"
     },
     {
