@@ -3,7 +3,6 @@ import { MessageCircle, X, Send, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 import { supabase } from "@/integrations/supabase/client";
-import { useTranslation } from "react-i18next";
 
 const SUPABASE_URL = "https://lgueucxznbqgvhpjzurf.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndWV1Y3h6bmJxZ3ZocGp6dXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4MDE5ODEsImV4cCI6MjA2NDM3Nzk4MX0.JH9wcGcoyPKQqWT1ExYLRJyg1Jz_8iXezfmeZ9oyZzE";
@@ -11,7 +10,12 @@ const CHAT_URL = `${SUPABASE_URL}/functions/v1/vesuviano-chat`;
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const CONTACT_TRIGGER = "Lascia i tuoi dati";
+function getBrowserLang(): string {
+  const nav = navigator.language || (navigator as any).userLanguage || "it";
+  const short = nav.substring(0, 2).toLowerCase();
+  const supported = ["it", "en", "fr", "de", "es"];
+  return supported.includes(short) ? short : "en";
+}
 
 const WELCOME_MESSAGES: Record<string, string> = {
   it: "Ciao! 👋 Sono l'assistente Vesuviano. Come posso aiutarti? Chiedimi dei nostri forni, tempi di consegna, o qualsiasi altra cosa!",
@@ -21,9 +25,26 @@ const WELCOME_MESSAGES: Record<string, string> = {
   es: "¡Hola! 👋 Soy el asistente de Vesuviano. ¿Cómo puedo ayudarte? ¡Pregúntame sobre nuestros hornos!",
 };
 
-function ContactForm({ onSubmitted }: { onSubmitted: (name: string) => void }) {
+const FORM_LABELS: Record<string, { title: string; name: string; email: string; phone: string; submit: string; submitting: string }> = {
+  it: { title: "📋 Lascia i tuoi dati per essere ricontattato:", name: "Nome e Cognome", email: "Email", phone: "Telefono", submit: "Invia i miei dati", submitting: "Invio..." },
+  en: { title: "📋 Leave your details and we'll get back to you:", name: "Full Name", email: "Email", phone: "Phone", submit: "Send my details", submitting: "Sending..." },
+  fr: { title: "📋 Laissez vos coordonnées, nous vous recontacterons :", name: "Nom complet", email: "Email", phone: "Téléphone", submit: "Envoyer mes données", submitting: "Envoi..." },
+  de: { title: "📋 Hinterlassen Sie Ihre Daten, wir melden uns bei Ihnen:", name: "Vollständiger Name", email: "E-Mail", phone: "Telefon", submit: "Meine Daten senden", submitting: "Senden..." },
+  es: { title: "📋 Deja tus datos y te contactaremos:", name: "Nombre completo", email: "Email", phone: "Teléfono", submit: "Enviar mis datos", submitting: "Enviando..." },
+};
+
+const THANK_YOU: Record<string, string> = {
+  it: "Grazie! 🎉 Un nostro esperto ti contatterà al più presto.",
+  en: "Thank you! 🎉 One of our experts will contact you shortly.",
+  fr: "Merci ! 🎉 Un de nos experts vous contactera bientôt.",
+  de: "Danke! 🎉 Einer unserer Experten wird sich bald bei Ihnen melden.",
+  es: "¡Gracias! 🎉 Uno de nuestros expertos te contactará pronto.",
+};
+
+function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string) => void; lang: string }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [submitting, setSubmitting] = useState(false);
+  const labels = FORM_LABELS[lang] || FORM_LABELS.en;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +61,7 @@ function ContactForm({ onSubmitted }: { onSubmitted: (name: string) => void }) {
       });
       onSubmitted(form.name.split(" ")[0] || "");
     } catch {
-      // silently fail
+      onSubmitted(form.name.split(" ")[0] || "");
     } finally {
       setSubmitting(false);
     }
@@ -48,9 +69,9 @@ function ContactForm({ onSubmitted }: { onSubmitted: (name: string) => void }) {
 
   return (
     <form onSubmit={handleSubmit} className="bg-vesuviano-50 border border-vesuviano-200 rounded-xl p-3 space-y-2 my-1">
-      <p className="text-xs font-medium text-stone-700">📋 Lascia i tuoi dati per essere ricontattato:</p>
+      <p className="text-xs font-medium text-stone-700">{labels.title}</p>
       <input
-        placeholder="Nome e Cognome"
+        placeholder={labels.name}
         value={form.name}
         onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
         className="w-full text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
@@ -58,7 +79,7 @@ function ContactForm({ onSubmitted }: { onSubmitted: (name: string) => void }) {
       />
       <input
         type="email"
-        placeholder="Email"
+        placeholder={labels.email}
         value={form.email}
         onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
         className="w-full text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
@@ -66,26 +87,24 @@ function ContactForm({ onSubmitted }: { onSubmitted: (name: string) => void }) {
       />
       <input
         type="tel"
-        placeholder="Telefono"
+        placeholder={labels.phone}
         value={form.phone}
         onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
         className="w-full text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
         maxLength={20}
       />
       <Button type="submit" size="sm" className="w-full bg-vesuviano-500 hover:bg-vesuviano-600 text-white" disabled={submitting}>
-        {submitting ? "Invio..." : "Invia i miei dati"}
+        {submitting ? labels.submitting : labels.submit}
       </Button>
     </form>
   );
 }
 
 export default function AIChatWidget() {
-  const { i18n } = useTranslation();
-  const currentLang = i18n.language?.substring(0, 2) || "it";
-  
+  const [lang] = useState(getBrowserLang);
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: WELCOME_MESSAGES[currentLang] || WELCOME_MESSAGES.it },
+    { role: "assistant", content: WELCOME_MESSAGES[lang] || WELCOME_MESSAGES.en },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -94,6 +113,7 @@ export default function AIChatWidget() {
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [showWhatsAppCta, setShowWhatsAppCta] = useState(false);
   const [showPulse, setShowPulse] = useState(true);
+  const [userMessageCount, setUserMessageCount] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -107,7 +127,6 @@ export default function AIChatWidget() {
     return () => clearTimeout(timer);
   }, [hasAutoOpened]);
 
-  // Hide pulse when opened
   useEffect(() => {
     if (open) setShowPulse(false);
   }, [open]);
@@ -120,21 +139,21 @@ export default function AIChatWidget() {
     if (open) inputRef.current?.focus();
   }, [open]);
 
-  // Detect contact trigger
+  // Show contact form after first user message
   useEffect(() => {
-    if (contactSubmitted) return;
-    const lastMsg = messages[messages.length - 1];
-    if (lastMsg?.role === "assistant" && lastMsg.content.includes(CONTACT_TRIGGER)) {
+    if (userMessageCount === 1 && !contactSubmitted) {
       setContactFormShown(true);
     }
-  }, [messages, contactSubmitted]);
+  }, [userMessageCount, contactSubmitted]);
 
   const handleContactSubmitted = (name: string) => {
     setContactSubmitted(true);
     setContactFormShown(false);
+    const thankYou = THANK_YOU[lang] || THANK_YOU.en;
+    const nameMsg = name ? thankYou.replace("!", ` ${name}!`) : thankYou;
     setMessages((prev) => [
       ...prev,
-      { role: "assistant", content: `Grazie ${name}! 🎉 Un nostro esperto ti contatterà al più presto.` },
+      { role: "assistant", content: nameMsg },
     ]);
     setShowWhatsAppCta(true);
   };
@@ -147,6 +166,7 @@ export default function AIChatWidget() {
       setMessages(allMessages);
       setInput("");
       setIsLoading(true);
+      setUserMessageCount((c) => c + 1);
 
       let assistantSoFar = "";
 
@@ -170,7 +190,7 @@ export default function AIChatWidget() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${SUPABASE_KEY}`,
           },
-          body: JSON.stringify({ messages: allMessages }),
+          body: JSON.stringify({ messages: allMessages, lang }),
         });
 
         if (!resp.ok || !resp.body) throw new Error("Stream failed");
@@ -209,15 +229,14 @@ export default function AIChatWidget() {
         setIsLoading(false);
       }
     },
-    [messages, isLoading]
+    [messages, isLoading, lang]
   );
 
   const renderMessageContent = (msg: Msg) => {
-    const displayContent = msg.content.replace(CONTACT_TRIGGER, "").trim();
     if (msg.role === "assistant") {
       return (
         <div className="prose prose-sm max-w-none [&_p]:m-0">
-          <ReactMarkdown>{displayContent || msg.content}</ReactMarkdown>
+          <ReactMarkdown>{msg.content}</ReactMarkdown>
         </div>
       );
     }
@@ -238,7 +257,7 @@ export default function AIChatWidget() {
         {open ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
       </button>
 
-      {/* Mobile AI icon - positioned above ContactBar */}
+      {/* Mobile AI icon */}
       <button
         onClick={() => setOpen((o) => !o)}
         className="fixed bottom-20 right-4 z-50 w-12 h-12 rounded-full bg-vesuviano-500 text-white shadow-lg flex items-center justify-center md:hidden"
@@ -265,7 +284,7 @@ export default function AIChatWidget() {
             />
             <div>
               <p className="font-semibold text-sm">Assistente Vesuviano</p>
-              <p className="text-xs opacity-80">Consulenza forni AI</p>
+              <p className="text-xs opacity-80">AI Oven Consultant</p>
             </div>
             <button onClick={() => setOpen(false)} className="ml-auto hover:opacity-70">
               <X className="w-5 h-5" />
@@ -301,9 +320,9 @@ export default function AIChatWidget() {
               </div>
             ))}
 
-            {/* Inline contact form */}
+            {/* Contact form after first message */}
             {contactFormShown && !contactSubmitted && (
-              <ContactForm onSubmitted={handleContactSubmitted} />
+              <ContactForm onSubmitted={handleContactSubmitted} lang={lang} />
             )}
 
             {/* WhatsApp CTA */}
@@ -315,7 +334,7 @@ export default function AIChatWidget() {
                 className="flex items-center gap-2 bg-[#25D366] text-white rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-[#1da851] transition-colors my-1 w-fit"
               >
                 <MessageCircle className="w-4 h-4" />
-                Scrivici su WhatsApp
+                WhatsApp
               </a>
             )}
 
@@ -348,7 +367,7 @@ export default function AIChatWidget() {
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Scrivi il tuo messaggio..."
+              placeholder={lang === "it" ? "Scrivi il tuo messaggio..." : lang === "fr" ? "Écrivez votre message..." : lang === "de" ? "Schreiben Sie Ihre Nachricht..." : lang === "es" ? "Escribe tu mensaje..." : "Type your message..."}
               className="flex-1 bg-transparent text-sm outline-none placeholder:text-stone-400"
               disabled={isLoading}
             />
