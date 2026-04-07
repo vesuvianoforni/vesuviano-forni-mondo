@@ -464,9 +464,9 @@ const Index = () => {
       </footer>
 
 
-      {/* WhatsApp Button */}
+      {/* AI Chat Widget */}
       <Suspense fallback={null}>
-        <WhatsAppButton />
+        <AIChatWidget />
         <ContactBar />
         <ReadyToShipPopup />
       </Suspense>

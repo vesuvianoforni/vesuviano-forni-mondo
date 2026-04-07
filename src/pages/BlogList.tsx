@@ -156,7 +156,7 @@ const BlogList = ({ lang }: BlogListProps) => {
         )}
       </div>
 
-      <WhatsAppButton />
+      <AIChatWidget />
     </div>
   );
 };

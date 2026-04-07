@@ -16,7 +16,7 @@ const ArchitettoAI = () => {
       <div className="pt-8">
         <OvenVisualizer />
       </div>
-      <WhatsAppButton />
+      <AIChatWidget />
       
       {/* Footer */}
       <footer className="bg-gradient-to-b from-gray-900 to-black text-white py-16">

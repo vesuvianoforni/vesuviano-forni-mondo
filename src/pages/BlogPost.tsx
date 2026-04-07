@@ -267,7 +267,7 @@ const BlogPostPage = ({ lang }: BlogPostProps) => {
         </div>
       </article>
 
-      <WhatsAppButton />
+      <AIChatWidget />
     </div>
   );
 };

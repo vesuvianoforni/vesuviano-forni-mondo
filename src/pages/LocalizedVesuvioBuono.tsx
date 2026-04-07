@@ -36,7 +36,7 @@ const LocalizedVesuvioBuono = ({ lang }: LocalizedVesuvioBuonoProps) => {
           </section>
         </main>
 
-        <WhatsAppButton />
+        <AIChatWidget />
 
         {/* Footer */}
         <footer className="bg-charcoal-900 text-white py-12 border-t border-stone-800">

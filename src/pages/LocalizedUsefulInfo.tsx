@@ -335,7 +335,7 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
         </div>
       </main>
 
-      <WhatsAppButton />
+      <AIChatWidget />
     </div>
   );
 };
