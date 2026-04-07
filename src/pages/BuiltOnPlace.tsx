@@ -333,7 +333,7 @@ const BuiltOnPlace = () => {
             </Button>
             <div className="flex items-center justify-center gap-4 pt-2">
               <a
-                href={WHATSAPP_LINK}
+                href="https://wa.link/a2959l"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-sm text-green-600 hover:text-green-700 font-medium"
@@ -342,10 +342,10 @@ const BuiltOnPlace = () => {
                 Or WhatsApp us directly
               </a>
               <span className="text-stone-300">|</span>
-              <div className="flex items-center gap-1 text-sm text-stone-500">
+              <a href="tel:+390819231684" className="flex items-center gap-1 text-sm text-stone-500 hover:text-stone-700 transition-colors">
                 <Phone size={14} />
-                +39 377 XXX XXXX
-              </div>
+                081 19231684
+              </a>
             </div>
           </form>
         </div>
