@@ -49,6 +49,7 @@ const ERPListini = lazy(() => import("./pages/ERPListini"));
 const ERPOrdini = lazy(() => import("./pages/ERPOrdini"));
 const ERPUtenti = lazy(() => import("./pages/ERPUtenti"));
 const ERPProntaConsegna = lazy(() => import("./pages/ERPProntaConsegna"));
+const ERPKnowledgeBase = lazy(() => import("./pages/ERPKnowledgeBase"));
 
 const queryClient = new QueryClient();
 
