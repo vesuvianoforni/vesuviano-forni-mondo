@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import Header from '@/components/Header';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import AIChatWidget from '@/components/chat/AIChatWidget';
 import ContactBar from '@/components/ContactBar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
