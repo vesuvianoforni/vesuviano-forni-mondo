@@ -230,7 +230,7 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
       </section>
 
       <AIChatWidget />
-      <ContactBar />
+      
     </div>
   );
 };

@@ -467,7 +467,7 @@ const Index = () => {
       {/* AI Chat Widget */}
       <Suspense fallback={null}>
         <AIChatWidget />
-        <ContactBar />
+        
         <ReadyToShipPopup />
       </Suspense>
     </div>

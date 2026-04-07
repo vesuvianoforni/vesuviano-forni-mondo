@@ -50,7 +50,7 @@ const ReadyToShip = () => {
     <div className="min-h-screen bg-gradient-to-b from-stone-50 to-stone-100">
       <Header />
       <AIChatWidget />
-      <ContactBar />
+      
       
       <main className="container mx-auto px-4 py-24">
         <section className="text-center mb-16">
