@@ -533,8 +533,9 @@ const ProformaPage = () => {
     }));
   };
 
-  // Check if burners should be available based on fuel types
-  const shouldShowBurners = items.some(i => i.item_type === 'oven' && itemConfigs[i.id]?.fuelType && itemConfigs[i.id].fuelType !== 'Legna' && itemConfigs[i.id].fuelType !== 'Elettrico');
+  // Check if burners should be available: show if there's already a burner item in the proforma OR if fuel type requires it
+  const hasBurnerItem = items.some(i => i.item_type === 'burner');
+  const shouldShowBurners = hasBurnerItem || items.some(i => i.item_type === 'oven' && itemConfigs[i.id]?.fuelType && itemConfigs[i.id].fuelType !== 'Legna' && itemConfigs[i.id].fuelType !== 'Elettrico');
 
   // Calculate total from current configurations
   const calculateTotal = () => {
