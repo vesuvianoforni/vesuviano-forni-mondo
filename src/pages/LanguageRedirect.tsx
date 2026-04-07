@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+
 
 const SUPPORTED_LANGS = ['it', 'en', 'fr', 'de', 'es'];
 
