@@ -54,7 +54,7 @@ const ProductCategories = () => {
     },
     {
       key: 'builtOnPlace',
-      image: "/lovable-uploads/forni-colorati-showroom.webp",
+      image: "/lovable-uploads/built-on-place-card.png",
       link: "/built-on-place"
     },
     {
@@ -153,13 +153,8 @@ const ProductCategories = () => {
                           ))}
                         </ul>
 
-                        <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
-                          <div className="inline-flex items-center px-3 py-1.5 bg-vesuviano-50 border border-vesuviano-200 rounded-full">
-                            <span className="text-xs font-semibold text-vesuviano-700">
-                              {t('products.builtOnPlace.startingFrom')}
-                            </span>
-                          </div>
-                        </div>
+
+
 
                         <Button
                           className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white transition-all duration-300 text-sm sm:text-base py-2 sm:py-3"
