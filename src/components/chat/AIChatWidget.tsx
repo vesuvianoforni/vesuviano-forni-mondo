@@ -122,6 +122,7 @@ export default function AIChatWidget() {
   const [showWhatsAppCta, setShowWhatsAppCta] = useState(false);
   const [showPulse, setShowPulse] = useState(true);
   const [userMessageCount, setUserMessageCount] = useState(0);
+  const [pendingMessage, setPendingMessage] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -147,13 +148,6 @@ export default function AIChatWidget() {
     if (open) inputRef.current?.focus();
   }, [open]);
 
-  // Show contact form after first user message
-  useEffect(() => {
-    if (userMessageCount === 1 && !contactSubmitted) {
-      setContactFormShown(true);
-    }
-  }, [userMessageCount, contactSubmitted]);
-
   const handleContactSubmitted = (name: string) => {
     setContactSubmitted(true);
     setContactFormShown(false);
@@ -164,17 +158,28 @@ export default function AIChatWidget() {
       { role: "assistant", content: nameMsg },
     ]);
     setShowWhatsAppCta(true);
+    // Now send the pending message to AI
+    if (pendingMessage) {
+      const msgToSend = pendingMessage;
+      setPendingMessage(null);
+      setTimeout(() => sendToAI(msgToSend), 500);
+    }
   };
 
-  const send = useCallback(
+  const sendToAI = useCallback(
     async (text: string) => {
       if (!text.trim() || isLoading) return;
-      const userMsg: Msg = { role: "user", content: text.trim() };
-      const allMessages = [...messages, userMsg];
-      setMessages(allMessages);
-      setInput("");
       setIsLoading(true);
-      setUserMessageCount((c) => c + 1);
+
+      const currentMessages = messages;
+      // Find the user message already in messages list
+      let allMessages = currentMessages;
+      // If user message not yet in list, add it
+      if (currentMessages[currentMessages.length - 1]?.content !== text || currentMessages[currentMessages.length - 1]?.role !== "user") {
+        // Message should already be there from send(), but just in case
+      }
+
+      let assistantSoFar = "";
 
       let assistantSoFar = "";
 
