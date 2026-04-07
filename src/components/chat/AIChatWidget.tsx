@@ -25,6 +25,14 @@ const WELCOME_MESSAGES: Record<string, string> = {
   es: "¡Hola! 👋 Soy el asistente de Vesuviano. ¿Cómo puedo ayudarte? ¡Pregúntame sobre nuestros hornos!",
 };
 
+const INTRO_MESSAGES: Record<string, string> = {
+  it: "Prima di risponderti, avrei bisogno cortesemente di queste informazioni. Presentiamoci! 😊",
+  en: "Before I answer, I'd kindly need some information. Let's introduce ourselves! 😊",
+  fr: "Avant de vous répondre, j'aurais besoin de quelques informations. Faisons connaissance ! 😊",
+  de: "Bevor ich antworte, bräuchte ich bitte einige Informationen. Stellen wir uns vor! 😊",
+  es: "Antes de responder, necesitaría amablemente esta información. ¡Presentémonos! 😊",
+};
+
 const FORM_LABELS: Record<string, { title: string; name: string; email: string; phone: string; submit: string; submitting: string }> = {
   it: { title: "📋 Lascia i tuoi dati per essere ricontattato:", name: "Nome e Cognome", email: "Email", phone: "Telefono", submit: "Invia i miei dati", submitting: "Invio..." },
   en: { title: "📋 Leave your details and we'll get back to you:", name: "Full Name", email: "Email", phone: "Phone", submit: "Send my details", submitting: "Sending..." },
@@ -34,11 +42,11 @@ const FORM_LABELS: Record<string, { title: string; name: string; email: string; 
 };
 
 const THANK_YOU: Record<string, string> = {
-  it: "Grazie! 🎉 Un nostro esperto ti contatterà al più presto.",
-  en: "Thank you! 🎉 One of our experts will contact you shortly.",
-  fr: "Merci ! 🎉 Un de nos experts vous contactera bientôt.",
-  de: "Danke! 🎉 Einer unserer Experten wird sich bald bei Ihnen melden.",
-  es: "¡Gracias! 🎉 Uno de nuestros expertos te contactará pronto.",
+  it: "Grazie! 🎉 Ora rispondo alla tua domanda...",
+  en: "Thank you! 🎉 Now let me answer your question...",
+  fr: "Merci ! 🎉 Maintenant, laissez-moi répondre à votre question...",
+  de: "Danke! 🎉 Jetzt beantworte ich Ihre Frage...",
+  es: "¡Gracias! 🎉 Ahora respondo a tu pregunta...",
 };
 
 function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string) => void; lang: string }) {
