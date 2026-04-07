@@ -36,6 +36,18 @@ const LazySection = ({
     return () => observer.disconnect();
   }, [rootMargin]);
 
+  // Force render when navigation requests it
+  useEffect(() => {
+    if (isVisible) return;
+
+    const handleForceLoad = () => {
+      setIsVisible(true);
+    };
+
+    window.addEventListener('force-lazy-load', handleForceLoad);
+    return () => window.removeEventListener('force-lazy-load', handleForceLoad);
+  }, [isVisible]);
+
   if (isVisible) {
     return <div className={className}>{children}</div>;
   }
