@@ -905,8 +905,7 @@ const ProformaPage = () => {
                     {/* Datasheet Download */}
                     {(() => {
                       const urls = selectedSize?.datasheet_urls || {};
-                      const datasheetUrl = urls[lang as keyof typeof urls] || urls['en'] || selectedSize?.datasheet_url;
-                      if (!datasheetUrl) return null;
+                      const datasheetUrl = urls[lang as keyof typeof urls] || urls['en'] || selectedSize?.datasheet_url || '/lovable-uploads/vesuviano-catalogo-eng.pdf';
                       return (
                         <a
                           href={datasheetUrl}

@@ -88,6 +88,10 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
         description: t('downloadDatasheet.successMessage'),
       });
 
+      // Trigger the actual PDF download
+      const downloadUrl = datasheetUrl || FALLBACK_CATALOG_URL;
+      window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+
       // Reset form and close modal
       setFormData({
         firstName: '',
