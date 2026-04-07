@@ -14,7 +14,7 @@ Crawl-delay: 1
 # Block access to sensitive areas
 Disallow: /api/
 Disallow: /admin/
-Disallow: /built-on-place
+
 Disallow: /_next/
 Disallow: /node_modules/
 Disallow: /src/components/
