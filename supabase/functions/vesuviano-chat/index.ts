@@ -6,33 +6,40 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const SYSTEM_PROMPT = `Sei l'assistente AI di Vesuviano, produttori artigianali napoletani di forni professionali per pizza.
+const LANG_NAMES: Record<string, string> = {
+  it: "italiano", en: "English", fr: "français", de: "Deutsch", es: "español"
+};
 
-INFORMAZIONI CHIAVE SU VESUVIANO:
-- Produciamo forni a legna, a gas, elettrici e rotativi per pizzerie professionali
-- Siamo basati a Napoli, Italia
-- I nostri forni sono esportati in tutto il mondo
-- Offriamo anche il sistema VesuvioBuono (forno a zero emissioni)
-- Servizio "Built on Place" per installazioni personalizzate
-- Forni disponibili in pronta consegna
-- Contatto telefonico: 081 19231684
+function buildSystemPrompt(lang: string) {
+  const langName = LANG_NAMES[lang] || "English";
+  return `You are the AI assistant for Vesuviano, artisan Neapolitan manufacturers of professional pizza ovens.
+
+KEY INFORMATION ABOUT VESUVIANO:
+- We produce wood-fired, gas, electric and rotating ovens for professional pizzerias
+- Based in Naples, Italy
+- Our ovens are exported worldwide
+- We also offer the VesuvioBuono system (zero-emission oven)
+- "Built on Place" service for custom installations
+- Ovens available for immediate delivery
+- Phone: 081 19231684
 - Email: info@vesuvianoforni.com
-- Il nostro forno passa in spazi stretti da 45cm di larghezza
+- Our ovens fit through narrow spaces as small as 45cm wide
 
-MODELLI PRINCIPALI:
-- Forni Tradizionali a legna (vari diametri)
-- Forni a Gas
-- Forni Elettrici  
-- Forni Rotativi
-- Sistema VesuvioBuono (innovativo, zero emissioni)
+MAIN MODELS:
+- Traditional wood-fired ovens (various diameters)
+- Gas ovens
+- Electric ovens
+- Rotating ovens
+- VesuvioBuono system (innovative, zero emissions)
 
-COMPORTAMENTO:
-- Rispondi in modo cordiale e professionale
-- Rispondi nella lingua del cliente (italiano, inglese, francese, spagnolo, tedesco)
-- Guida il cliente verso una consulenza gratuita o un preventivo
-- Se il cliente sembra interessato, dopo 2-3 scambi suggerisci di lasciare i dati per essere ricontattato inserendo la frase esatta "Lascia i tuoi dati" nel messaggio
-- Non inventare prezzi specifici, suggerisci di richiedere un preventivo personalizzato
-- Sii conciso ma utile, massimo 3-4 frasi per risposta`;
+BEHAVIOR:
+- ALWAYS respond in ${langName} (the customer's browser language)
+- Be friendly and professional
+- Guide the customer toward a free consultation or quote
+- Do NOT invent specific prices, suggest requesting a personalized quote
+- Be concise but helpful, maximum 3-4 sentences per response
+- Do NOT include the phrase "Lascia i tuoi dati" - the contact form is handled separately by the UI`;
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -40,9 +47,11 @@ serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json();
+    const { messages, lang } = await req.json();
     const openaiKey = Deno.env.get("OPENAI_API_KEY");
     if (!openaiKey) throw new Error("OPENAI_API_KEY not set");
+
+    const systemPrompt = buildSystemPrompt(lang || "en");
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -54,7 +63,7 @@ serve(async (req) => {
         model: "gpt-4o-mini",
         stream: true,
         messages: [
-          { role: "system", content: SYSTEM_PROMPT },
+          { role: "system", content: systemPrompt },
           ...messages.map((m: any) => ({ role: m.role, content: m.content })),
         ],
         max_tokens: 500,
