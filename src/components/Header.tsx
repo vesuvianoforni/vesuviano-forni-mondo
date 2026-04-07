@@ -104,18 +104,29 @@ const Header = () => {
     const sectionId = href.replace('#', '');
     const homePath = `/${currentLang}`;
     
-    // Se siamo su una pagina diversa dalla home localizzata, naviga prima alla home
+    // Force all lazy sections to render
+    window.dispatchEvent(new CustomEvent('force-lazy-load', { detail: sectionId }));
+    
     if (location.pathname !== homePath) {
       navigate(homePath);
-      // Aspetta che la navigazione sia completa prima di scrollare
       setTimeout(() => {
-        scrollToSection(sectionId);
-      }, 100);
+        window.dispatchEvent(new CustomEvent('force-lazy-load', { detail: sectionId }));
+        scrollToSectionWithRetry(sectionId);
+      }, 200);
     } else {
-      scrollToSection(sectionId);
+      scrollToSectionWithRetry(sectionId);
     }
     
     setIsOpen(false);
+  };
+
+  const scrollToSectionWithRetry = (sectionId: string, attempts = 0) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      scrollToSection(sectionId);
+    } else if (attempts < 10) {
+      setTimeout(() => scrollToSectionWithRetry(sectionId, attempts + 1), 100);
+    }
   };
 
   const scrollToSection = (sectionId: string) => {
