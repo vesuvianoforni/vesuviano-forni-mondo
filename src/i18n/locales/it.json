@@ -1,4 +1,3 @@
-
 {
   "cta": {
     "getQuote": "Richiedi un preventivo",
@@ -149,6 +148,19 @@
       "description": "Ogni forno Vesuviano è progettato per soddisfare le esigenze specifiche della tua attività. I nostri esperti ti aiuteranno a trovare la soluzione perfetta.",
       "freeConsultation": "Consulenza Gratuita",
       "viewGallery": "Vedi Galleria"
+    },
+    "builtOnPlace": {
+      "title": "Costruiti Sul Posto",
+      "subtitle": "Costruzione in Loco",
+      "description": "I nostri maestri artigiani si spostano nella tua sede e costruiscono il forno dei tuoi sogni direttamente sul posto. Un'esperienza artigianale napoletana autentica.",
+      "features": {
+        "onSite": "Costruito direttamente nella tua sede",
+        "craftsmen": "Artigiani napoletani esperti",
+        "custom": "Design completamente personalizzabile",
+        "turnkey": "Soluzione chiavi in mano"
+      },
+      "startingFrom": "A partire da £13.500 GBP",
+      "cta": "Scopri di Più"
     }
   },
   "clientsMap": {
@@ -164,7 +176,7 @@
     "subtitle": "Scegli tra una vasta gamma di rivestimenti premium per personalizzare il tuo forno secondo il tuo stile unico.",
     "options": {
       "verniciato": "Verniciato",
-      "mosaicato": "Mosaicato",  
+      "mosaicato": "Mosaicato",
       "mattoni": "Mattoni a Vista"
     },
     "colors": {
@@ -393,7 +405,7 @@
       "woodFixed": "Forno a Legna Fisso",
       "woodRotating": "Forno a Legna Rotante",
       "gasFixed": "Forno a Gas Fisso",
-      "gasRotating": "Forno a Gas Rotante", 
+      "gasRotating": "Forno a Gas Rotante",
       "electricFixed": "Forno Elettrico Fisso",
       "electricRotating": "Forno Elettrico Rotante",
       "vesuvioWood": "VesuvioBuono a Legna",
@@ -485,14 +497,14 @@
   },
   "ovenVisualizer": {
     "badge": "Novità assoluta AI",
-    "title": "Visualizzatore Forni", 
+    "title": "Visualizzatore Forni",
     "subtitle": "Scegli come visualizzare il tuo forno Vesuviano",
     "aiMode": {
       "title": "Architetto AI",
       "description": "Carica una foto del tuo spazio e l'AI integrerà fotorealisticamente il forno selezionato",
       "features": {
         "photorealistic": "Risultato fotorealistico professionale",
-        "lighting": "Integrazione perfetta con illuminazione", 
+        "lighting": "Integrazione perfetta con illuminazione",
         "highRes": "Immagine scaricabile ad alta risoluzione"
       },
       "uploadTitle": "Carica foto del tuo spazio",
@@ -546,7 +558,7 @@
       "defaultMessage": "L'AI sta creando la tua immagine personalizzata...",
       "steps": {
         "analysis": "Analisi dello spazio",
-        "integration": "Integrazione del forno", 
+        "integration": "Integrazione del forno",
         "finalization": "Finalizzazione dell'immagine"
       }
     },
@@ -571,7 +583,7 @@
       "formTitle": "I tuoi dati per il download",
       "formDescription": "Inserisci i tuoi dati per ricevere l'immagine ad alta risoluzione",
       "firstName": "Nome",
-      "lastName": "Cognome", 
+      "lastName": "Cognome",
       "email": "Email",
       "city": "Città",
       "phone": "Telefono",
@@ -588,7 +600,7 @@
     },
     "arVisualization": {
       "loadingModel": "Caricamento modello...",
-      "modelNotAvailable": "Modello non disponibile", 
+      "modelNotAvailable": "Modello non disponibile",
       "unsupportedFormat": "Formato file non supportato. Supportati: GLB, GLTF, OBJ, FBX"
     },
     "ovenModels": {
@@ -892,14 +904,15 @@
     "selectSize": "Seleziona Dimensione",
     "selectCoating": "Seleziona Rivestimento",
     "steps": {
+      "chooseModel": "Scegli il Modello",
       "chooseFuel": "Scegli l'Alimentazione",
       "chooseDiameter": "Scegli il Diametro",
-      "chooseCoating": "Scegli il Rivestimento"
+      "chooseCoating": "Scegli il Rivestimento",
+      "additionalOptions": "Opzioni Aggiuntive e Riepilogo"
     },
     "preview": {
-      "fuelTypes": "Alimentazioni",
-      "diameters": "Diametri",
-      "coatings": "Rivestimenti"
+      "fuelTypes": "Alimentazioni:",
+      "dimensions": "Dimensioni:"
     },
     "fuelTypes": {
       "Legna": "Legna",
@@ -1003,17 +1016,6 @@
       "requestError": "Errore nell'invio della richiesta",
       "missingData": "Dati cliente mancanti"
     },
-    "steps": {
-      "chooseModel": "Scegli il Modello",
-      "chooseFuel": "Scegli l'Alimentazione",
-      "chooseDiameter": "Scegli il Diametro",
-      "chooseCoating": "Scegli il Rivestimento",
-      "additionalOptions": "Opzioni Aggiuntive e Riepilogo"
-    },
-    "preview": {
-      "fuelTypes": "Alimentazioni:",
-      "dimensions": "Dimensioni:"
-    },
     "delivery": {
       "spaceRequired": "Spazio necessario per il passaggio:",
       "shippingEurope": "Spedizione in Europa",
@@ -1070,57 +1072,6 @@
         "otherPlaceholder": "Condividi altri dettagli che potrebbero aiutarci...",
         "submit": "Invia Feedback",
         "submitting": "Invio..."
-      }
-    },
-    "colorRender": {
-      "title": "Render Real Time",
-      "subtitle": "Visualizza il forno con il colore selezionato in tempo reale",
-      "selectedCoating": "Rivestimento selezionato:",
-      "desiredColor": "Colore desiderato",
-      "customColor": "Colore Personalizzato",
-      "customColorPlaceholder": "Es: Rosso Ferrari, Blu Oceano, Verde Bosco...",
-      "customColorDescription": "Descrivi il colore che desideri (max 50 caratteri)",
-      "selected": "Selezionato:",
-      "generateButton": "Genera Render Real Time",
-      "generateDescription": "Visualizza il render del forno nel colore selezionato",
-      "downloadButton": "Scarica Immagine",
-      "colors": {
-        "Nero": "Nero",
-        "Bianco": "Bianco",
-        "Rosso Mattone": "Rosso Mattone",
-        "Grigio Pietra": "Grigio Pietra",
-        "Terracotta": "Terracotta",
-        "Beige": "Beige",
-        "Marrone": "Marrone",
-        "Verde Oliva": "Verde Oliva"
-      },
-      "errors": {
-        "selectColor": "Seleziona un colore o inserisci un colore personalizzato!",
-        "maxLength": "Il colore personalizzato non può superare i 50 caratteri",
-        "invalidChars": "Il colore può contenere solo lettere, numeri, spazi e trattini"
-      },
-      "success": {
-        "generated": "Render generato con successo!",
-        "downloaded": "Download avviato!"
-      }
-    },
-    "architectAI": {
-      "title": "Architetto AI",
-      "subtitle": "Inserisci il forno nel tuo ambiente con l'intelligenza artificiale",
-      "takePhoto": "Scatta una Foto",
-      "takePhotoDescription": "Usa la fotocamera",
-      "uploadImage": "Carica Immagine",
-      "uploadImageDescription": "Dal tuo dispositivo",
-      "or": "OPPURE",
-      "generateButton": "Genera Render con AI",
-      "downloadButton": "Scarica Render",
-      "errors": {
-        "noImage": "Carica prima una foto del tuo ambiente",
-        "generationFailed": "Errore nella generazione del render"
-      },
-      "success": {
-        "generated": "Render generato con successo!",
-        "downloaded": "Download completato!"
       }
     },
     "colorRender": {

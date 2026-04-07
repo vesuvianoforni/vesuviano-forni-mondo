@@ -1,4 +1,3 @@
-
 {
   "cta": {
     "getQuote": "Solicitar presupuesto",
@@ -140,6 +139,19 @@
       "description": "Cada horno Vesuviano está diseñado para satisfacer las necesidades específicas de su negocio. Nuestros expertos le ayudarán a encontrar la solución perfecta.",
       "freeConsultation": "Consulta Gratuita",
       "viewGallery": "Ver Galería"
+    },
+    "builtOnPlace": {
+      "title": "Construidos en el Lugar",
+      "subtitle": "Construcción In Situ",
+      "description": "Nuestros maestros artesanos viajan a tu ubicación y construyen tu horno soñado directamente en el lugar. Artesanía napolitana auténtica.",
+      "features": {
+        "onSite": "Construido directamente en tu ubicación",
+        "craftsmen": "Artesanos napolitanos expertos",
+        "custom": "Diseño completamente personalizable",
+        "turnkey": "Solución llave en mano"
+      },
+      "startingFrom": "Desde £13.500 GBP",
+      "cta": "Saber Más"
     }
   },
   "clientsMap": {
@@ -211,7 +223,7 @@
     "countries": "Países Atendidos"
   },
   "services": {
-    "badge": "Servicios Profesionales", 
+    "badge": "Servicios Profesionales",
     "title": "Nuestros",
     "titleHighlight": "Servicios",
     "subtitle": "Un acompañamiento completo desde el diseño hasta la instalación, para garantizar el éxito de tu proyecto.",
@@ -390,14 +402,14 @@
   },
   "ovenVisualizer": {
     "badge": "Novedad Absoluta IA",
-    "title": "Visualizador de Hornos", 
+    "title": "Visualizador de Hornos",
     "subtitle": "Elige cómo visualizar tu horno Vesuviano",
     "aiMode": {
       "title": "Arquitecto IA",
       "description": "Sube una foto de tu espacio y la IA integrará fotorealisticamente el horno seleccionado",
       "features": {
         "photorealistic": "Resultado fotorrealista profesional",
-        "lighting": "Integración perfecta con iluminación", 
+        "lighting": "Integración perfecta con iluminación",
         "highRes": "Imagen descargable de alta resolución"
       },
       "uploadTitle": "Sube foto de tu espacio",
@@ -451,7 +463,7 @@
       "defaultMessage": "La IA está creando tu imagen personalizada...",
       "steps": {
         "analysis": "Análisis del espacio",
-        "integration": "Integración del horno", 
+        "integration": "Integración del horno",
         "finalization": "Finalización de la imagen"
       }
     },
@@ -476,7 +488,7 @@
       "formTitle": "Tus datos para la descarga",
       "formDescription": "Ingresa tus datos para recibir la imagen de alta resolución",
       "firstName": "Nombre",
-      "lastName": "Apellido", 
+      "lastName": "Apellido",
       "email": "Email",
       "city": "Ciudad",
       "phone": "Teléfono",
@@ -493,7 +505,7 @@
     },
     "arVisualization": {
       "loadingModel": "Cargando modelo...",
-      "modelNotAvailable": "Modelo no disponible", 
+      "modelNotAvailable": "Modelo no disponible",
       "unsupportedFormat": "Formato de archivo no soportado. Soportados: GLB, GLTF, OBJ, FBX"
     },
     "ovenModels": {

@@ -1,4 +1,3 @@
-
 {
   "cta": {
     "getQuote": "Angebot anfordern",
@@ -149,6 +148,19 @@
       "description": "Jeder Vesuviano-Ofen ist darauf ausgelegt, die spezifischen Bedürfnisse Ihres Unternehmens zu erfüllen. Unsere Experten helfen Ihnen dabei, die perfekte Lösung zu finden.",
       "freeConsultation": "Kostenlose Beratung",
       "viewGallery": "Galerie Ansehen"
+    },
+    "builtOnPlace": {
+      "title": "Vor Ort Gebaut",
+      "subtitle": "Vor-Ort-Konstruktion",
+      "description": "Unsere Meisterhandwerker kommen zu Ihnen und bauen Ihren Traumofen direkt vor Ort. Authentische neapolitanische Handwerkskunst.",
+      "features": {
+        "onSite": "Direkt bei Ihnen vor Ort gebaut",
+        "craftsmen": "Erfahrene neapolitanische Handwerker",
+        "custom": "Vollständig anpassbares Design",
+        "turnkey": "Schlüsselfertige Lösung"
+      },
+      "startingFrom": "Ab £13.500 GBP",
+      "cta": "Mehr Erfahren"
     }
   },
   "clientsMap": {
@@ -399,14 +411,14 @@
   },
   "ovenVisualizer": {
     "badge": "Absolutes KI-Novum",
-    "title": "Ofen-Visualisierer", 
+    "title": "Ofen-Visualisierer",
     "subtitle": "Wählen Sie, wie Sie Ihren Vesuviano-Ofen visualisieren möchten",
     "aiMode": {
       "title": "KI-Architekt",
       "description": "Laden Sie ein Foto Ihres Raums hoch und die KI wird den ausgewählten Ofen fotorealistisch integrieren",
       "features": {
         "photorealistic": "Professionelles fotorealistisches Ergebnis",
-        "lighting": "Perfekte Integration mit Beleuchtung", 
+        "lighting": "Perfekte Integration mit Beleuchtung",
         "highRes": "Herunterladbares hochauflösendes Bild"
       },
       "uploadTitle": "Foto Ihres Raums hochladen",
@@ -460,7 +472,7 @@
       "defaultMessage": "Die KI erstellt Ihr personalisiertes Bild...",
       "steps": {
         "analysis": "Raumanalyse",
-        "integration": "Ofenintegration", 
+        "integration": "Ofenintegration",
         "finalization": "Bildfinalisierung"
       }
     },
@@ -485,7 +497,7 @@
       "formTitle": "Ihre Daten für den Download",
       "formDescription": "Geben Sie Ihre Daten ein, um das hochauflösende Bild zu erhalten",
       "firstName": "Vorname",
-      "lastName": "Nachname", 
+      "lastName": "Nachname",
       "email": "E-Mail",
       "city": "Stadt",
       "phone": "Telefon",
@@ -502,7 +514,7 @@
     },
     "arVisualization": {
       "loadingModel": "Modell wird geladen...",
-      "modelNotAvailable": "Modell nicht verfügbar", 
+      "modelNotAvailable": "Modell nicht verfügbar",
       "unsupportedFormat": "Dateiformat nicht unterstützt. Unterstützt: GLB, GLTF, OBJ, FBX"
     },
     "ovenModels": {
