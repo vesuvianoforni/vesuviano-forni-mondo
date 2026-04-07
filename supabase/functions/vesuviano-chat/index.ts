@@ -1,5 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.8";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -10,27 +11,12 @@ const LANG_NAMES: Record<string, string> = {
   it: "italiano", en: "English", fr: "français", de: "Deutsch", es: "español"
 };
 
-function buildSystemPrompt(lang: string) {
+function buildSystemPrompt(lang: string, knowledgeBase: string) {
   const langName = LANG_NAMES[lang] || "English";
   return `You are the AI assistant for Vesuviano, artisan Neapolitan manufacturers of professional pizza ovens.
 
-KEY INFORMATION ABOUT VESUVIANO:
-- We produce wood-fired, gas, electric and rotating ovens for professional pizzerias
-- Based in Naples, Italy
-- Our ovens are exported worldwide
-- We also offer the VesuvioBuono system (zero-emission oven)
-- "Built on Place" service for custom installations
-- Ovens available for immediate delivery
-- Phone: 081 19231684
-- Email: info@vesuvianoforni.com
-- Our ovens fit through narrow spaces as small as 45cm wide
-
-MAIN MODELS:
-- Traditional wood-fired ovens (various diameters)
-- Gas ovens
-- Electric ovens
-- Rotating ovens
-- VesuvioBuono system (innovative, zero emissions)
+KNOWLEDGE BASE (use this information to answer customer questions):
+${knowledgeBase}
 
 BEHAVIOR:
 - ALWAYS respond in ${langName} (the customer's browser language)
@@ -51,7 +37,22 @@ serve(async (req) => {
     const openaiKey = Deno.env.get("OPENAI_API_KEY");
     if (!openaiKey) throw new Error("OPENAI_API_KEY not set");
 
-    const systemPrompt = buildSystemPrompt(lang || "en");
+    // Fetch knowledge base from database
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const { data: kbEntries } = await supabase
+      .from("ai_knowledge_base")
+      .select("category, title, content")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
+
+    const knowledgeBase = (kbEntries || [])
+      .map((e: any) => `[${e.category.toUpperCase()}] ${e.title}: ${e.content}`)
+      .join("\n");
+
+    const systemPrompt = buildSystemPrompt(lang || "en", knowledgeBase || "No knowledge base configured.");
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
