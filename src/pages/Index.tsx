@@ -23,7 +23,7 @@ const ConsultationForm = lazy(() => import("@/components/ConsultationForm"));
 const FAQSection = lazy(() => import("@/components/FAQSection"));
 const HomeBlogSection = lazy(() => import("@/components/HomeBlogSection"));
 const WhereWeAre = lazy(() => import("@/components/WhereWeAre"));
-const WhatsAppButton = lazy(() => import("@/components/WhatsAppButton"));
+const AIChatWidget = lazy(() => import("@/components/chat/AIChatWidget"));
 const ContactBar = lazy(() => import("@/components/ContactBar"));
 const ReadyToShipPopup = lazy(() => import("@/components/ReadyToShipPopup"));
 
@@ -464,9 +464,9 @@ const Index = () => {
       </footer>
 
 
-      {/* WhatsApp Button */}
+      {/* AI Chat Widget */}
       <Suspense fallback={null}>
-        <WhatsAppButton />
+        <AIChatWidget />
         <ContactBar />
         <ReadyToShipPopup />
       </Suspense>

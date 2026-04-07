@@ -6,7 +6,7 @@ import Header from '@/components/Header';
 import { useBlogPosts, getLocalizedField } from '@/hooks/useBlogPosts';
 import BlogSEO from '@/components/blog/BlogSEO';
 import LazyImage from '@/components/LazyImage';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import AIChatWidget from '@/components/chat/AIChatWidget';
 
 interface BlogListProps {
   lang: string;
@@ -156,7 +156,7 @@ const BlogList = ({ lang }: BlogListProps) => {
         )}
       </div>
 
-      <WhatsAppButton />
+      <AIChatWidget />
     </div>
   );
 };

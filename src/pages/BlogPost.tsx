@@ -5,7 +5,7 @@ import Header from '@/components/Header';
 import { useBlogPost, getLocalizedField } from '@/hooks/useBlogPosts';
 import BlogSEO from '@/components/blog/BlogSEO';
 import LazyImage from '@/components/LazyImage';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import AIChatWidget from '@/components/chat/AIChatWidget';
 import NotFound from './NotFound';
 
 interface BlogPostProps {
@@ -267,7 +267,7 @@ const BlogPostPage = ({ lang }: BlogPostProps) => {
         </div>
       </article>
 
-      <WhatsAppButton />
+      <AIChatWidget />
     </div>
   );
 };

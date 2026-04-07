@@ -4,7 +4,7 @@ import { loadLanguage } from '@/i18n/config';
 import Header from "@/components/Header";
 import VesuvioBuono from "@/components/VesuvioBuono";
 import ConsultationForm from "@/components/ConsultationForm";
-import WhatsAppButton from "@/components/WhatsAppButton";
+import AIChatWidget from "@/components/chat/AIChatWidget";
 
 interface LocalizedVesuvioBuonoProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
@@ -36,7 +36,7 @@ const LocalizedVesuvioBuono = ({ lang }: LocalizedVesuvioBuonoProps) => {
           </section>
         </main>
 
-        <WhatsAppButton />
+        <AIChatWidget />
 
         {/* Footer */}
         <footer className="bg-charcoal-900 text-white py-12 border-t border-stone-800">
