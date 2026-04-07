@@ -172,6 +172,7 @@ const App = () => {
                 <Route path="ordini" element={<ERPOrdini />} />
                 <Route path="utenti" element={<ERPUtenti />} />
                 <Route path="pronta-consegna" element={<ERPProntaConsegna />} />
+                <Route path="knowledge-base" element={<ERPKnowledgeBase />} />
               </Route>
 
               {/* Legacy admin redirects */}

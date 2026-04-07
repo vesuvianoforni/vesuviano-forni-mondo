@@ -47,6 +47,7 @@ const catalogItems = [
 const contentItems = [
   { title: 'Blog', url: '/erp/blog', icon: BookOpen },
   { title: 'Lead Sito Web', url: '/erp/leads', icon: TrendingUp },
+  { title: 'Knowledge Base AI', url: '/erp/knowledge-base', icon: Brain },
 ];
 
 const operationsItems = [
