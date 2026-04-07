@@ -191,7 +191,7 @@ const BuiltOnPlace = () => {
               {
                 title: "Superior Performance",
                 desc: "On-site construction allows for optimal thermal mass, reaching 500°C and retaining heat for hours.",
-                img: "https://xvccwwusmraonezalabc.supabase.co/storage/v1/object/public/oven-images/gallery/vesuviano-traditional-3.jpg",
+                img: "/lovable-uploads/built-on-place-oven.png",
               },
             ].map((item) => (
               <div key={item.title} className="bg-stone-50 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
