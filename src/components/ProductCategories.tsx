@@ -16,6 +16,7 @@ const ProductCategories = () => {
     datasheetUrl?: string;
   } | null>(null);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const getDatasheetUrl = (ovenType: string) => {
     const datasheetUrls: Record<string, string> = {
