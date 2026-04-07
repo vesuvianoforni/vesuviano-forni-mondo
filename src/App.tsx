@@ -33,6 +33,7 @@ const ContattiRedirect = lazy(() => import("./pages/ContattiRedirect"));
 const LocalizedBlogList = lazy(() => import("./pages/LocalizedBlogList"));
 const LocalizedBlogPost = lazy(() => import("./pages/LocalizedBlogPost"));
 const ProformaPage = lazy(() => import("./pages/ProformaPage"));
+const BuiltOnPlace = lazy(() => import("./pages/BuiltOnPlace"));
 
 // ERP - lazy loaded
 const ERPLayout = lazy(() => import("./pages/ERPLayout"));
@@ -152,6 +153,7 @@ const App = () => {
               <Route path="/success" element={<PaymentSuccess />} />
               <Route path="/contatti" element={<ContattiRedirect />} />
               <Route path="/proforma/:token" element={<ProformaPage />} />
+              <Route path="/built-on-place" element={<BuiltOnPlace />} />
 
               {/* ERP */}
               <Route path="/erp/login" element={<AdminLogin />} />
