@@ -181,7 +181,7 @@ const BuiltOnPlace = () => {
               {
                 title: "Fits Through Any Door",
                 desc: "Our ovens are assembled on-site, piece by piece. They pass through spaces as narrow as 45 cm — doorways where no pre-built oven could ever fit.",
-                img: "https://xvccwwusmraonezalabc.supabase.co/storage/v1/object/public/oven-images/gallery/vesuviano-traditional-1.jpg",
+                img: "/lovable-uploads/fits-through-door.jpg",
               },
               {
                 title: "Authentic Craftsmanship",
