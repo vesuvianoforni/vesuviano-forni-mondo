@@ -1,4 +1,3 @@
-
 {
   "cta": {
     "getQuote": "Get a quote",
@@ -149,6 +148,19 @@
       "description": "Every Vesuviano oven is designed to meet the specific needs of your business. Our experts will help you find the perfect solution.",
       "freeConsultation": "Free Consultation",
       "viewGallery": "View Gallery"
+    },
+    "builtOnPlace": {
+      "title": "Built on Place",
+      "subtitle": "On-Site Construction",
+      "description": "Our master craftsmen travel to your location and build your dream oven on-site. A truly bespoke experience with authentic Neapolitan craftsmanship.",
+      "features": {
+        "onSite": "Built directly at your location",
+        "craftsmen": "Expert Neapolitan artisans",
+        "custom": "Fully customizable design",
+        "turnkey": "Turnkey solution, ready to fire"
+      },
+      "startingFrom": "From £13,500 GBP",
+      "cta": "Learn More"
     }
   },
   "clientsMap": {
@@ -504,33 +516,18 @@
     "contact": "Contact"
   },
   "footer": {
-    "company": "Company",
-    "aboutUs": "About Us",
-    "ourStory": "Our Story",
-    "craftsmanship": "Craftsmanship",
-    "products": "Products",
-    "woodOvens": "Wood Ovens",
-    "gasOvens": "Gas Ovens",
-    "electricOvens": "Electric Ovens",
-    "vesuviobuono": "VesuvioBuono",
-    "support": "Support",
-    "contact": "Contact",
-    "consultation": "Free Consultation",
-    "faq": "FAQ",
-    "followUs": "Follow Us",
-    "rights": "All rights reserved",
-    "madein": "Made with passion in Naples, Italy"
+    "rights": "All rights reserved"
   },
   "ovenVisualizer": {
     "badge": "Absolute AI Novelty",
-    "title": "Oven Visualizer", 
+    "title": "Oven Visualizer",
     "subtitle": "Choose how to visualize your Vesuviano oven",
     "aiMode": {
       "title": "AI Architect",
       "description": "Upload a photo of your space and AI will photorealistically integrate the selected oven",
       "features": {
         "photorealistic": "Professional photorealistic result",
-        "lighting": "Perfect integration with lighting", 
+        "lighting": "Perfect integration with lighting",
         "highRes": "Downloadable high resolution image"
       },
       "uploadTitle": "Upload photo of your space",
@@ -584,7 +581,7 @@
       "defaultMessage": "AI is creating your personalized image...",
       "steps": {
         "analysis": "Space analysis",
-        "integration": "Oven integration", 
+        "integration": "Oven integration",
         "finalization": "Image finalization"
       }
     },
@@ -609,7 +606,7 @@
       "formTitle": "Your data for download",
       "formDescription": "Enter your data to receive the high resolution image",
       "firstName": "First Name",
-      "lastName": "Last Name", 
+      "lastName": "Last Name",
       "email": "Email",
       "city": "City",
       "phone": "Phone",
@@ -626,7 +623,7 @@
     },
     "arVisualization": {
       "loadingModel": "Loading model...",
-      "modelNotAvailable": "Model not available", 
+      "modelNotAvailable": "Model not available",
       "unsupportedFormat": "File format not supported. Supported: GLB, GLTF, OBJ, FBX"
     },
     "ovenModels": {
@@ -911,9 +908,6 @@
       "errorMessage": "An error occurred while sending the request. Please try again later."
     }
   },
-  "footer": {
-    "rights": "All rights reserved"
-  },
   "configurator": {
     "loading": "Loading...",
     "title": "Oven Configurator",
@@ -930,14 +924,15 @@
     "selectSize": "Select Size",
     "selectCoating": "Select Coating",
     "steps": {
+      "chooseModel": "Choose Model",
       "chooseFuel": "Choose Fuel Type",
       "chooseDiameter": "Choose Diameter",
-      "chooseCoating": "Choose Coating"
+      "chooseCoating": "Choose Coating",
+      "additionalOptions": "Additional Options and Summary"
     },
     "preview": {
-      "fuelTypes": "Fuel Types",
-      "diameters": "Diameters",
-      "coatings": "Coatings"
+      "fuelTypes": "Fuel Types:",
+      "dimensions": "Dimensions:"
     },
     "fuelTypes": {
       "Legna": "Wood",
@@ -1041,17 +1036,6 @@
       "requestError": "Error sending request",
       "missingData": "Customer data missing"
     },
-    "steps": {
-      "chooseModel": "Choose Model",
-      "chooseFuel": "Choose Fuel Type",
-      "chooseDiameter": "Choose Diameter",
-      "chooseCoating": "Choose Coating",
-      "additionalOptions": "Additional Options and Summary"
-    },
-    "preview": {
-      "fuelTypes": "Fuel Types:",
-      "dimensions": "Dimensions:"
-    },
     "delivery": {
       "spaceRequired": "Required passage space:",
       "shippingEurope": "Shipping to Europe",
@@ -1108,57 +1092,6 @@
         "otherPlaceholder": "Share other details that could help us...",
         "submit": "Send Feedback",
         "submitting": "Sending..."
-      }
-    },
-    "colorRender": {
-      "title": "Real Time Render",
-      "subtitle": "Visualize the oven with the selected color in real time",
-      "selectedCoating": "Selected coating:",
-      "desiredColor": "Desired Color",
-      "customColor": "Custom Color",
-      "customColorPlaceholder": "E.g.: Ferrari Red, Ocean Blue, Forest Green...",
-      "customColorDescription": "Describe the color you want (max 50 characters)",
-      "selected": "Selected:",
-      "generateButton": "Generate Real Time Render",
-      "generateDescription": "View the oven render in the selected color",
-      "downloadButton": "Download Image",
-      "colors": {
-        "Nero": "Black",
-        "Bianco": "White",
-        "Rosso Mattone": "Brick Red",
-        "Grigio Pietra": "Stone Gray",
-        "Terracotta": "Terracotta",
-        "Beige": "Beige",
-        "Marrone": "Brown",
-        "Verde Oliva": "Olive Green"
-      },
-      "errors": {
-        "selectColor": "Select a color or enter a custom color!",
-        "maxLength": "Custom color cannot exceed 50 characters",
-        "invalidChars": "Color can only contain letters, numbers, spaces and hyphens"
-      },
-      "success": {
-        "generated": "Render generated successfully!",
-        "downloaded": "Download started!"
-      }
-    },
-    "architectAI": {
-      "title": "AI Architect",
-      "subtitle": "Insert the oven in your environment with artificial intelligence",
-      "takePhoto": "Take a Photo",
-      "takePhotoDescription": "Use the camera",
-      "uploadImage": "Upload Image",
-      "uploadImageDescription": "From your device",
-      "or": "OR",
-      "generateButton": "Generate AI Render",
-      "downloadButton": "Download Render",
-      "errors": {
-        "noImage": "First upload a photo of your environment",
-        "generationFailed": "Error generating render"
-      },
-      "success": {
-        "generated": "Render generated successfully!",
-        "downloaded": "Download completed!"
       }
     },
     "colorRender": {

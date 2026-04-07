@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import CtaButton from './CtaButton';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
@@ -15,6 +16,7 @@ const ProductCategories = () => {
     datasheetUrl?: string;
   } | null>(null);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const getDatasheetUrl = (ovenType: string) => {
     const datasheetUrls: Record<string, string> = {
@@ -51,6 +53,11 @@ const ProductCategories = () => {
       video: "/lovable-uploads/vesuviobuono-360-video.mp4"
     },
     {
+      key: 'builtOnPlace',
+      image: "/lovable-uploads/forni-colorati-showroom.webp",
+      link: "/built-on-place"
+    },
+    {
       key: 'consultation',
       image: "/lovable-uploads/forni-colorati-showroom.webp"
     }
@@ -74,7 +81,7 @@ const ProductCategories = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-12 sm:mb-16">
             {categories.map((category, index) => {
               const isConsultation = category.key === 'consultation';
-              
+              const isBuiltOnPlace = category.key === 'builtOnPlace';
               return (
                 <Card 
                   key={category.key}
@@ -128,7 +135,40 @@ const ProductCategories = () => {
                   </div>
                   
                   <CardContent className="p-4 sm:p-6">
-                    {isConsultation ? (
+                    {isBuiltOnPlace ? (
+                      <>
+                        <p className="text-stone-600 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base">
+                          {t(`products.${category.key}.description`)}
+                        </p>
+                        
+                        <ul className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6">
+                          {Object.keys(t(`products.${category.key}.features`, { returnObjects: true }) as object).map((featureKey) => (
+                            <li 
+                              key={featureKey}
+                              className="flex items-center text-xs sm:text-sm text-stone-600"
+                            >
+                              <div className="w-1.5 h-1.5 bg-vesuviano-500 rounded-full mr-3 flex-shrink-0"></div>
+                              {t(`products.${category.key}.features.${featureKey}`)}
+                            </li>
+                          ))}
+                        </ul>
+
+                        <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
+                          <div className="inline-flex items-center px-3 py-1.5 bg-vesuviano-50 border border-vesuviano-200 rounded-full">
+                            <span className="text-xs font-semibold text-vesuviano-700">
+                              {t('products.builtOnPlace.startingFrom')}
+                            </span>
+                          </div>
+                        </div>
+
+                        <Button
+                          className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white transition-all duration-300 text-sm sm:text-base py-2 sm:py-3"
+                          onClick={() => navigate('/built-on-place')}
+                        >
+                          {t('products.builtOnPlace.cta')}
+                        </Button>
+                      </>
+                    ) : isConsultation ? (
                       <>
                         <p className="text-stone-700 font-medium mb-4 leading-relaxed text-sm sm:text-base">
                           {t(`products.${category.key}.description`)} 🍕

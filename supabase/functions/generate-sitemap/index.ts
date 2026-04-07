@@ -18,6 +18,7 @@ const staticPages = [
   { paths: { it: "/it/pronta-consegna", en: "/en/ready-to-ship", fr: "/fr/pret-a-expedier", de: "/de/versandfertig", es: "/es/listo-para-enviar" }, priority: "0.8", changefreq: "weekly" },
   { paths: { it: "/it/architettoai", en: "/en/architettoai", fr: "/fr/architettoai", de: "/de/architettoai", es: "/es/architettoai" }, priority: "0.8", changefreq: "monthly" },
   { paths: { it: "/it/blog", en: "/en/blog", fr: "/fr/blog", de: "/de/blog", es: "/es/blog" }, priority: "0.8", changefreq: "daily" },
+  { paths: { it: "/built-on-place", en: "/built-on-place", fr: "/built-on-place", de: "/built-on-place", es: "/built-on-place" }, priority: "0.8", changefreq: "monthly" },
 ];
 
 function escapeXml(s: string) {

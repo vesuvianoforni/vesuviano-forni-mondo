@@ -1,4 +1,3 @@
-
 {
   "cta": {
     "getQuote": "Demander un devis",
@@ -74,13 +73,7 @@
     "contact": "Contact"
   },
   "footer": {
-    "company": "Entreprise",
-    "description": "Excellence artisanale napolitaine qui conquiert le monde. Fours traditionnels et innovants pour toute exigence culinaire professionnelle.",
-    "quickLinks": "Liens Rapides",
-    "contact": "Contact",
-    "address": "Adresse",
-    "phone": "Téléphone",
-    "rights": "Tous droits réservés."
+    "rights": "Tous droits réservés"
   },
   "products": {
     "title": "Nos",
@@ -165,6 +158,19 @@
       "description": "Chaque four Vesuviano est conçu pour répondre aux besoins spécifiques de votre activité. Nos experts vous aideront à trouver la solution parfaite.",
       "freeConsultation": "Consultation Gratuite",
       "viewGallery": "Voir la Galerie"
+    },
+    "builtOnPlace": {
+      "title": "Construits Sur Place",
+      "subtitle": "Construction sur Site",
+      "description": "Nos maîtres artisans se déplacent chez vous et construisent votre four de rêve directement sur place. Un savoir-faire napolitain authentique.",
+      "features": {
+        "onSite": "Construit directement chez vous",
+        "craftsmen": "Artisans napolitains experts",
+        "custom": "Design entièrement personnalisable",
+        "turnkey": "Solution clé en main"
+      },
+      "startingFrom": "À partir de £13 500 GBP",
+      "cta": "En Savoir Plus"
     }
   },
   "clientsMap": {
@@ -854,9 +860,6 @@
       "errorMessage": "Une erreur s'est produite lors de l'envoi de la demande. Veuillez réessayer plus tard."
     }
   },
-  "footer": {
-    "rights": "Tous droits réservés"
-  },
   "configurator": {
     "loading": "Chargement...",
     "title": "Configurateur de Fours",
@@ -873,14 +876,15 @@
     "selectSize": "Sélectionner la Taille",
     "selectCoating": "Sélectionner le Revêtement",
     "steps": {
+      "chooseModel": "Choisir le Modèle",
       "chooseFuel": "Choisir l'Alimentation",
       "chooseDiameter": "Choisir le Diamètre",
-      "chooseCoating": "Choisir le Revêtement"
+      "chooseCoating": "Choisir le Revêtement",
+      "additionalOptions": "Options Supplémentaires et Résumé"
     },
     "preview": {
-      "fuelTypes": "Alimentations",
-      "diameters": "Diamètres",
-      "coatings": "Revêtements"
+      "fuelTypes": "Types d'alimentation:",
+      "dimensions": "Dimensions:"
     },
     "fuelTypes": {
       "Legna": "Bois",
@@ -984,17 +988,6 @@
       "requestError": "Erreur lors de l'envoi de la demande",
       "missingData": "Données client manquantes"
     },
-    "steps": {
-      "chooseModel": "Choisir le Modèle",
-      "chooseFuel": "Choisir l'Alimentation",
-      "chooseDiameter": "Choisir le Diamètre",
-      "chooseCoating": "Choisir le Revêtement",
-      "additionalOptions": "Options Supplémentaires et Résumé"
-    },
-    "preview": {
-      "fuelTypes": "Types d'alimentation:",
-      "dimensions": "Dimensions:"
-    },
     "delivery": {
       "spaceRequired": "Espace de passage requis:",
       "shippingEurope": "Expédition en Europe",
@@ -1051,57 +1044,6 @@
         "otherPlaceholder": "Partagez d'autres détails qui pourraient nous aider...",
         "submit": "Envoyer le Retour",
         "submitting": "Envoi..."
-      }
-    },
-    "colorRender": {
-      "title": "Rendu en Temps Réel",
-      "subtitle": "Visualisez le four avec la couleur sélectionnée en temps réel",
-      "selectedCoating": "Revêtement sélectionné:",
-      "desiredColor": "Couleur Désirée",
-      "customColor": "Couleur Personnalisée",
-      "customColorPlaceholder": "Ex: Rouge Ferrari, Bleu Océan, Vert Forêt...",
-      "customColorDescription": "Décrivez la couleur que vous souhaitez (max 50 caractères)",
-      "selected": "Sélectionné:",
-      "generateButton": "Générer Rendu en Temps Réel",
-      "generateDescription": "Visualisez le rendu du four dans la couleur sélectionnée",
-      "downloadButton": "Télécharger l'Image",
-      "colors": {
-        "Nero": "Noir",
-        "Bianco": "Blanc",
-        "Rosso Mattone": "Rouge Brique",
-        "Grigio Pietra": "Gris Pierre",
-        "Terracotta": "Terre Cuite",
-        "Beige": "Beige",
-        "Marrone": "Marron",
-        "Verde Oliva": "Vert Olive"
-      },
-      "errors": {
-        "selectColor": "Sélectionnez une couleur ou entrez une couleur personnalisée!",
-        "maxLength": "La couleur personnalisée ne peut pas dépasser 50 caractères",
-        "invalidChars": "La couleur ne peut contenir que des lettres, chiffres, espaces et traits d'union"
-      },
-      "success": {
-        "generated": "Rendu généré avec succès!",
-        "downloaded": "Téléchargement démarré!"
-      }
-    },
-    "architectAI": {
-      "title": "Architecte IA",
-      "subtitle": "Insérez le four dans votre environnement avec l'intelligence artificielle",
-      "takePhoto": "Prendre une Photo",
-      "takePhotoDescription": "Utiliser l'appareil photo",
-      "uploadImage": "Télécharger une Image",
-      "uploadImageDescription": "Depuis votre appareil",
-      "or": "OU",
-      "generateButton": "Générer Rendu IA",
-      "downloadButton": "Télécharger le Rendu",
-      "errors": {
-        "noImage": "Téléchargez d'abord une photo de votre environnement",
-        "generationFailed": "Erreur lors de la génération du rendu"
-      },
-      "success": {
-        "generated": "Rendu généré avec succès!",
-        "downloaded": "Téléchargement terminé!"
       }
     },
     "colorRender": {
