@@ -52,6 +52,11 @@ const ProductCategories = () => {
       video: "/lovable-uploads/vesuviobuono-360-video.mp4"
     },
     {
+      key: 'builtOnPlace',
+      image: "/lovable-uploads/forni-colorati-showroom.webp",
+      link: "/built-on-place"
+    },
+    {
       key: 'consultation',
       image: "/lovable-uploads/forni-colorati-showroom.webp"
     }
