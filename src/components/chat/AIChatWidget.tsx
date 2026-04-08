@@ -188,11 +188,19 @@ export default function AIChatWidget() {
     } catch (e) { console.error("Chat save exception:", e); }
   }, [visitorId, lang]);
 
+  const [showMobileBubble, setShowMobileBubble] = useState(false);
+
   useEffect(() => {
     if (hasAutoOpened) return;
+    const isMobile = window.innerWidth < 768;
     const timer = setTimeout(() => {
-      setOpen(true);
-      setHasAutoOpened(true);
+      if (isMobile) {
+        setShowMobileBubble(true);
+        setHasAutoOpened(true);
+      } else {
+        setOpen(true);
+        setHasAutoOpened(true);
+      }
     }, 15000);
     return () => clearTimeout(timer);
   }, [hasAutoOpened]);
@@ -357,16 +365,26 @@ export default function AIChatWidget() {
         {open ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
       </button>
 
-      <button
-        onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-20 right-4 z-50 w-12 h-12 rounded-full bg-vesuviano-500 text-white shadow-lg flex items-center justify-center md:hidden"
-        aria-label="Apri assistente AI"
-      >
-        {showPulse && !open && (
-          <span className="absolute inset-0 rounded-full bg-vesuviano-500 animate-ping opacity-30" />
+      <div className="fixed bottom-20 right-4 z-50 flex items-center gap-2 md:hidden">
+        {showMobileBubble && !open && (
+          <button
+            onClick={() => { setShowMobileBubble(false); setOpen(true); }}
+            className="bg-white text-vesuviano-700 text-sm font-medium px-4 py-2 rounded-full shadow-lg border border-stone-200 animate-fade-in whitespace-nowrap"
+          >
+            💬 {lang === 'it' ? 'Chiedimi tutto!' : lang === 'fr' ? 'Demandez-moi tout !' : lang === 'de' ? 'Frag mich alles!' : lang === 'es' ? '¡Pregúntame todo!' : 'Ask me anything!'}
+          </button>
         )}
-        {open ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
-      </button>
+        <button
+          onClick={() => { setShowMobileBubble(false); setOpen((o) => !o); }}
+          className="w-12 h-12 rounded-full bg-vesuviano-500 text-white shadow-lg flex items-center justify-center"
+          aria-label="Apri assistente AI"
+        >
+          {showPulse && !open && (
+            <span className="absolute inset-0 rounded-full bg-vesuviano-500 animate-ping opacity-30" />
+          )}
+          {open ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
+        </button>
+      </div>
 
       {open && (
         <div
