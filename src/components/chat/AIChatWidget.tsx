@@ -164,7 +164,7 @@ export default function AIChatWidget() {
   const saveConversation = useCallback(async (msgs: Msg[], contactInfo?: { name?: string; email?: string; phone?: string }) => {
     const payload: Record<string, unknown> = {
       visitor_id: visitorId,
-      messages: JSON.stringify(msgs),
+      messages: msgs,
       lang,
       page_url: window.location.pathname,
       last_message_at: new Date().toISOString(),
