@@ -112,7 +112,7 @@ const ReadyToShip = () => {
                       </div>
                       <div className="flex items-start">
                         <span className="font-semibold text-stone-900 min-w-[120px]">{t('readyToShip.fuel')}:</span>
-                        <span className="text-stone-700">{product.fuel_type || t('readyToShip.woodOrGas')}</span>
+                        <span className="text-stone-700">{product.fuel_type || 'N/A'}</span>
                       </div>
                       <div className="flex items-start">
                         <span className="font-semibold text-stone-900 min-w-[120px]">{t('readyToShip.coating')}:</span>
