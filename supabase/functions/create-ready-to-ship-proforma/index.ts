@@ -243,6 +243,7 @@ serve(async (req) => {
         datasheetDesc: 'Download the complete technical datasheet for your oven',
         datasheetBtn: '⬇️ Download Datasheet PDF',
         priceLabel: 'Ready-to-Ship oven price',
+        shippingIncluded: '🚚 Shipping included',
         depositTitle: '🔒 Reserve your oven with just 5%',
         depositLabel: 'Deposit',
         depositRefund: 'The deposit is <strong>100% refundable</strong> and reserves the oven for 7 days.',
