@@ -205,6 +205,7 @@ serve(async (req) => {
         datasheetDesc: 'Scarica la scheda tecnica completa del tuo forno',
         datasheetBtn: '⬇️ Scarica Scheda Tecnica PDF',
         priceLabel: 'Prezzo forno Pronta Consegna',
+        shippingIncluded: '🚚 Spedizione inclusa',
         depositTitle: '🔒 Riserva il tuo forno con solo il 5%',
         depositLabel: 'Deposito',
         depositRefund: 'Il deposito è <strong>100% rimborsabile</strong> e riserva il forno per 7 giorni.',
