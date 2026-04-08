@@ -215,6 +215,62 @@ export type Database = {
         }
         Relationships: []
       }
+      chat_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          lang: string
+          last_message_at: string
+          lead_id: string | null
+          message_count: number
+          messages: Json
+          page_url: string | null
+          started_at: string
+          visitor_email: string | null
+          visitor_id: string
+          visitor_name: string | null
+          visitor_phone: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lang?: string
+          last_message_at?: string
+          lead_id?: string | null
+          message_count?: number
+          messages?: Json
+          page_url?: string | null
+          started_at?: string
+          visitor_email?: string | null
+          visitor_id: string
+          visitor_name?: string | null
+          visitor_phone?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lang?: string
+          last_message_at?: string
+          lead_id?: string | null
+          message_count?: number
+          messages?: Json
+          page_url?: string | null
+          started_at?: string
+          visitor_email?: string | null
+          visitor_id?: string
+          visitor_name?: string | null
+          visitor_phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_conversations_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "website_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       configurator_options: {
         Row: {
           created_at: string
