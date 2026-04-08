@@ -103,16 +103,20 @@ const BuiltOnPlace = () => {
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 overflow-hidden">
         <div className="absolute inset-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover opacity-40"
+            poster="https://xvccwwusmraonezalabc.supabase.co/storage/v1/object/public/oven-images/gallery/built-on-site-hero.jpg"
+          >
+            <source src="/videos/built-on-place-bg.mp4" type="video/mp4" />
+          </video>
           <LazyImage
             src="/lovable-uploads/255a7344-f5ab-411b-8b37-6ed61e01d472.png"
             alt=""
             className="absolute top-6 left-6 h-10 w-auto opacity-80 z-10"
-            priority
-          />
-          <LazyImage
-            src="https://xvccwwusmraonezalabc.supabase.co/storage/v1/object/public/oven-images/gallery/built-on-site-hero.jpg"
-            alt="Authentic Neapolitan oven built on site"
-            className="w-full h-full object-cover opacity-40"
             priority
           />
         </div>
