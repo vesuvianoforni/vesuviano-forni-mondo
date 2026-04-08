@@ -7,6 +7,17 @@ import { supabase } from "@/integrations/supabase/client";
 const SUPABASE_URL = "https://lgueucxznbqgvhpjzurf.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndWV1Y3h6bmJxZ3ZocGp6dXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4MDE5ODEsImV4cCI6MjA2NDM3Nzk4MX0.JH9wcGcoyPKQqWT1ExYLRJyg1Jz_8iXezfmeZ9oyZzE";
 const CHAT_URL = `${SUPABASE_URL}/functions/v1/vesuviano-chat`;
+const VISITOR_ID_KEY = "vesuviano_visitor_id";
+const VISITOR_NAME_KEY = "vesuviano_visitor_name";
+
+function getOrCreateVisitorId(): string {
+  let id = localStorage.getItem(VISITOR_ID_KEY);
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem(VISITOR_ID_KEY, id);
+  }
+  return id;
+}
 
 type Msg = { role: "user" | "assistant"; content: string };
 
