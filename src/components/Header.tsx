@@ -76,6 +76,17 @@ const Header = () => {
     return paths[ovenType]?.[currentLang] || paths[ovenType]?.['it'] || '/';
   };
 
+  const getReadyToShipPath = () => {
+    const paths: Record<string, string> = {
+      'it': '/it/pronta-consegna',
+      'en': '/en/ready-to-ship',
+      'fr': '/fr/pret-a-expedier',
+      'es': '/es/listo-para-enviar',
+      'de': '/de/sofort-lieferbar'
+    };
+    return paths[currentLang] || paths['it'];
+  };
+
   const productDropdownItems = [
     { key: 'traditional', label: t('products.traditional.title'), path: getOvenPath('traditional') },
     { key: 'gas', label: t('products.gas.title'), path: getOvenPath('gas') },
@@ -83,7 +94,8 @@ const Header = () => {
     { key: 'rotating', label: t('products.rotating.title'), path: getOvenPath('rotating') },
     { key: 'vesuviobuono', label: t('products.vesuviobuono.title'), path: getVesuvioBuonoPath() },
     { key: 'builtOnPlace', label: t('products.builtOnPlace.title'), path: '/built-on-place' },
-    { key: 'burners', label: t('burners.pageTitle'), path: getOvenPath('burners') }
+    { key: 'burners', label: t('burners.pageTitle'), path: getOvenPath('burners') },
+    { key: 'readyToShip', label: t('readyToShip.menuTitle', 'Ready to Ship'), path: getReadyToShipPath() }
   ];
 
   const navItems: Array<{ href: string; label: string; type: 'anchor' | 'link' }> = [
