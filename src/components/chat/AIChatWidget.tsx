@@ -295,8 +295,8 @@ export default function AIChatWidget() {
 
       {open && (
         <div
-          className="fixed bottom-24 right-4 md:bottom-24 md:right-6 z-50 w-[calc(100vw-2rem)] max-w-md bg-white border border-stone-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
-          style={{ height: "min(500px, calc(100vh - 10rem))" }}
+          className="fixed bottom-24 right-4 md:bottom-24 md:right-6 z-50 w-[calc(100vw-2rem)] max-w-md bg-white border border-stone-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden transform-gpu"
+          style={{ height: "min(500px, calc(100dvh - 10rem))" }}
         >
           <div className="bg-vesuviano-500 text-white px-4 py-3 flex items-center gap-3">
             <img src="/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano" className="h-6 w-auto" />
