@@ -22,6 +22,7 @@ const OvenDataInitializer = lazy(() => import("@/components/OvenDataInitializer"
 const ConsultationForm = lazy(() => import("@/components/ConsultationForm"));
 const FAQSection = lazy(() => import("@/components/FAQSection"));
 const HomeBlogSection = lazy(() => import("@/components/HomeBlogSection"));
+const ZapperSection = lazy(() => import("@/components/ZapperSection"));
 const WhereWeAre = lazy(() => import("@/components/WhereWeAre"));
 const AIChatWidget = lazy(() => import("@/components/chat/AIChatWidget"));
 
@@ -244,6 +245,14 @@ const Index = () => {
           <Suspense fallback={null}>
             <section id="rivestimenti" aria-label="Rivestimenti forni">
               <Rivestimenti />
+            </section>
+          </Suspense>
+        </LazySection>
+
+        <LazySection minHeight="400px">
+          <Suspense fallback={null}>
+            <section id="zapper" aria-label="ZAPPER abbattimento fumi">
+              <ZapperSection />
             </section>
           </Suspense>
         </LazySection>
