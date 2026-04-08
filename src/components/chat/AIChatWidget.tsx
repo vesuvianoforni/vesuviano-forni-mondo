@@ -188,11 +188,19 @@ export default function AIChatWidget() {
     } catch (e) { console.error("Chat save exception:", e); }
   }, [visitorId, lang]);
 
+  const [showMobileBubble, setShowMobileBubble] = useState(false);
+
   useEffect(() => {
     if (hasAutoOpened) return;
+    const isMobile = window.innerWidth < 768;
     const timer = setTimeout(() => {
-      setOpen(true);
-      setHasAutoOpened(true);
+      if (isMobile) {
+        setShowMobileBubble(true);
+        setHasAutoOpened(true);
+      } else {
+        setOpen(true);
+        setHasAutoOpened(true);
+      }
     }, 15000);
     return () => clearTimeout(timer);
   }, [hasAutoOpened]);
