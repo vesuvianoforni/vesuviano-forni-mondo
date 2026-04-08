@@ -13,6 +13,7 @@ import { Loader2 } from 'lucide-react';
 interface ReadyToShipOven {
   id: string;
   model_name: string;
+  custom_title: string | null;
   diameter: number;
   coating: string | null;
   fuel_type: string | null;
