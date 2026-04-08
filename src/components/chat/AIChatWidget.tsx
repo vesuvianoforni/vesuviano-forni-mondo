@@ -90,7 +90,7 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string) => voi
         placeholder={labels.email}
         value={form.email}
         onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-        className="w-full text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
+        className="w-full text-base md:text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
         maxLength={255}
       />
       <input
