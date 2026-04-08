@@ -126,7 +126,7 @@ const BuiltOnPlace = () => {
             <span className="text-vesuviano-400">Pizza Oven</span>, Built On-Site
           </h1>
           <p className="text-lg sm:text-xl text-stone-300 max-w-2xl mx-auto mb-4">
-            Our master craftsmen travel from Naples to build your oven directly at your home. 
+            Our master craftsmen travel from Naples to build your oven directly at your restaurant. 
             Made with volcanic sand from Mount Vesuvius.
           </p>
           <p className="text-3xl sm:text-4xl font-bold text-white mb-8">
