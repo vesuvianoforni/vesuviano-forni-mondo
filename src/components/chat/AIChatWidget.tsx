@@ -133,15 +133,18 @@ export default function AIChatWidget() {
   const [visitorId] = useState(getOrCreateVisitorId);
   const [open, setOpen] = useState(false);
 
-  // Detect returning visitor
+  // Detect returning visitor (even without name)
   const savedName = localStorage.getItem(VISITOR_NAME_KEY);
-  const isReturning = !!savedName;
+  const hasSubmittedBefore = localStorage.getItem(VISITOR_SUBMITTED_KEY) === "true";
+  const isReturning = hasSubmittedBefore;
 
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "assistant",
       content: isReturning
-        ? (WELCOME_BACK[lang] || WELCOME_BACK.en).replace("!", ` ${savedName}!`)
+        ? savedName
+          ? (WELCOME_BACK[lang] || WELCOME_BACK.en).replace("!", ` ${savedName}!`)
+          : (WELCOME_BACK[lang] || WELCOME_BACK.en)
         : (WELCOME_MESSAGES[lang] || WELCOME_MESSAGES.en),
     },
   ]);
