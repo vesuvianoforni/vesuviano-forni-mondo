@@ -373,8 +373,9 @@ export default function AIChatWidget() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={lang === "it" ? "Scrivi il tuo messaggio..." : lang === "fr" ? "Écrivez votre message..." : lang === "de" ? "Schreiben Sie Ihre Nachricht..." : lang === "es" ? "Escribe tu mensaje..." : "Type your message..."}
-              className="flex-1 bg-transparent text-sm outline-none placeholder:text-stone-400"
+              className="flex-1 bg-transparent text-base md:text-sm outline-none placeholder:text-stone-400"
               disabled={isLoading || (contactFormShown && !contactSubmitted)}
+              autoComplete="off"
             />
             <Button
               type="submit"
