@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +11,6 @@ import { supabase } from "@/integrations/supabase/client";
 
 const ConsultationForm = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -45,16 +43,12 @@ const ConsultationForm = () => {
 
       if (error) throw error;
 
-      const currentLang = i18n.language || 'it';
-      const thankYouRoutes: Record<string, string> = {
-        'it': '/it/thank-you-it',
-        'en': '/en/thank-you-en',
-        'fr': '/fr/thank-you-fr',
-        'es': '/es/thank-you-es',
-        'de': '/de/thank-you-de'
-      };
+      toast({
+        title: t('consultation.messages.success'),
+        description: t('consultation.messages.successDescription'),
+      });
       
-      navigate(thankYouRoutes[currentLang] || '/it/thank-you-it');
+      setFormData({ name: "", email: "", phone: "", country: "", ovenType: "", message: "" });
     } catch (error) {
       console.error("Errore invio consulenza:", error);
       toast({
