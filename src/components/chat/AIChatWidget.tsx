@@ -68,7 +68,7 @@ const WELCOME_BACK: Record<string, string> = {
   es: "¡Bienvenido de nuevo! 👋 ¿Cómo puedo ayudarte hoy?",
 };
 
-function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string) => void; lang: string }) {
+function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string, email?: string, phone?: string) => void; lang: string }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [submitting, setSubmitting] = useState(false);
   const labels = FORM_LABELS[lang] || FORM_LABELS.en;
