@@ -290,7 +290,7 @@ export default function AIChatWidget() {
         {showPulse && !open && (
           <span className="absolute inset-0 rounded-full bg-vesuviano-500 animate-ping opacity-30" />
         )}
-        {open ? <X className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
+        {open ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
       </button>
 
       {open && (
