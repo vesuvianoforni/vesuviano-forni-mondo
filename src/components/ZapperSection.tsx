@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import zapperProduct from '@/assets/zapper-product.png';
 import { Button } from "@/components/ui/button";
 import { Wind, ShieldCheck, Leaf, ArrowRight } from "lucide-react";
 
