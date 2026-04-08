@@ -21,7 +21,7 @@ const reviews = [
   {
     name: "Sophie M.",
     location: "Surrey, UK",
-    text: "We chose the built-on-place option and it was the best decision. The craftsmen were incredible, and the oven is a work of art in our garden.",
+    text: "We chose the built-on-place option and it was the best decision. The craftsmen were incredible, and the oven is a work of art in our restaurant.",
     stars: 5,
   },
   {
@@ -119,14 +119,14 @@ const BuiltOnPlace = () => {
         <div className="relative z-10 container mx-auto px-4 sm:px-6 py-20 text-center">
           <Badge className="bg-vesuviano-500 text-white px-5 py-2 text-sm font-bold mb-6 animate-fade-in">
             <Flame className="mr-2" size={16} />
-            HANDCRAFTED IN ITALY · BUILT AT YOUR HOME
+            HANDCRAFTED IN ITALY · BUILT AT YOUR RESTAURANT
           </Badge>
           <h1 className="font-playfair text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
             Your Authentic Neapolitan<br />
             <span className="text-vesuviano-400">Pizza Oven</span>, Built On-Site
           </h1>
           <p className="text-lg sm:text-xl text-stone-300 max-w-2xl mx-auto mb-4">
-            Our master craftsmen travel from Naples to build your oven directly at your home. 
+            Our master craftsmen travel from Naples to build your oven directly at your restaurant. 
             Made with volcanic sand from Mount Vesuvius.
           </p>
           <p className="text-3xl sm:text-4xl font-bold text-white mb-8">
@@ -185,7 +185,7 @@ const BuiltOnPlace = () => {
               },
               {
                 title: "Authentic Craftsmanship",
-                desc: "Neapolitan master builders use techniques passed down through generations, with real volcanic sand from Mount Vesuvius.",
+                desc: "Neapolitan master builders travel to your restaurant and use techniques passed down through generations, with real volcanic sand from Mount Vesuvius.",
                 img: "/lovable-uploads/authentic-craftsmanship.png",
               },
               {
@@ -355,7 +355,7 @@ const BuiltOnPlace = () => {
       <section className="py-12 bg-vesuviano-500 text-center">
         <div className="container mx-auto px-4">
           <h2 className="font-playfair text-2xl md:text-3xl font-bold text-white mb-4">
-            Ready to bring Naples to your garden?
+            Ready to bring Naples to your restaurant?
           </h2>
           <p className="text-white/80 mb-6">Starting from £13,500 · Free consultation · Handcrafted in Italy</p>
           <Button
