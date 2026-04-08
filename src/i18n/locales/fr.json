@@ -859,7 +859,8 @@
       "error": "Erreur",
       "errorMessage": "Une erreur s'est produite lors de l'envoi de la demande. Veuillez réessayer plus tard."
     },
-    "shippingIncluded": "Livraison incluse"
+    "shippingIncluded": "Livraison incluse",
+    "menuTitle": "Prêt à Expédier"
   },
   "configurator": {
     "loading": "Chargement...",

@@ -798,7 +798,8 @@
       "error": "Fehler",
       "errorMessage": "Beim Senden der Anfrage ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut."
     },
-    "shippingIncluded": "Versand inklusive"
+    "shippingIncluded": "Versand inklusive",
+    "menuTitle": "Sofort Lieferbar"
   },
   "footer": {
     "rights": "Alle Rechte vorbehalten"

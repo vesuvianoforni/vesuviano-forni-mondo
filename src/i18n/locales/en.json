@@ -907,7 +907,8 @@
       "error": "Error",
       "errorMessage": "An error occurred while sending the request. Please try again later."
     },
-    "shippingIncluded": "Shipping included"
+    "shippingIncluded": "Shipping included",
+    "menuTitle": "Ready to Ship"
   },
   "configurator": {
     "loading": "Loading...",
