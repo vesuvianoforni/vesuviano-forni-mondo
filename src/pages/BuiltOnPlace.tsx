@@ -119,7 +119,7 @@ const BuiltOnPlace = () => {
         <div className="relative z-10 container mx-auto px-4 sm:px-6 py-20 text-center">
           <Badge className="bg-vesuviano-500 text-white px-5 py-2 text-sm font-bold mb-6 animate-fade-in">
             <Flame className="mr-2" size={16} />
-            HANDCRAFTED IN ITALY · BUILT AT YOUR HOME
+            HANDCRAFTED IN ITALY · BUILT AT YOUR RESTAURANT
           </Badge>
           <h1 className="font-playfair text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
             Your Authentic Neapolitan<br />
