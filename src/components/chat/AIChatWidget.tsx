@@ -82,7 +82,7 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string) => voi
         placeholder={labels.name}
         value={form.name}
         onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-        className="w-full text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
+        className="w-full text-base md:text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
         maxLength={100}
       />
       <input
@@ -90,7 +90,7 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string) => voi
         placeholder={labels.email}
         value={form.email}
         onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-        className="w-full text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
+        className="w-full text-base md:text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
         maxLength={255}
       />
       <input
@@ -98,7 +98,7 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string) => voi
         placeholder={labels.phone}
         value={form.phone}
         onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-        className="w-full text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
+        className="w-full text-base md:text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
         maxLength={20}
       />
       <Button type="submit" size="sm" className="w-full bg-vesuviano-500 hover:bg-vesuviano-600 text-white" disabled={submitting}>
@@ -295,8 +295,8 @@ export default function AIChatWidget() {
 
       {open && (
         <div
-          className="fixed bottom-24 right-4 md:bottom-24 md:right-6 z-50 w-[calc(100vw-2rem)] max-w-md bg-white border border-stone-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
-          style={{ height: "min(500px, calc(100vh - 10rem))" }}
+          className="fixed bottom-24 right-4 md:bottom-24 md:right-6 z-50 w-[calc(100vw-2rem)] max-w-md bg-white border border-stone-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden transform-gpu"
+          style={{ height: "min(500px, calc(100dvh - 10rem))" }}
         >
           <div className="bg-vesuviano-500 text-white px-4 py-3 flex items-center gap-3">
             <img src="/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano" className="h-6 w-auto" />
@@ -373,8 +373,9 @@ export default function AIChatWidget() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={lang === "it" ? "Scrivi il tuo messaggio..." : lang === "fr" ? "Écrivez votre message..." : lang === "de" ? "Schreiben Sie Ihre Nachricht..." : lang === "es" ? "Escribe tu mensaje..." : "Type your message..."}
-              className="flex-1 bg-transparent text-sm outline-none placeholder:text-stone-400"
+              className="flex-1 bg-transparent text-base md:text-sm outline-none placeholder:text-stone-400"
               disabled={isLoading || (contactFormShown && !contactSubmitted)}
+              autoComplete="off"
             />
             <Button
               type="submit"
