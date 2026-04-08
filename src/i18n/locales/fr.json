@@ -1181,5 +1181,22 @@
     },
     "ctaTitle": "Besoin d'un Brûleur ?",
     "ctaText": "Contactez-nous pour une consultation gratuite et trouvez le brûleur parfait pour votre four."
+  },
+  "zapper": {
+    "badge": "Partenaire Officiel",
+    "title": "Ouvrez votre four en",
+    "titleHighlight": "centre-ville",
+    "subtitle": "Avec ZAPPER® vous éliminez fumées, odeurs et particules fines. Le système certifié d'abattement des fumées qui vous permet d'opérer partout, sans plaintes et dans le respect des réglementations.",
+    "feature1Title": "Réduction des fumées jusqu'à 95%",
+    "feature1Desc": "Technologie certifiée pour réduire fumées, odeurs et particules fines de suie",
+    "feature2Title": "Conformité réglementaire garantie",
+    "feature2Desc": "Aucune plainte des voisins, aucune amende. Idéal pour les ouvertures en centre-ville",
+    "feature3Title": "Air pur, toujours",
+    "feature3Desc": "Systèmes compatibles avec les fours à bois, gaz et électriques",
+    "cta": "Découvrir ZAPPER®",
+    "ctaConsulting": "Demander une consultation technique",
+    "cardDesc": "Technologie italienne certifiée pour l'abattement des fumées. Plus de 2 500 clients satisfaits avec une note Trustpilot de 4.8/5.",
+    "statSmoke": "Réduction des fumées",
+    "statClients": "Clients satisfaits"
   }
 }

@@ -834,5 +834,22 @@
     },
     "ctaTitle": "Brauchen Sie einen Brenner?",
     "ctaText": "Kontaktieren Sie uns für eine kostenlose Beratung und finden Sie den perfekten Brenner für Ihren Ofen."
+  },
+  "zapper": {
+    "badge": "Offizieller Partner",
+    "title": "Eröffnen Sie Ihren Ofen in der",
+    "titleHighlight": "Innenstadt",
+    "subtitle": "Mit ZAPPER® beseitigen Sie Rauch, Gerüche und Feinstaub. Das zertifizierte Rauchabscheidungssystem, mit dem Sie überall arbeiten können – ohne Beschwerden und unter Einhaltung aller Vorschriften.",
+    "feature1Title": "Bis zu 95% Rauchreduzierung",
+    "feature1Desc": "Zertifizierte Technologie zur Reduzierung von Rauch, Gerüchen und feinen Rußpartikeln",
+    "feature2Title": "Garantierte Einhaltung der Vorschriften",
+    "feature2Desc": "Keine Beschwerden von Nachbarn, keine Bußgelder. Ideal für Eröffnungen in der Innenstadt",
+    "feature3Title": "Saubere Luft, immer",
+    "feature3Desc": "Systeme kompatibel mit Holz-, Gas- und Elektroöfen",
+    "cta": "ZAPPER® entdecken",
+    "ctaConsulting": "Technische Beratung anfordern",
+    "cardDesc": "Zertifizierte italienische Technologie zur Rauchminderung. Über 2.500 zufriedene Kunden mit einer Trustpilot-Bewertung von 4.8/5.",
+    "statSmoke": "Rauchreduzierung",
+    "statClients": "Zufriedene Kunden"
   }
 }

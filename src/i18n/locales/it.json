@@ -1209,5 +1209,22 @@
     },
     "ctaTitle": "Hai Bisogno di un Bruciatore?",
     "ctaText": "Contattaci per una consulenza gratuita e trova il bruciatore perfetto per il tuo forno."
+  },
+  "zapper": {
+    "badge": "Partner Ufficiale",
+    "title": "Apri il tuo forno in",
+    "titleHighlight": "centro città",
+    "subtitle": "Con ZAPPER® elimini fumi, odori e polveri sottili. Il sistema di abbattimento fumi certificato che ti permette di operare ovunque, senza reclami e nel rispetto delle normative.",
+    "feature1Title": "Riduzione fumi fino al 95%",
+    "feature1Desc": "Tecnologia certificata per abbattere fumi, odori e polveri sottili di fuliggine",
+    "feature2Title": "Conformità normativa garantita",
+    "feature2Desc": "Nessun reclamo dai vicini, nessuna multa. Ideale per aperture in centro città",
+    "feature3Title": "Aria pulita, sempre",
+    "feature3Desc": "Sistemi compatibili con forni a legna, gas ed elettrici",
+    "cta": "Scopri ZAPPER®",
+    "ctaConsulting": "Richiedi consulenza tecnica",
+    "cardDesc": "Tecnologia italiana certificata per l'abbattimento fumi. Oltre 2500 clienti soddisfatti con valutazione Trustpilot 4.8/5.",
+    "statSmoke": "Riduzione fumi",
+    "statClients": "Clienti soddisfatti"
   }
 }

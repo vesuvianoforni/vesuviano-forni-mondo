@@ -1229,5 +1229,22 @@
     },
     "ctaTitle": "Need a Burner?",
     "ctaText": "Contact us for a free consultation and find the perfect burner for your oven."
+  },
+  "zapper": {
+    "badge": "Official Partner",
+    "title": "Open your oven in the",
+    "titleHighlight": "city centre",
+    "subtitle": "With ZAPPER® you eliminate smoke, odours and fine particulate matter. The certified smoke abatement system that allows you to operate anywhere, without complaints and in full regulatory compliance.",
+    "feature1Title": "Up to 95% smoke reduction",
+    "feature1Desc": "Certified technology to reduce smoke, odours and fine soot particles",
+    "feature2Title": "Guaranteed regulatory compliance",
+    "feature2Desc": "No complaints from neighbours, no fines. Ideal for city centre openings",
+    "feature3Title": "Clean air, always",
+    "feature3Desc": "Systems compatible with wood, gas and electric ovens",
+    "cta": "Discover ZAPPER®",
+    "ctaConsulting": "Request technical consultation",
+    "cardDesc": "Certified Italian technology for smoke abatement. Over 2,500 satisfied customers with a 4.8/5 Trustpilot rating.",
+    "statSmoke": "Smoke reduction",
+    "statClients": "Satisfied customers"
   }
 }
