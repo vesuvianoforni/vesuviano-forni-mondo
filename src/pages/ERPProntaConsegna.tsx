@@ -353,6 +353,16 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
           <DialogTitle>{isEditing ? 'Modifica Pronta Consegna' : 'Aggiungi Pronta Consegna'}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
+          {/* Custom title */}
+          <div>
+            <Label>Titolo Personalizzato <span className="text-xs text-muted-foreground">opzionale — se vuoto, usa il nome modello</span></Label>
+            <Input
+              value={form.custom_title}
+              onChange={e => setForm(prev => ({ ...prev, custom_title: e.target.value }))}
+              placeholder="es. Anastasia 120 Blu Oceano — Pronta Consegna"
+            />
+          </div>
+
           {/* Model selection */}
           <div className="grid grid-cols-2 gap-4">
             <div>
