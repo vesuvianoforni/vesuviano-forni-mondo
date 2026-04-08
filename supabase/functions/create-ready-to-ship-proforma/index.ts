@@ -357,6 +357,7 @@ serve(async (req) => {
         datasheetDesc: 'Descarga la ficha técnica completa de tu horno',
         datasheetBtn: '⬇️ Descargar Ficha Técnica PDF',
         priceLabel: 'Precio horno Listo para Envío',
+        shippingIncluded: '🚚 Envío incluido',
         depositTitle: '🔒 Reserva tu horno con solo el 5%',
         depositLabel: 'Depósito',
         depositRefund: 'El depósito es <strong>100% reembolsable</strong> y reserva el horno por 7 días.',
