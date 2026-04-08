@@ -34,7 +34,7 @@ export default function ERPChatLogs() {
         .order("last_message_at", { ascending: false })
         .limit(200);
       if (error) throw error;
-      return (data || []) as ChatConversation[];
+      return (data || []) as unknown as ChatConversation[];
     },
     refetchInterval: 15000,
   });
