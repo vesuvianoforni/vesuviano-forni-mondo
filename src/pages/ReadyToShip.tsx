@@ -77,10 +77,10 @@ const ReadyToShip = () => {
               const mainImage = product.images?.[0] || '/placeholder.svg';
               return (
                 <Card key={product.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border-stone-200 hover:border-vesuviano-300">
-                  <div className="relative h-80 overflow-hidden cursor-pointer" onClick={() => setSelectedImage({ url: mainImage, name: product.model_name })}>
+                  <div className="relative h-80 overflow-hidden cursor-pointer" onClick={() => setSelectedImage({ url: mainImage, name: product.custom_title || product.model_name })}>
                     <img 
                       src={mainImage} 
-                      alt={product.model_name}
+                      alt={product.custom_title || product.model_name}
                       className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
