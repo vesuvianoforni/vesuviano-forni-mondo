@@ -16,6 +16,7 @@ interface ReadyToShipOven {
   id: string;
   oven_id: string | null;
   model_name: string;
+  custom_title: string | null;
   diameter: number;
   coating: string | null;
   fuel_type: string | null;
