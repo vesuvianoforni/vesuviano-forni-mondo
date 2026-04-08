@@ -281,6 +281,7 @@ export default function AIChatWidget() {
     setContactFormShown(false);
     // Remember the visitor
     if (name) localStorage.setItem(VISITOR_NAME_KEY, name);
+    localStorage.setItem(VISITOR_SUBMITTED_KEY, "true");
     const thankYou = THANK_YOU[lang] || THANK_YOU.en;
     const nameMsg = name ? thankYou.replace("!", ` ${name}!`) : thankYou;
     setMessages((prev) => {
