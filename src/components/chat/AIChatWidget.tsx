@@ -265,9 +265,11 @@ export default function AIChatWidget() {
         upsertAssistant("Mi dispiace, si è verificato un errore. Riprova o contattaci al 081 19231684.");
       } finally {
         setIsLoading(false);
+        // Save conversation after AI response
+        setMessages((prev) => { saveConversation(prev); return prev; });
       }
     },
-    [lang]
+    [lang, saveConversation]
   );
 
   const handleContactSubmitted = useCallback((name: string) => {
