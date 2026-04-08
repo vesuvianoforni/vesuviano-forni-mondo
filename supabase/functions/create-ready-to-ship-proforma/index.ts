@@ -423,12 +423,12 @@ serve(async (req) => {
                 <h3 style="margin: 0 0 10px 0; color: #1f2937;">${rtsOven.model_name}</h3>
                 <p style="margin: 5px 0;"><strong>${t.diameter}:</strong> ${rtsOven.diameter} cm</p>
                 <p style="margin: 5px 0;"><strong>${t.coating}:</strong> ${rtsOven.coating || 'Standard'}</p>
-                <p style="margin: 5px 0;"><strong>${t.fuel}:</strong> ${t.woodFired}</p>
+                <p style="margin: 5px 0;"><strong>${t.fuel}:</strong> ${actualFuelType}</p>
               </div>
 
-              <div class="gas-note">
+              ${isGasConfigurable ? `<div class="gas-note">
                 ${t.gasNote}
-              </div>
+              </div>` : ''}
 
               ${datasheetUrl ? `
               <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 20px; margin: 20px 0; text-align: center;">
