@@ -98,10 +98,9 @@ const ZapperSection = () => {
             </div>
             <div className="text-center">
               <img
-                src="https://smokezapper.it/assets/logo-zapper-white-CZHj_Kxv.svg"
+                src={zapperLogo}
                 alt="ZAPPER® Logo"
-                className="h-8 w-auto mx-auto mb-4 opacity-90"
-                loading="lazy"
+                className="h-10 w-auto mx-auto mb-4"
               />
               <p className="text-stone-300 text-sm mb-4">
                 Tecnologia italiana certificata per l'abbattimento fumi. Oltre 2500 clienti soddisfatti con valutazione Trustpilot 4.8/5.
