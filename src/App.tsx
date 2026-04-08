@@ -174,6 +174,7 @@ const App = () => {
                 <Route path="utenti" element={<ERPUtenti />} />
                 <Route path="pronta-consegna" element={<ERPProntaConsegna />} />
                 <Route path="knowledge-base" element={<ERPKnowledgeBase />} />
+                <Route path="chat-logs" element={<ERPChatLogs />} />
               </Route>
 
               {/* Legacy admin redirects */}

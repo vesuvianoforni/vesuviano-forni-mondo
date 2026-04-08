@@ -48,6 +48,7 @@ const catalogItems = [
 const contentItems = [
   { title: 'Blog', url: '/erp/blog', icon: BookOpen },
   { title: 'Lead Sito Web', url: '/erp/leads', icon: TrendingUp },
+  { title: 'Chat AI Logs', url: '/erp/chat-logs', icon: MessageCircle },
   { title: 'Knowledge Base AI', url: '/erp/knowledge-base', icon: Brain },
 ];
 
