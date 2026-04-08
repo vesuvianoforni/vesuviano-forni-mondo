@@ -164,7 +164,7 @@ export default function AIChatWidget() {
   const saveConversation = useCallback(async (msgs: Msg[], contactInfo?: { name?: string; email?: string; phone?: string }) => {
     const payload: Record<string, unknown> = {
       visitor_id: visitorId,
-      messages: JSON.stringify(msgs),
+      messages: msgs,
       lang,
       page_url: window.location.pathname,
       last_message_at: new Date().toISOString(),
@@ -178,12 +178,14 @@ export default function AIChatWidget() {
 
     try {
       if (conversationIdRef.current) {
-        await supabase.from("chat_conversations").update(payload).eq("id", conversationIdRef.current);
+        const { error } = await supabase.from("chat_conversations").update(payload).eq("id", conversationIdRef.current);
+        if (error) console.error("Chat save update error:", error);
       } else {
-        const { data } = await supabase.from("chat_conversations").insert(payload as any).select("id").single();
+        const { data, error } = await supabase.from("chat_conversations").insert(payload as any).select("id").single();
+        if (error) console.error("Chat save insert error:", error);
         if (data) conversationIdRef.current = data.id;
       }
-    } catch { /* silent */ }
+    } catch (e) { console.error("Chat save exception:", e); }
   }, [visitorId, lang]);
 
   useEffect(() => {
