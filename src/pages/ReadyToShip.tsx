@@ -13,6 +13,7 @@ import { Loader2 } from 'lucide-react';
 interface ReadyToShipOven {
   id: string;
   model_name: string;
+  custom_title: string | null;
   diameter: number;
   coating: string | null;
   fuel_type: string | null;
@@ -76,10 +77,10 @@ const ReadyToShip = () => {
               const mainImage = product.images?.[0] || '/placeholder.svg';
               return (
                 <Card key={product.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border-stone-200 hover:border-vesuviano-300">
-                  <div className="relative h-80 overflow-hidden cursor-pointer" onClick={() => setSelectedImage({ url: mainImage, name: product.model_name })}>
+                  <div className="relative h-80 overflow-hidden cursor-pointer" onClick={() => setSelectedImage({ url: mainImage, name: product.custom_title || product.model_name })}>
                     <img 
                       src={mainImage} 
-                      alt={product.model_name}
+                      alt={product.custom_title || product.model_name}
                       className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -99,7 +100,7 @@ const ReadyToShip = () => {
                       </div>
                     </div>
                     <div className="absolute bottom-4 left-4 text-white pointer-events-none">
-                      <h3 className="font-playfair text-2xl font-bold mb-1">{product.model_name}</h3>
+                      <h3 className="font-playfair text-2xl font-bold mb-1">{product.custom_title || product.model_name}</h3>
                     </div>
                   </div>
                   
@@ -164,7 +165,7 @@ const ReadyToShip = () => {
       <ReadyToShipContactModal
         isOpen={!!selectedProduct}
         onClose={() => setSelectedProduct(null)}
-        productName={selectedProduct?.model_name || ''}
+        productName={selectedProduct?.custom_title || selectedProduct?.model_name || ''}
         productCode={selectedProduct?.id || ''}
         productDiameter={`${selectedProduct?.diameter || ''} cm`}
         productCoating={selectedProduct?.coating || ''}
