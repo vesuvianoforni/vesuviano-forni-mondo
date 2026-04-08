@@ -100,7 +100,7 @@ const ReadyToShip = () => {
                       </div>
                     </div>
                     <div className="absolute bottom-4 left-4 text-white pointer-events-none">
-                      <h3 className="font-playfair text-2xl font-bold mb-1">{product.model_name}</h3>
+                      <h3 className="font-playfair text-2xl font-bold mb-1">{product.custom_title || product.model_name}</h3>
                     </div>
                   </div>
                   
