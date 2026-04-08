@@ -82,7 +82,7 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string) => voi
         placeholder={labels.name}
         value={form.name}
         onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-        className="w-full text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
+        className="w-full text-base md:text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
         maxLength={100}
       />
       <input
