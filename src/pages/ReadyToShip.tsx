@@ -165,7 +165,7 @@ const ReadyToShip = () => {
       <ReadyToShipContactModal
         isOpen={!!selectedProduct}
         onClose={() => setSelectedProduct(null)}
-        productName={selectedProduct?.model_name || ''}
+        productName={selectedProduct?.custom_title || selectedProduct?.model_name || ''}
         productCode={selectedProduct?.id || ''}
         productDiameter={`${selectedProduct?.diameter || ''} cm`}
         productCoating={selectedProduct?.coating || ''}
