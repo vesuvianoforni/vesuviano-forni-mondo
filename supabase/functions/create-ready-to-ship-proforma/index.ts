@@ -281,6 +281,7 @@ serve(async (req) => {
         datasheetDesc: 'Téléchargez la fiche technique complète de votre four',
         datasheetBtn: '⬇️ Télécharger la Fiche Technique PDF',
         priceLabel: 'Prix du four Prêt à Expédier',
+        shippingIncluded: '🚚 Livraison incluse',
         depositTitle: '🔒 Réservez votre four avec seulement 5%',
         depositLabel: 'Acompte',
         depositRefund: 'L\'acompte est <strong>100% remboursable</strong> et réserve le four pendant 7 jours.',
