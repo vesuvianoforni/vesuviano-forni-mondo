@@ -50,6 +50,7 @@ const ERPOrdini = lazy(() => import("./pages/ERPOrdini"));
 const ERPUtenti = lazy(() => import("./pages/ERPUtenti"));
 const ERPProntaConsegna = lazy(() => import("./pages/ERPProntaConsegna"));
 const ERPKnowledgeBase = lazy(() => import("./pages/ERPKnowledgeBase"));
+const ERPChatLogs = lazy(() => import("./pages/ERPChatLogs"));
 
 const queryClient = new QueryClient();
 
@@ -173,6 +174,7 @@ const App = () => {
                 <Route path="utenti" element={<ERPUtenti />} />
                 <Route path="pronta-consegna" element={<ERPProntaConsegna />} />
                 <Route path="knowledge-base" element={<ERPKnowledgeBase />} />
+                <Route path="chat-logs" element={<ERPChatLogs />} />
               </Route>
 
               {/* Legacy admin redirects */}

@@ -7,6 +7,17 @@ import { supabase } from "@/integrations/supabase/client";
 const SUPABASE_URL = "https://lgueucxznbqgvhpjzurf.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndWV1Y3h6bmJxZ3ZocGp6dXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4MDE5ODEsImV4cCI6MjA2NDM3Nzk4MX0.JH9wcGcoyPKQqWT1ExYLRJyg1Jz_8iXezfmeZ9oyZzE";
 const CHAT_URL = `${SUPABASE_URL}/functions/v1/vesuviano-chat`;
+const VISITOR_ID_KEY = "vesuviano_visitor_id";
+const VISITOR_NAME_KEY = "vesuviano_visitor_name";
+
+function getOrCreateVisitorId(): string {
+  let id = localStorage.getItem(VISITOR_ID_KEY);
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem(VISITOR_ID_KEY, id);
+  }
+  return id;
+}
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -49,7 +60,15 @@ const THANK_YOU: Record<string, string> = {
   es: "¡Gracias! 🎉 Ahora respondo a tu pregunta...",
 };
 
-function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string) => void; lang: string }) {
+const WELCOME_BACK: Record<string, string> = {
+  it: "Bentornato! 👋 Come posso aiutarti oggi?",
+  en: "Welcome back! 👋 How can I help you today?",
+  fr: "Content de vous revoir ! 👋 Comment puis-je vous aider ?",
+  de: "Willkommen zurück! 👋 Wie kann ich Ihnen heute helfen?",
+  es: "¡Bienvenido de nuevo! 👋 ¿Cómo puedo ayudarte hoy?",
+};
+
+function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string, email?: string, phone?: string) => void; lang: string }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [submitting, setSubmitting] = useState(false);
   const labels = FORM_LABELS[lang] || FORM_LABELS.en;
@@ -67,9 +86,9 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string) => voi
         form_type: "ai_chat",
         notes: "Contatto generato dall'assistente AI del sito.",
       });
-      onSubmitted(form.name.split(" ")[0] || "");
+      onSubmitted(form.name.split(" ")[0] || "", form.email || undefined, form.phone || undefined);
     } catch {
-      onSubmitted(form.name.split(" ")[0] || "");
+      onSubmitted(form.name.split(" ")[0] || "", form.email || undefined, form.phone || undefined);
     } finally {
       setSubmitting(false);
     }
@@ -110,20 +129,58 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string) => voi
 
 export default function AIChatWidget() {
   const [lang] = useState(getBrowserLang);
+  const [visitorId] = useState(getOrCreateVisitorId);
   const [open, setOpen] = useState(false);
+
+  // Detect returning visitor
+  const savedName = localStorage.getItem(VISITOR_NAME_KEY);
+  const isReturning = !!savedName;
+
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: WELCOME_MESSAGES[lang] || WELCOME_MESSAGES.en },
+    {
+      role: "assistant",
+      content: isReturning
+        ? (WELCOME_BACK[lang] || WELCOME_BACK.en).replace("!", ` ${savedName}!`)
+        : (WELCOME_MESSAGES[lang] || WELCOME_MESSAGES.en),
+    },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hasAutoOpened, setHasAutoOpened] = useState(false);
   const [contactFormShown, setContactFormShown] = useState(false);
-  const [contactSubmitted, setContactSubmitted] = useState(false);
+  const [contactSubmitted, setContactSubmitted] = useState(isReturning);
   const [showWhatsAppCta, setShowWhatsAppCta] = useState(false);
   const [showPulse, setShowPulse] = useState(true);
   const [pendingMessage, setPendingMessage] = useState<string | null>(null);
+  const conversationIdRef = useRef<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Save conversation to DB
+  const saveConversation = useCallback(async (msgs: Msg[], contactInfo?: { name?: string; email?: string; phone?: string }) => {
+    const payload: Record<string, unknown> = {
+      visitor_id: visitorId,
+      messages: JSON.stringify(msgs),
+      lang,
+      page_url: window.location.pathname,
+      last_message_at: new Date().toISOString(),
+      message_count: msgs.length,
+    };
+    if (contactInfo) {
+      if (contactInfo.name) payload.visitor_name = contactInfo.name;
+      if (contactInfo.email) payload.visitor_email = contactInfo.email;
+      if (contactInfo.phone) payload.visitor_phone = contactInfo.phone;
+    }
+
+    try {
+      if (conversationIdRef.current) {
+        await supabase.from("chat_conversations").update(payload).eq("id", conversationIdRef.current);
+      } else {
+        const { data } = await supabase.from("chat_conversations").insert(payload as any).select("id").single();
+        if (data) conversationIdRef.current = data.id;
+      }
+    } catch { /* silent */ }
+  }, [visitorId, lang]);
 
   useEffect(() => {
     if (hasAutoOpened) return;
@@ -208,17 +265,25 @@ export default function AIChatWidget() {
         upsertAssistant("Mi dispiace, si è verificato un errore. Riprova o contattaci al 081 19231684.");
       } finally {
         setIsLoading(false);
+        // Save conversation after AI response
+        setMessages((prev) => { saveConversation(prev); return prev; });
       }
     },
-    [lang]
+    [lang, saveConversation]
   );
 
-  const handleContactSubmitted = useCallback((name: string) => {
+  const handleContactSubmitted = useCallback((name: string, email?: string, phone?: string) => {
     setContactSubmitted(true);
     setContactFormShown(false);
+    // Remember the visitor
+    if (name) localStorage.setItem(VISITOR_NAME_KEY, name);
     const thankYou = THANK_YOU[lang] || THANK_YOU.en;
     const nameMsg = name ? thankYou.replace("!", ` ${name}!`) : thankYou;
-    setMessages((prev) => [...prev, { role: "assistant", content: nameMsg }]);
+    setMessages((prev) => {
+      const updated = [...prev, { role: "assistant" as const, content: nameMsg }];
+      saveConversation(updated, { name, email, phone });
+      return updated;
+    });
     setShowWhatsAppCta(true);
     // Send pending message to AI after a short delay
     setPendingMessage((pending) => {
@@ -232,7 +297,7 @@ export default function AIChatWidget() {
       }
       return null;
     });
-  }, [lang, callAI]);
+  }, [lang, callAI, saveConversation]);
 
   const send = useCallback(
     (text: string) => {
@@ -241,21 +306,24 @@ export default function AIChatWidget() {
       setInput("");
 
       if (!contactSubmitted) {
-        // First message: show intro + form, don't call AI yet
         const introMsg = INTRO_MESSAGES[lang] || INTRO_MESSAGES.en;
-        setMessages((prev) => [...prev, userMsg, { role: "assistant", content: introMsg }]);
+        setMessages((prev) => {
+          const updated = [...prev, userMsg, { role: "assistant" as const, content: introMsg }];
+          saveConversation(updated);
+          return updated;
+        });
         setContactFormShown(true);
         setPendingMessage(text.trim());
       } else {
-        // Already submitted contact: call AI directly
         setMessages((prev) => {
           const updated = [...prev, userMsg];
+          saveConversation(updated);
           callAI(updated);
           return updated;
         });
       }
     },
-    [isLoading, contactSubmitted, lang, callAI]
+    [isLoading, contactSubmitted, lang, callAI, saveConversation]
   );
 
   const renderMessageContent = (msg: Msg) => {
