@@ -21,7 +21,7 @@ const reviews = [
   {
     name: "Sophie M.",
     location: "Surrey, UK",
-    text: "We chose the built-on-place option and it was the best decision. The craftsmen were incredible, and the oven is a work of art in our garden.",
+    text: "We chose the built-on-place option and it was the best decision. The craftsmen were incredible, and the oven is a work of art in our restaurant.",
     stars: 5,
   },
   {
