@@ -355,7 +355,7 @@ const BuiltOnPlace = () => {
       <section className="py-12 bg-vesuviano-500 text-center">
         <div className="container mx-auto px-4">
           <h2 className="font-playfair text-2xl md:text-3xl font-bold text-white mb-4">
-            Ready to bring Naples to your garden?
+            Ready to bring Naples to your restaurant?
           </h2>
           <p className="text-white/80 mb-6">Starting from £13,500 · Free consultation · Handcrafted in Italy</p>
           <Button
