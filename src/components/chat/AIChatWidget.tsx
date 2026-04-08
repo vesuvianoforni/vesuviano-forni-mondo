@@ -9,6 +9,7 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const CHAT_URL = `${SUPABASE_URL}/functions/v1/vesuviano-chat`;
 const VISITOR_ID_KEY = "vesuviano_visitor_id";
 const VISITOR_NAME_KEY = "vesuviano_visitor_name";
+const VISITOR_SUBMITTED_KEY = "vesuviano_contact_submitted";
 
 function getOrCreateVisitorId(): string {
   let id = localStorage.getItem(VISITOR_ID_KEY);
@@ -132,15 +133,18 @@ export default function AIChatWidget() {
   const [visitorId] = useState(getOrCreateVisitorId);
   const [open, setOpen] = useState(false);
 
-  // Detect returning visitor
+  // Detect returning visitor (even without name)
   const savedName = localStorage.getItem(VISITOR_NAME_KEY);
-  const isReturning = !!savedName;
+  const hasSubmittedBefore = localStorage.getItem(VISITOR_SUBMITTED_KEY) === "true";
+  const isReturning = hasSubmittedBefore;
 
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "assistant",
       content: isReturning
-        ? (WELCOME_BACK[lang] || WELCOME_BACK.en).replace("!", ` ${savedName}!`)
+        ? savedName
+          ? (WELCOME_BACK[lang] || WELCOME_BACK.en).replace("!", ` ${savedName}!`)
+          : (WELCOME_BACK[lang] || WELCOME_BACK.en)
         : (WELCOME_MESSAGES[lang] || WELCOME_MESSAGES.en),
     },
   ]);
@@ -277,6 +281,7 @@ export default function AIChatWidget() {
     setContactFormShown(false);
     // Remember the visitor
     if (name) localStorage.setItem(VISITOR_NAME_KEY, name);
+    localStorage.setItem(VISITOR_SUBMITTED_KEY, "true");
     const thankYou = THANK_YOU[lang] || THANK_YOU.en;
     const nameMsg = name ? thankYou.replace("!", ` ${name}!`) : thankYou;
     setMessages((prev) => {
