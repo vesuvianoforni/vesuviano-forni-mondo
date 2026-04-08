@@ -16,6 +16,7 @@ interface ReadyToShipOven {
   id: string;
   oven_id: string | null;
   model_name: string;
+  custom_title: string | null;
   diameter: number;
   coating: string | null;
   fuel_type: string | null;
@@ -136,7 +137,10 @@ const ERPProntaConsegna = () => {
                       </div>
                     )}
                   </TableCell>
-                  <TableCell className="font-medium text-amber-100">{item.model_name}</TableCell>
+                  <TableCell className="font-medium text-amber-100">
+                    {item.custom_title || item.model_name}
+                    {item.custom_title && <span className="block text-xs text-gray-400">{item.model_name}</span>}
+                  </TableCell>
                   <TableCell className="text-amber-200">{item.diameter}cm</TableCell>
                   <TableCell className="text-amber-200">{item.coating || '—'}</TableCell>
                   <TableCell className="text-amber-200">{item.fuel_type || '—'}</TableCell>
@@ -199,6 +203,7 @@ interface AddEditModalProps {
 const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps) => {
   const [form, setForm] = useState({
     model_name: '',
+    custom_title: '',
     oven_id: '' as string,
     diameter: 0,
     coating: '',
@@ -218,6 +223,7 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
     if (item) {
       setForm({
         model_name: item.model_name,
+        custom_title: item.custom_title || '',
         oven_id: item.oven_id || '',
         diameter: item.diameter,
         coating: item.coating || '',
@@ -230,7 +236,7 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
         delivery_description: (item as any).delivery_description || '',
       });
     } else {
-      setForm({ model_name: '', oven_id: '', diameter: 0, coating: '', fuel_type: '', description: '', list_price: 0, sale_price: null, images: [], delivery_price: 0, delivery_description: '' });
+      setForm({ model_name: '', custom_title: '', oven_id: '', diameter: 0, coating: '', fuel_type: '', description: '', list_price: 0, sale_price: null, images: [], delivery_price: 0, delivery_description: '' });
     }
   }, [item, open]);
 
@@ -310,6 +316,7 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
 
     const payload = {
       model_name: form.model_name,
+      custom_title: form.custom_title || null,
       oven_id: form.oven_id || null,
       diameter: form.diameter,
       coating: form.coating || null,
@@ -346,6 +353,16 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
           <DialogTitle>{isEditing ? 'Modifica Pronta Consegna' : 'Aggiungi Pronta Consegna'}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
+          {/* Custom title */}
+          <div>
+            <Label>Titolo Personalizzato <span className="text-xs text-muted-foreground">opzionale — se vuoto, usa il nome modello</span></Label>
+            <Input
+              value={form.custom_title}
+              onChange={e => setForm(prev => ({ ...prev, custom_title: e.target.value }))}
+              placeholder="es. Anastasia 120 Blu Oceano — Pronta Consegna"
+            />
+          </div>
+
           {/* Model selection */}
           <div className="grid grid-cols-2 gap-4">
             <div>
