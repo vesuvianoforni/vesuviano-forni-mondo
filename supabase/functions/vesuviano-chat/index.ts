@@ -147,12 +147,25 @@ serve(async (req) => {
 
     const liveProducts = (ovensResult.data || [])
       .map((o: any) => {
-        let line = `${o.model_name} ${o.diameter}cm - Capacità: ${o.pizza_capacity} - Prezzo base (legna): €${o.base_price_a}`;
-        if (o.gas_price_a) line += ` | Gas: €${o.gas_price_a}`;
-        if (o.electric_price_a) line += ` | Elettrico: €${o.electric_price_a}`;
-        line += ` | Consegna: ${o.delivery_time_weeks} settimane`;
-        if (o.coatings) line += ` | Rivestimenti: ${JSON.stringify(o.coatings)}`;
-        return line;
+        const lines: string[] = [];
+        const sizes = o.sizes as any[] || [];
+        if (sizes.length > 0) {
+          for (const size of sizes) {
+            const coatings = size.coatings as any[] || [];
+            for (const coat of coatings) {
+              const p = coat.prices?.listA || {};
+              let line = `${o.model_name} ${size.diameter}cm ${coat.name} - Capacità: ${size.pizza_capacity}`;
+              if (p.base) line += ` | Legna: €${p.base}`;
+              if (p.gas) line += ` | Gas: €${p.gas}`;
+              if (p.electric) line += ` | Elettrico: €${p.electric}`;
+              line += ` | Consegna: ${o.delivery_time_weeks} settimane`;
+              lines.push(line);
+            }
+          }
+        } else {
+          lines.push(`${o.model_name} ${o.diameter}cm - Capacità: ${o.pizza_capacity} - Prezzo: da configurare | Consegna: ${o.delivery_time_weeks} settimane`);
+        }
+        return lines.join("\n");
       })
       .join("\n") || "Nessun prodotto disponibile al momento.";
 
