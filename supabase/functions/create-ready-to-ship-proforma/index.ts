@@ -430,11 +430,11 @@ serve(async (req) => {
                 ${t.gasNote}
               </div>` : ''}
 
-              ${datasheetUrl ? `
+              ${resolvedDatasheetUrl ? `
               <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 20px; margin: 20px 0; text-align: center;">
                 <p style="margin: 0 0 12px 0; font-size: 15px; color: #1e40af; font-weight: 600;">${t.datasheetTitle}</p>
                 <p style="margin: 0 0 15px 0; font-size: 13px; color: #3b82f6;">${t.datasheetDesc}</p>
-                <a href="${datasheetUrl}" style="display: inline-block; background: #2563eb; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">${t.datasheetBtn}</a>
+                <a href="${resolvedDatasheetUrl}" style="display: inline-block; background: #2563eb; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">${t.datasheetBtn}</a>
               </div>
               ` : ''}
 
