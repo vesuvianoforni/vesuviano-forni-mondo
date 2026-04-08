@@ -825,5 +825,22 @@
     },
     "ctaTitle": "¿Necesitas un Quemador?",
     "ctaText": "Contáctanos para una consulta gratuita y encuentra el quemador perfecto para tu horno."
+  },
+  "zapper": {
+    "badge": "Socio Oficial",
+    "title": "Abre tu horno en el",
+    "titleHighlight": "centro de la ciudad",
+    "subtitle": "Con ZAPPER® eliminas humos, olores y partículas finas. El sistema certificado de reducción de humos que te permite operar en cualquier lugar, sin quejas y cumpliendo la normativa.",
+    "feature1Title": "Reducción de humos hasta el 95%",
+    "feature1Desc": "Tecnología certificada para reducir humos, olores y partículas finas de hollín",
+    "feature2Title": "Cumplimiento normativo garantizado",
+    "feature2Desc": "Sin quejas de vecinos, sin multas. Ideal para aperturas en el centro de la ciudad",
+    "feature3Title": "Aire limpio, siempre",
+    "feature3Desc": "Sistemas compatibles con hornos de leña, gas y eléctricos",
+    "cta": "Descubre ZAPPER®",
+    "ctaConsulting": "Solicitar consulta técnica",
+    "cardDesc": "Tecnología italiana certificada para la reducción de humos. Más de 2.500 clientes satisfechos con una valoración Trustpilot de 4.8/5.",
+    "statSmoke": "Reducción de humos",
+    "statClients": "Clientes satisfechos"
   }
 }
