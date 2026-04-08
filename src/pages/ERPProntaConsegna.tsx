@@ -223,6 +223,7 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
     if (item) {
       setForm({
         model_name: item.model_name,
+        custom_title: item.custom_title || '',
         oven_id: item.oven_id || '',
         diameter: item.diameter,
         coating: item.coating || '',
@@ -235,7 +236,7 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
         delivery_description: (item as any).delivery_description || '',
       });
     } else {
-      setForm({ model_name: '', oven_id: '', diameter: 0, coating: '', fuel_type: '', description: '', list_price: 0, sale_price: null, images: [], delivery_price: 0, delivery_description: '' });
+      setForm({ model_name: '', custom_title: '', oven_id: '', diameter: 0, coating: '', fuel_type: '', description: '', list_price: 0, sale_price: null, images: [], delivery_price: 0, delivery_description: '' });
     }
   }, [item, open]);
 
