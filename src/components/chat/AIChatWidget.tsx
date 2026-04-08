@@ -129,20 +129,58 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string) => voi
 
 export default function AIChatWidget() {
   const [lang] = useState(getBrowserLang);
+  const [visitorId] = useState(getOrCreateVisitorId);
   const [open, setOpen] = useState(false);
+
+  // Detect returning visitor
+  const savedName = localStorage.getItem(VISITOR_NAME_KEY);
+  const isReturning = !!savedName;
+
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: WELCOME_MESSAGES[lang] || WELCOME_MESSAGES.en },
+    {
+      role: "assistant",
+      content: isReturning
+        ? (WELCOME_BACK[lang] || WELCOME_BACK.en).replace("!", ` ${savedName}!`)
+        : (WELCOME_MESSAGES[lang] || WELCOME_MESSAGES.en),
+    },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hasAutoOpened, setHasAutoOpened] = useState(false);
   const [contactFormShown, setContactFormShown] = useState(false);
-  const [contactSubmitted, setContactSubmitted] = useState(false);
+  const [contactSubmitted, setContactSubmitted] = useState(isReturning);
   const [showWhatsAppCta, setShowWhatsAppCta] = useState(false);
   const [showPulse, setShowPulse] = useState(true);
   const [pendingMessage, setPendingMessage] = useState<string | null>(null);
+  const conversationIdRef = useRef<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Save conversation to DB
+  const saveConversation = useCallback(async (msgs: Msg[], contactInfo?: { name?: string; email?: string; phone?: string }) => {
+    const payload: Record<string, unknown> = {
+      visitor_id: visitorId,
+      messages: JSON.stringify(msgs),
+      lang,
+      page_url: window.location.pathname,
+      last_message_at: new Date().toISOString(),
+      message_count: msgs.length,
+    };
+    if (contactInfo) {
+      if (contactInfo.name) payload.visitor_name = contactInfo.name;
+      if (contactInfo.email) payload.visitor_email = contactInfo.email;
+      if (contactInfo.phone) payload.visitor_phone = contactInfo.phone;
+    }
+
+    try {
+      if (conversationIdRef.current) {
+        await supabase.from("chat_conversations").update(payload).eq("id", conversationIdRef.current);
+      } else {
+        const { data } = await supabase.from("chat_conversations").insert(payload as any).select("id").single();
+        if (data) conversationIdRef.current = data.id;
+      }
+    } catch { /* silent */ }
+  }, [visitorId, lang]);
 
   useEffect(() => {
     if (hasAutoOpened) return;
