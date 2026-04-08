@@ -10,46 +10,42 @@ const ZapperSection = () => {
   const features = [
     {
       icon: Wind,
-      title: "Riduzione fumi fino al 95%",
-      description: "Tecnologia certificata per abbattere fumi, odori e polveri sottili di fuliggine"
+      title: t('zapper.feature1Title'),
+      description: t('zapper.feature1Desc')
     },
     {
       icon: ShieldCheck,
-      title: "Conformità normativa garantita",
-      description: "Nessun reclamo dai vicini, nessuna multa. Ideale per aperture in centro città"
+      title: t('zapper.feature2Title'),
+      description: t('zapper.feature2Desc')
     },
     {
       icon: Leaf,
-      title: "Aria pulita, sempre",
-      description: "Sistemi compatibili con forni a legna, gas ed elettrici"
+      title: t('zapper.feature3Title'),
+      description: t('zapper.feature3Desc')
     }
   ];
 
   return (
     <section className="py-16 md:py-24 bg-gradient-to-b from-stone-900 to-stone-950 relative overflow-hidden">
-      {/* Decorative elements */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-green-500/5 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-green-500/5 rounded-full blur-3xl" />
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">
-        {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center space-x-2 bg-green-500/10 border border-green-500/20 px-4 py-2 rounded-full text-sm font-medium text-green-400 mb-6">
             <span>🤝</span>
-            <span>Partner Ufficiale</span>
+            <span>{t('zapper.badge')}</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-playfair font-bold text-white mb-4">
-            Apri il tuo forno in <span className="text-green-400">centro città</span>
+            {t('zapper.title')} <span className="text-green-400">{t('zapper.titleHighlight')}</span>
           </h2>
           <p className="text-lg sm:text-xl text-stone-400 max-w-3xl mx-auto">
-            Con ZAPPER® elimini fumi, odori e polveri sottili. Il sistema di abbattimento fumi certificato che ti permette di operare ovunque, senza reclami e nel rispetto delle normative.
+            {t('zapper.subtitle')}
           </p>
         </div>
 
-        {/* Content grid */}
         <div className="grid lg:grid-cols-2 gap-10 items-center max-w-6xl mx-auto">
-          {/* Left: Features */}
           <div className="space-y-6">
             {features.map((feature, index) => (
               <div
@@ -72,7 +68,7 @@ const ZapperSection = () => {
                 className="bg-green-500 hover:bg-green-600 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 onClick={() => window.open('https://www.smokezapper.it', '_blank')}
               >
-                Scopri ZAPPER®
+                {t('zapper.cta')}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
               <Button
@@ -81,12 +77,11 @@ const ZapperSection = () => {
                 className="border-green-500/30 text-green-400 hover:bg-green-500/10 px-8 py-6 text-lg font-semibold rounded-xl transition-all duration-300"
                 onClick={() => window.open('https://smokezapper.it/contatti', '_blank')}
               >
-                Richiedi consulenza tecnica
+                {t('zapper.ctaConsulting')}
               </Button>
             </div>
           </div>
 
-          {/* Right: Visual card */}
           <div className="bg-gradient-to-br from-stone-800 to-stone-900 rounded-3xl p-8 border border-white/10 shadow-2xl">
             <div className="flex items-center gap-3 mb-6">
               <img
@@ -103,17 +98,17 @@ const ZapperSection = () => {
                 className="h-10 w-auto mx-auto mb-4"
               />
               <p className="text-stone-300 text-sm mb-4">
-                Tecnologia italiana certificata per l'abbattimento fumi. Oltre 2500 clienti soddisfatti con valutazione Trustpilot 4.8/5.
+                {t('zapper.cardDesc')}
               </p>
               <div className="flex items-center justify-center gap-6 text-sm">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-green-400">95%</div>
-                  <div className="text-stone-500 text-xs">Riduzione fumi</div>
+                  <div className="text-stone-500 text-xs">{t('zapper.statSmoke')}</div>
                 </div>
                 <div className="w-px h-10 bg-white/10" />
                 <div className="text-center">
                   <div className="text-2xl font-bold text-green-400">2500+</div>
-                  <div className="text-stone-500 text-xs">Clienti soddisfatti</div>
+                  <div className="text-stone-500 text-xs">{t('zapper.statClients')}</div>
                 </div>
                 <div className="w-px h-10 bg-white/10" />
                 <div className="text-center">
