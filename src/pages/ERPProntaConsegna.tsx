@@ -137,7 +137,10 @@ const ERPProntaConsegna = () => {
                       </div>
                     )}
                   </TableCell>
-                  <TableCell className="font-medium text-amber-100">{item.model_name}</TableCell>
+                  <TableCell className="font-medium text-amber-100">
+                    {item.custom_title || item.model_name}
+                    {item.custom_title && <span className="block text-xs text-gray-400">{item.model_name}</span>}
+                  </TableCell>
                   <TableCell className="text-amber-200">{item.diameter}cm</TableCell>
                   <TableCell className="text-amber-200">{item.coating || '—'}</TableCell>
                   <TableCell className="text-amber-200">{item.fuel_type || '—'}</TableCell>
