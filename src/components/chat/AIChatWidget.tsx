@@ -405,17 +405,6 @@ export default function AIChatWidget() {
               <ContactForm onSubmitted={handleContactSubmitted} lang={lang} />
             )}
 
-            {showWhatsAppCta && (
-              <a
-                href="https://wa.link/a2959l"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 bg-[#25D366] text-white rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-[#1da851] transition-colors my-1 w-fit"
-              >
-                <MessageCircle className="w-4 h-4" />
-                WhatsApp
-              </a>
-            )}
 
             {isLoading && messages[messages.length - 1]?.role === "user" && (
               <div className="flex gap-2">
