@@ -788,7 +788,8 @@
       "fillAllFields": "Por favor complete todos los campos obligatorios",
       "error": "Error",
       "errorMessage": "Se produjo un error al enviar la solicitud. Por favor, inténtelo de nuevo más tarde."
-    }
+    },
+    "shippingIncluded": "Envío incluido"
   },
   "footer": {
     "rights": "Todos los derechos reservados"

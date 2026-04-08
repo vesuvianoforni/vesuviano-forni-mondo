@@ -112,12 +112,17 @@ const ReadyToShip = () => {
                       </div>
                       <div className="flex items-start">
                         <span className="font-semibold text-stone-900 min-w-[120px]">{t('readyToShip.fuel')}:</span>
-                        <span className="text-stone-700">{product.fuel_type || t('readyToShip.woodOrGas')}</span>
+                        <span className="text-stone-700">{product.fuel_type || 'N/A'}</span>
                       </div>
                       <div className="flex items-start">
                         <span className="font-semibold text-stone-900 min-w-[120px]">{t('readyToShip.coating')}:</span>
                         <span className="text-stone-700">{product.coating || 'Standard'}</span>
                       </div>
+                      {(product.sale_price || product.list_price) && (
+                        <div className="flex items-start mt-2">
+                          <span className="text-xs text-vesuviano-600 font-medium">🚚 {t('readyToShip.shippingIncluded', 'Shipping included')}</span>
+                        </div>
+                      )}
                     </div>
 
                     <ul className="space-y-2 mb-6">

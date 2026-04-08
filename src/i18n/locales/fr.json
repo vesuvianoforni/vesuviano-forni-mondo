@@ -858,7 +858,8 @@
       "fillAllFields": "Veuillez remplir tous les champs obligatoires",
       "error": "Erreur",
       "errorMessage": "Une erreur s'est produite lors de l'envoi de la demande. Veuillez réessayer plus tard."
-    }
+    },
+    "shippingIncluded": "Livraison incluse"
   },
   "configurator": {
     "loading": "Chargement...",

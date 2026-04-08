@@ -63,8 +63,10 @@ serve(async (req) => {
         const matchingSize = (configOven.sizes as any[]).find(
           (s: any) => s.diameter === rtsOven.diameter
         )
-        if (matchingSize?.datasheet_urls || matchingSize?.datasheet_url) {
-          datasheetUrl = matchingSize.datasheet_urls || { it: matchingSize.datasheet_url }
+        if (matchingSize?.datasheet_urls) {
+          datasheetUrl = matchingSize.datasheet_urls
+        } else if (matchingSize?.datasheet_url) {
+          datasheetUrl = { it: matchingSize.datasheet_url }
         }
       }
     }
@@ -82,8 +84,11 @@ serve(async (req) => {
             const matchingSize = (oven.sizes as any[] || []).find(
               (s: any) => s.diameter === rtsOven.diameter
             )
-            if (matchingSize?.datasheet_urls || matchingSize?.datasheet_url) {
-              datasheetUrl = matchingSize.datasheet_urls || { it: matchingSize.datasheet_url }
+            if (matchingSize?.datasheet_urls) {
+              datasheetUrl = matchingSize.datasheet_urls
+              break
+            } else if (matchingSize?.datasheet_url) {
+              datasheetUrl = { it: matchingSize.datasheet_url }
               break
             }
           }
@@ -91,7 +96,24 @@ serve(async (req) => {
       }
     }
 
-    console.log('Datasheet URL found:', datasheetUrl)
+    // Resolve datasheet URL by language
+    let resolvedDatasheetUrl: string | null = null
+    if (datasheetUrl && typeof datasheetUrl === 'object') {
+      resolvedDatasheetUrl = datasheetUrl[language] || datasheetUrl['en'] || datasheetUrl['it'] || null
+    } else if (typeof datasheetUrl === 'string') {
+      resolvedDatasheetUrl = datasheetUrl
+    }
+
+    // If still no datasheet, use universal catalog as fallback
+    if (!resolvedDatasheetUrl) {
+      resolvedDatasheetUrl = 'https://www.vesuvianoforni.com/lovable-uploads/vesuviobuono-scheda-tecnica.pdf'
+    }
+
+    console.log('Datasheet URL resolved:', resolvedDatasheetUrl, 'for language:', language)
+
+    // Determine the actual fuel type display
+    const actualFuelType = rtsOven.fuel_type || 'Legna'
+    const isGasConfigurable = actualFuelType.toLowerCase() === 'legna' || actualFuelType.toLowerCase() === 'wood'
 
     // Use sale_price if available, otherwise list_price
     const ovenPrice = rtsOven.sale_price || rtsOven.list_price || 0
@@ -183,6 +205,7 @@ serve(async (req) => {
         datasheetDesc: 'Scarica la scheda tecnica completa del tuo forno',
         datasheetBtn: '⬇️ Scarica Scheda Tecnica PDF',
         priceLabel: 'Prezzo forno Pronta Consegna',
+        shippingIncluded: '🚚 Spedizione inclusa',
         depositTitle: '🔒 Riserva il tuo forno con solo il 5%',
         depositLabel: 'Deposito',
         depositRefund: 'Il deposito è <strong>100% rimborsabile</strong> e riserva il forno per 7 giorni.',
@@ -220,6 +243,7 @@ serve(async (req) => {
         datasheetDesc: 'Download the complete technical datasheet for your oven',
         datasheetBtn: '⬇️ Download Datasheet PDF',
         priceLabel: 'Ready-to-Ship oven price',
+        shippingIncluded: '🚚 Shipping included',
         depositTitle: '🔒 Reserve your oven with just 5%',
         depositLabel: 'Deposit',
         depositRefund: 'The deposit is <strong>100% refundable</strong> and reserves the oven for 7 days.',
@@ -257,6 +281,7 @@ serve(async (req) => {
         datasheetDesc: 'Téléchargez la fiche technique complète de votre four',
         datasheetBtn: '⬇️ Télécharger la Fiche Technique PDF',
         priceLabel: 'Prix du four Prêt à Expédier',
+        shippingIncluded: '🚚 Livraison incluse',
         depositTitle: '🔒 Réservez votre four avec seulement 5%',
         depositLabel: 'Acompte',
         depositRefund: 'L\'acompte est <strong>100% remboursable</strong> et réserve le four pendant 7 jours.',
@@ -294,6 +319,7 @@ serve(async (req) => {
         datasheetDesc: 'Laden Sie das vollständige technische Datenblatt Ihres Ofens herunter',
         datasheetBtn: '⬇️ Datenblatt PDF herunterladen',
         priceLabel: 'Preis Sofort Lieferbar Ofen',
+        shippingIncluded: '🚚 Versand inklusive',
         depositTitle: '🔒 Reservieren Sie Ihren Ofen mit nur 5%',
         depositLabel: 'Anzahlung',
         depositRefund: 'Die Anzahlung ist <strong>100% erstattbar</strong> und reserviert den Ofen für 7 Tage.',
@@ -331,6 +357,7 @@ serve(async (req) => {
         datasheetDesc: 'Descarga la ficha técnica completa de tu horno',
         datasheetBtn: '⬇️ Descargar Ficha Técnica PDF',
         priceLabel: 'Precio horno Listo para Envío',
+        shippingIncluded: '🚚 Envío incluido',
         depositTitle: '🔒 Reserva tu horno con solo el 5%',
         depositLabel: 'Depósito',
         depositRefund: 'El depósito es <strong>100% reembolsable</strong> y reserva el horno por 7 días.',
@@ -401,18 +428,18 @@ serve(async (req) => {
                 <h3 style="margin: 0 0 10px 0; color: #1f2937;">${rtsOven.model_name}</h3>
                 <p style="margin: 5px 0;"><strong>${t.diameter}:</strong> ${rtsOven.diameter} cm</p>
                 <p style="margin: 5px 0;"><strong>${t.coating}:</strong> ${rtsOven.coating || 'Standard'}</p>
-                <p style="margin: 5px 0;"><strong>${t.fuel}:</strong> ${t.woodFired}</p>
+                <p style="margin: 5px 0;"><strong>${t.fuel}:</strong> ${actualFuelType}</p>
               </div>
 
-              <div class="gas-note">
+              ${isGasConfigurable ? `<div class="gas-note">
                 ${t.gasNote}
-              </div>
+              </div>` : ''}
 
-              ${datasheetUrl ? `
+              ${resolvedDatasheetUrl ? `
               <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 20px; margin: 20px 0; text-align: center;">
                 <p style="margin: 0 0 12px 0; font-size: 15px; color: #1e40af; font-weight: 600;">${t.datasheetTitle}</p>
                 <p style="margin: 0 0 15px 0; font-size: 13px; color: #3b82f6;">${t.datasheetDesc}</p>
-                <a href="${datasheetUrl}" style="display: inline-block; background: #2563eb; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">${t.datasheetBtn}</a>
+                <a href="${resolvedDatasheetUrl}" style="display: inline-block; background: #2563eb; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">${t.datasheetBtn}</a>
               </div>
               ` : ''}
 
@@ -420,6 +447,7 @@ serve(async (req) => {
                 <p style="margin: 0 0 5px 0; font-size: 14px; opacity: 0.9;">${t.priceLabel}</p>
                 <div class="price-amount">€${priceFormatted}</div>
                 ${rtsOven.sale_price && rtsOven.list_price > rtsOven.sale_price ? `<p style="margin: 8px 0 0 0; font-size: 14px; text-decoration: line-through; opacity: 0.7;">€${listPriceFormatted}</p>` : ''}
+                <p style="margin: 8px 0 0 0; font-size: 13px; opacity: 0.9;">${t.shippingIncluded}</p>
               </div>
 
               <div class="deposit-box">
