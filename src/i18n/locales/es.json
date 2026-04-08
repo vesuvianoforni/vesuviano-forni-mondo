@@ -789,7 +789,8 @@
       "error": "Error",
       "errorMessage": "Se produjo un error al enviar la solicitud. Por favor, inténtelo de nuevo más tarde."
     },
-    "shippingIncluded": "Envío incluido"
+    "shippingIncluded": "Envío incluido",
+    "menuTitle": "Listo para Enviar"
   },
   "footer": {
     "rights": "Todos los derechos reservados"
