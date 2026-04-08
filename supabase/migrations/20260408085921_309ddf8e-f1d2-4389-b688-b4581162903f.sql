@@ -1,0 +1,1 @@
+ALTER TABLE public.ready_to_ship_ovens ADD COLUMN custom_title text;
