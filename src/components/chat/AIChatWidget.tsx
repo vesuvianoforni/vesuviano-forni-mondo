@@ -272,12 +272,18 @@ export default function AIChatWidget() {
     [lang, saveConversation]
   );
 
-  const handleContactSubmitted = useCallback((name: string) => {
+  const handleContactSubmitted = useCallback((name: string, email?: string, phone?: string) => {
     setContactSubmitted(true);
     setContactFormShown(false);
+    // Remember the visitor
+    if (name) localStorage.setItem(VISITOR_NAME_KEY, name);
     const thankYou = THANK_YOU[lang] || THANK_YOU.en;
     const nameMsg = name ? thankYou.replace("!", ` ${name}!`) : thankYou;
-    setMessages((prev) => [...prev, { role: "assistant", content: nameMsg }]);
+    setMessages((prev) => {
+      const updated = [...prev, { role: "assistant" as const, content: nameMsg }];
+      saveConversation(updated, { name, email, phone });
+      return updated;
+    });
     setShowWhatsAppCta(true);
     // Send pending message to AI after a short delay
     setPendingMessage((pending) => {
@@ -291,7 +297,7 @@ export default function AIChatWidget() {
       }
       return null;
     });
-  }, [lang, callAI]);
+  }, [lang, callAI, saveConversation]);
 
   const send = useCallback(
     (text: string) => {
