@@ -60,6 +60,14 @@ const THANK_YOU: Record<string, string> = {
   es: "¡Gracias! 🎉 Ahora respondo a tu pregunta...",
 };
 
+const WELCOME_BACK: Record<string, string> = {
+  it: "Bentornato! 👋 Come posso aiutarti oggi?",
+  en: "Welcome back! 👋 How can I help you today?",
+  fr: "Content de vous revoir ! 👋 Comment puis-je vous aider ?",
+  de: "Willkommen zurück! 👋 Wie kann ich Ihnen heute helfen?",
+  es: "¡Bienvenido de nuevo! 👋 ¿Cómo puedo ayudarte hoy?",
+};
+
 function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string) => void; lang: string }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [submitting, setSubmitting] = useState(false);
