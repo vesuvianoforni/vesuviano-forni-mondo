@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import zapperProduct from '@/assets/zapper-product.png';
 import { Button } from "@/components/ui/button";
 import { Wind, ShieldCheck, Leaf, ArrowRight } from "lucide-react";
 
@@ -88,9 +89,9 @@ const ZapperSection = () => {
           <div className="bg-gradient-to-br from-stone-800 to-stone-900 rounded-3xl p-8 border border-white/10 shadow-2xl">
             <div className="flex items-center gap-3 mb-6">
               <img
-                src="https://smokezapper.it/assets/hero-zapper-team-guQxyLHy.webp"
-                alt="ZAPPER® Team"
-                className="w-full rounded-2xl object-cover max-h-[300px]"
+                src={zapperProduct}
+                alt="ZAPPER® Sistema Abbattimento Fumi"
+                className="w-full rounded-2xl object-contain max-h-[300px] bg-white p-4"
                 loading="lazy"
               />
             </div>
