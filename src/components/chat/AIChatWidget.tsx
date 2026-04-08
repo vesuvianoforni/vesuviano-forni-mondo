@@ -9,6 +9,7 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const CHAT_URL = `${SUPABASE_URL}/functions/v1/vesuviano-chat`;
 const VISITOR_ID_KEY = "vesuviano_visitor_id";
 const VISITOR_NAME_KEY = "vesuviano_visitor_name";
+const VISITOR_SUBMITTED_KEY = "vesuviano_contact_submitted";
 
 function getOrCreateVisitorId(): string {
   let id = localStorage.getItem(VISITOR_ID_KEY);
