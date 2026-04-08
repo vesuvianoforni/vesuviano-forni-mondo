@@ -883,7 +883,8 @@
       "fillAllFields": "Per favore compila tutti i campi richiesti",
       "error": "Errore",
       "errorMessage": "Si è verificato un errore durante l'invio della richiesta. Riprova più tardi."
-    }
+    },
+    "shippingIncluded": "Spedizione inclusa"
   },
   "footer": {
     "rights": "Tutti i diritti riservati"

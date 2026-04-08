@@ -906,7 +906,8 @@
       "fillAllFields": "Please fill in all required fields",
       "error": "Error",
       "errorMessage": "An error occurred while sending the request. Please try again later."
-    }
+    },
+    "shippingIncluded": "Shipping included"
   },
   "configurator": {
     "loading": "Loading...",
