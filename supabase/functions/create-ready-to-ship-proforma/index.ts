@@ -319,6 +319,7 @@ serve(async (req) => {
         datasheetDesc: 'Laden Sie das vollständige technische Datenblatt Ihres Ofens herunter',
         datasheetBtn: '⬇️ Datenblatt PDF herunterladen',
         priceLabel: 'Preis Sofort Lieferbar Ofen',
+        shippingIncluded: '🚚 Versand inklusive',
         depositTitle: '🔒 Reservieren Sie Ihren Ofen mit nur 5%',
         depositLabel: 'Anzahlung',
         depositRefund: 'Die Anzahlung ist <strong>100% erstattbar</strong> und reserviert den Ofen für 7 Tage.',
