@@ -316,6 +316,7 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
 
     const payload = {
       model_name: form.model_name,
+      custom_title: form.custom_title || null,
       oven_id: form.oven_id || null,
       diameter: form.diameter,
       coating: form.coating || null,
