@@ -203,6 +203,7 @@ interface AddEditModalProps {
 const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps) => {
   const [form, setForm] = useState({
     model_name: '',
+    custom_title: '',
     oven_id: '' as string,
     diameter: 0,
     coating: '',
