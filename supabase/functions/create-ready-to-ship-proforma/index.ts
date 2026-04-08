@@ -96,7 +96,24 @@ serve(async (req) => {
       }
     }
 
-    console.log('Datasheet URL found:', datasheetUrl)
+    // Resolve datasheet URL by language
+    let resolvedDatasheetUrl: string | null = null
+    if (datasheetUrl && typeof datasheetUrl === 'object') {
+      resolvedDatasheetUrl = datasheetUrl[language] || datasheetUrl['en'] || datasheetUrl['it'] || null
+    } else if (typeof datasheetUrl === 'string') {
+      resolvedDatasheetUrl = datasheetUrl
+    }
+
+    // If still no datasheet, use universal catalog as fallback
+    if (!resolvedDatasheetUrl) {
+      resolvedDatasheetUrl = 'https://www.vesuvianoforni.com/lovable-uploads/vesuviobuono-scheda-tecnica.pdf'
+    }
+
+    console.log('Datasheet URL resolved:', resolvedDatasheetUrl, 'for language:', language)
+
+    // Determine the actual fuel type display
+    const actualFuelType = rtsOven.fuel_type || 'Legna'
+    const isGasConfigurable = actualFuelType.toLowerCase() === 'legna' || actualFuelType.toLowerCase() === 'wood'
 
     // Use sale_price if available, otherwise list_price
     const ovenPrice = rtsOven.sale_price || rtsOven.list_price || 0
