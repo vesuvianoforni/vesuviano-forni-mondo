@@ -86,9 +86,9 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string, email?
         form_type: "ai_chat",
         notes: "Contatto generato dall'assistente AI del sito.",
       });
-      onSubmitted(form.name.split(" ")[0] || "");
+      onSubmitted(form.name.split(" ")[0] || "", form.email || undefined, form.phone || undefined);
     } catch {
-      onSubmitted(form.name.split(" ")[0] || "");
+      onSubmitted(form.name.split(" ")[0] || "", form.email || undefined, form.phone || undefined);
     } finally {
       setSubmitting(false);
     }
