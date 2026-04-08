@@ -447,6 +447,7 @@ serve(async (req) => {
                 <p style="margin: 0 0 5px 0; font-size: 14px; opacity: 0.9;">${t.priceLabel}</p>
                 <div class="price-amount">€${priceFormatted}</div>
                 ${rtsOven.sale_price && rtsOven.list_price > rtsOven.sale_price ? `<p style="margin: 8px 0 0 0; font-size: 14px; text-decoration: line-through; opacity: 0.7;">€${listPriceFormatted}</p>` : ''}
+                <p style="margin: 8px 0 0 0; font-size: 13px; opacity: 0.9;">${t.shippingIncluded}</p>
               </div>
 
               <div class="deposit-box">
