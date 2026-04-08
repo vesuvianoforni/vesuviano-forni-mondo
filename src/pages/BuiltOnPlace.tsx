@@ -185,7 +185,7 @@ const BuiltOnPlace = () => {
               },
               {
                 title: "Authentic Craftsmanship",
-                desc: "Neapolitan master builders use techniques passed down through generations, with real volcanic sand from Mount Vesuvius.",
+                desc: "Neapolitan master builders travel to your restaurant and use techniques passed down through generations, with real volcanic sand from Mount Vesuvius.",
                 img: "/lovable-uploads/authentic-craftsmanship.png",
               },
               {
