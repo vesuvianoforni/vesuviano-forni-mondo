@@ -306,21 +306,24 @@ export default function AIChatWidget() {
       setInput("");
 
       if (!contactSubmitted) {
-        // First message: show intro + form, don't call AI yet
         const introMsg = INTRO_MESSAGES[lang] || INTRO_MESSAGES.en;
-        setMessages((prev) => [...prev, userMsg, { role: "assistant", content: introMsg }]);
+        setMessages((prev) => {
+          const updated = [...prev, userMsg, { role: "assistant" as const, content: introMsg }];
+          saveConversation(updated);
+          return updated;
+        });
         setContactFormShown(true);
         setPendingMessage(text.trim());
       } else {
-        // Already submitted contact: call AI directly
         setMessages((prev) => {
           const updated = [...prev, userMsg];
+          saveConversation(updated);
           callAI(updated);
           return updated;
         });
       }
     },
-    [isLoading, contactSubmitted, lang, callAI]
+    [isLoading, contactSubmitted, lang, callAI, saveConversation]
   );
 
   const renderMessageContent = (msg: Msg) => {
