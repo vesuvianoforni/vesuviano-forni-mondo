@@ -106,13 +106,6 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Proof Bar */}
-        <div className="mt-3 sm:mt-4 animate-fade-in" style={{ animationDelay: '1.1s' }}>
-          <p className="text-white/70 text-[10px] sm:text-sm text-center font-medium">
-            {t('hero.proofBar')}
-          </p>
-        </div>
-
         {/* Scroll Indicator */}
         <div className="mt-4 sm:mt-8 animate-bounce" style={{ animationDelay: '1.2s' }}>
           <ArrowDown 
