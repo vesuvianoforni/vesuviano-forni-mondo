@@ -11,6 +11,7 @@ import Hero from "@/components/Hero";
 import ProductCategories from "@/components/ProductCategories";
 import LazySection from "@/components/LazySection";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import ValueProposition from "@/components/ValueProposition";
 
 // Lazy loaded below-fold components
 const CraftsmanshipSection = lazy(() => import("@/components/CraftsmanshipSection"));
@@ -75,6 +76,12 @@ const Index = () => {
       <main>
         <Hero />
         
+        <ValueProposition />
+
+        <section id="products" aria-label="Categorie prodotti">
+          <ProductCategories />
+        </section>
+
         <LazySection minHeight="300px">
           <Suspense fallback={null}>
             <section id="where-we-are" aria-label="Dove siamo">
@@ -82,10 +89,6 @@ const Index = () => {
             </section>
           </Suspense>
         </LazySection>
-
-        <section id="products" aria-label="Categorie prodotti">
-          <ProductCategories />
-        </section>
 
         {/* Ready to Ship Section */}
         <section id="ready-to-ship" aria-label="Pronta consegna" className="py-16 md:py-20 bg-gradient-to-b from-stone-100 to-stone-50">
