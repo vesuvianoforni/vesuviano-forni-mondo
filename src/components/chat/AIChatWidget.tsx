@@ -384,9 +384,7 @@ export default function AIChatWidget() {
             className="w-12 h-12 rounded-full bg-vesuviano-500 text-white shadow-lg flex items-center justify-center relative"
             aria-label="Apri assistente AI"
           >
-            {showPulse && (
-              <span className="absolute inset-0 rounded-full bg-vesuviano-500 animate-ping opacity-30" />
-            )}
+            
             <MessageCircle className="w-5 h-5" />
           </button>
         </div>
