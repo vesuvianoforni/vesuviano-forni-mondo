@@ -14,6 +14,7 @@ import {
   PackageCheck,
   Brain,
   MessageCircle,
+  Store,
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -43,6 +44,7 @@ const catalogItems = [
   { title: 'Bruciatori', url: '/erp/bruciatori', icon: Package },
   { title: 'Pronta Consegna', url: '/erp/pronta-consegna', icon: PackageCheck },
   { title: 'Listini', url: '/erp/listini', icon: DollarSign },
+  { title: 'Listino Rivenditori', url: '/erp/listino-rivenditori', icon: Store },
 ];
 
 const contentItems = [

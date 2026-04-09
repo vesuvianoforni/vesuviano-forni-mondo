@@ -52,6 +52,7 @@ const ERPUtenti = lazy(() => import("./pages/ERPUtenti"));
 const ERPProntaConsegna = lazy(() => import("./pages/ERPProntaConsegna"));
 const ERPKnowledgeBase = lazy(() => import("./pages/ERPKnowledgeBase"));
 const ERPChatLogs = lazy(() => import("./pages/ERPChatLogs"));
+const ERPListinoRivenditori = lazy(() => import("./pages/ERPListinoRivenditori"));
 
 const queryClient = new QueryClient();
 
@@ -171,6 +172,7 @@ const App = () => {
                 <Route path="forni" element={<ERPForni />} />
                 <Route path="bruciatori" element={<ERPBruciatori />} />
                 <Route path="listini" element={<ERPListini />} />
+                <Route path="listino-rivenditori" element={<ERPListinoRivenditori />} />
                 <Route path="leads" element={<ERPPlaceholder title="Lead Sito Web" description="Gestione dei lead provenienti dal sito web e dai form di contatto." />} />
                 <Route path="ordini" element={<ERPOrdini />} />
                 <Route path="utenti" element={<ERPUtenti />} />
