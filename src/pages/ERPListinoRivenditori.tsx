@@ -227,12 +227,12 @@ const ERPListinoRivenditori = () => {
       // Generate PDF using html2canvas approach with printable HTML
       const printWindow = window.open('', '_blank');
       if (!printWindow) {
-        toast.error('Popup bloccato. Consenti i popup per scaricare il PDF.');
+        toast.error(t.popupBlocked);
         setGeneratingPdf(false);
         return;
       }
 
-      const today = new Date().toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const today = new Date().toLocaleDateString(dateLocale, { day: '2-digit', month: '2-digit', year: 'numeric' });
 
       let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Listino Rivenditori - Vesuviano</title>
       <style>
