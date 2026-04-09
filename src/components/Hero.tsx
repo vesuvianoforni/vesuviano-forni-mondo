@@ -100,9 +100,9 @@ const Hero = () => {
             {t('hero.someClients')}
           </p>
           <div className="flex items-center justify-center gap-6 sm:gap-10">
-            <img src="/lovable-uploads/client-logo-cugini-pizza.png" alt="Cugini Pizza" className="h-8 sm:h-12 w-auto opacity-70 hover:opacity-100 transition-opacity brightness-0 invert" />
-            <img src="/lovable-uploads/client-logo-hands.png" alt="Client logo" className="h-8 sm:h-12 w-auto opacity-70 hover:opacity-100 transition-opacity brightness-0 invert" />
-            <img src="/lovable-uploads/client-logo-ansun.png" alt="Ansun" className="h-8 sm:h-12 w-auto opacity-70 hover:opacity-100 transition-opacity brightness-0 invert" />
+            <img src="/lovable-uploads/client-logo-cugini-pizza.png" alt="Cugini Pizza" className="h-8 sm:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity" />
+            <img src="/lovable-uploads/client-logo-hands.png" alt="Client logo" className="h-8 sm:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity" />
+            <img src="/lovable-uploads/client-logo-ansun.png" alt="Ansun" className="h-8 sm:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity" />
           </div>
         </div>
 
