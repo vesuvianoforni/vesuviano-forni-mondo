@@ -15,7 +15,7 @@ const ReadyToShipPopup = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setOpen(true);
-    }, 30000); // 30 seconds
+    }, 15000); // 15 seconds
 
     return () => clearTimeout(timer);
   }, []);
