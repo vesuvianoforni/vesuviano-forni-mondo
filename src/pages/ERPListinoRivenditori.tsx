@@ -5,7 +5,91 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { DollarSign, Save, Loader2, Search, ChevronDown, ChevronRight, Flame, Download } from 'lucide-react';
+import { DollarSign, Save, Loader2, Search, ChevronDown, ChevronRight, Flame, Download, Globe } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+
+const pdfTranslations: Record<string, Record<string, string>> = {
+  it: {
+    title: 'Listino Rivenditori',
+    subtitle: 'Prezzi riservati — Non divulgare',
+    badge: 'RISERVATO',
+    updated: 'Aggiornato al',
+    confidential: '⚠️ DOCUMENTO RISERVATO — SOLO PER RIVENDITORI AUTORIZZATI',
+    size: 'Taglia',
+    coating: 'Rivestimento',
+    base: 'Base (Legna/Gas)',
+    gas: 'Gas',
+    electric: 'Elettrico',
+    onSite: 'Sul Posto',
+    pizzas: 'pizze',
+    print: '⬇ Stampa / Salva PDF',
+    footer1: 'Vesuviano Forni Napoletani — www.vesuvianoforni.com — info@vesuvianoforni.com',
+    footer2: 'Tutti i prezzi sono IVA esclusa. Prezzi soggetti a variazione senza preavviso.',
+    success: 'Listino generato! Usa "Salva come PDF" nella finestra di stampa.',
+    noData: 'Nessun prezzo rivenditore configurato. Inserisci almeno un prezzo prima di generare il PDF.',
+    popupBlocked: 'Popup bloccato. Consenti i popup per scaricare il PDF.',
+  },
+  en: {
+    title: 'Reseller Price List',
+    subtitle: 'Reserved prices — Do not disclose',
+    badge: 'CONFIDENTIAL',
+    updated: 'Updated on',
+    confidential: '⚠️ CONFIDENTIAL DOCUMENT — AUTHORIZED RESELLERS ONLY',
+    size: 'Size',
+    coating: 'Coating',
+    base: 'Base (Wood/Gas)',
+    gas: 'Gas',
+    electric: 'Electric',
+    onSite: 'On Site',
+    pizzas: 'pizzas',
+    print: '⬇ Print / Save PDF',
+    footer1: 'Vesuviano Neapolitan Ovens — www.vesuvianoforni.com — info@vesuvianoforni.com',
+    footer2: 'All prices are VAT excluded. Prices subject to change without notice.',
+    success: 'Price list generated! Use "Save as PDF" in the print dialog.',
+    noData: 'No reseller prices configured. Enter at least one price before generating the PDF.',
+    popupBlocked: 'Popup blocked. Allow popups to download the PDF.',
+  },
+  fr: {
+    title: 'Tarif Revendeurs',
+    subtitle: 'Prix réservés — Ne pas divulguer',
+    badge: 'CONFIDENTIEL',
+    updated: 'Mis à jour le',
+    confidential: '⚠️ DOCUMENT CONFIDENTIEL — REVENDEURS AUTORISÉS UNIQUEMENT',
+    size: 'Taille',
+    coating: 'Revêtement',
+    base: 'Base (Bois/Gaz)',
+    gas: 'Gaz',
+    electric: 'Électrique',
+    onSite: 'Sur Place',
+    pizzas: 'pizzas',
+    print: '⬇ Imprimer / Enregistrer PDF',
+    footer1: 'Vesuviano Fours Napolitains — www.vesuvianoforni.com — info@vesuvianoforni.com',
+    footer2: 'Tous les prix sont hors TVA. Prix susceptibles de modification sans préavis.',
+    success: 'Tarif généré ! Utilisez "Enregistrer en PDF" dans la fenêtre d\'impression.',
+    noData: 'Aucun prix revendeur configuré. Saisissez au moins un prix avant de générer le PDF.',
+    popupBlocked: 'Popup bloqué. Autorisez les popups pour télécharger le PDF.',
+  },
+  es: {
+    title: 'Lista de Precios Distribuidores',
+    subtitle: 'Precios reservados — No divulgar',
+    badge: 'CONFIDENCIAL',
+    updated: 'Actualizado el',
+    confidential: '⚠️ DOCUMENTO CONFIDENCIAL — SOLO PARA DISTRIBUIDORES AUTORIZADOS',
+    size: 'Tamaño',
+    coating: 'Revestimiento',
+    base: 'Base (Leña/Gas)',
+    gas: 'Gas',
+    electric: 'Eléctrico',
+    onSite: 'En Sitio',
+    pizzas: 'pizzas',
+    print: '⬇ Imprimir / Guardar PDF',
+    footer1: 'Vesuviano Hornos Napolitanos — www.vesuvianoforni.com — info@vesuvianoforni.com',
+    footer2: 'Todos los precios son sin IVA. Precios sujetos a cambio sin previo aviso.',
+    success: '¡Lista generada! Usa "Guardar como PDF" en la ventana de impresión.',
+    noData: 'No hay precios de distribuidor configurados. Ingrese al menos un precio antes de generar el PDF.',
+    popupBlocked: 'Popup bloqueado. Permite los popups para descargar el PDF.',
+  },
+};
 
 const ERPListinoRivenditori = () => {
   const [ovens, setOvens] = useState<any[]>([]);
@@ -92,7 +176,9 @@ const ERPListinoRivenditori = () => {
     return o.model_name?.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  const generatePDF = useCallback(async () => {
+  const generatePDF = useCallback(async (lang: string = 'it') => {
+    const t = pdfTranslations[lang] || pdfTranslations.it;
+    const dateLocale = lang === 'it' ? 'it-IT' : lang === 'fr' ? 'fr-FR' : lang === 'es' ? 'es-ES' : 'en-GB';
     setGeneratingPdf(true);
     try {
       // Build data for PDF
@@ -133,7 +219,7 @@ const ERPListinoRivenditori = () => {
       }
 
       if (pdfData.length === 0) {
-        toast.error('Nessun prezzo rivenditore configurato. Inserisci almeno un prezzo prima di generare il PDF.');
+        toast.error(t.noData);
         setGeneratingPdf(false);
         return;
       }
@@ -141,14 +227,14 @@ const ERPListinoRivenditori = () => {
       // Generate PDF using html2canvas approach with printable HTML
       const printWindow = window.open('', '_blank');
       if (!printWindow) {
-        toast.error('Popup bloccato. Consenti i popup per scaricare il PDF.');
+        toast.error(t.popupBlocked);
         setGeneratingPdf(false);
         return;
       }
 
-      const today = new Date().toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const today = new Date().toLocaleDateString(dateLocale, { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-      let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Listino Rivenditori - Vesuviano</title>
+      let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${t.title} - Vesuviano</title>
       <style>
         @media print { @page { size: A4 landscape; margin: 15mm; } }
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -173,18 +259,18 @@ const ERPListinoRivenditori = () => {
         .no-print { margin-bottom: 20px; }
         @media print { .no-print { display: none; } }
       </style></head><body>
-      <div class="no-print"><button onclick="window.print()" style="padding:10px 24px;background:#d97706;color:white;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;">⬇ Stampa / Salva PDF</button></div>
+      <div class="no-print"><button onclick="window.print()" style="padding:10px 24px;background:#d97706;color:white;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;">${t.print}</button></div>
       <div class="header">
         <div>
-          <h1>🔥 Vesuviano — Listino Rivenditori</h1>
-          <p style="color:#666;font-size:13px;margin-top:4px;">Prezzi riservati — Non divulgare</p>
+          <h1>🔥 Vesuviano — ${t.title}</h1>
+          <p style="color:#666;font-size:13px;margin-top:4px;">${t.subtitle}</p>
         </div>
         <div style="text-align:right;">
-          <span class="badge">RISERVATO</span>
-          <p class="date" style="margin-top:6px;">Aggiornato al ${today}</p>
+          <span class="badge">${t.badge}</span>
+          <p class="date" style="margin-top:6px;">${t.updated} ${today}</p>
         </div>
       </div>
-      <p class="confidential">⚠️ DOCUMENTO RISERVATO — SOLO PER RIVENDITORI AUTORIZZATI</p>`;
+      <p class="confidential">${t.confidential}</p>`;
 
       for (const oven of pdfData) {
         html += `<div class="model">
@@ -194,24 +280,24 @@ const ERPListinoRivenditori = () => {
           </div>
           <table>
             <thead><tr>
-              <th>Taglia</th>
-              <th>Rivestimento</th>
-              <th>Base (Legna/Gas)</th>
-              <th>Gas</th>
-              <th>Elettrico</th>
-              <th>Sul Posto</th>
+              <th>${t.size}</th>
+              <th>${t.coating}</th>
+              <th>${t.base}</th>
+              <th>${t.gas}</th>
+              <th>${t.electric}</th>
+              <th>${t.onSite}</th>
             </tr></thead><tbody>`;
 
         for (const size of oven.sizes) {
           for (let i = 0; i < size.coatings.length; i++) {
             const c = size.coatings[i];
             html += `<tr>
-              ${i === 0 ? `<td rowspan="${size.coatings.length}" style="font-weight:600;vertical-align:top;">Ø ${size.diameter}cm<br><span style="font-weight:400;font-size:11px;color:#666;">${size.pizza_capacity} pizze</span></td>` : ''}
+              ${i === 0 ? `<td rowspan="${size.coatings.length}" style="font-weight:600;vertical-align:top;">Ø ${size.diameter}cm<br><span style="font-weight:400;font-size:11px;color:#666;">${size.pizza_capacity} ${t.pizzas}</span></td>` : ''}
               <td>${c.name}</td>
-              <td>${c.base ? `€${Number(c.base).toLocaleString('it-IT')}` : '—'}</td>
-              <td>${c.gas ? `€${Number(c.gas).toLocaleString('it-IT')}` : '—'}</td>
-              <td>${c.electric ? `€${Number(c.electric).toLocaleString('it-IT')}` : '—'}</td>
-              <td>${c.onSite ? `€${Number(c.onSite).toLocaleString('it-IT')}` : '—'}</td>
+              <td>${c.base ? `€${Number(c.base).toLocaleString(dateLocale)}` : '—'}</td>
+              <td>${c.gas ? `€${Number(c.gas).toLocaleString(dateLocale)}` : '—'}</td>
+              <td>${c.electric ? `€${Number(c.electric).toLocaleString(dateLocale)}` : '—'}</td>
+              <td>${c.onSite ? `€${Number(c.onSite).toLocaleString(dateLocale)}` : '—'}</td>
             </tr>`;
           }
         }
@@ -220,13 +306,13 @@ const ERPListinoRivenditori = () => {
       }
 
       html += `<div class="footer">
-        <p>Vesuviano Forni Napoletani — www.vesuvianoforni.com — info@vesuvianoforni.com</p>
-        <p>Tutti i prezzi sono IVA esclusa. Prezzi soggetti a variazione senza preavviso.</p>
+        <p>${t.footer1}</p>
+        <p>${t.footer2}</p>
       </div></body></html>`;
 
       printWindow.document.write(html);
       printWindow.document.close();
-      toast.success('Listino generato! Usa "Salva come PDF" nella finestra di stampa.');
+      toast.success(t.success);
     } catch (e: any) {
       toast.error('Errore generazione: ' + e.message);
     }
@@ -249,14 +335,21 @@ const ERPListinoRivenditori = () => {
           <h1 className="text-2xl font-bold text-amber-100">Listino Rivenditori</h1>
           <Badge variant="secondary" className="ml-2 bg-amber-700/20 text-amber-300">Riservato</Badge>
         </div>
-        <Button
-          onClick={generatePDF}
-          disabled={generatingPdf}
-          className="bg-amber-600 hover:bg-amber-700"
-        >
-          {generatingPdf ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
-          Scarica PDF
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button disabled={generatingPdf} className="bg-amber-600 hover:bg-amber-700">
+              {generatingPdf ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
+              Scarica PDF
+              <Globe className="w-4 h-4 ml-2" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => generatePDF('it')}>🇮🇹 Italiano</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => generatePDF('en')}>🇬🇧 English</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => generatePDF('fr')}>🇫🇷 Français</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => generatePDF('es')}>🇪🇸 Español</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="flex items-center gap-4 mb-4">
