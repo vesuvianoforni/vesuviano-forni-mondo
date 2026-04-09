@@ -68,6 +68,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ClarityPageView />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<LanguageRedirect />} />
