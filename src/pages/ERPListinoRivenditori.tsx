@@ -219,7 +219,7 @@ const ERPListinoRivenditori = () => {
       }
 
       if (pdfData.length === 0) {
-        toast.error('Nessun prezzo rivenditore configurato. Inserisci almeno un prezzo prima di generare il PDF.');
+        toast.error(t.noData);
         setGeneratingPdf(false);
         return;
       }
