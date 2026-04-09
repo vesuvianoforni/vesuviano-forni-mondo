@@ -77,9 +77,8 @@ const Hero = () => {
           </Button>
           <Button
             onClick={scrollToConsultation}
-            variant="outline"
             size="lg"
-            className="border-white/40 text-white hover:bg-white/15 px-6 py-5 sm:py-6 text-sm sm:text-base font-medium transition-all duration-300 w-full sm:w-auto backdrop-blur-sm"
+            className="bg-transparent border-2 border-white/50 text-white hover:bg-white/20 px-6 py-5 sm:py-6 text-sm sm:text-base font-medium transition-all duration-300 w-full sm:w-auto backdrop-blur-sm"
           >
             <Phone className="w-4 h-4 mr-2" />
             {t('hero.freeConsultation')}
