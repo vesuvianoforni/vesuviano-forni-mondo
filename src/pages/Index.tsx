@@ -14,7 +14,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import ValueProposition from "@/components/ValueProposition";
 
 // Lazy loaded below-fold components
-const CraftsmanshipSection = lazy(() => import("@/components/CraftsmanshipSection"));
+const AboutUs = lazy(() => import("@/components/AboutUs"));
 const Services = lazy(() => import("@/components/Services"));
 const Rivestimenti = lazy(() => import("@/components/Rivestimenti"));
 const ClientsMap = lazy(() => import("@/components/ClientsMap"));
@@ -24,7 +24,7 @@ const ConsultationForm = lazy(() => import("@/components/ConsultationForm"));
 const FAQSection = lazy(() => import("@/components/FAQSection"));
 const HomeBlogSection = lazy(() => import("@/components/HomeBlogSection"));
 const ZapperSection = lazy(() => import("@/components/ZapperSection"));
-const WhereWeAre = lazy(() => import("@/components/WhereWeAre"));
+
 const AIChatWidget = lazy(() => import("@/components/chat/AIChatWidget"));
 
 const ReadyToShipPopup = lazy(() => import("@/components/ReadyToShipPopup"));
@@ -82,13 +82,6 @@ const Index = () => {
           <ProductCategories />
         </section>
 
-        <LazySection minHeight="300px">
-          <Suspense fallback={null}>
-            <section id="where-we-are" aria-label="Dove siamo">
-              <WhereWeAre />
-            </section>
-          </Suspense>
-        </LazySection>
 
         {/* Ready to Ship Section */}
         <section id="ready-to-ship" aria-label="Pronta consegna" className="py-16 md:py-20 bg-gradient-to-b from-stone-100 to-stone-50">
@@ -230,8 +223,8 @@ const Index = () => {
         
         <LazySection minHeight="400px">
           <Suspense fallback={null}>
-            <section id="craftsmanship" aria-label="Artigianato napoletano">
-              <CraftsmanshipSection />
+            <section id="about-us" aria-label="Chi siamo">
+              <AboutUs />
             </section>
           </Suspense>
         </LazySection>
