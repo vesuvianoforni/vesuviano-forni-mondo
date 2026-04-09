@@ -94,6 +94,18 @@ const Hero = () => {
           </Carousel>
         </div>
         
+        {/* Client Logos */}
+        <div className="mt-4 sm:mt-6 animate-fade-in" style={{ animationDelay: '1s' }}>
+          <p className="text-white/50 text-[10px] sm:text-xs text-center font-medium uppercase tracking-widest mb-3">
+            {t('hero.someClients')}
+          </p>
+          <div className="flex items-center justify-center gap-6 sm:gap-10">
+            <img src="/lovable-uploads/client-logo-cugini-pizza.png" alt="Cugini Pizza" className="h-8 sm:h-12 w-auto opacity-70 hover:opacity-100 transition-opacity brightness-0 invert" />
+            <img src="/lovable-uploads/client-logo-hands.png" alt="Client logo" className="h-8 sm:h-12 w-auto opacity-70 hover:opacity-100 transition-opacity brightness-0 invert" />
+            <img src="/lovable-uploads/client-logo-ansun.png" alt="Ansun" className="h-8 sm:h-12 w-auto opacity-70 hover:opacity-100 transition-opacity brightness-0 invert" />
+          </div>
+        </div>
+
         {/* Proof Bar */}
         <div className="mt-3 sm:mt-4 animate-fade-in" style={{ animationDelay: '1.1s' }}>
           <p className="text-white/70 text-[10px] sm:text-sm text-center font-medium">
