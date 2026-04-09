@@ -14,7 +14,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import ValueProposition from "@/components/ValueProposition";
 
 // Lazy loaded below-fold components
-const AboutUs = lazy(() => import("@/components/AboutUs"));
+
 const Services = lazy(() => import("@/components/Services"));
 const Rivestimenti = lazy(() => import("@/components/Rivestimenti"));
 const ClientsMap = lazy(() => import("@/components/ClientsMap"));
@@ -221,13 +221,6 @@ const Index = () => {
           </div>
         </section>
         
-        <LazySection minHeight="400px">
-          <Suspense fallback={null}>
-            <section id="about-us" aria-label="Chi siamo">
-              <AboutUs />
-            </section>
-          </Suspense>
-        </LazySection>
         
         <LazySection minHeight="400px">
           <Suspense fallback={null}>

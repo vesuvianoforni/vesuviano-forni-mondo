@@ -16,6 +16,7 @@ const LocalizedGasOven = lazy(() => import("./pages/LocalizedGasOven"));
 const LocalizedElectricOven = lazy(() => import("./pages/LocalizedElectricOven"));
 const LocalizedRotatingOven = lazy(() => import("./pages/LocalizedRotatingOven"));
 const LocalizedVesuvioBuono = lazy(() => import("./pages/LocalizedVesuvioBuono"));
+const LocalizedAboutUs = lazy(() => import("./pages/LocalizedAboutUs"));
 const LocalizedReadyToShip = lazy(() => import("./pages/LocalizedReadyToShip"));
 const LocalizedBurners = lazy(() => import("./pages/LocalizedBurners"));
 const LocalizedUsefulInfo = lazy(() => import("./pages/LocalizedUsefulInfo"));
@@ -89,6 +90,7 @@ const App = () => {
               <Route path="/it/blog/:slug" element={<LocalizedBlogPost lang="it" />} />
               <Route path="/it/thank-you-it" element={<ThankYou lang="it" />} />
               <Route path="/it/informazioni-utili" element={<LocalizedUsefulInfo lang="it" />} />
+              <Route path="/it/chi-siamo" element={<LocalizedAboutUs lang="it" />} />
               
               {/* English Routes */}
               <Route path="/en" element={<LocalizedIndex lang="en" />} />
@@ -104,6 +106,7 @@ const App = () => {
               <Route path="/en/blog/:slug" element={<LocalizedBlogPost lang="en" />} />
               <Route path="/en/thank-you-en" element={<ThankYou lang="en" />} />
               <Route path="/en/useful-information" element={<LocalizedUsefulInfo lang="en" />} />
+              <Route path="/en/about-us" element={<LocalizedAboutUs lang="en" />} />
               
               {/* French Routes */}
               <Route path="/fr" element={<LocalizedIndex lang="fr" />} />
@@ -119,6 +122,7 @@ const App = () => {
               <Route path="/fr/blog/:slug" element={<LocalizedBlogPost lang="fr" />} />
               <Route path="/fr/thank-you-fr" element={<ThankYou lang="fr" />} />
               <Route path="/fr/informations-utiles" element={<LocalizedUsefulInfo lang="fr" />} />
+              <Route path="/fr/qui-sommes-nous" element={<LocalizedAboutUs lang="fr" />} />
               
               {/* Spanish Routes */}
               <Route path="/es" element={<LocalizedIndex lang="es" />} />
@@ -134,6 +138,7 @@ const App = () => {
               <Route path="/es/blog/:slug" element={<LocalizedBlogPost lang="es" />} />
               <Route path="/es/thank-you-es" element={<ThankYou lang="es" />} />
               <Route path="/es/informacion-util" element={<LocalizedUsefulInfo lang="es" />} />
+              <Route path="/es/quienes-somos" element={<LocalizedAboutUs lang="es" />} />
               
               {/* German Routes */}
               <Route path="/de" element={<LocalizedIndex lang="de" />} />
@@ -149,6 +154,7 @@ const App = () => {
               <Route path="/de/blog/:slug" element={<LocalizedBlogPost lang="de" />} />
               <Route path="/de/thank-you-de" element={<ThankYou lang="de" />} />
               <Route path="/de/nuetzliche-informationen" element={<LocalizedUsefulInfo lang="de" />} />
+              <Route path="/de/ueber-uns" element={<LocalizedAboutUs lang="de" />} />
               
               {/* Public pages */}
               <Route path="/book-a-slot-call" element={<BookAppointment />} />
