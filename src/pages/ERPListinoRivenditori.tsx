@@ -176,7 +176,9 @@ const ERPListinoRivenditori = () => {
     return o.model_name?.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  const generatePDF = useCallback(async () => {
+  const generatePDF = useCallback(async (lang: string = 'it') => {
+    const t = pdfTranslations[lang] || pdfTranslations.it;
+    const dateLocale = lang === 'it' ? 'it-IT' : lang === 'fr' ? 'fr-FR' : lang === 'es' ? 'es-ES' : 'en-GB';
     setGeneratingPdf(true);
     try {
       // Build data for PDF
