@@ -66,24 +66,6 @@ const Hero = () => {
           {t('hero.description')}
         </p>
 
-        {/* CTA Buttons - visible above the fold on mobile */}
-        <div className="flex flex-col sm:flex-row items-center gap-3 justify-center mb-5 sm:mb-8 animate-scale-in px-2" style={{ animationDelay: '0.7s' }}>
-          <Button
-            onClick={scrollToProducts}
-            size="lg"
-            className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-6 py-5 sm:py-6 text-sm sm:text-base font-bold transition-all duration-300 hover:scale-105 shadow-xl w-full sm:w-auto"
-          >
-            {t('hero.discoverOvens')}
-          </Button>
-          <Button
-            onClick={scrollToConsultation}
-            size="lg"
-            className="bg-transparent border-2 border-white/50 text-white hover:bg-white/20 px-6 py-5 sm:py-6 text-sm sm:text-base font-medium transition-all duration-300 w-full sm:w-auto backdrop-blur-sm"
-          >
-            <Phone className="w-4 h-4 mr-2" />
-            {t('hero.freeConsultation')}
-          </Button>
-        </div>
 
         {/* Customer Reviews Carousel */}
         <div className="w-full max-w-xl mx-auto px-8 sm:px-12 animate-fade-in" style={{ animationDelay: '0.9s' }}>
