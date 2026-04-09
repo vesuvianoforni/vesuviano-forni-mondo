@@ -34,6 +34,7 @@ const LocalizedBlogList = lazy(() => import("./pages/LocalizedBlogList"));
 const LocalizedBlogPost = lazy(() => import("./pages/LocalizedBlogPost"));
 const ProformaPage = lazy(() => import("./pages/ProformaPage"));
 import BuiltOnPlace from "./pages/BuiltOnPlace";
+import ClarityPageView from "./components/ClarityPageView";
 
 // ERP - lazy loaded
 const ERPLayout = lazy(() => import("./pages/ERPLayout"));
@@ -67,6 +68,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ClarityPageView />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<LanguageRedirect />} />
