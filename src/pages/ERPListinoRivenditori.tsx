@@ -335,14 +335,21 @@ const ERPListinoRivenditori = () => {
           <h1 className="text-2xl font-bold text-amber-100">Listino Rivenditori</h1>
           <Badge variant="secondary" className="ml-2 bg-amber-700/20 text-amber-300">Riservato</Badge>
         </div>
-        <Button
-          onClick={generatePDF}
-          disabled={generatingPdf}
-          className="bg-amber-600 hover:bg-amber-700"
-        >
-          {generatingPdf ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
-          Scarica PDF
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button disabled={generatingPdf} className="bg-amber-600 hover:bg-amber-700">
+              {generatingPdf ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
+              Scarica PDF
+              <Globe className="w-4 h-4 ml-2" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => generatePDF('it')}>🇮🇹 Italiano</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => generatePDF('en')}>🇬🇧 English</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => generatePDF('fr')}>🇫🇷 Français</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => generatePDF('es')}>🇪🇸 Español</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="flex items-center gap-4 mb-4">
