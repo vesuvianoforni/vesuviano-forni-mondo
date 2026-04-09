@@ -197,6 +197,8 @@ export default function AIChatWidget() {
       if (isMobile) {
         setShowMobileBubble(true);
         setHasAutoOpened(true);
+        // Auto-hide bubble after 5 seconds
+        setTimeout(() => setShowMobileBubble(false), 5000);
       } else {
         setOpen(true);
         setHasAutoOpened(true);
