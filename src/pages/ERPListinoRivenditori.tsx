@@ -5,7 +5,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { DollarSign, Save, Loader2, Search, ChevronDown, ChevronRight, Flame, Download } from 'lucide-react';
+import { DollarSign, Save, Loader2, Search, ChevronDown, ChevronRight, Flame, Download, Globe } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const ERPListinoRivenditori = () => {
   const [ovens, setOvens] = useState<any[]>([]);
