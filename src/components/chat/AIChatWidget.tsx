@@ -352,11 +352,12 @@ export default function AIChatWidget() {
     return msg.content;
   };
 
-  return (
+    return (
     <>
+      {/* Desktop FAB */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-vesuviano-500 text-white shadow-lg hover:shadow-xl transition-all flex items-center justify-center hover:scale-105 hidden md:flex"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-vesuviano-500 text-white shadow-lg hover:shadow-xl transition-all items-center justify-center hover:scale-105 hidden md:flex"
         aria-label="Apri assistente AI"
       >
         {showPulse && !open && (
@@ -365,111 +366,180 @@ export default function AIChatWidget() {
         {open ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
       </button>
 
-      <div className="fixed bottom-20 right-4 z-50 flex items-center gap-2 md:hidden">
-        {showMobileBubble && !open && (
+      {/* Mobile FAB + bubble (hidden when chat is open) */}
+      {!open && (
+        <div className="fixed bottom-5 right-4 z-50 flex items-center gap-2 md:hidden">
+          {showMobileBubble && (
+            <button
+              onClick={() => { setShowMobileBubble(false); setOpen(true); }}
+              className="bg-white text-vesuviano-700 text-sm font-medium px-4 py-2 rounded-full shadow-lg border border-stone-200 animate-fade-in whitespace-nowrap"
+            >
+              💬 {lang === 'it' ? 'Chiedimi tutto!' : lang === 'fr' ? 'Demandez-moi tout !' : lang === 'de' ? 'Frag mich alles!' : lang === 'es' ? '¡Pregúntame todo!' : 'Ask me anything!'}
+            </button>
+          )}
           <button
             onClick={() => { setShowMobileBubble(false); setOpen(true); }}
-            className="bg-white text-vesuviano-700 text-sm font-medium px-4 py-2 rounded-full shadow-lg border border-stone-200 animate-fade-in whitespace-nowrap"
+            className="w-12 h-12 rounded-full bg-vesuviano-500 text-white shadow-lg flex items-center justify-center relative"
+            aria-label="Apri assistente AI"
           >
-            💬 {lang === 'it' ? 'Chiedimi tutto!' : lang === 'fr' ? 'Demandez-moi tout !' : lang === 'de' ? 'Frag mich alles!' : lang === 'es' ? '¡Pregúntame todo!' : 'Ask me anything!'}
+            {showPulse && (
+              <span className="absolute inset-0 rounded-full bg-vesuviano-500 animate-ping opacity-30" />
+            )}
+            <MessageCircle className="w-5 h-5" />
           </button>
-        )}
-        <button
-          onClick={() => { setShowMobileBubble(false); setOpen((o) => !o); }}
-          className="w-12 h-12 rounded-full bg-vesuviano-500 text-white shadow-lg flex items-center justify-center"
-          aria-label="Apri assistente AI"
-        >
-          {showPulse && !open && (
-            <span className="absolute inset-0 rounded-full bg-vesuviano-500 animate-ping opacity-30" />
-          )}
-          {open ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
-        </button>
-      </div>
+        </div>
+      )}
 
+      {/* Chat panel */}
       {open && (
-        <div
-          className="fixed bottom-24 right-4 md:bottom-24 md:right-6 z-50 w-[calc(100vw-2rem)] max-w-md bg-white border border-stone-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden transform-gpu"
-          style={{ height: "min(500px, calc(100dvh - 10rem))" }}
-        >
-          <div className="bg-vesuviano-500 text-white px-4 py-3 flex items-center gap-3">
-            <img src="/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano" className="h-6 w-auto" />
-            <div>
-              <p className="font-semibold text-sm">Assistente Vesuviano</p>
-              <p className="text-xs opacity-80">AI Oven Consultant</p>
+        <>
+          {/* Mobile: full-screen overlay */}
+          <div
+            className="fixed inset-0 z-50 bg-white flex flex-col md:hidden"
+            style={{ height: '100dvh' }}
+          >
+            <div className="bg-vesuviano-500 text-white px-4 py-3 flex items-center gap-3 flex-shrink-0">
+              <img src="/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano" className="h-6 w-auto" />
+              <div>
+                <p className="font-semibold text-sm">Assistente Vesuviano</p>
+                <p className="text-xs opacity-80">AI Oven Consultant</p>
+              </div>
+              <button onClick={() => setOpen(false)} className="ml-auto hover:opacity-70 p-2 -mr-2">
+                <X className="w-6 h-6" />
+              </button>
             </div>
-            <button onClick={() => setOpen(false)} className="ml-auto hover:opacity-70">
-              <X className="w-5 h-5" />
-            </button>
-          </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {messages.map((msg, i) => (
-              <div key={i} className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                {msg.role === "assistant" && (
-                  <div className="w-7 h-7 rounded-full bg-vesuviano-100 flex items-center justify-center flex-shrink-0 mt-1">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              {messages.map((msg, i) => (
+                <div key={i} className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                  {msg.role === "assistant" && (
+                    <div className="w-7 h-7 rounded-full bg-vesuviano-100 flex items-center justify-center flex-shrink-0 mt-1">
+                      <Bot className="w-4 h-4 text-vesuviano-600" />
+                    </div>
+                  )}
+                  <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${msg.role === "user" ? "bg-vesuviano-500 text-white rounded-br-md" : "bg-stone-100 text-stone-800 rounded-bl-md"}`}>
+                    {renderMessageContent(msg)}
+                  </div>
+                  {msg.role === "user" && (
+                    <div className="w-7 h-7 rounded-full bg-vesuviano-100 flex items-center justify-center flex-shrink-0 mt-1">
+                      <User className="w-4 h-4 text-vesuviano-600" />
+                    </div>
+                  )}
+                </div>
+              ))}
+              {contactFormShown && !contactSubmitted && (
+                <ContactForm onSubmitted={handleContactSubmitted} lang={lang} />
+              )}
+              {isLoading && messages[messages.length - 1]?.role === "user" && (
+                <div className="flex gap-2">
+                  <div className="w-7 h-7 rounded-full bg-vesuviano-100 flex items-center justify-center flex-shrink-0">
                     <Bot className="w-4 h-4 text-vesuviano-600" />
                   </div>
-                )}
-                <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${msg.role === "user" ? "bg-vesuviano-500 text-white rounded-br-md" : "bg-stone-100 text-stone-800 rounded-bl-md"}`}>
-                  {renderMessageContent(msg)}
-                </div>
-                {msg.role === "user" && (
-                  <div className="w-7 h-7 rounded-full bg-vesuviano-100 flex items-center justify-center flex-shrink-0 mt-1">
-                    <User className="w-4 h-4 text-vesuviano-600" />
-                  </div>
-                )}
-              </div>
-            ))}
-
-            {contactFormShown && !contactSubmitted && (
-              <ContactForm onSubmitted={handleContactSubmitted} lang={lang} />
-            )}
-
-
-            {isLoading && messages[messages.length - 1]?.role === "user" && (
-              <div className="flex gap-2">
-                <div className="w-7 h-7 rounded-full bg-vesuviano-100 flex items-center justify-center flex-shrink-0">
-                  <Bot className="w-4 h-4 text-vesuviano-600" />
-                </div>
-                <div className="bg-stone-100 rounded-2xl rounded-bl-md px-4 py-3">
-                  <div className="flex gap-1">
-                    <span className="w-2 h-2 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <span className="w-2 h-2 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <span className="w-2 h-2 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                  <div className="bg-stone-100 rounded-2xl rounded-bl-md px-4 py-3">
+                    <div className="flex gap-1">
+                      <span className="w-2 h-2 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <span className="w-2 h-2 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <span className="w-2 h-2 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-            <div ref={bottomRef} />
+              )}
+              <div ref={bottomRef} />
+            </div>
+
+            <form
+              onSubmit={(e) => { e.preventDefault(); send(input); }}
+              className="border-t border-stone-200 px-3 py-2 flex gap-2 flex-shrink-0"
+              style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
+            >
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder={lang === "it" ? "Scrivi il tuo messaggio..." : lang === "fr" ? "Écrivez votre message..." : lang === "de" ? "Schreiben Sie Ihre Nachricht..." : lang === "es" ? "Escribe tu mensaje..." : "Type your message..."}
+                className="flex-1 bg-transparent text-base outline-none placeholder:text-stone-400"
+                disabled={isLoading || (contactFormShown && !contactSubmitted)}
+                autoComplete="off"
+              />
+              <Button type="submit" size="icon" variant="ghost" disabled={!input.trim() || isLoading || (contactFormShown && !contactSubmitted)} className="h-8 w-8 text-vesuviano-500 hover:text-vesuviano-600">
+                <Send className="w-4 h-4" />
+              </Button>
+            </form>
           </div>
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              send(input);
-            }}
-            className="border-t border-stone-200 px-3 py-2 flex gap-2"
+          {/* Desktop: floating panel */}
+          <div
+            className="fixed bottom-24 right-6 z-50 w-[calc(100vw-2rem)] max-w-md bg-white border border-stone-200 rounded-2xl shadow-2xl flex-col overflow-hidden transform-gpu hidden md:flex"
+            style={{ height: "min(500px, calc(100dvh - 10rem))" }}
           >
-            <input
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={lang === "it" ? "Scrivi il tuo messaggio..." : lang === "fr" ? "Écrivez votre message..." : lang === "de" ? "Schreiben Sie Ihre Nachricht..." : lang === "es" ? "Escribe tu mensaje..." : "Type your message..."}
-              className="flex-1 bg-transparent text-base md:text-sm outline-none placeholder:text-stone-400"
-              disabled={isLoading || (contactFormShown && !contactSubmitted)}
-              autoComplete="off"
-            />
-            <Button
-              type="submit"
-              size="icon"
-              variant="ghost"
-              disabled={!input.trim() || isLoading || (contactFormShown && !contactSubmitted)}
-              className="h-8 w-8 text-vesuviano-500 hover:text-vesuviano-600"
+            <div className="bg-vesuviano-500 text-white px-4 py-3 flex items-center gap-3">
+              <img src="/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano" className="h-6 w-auto" />
+              <div>
+                <p className="font-semibold text-sm">Assistente Vesuviano</p>
+                <p className="text-xs opacity-80">AI Oven Consultant</p>
+              </div>
+              <button onClick={() => setOpen(false)} className="ml-auto hover:opacity-70">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              {messages.map((msg, i) => (
+                <div key={i} className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                  {msg.role === "assistant" && (
+                    <div className="w-7 h-7 rounded-full bg-vesuviano-100 flex items-center justify-center flex-shrink-0 mt-1">
+                      <Bot className="w-4 h-4 text-vesuviano-600" />
+                    </div>
+                  )}
+                  <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${msg.role === "user" ? "bg-vesuviano-500 text-white rounded-br-md" : "bg-stone-100 text-stone-800 rounded-bl-md"}`}>
+                    {renderMessageContent(msg)}
+                  </div>
+                  {msg.role === "user" && (
+                    <div className="w-7 h-7 rounded-full bg-vesuviano-100 flex items-center justify-center flex-shrink-0 mt-1">
+                      <User className="w-4 h-4 text-vesuviano-600" />
+                    </div>
+                  )}
+                </div>
+              ))}
+              {contactFormShown && !contactSubmitted && (
+                <ContactForm onSubmitted={handleContactSubmitted} lang={lang} />
+              )}
+              {isLoading && messages[messages.length - 1]?.role === "user" && (
+                <div className="flex gap-2">
+                  <div className="w-7 h-7 rounded-full bg-vesuviano-100 flex items-center justify-center flex-shrink-0">
+                    <Bot className="w-4 h-4 text-vesuviano-600" />
+                  </div>
+                  <div className="bg-stone-100 rounded-2xl rounded-bl-md px-4 py-3">
+                    <div className="flex gap-1">
+                      <span className="w-2 h-2 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <span className="w-2 h-2 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <span className="w-2 h-2 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={bottomRef} />
+            </div>
+
+            <form
+              onSubmit={(e) => { e.preventDefault(); send(input); }}
+              className="border-t border-stone-200 px-3 py-2 flex gap-2"
             >
-              <Send className="w-4 h-4" />
-            </Button>
-          </form>
-        </div>
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder={lang === "it" ? "Scrivi il tuo messaggio..." : lang === "fr" ? "Écrivez votre message..." : lang === "de" ? "Schreiben Sie Ihre Nachricht..." : lang === "es" ? "Escribe tu mensaje..." : "Type your message..."}
+                className="flex-1 bg-transparent text-sm outline-none placeholder:text-stone-400"
+                disabled={isLoading || (contactFormShown && !contactSubmitted)}
+                autoComplete="off"
+              />
+              <Button type="submit" size="icon" variant="ghost" disabled={!input.trim() || isLoading || (contactFormShown && !contactSubmitted)} className="h-8 w-8 text-vesuviano-500 hover:text-vesuviano-600">
+                <Send className="w-4 h-4" />
+              </Button>
+            </form>
+          </div>
+        </>
       )}
     </>
   );
