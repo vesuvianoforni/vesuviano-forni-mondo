@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import LazyImage from "@/components/LazyImage";
 
-const WHATSAPP_LINK = "https://wa.me/393773aborni";
+const WHATSAPP_LINK = "https://wa.me/393509286941?text=Ciao,%20vorrei%20informazioni%20sui%20vostri%20forni%20professionali";
 
 const reviews = [
   {
