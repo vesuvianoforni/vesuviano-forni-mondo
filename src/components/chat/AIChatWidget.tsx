@@ -69,6 +69,22 @@ const WELCOME_BACK: Record<string, string> = {
   es: "¡Bienvenido de nuevo! 👋 ¿Cómo puedo ayudarte hoy?",
 };
 
+const CALLBACK_ASK_PHONE: Record<string, string> = {
+  it: "Sarà fatto! 📞 Qual è il tuo numero di telefono?",
+  en: "Sure thing! 📞 What's your phone number?",
+  fr: "Avec plaisir ! 📞 Quel est votre numéro de téléphone ?",
+  de: "Sehr gern! 📞 Wie lautet Ihre Telefonnummer?",
+  es: "¡Por supuesto! 📞 ¿Cuál es tu número de teléfono?",
+};
+
+const CALLBACK_CONFIRM: Record<string, string> = {
+  it: "Perfetto! Ti chiameremo il prima possibile 🤙",
+  en: "Got it! We'll call you as soon as possible 🤙",
+  fr: "Parfait ! Nous vous appellerons dès que possible 🤙",
+  de: "Perfekt! Wir rufen Sie so schnell wie möglich an 🤙",
+  es: "¡Perfecto! Te llamaremos lo antes posible 🤙",
+};
+
 function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string, email?: string, phone?: string) => void; lang: string }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [submitting, setSubmitting] = useState(false);
@@ -156,6 +172,7 @@ export default function AIChatWidget() {
   const [showWhatsAppCta, setShowWhatsAppCta] = useState(false);
   const [showPulse, setShowPulse] = useState(true);
   const [pendingMessage, setPendingMessage] = useState<string | null>(null);
+  const [callbackMode, setCallbackMode] = useState(false);
   const conversationIdRef = useRef<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -214,6 +231,19 @@ export default function AIChatWidget() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, contactFormShown]);
+
+  // Listen for callback request from popup
+  useEffect(() => {
+    const handleCallbackRequest = () => {
+      setCallbackMode(true);
+      setOpen(true);
+      setShowMobileBubble(false);
+      const askPhone = CALLBACK_ASK_PHONE[lang] || CALLBACK_ASK_PHONE.en;
+      setMessages((prev) => [...prev, { role: "assistant", content: askPhone }]);
+    };
+    window.addEventListener('vesuviano-callback-request', handleCallbackRequest);
+    return () => window.removeEventListener('vesuviano-callback-request', handleCallbackRequest);
+  }, [lang]);
 
   useEffect(() => {
     if (open) inputRef.current?.focus();
@@ -322,6 +352,28 @@ export default function AIChatWidget() {
       const userMsg: Msg = { role: "user", content: text.trim() };
       setInput("");
 
+      // Callback mode: user is giving their phone number
+      if (callbackMode) {
+        const confirmMsg = CALLBACK_CONFIRM[lang] || CALLBACK_CONFIRM.en;
+        setMessages((prev) => {
+          const updated = [...prev, userMsg, { role: "assistant" as const, content: confirmMsg }];
+          saveConversation(updated, { phone: text.trim() });
+          return updated;
+        });
+        // Save as lead
+        supabase.from("website_leads").insert({
+          first_name: "-",
+          last_name: "-",
+          phone: text.trim(),
+          form_type: "callback_request",
+          notes: "Richiesta di richiamata dal popup del sito.",
+        }).then(() => {});
+        setCallbackMode(false);
+        setContactSubmitted(true);
+        localStorage.setItem(VISITOR_SUBMITTED_KEY, "true");
+        return;
+      }
+
       if (!contactSubmitted) {
         const introMsg = INTRO_MESSAGES[lang] || INTRO_MESSAGES.en;
         setMessages((prev) => {
@@ -340,7 +392,7 @@ export default function AIChatWidget() {
         });
       }
     },
-    [isLoading, contactSubmitted, lang, callAI, saveConversation]
+    [isLoading, contactSubmitted, callbackMode, lang, callAI, saveConversation]
   );
 
   const renderMessageContent = (msg: Msg) => {

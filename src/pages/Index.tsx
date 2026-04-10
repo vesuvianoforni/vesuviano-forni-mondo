@@ -28,6 +28,7 @@ const ZapperSection = lazy(() => import("@/components/ZapperSection"));
 const AIChatWidget = lazy(() => import("@/components/chat/AIChatWidget"));
 
 const ReadyToShipPopup = lazy(() => import("@/components/ReadyToShipPopup"));
+const CallbackPopup = lazy(() => import("@/components/CallbackPopup"));
 
 const Index = () => {
   const navigate = useNavigate();
@@ -467,6 +468,7 @@ const Index = () => {
         <AIChatWidget />
         
         <ReadyToShipPopup />
+        <CallbackPopup />
       </Suspense>
     </div>
   );
