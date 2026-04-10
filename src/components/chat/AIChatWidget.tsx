@@ -352,6 +352,28 @@ export default function AIChatWidget() {
       const userMsg: Msg = { role: "user", content: text.trim() };
       setInput("");
 
+      // Callback mode: user is giving their phone number
+      if (callbackMode) {
+        const confirmMsg = CALLBACK_CONFIRM[lang] || CALLBACK_CONFIRM.en;
+        setMessages((prev) => {
+          const updated = [...prev, userMsg, { role: "assistant" as const, content: confirmMsg }];
+          saveConversation(updated, { phone: text.trim() });
+          return updated;
+        });
+        // Save as lead
+        supabase.from("website_leads").insert({
+          first_name: "-",
+          last_name: "-",
+          phone: text.trim(),
+          form_type: "callback_request",
+          notes: "Richiesta di richiamata dal popup del sito.",
+        }).then(() => {});
+        setCallbackMode(false);
+        setContactSubmitted(true);
+        localStorage.setItem(VISITOR_SUBMITTED_KEY, "true");
+        return;
+      }
+
       if (!contactSubmitted) {
         const introMsg = INTRO_MESSAGES[lang] || INTRO_MESSAGES.en;
         setMessages((prev) => {
@@ -370,7 +392,7 @@ export default function AIChatWidget() {
         });
       }
     },
-    [isLoading, contactSubmitted, lang, callAI, saveConversation]
+    [isLoading, contactSubmitted, callbackMode, lang, callAI, saveConversation]
   );
 
   const renderMessageContent = (msg: Msg) => {
