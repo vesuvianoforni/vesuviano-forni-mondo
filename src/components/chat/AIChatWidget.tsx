@@ -156,6 +156,7 @@ export default function AIChatWidget() {
   const [showWhatsAppCta, setShowWhatsAppCta] = useState(false);
   const [showPulse, setShowPulse] = useState(true);
   const [pendingMessage, setPendingMessage] = useState<string | null>(null);
+  const [callbackMode, setCallbackMode] = useState(false);
   const conversationIdRef = useRef<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
