@@ -232,6 +232,19 @@ export default function AIChatWidget() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, contactFormShown]);
 
+  // Listen for callback request from popup
+  useEffect(() => {
+    const handleCallbackRequest = () => {
+      setCallbackMode(true);
+      setOpen(true);
+      setShowMobileBubble(false);
+      const askPhone = CALLBACK_ASK_PHONE[lang] || CALLBACK_ASK_PHONE.en;
+      setMessages((prev) => [...prev, { role: "assistant", content: askPhone }]);
+    };
+    window.addEventListener('vesuviano-callback-request', handleCallbackRequest);
+    return () => window.removeEventListener('vesuviano-callback-request', handleCallbackRequest);
+  }, [lang]);
+
   useEffect(() => {
     if (open) inputRef.current?.focus();
   }, [open]);
