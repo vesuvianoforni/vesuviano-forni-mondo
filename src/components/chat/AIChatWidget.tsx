@@ -69,6 +69,22 @@ const WELCOME_BACK: Record<string, string> = {
   es: "¡Bienvenido de nuevo! 👋 ¿Cómo puedo ayudarte hoy?",
 };
 
+const CALLBACK_ASK_PHONE: Record<string, string> = {
+  it: "Sarà fatto! 📞 Qual è il tuo numero di telefono?",
+  en: "Sure thing! 📞 What's your phone number?",
+  fr: "Avec plaisir ! 📞 Quel est votre numéro de téléphone ?",
+  de: "Sehr gern! 📞 Wie lautet Ihre Telefonnummer?",
+  es: "¡Por supuesto! 📞 ¿Cuál es tu número de teléfono?",
+};
+
+const CALLBACK_CONFIRM: Record<string, string> = {
+  it: "Perfetto! Ti chiameremo il prima possibile 🤙",
+  en: "Got it! We'll call you as soon as possible 🤙",
+  fr: "Parfait ! Nous vous appellerons dès que possible 🤙",
+  de: "Perfekt! Wir rufen Sie so schnell wie möglich an 🤙",
+  es: "¡Perfecto! Te llamaremos lo antes posible 🤙",
+};
+
 function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string, email?: string, phone?: string) => void; lang: string }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [submitting, setSubmitting] = useState(false);
