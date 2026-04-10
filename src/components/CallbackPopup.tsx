@@ -34,10 +34,9 @@ const CallbackPopup = () => {
   useEffect(() => {
     if (!visible || interacted) return;
     inactivityTimerRef.current = setTimeout(() => {
-      // No interaction after 15s → engage via chat
+      // No interaction after 15s → just dismiss
       setVisible(false);
       sessionStorage.setItem(DISMISSED_KEY, 'true');
-      window.dispatchEvent(new CustomEvent('vesuviano-engage-chat'));
     }, 15000);
     return () => {
       if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
@@ -58,8 +57,7 @@ const CallbackPopup = () => {
 
   const handleNo = () => {
     dismiss();
-    // Open chat with engagement message
-    window.dispatchEvent(new CustomEvent('vesuviano-engage-chat'));
+    // Just dismiss, don't open chat
   };
 
   if (!visible) return null;

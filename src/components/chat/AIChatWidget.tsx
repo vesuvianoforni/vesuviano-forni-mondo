@@ -207,22 +207,7 @@ export default function AIChatWidget() {
 
   const [showMobileBubble, setShowMobileBubble] = useState(false);
 
-  useEffect(() => {
-    if (hasAutoOpened) return;
-    const isMobile = window.innerWidth < 768;
-    const timer = setTimeout(() => {
-      if (isMobile) {
-        setShowMobileBubble(true);
-        setHasAutoOpened(true);
-        // Auto-hide bubble after 5 seconds
-        setTimeout(() => setShowMobileBubble(false), 5000);
-      } else {
-        setOpen(true);
-        setHasAutoOpened(true);
-      }
-    }, 15000);
-    return () => clearTimeout(timer);
-  }, [hasAutoOpened]);
+  // Chat no longer auto-opens — only the callback popup triggers engagement
 
   useEffect(() => {
     if (open) setShowPulse(false);
