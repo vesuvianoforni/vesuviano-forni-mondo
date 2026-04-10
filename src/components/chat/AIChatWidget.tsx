@@ -241,8 +241,25 @@ export default function AIChatWidget() {
       const askPhone = CALLBACK_ASK_PHONE[lang] || CALLBACK_ASK_PHONE.en;
       setMessages((prev) => [...prev, { role: "assistant", content: askPhone }]);
     };
+    const handleEngageChat = () => {
+      setOpen(true);
+      setShowMobileBubble(false);
+      const engageMessages: Record<string, string> = {
+        it: "Posso aiutarti a scegliere il forno perfetto per te? 🔥 Chiedimi quello che vuoi!",
+        en: "Can I help you choose the perfect oven? 🔥 Ask me anything!",
+        fr: "Puis-je vous aider à choisir le four parfait ? 🔥 Demandez-moi ce que vous voulez !",
+        de: "Kann ich Ihnen helfen, den perfekten Ofen zu finden? 🔥 Fragen Sie mich!",
+        es: "¿Puedo ayudarte a elegir el horno perfecto? 🔥 ¡Pregúntame lo que quieras!",
+      };
+      const msg = engageMessages[lang] || engageMessages.en;
+      setMessages((prev) => [...prev, { role: "assistant", content: msg }]);
+    };
     window.addEventListener('vesuviano-callback-request', handleCallbackRequest);
-    return () => window.removeEventListener('vesuviano-callback-request', handleCallbackRequest);
+    window.addEventListener('vesuviano-engage-chat', handleEngageChat);
+    return () => {
+      window.removeEventListener('vesuviano-callback-request', handleCallbackRequest);
+      window.removeEventListener('vesuviano-engage-chat', handleEngageChat);
+    };
   }, [lang]);
 
   useEffect(() => {
