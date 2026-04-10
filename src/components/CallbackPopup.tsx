@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { X, Phone } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { X } from 'lucide-react';
 
 const CALLBACK_TEXTS: Record<string, { question: string; yes: string; no: string }> = {
   it: { question: 'Vorresti che ti chiamassimo?', yes: 'Sì, grazie!', no: 'No, grazie.' },
@@ -19,6 +19,8 @@ const DISMISSED_KEY = 'vesuviano_callback_dismissed';
 
 const CallbackPopup = () => {
   const [visible, setVisible] = useState(false);
+  const [interacted, setInteracted] = useState(false);
+  const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lang = getBrowserLang();
   const t = CALLBACK_TEXTS[lang] || CALLBACK_TEXTS.en;
 
@@ -28,14 +30,36 @@ const CallbackPopup = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Start 15s inactivity timer when popup becomes visible
+  useEffect(() => {
+    if (!visible || interacted) return;
+    inactivityTimerRef.current = setTimeout(() => {
+      // No interaction after 15s → engage via chat
+      setVisible(false);
+      sessionStorage.setItem(DISMISSED_KEY, 'true');
+      window.dispatchEvent(new CustomEvent('vesuviano-engage-chat'));
+    }, 15000);
+    return () => {
+      if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+    };
+  }, [visible, interacted]);
+
   const dismiss = () => {
+    setInteracted(true);
     setVisible(false);
     sessionStorage.setItem(DISMISSED_KEY, 'true');
+    if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
   };
 
   const handleYes = () => {
     dismiss();
     window.dispatchEvent(new CustomEvent('vesuviano-callback-request'));
+  };
+
+  const handleNo = () => {
+    dismiss();
+    // Open chat with engagement message
+    window.dispatchEvent(new CustomEvent('vesuviano-engage-chat'));
   };
 
   if (!visible) return null;
@@ -62,7 +86,7 @@ const CallbackPopup = () => {
             {t.yes}
           </button>
           <button
-            onClick={dismiss}
+            onClick={handleNo}
             className="text-left text-vesuviano-600 font-semibold text-base hover:text-vesuviano-700 transition-colors px-1 py-1"
           >
             {t.no}
