@@ -19,7 +19,7 @@ const Services = lazy(() => import("@/components/Services"));
 const Rivestimenti = lazy(() => import("@/components/Rivestimenti"));
 const ClientsMap = lazy(() => import("@/components/ClientsMap"));
 const OvenGallery = lazy(() => import("@/components/OvenGallery"));
-const OvenDataInitializer = lazy(() => import("@/components/OvenDataInitializer"));
+import OvenDataInitializer from "@/components/OvenDataInitializer";
 const ConsultationForm = lazy(() => import("@/components/ConsultationForm"));
 const FAQSection = lazy(() => import("@/components/FAQSection"));
 const HomeBlogSection = lazy(() => import("@/components/HomeBlogSection"));
@@ -69,9 +69,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
-      <Suspense fallback={null}>
-        <OvenDataInitializer />
-      </Suspense>
+      <OvenDataInitializer />
       <Header />
       
       <main>
