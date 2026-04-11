@@ -34,13 +34,13 @@ const Hero = () => {
           width={1920}
           height={1080}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/75"></div>
       </div>
       
       {/* Main Content */}
-      <div className="container mx-auto px-4 sm:px-6 text-center z-10 relative max-w-full py-6 sm:py-12">
-        {/* Logo Section */}
-        <div className="mb-4 sm:mb-8 animate-scale-in">
+      <div className="container mx-auto px-5 sm:px-6 text-center z-10 relative max-w-full py-8 sm:py-12">
+        {/* Logo Section - hidden on mobile since it's in header */}
+        <div className="mb-4 sm:mb-8 animate-scale-in hidden sm:block">
           <LazyImage 
             src="/lovable-uploads/vesuviano-logo-bianco.png"
             alt="Vesuviano - Forni artigianali napoletani di alta qualità" 
@@ -50,67 +50,66 @@ const Hero = () => {
         </div>
         
         {/* Pre-headline badge */}
-        <div className="animate-fade-in mb-3 sm:mb-4">
-          <span className="inline-block bg-white/15 backdrop-blur-sm text-white text-xs sm:text-sm font-medium px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/20">
+        <div className="animate-fade-in mb-4 sm:mb-5">
+          <span className="inline-block bg-white/10 backdrop-blur-sm text-white/90 text-[11px] sm:text-sm font-medium px-4 py-1.5 sm:px-5 sm:py-2 rounded-full border border-white/15 tracking-wide">
             {t('hero.subtitle')}
           </span>
         </div>
 
         {/* Main Headline */}
-        <h1 className="font-playfair text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold mb-3 sm:mb-5 leading-snug animate-fade-in text-white px-1 sm:px-4 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]" style={{ animationDelay: '0.3s' }}>
+        <h1 className="font-playfair text-[26px] leading-[1.2] sm:text-2xl md:text-3xl lg:text-5xl font-bold mb-4 sm:mb-5 sm:leading-snug animate-fade-in text-white px-2 sm:px-4 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]" style={{ animationDelay: '0.3s' }}>
           {t('hero.title')}
         </h1>
         
         {/* Description */}
-        <p className="font-inter text-sm sm:text-base md:text-lg lg:text-xl mb-5 sm:mb-8 max-w-2xl mx-auto leading-relaxed text-white/90 animate-fade-in px-1 sm:px-4" style={{ animationDelay: '0.5s' }}>
+        <p className="font-inter text-[13px] leading-[1.6] sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 max-w-2xl mx-auto text-white/80 animate-fade-in px-3 sm:px-4" style={{ animationDelay: '0.5s' }}>
           {t('hero.description')}
         </p>
 
-
         {/* Customer Reviews Carousel */}
-        <div className="w-full max-w-xl mx-auto px-8 sm:px-12 animate-fade-in" style={{ animationDelay: '0.9s' }}>
+        <div className="w-full max-w-xl mx-auto px-6 sm:px-12 animate-fade-in" style={{ animationDelay: '0.9s' }}>
           <Carousel className="w-full">
             <CarouselContent>
               {[1, 2, 3, 4, 5].map((num) => (
                 <CarouselItem key={num}>
-                  <div className="bg-white/8 backdrop-blur-md rounded-lg p-3 sm:p-5 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] mx-1 sm:mx-2">
+                  <div className="bg-white/[0.07] backdrop-blur-md rounded-xl p-4 sm:p-5 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] mx-1 sm:mx-2">
                     <div className="flex justify-center gap-0.5 sm:gap-1 mb-2 sm:mb-3">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-3.5 h-3.5 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
+                        <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
                       ))}
                     </div>
-                    <p className="text-white text-xs sm:text-base text-center italic leading-relaxed">
+                    <p className="text-white text-[13px] sm:text-base text-center italic leading-relaxed">
                       "{t(`hero.review${num}`)}"
                     </p>
-                    <p className="text-white/60 text-[10px] sm:text-sm text-center mt-2 sm:mt-3 font-medium">
-                      - {t(`hero.reviewer${num}`)}
+                    <p className="text-white/50 text-[11px] sm:text-sm text-center mt-2 sm:mt-3 font-medium">
+                      — {t(`hero.reviewer${num}`)}
                     </p>
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-0 bg-white/10 border-white/20 text-white hover:bg-white/20 h-7 w-7 sm:h-10 sm:w-10" />
-            <CarouselNext className="right-0 bg-white/10 border-white/20 text-white hover:bg-white/20 h-7 w-7 sm:h-10 sm:w-10" />
+            <CarouselPrevious className="-left-2 sm:left-0 bg-white/10 border-white/20 text-white hover:bg-white/20 h-8 w-8 sm:h-10 sm:w-10" />
+            <CarouselNext className="-right-2 sm:right-0 bg-white/10 border-white/20 text-white hover:bg-white/20 h-8 w-8 sm:h-10 sm:w-10" />
           </Carousel>
         </div>
         
         {/* Client Logos */}
-        <div className="mt-4 sm:mt-6 animate-fade-in" style={{ animationDelay: '1s' }}>
-          <p className="text-white/50 text-[10px] sm:text-xs text-center font-medium uppercase tracking-widest mb-3">
+        <div className="mt-6 sm:mt-8 animate-fade-in" style={{ animationDelay: '1s' }}>
+          <p className="text-white/40 text-[10px] sm:text-xs text-center font-semibold uppercase tracking-[0.2em] mb-3 sm:mb-4">
             {t('hero.someClients')}
           </p>
-          <div className="flex items-center justify-center gap-6 sm:gap-10">
-            <img src="/lovable-uploads/client-logo-cugini-pizza.png" alt="Cugini Pizza" className="h-8 sm:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity" />
-            <img src="/lovable-uploads/client-logo-hands.png" alt="Client logo" className="h-8 sm:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity" />
-            <img src="/lovable-uploads/client-logo-ansun.png" alt="Ansun" className="h-8 sm:h-12 w-auto opacity-80 hover:opacity-100 transition-opacity" />
+          <div className="flex items-center justify-center gap-8 sm:gap-10">
+            <img src="/lovable-uploads/client-logo-cugini-pizza.png" alt="Cugini Pizza" className="h-9 sm:h-12 w-auto opacity-70 hover:opacity-100 transition-opacity" />
+            <img src="/lovable-uploads/client-logo-hands.png" alt="Client logo" className="h-9 sm:h-12 w-auto opacity-70 hover:opacity-100 transition-opacity" />
+            <img src="/lovable-uploads/client-logo-ansun.png" alt="Ansun" className="h-9 sm:h-12 w-auto opacity-70 hover:opacity-100 transition-opacity" />
           </div>
         </div>
 
         {/* Scroll Indicator */}
-        <div className="mt-4 sm:mt-8 animate-bounce" style={{ animationDelay: '1.2s' }}>
+        <div className="mt-6 sm:mt-8 animate-bounce" style={{ animationDelay: '1.2s' }}>
           <ArrowDown 
-            className="mx-auto text-white/70 cursor-pointer hover:text-vesuviano-400 transition-colors hover:scale-125 duration-300" 
-            size={20}
+            className="mx-auto text-white/50 cursor-pointer hover:text-vesuviano-400 transition-colors hover:scale-125 duration-300" 
+            size={22}
             onClick={scrollToProducts}
           />
         </div>
