@@ -49,9 +49,9 @@ const Hero = () => {
           />
         </div>
         
-        {/* Pre-headline badge */}
+        {/* Pre-headline - elegant simple text */}
         <div className="animate-fade-in mb-4 sm:mb-5">
-          <span className="inline-block bg-white/10 backdrop-blur-sm text-white/90 text-[11px] sm:text-sm font-medium px-4 py-1.5 sm:px-5 sm:py-2 rounded-full border border-white/15 tracking-wide">
+          <span className="text-white/80 text-[11px] sm:text-sm font-medium tracking-[0.25em] uppercase">
             {t('hero.subtitle')}
           </span>
         </div>
