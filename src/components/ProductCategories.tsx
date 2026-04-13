@@ -87,6 +87,7 @@ const ProductCategories = () => {
             {categories.map((category, index) => {
               const isConsultation = category.key === 'consultation';
               const isBuiltOnPlace = category.key === 'builtOnPlace';
+              const isReadyToShip = category.key === 'readyToShip';
               return (
                 <Card 
                   key={category.key}
