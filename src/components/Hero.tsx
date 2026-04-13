@@ -143,29 +143,30 @@ const Hero = () => {
                 { logo: '/lovable-uploads/client-logo-ansun.png', name: 'Ansun', reviewKey: 3 },
               ].map((client) => (
                 <CarouselItem key={client.name}>
-                  <div className="bg-white/[0.07] backdrop-blur-md rounded-xl p-3 sm:p-5 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] mx-1 sm:mx-2">
-                    {/* Client Logo */}
-                    <div className="flex justify-center mb-2 sm:mb-3">
+                  <div className="bg-white/[0.07] backdrop-blur-md rounded-lg p-2.5 sm:p-5 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] mx-1 sm:mx-2">
+                    <div className="flex items-center gap-2.5 sm:gap-0 sm:flex-col">
+                      {/* Logo */}
                       <img
                         src={client.logo}
                         alt={client.name}
-                        className="h-8 sm:h-12 w-auto opacity-80"
+                        className="h-10 sm:h-14 w-auto opacity-80 flex-shrink-0"
                       />
+
+                      {/* Review content */}
+                      <div className="flex-1 sm:mt-2">
+                        <div className="flex gap-0.5 mb-1 sm:justify-center">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="w-2.5 h-2.5 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400" />
+                          ))}
+                        </div>
+                        <p className="text-white text-[10px] sm:text-sm text-left sm:text-center italic leading-snug">
+                          "{t(`hero.review${client.reviewKey}`)}"
+                        </p>
+                        <p className="text-white/60 text-[9px] sm:text-xs text-left sm:text-center mt-1 sm:mt-2 font-semibold">
+                          — {client.name}
+                        </p>
+                      </div>
                     </div>
-
-                    <div className="flex justify-center gap-0.5 sm:gap-1 mb-1.5 sm:mb-2">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
-
-                    <p className="text-white text-[11px] sm:text-base text-center italic leading-relaxed">
-                      "{t(`hero.review${client.reviewKey}`)}"
-                    </p>
-
-                    <p className="text-white/60 text-[10px] sm:text-sm text-center mt-1.5 sm:mt-3 font-semibold">
-                      — {client.name}
-                    </p>
                   </div>
                 </CarouselItem>
               ))}
