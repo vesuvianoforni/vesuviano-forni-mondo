@@ -304,6 +304,23 @@ const Index = () => {
                   </Link>
                 </li>
                 <li>
+                  <Link 
+                    to={(() => {
+                      const paths: Record<string, string> = {
+                        'it': '/it/pronta-consegna',
+                        'en': '/en/ready-to-ship',
+                        'fr': '/fr/pret-a-expedier',
+                        'es': '/es/listo-para-enviar',
+                        'de': '/de/versandfertig'
+                      };
+                      return paths[currentLang] || paths['it'];
+                    })()}
+                    className="text-gray-400 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {t('readyToShip.menuTitle', 'Ready to Ship')}
+                  </Link>
+                </li>
+                <li>
                   <a 
                     href={`/${currentLang}#clients-map`}
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
