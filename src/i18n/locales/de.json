@@ -168,6 +168,17 @@
       },
       "startingFrom": "Ab £13.500 GBP",
       "cta": "Mehr Erfahren"
+    },
+    "readyToShip": {
+      "title": "Sofort Lieferbar",
+      "subtitle": "Sofortige Lieferung",
+      "description": "Ausgewählte Öfen auf Lager, getestet und bereit für den sofortigen Versand. Sparen Sie Wochen Wartezeit.",
+      "features": {
+        "immediate": "Sofortige Verfügbarkeit",
+        "tested": "Werkseitig getestet und zertifiziert",
+        "shipping": "Schneller weltweiter Versand"
+      },
+      "cta": "Verfügbare Öfen ansehen"
     }
   },
   "clientsMap": {
