@@ -23,7 +23,7 @@ import OvenDataInitializer from "@/components/OvenDataInitializer";
 const ConsultationForm = lazy(() => import("@/components/ConsultationForm"));
 const FAQSection = lazy(() => import("@/components/FAQSection"));
 const HomeBlogSection = lazy(() => import("@/components/HomeBlogSection"));
-const ZapperSection = lazy(() => import("@/components/ZapperSection"));
+
 
 const AIChatWidget = lazy(() => import("@/components/chat/AIChatWidget"));
 
