@@ -49,6 +49,25 @@ serve(async (req) => {
     let emailContent = ''
 
     switch (formType) {
+      case 'hero_callback':
+        subject = `📞 Richiesta Callback - ${data.phone}`
+        emailContent = `
+          <h2>🔔 Nuova Richiesta di Callback</h2>
+          <p><strong>Data:</strong> ${new Date().toLocaleString('it-IT')}</p>
+          
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3>Contatto:</h3>
+            <p><strong>Telefono:</strong> <a href="tel:${data.phone}">${data.phone}</a></p>
+          </div>
+          
+          <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+            <strong>⚡ AZIONE RICHIESTA:</strong> Il cliente ha chiesto di essere richiamato entro 5 minuti (orario 9-19).
+          </div>
+          
+          <p><em>Richiesta inviata dalla Hero section del sito.</em></p>
+        `
+        break
+
       case 'vesuvio-buono':
         subject = `📥 Download Catalogo VesuvioBuono - ${data.firstName} ${data.lastName}`
         emailContent = `
