@@ -34,7 +34,7 @@ const ContattiRedirect = lazy(() => import("./pages/ContattiRedirect"));
 const LocalizedBlogList = lazy(() => import("./pages/LocalizedBlogList"));
 const LocalizedBlogPost = lazy(() => import("./pages/LocalizedBlogPost"));
 const ProformaPage = lazy(() => import("./pages/ProformaPage"));
-import BuiltOnPlace from "./pages/BuiltOnPlace";
+const BuiltOnPlace = lazy(() => import("./pages/BuiltOnPlace"));
 import ClarityPageView from "./components/ClarityPageView";
 
 // ERP - lazy loaded
