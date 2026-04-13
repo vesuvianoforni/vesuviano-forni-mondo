@@ -1,8 +1,9 @@
 
 import { Button } from "@/components/ui/button";
 import CtaButton from './CtaButton';
-import { ArrowDown, Phone } from "lucide-react";
+import { ArrowDown, Phone, Flame, Zap, RotateCw, TreePine, Building2 } from "lucide-react";
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import LazyImage from './LazyImage';
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,6 +11,7 @@ import { toast } from 'sonner';
 const laboratorioHero = '/hero.webp';
 
 const Hero = () => {
+  const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [callPhone, setCallPhone] = useState('');
   const [callLoading, setCallLoading] = useState(false);
@@ -97,6 +99,32 @@ const Hero = () => {
         <p className="font-inter text-[13px] leading-[1.6] sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 max-w-2xl mx-auto text-white/80 animate-fade-in px-3 sm:px-4" style={{ animationDelay: '0.5s' }}>
           {t('hero.description')}
         </p>
+
+        {/* Category Pills */}
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 sm:mb-8 animate-fade-in px-2" style={{ animationDelay: '0.7s' }}>
+          {[
+            { icon: TreePine, labelKey: 'hero.catWood', fallback: 'Wood', path: { it: '/it/forni-tradizionali', en: '/en/traditional-ovens', fr: '/fr/fours-traditionnels', es: '/es/hornos-tradicionales', de: '/de/traditionelle-oefen' } },
+            { icon: Flame, labelKey: 'hero.catGas', fallback: 'Gas', path: { it: '/it/forni-gas', en: '/en/gas-ovens', fr: '/fr/fours-gaz', es: '/es/hornos-gas', de: '/de/gasoefen' } },
+            { icon: RotateCw, labelKey: 'hero.catRotating', fallback: 'Rotating', path: { it: '/it/forni-rotanti', en: '/en/rotating-ovens', fr: '/fr/fours-rotatifs', es: '/es/hornos-rotativos', de: '/de/drehoefen' } },
+            { icon: Zap, labelKey: 'hero.catElectric', fallback: 'Electric', path: { it: '/it/forni-elettrici', en: '/en/electric-ovens', fr: '/fr/fours-electriques', es: '/es/hornos-electricos', de: '/de/elektrooefen' } },
+            { icon: Building2, labelKey: 'hero.catBuiltOnPlace', fallback: 'Built on Place', path: { it: '/built-on-place', en: '/built-on-place', fr: '/built-on-place', es: '/built-on-place', de: '/built-on-place' } },
+          ].map((cat) => {
+            const Icon = cat.icon;
+            const lang = (i18n.language || 'it') as keyof typeof cat.path;
+            return (
+              <button
+                key={cat.labelKey}
+                onClick={() => navigate(cat.path[lang] || cat.path.it)}
+                className="group flex items-center gap-1.5 sm:gap-2 bg-white/[0.08] hover:bg-white/[0.18] backdrop-blur-sm border border-white/15 hover:border-white/30 rounded-full px-3 py-1.5 sm:px-5 sm:py-2.5 transition-all duration-300 hover:scale-105"
+              >
+                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-vesuviano-400 group-hover:text-vesuviano-300 transition-colors" />
+                <span className="text-white/90 text-[11px] sm:text-sm font-medium tracking-wide">
+                  {t(cat.labelKey, cat.fallback)}
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
         {/* Call Me Section - Mobile */}
         <div className="sm:hidden w-full max-w-xs mx-auto mb-5 animate-fade-in" style={{ animationDelay: '0.8s' }}>
