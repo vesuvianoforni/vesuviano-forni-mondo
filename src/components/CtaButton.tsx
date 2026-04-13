@@ -19,7 +19,18 @@ const CtaButton = ({ className, size = "lg", variant, onClick, showSubtext = tru
       onClick();
       return;
     }
-    document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' });
+    // Force lazy sections to load so #consultation becomes available
+    window.dispatchEvent(new Event('force-lazy-load'));
+    const tryScroll = () => {
+      const el = document.getElementById('consultation');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        setTimeout(tryScroll, 100);
+      }
+    };
+    // Small delay to let LazySection render
+    setTimeout(tryScroll, 50);
   };
 
   return (
