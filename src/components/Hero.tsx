@@ -48,8 +48,7 @@ const Hero = () => {
           data: { name: callName.trim(), phone: callPhone.trim() },
         },
       });
-      setCallSent(true);
-      toast.success(t('hero.callbackSuccess', 'We\'ll call you shortly!'));
+      navigate('/thank-you');
     } catch (e) {
       toast.error('Error, please try again');
     } finally {
