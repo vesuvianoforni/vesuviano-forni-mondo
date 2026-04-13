@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, Clock, Phone, MessageCircle, Video } from "lucide-react";
+import { CalendarIcon, Clock, Phone, MessageCircle, Video, ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -52,6 +52,7 @@ const BookAppointment = () => {
   }, [i18n]);
 
   const formSchema = z.object({
+    name: z.string().trim().min(2, t("bookSlot.validation.nameRequired", "Name is required")).max(100),
     date: z.date({
       required_error: t("bookSlot.validation.dateRequired"),
     }),
@@ -67,6 +68,7 @@ const BookAppointment = () => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       contactMethod: "whatsapp",
     },
   });
@@ -84,6 +86,7 @@ const BookAppointment = () => {
         body: {
           formType: "appointment",
           data: {
+            name: data.name,
             date: format(data.date, "dd/MM/yyyy"),
             time: data.time,
             contactMethod: data.contactMethod,
@@ -107,7 +110,14 @@ const BookAppointment = () => {
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Language Selector */}
-        <div className="flex justify-end mb-6">
+        <div className="flex justify-between items-center mb-6">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors text-sm"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            {t('bookSlot.back', 'Back')}
+          </button>
           <LanguageSelector />
         </div>
 
@@ -123,6 +133,27 @@ const BookAppointment = () => {
         <div className="bg-card rounded-lg shadow-lg p-8 border">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              {/* Name */}
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-semibold">
+                      {t("bookSlot.nameLabel", "Your Name")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t("bookSlot.namePlaceholder", "John Doe")}
+                        {...field}
+                        className="h-12"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               {/* Date Picker */}
               <FormField
                 control={form.control}
