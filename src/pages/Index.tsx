@@ -1,5 +1,6 @@
 
 import React, { lazy, Suspense } from "react";
+import { useConsultationModal } from "@/contexts/ConsultationModalContext";
 import wiseLogo from '@/assets/wise-logo.png';
 import paypalLogo from '@/assets/paypal-logo.png';
 import { useNavigate, Link } from "react-router-dom";
@@ -33,6 +34,7 @@ const CallbackPopup = lazy(() => import("@/components/CallbackPopup"));
 const Index = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const { openModal: openConsultationModal } = useConsultationModal();
   
   // Extract current language from location
   const currentLang = i18n.language;
@@ -327,13 +329,12 @@ const Index = () => {
               <div className="flex space-x-6 text-sm">
                 <a href="#" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
                 <a href="#" className="text-gray-400 hover:text-white transition-colors">Termini di Servizio</a>
-                <a 
-                  href={`/${currentLang}#consultation`}
+                <button 
                   className="text-vesuviano-400 hover:text-vesuviano-300 transition-colors font-medium cursor-pointer"
-                  onClick={(e) => handleNavClick(e, 'consultation')}
+                  onClick={() => openConsultationModal()}
                 >
                   Contattaci
-                </a>
+                </button>
               </div>
             </div>
           </div>
