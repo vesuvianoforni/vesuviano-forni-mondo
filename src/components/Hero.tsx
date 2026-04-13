@@ -57,7 +57,7 @@ const Hero = () => {
         </div>
 
         {/* Main Headline */}
-        <h1 className="font-playfair text-[26px] leading-[1.2] sm:text-2xl md:text-3xl lg:text-5xl font-bold mb-4 sm:mb-5 sm:leading-snug animate-fade-in text-white px-2 sm:px-4 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]" style={{ animationDelay: '0.3s' }}>
+        <h1 className="font-playfair text-[26px] leading-[1.2] sm:text-2xl md:text-3xl lg:text-5xl font-bold mb-4 sm:mb-5 sm:leading-snug animate-fade-in text-white px-2 sm:px-4 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] whitespace-pre-line" style={{ animationDelay: '0.3s' }}>
           {t('hero.title')}
         </h1>
         
