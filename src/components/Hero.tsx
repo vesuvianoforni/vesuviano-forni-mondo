@@ -136,7 +136,7 @@ const Hero = () => {
 
         {/* Customer Reviews Carousel - 3 real clients */}
         <div className="w-full max-w-xl mx-auto px-6 sm:px-12 animate-fade-in" style={{ animationDelay: '0.9s' }}>
-          <Carousel className="w-full">
+          <Carousel className="w-full" opts={{ loop: true }} plugins={[Autoplay({ delay: 4000, stopOnInteraction: false })]}>
             <CarouselContent>
               {[
                 { logo: '/lovable-uploads/client-logo-cugini-pizza.png', name: 'Cugini Pizza', reviewKey: 1 },
