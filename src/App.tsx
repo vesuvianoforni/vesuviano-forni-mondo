@@ -19,6 +19,7 @@ const LocalizedVesuvioBuono = lazy(() => import("./pages/LocalizedVesuvioBuono")
 const LocalizedAboutUs = lazy(() => import("./pages/LocalizedAboutUs"));
 const LocalizedReadyToShip = lazy(() => import("./pages/LocalizedReadyToShip"));
 const LocalizedBurners = lazy(() => import("./pages/LocalizedBurners"));
+const LocalizedSmokePurifier = lazy(() => import("./pages/LocalizedSmokePurifier"));
 const LocalizedUsefulInfo = lazy(() => import("./pages/LocalizedUsefulInfo"));
 const ArchitettoAIRedirect = lazy(() => import("./pages/ArchitettoAIRedirect"));
 const ThankYou = lazy(() => import("./pages/ThankYou"));
@@ -86,6 +87,7 @@ const App = () => {
               <Route path="/it/sistema-vesuviobuono" element={<LocalizedVesuvioBuono lang="it" />} />
               <Route path="/it/pronta-consegna" element={<LocalizedReadyToShip lang="it" />} />
               <Route path="/it/bruciatori" element={<LocalizedBurners lang="it" />} />
+              <Route path="/it/depuratore-fumi" element={<LocalizedSmokePurifier lang="it" />} />
               <Route path="/it/blog" element={<LocalizedBlogList lang="it" />} />
               <Route path="/it/blog/:slug" element={<LocalizedBlogPost lang="it" />} />
               <Route path="/it/thank-you-it" element={<ThankYou lang="it" />} />
@@ -102,6 +104,7 @@ const App = () => {
               <Route path="/en/vesuviobuono-system" element={<LocalizedVesuvioBuono lang="en" />} />
               <Route path="/en/ready-to-ship" element={<LocalizedReadyToShip lang="en" />} />
               <Route path="/en/burners" element={<LocalizedBurners lang="en" />} />
+              <Route path="/en/wood-smoke-purifier" element={<LocalizedSmokePurifier lang="en" />} />
               <Route path="/en/blog" element={<LocalizedBlogList lang="en" />} />
               <Route path="/en/blog/:slug" element={<LocalizedBlogPost lang="en" />} />
               <Route path="/en/thank-you-en" element={<ThankYou lang="en" />} />
@@ -118,6 +121,7 @@ const App = () => {
               <Route path="/fr/systeme-vesuviobuono" element={<LocalizedVesuvioBuono lang="fr" />} />
               <Route path="/fr/pret-a-expedier" element={<LocalizedReadyToShip lang="fr" />} />
               <Route path="/fr/bruleurs" element={<LocalizedBurners lang="fr" />} />
+              <Route path="/fr/purificateur-fumee" element={<LocalizedSmokePurifier lang="fr" />} />
               <Route path="/fr/blog" element={<LocalizedBlogList lang="fr" />} />
               <Route path="/fr/blog/:slug" element={<LocalizedBlogPost lang="fr" />} />
               <Route path="/fr/thank-you-fr" element={<ThankYou lang="fr" />} />
@@ -134,6 +138,7 @@ const App = () => {
               <Route path="/es/sistema-vesuviobuono" element={<LocalizedVesuvioBuono lang="es" />} />
               <Route path="/es/listo-para-enviar" element={<LocalizedReadyToShip lang="es" />} />
               <Route path="/es/quemadores" element={<LocalizedBurners lang="es" />} />
+              <Route path="/es/purificador-humo" element={<LocalizedSmokePurifier lang="es" />} />
               <Route path="/es/blog" element={<LocalizedBlogList lang="es" />} />
               <Route path="/es/blog/:slug" element={<LocalizedBlogPost lang="es" />} />
               <Route path="/es/thank-you-es" element={<ThankYou lang="es" />} />
@@ -150,6 +155,7 @@ const App = () => {
               <Route path="/de/vesuviobuono-system" element={<LocalizedVesuvioBuono lang="de" />} />
               <Route path="/de/versandfertig" element={<LocalizedReadyToShip lang="de" />} />
               <Route path="/de/brenner" element={<LocalizedBurners lang="de" />} />
+              <Route path="/de/rauchfilter" element={<LocalizedSmokePurifier lang="de" />} />
               <Route path="/de/blog" element={<LocalizedBlogList lang="de" />} />
               <Route path="/de/blog/:slug" element={<LocalizedBlogPost lang="de" />} />
               <Route path="/de/thank-you-de" element={<ThankYou lang="de" />} />
