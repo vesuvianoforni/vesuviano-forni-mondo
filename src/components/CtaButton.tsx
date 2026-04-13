@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useConsultationModal } from "@/contexts/ConsultationModalContext";
 
 interface CtaButtonProps {
   className?: string;
@@ -13,24 +14,14 @@ interface CtaButtonProps {
 
 const CtaButton = ({ className, size = "lg", variant, onClick, showSubtext = true, dark = false }: CtaButtonProps) => {
   const { t } = useTranslation();
+  const { openModal } = useConsultationModal();
 
   const handleClick = () => {
     if (onClick) {
       onClick();
       return;
     }
-    // Force lazy sections to load so #consultation becomes available
-    window.dispatchEvent(new Event('force-lazy-load'));
-    const tryScroll = () => {
-      const el = document.getElementById('consultation');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        setTimeout(tryScroll, 100);
-      }
-    };
-    // Small delay to let LazySection render
-    setTimeout(tryScroll, 50);
+    openModal();
   };
 
   return (
