@@ -133,36 +133,39 @@ const Hero = () => {
           )}
         </div>
 
-        {/* Customer Reviews Carousel */}
+        {/* Customer Reviews Carousel - 3 real clients */}
         <div className="w-full max-w-xl mx-auto px-6 sm:px-12 animate-fade-in" style={{ animationDelay: '0.9s' }}>
           <Carousel className="w-full">
             <CarouselContent>
-              {[1, 2, 3, 4, 5].map((num) => (
-                <CarouselItem key={num}>
+              {[
+                { logo: '/lovable-uploads/client-logo-cugini-pizza.png', name: 'Cugini Pizza', reviewKey: 1 },
+                { logo: '/lovable-uploads/client-logo-hands.png', name: 'Rosso Mazara', reviewKey: 2 },
+                { logo: '/lovable-uploads/client-logo-ansun.png', name: 'Ansun', reviewKey: 3 },
+              ].map((client) => (
+                <CarouselItem key={client.name}>
                   <div className="bg-white/[0.07] backdrop-blur-md rounded-xl p-3 sm:p-5 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] mx-1 sm:mx-2">
-                    <div className="flex justify-center gap-0.5 sm:gap-1 mb-1.5 sm:mb-3">
+                    {/* Client Logo */}
+                    <div className="flex justify-center mb-2 sm:mb-3">
+                      <img
+                        src={client.logo}
+                        alt={client.name}
+                        className="h-8 sm:h-12 w-auto opacity-80"
+                      />
+                    </div>
+
+                    <div className="flex justify-center gap-0.5 sm:gap-1 mb-1.5 sm:mb-2">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-3.5 h-3.5 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
+                        <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400" />
                       ))}
                     </div>
+
                     <p className="text-white text-[11px] sm:text-base text-center italic leading-relaxed">
-                      "{t(`hero.review${num}`)}"
+                      "{t(`hero.review${client.reviewKey}`)}"
                     </p>
-                    <p className="text-white/50 text-[10px] sm:text-sm text-center mt-1.5 sm:mt-3 font-medium">
-                      — {t(`hero.reviewer${num}`)}
+
+                    <p className="text-white/60 text-[10px] sm:text-sm text-center mt-1.5 sm:mt-3 font-semibold">
+                      — {client.name}
                     </p>
-                    
-                    {/* Client Logos inside carousel */}
-                    <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-white/10">
-                      <p className="text-white/30 text-[8px] sm:text-[10px] text-center uppercase tracking-[0.2em] mb-2">
-                        {t('hero.someClients')}
-                      </p>
-                      <div className="flex items-center justify-center gap-4 sm:gap-6">
-                        <img src="/lovable-uploads/client-logo-cugini-pizza.png" alt="Cugini Pizza - UK" className="h-5 sm:h-8 w-auto opacity-50" />
-                        <img src="/lovable-uploads/client-logo-hands.png" alt="Rosso Mazzara - UK" className="h-5 sm:h-8 w-auto opacity-50" />
-                        <img src="/lovable-uploads/client-logo-ansun.png" alt="Ansun - UK" className="h-5 sm:h-8 w-auto opacity-50" />
-                      </div>
-                    </div>
                   </div>
                 </CarouselItem>
               ))}
