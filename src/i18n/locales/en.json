@@ -53,6 +53,11 @@
     "someClients": "Some of our clients",
     "callMe": "Enter your number, we'll call you in 5 minutes",
     "callbackSuccess": "We'll call you shortly!",
+    "catWood": "Wood",
+    "catGas": "Gas",
+    "catRotating": "Rotating",
+    "catElectric": "Electric",
+    "catBuiltOnPlace": "Built on Place",
     "readyToShip": {
       "title": "Ready to Ship",
       "subtitle": "Ready to Ship in 24/48h",
