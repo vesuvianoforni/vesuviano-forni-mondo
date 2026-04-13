@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, Clock, Phone, MessageCircle, Video } from "lucide-react";
+import { CalendarIcon, Clock, Phone, MessageCircle, Video, ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -68,6 +68,7 @@ const BookAppointment = () => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       contactMethod: "whatsapp",
     },
   });
@@ -85,6 +86,7 @@ const BookAppointment = () => {
         body: {
           formType: "appointment",
           data: {
+            name: data.name,
             date: format(data.date, "dd/MM/yyyy"),
             time: data.time,
             contactMethod: data.contactMethod,
@@ -108,7 +110,14 @@ const BookAppointment = () => {
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Language Selector */}
-        <div className="flex justify-end mb-6">
+        <div className="flex justify-between items-center mb-6">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors text-sm"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            {t('bookSlot.back', 'Back')}
+          </button>
           <LanguageSelector />
         </div>
 
