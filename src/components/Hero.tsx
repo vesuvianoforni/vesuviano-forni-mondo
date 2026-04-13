@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import CtaButton from './CtaButton';
-import { ArrowDown, Phone, Flame, Zap, RotateCw, TreePine, Building2 } from "lucide-react";
+import { ArrowDown, Phone, Flame, Zap, RotateCw, TreePine, Building2, CalendarClock } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import LazyImage from './LazyImage';
@@ -171,6 +171,13 @@ const Hero = () => {
                   <Phone className="w-3 h-3" />
                 </Button>
               </div>
+              <button
+                onClick={() => navigate('/book-a-slot-call')}
+                className="flex items-center justify-center gap-1.5 w-full mt-2 text-white/50 hover:text-white/80 text-[10px] transition-colors"
+              >
+                <CalendarClock className="w-3 h-3" />
+                {t('hero.scheduleOther', 'Schedule at a more convenient time')}
+              </button>
             </div>
           ) : (
             <div className="bg-white/[0.07] backdrop-blur-md rounded-xl p-3 border border-white/10 text-center">
