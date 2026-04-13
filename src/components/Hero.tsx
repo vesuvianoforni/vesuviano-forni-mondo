@@ -19,6 +19,7 @@ const Hero = () => {
   const [callSent, setCallSent] = useState(false);
   const [selectedCat, setSelectedCat] = useState<string | null>(null);
   const [callHighlight, setCallHighlight] = useState(false);
+  const [showNameField, setShowNameField] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const callSectionRef = useRef<HTMLDivElement>(null);
 
@@ -156,32 +157,50 @@ const Hero = () => {
                 </span>
               </div>
               <p className="text-white/40 text-[9px] text-center mb-2">(9:00 - 19:00 CET)</p>
-              <div className="flex flex-col gap-2">
+              <div className="flex gap-2">
                 <input
-                  type="text"
-                  value={callName}
-                  onChange={(e) => setCallName(e.target.value)}
-                  placeholder={t('hero.namePlaceholder', 'Your name (optional)')}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-vesuviano-400"
+                  type="tel"
+                  value={callPhone}
+                  onChange={(e) => setCallPhone(e.target.value)}
+                  placeholder="+39 333..."
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-vesuviano-400"
                 />
-                <div className="flex gap-2">
+                <Button
+                  onClick={() => {
+                    if (!callPhone.trim()) return;
+                    if (!showNameField) {
+                      setShowNameField(true);
+                    } else {
+                      handleCallMe();
+                    }
+                  }}
+                  disabled={callLoading || !callPhone.trim()}
+                  size="sm"
+                  className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-xs px-3"
+                >
+                  <ThumbsUp className="w-3 h-3" />
+                </Button>
+              </div>
+              {showNameField && (
+                <div className="mt-2 animate-fade-in">
                   <input
-                    type="tel"
-                    value={callPhone}
-                    onChange={(e) => setCallPhone(e.target.value)}
-                    placeholder="+39 333..."
-                    className="flex-1 bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-vesuviano-400"
+                    type="text"
+                    value={callName}
+                    onChange={(e) => setCallName(e.target.value)}
+                    placeholder={t('hero.namePlaceholder', 'Your name (optional)')}
+                    className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-vesuviano-400"
+                    autoFocus
                   />
                   <Button
                     onClick={handleCallMe}
-                    disabled={callLoading || !callPhone.trim()}
+                    disabled={callLoading}
                     size="sm"
-                    className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-xs px-3"
+                    className="w-full mt-2 bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-xs"
                   >
-                    <ThumbsUp className="w-3 h-3" />
+                    {callLoading ? '...' : t('hero.confirmCall', 'Confirm ✓')}
                   </Button>
                 </div>
-              </div>
+              )}
               <button
                 onClick={() => navigate('/book-a-slot-call')}
                 className="flex items-center justify-center gap-1.5 w-full mt-2 text-white/50 hover:text-white/80 text-[10px] transition-colors"
