@@ -1,15 +1,13 @@
 
 import { Button } from "@/components/ui/button";
 import CtaButton from './CtaButton';
-import { ArrowDown, Star, Phone } from "lucide-react";
+import { ArrowDown, Phone } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import LazyImage from './LazyImage';
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 const laboratorioHero = '/hero.webp';
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
 
 const Hero = () => {
   const { t, i18n } = useTranslation();
@@ -136,46 +134,6 @@ const Hero = () => {
           )}
         </div>
 
-        {/* Customer Reviews Carousel - 3 real clients */}
-        <div className="w-full max-w-xl mx-auto px-6 sm:px-12 animate-fade-in" style={{ animationDelay: '0.9s' }}>
-          <Carousel className="w-full" opts={{ loop: true }} plugins={[Autoplay({ delay: 4000, stopOnInteraction: false })]}>
-            <CarouselContent>
-              {[
-                { logo: '/lovable-uploads/client-logo-cugini-pizza.png', name: 'Cugini Pizza', reviewKey: 1 },
-                { logo: '/lovable-uploads/client-logo-hands.png', name: 'Rosso Mazara', reviewKey: 2 },
-                { logo: '/lovable-uploads/client-logo-ansun.png', name: 'Ansun', reviewKey: 3 },
-              ].map((client) => (
-                <CarouselItem key={client.name}>
-                  <div className="bg-white/[0.07] backdrop-blur-md rounded-lg p-2.5 sm:p-5 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] mx-1 sm:mx-2">
-                    <div className="flex items-center gap-2.5 sm:gap-0 sm:flex-col">
-                      {/* Logo */}
-                      <img
-                        src={client.logo}
-                        alt={client.name}
-                        className="h-10 sm:h-14 w-auto opacity-80 flex-shrink-0"
-                      />
-
-                      {/* Review content */}
-                      <div className="flex-1 sm:mt-2">
-                        <div className="flex gap-0.5 mb-1 sm:justify-center">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="w-2.5 h-2.5 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400" />
-                          ))}
-                        </div>
-                        <p className="text-white text-[10px] sm:text-sm text-left sm:text-center italic leading-snug">
-                          "{t(`hero.review${client.reviewKey}`)}"
-                        </p>
-                        <p className="text-white/60 text-[9px] sm:text-xs text-left sm:text-center mt-1 sm:mt-2 font-semibold">
-                          — {client.name}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
-        </div>
         
 
         {/* Scroll Indicator */}
