@@ -151,6 +151,18 @@ const Hero = () => {
                     <p className="text-white/50 text-[10px] sm:text-sm text-center mt-1.5 sm:mt-3 font-medium">
                       — {t(`hero.reviewer${num}`)}
                     </p>
+                    
+                    {/* Client Logos inside carousel */}
+                    <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-white/10">
+                      <p className="text-white/30 text-[8px] sm:text-[10px] text-center uppercase tracking-[0.2em] mb-2">
+                        {t('hero.someClients')}
+                      </p>
+                      <div className="flex items-center justify-center gap-4 sm:gap-6">
+                        <img src="/lovable-uploads/client-logo-cugini-pizza.png" alt="Cugini Pizza - UK" className="h-5 sm:h-8 w-auto opacity-50" />
+                        <img src="/lovable-uploads/client-logo-hands.png" alt="Rosso Mazzara - UK" className="h-5 sm:h-8 w-auto opacity-50" />
+                        <img src="/lovable-uploads/client-logo-ansun.png" alt="Ansun - UK" className="h-5 sm:h-8 w-auto opacity-50" />
+                      </div>
+                    </div>
                   </div>
                 </CarouselItem>
               ))}
@@ -160,17 +172,6 @@ const Hero = () => {
           </Carousel>
         </div>
         
-        {/* Client Logos */}
-        <div className="mt-6 sm:mt-8 animate-fade-in" style={{ animationDelay: '1s' }}>
-          <p className="text-white/40 text-[10px] sm:text-xs text-center font-semibold uppercase tracking-[0.2em] mb-3 sm:mb-4">
-            {t('hero.someClients')}
-          </p>
-          <div className="flex items-center justify-center gap-8 sm:gap-10">
-            <img src="/lovable-uploads/client-logo-cugini-pizza.png" alt="Cugini Pizza" className="h-9 sm:h-12 w-auto opacity-70 hover:opacity-100 transition-opacity" />
-            <img src="/lovable-uploads/client-logo-hands.png" alt="Client logo" className="h-9 sm:h-12 w-auto opacity-70 hover:opacity-100 transition-opacity" />
-            <img src="/lovable-uploads/client-logo-ansun.png" alt="Ansun" className="h-9 sm:h-12 w-auto opacity-70 hover:opacity-100 transition-opacity" />
-          </div>
-        </div>
 
         {/* Scroll Indicator */}
         <div className="mt-6 sm:mt-8 animate-bounce" style={{ animationDelay: '1.2s' }}>
