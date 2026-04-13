@@ -16,15 +16,7 @@ const Hero = () => {
   const [callPhone, setCallPhone] = useState('');
   const [callLoading, setCallLoading] = useState(false);
   const [callSent, setCallSent] = useState(false);
-  const [showVideo, setShowVideo] = useState(false);
-  const [videoReady, setVideoReady] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  // Defer video loading until after page is interactive (3s)
-  useEffect(() => {
-    const timer = setTimeout(() => setShowVideo(true), 3000);
-    return () => clearTimeout(timer);
-  }, []);
 
   const scrollToProducts = () => {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
@@ -65,29 +57,17 @@ const Hero = () => {
     <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden pt-16 sm:pt-20">
       {/* Background: image first for LCP, video loads after interaction */}
       <div className="absolute inset-0">
-        <img
-          src={laboratorioHero}
-          alt="Laboratorio artigianale Vesuviano"
-          className={`w-full h-full object-cover object-center absolute inset-0 transition-opacity duration-1000 ${videoReady ? 'opacity-0' : 'opacity-100'}`}
-          fetchPriority="high"
-          decoding="sync"
-          loading="eager"
-          width={1920}
-          height={1080}
-        />
-        {showVideo && (
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            onCanPlay={() => setVideoReady(true)}
-            className={`w-full h-full object-cover object-center absolute inset-0 transition-opacity duration-1000 ${videoReady ? 'opacity-100' : 'opacity-0'}`}
-          >
-            <source src="/videos/built-on-place-bg.mp4" type="video/mp4" />
-          </video>
-        )}
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster={laboratorioHero}
+          className="w-full h-full object-cover object-center absolute inset-0"
+        >
+          <source src="/videos/built-on-place-bg.mp4" type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/75"></div>
       </div>
       
