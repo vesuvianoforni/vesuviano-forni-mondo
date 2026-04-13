@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { X, ArrowRight, Truck } from 'lucide-react';
@@ -18,30 +18,43 @@ interface OvenPreview {
 const ReadyToShipPopup = () => {
   const [open, setOpen] = useState(false);
   const [ovens, setOvens] = useState<OvenPreview[]>([]);
+  const dataReady = useRef(false);
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
 
+  // Prefetch data early (at 15s), well before popup opens at 25s
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setOpen(true);
-    }, 25000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (!open) return;
-    const fetchOvens = async () => {
+    const prefetchTimer = setTimeout(async () => {
       const { data } = await supabase
         .from('ready_to_ship_ovens')
         .select('id, custom_title, model_name, images, is_sold')
         .eq('is_sold', false)
         .order('created_at', { ascending: false })
         .limit(3);
-      setOvens((data as OvenPreview[]) || []);
+      const fetched = (data as OvenPreview[]) || [];
+      setOvens(fetched);
+      dataReady.current = true;
+
+      // Preload images so they're cached when popup opens
+      fetched.forEach((oven) => {
+        const url = oven.images?.[0];
+        if (url) {
+          const img = new Image();
+          img.src = url;
+        }
+      });
+    }, 15000);
+
+    const openTimer = setTimeout(() => {
+      setOpen(true);
+    }, 25000);
+
+    return () => {
+      clearTimeout(prefetchTimer);
+      clearTimeout(openTimer);
     };
-    fetchOvens();
-  }, [open]);
+  }, []);
 
   const handleNavigate = () => {
     const paths: Record<string, string> = {
@@ -106,6 +119,7 @@ const ReadyToShipPopup = () => {
                       src={oven.images?.[0] || '/placeholder.svg'}
                       alt={oven.custom_title || oven.model_name}
                       className="w-full h-full object-cover"
+                      loading="eager"
                     />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-1.5">
                       <p className="text-[9px] sm:text-[10px] font-medium text-white truncate leading-tight">
