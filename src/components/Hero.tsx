@@ -8,7 +8,8 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 const laboratorioHero = '/hero.webp';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const Hero = () => {
   const { t, i18n } = useTranslation();
@@ -135,7 +136,7 @@ const Hero = () => {
 
         {/* Customer Reviews Carousel - 3 real clients */}
         <div className="w-full max-w-xl mx-auto px-6 sm:px-12 animate-fade-in" style={{ animationDelay: '0.9s' }}>
-          <Carousel className="w-full">
+          <Carousel className="w-full" opts={{ loop: true }} plugins={[Autoplay({ delay: 4000, stopOnInteraction: false })]}>
             <CarouselContent>
               {[
                 { logo: '/lovable-uploads/client-logo-cugini-pizza.png', name: 'Cugini Pizza', reviewKey: 1 },
@@ -171,8 +172,6 @@ const Hero = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="-left-2 sm:left-0 bg-white/10 border-white/20 text-white hover:bg-white/20 h-7 w-7 sm:h-10 sm:w-10" />
-            <CarouselNext className="-right-2 sm:right-0 bg-white/10 border-white/20 text-white hover:bg-white/20 h-7 w-7 sm:h-10 sm:w-10" />
           </Carousel>
         </div>
         
