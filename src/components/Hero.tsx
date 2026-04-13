@@ -4,11 +4,17 @@ import CtaButton from './CtaButton';
 import { ArrowDown, Star, Phone } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import LazyImage from './LazyImage';
+import { useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 const laboratorioHero = '/hero.webp';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const Hero = () => {
   const { t, i18n } = useTranslation();
+  const [callPhone, setCallPhone] = useState('');
+  const [callLoading, setCallLoading] = useState(false);
+  const [callSent, setCallSent] = useState(false);
 
   const scrollToProducts = () => {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
@@ -16,6 +22,25 @@ const Hero = () => {
 
   const scrollToConsultation = () => {
     document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleCallMe = async () => {
+    if (!callPhone.trim()) return;
+    setCallLoading(true);
+    try {
+      await supabase.from('website_leads').insert({
+        phone: callPhone.trim(),
+        form_type: 'hero_callback',
+        status: 'new',
+        notes: 'Richiesta callback da Hero section',
+      });
+      setCallSent(true);
+      toast.success(t('hero.callbackSuccess', 'We\'ll call you shortly!'));
+    } catch (e) {
+      toast.error('Error, please try again');
+    } finally {
+      setCallLoading(false);
+    }
   };
 
   const currentLang = i18n.language || 'it';
@@ -66,30 +91,66 @@ const Hero = () => {
           {t('hero.description')}
         </p>
 
+        {/* Call Me Section - Mobile */}
+        <div className="sm:hidden w-full max-w-xs mx-auto mb-5 animate-fade-in" style={{ animationDelay: '0.8s' }}>
+          {!callSent ? (
+            <div className="bg-white/[0.07] backdrop-blur-md rounded-xl p-3 border border-white/10">
+              <div className="flex items-center justify-center gap-1.5 mb-2">
+                <Phone className="w-3.5 h-3.5 text-vesuviano-400" />
+                <span className="text-white/90 text-[11px] font-medium">
+                  {t('hero.callMe', 'Insert your number, we\'ll call you in 5 min')}
+                </span>
+              </div>
+              <p className="text-white/40 text-[9px] text-center mb-2">(9:00 - 19:00 CET)</p>
+              <div className="flex gap-2">
+                <input
+                  type="tel"
+                  value={callPhone}
+                  onChange={(e) => setCallPhone(e.target.value)}
+                  placeholder="+39 333..."
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-vesuviano-400"
+                />
+                <Button
+                  onClick={handleCallMe}
+                  disabled={callLoading || !callPhone.trim()}
+                  size="sm"
+                  className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-xs px-3"
+                >
+                  <Phone className="w-3 h-3" />
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white/[0.07] backdrop-blur-md rounded-xl p-3 border border-white/10 text-center">
+              <p className="text-white/90 text-xs">✅ {t('hero.callbackSuccess', 'We\'ll call you shortly!')}</p>
+            </div>
+          )}
+        </div>
+
         {/* Customer Reviews Carousel */}
         <div className="w-full max-w-xl mx-auto px-6 sm:px-12 animate-fade-in" style={{ animationDelay: '0.9s' }}>
           <Carousel className="w-full">
             <CarouselContent>
               {[1, 2, 3, 4, 5].map((num) => (
                 <CarouselItem key={num}>
-                  <div className="bg-white/[0.07] backdrop-blur-md rounded-xl p-4 sm:p-5 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] mx-1 sm:mx-2">
-                    <div className="flex justify-center gap-0.5 sm:gap-1 mb-2 sm:mb-3">
+                  <div className="bg-white/[0.07] backdrop-blur-md rounded-xl p-3 sm:p-5 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] mx-1 sm:mx-2">
+                    <div className="flex justify-center gap-0.5 sm:gap-1 mb-1.5 sm:mb-3">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
+                        <Star key={i} className="w-3.5 h-3.5 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
                       ))}
                     </div>
-                    <p className="text-white text-[13px] sm:text-base text-center italic leading-relaxed">
+                    <p className="text-white text-[11px] sm:text-base text-center italic leading-relaxed">
                       "{t(`hero.review${num}`)}"
                     </p>
-                    <p className="text-white/50 text-[11px] sm:text-sm text-center mt-2 sm:mt-3 font-medium">
+                    <p className="text-white/50 text-[10px] sm:text-sm text-center mt-1.5 sm:mt-3 font-medium">
                       — {t(`hero.reviewer${num}`)}
                     </p>
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="-left-2 sm:left-0 bg-white/10 border-white/20 text-white hover:bg-white/20 h-8 w-8 sm:h-10 sm:w-10" />
-            <CarouselNext className="-right-2 sm:right-0 bg-white/10 border-white/20 text-white hover:bg-white/20 h-8 w-8 sm:h-10 sm:w-10" />
+            <CarouselPrevious className="-left-2 sm:left-0 bg-white/10 border-white/20 text-white hover:bg-white/20 h-7 w-7 sm:h-10 sm:w-10" />
+            <CarouselNext className="-right-2 sm:right-0 bg-white/10 border-white/20 text-white hover:bg-white/20 h-7 w-7 sm:h-10 sm:w-10" />
           </Carousel>
         </div>
         
