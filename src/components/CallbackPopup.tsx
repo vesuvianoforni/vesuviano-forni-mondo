@@ -26,7 +26,7 @@ const CallbackPopup = () => {
 
   useEffect(() => {
     if (sessionStorage.getItem(DISMISSED_KEY)) return;
-    const timer = setTimeout(() => setVisible(true), 10000);
+    const timer = setTimeout(() => setVisible(true), 45000);
     return () => clearTimeout(timer);
   }, []);
 
