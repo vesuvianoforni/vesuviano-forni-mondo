@@ -49,6 +49,7 @@
     "catRotating": "Rotativo",
     "catElectric": "Eléctrico",
     "catBuiltOnPlace": "Built on Place",
+    "scheduleOther": "Programar en un día/hora más conveniente",
     "readyToShip": {
       "title": "Listo para Enviar",
       "subtitle": "Listo para Enviar en 24/48h",
