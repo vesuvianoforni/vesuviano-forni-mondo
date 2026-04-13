@@ -58,6 +58,7 @@
     "catRotating": "Rotating",
     "catElectric": "Electric",
     "catBuiltOnPlace": "Built on Place",
+    "scheduleOther": "Schedule at a more convenient time",
     "readyToShip": {
       "title": "Ready to Ship",
       "subtitle": "Ready to Ship in 24/48h",
