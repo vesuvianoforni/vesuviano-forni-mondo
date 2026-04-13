@@ -16,7 +16,10 @@ const Hero = () => {
   const [callPhone, setCallPhone] = useState('');
   const [callLoading, setCallLoading] = useState(false);
   const [callSent, setCallSent] = useState(false);
+  const [selectedCat, setSelectedCat] = useState<string | null>(null);
+  const [callHighlight, setCallHighlight] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const callSectionRef = useRef<HTMLDivElement>(null);
 
   const scrollToProducts = () => {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
@@ -111,14 +114,28 @@ const Hero = () => {
           ].map((cat) => {
             const Icon = cat.icon;
             const lang = (i18n.language || 'it') as keyof typeof cat.path;
+            const isSelected = selectedCat === cat.labelKey;
             return (
               <button
                 key={cat.labelKey}
-                onClick={() => navigate(cat.path[lang] || cat.path.it)}
-                className="group flex items-center gap-1.5 sm:gap-2 bg-white/[0.08] hover:bg-white/[0.18] backdrop-blur-sm border border-white/15 hover:border-white/30 rounded-full px-3 py-1.5 sm:px-5 sm:py-2.5 transition-all duration-300 hover:scale-105"
+                onClick={() => {
+                  if (isSelected) {
+                    navigate(cat.path[lang] || cat.path.it);
+                  } else {
+                    setSelectedCat(cat.labelKey);
+                    setCallHighlight(true);
+                    callSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => setCallHighlight(false), 2000);
+                  }
+                }}
+                className={`group flex items-center gap-1.5 sm:gap-2 backdrop-blur-sm rounded-full px-3 py-1.5 sm:px-5 sm:py-2.5 transition-all duration-300 hover:scale-105 ${
+                  isSelected
+                    ? 'bg-vesuviano-600/40 border-2 border-vesuviano-400 shadow-[0_0_16px_rgba(200,120,50,0.3)]'
+                    : 'bg-white/[0.08] hover:bg-white/[0.18] border border-white/15 hover:border-white/30'
+                }`}
               >
-                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-vesuviano-400 group-hover:text-vesuviano-300 transition-colors" />
-                <span className="text-white/90 text-[11px] sm:text-sm font-medium tracking-wide">
+                <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors ${isSelected ? 'text-vesuviano-300' : 'text-vesuviano-400 group-hover:text-vesuviano-300'}`} />
+                <span className={`text-[11px] sm:text-sm font-medium tracking-wide ${isSelected ? 'text-white' : 'text-white/90'}`}>
                   {t(cat.labelKey, cat.fallback)}
                 </span>
               </button>
@@ -127,9 +144,9 @@ const Hero = () => {
         </div>
 
         {/* Call Me Section - Mobile */}
-        <div className="sm:hidden w-full max-w-xs mx-auto mb-5 animate-fade-in" style={{ animationDelay: '0.8s' }}>
+        <div ref={callSectionRef} className={`sm:hidden w-full max-w-xs mx-auto mb-5 animate-fade-in transition-all duration-500 ${callHighlight ? 'scale-105 ring-2 ring-vesuviano-400 rounded-xl' : ''}`} style={{ animationDelay: '0.8s' }}>
           {!callSent ? (
-            <div className="bg-white/[0.07] backdrop-blur-md rounded-xl p-3 border border-white/10">
+            <div className={`bg-white/[0.07] backdrop-blur-md rounded-xl p-3 border transition-colors duration-500 ${callHighlight ? 'border-vesuviano-400 bg-white/[0.12]' : 'border-white/10'}`}>
               <div className="flex items-center justify-center gap-1.5 mb-2">
                 <Phone className="w-3.5 h-3.5 text-vesuviano-400" />
                 <span className="text-white/90 text-[11px] font-medium">
