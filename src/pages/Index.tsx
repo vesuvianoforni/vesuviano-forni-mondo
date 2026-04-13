@@ -237,13 +237,7 @@ const Index = () => {
           </Suspense>
         </LazySection>
 
-        <LazySection minHeight="400px">
-          <Suspense fallback={null}>
-            <section id="zapper" aria-label="ZAPPER abbattimento fumi">
-              <ZapperSection />
-            </section>
-          </Suspense>
-        </LazySection>
+        
         
         <LazySection minHeight="500px">
           <Suspense fallback={null}>
