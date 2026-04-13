@@ -178,6 +178,17 @@
       },
       "startingFrom": "À partir de £13 500 GBP",
       "cta": "En Savoir Plus"
+    },
+    "readyToShip": {
+      "title": "Prêt à Expédier",
+      "subtitle": "Livraison immédiate",
+      "description": "Fours sélectionnés en stock, testés et prêts pour une expédition immédiate. Économisez des semaines d'attente.",
+      "features": {
+        "immediate": "Disponibilité immédiate",
+        "tested": "Testés et certifiés en usine",
+        "shipping": "Expédition rapide dans le monde entier"
+      },
+      "cta": "Voir les Fours Disponibles"
     }
   },
   "clientsMap": {

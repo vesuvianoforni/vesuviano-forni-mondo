@@ -168,6 +168,17 @@
       },
       "startingFrom": "From £13,500 GBP",
       "cta": "Learn More"
+    },
+    "readyToShip": {
+      "title": "Ready to Ship",
+      "subtitle": "Immediate delivery",
+      "description": "Selected ovens in stock, tested and ready for immediate dispatch. Save weeks of waiting time.",
+      "features": {
+        "immediate": "Immediate availability",
+        "tested": "Factory tested & certified",
+        "shipping": "Fast worldwide shipping"
+      },
+      "cta": "View Available Ovens"
     }
   },
   "clientsMap": {

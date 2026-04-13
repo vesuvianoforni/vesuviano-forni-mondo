@@ -82,56 +82,7 @@ const Index = () => {
         </section>
 
 
-        {/* Ready to Ship Section */}
-        <section id="ready-to-ship" aria-label="Pronta consegna" className="py-16 md:py-20 bg-gradient-to-b from-stone-100 to-stone-50">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="max-w-5xl mx-auto">
-              <div className="bg-gradient-to-br from-vesuviano-500 to-vesuviano-600 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
-                {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-3xl"></div>
-                
-                <div className="relative z-10 text-center text-white">
-                  <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium mb-6">
-                    <span className="animate-pulse">🔥</span>
-                    <span>{t('hero.readyToShip.subtitle')}</span>
-                  </div>
-                  
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-playfair font-bold mb-4">
-                    {t('hero.readyToShip.title')}
-                  </h2>
-                  
-                  <p className="text-lg sm:text-xl text-white/90 mb-3 max-w-2xl mx-auto">
-                    {t('readyToShip.hero.description1')}
-                  </p>
-                  
-                  <p className="text-base sm:text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-                    {t('readyToShip.hero.description2')}
-                  </p>
-                  
-                  <Button 
-                    size="lg"
-                    className="bg-white text-vesuviano-600 hover:bg-stone-100 px-8 py-6 text-lg font-bold transition-all duration-300 hover:scale-105 shadow-xl"
-                    onClick={() => {
-                      const readyToShipPaths: Record<string, string> = {
-                        'it': '/it/pronta-consegna',
-                        'en': '/en/ready-to-ship',
-                        'fr': '/fr/pret-a-expedier',
-                        'es': '/es/listo-para-enviar',
-                        'de': '/de/versandfertig'
-                      };
-                      navigate(readyToShipPaths[currentLang] || readyToShipPaths['it']);
-                    }}
-                  >
-                    {t('hero.readyToShip.cta')}
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        
+
         <section id="ai-architect" aria-label="Architetto AI" className="py-16 md:py-24 bg-gradient-to-b from-stone-50 to-stone-100">
           <div className="max-w-6xl mx-auto px-4 md:px-6">
             {/* Header */}
@@ -350,6 +301,23 @@ const Index = () => {
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                   >
                     VesuvioBuono
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    to={(() => {
+                      const paths: Record<string, string> = {
+                        'it': '/it/pronta-consegna',
+                        'en': '/en/ready-to-ship',
+                        'fr': '/fr/pret-a-expedier',
+                        'es': '/es/listo-para-enviar',
+                        'de': '/de/versandfertig'
+                      };
+                      return paths[currentLang] || paths['it'];
+                    })()}
+                    className="text-gray-400 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {t('readyToShip.menuTitle', 'Ready to Ship')}
                   </Link>
                 </li>
                 <li>

@@ -159,6 +159,17 @@
       },
       "startingFrom": "Desde £13.500 GBP",
       "cta": "Saber Más"
+    },
+    "readyToShip": {
+      "title": "Listo para Enviar",
+      "subtitle": "Entrega inmediata",
+      "description": "Hornos seleccionados en stock, probados y listos para envío inmediato. Ahorra semanas de espera.",
+      "features": {
+        "immediate": "Disponibilidad inmediata",
+        "tested": "Probados y certificados en fábrica",
+        "shipping": "Envío rápido a todo el mundo"
+      },
+      "cta": "Ver Hornos Disponibles"
     }
   },
   "clientsMap": {

@@ -168,6 +168,17 @@
       },
       "startingFrom": "A partire da £13.500 GBP",
       "cta": "Scopri di Più"
+    },
+    "readyToShip": {
+      "title": "Pronta Consegna",
+      "subtitle": "Consegna immediata",
+      "description": "Forni selezionati in magazzino, testati e pronti per la spedizione immediata. Risparmia settimane di attesa.",
+      "features": {
+        "immediate": "Disponibilità immediata",
+        "tested": "Testati e certificati in fabbrica",
+        "shipping": "Spedizione rapida in tutto il mondo"
+      },
+      "cta": "Vedi Forni Disponibili"
     }
   },
   "clientsMap": {
