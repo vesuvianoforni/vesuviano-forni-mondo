@@ -141,7 +141,7 @@ const ProductCategories = () => {
                   </div>
                   
                   <CardContent className="p-4 sm:p-6">
-                    {isBuiltOnPlace ? (
+                    {isBuiltOnPlace || isReadyToShip ? (
                       <>
                         <p className="text-stone-600 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base">
                           {t(`products.${category.key}.description`)}
@@ -159,14 +159,24 @@ const ProductCategories = () => {
                           ))}
                         </ul>
 
-
-
-
                         <Button
                           className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white transition-all duration-300 text-sm sm:text-base py-2 sm:py-3"
-                          onClick={() => navigate('/built-on-place')}
+                          onClick={() => {
+                            if (isReadyToShip) {
+                              const readyToShipPaths: Record<string, string> = {
+                                'it': '/it/pronta-consegna',
+                                'en': '/en/ready-to-ship',
+                                'fr': '/fr/pret-a-expedier',
+                                'es': '/es/listo-para-enviar',
+                                'de': '/de/versandfertig'
+                              };
+                              navigate(readyToShipPaths[i18n.language] || readyToShipPaths['it']);
+                            } else {
+                              navigate('/built-on-place');
+                            }
+                          }}
                         >
-                          {t('products.builtOnPlace.cta')}
+                          {t(`products.${category.key}.cta`)}
                         </Button>
                       </>
                     ) : isConsultation ? (
