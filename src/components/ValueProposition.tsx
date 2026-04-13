@@ -68,7 +68,7 @@ const ValueProposition = () => {
       {/* Oven dome image with fade */}
       <div className="relative w-full h-[250px] sm:h-[320px] md:h-[400px] overflow-hidden">
         <img
-          src="/images/cupola-forno.png"
+          src="/images/cupola-forno.webp"
           alt="Cupola forno napoletano Vesuviano"
           className="w-full h-full object-cover object-top"
           loading="lazy"
