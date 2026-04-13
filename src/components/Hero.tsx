@@ -149,7 +149,16 @@ const Hero = () => {
         <div ref={callSectionRef} className={`sm:hidden w-full max-w-xs mx-auto mb-5 animate-fade-in transition-all duration-500 ${callHighlight ? 'scale-105 ring-2 ring-vesuviano-400 rounded-xl' : ''}`} style={{ animationDelay: '0.8s' }}>
           {!callSent ? (
             <div className={`bg-white/[0.07] backdrop-blur-md rounded-xl p-3 border transition-colors duration-500 ${callHighlight ? 'border-vesuviano-400 bg-white/[0.12]' : 'border-white/10'}`}>
-              <div className="flex items-center justify-center gap-1.5 mb-2">
+              <p className="text-white/80 text-[10px] font-medium text-center mb-2">
+                {t('hero.helpWith', "We'll help you with")}
+              </p>
+              <ul className="text-white/60 text-[9px] space-y-0.5 mb-3 pl-1">
+                <li>✓ {t('hero.help1', 'The exact oven that fits your business')}</li>
+                <li>✓ {t('hero.help2', 'The right capacity for your daily service')}</li>
+                <li>✓ {t('hero.help3', 'The key elements every pizzeria must have')}</li>
+                <li>✓ {t('hero.help4', 'Clear answers, no pressure')}</li>
+              </ul>
+              <div className="flex items-center justify-center gap-1.5 mb-1.5">
                 <Phone className="w-3.5 h-3.5 text-vesuviano-400" />
                 <span className="text-white/90 text-[11px] font-medium">
                   {t('hero.callMe', 'Insert your number, we\'ll call you in 5 min')}
