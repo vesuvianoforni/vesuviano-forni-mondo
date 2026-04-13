@@ -53,6 +53,11 @@
     "someClients": "Quelques-uns de nos clients",
     "callMe": "Entrez votre numéro, on vous rappelle en 5 minutes",
     "callbackSuccess": "Nous vous rappellerons bientôt !",
+    "catWood": "Bois",
+    "catGas": "Gaz",
+    "catRotating": "Rotatif",
+    "catElectric": "Électrique",
+    "catBuiltOnPlace": "Built on Place",
     "readyToShip": {
       "title": "Prêt à Expédier",
       "subtitle": "Prêt à Expédier en 24/48h",
