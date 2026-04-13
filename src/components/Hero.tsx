@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import CtaButton from './CtaButton';
-import { ArrowDown, Phone, Flame, Zap, RotateCw, TreePine, Building2, CalendarClock } from "lucide-react";
+import { ArrowDown, Phone, Flame, Zap, RotateCw, TreePine, Building2, CalendarClock, ThumbsUp } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import LazyImage from './LazyImage';
@@ -13,6 +13,7 @@ const laboratorioHero = '/hero.webp';
 const Hero = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const [callName, setCallName] = useState('');
   const [callPhone, setCallPhone] = useState('');
   const [callLoading, setCallLoading] = useState(false);
   const [callSent, setCallSent] = useState(false);
@@ -34,6 +35,7 @@ const Hero = () => {
     setCallLoading(true);
     try {
       await supabase.from('website_leads').insert({
+        first_name: callName.trim() || null,
         phone: callPhone.trim(),
         form_type: 'hero_callback',
         status: 'new',
@@ -42,7 +44,7 @@ const Hero = () => {
       await supabase.functions.invoke('send-form-data', {
         body: {
           formType: 'hero_callback',
-          data: { phone: callPhone.trim() },
+          data: { name: callName.trim(), phone: callPhone.trim() },
         },
       });
       setCallSent(true);
@@ -154,22 +156,31 @@ const Hero = () => {
                 </span>
               </div>
               <p className="text-white/40 text-[9px] text-center mb-2">(9:00 - 19:00 CET)</p>
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2">
                 <input
-                  type="tel"
-                  value={callPhone}
-                  onChange={(e) => setCallPhone(e.target.value)}
-                  placeholder="+39 333..."
-                  className="flex-1 bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-vesuviano-400"
+                  type="text"
+                  value={callName}
+                  onChange={(e) => setCallName(e.target.value)}
+                  placeholder={t('hero.namePlaceholder', 'Your name (optional)')}
+                  className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-vesuviano-400"
                 />
-                <Button
-                  onClick={handleCallMe}
-                  disabled={callLoading || !callPhone.trim()}
-                  size="sm"
-                  className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-xs px-3"
-                >
-                  <Phone className="w-3 h-3" />
-                </Button>
+                <div className="flex gap-2">
+                  <input
+                    type="tel"
+                    value={callPhone}
+                    onChange={(e) => setCallPhone(e.target.value)}
+                    placeholder="+39 333..."
+                    className="flex-1 bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-vesuviano-400"
+                  />
+                  <Button
+                    onClick={handleCallMe}
+                    disabled={callLoading || !callPhone.trim()}
+                    size="sm"
+                    className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-xs px-3"
+                  >
+                    <ThumbsUp className="w-3 h-3" />
+                  </Button>
+                </div>
               </div>
               <button
                 onClick={() => navigate('/book-a-slot-call')}
