@@ -133,6 +133,27 @@ const BookAppointment = () => {
         <div className="bg-card rounded-lg shadow-lg p-8 border">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              {/* Name */}
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-semibold">
+                      {t("bookSlot.nameLabel", "Your Name")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t("bookSlot.namePlaceholder", "John Doe")}
+                        {...field}
+                        className="h-12"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               {/* Date Picker */}
               <FormField
                 control={form.control}
