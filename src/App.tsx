@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { ConsultationModalProvider } from "@/contexts/ConsultationModalContext";
 
 // Critical route - loaded eagerly
 import LocalizedIndex from "./pages/LocalizedIndex";
@@ -71,6 +72,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ConsultationModalProvider>
           <ClarityPageView />
           <Suspense fallback={<PageLoader />}>
             <Routes>
@@ -204,6 +206,7 @@ const App = () => {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          </ConsultationModalProvider>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
