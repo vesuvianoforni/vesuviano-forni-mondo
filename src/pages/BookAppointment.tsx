@@ -52,6 +52,7 @@ const BookAppointment = () => {
   }, [i18n]);
 
   const formSchema = z.object({
+    name: z.string().trim().min(2, t("bookSlot.validation.nameRequired", "Name is required")).max(100),
     date: z.date({
       required_error: t("bookSlot.validation.dateRequired"),
     }),
