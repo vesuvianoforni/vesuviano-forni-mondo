@@ -5,7 +5,6 @@ import paypalLogo from '@/assets/paypal-logo.png';
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
-import { Wand2, Eye, ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProductCategories from "@/components/ProductCategories";
