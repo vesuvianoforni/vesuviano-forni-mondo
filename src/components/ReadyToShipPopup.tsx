@@ -15,7 +15,7 @@ const ReadyToShipPopup = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setOpen(true);
-    }, 15000); // 15 seconds
+    }, 25000); // 25 seconds
 
     return () => clearTimeout(timer);
   }, []);
@@ -49,33 +49,16 @@ const ReadyToShipPopup = () => {
             <DialogTitle>Pronta Consegna</DialogTitle>
             <DialogDescription>Forni pronti per la spedizione</DialogDescription>
           </VisuallyHidden>
-          <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium mb-4">
-            <span className="animate-pulse">🔥</span>
-            <span>{t('hero.readyToShip.subtitle')}</span>
-          </div>
-
-          <h2 className="text-2xl sm:text-3xl font-playfair font-bold mb-3">
-            {t('hero.readyToShip.title')}
+          <h2 className="text-2xl sm:text-3xl font-playfair font-bold mb-4">
+            Evita tempi di attesa: alcuni forni sono già disponibili
           </h2>
-
-          <p className="text-white/90 mb-2 text-sm sm:text-base">
-            {t('readyToShip.hero.description1')}
-          </p>
-
-          <p className="text-white font-semibold mb-1 text-base sm:text-lg">
-            Disponibili anche a Gas
-          </p>
-
-          <div className="inline-block bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-            <span className="text-xl font-bold">Sconto 20%</span>
-          </div>
 
           <Button
             onClick={handleNavigate}
             size="lg"
             className="bg-white text-vesuviano-600 hover:bg-stone-100 px-6 py-6 text-base font-bold transition-all duration-300 hover:scale-105 shadow-xl w-full sm:w-auto"
           >
-            {t('hero.readyToShip.cta')}
+            👉 Verifica quali modelli sono pronti
             <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
         </div>
