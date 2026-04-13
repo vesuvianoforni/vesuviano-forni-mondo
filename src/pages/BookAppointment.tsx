@@ -93,8 +93,7 @@ const BookAppointment = () => {
 
       if (error) throw error;
 
-      toast.success(t("bookSlot.successMessage"));
-      form.reset();
+      navigate('/thank-you');
     } catch (error) {
       console.error("Error submitting appointment:", error);
       toast.error(t("bookSlot.errorMessage"));
