@@ -49,9 +49,16 @@ const ReadyToShipPopup = () => {
             <DialogTitle>Pronta Consegna</DialogTitle>
             <DialogDescription>Forni pronti per la spedizione</DialogDescription>
           </VisuallyHidden>
-          <h2 className="text-2xl sm:text-3xl font-playfair font-bold mb-4">
+          <h2 className="text-2xl sm:text-3xl font-playfair font-bold mb-3">
             Evita tempi di attesa: alcuni forni sono già disponibili
           </h2>
+
+          <p className="text-white/90 text-sm sm:text-base mb-1">
+            Sconto 20% sui modelli pronti a partire
+          </p>
+          <p className="text-white/70 text-xs sm:text-sm mb-5">
+            Spedizione in 7 giorni
+          </p>
 
           <Button
             onClick={handleNavigate}
