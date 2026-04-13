@@ -56,16 +56,16 @@ const Hero = () => {
     <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden pt-16 sm:pt-20">
       {/* Background Image */}
       <div className="absolute inset-0">
-        <img
-          src={laboratorioHero}
-          alt="Laboratorio artigianale Vesuviano - Produzione artigianale di forni napoletani a legna, gas ed elettrici"
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster={laboratorioHero}
           className="w-full h-full object-cover object-center"
-          fetchPriority="high"
-          decoding="sync"
-          loading="eager"
-          width={1920}
-          height={1080}
-        />
+        >
+          <source src="/videos/built-on-place-bg.mp4" type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/75"></div>
       </div>
       
