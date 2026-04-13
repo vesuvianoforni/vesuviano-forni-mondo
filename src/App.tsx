@@ -19,6 +19,7 @@ const LocalizedVesuvioBuono = lazy(() => import("./pages/LocalizedVesuvioBuono")
 const LocalizedAboutUs = lazy(() => import("./pages/LocalizedAboutUs"));
 const LocalizedReadyToShip = lazy(() => import("./pages/LocalizedReadyToShip"));
 const LocalizedBurners = lazy(() => import("./pages/LocalizedBurners"));
+const LocalizedSmokePurifier = lazy(() => import("./pages/LocalizedSmokePurifier"));
 const LocalizedUsefulInfo = lazy(() => import("./pages/LocalizedUsefulInfo"));
 const ArchitettoAIRedirect = lazy(() => import("./pages/ArchitettoAIRedirect"));
 const ThankYou = lazy(() => import("./pages/ThankYou"));
