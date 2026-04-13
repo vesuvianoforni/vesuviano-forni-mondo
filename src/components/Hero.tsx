@@ -34,6 +34,12 @@ const Hero = () => {
         status: 'new',
         notes: 'Richiesta callback da Hero section',
       });
+      await supabase.functions.invoke('send-form-data', {
+        body: {
+          formType: 'hero_callback',
+          data: { phone: callPhone.trim() },
+        },
+      });
       setCallSent(true);
       toast.success(t('hero.callbackSuccess', 'We\'ll call you shortly!'));
     } catch (e) {
