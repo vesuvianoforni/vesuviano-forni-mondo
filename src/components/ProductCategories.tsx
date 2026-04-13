@@ -58,6 +58,11 @@ const ProductCategories = () => {
       link: "/built-on-place"
     },
     {
+      key: 'readyToShip',
+      image: "/lovable-uploads/forni-colorati-showroom.webp",
+      link: 'readyToShip'
+    },
+    {
       key: 'consultation',
       image: "/lovable-uploads/forni-colorati-showroom.webp"
     }
@@ -247,26 +252,6 @@ const ProductCategories = () => {
             })}
           </div>
 
-          {/* Bottom Section */}
-          <div className="text-center bg-stone-50 rounded-2xl p-6 sm:p-8 animate-scale-in" style={{ animationDelay: '0.6s' }}>
-            <h3 className="font-playfair text-xl sm:text-2xl md:text-3xl font-bold text-charcoal-900 mb-3 sm:mb-4 px-2">
-              {t('products.customSolutions.title')}
-            </h3>
-            <p className="text-stone-600 mb-4 sm:mb-6 max-w-2xl mx-auto text-sm sm:text-base px-2">
-              {t('products.customSolutions.description')}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <CtaButton className="px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base" />
-              <Button 
-                size="lg"
-                variant="outline"
-                className="border-vesuviano-500 text-vesuviano-600 hover:bg-vesuviano-500 hover:text-white px-6 sm:px-8 py-2.5 sm:py-3 transition-all duration-300 text-sm sm:text-base"
-                onClick={() => document.getElementById('oven-gallery')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                {t('products.customSolutions.viewGallery')}
-              </Button>
-            </div>
-          </div>
         </div>
 
         {/* Download Datasheet Modal */}
