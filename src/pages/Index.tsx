@@ -34,6 +34,7 @@ const CallbackPopup = lazy(() => import("@/components/CallbackPopup"));
 const Index = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const { openModal: openConsultationModal } = useConsultationModal();
   
   // Extract current language from location
   const currentLang = i18n.language;
