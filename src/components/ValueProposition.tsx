@@ -64,8 +64,20 @@ const ValueProposition = () => {
   const l = labels[lang] || labels.it;
 
   return (
-    <section className="py-12 md:py-20 bg-gradient-to-b from-stone-50 to-stone-100">
-      <div className="container mx-auto px-4 md:px-6">
+    <section className="relative bg-gradient-to-b from-stone-50 to-stone-100 overflow-hidden">
+      {/* Oven dome image with fade */}
+      <div className="relative w-full h-[250px] sm:h-[320px] md:h-[400px] overflow-hidden">
+        <img
+          src="/images/cupola-forno.png"
+          alt="Cupola forno napoletano Vesuviano"
+          className="w-full h-full object-cover object-top"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-stone-50" />
+        <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-b from-transparent to-stone-50" />
+      </div>
+
+      <div className="container mx-auto px-4 md:px-6 pb-12 md:pb-20 -mt-8 relative z-10">
         <div className="max-w-3xl mx-auto">
           <h2 className="font-playfair text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-stone-900 mb-8 md:mb-12 text-center leading-snug">
             {l.title}
