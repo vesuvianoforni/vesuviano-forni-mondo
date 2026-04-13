@@ -48,7 +48,11 @@
       "title": "Listo para Enviar",
       "subtitle": "Listo para Enviar en 24/48h",
       "description": "Hornos de leña básicos, listos para ser embalados y enviados. También se pueden configurar a gas según tus necesidades.",
-      "cta": "Ver Hornos Disponibles →"
+      "cta": "Ver Hornos Disponibles →",
+      "popupTitle": "Evita la espera: algunos hornos ya están disponibles",
+      "popupDiscount": "20% de descuento en modelos listos para enviar",
+      "popupShipping": "Envío en 7 días",
+      "popupCta": "Verifica qué modelos están listos"
     }
   },
   "header": {

@@ -57,7 +57,11 @@
       "title": "Prêt à Expédier",
       "subtitle": "Prêt à Expédier en 24/48h",
       "description": "Fours à bois de base, prêts à être emballés et expédiés. Peuvent également être configurés au gaz selon vos besoins.",
-      "cta": "Voir les Fours Disponibles →"
+      "cta": "Voir les Fours Disponibles →",
+      "popupTitle": "Évitez l'attente : certains fours sont déjà disponibles",
+      "popupDiscount": "Remise de 20% sur les modèles prêts à partir",
+      "popupShipping": "Expédition en 7 jours",
+      "popupCta": "Vérifiez quels modèles sont prêts"
     }
   },
   "header": {

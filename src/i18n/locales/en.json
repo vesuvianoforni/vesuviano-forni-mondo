@@ -57,7 +57,11 @@
       "title": "Ready to Ship",
       "subtitle": "Ready to Ship in 24/48h",
       "description": "Basic wood-fired ovens, ready to be packed and shipped. Can also be configured for gas according to your needs.",
-      "cta": "View Available Ovens →"
+      "cta": "View Available Ovens →",
+      "popupTitle": "Skip the wait: some ovens are already available",
+      "popupDiscount": "20% off on ready-to-ship models",
+      "popupShipping": "Shipping in 7 days",
+      "popupCta": "Check which models are ready"
     }
   },
   "header": {

@@ -57,7 +57,11 @@
       "title": "Pronta Consegna",
       "subtitle": "Ready to Ship in 24/48h",
       "description": "Forni di base a legna, già pronti per essere imballati e spediti. Possono essere configurati anche a gas secondo le tue esigenze.",
-      "cta": "Vedi Forni Disponibili →"
+      "cta": "Vedi Forni Disponibili →",
+      "popupTitle": "Evita tempi di attesa: alcuni forni sono già disponibili",
+      "popupDiscount": "Sconto 20% sui modelli pronti a partire",
+      "popupShipping": "Spedizione in 7 giorni",
+      "popupCta": "Verifica quali modelli sono pronti"
     }
   },
   "header": {
