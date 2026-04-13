@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -37,6 +38,7 @@ import LanguageSelector from "@/components/LanguageSelector";
 
 const BookAppointment = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Detect browser language on mount
@@ -92,8 +94,7 @@ const BookAppointment = () => {
 
       if (error) throw error;
 
-      toast.success(t("bookSlot.successMessage"));
-      form.reset();
+      navigate('/thank-you');
     } catch (error) {
       console.error("Error submitting appointment:", error);
       toast.error(t("bookSlot.errorMessage"));
