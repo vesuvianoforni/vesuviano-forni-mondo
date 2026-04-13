@@ -133,7 +133,7 @@ const Hero = () => {
                 className={`group flex items-center gap-1.5 sm:gap-2 backdrop-blur-sm rounded-full px-3 py-1.5 sm:px-5 sm:py-2.5 transition-all duration-300 hover:scale-105 ${
                   isSelected
                     ? 'bg-vesuviano-600/40 border-2 border-vesuviano-400 shadow-[0_0_16px_rgba(200,120,50,0.3)]'
-                    : 'bg-white/[0.08] hover:bg-white/[0.18] border border-white/15 hover:border-white/30'
+                    : 'bg-white/[0.08] hover:bg-vesuviano-600/30 border border-white/15 hover:border-vesuviano-400/50'
                 }`}
               >
                 <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors ${isSelected ? 'text-vesuviano-300' : 'text-vesuviano-400 group-hover:text-vesuviano-300'}`} />
