@@ -16,6 +16,15 @@ const Hero = () => {
   const [callPhone, setCallPhone] = useState('');
   const [callLoading, setCallLoading] = useState(false);
   const [callSent, setCallSent] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Defer video loading until after page is interactive (3s)
+  useEffect(() => {
+    const timer = setTimeout(() => setShowVideo(true), 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const scrollToProducts = () => {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
