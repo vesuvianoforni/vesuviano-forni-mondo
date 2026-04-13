@@ -38,6 +38,7 @@ import LanguageSelector from "@/components/LanguageSelector";
 
 const BookAppointment = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Detect browser language on mount
