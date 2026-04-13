@@ -125,13 +125,6 @@ const Index = () => {
           </Suspense>
         </LazySection>
         
-        <LazySection minHeight="400px">
-          <Suspense fallback={null}>
-            <section id="consultation" aria-label="Modulo contatti">
-              <ConsultationForm />
-            </section>
-          </Suspense>
-        </LazySection>
         
         <LazySection minHeight="300px">
           <Suspense fallback={null}>
