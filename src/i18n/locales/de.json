@@ -57,7 +57,11 @@
       "title": "Versandfertig",
       "subtitle": "Versandfertig in 24/48h",
       "description": "Basis-Holzöfen, bereit zum Verpacken und Versenden. Können auch für Gas nach Ihren Bedürfnissen konfiguriert werden.",
-      "cta": "Verfügbare Öfen anzeigen →"
+      "cta": "Verfügbare Öfen anzeigen →",
+      "popupTitle": "Keine Wartezeit: Einige Öfen sind sofort verfügbar",
+      "popupDiscount": "20% Rabatt auf versandfertige Modelle",
+      "popupShipping": "Versand in 7 Tagen",
+      "popupCta": "Prüfen Sie, welche Modelle bereit sind"
     }
   },
   "header": {
