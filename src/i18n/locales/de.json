@@ -53,6 +53,11 @@
     "someClients": "Einige unserer Kunden",
     "callMe": "Nummer eingeben, wir rufen Sie in 5 Minuten zurück",
     "callbackSuccess": "Wir rufen Sie bald zurück!",
+    "catWood": "Holz",
+    "catGas": "Gas",
+    "catRotating": "Drehbar",
+    "catElectric": "Elektrisch",
+    "catBuiltOnPlace": "Built on Place",
     "readyToShip": {
       "title": "Versandfertig",
       "subtitle": "Versandfertig in 24/48h",
