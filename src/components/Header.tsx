@@ -71,6 +71,13 @@ const Header = () => {
         'fr': '/fr/bruleurs',
         'es': '/es/quemadores',
         'de': '/de/brenner'
+      },
+      'smokePurifier': {
+        'it': '/it/depuratore-fumi',
+        'en': '/en/wood-smoke-purifier',
+        'fr': '/fr/purificateur-fumee',
+        'es': '/es/purificador-humo',
+        'de': '/de/rauchfilter'
       }
     };
     return paths[ovenType]?.[currentLang] || paths[ovenType]?.['it'] || '/';
@@ -95,6 +102,7 @@ const Header = () => {
     { key: 'vesuviobuono', label: t('products.vesuviobuono.title'), path: getVesuvioBuonoPath() },
     { key: 'builtOnPlace', label: t('products.builtOnPlace.title'), path: '/built-on-place' },
     { key: 'burners', label: t('burners.pageTitle'), path: getOvenPath('burners') },
+    { key: 'smokePurifier', label: t('zapper.menuTitle', 'Wood Smoke Purifier'), path: getOvenPath('smokePurifier') },
     { key: 'readyToShip', label: t('readyToShip.menuTitle', 'Ready to Ship'), path: getReadyToShipPath() }
   ];
 
