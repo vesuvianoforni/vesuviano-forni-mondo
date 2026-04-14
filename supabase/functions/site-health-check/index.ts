@@ -30,7 +30,14 @@ serve(async (req) => {
     try {
       const controller = new AbortController()
       const timeout = setTimeout(() => controller.abort(), 20000)
-      const siteRes = await fetch(SITE_URL, { signal: controller.signal })
+      const siteRes = await fetch(SITE_URL, { 
+        signal: controller.signal,
+        headers: {
+          'User-Agent': 'VesuvianoHealthCheck/1.0',
+          'Accept': 'text/html',
+        },
+        redirect: 'follow',
+      })
       clearTimeout(timeout)
       
       if (siteRes.ok) {
