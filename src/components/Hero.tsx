@@ -1,59 +1,22 @@
 
 import { Button } from "@/components/ui/button";
-import CtaButton from './CtaButton';
-import { ArrowDown, Phone, Flame, Zap, RotateCw, TreePine, Building2, CalendarClock, ThumbsUp } from "lucide-react";
+import { ArrowDown, Flame, Zap, RotateCw, TreePine, Building2, Sparkles } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import LazyImage from './LazyImage';
-import { useState, useEffect, useRef } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { useState, useRef } from 'react';
+import OvenFinderQuizModal from './OvenFinderQuizModal';
 const laboratorioHero = '/hero.webp';
 
 const Hero = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const [callName, setCallName] = useState('');
-  const [callPhone, setCallPhone] = useState('');
-  const [callLoading, setCallLoading] = useState(false);
-  const [callSent, setCallSent] = useState(false);
   const [selectedCat, setSelectedCat] = useState<string | null>(null);
-  const [callHighlight, setCallHighlight] = useState(false);
-  const [showNameField, setShowNameField] = useState(false);
+  const [quizOpen, setQuizOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const callSectionRef = useRef<HTMLDivElement>(null);
 
   const scrollToProducts = () => {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const scrollToConsultation = () => {
-    document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleCallMe = async () => {
-    if (!callPhone.trim()) return;
-    setCallLoading(true);
-    try {
-      await supabase.from('website_leads').insert({
-        first_name: callName.trim() || null,
-        phone: callPhone.trim(),
-        form_type: 'hero_callback',
-        status: 'new',
-        notes: 'Richiesta callback da Hero section',
-      });
-      await supabase.functions.invoke('send-form-data', {
-        body: {
-          formType: 'hero_callback',
-          data: { name: callName.trim(), phone: callPhone.trim() },
-        },
-      });
-      navigate('/thank-you');
-    } catch (e) {
-      toast.error('Error, please try again');
-    } finally {
-      setCallLoading(false);
-    }
   };
 
   const currentLang = i18n.language || 'it';
