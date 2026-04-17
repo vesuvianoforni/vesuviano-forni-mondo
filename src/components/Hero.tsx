@@ -149,13 +149,22 @@ const Hero = () => {
         {/* AI Oven Finder CTA - minimal one-liner + button */}
         <div className="w-full max-w-sm mx-auto mb-5 animate-fade-in" style={{ animationDelay: '0.8s' }}>
           <Button
-            onClick={() => setQuizOpen(true)}
+            onClick={() => { setHighlightCta(false); setQuizOpen(true); }}
             size="lg"
-            className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white font-semibold rounded-full shadow-lg shadow-black/30 h-12"
+            className={`w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white font-semibold rounded-full shadow-lg shadow-black/30 h-12 transition-all duration-300 ${
+              highlightCta
+                ? 'animate-pulse ring-4 ring-vesuviano-400/60 scale-105 shadow-[0_0_28px_rgba(200,120,50,0.6)]'
+                : ''
+            }`}
           >
             <Sparkles className="w-4 h-4 mr-2" />
             {t('hero.quizCtaShort', { defaultValue: 'Find your perfect oven in 60s' })}
           </Button>
+          {highlightCta && selectedCat && (
+            <p className="text-vesuviano-300 text-[11px] sm:text-xs text-center mt-2 animate-fade-in">
+              {t('hero.tapAgainHint', { defaultValue: 'Tap the tag again to see all models, or start the quiz ✨' })}
+            </p>
+          )}
         </div>
 
         {/* Scroll Indicator */}
