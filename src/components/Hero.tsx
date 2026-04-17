@@ -4,16 +4,49 @@ import { ArrowDown, Flame, Zap, RotateCw, TreePine, Building2, Sparkles } from "
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import LazyImage from './LazyImage';
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import OvenFinderQuizModal from './OvenFinderQuizModal';
+import { supabase } from "@/integrations/supabase/client";
 const laboratorioHero = '/hero.webp';
+
+const fallbackByLang: Record<string, { name: string; flag: string }> = {
+  it: { name: 'Italia', flag: '🇮🇹' },
+  en: { name: 'United Kingdom', flag: '🇬🇧' },
+  fr: { name: 'France', flag: '🇫🇷' },
+  de: { name: 'Deutschland', flag: '🇩🇪' },
+  es: { name: 'España', flag: '🇪🇸' },
+};
 
 const Hero = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [selectedCat, setSelectedCat] = useState<string | null>(null);
   const [quizOpen, setQuizOpen] = useState(false);
+  const [geo, setGeo] = useState<{ name: string; flag: string } | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const cached = sessionStorage.getItem('visitor-geo');
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        if (parsed?.name && parsed?.flag) { setGeo(parsed); return; }
+      } catch {}
+    }
+    supabase.functions.invoke('geo-detect').then(({ data }) => {
+      if (!data?.country_name) return;
+      // Try to localize country name in current UI language
+      let localized = data.country_name as string;
+      try {
+        const dn = new (Intl as any).DisplayNames([i18n.language || 'en'], { type: 'region' });
+        localized = dn.of(data.country_code) || data.country_name;
+      } catch {}
+      const result = { name: localized, flag: data.flag };
+      setGeo(result);
+      sessionStorage.setItem('visitor-geo', JSON.stringify(result));
+    }).catch(() => {});
+  }, [i18n.language]);
+
 
   const scrollToProducts = () => {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
@@ -51,10 +84,14 @@ const Hero = () => {
           />
         </div>
         
-        {/* Pre-headline - elegant simple text */}
+        {/* Pre-headline - geo-aware text with country flag */}
         <div className="animate-fade-in mb-4 sm:mb-5">
           <span className="text-white/80 text-[11px] sm:text-sm font-medium tracking-[0.25em] uppercase">
-            {t('hero.subtitle')}
+            {t('hero.subtitlePrefix', { defaultValue: 'For pizzerias and restaurants in' })}{' '}
+            <span className="text-white normal-case tracking-normal font-semibold">
+              {(geo || fallbackByLang[i18n.language] || fallbackByLang.en).flag}{' '}
+              {(geo || fallbackByLang[i18n.language] || fallbackByLang.en).name}
+            </span>
           </span>
         </div>
 
