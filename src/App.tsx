@@ -206,9 +206,6 @@ const App = () => {
 
               <Route path="*" element={<NotFound />} />
             </Routes>
-            <Suspense fallback={null}>
-              <PreFooterConsultation />
-            </Suspense>
           </Suspense>
           </ConsultationModalProvider>
         </BrowserRouter>
