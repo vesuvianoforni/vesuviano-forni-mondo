@@ -23,6 +23,7 @@ const Hero = () => {
   const [selectedCat, setSelectedCat] = useState<string | null>(null);
   const [quizOpen, setQuizOpen] = useState(false);
   const [geo, setGeo] = useState<{ name: string; flag: string } | null>(null);
+  const [highlightCta, setHighlightCta] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
