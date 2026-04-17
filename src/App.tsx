@@ -38,7 +38,7 @@ const LocalizedBlogPost = lazy(() => import("./pages/LocalizedBlogPost"));
 const ProformaPage = lazy(() => import("./pages/ProformaPage"));
 const BuiltOnPlace = lazy(() => import("./pages/BuiltOnPlace"));
 import ClarityPageView from "./components/ClarityPageView";
-const PreFooterConsultation = lazy(() => import("./components/PreFooterConsultation"));
+
 
 // ERP - lazy loaded
 const ERPLayout = lazy(() => import("./pages/ERPLayout"));
@@ -206,9 +206,6 @@ const App = () => {
 
               <Route path="*" element={<NotFound />} />
             </Routes>
-            <Suspense fallback={null}>
-              <PreFooterConsultation />
-            </Suspense>
           </Suspense>
           </ConsultationModalProvider>
         </BrowserRouter>
