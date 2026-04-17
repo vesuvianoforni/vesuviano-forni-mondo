@@ -110,13 +110,7 @@ const Index = () => {
           </Suspense>
         </LazySection>
         
-        <LazySection minHeight="400px">
-          <Suspense fallback={null}>
-            <section id="oven-gallery" aria-label="Galleria forni">
-              <OvenGallery />
-            </section>
-          </Suspense>
-        </LazySection>
+        
         
         
         <LazySection minHeight="300px">
