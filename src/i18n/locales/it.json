@@ -32,6 +32,9 @@
     "description": "I nostri forni artigianali protagonisti di questa speciale manifestazione che si tiene ogni anno, dove la tradizione napoletana incontra l'eccellenza culinaria.",
     "caption": "Vesuviano - Partner ufficiale dell'evento Pizza a Vico"
   },
+  "reviewsStrip": {
+    "headline": "Pizzerie e ristoranti che ci scelgono in"
+  },
   "hero": {
     "quizBadge": "Consulenza personalizzata",
     "quizTitle": "Non sai quale forno fa per te?",
