@@ -32,6 +32,9 @@
     "description": "Nuestros hornos artesanales son protagonistas de este evento especial que se celebra cada año, donde la tradición napolitana se encuentra con la excelencia culinaria.",
     "caption": "Vesuviano - Socio oficial del evento Pizza a Vico"
   },
+  "reviewsStrip": {
+    "headline": "Pizzerías y restaurantes que nos eligen en"
+  },
   "hero": {
     "quizBadge": "Asesoramiento personalizado",
     "quizTitle": "¿No sabes qué horno es para ti?",

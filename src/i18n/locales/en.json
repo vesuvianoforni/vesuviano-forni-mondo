@@ -32,6 +32,9 @@
     "description": "Our artisan ovens take center stage at this special annual event, where Neapolitan tradition meets culinary excellence.",
     "caption": "Vesuviano - Official partner of the Pizza a Vico event"
   },
+  "reviewsStrip": {
+    "headline": "Trusted by pizzerias and restaurants in"
+  },
   "hero": {
     "quizBadge": "Personalized consultation",
     "quizTitle": "Not sure which oven is right for you?",
