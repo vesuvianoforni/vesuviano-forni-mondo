@@ -89,13 +89,7 @@ const Index = () => {
 
         
         
-        <LazySection minHeight="400px">
-          <Suspense fallback={null}>
-            <section id="services" aria-label="Servizi offerti">
-              <Services />
-            </section>
-          </Suspense>
-        </LazySection>
+        
 
         
         
