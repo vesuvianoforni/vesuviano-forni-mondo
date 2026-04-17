@@ -163,6 +163,101 @@ Pick the single best model and explain in 3-4 sentences why it's perfect for thi
       (o) => o.model_name?.toLowerCase() === recommendedModel.toLowerCase(),
     );
 
+    // Send notification emails (admin full report + customer teaser)
+    if (RESEND_API_KEY) {
+      const labels: Record<string, string> = {
+        pizzeria: "Pizzeria / Ristorante", private: "Uso privato",
+        wood: "Legna", gas: "Gas", electric: "Elettrico", any: "Nessuna preferenza",
+        traditional: "Napoletana tradizionale", modern: "Moderno / Contemporaneo",
+        romana: "Romana / Pinsa", mixed: "Menu misto",
+      };
+      const lbl = (k?: string) => (k ? labels[k] || k : "—");
+
+      const adminHtml = `
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#fff;">
+          <div style="background:linear-gradient(135deg,#c2410c,#9a3412);padding:24px;border-radius:8px 8px 0 0;color:#fff;">
+            <h1 style="margin:0;font-size:22px;">🔥 Nuovo lead — Oven Finder Quiz</h1>
+            <p style="margin:6px 0 0;opacity:.9;font-size:13px;">Quiz "Find your perfect oven" completato</p>
+          </div>
+          <div style="border:1px solid #e5e7eb;border-top:none;padding:24px;border-radius:0 0 8px 8px;">
+            <h2 style="font-size:16px;margin:0 0 12px;color:#111;">Contatti</h2>
+            <table style="width:100%;font-size:14px;color:#333;border-collapse:collapse;">
+              <tr><td style="padding:6px 0;width:120px;color:#666;">Nome</td><td><strong>${name}</strong></td></tr>
+              <tr><td style="padding:6px 0;color:#666;">Email</td><td><a href="mailto:${email}">${email}</a></td></tr>
+              <tr><td style="padding:6px 0;color:#666;">Telefono</td><td><a href="tel:${phone}">${phone}</a></td></tr>
+              <tr><td style="padding:6px 0;color:#666;">Lingua</td><td>${lang.toUpperCase()}</td></tr>
+            </table>
+            <h2 style="font-size:16px;margin:24px 0 12px;color:#111;">Risposte quiz</h2>
+            <table style="width:100%;font-size:14px;color:#333;border-collapse:collapse;">
+              <tr><td style="padding:6px 0;width:160px;color:#666;">Utilizzo</td><td>${lbl(usage)}</td></tr>
+              <tr><td style="padding:6px 0;color:#666;">Coperti / Persone</td><td>${covers || "—"}</td></tr>
+              <tr><td style="padding:6px 0;color:#666;">Stile pizza</td><td>${lbl(style)}</td></tr>
+              <tr><td style="padding:6px 0;color:#666;">Combustibile</td><td>${lbl(fuel)}</td></tr>
+            </table>
+            <div style="margin-top:24px;padding:16px;background:#fff7ed;border-left:4px solid #c2410c;border-radius:4px;">
+              <p style="margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:#9a3412;font-weight:600;">Raccomandazione AI</p>
+              <p style="margin:0 0 8px;font-size:18px;font-weight:700;color:#111;">${recommendedModel || "—"}</p>
+              <p style="margin:0;font-size:13px;color:#444;line-height:1.5;">${aiMessage || "—"}</p>
+            </div>
+            <p style="margin:24px 0 0;font-size:12px;color:#888;">Lead ID: ${lead?.id || "n/a"}</p>
+          </div>
+        </div>`;
+
+      const customerSubjects: Record<string, string> = {
+        it: "Abbiamo trovato il forno perfetto per te 🔥",
+        en: "We've found your perfect oven 🔥",
+        fr: "Nous avons trouvé votre four parfait 🔥",
+        de: "Wir haben Ihren perfekten Ofen gefunden 🔥",
+        es: "Hemos encontrado tu horno perfecto 🔥",
+      };
+      const customerBodies: Record<string, { title: string; body: string; signoff: string }> = {
+        it: { title: `Grazie ${name}!`, body: "Abbiamo analizzato le tue risposte e individuato il forno perfetto per le tue esigenze. Un nostro esperto ti contatterà a brevissimo per presentartelo nei dettagli e prepararti un preventivo personalizzato.", signoff: "A presto,<br/>Il team Vesuviano Forni" },
+        en: { title: `Thank you, ${name}!`, body: "We've analyzed your answers and identified the perfect oven for your needs. One of our experts will contact you very shortly to present it in detail and prepare a personalized quote.", signoff: "Talk soon,<br/>The Vesuviano Forni team" },
+        fr: { title: `Merci ${name} !`, body: "Nous avons analysé vos réponses et identifié le four parfait pour vos besoins. L'un de nos experts vous contactera très prochainement pour vous le présenter en détail et préparer un devis personnalisé.", signoff: "À bientôt,<br/>L'équipe Vesuviano Forni" },
+        de: { title: `Vielen Dank, ${name}!`, body: "Wir haben Ihre Antworten analysiert und den perfekten Ofen für Ihre Bedürfnisse gefunden. Einer unserer Experten wird Sie in Kürze kontaktieren, um ihn Ihnen im Detail vorzustellen und ein persönliches Angebot zu erstellen.", signoff: "Bis bald,<br/>Das Vesuviano Forni Team" },
+        es: { title: `¡Gracias ${name}!`, body: "Hemos analizado tus respuestas e identificado el horno perfecto para tus necesidades. Uno de nuestros expertos te contactará muy pronto para presentártelo en detalle y prepararte un presupuesto personalizado.", signoff: "Hasta pronto,<br/>El equipo Vesuviano Forni" },
+      };
+      const cb = customerBodies[lang] || customerBodies.en;
+      const customerHtml = `
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#fff;">
+          <div style="background:linear-gradient(135deg,#c2410c,#9a3412);padding:32px 24px;text-align:center;color:#fff;border-radius:8px 8px 0 0;">
+            <h1 style="margin:0;font-size:26px;font-weight:700;">${cb.title}</h1>
+          </div>
+          <div style="border:1px solid #e5e7eb;border-top:none;padding:32px 24px;border-radius:0 0 8px 8px;">
+            <p style="font-size:15px;color:#333;line-height:1.6;margin:0 0 24px;">${cb.body}</p>
+            <div style="background:#fff7ed;border-left:4px solid #c2410c;padding:16px;border-radius:4px;margin:24px 0;">
+              <p style="margin:0;font-size:14px;color:#9a3412;font-style:italic;">"Ogni forno Vesuviano è un'opera unica, costruita a mano nei nostri laboratori di Sant'Anastasia e Boscoreale."</p>
+            </div>
+            <p style="font-size:14px;color:#555;margin:24px 0 0;line-height:1.6;">${cb.signoff}</p>
+            <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;"/>
+            <p style="font-size:12px;color:#888;text-align:center;margin:0;">
+              Vesuviano Forni · <a href="https://vesuvianoforni.com" style="color:#c2410c;text-decoration:none;">vesuvianoforni.com</a><br/>
+              📞 081 19231684 · ✉️ info@vesuvianoforni.com
+            </p>
+          </div>
+        </div>`;
+
+      const sendEmail = (to: string, subject: string, html: string) =>
+        fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            from: "Vesuviano Forni <info@vesuvianoforni.com>",
+            to: [to], subject, html,
+          }),
+        }).then(async (r) => {
+          if (!r.ok) console.error(`Email to ${to} failed:`, r.status, await r.text());
+          else console.log(`Email sent to ${to}`);
+        }).catch((err) => console.error(`Email to ${to} error:`, err));
+
+      await Promise.all([
+        sendEmail("info@vesuvianoforni.com", `🔥 Nuovo lead Oven Finder — ${name}`, adminHtml),
+        sendEmail(email, customerSubjects[lang] || customerSubjects.en, customerHtml),
+      ]);
+    } else {
+      console.warn("RESEND_API_KEY missing — skipping email notifications");
+    }
+
     return new Response(
       JSON.stringify({
         leadId: lead?.id,
