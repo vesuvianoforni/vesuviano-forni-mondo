@@ -33,6 +33,11 @@
     "caption": "Vesuviano - Partner ufficiale dell'evento Pizza a Vico"
   },
   "hero": {
+    "quizBadge": "AI Oven Finder",
+    "quizTitle": "Non sai quale forno fa per te?",
+    "quizSubtitle": "Rispondi a 4 domande veloci e la nostra AI trova il modello perfetto per te",
+    "quizCta": "Trova il mio forno perfetto",
+    "quizFooter": "Gratis • Personalizzato • 60 secondi",
     "subtitle": "Per Pizzerie e Ristoranti nel mondo che cercano autenticità",
     "title": "Il Tuo Forno Ideale Esiste.\nTi Aiutiamo a Trovarlo.",
     "description": "Forni professionali direttamente dal Sud Italia, progettati per pizzerie ad alte prestazioni e risultati costantemente replicabili ogni giorno.",

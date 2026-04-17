@@ -1,59 +1,22 @@
 
 import { Button } from "@/components/ui/button";
-import CtaButton from './CtaButton';
-import { ArrowDown, Phone, Flame, Zap, RotateCw, TreePine, Building2, CalendarClock, ThumbsUp } from "lucide-react";
+import { ArrowDown, Flame, Zap, RotateCw, TreePine, Building2, Sparkles } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import LazyImage from './LazyImage';
-import { useState, useEffect, useRef } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { useState, useRef } from 'react';
+import OvenFinderQuizModal from './OvenFinderQuizModal';
 const laboratorioHero = '/hero.webp';
 
 const Hero = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const [callName, setCallName] = useState('');
-  const [callPhone, setCallPhone] = useState('');
-  const [callLoading, setCallLoading] = useState(false);
-  const [callSent, setCallSent] = useState(false);
   const [selectedCat, setSelectedCat] = useState<string | null>(null);
-  const [callHighlight, setCallHighlight] = useState(false);
-  const [showNameField, setShowNameField] = useState(false);
+  const [quizOpen, setQuizOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const callSectionRef = useRef<HTMLDivElement>(null);
 
   const scrollToProducts = () => {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const scrollToConsultation = () => {
-    document.getElementById('consultation')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleCallMe = async () => {
-    if (!callPhone.trim()) return;
-    setCallLoading(true);
-    try {
-      await supabase.from('website_leads').insert({
-        first_name: callName.trim() || null,
-        phone: callPhone.trim(),
-        form_type: 'hero_callback',
-        status: 'new',
-        notes: 'Richiesta callback da Hero section',
-      });
-      await supabase.functions.invoke('send-form-data', {
-        body: {
-          formType: 'hero_callback',
-          data: { name: callName.trim(), phone: callPhone.trim() },
-        },
-      });
-      navigate('/thank-you');
-    } catch (e) {
-      toast.error('Error, please try again');
-    } finally {
-      setCallLoading(false);
-    }
   };
 
   const currentLang = i18n.language || 'it';
@@ -125,9 +88,7 @@ const Hero = () => {
                     navigate(cat.path[lang] || cat.path.it);
                   } else {
                     setSelectedCat(cat.labelKey);
-                    setCallHighlight(true);
-                    callSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    setTimeout(() => setCallHighlight(false), 2000);
+                    setQuizOpen(true);
                   }
                 }}
                 className={`group flex items-center gap-1.5 sm:gap-2 backdrop-blur-sm rounded-full px-3 py-1.5 sm:px-5 sm:py-2.5 transition-all duration-300 hover:scale-105 ${
@@ -145,86 +106,34 @@ const Hero = () => {
           })}
         </div>
 
-        {/* Call Me Section - Mobile */}
-        <div ref={callSectionRef} className={`sm:hidden w-full max-w-xs mx-auto mb-5 animate-fade-in transition-all duration-500 ${callHighlight ? 'scale-105 ring-2 ring-vesuviano-400 rounded-xl' : ''}`} style={{ animationDelay: '0.8s' }}>
-          {!callSent ? (
-            <div className={`bg-white/[0.07] backdrop-blur-md rounded-xl p-3 border transition-colors duration-500 ${callHighlight ? 'border-vesuviano-400 bg-white/[0.12]' : 'border-white/10'}`}>
-              <p className="text-white/80 text-[10px] font-medium text-center mb-2">
-                {t('hero.helpWith', "We'll help you with")}
-              </p>
-              <ul className="text-white/60 text-[9px] space-y-0.5 mb-3 pl-1">
-                <li>✓ {t('hero.help1', 'The exact oven that fits your business')}</li>
-                <li>✓ {t('hero.help2', 'The right capacity for your daily service')}</li>
-                <li>✓ {t('hero.help3', 'The key elements every pizzeria must have')}</li>
-                <li>✓ {t('hero.help4', 'Clear answers, no pressure')}</li>
-              </ul>
-              <div className="flex items-center justify-center gap-1.5 mb-1.5">
-                <Phone className="w-3.5 h-3.5 text-vesuviano-400" />
-                <span className="text-white/90 text-[11px] font-medium">
-                  {t('hero.callMe', 'Insert your number, we\'ll call you in 5 min')}
-                </span>
-              </div>
-              <p className="text-white/40 text-[9px] text-center mb-2">(9:00 - 19:00 CET)</p>
-              <div className="flex gap-2">
-                <input
-                  type="tel"
-                  value={callPhone}
-                  onChange={(e) => setCallPhone(e.target.value)}
-                  placeholder="+39 333..."
-                  className="flex-1 bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-vesuviano-400"
-                />
-                <Button
-                  onClick={() => {
-                    if (!callPhone.trim()) return;
-                    if (!showNameField) {
-                      setShowNameField(true);
-                    } else {
-                      handleCallMe();
-                    }
-                  }}
-                  disabled={callLoading || !callPhone.trim()}
-                  size="sm"
-                  className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-xs px-3"
-                >
-                  <ThumbsUp className="w-3 h-3" />
-                </Button>
-              </div>
-              {showNameField && (
-                <div className="mt-2 animate-fade-in">
-                  <input
-                    type="text"
-                    value={callName}
-                    onChange={(e) => setCallName(e.target.value)}
-                    placeholder={t('hero.namePlaceholder', 'Your name (optional)')}
-                    className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-vesuviano-400"
-                    autoFocus
-                  />
-                  <Button
-                    onClick={handleCallMe}
-                    disabled={callLoading}
-                    size="sm"
-                    className="w-full mt-2 bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-xs"
-                  >
-                    {callLoading ? '...' : t('hero.confirmCall', 'Confirm ✓')}
-                  </Button>
-                </div>
-              )}
-              <button
-                onClick={() => navigate('/book-a-slot-call')}
-                className="flex items-center justify-center gap-1.5 w-full mt-2 text-white/50 hover:text-white/80 text-[10px] transition-colors"
-              >
-                <CalendarClock className="w-3 h-3" />
-                {t('hero.scheduleOther', 'Schedule at a more convenient time')}
-              </button>
+        {/* AI Oven Finder CTA - mobile + desktop */}
+        <div className="w-full max-w-md mx-auto mb-5 animate-fade-in" style={{ animationDelay: '0.8s' }}>
+          <div className="bg-white/[0.07] backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-white/15">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Sparkles className="w-4 h-4 text-vesuviano-400" />
+              <span className="text-vesuviano-300 text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase">
+                {t('hero.quizBadge', 'AI Oven Finder')}
+              </span>
             </div>
-          ) : (
-            <div className="bg-white/[0.07] backdrop-blur-md rounded-xl p-3 border border-white/10 text-center">
-              <p className="text-white/90 text-xs">✅ {t('hero.callbackSuccess', 'We\'ll call you shortly!')}</p>
-            </div>
-          )}
+            <h3 className="text-white text-sm sm:text-base font-semibold text-center mb-1">
+              {t('hero.quizTitle', "Not sure which oven is right for you?")}
+            </h3>
+            <p className="text-white/70 text-[11px] sm:text-xs text-center mb-3">
+              {t('hero.quizSubtitle', 'Answer 4 quick questions and our AI finds your perfect match')}
+            </p>
+            <Button
+              onClick={() => setQuizOpen(true)}
+              size="lg"
+              className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white font-semibold"
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
+              {t('hero.quizCta', 'Find my perfect oven')}
+            </Button>
+            <p className="text-white/40 text-[10px] text-center mt-2">
+              {t('hero.quizFooter', 'Free • Personalized • Takes 60 seconds')}
+            </p>
+          </div>
         </div>
-
-        
 
         {/* Scroll Indicator */}
         <div className="mt-6 sm:mt-8 animate-bounce" style={{ animationDelay: '1.2s' }}>
@@ -238,6 +147,8 @@ const Hero = () => {
 
       {/* Bottom Fade */}
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-stone-50 to-transparent"></div>
+
+      <OvenFinderQuizModal open={quizOpen} onOpenChange={setQuizOpen} />
     </section>
   );
 };
