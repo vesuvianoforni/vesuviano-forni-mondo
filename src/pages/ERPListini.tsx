@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { DollarSign, Save, Loader2, Search, ChevronDown, ChevronRight, Flame, ImagePlus } from 'lucide-react';
 
 type PriceListCode = 'A' | 'B' | 'C';
-type PriceField = 'price' | 'electric' | 'rotating' | 'onSite';
+type PriceField = 'base' | 'gas' | 'electric' | 'rotating' | 'onSite';
 
 const PRICE_LISTS: { code: PriceListCode; name: string }[] = [
   { code: 'A', name: 'Listino A' },
@@ -274,20 +274,27 @@ const ERPListini = () => {
               {isExpanded && hasSizes && (
                 <CardContent className="pt-0 pb-4 px-4">
                   {oven.sizes.map((size: any, sIdx: number) => {
-                    const hasElectric = Array.isArray(oven.fuel_type) && oven.fuel_type.some((f: string) => f?.toLowerCase().includes('elettric'));
-                    const hasRotating = oven.model_name?.toLowerCase().includes('rotant');
-                    
+                    const fuels: string[] = Array.isArray(oven.fuel_type) ? oven.fuel_type.filter(Boolean).map((f: string) => f.toLowerCase()) : [];
+                    const hasWood = fuels.some(f => f.includes('legna') || f.includes('wood') || f.includes('bois') || f.includes('holz') || f.includes('lena'));
+                    const hasGas = fuels.some(f => f.includes('gas') || f.includes('gaz'));
+                    const hasElectric = fuels.some(f => f.includes('elettric') || f.includes('electric') || f.includes('electr'));
+                    const hasRotating = oven.model_name?.toLowerCase().includes('rotant') || fuels.some(f => f.includes('rotant') || f.includes('rotating'));
+
                     const getFields = (): PriceField[] => {
-                      const fields: PriceField[] = ['price'];
+                      const fields: PriceField[] = [];
+                      // Default to wood (base) if no fuel info or wood is supported
+                      if (hasWood || (!hasWood && !hasGas && !hasElectric && !hasRotating)) fields.push('base');
+                      if (hasGas) fields.push('gas');
                       if (hasElectric) fields.push('electric');
                       if (hasRotating) fields.push('rotating');
                       if (size.can_be_built_on_site) fields.push('onSite');
                       return fields;
                     };
                     const fields = getFields();
-                    
+
                     const fieldLabels: Record<PriceField, string> = {
-                      price: 'Legna',
+                      base: 'Legna',
+                      gas: 'Gas',
                       electric: 'Elettrico',
                       rotating: 'Rotante',
                       onSite: 'Sul Posto',
