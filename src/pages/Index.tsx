@@ -135,7 +135,12 @@ const Index = () => {
           </Suspense>
         </LazySection>
       </main>
-      
+
+      {/* Pre-footer simple consultation form */}
+      <Suspense fallback={null}>
+        <PreFooterSimpleForm />
+      </Suspense>
+
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-16">
         <div className="container mx-auto px-6">
