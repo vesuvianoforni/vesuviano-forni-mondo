@@ -16,7 +16,6 @@ import ReviewsStrip from "@/components/ReviewsStrip";
 
 // Lazy loaded below-fold components
 
-const Services = lazy(() => import("@/components/Services"));
 const ClientsMap = lazy(() => import("@/components/ClientsMap"));
 
 import OvenDataInitializer from "@/components/OvenDataInitializer";
