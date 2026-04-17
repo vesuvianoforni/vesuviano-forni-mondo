@@ -116,7 +116,7 @@ const OvenFinderQuizModal = ({ open, onOpenChange }: OvenFinderQuizModalProps) =
           <div className="flex items-center gap-2 mb-1">
             <Sparkles className="w-3.5 h-3.5" />
             <span className="text-[10px] sm:text-xs font-semibold tracking-wider uppercase">
-              {t("ovenFinder.badge", "AI Oven Finder")}
+              {t("ovenFinder.badge", "Personalized consultation")}
             </span>
           </div>
           <h2 className="font-playfair text-base sm:text-2xl font-bold leading-tight pr-8">
@@ -218,7 +218,7 @@ const OvenFinderQuizModal = ({ open, onOpenChange }: OvenFinderQuizModalProps) =
           {step === 4 && (
             <div className="space-y-4 animate-fade-in">
               <p className="text-sm text-muted-foreground">
-                {t("ovenFinder.contactSubtitle", "Leave your details to discover our personalized AI recommendation. An expert will then reach out for further details.")}
+                {t("ovenFinder.contactSubtitle", "Leave your details to discover our personalized recommendation. An expert will then reach out for further details.")}
               </p>
               <div className="space-y-3">
                 <div>
@@ -255,7 +255,7 @@ const OvenFinderQuizModal = ({ open, onOpenChange }: OvenFinderQuizModalProps) =
                 className="w-full bg-vesuviano-600 hover:bg-vesuviano-700"
               >
                 {loading ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> {t("ovenFinder.analyzing", "Analyzing your needs...")}</>
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> {t("ovenFinder.analyzing", "Finding your perfect oven...")}</>
                 ) : (
                   <><Sparkles className="w-4 h-4 mr-2" /> {t("ovenFinder.reveal", "Reveal my perfect oven")}</>
                 )}
