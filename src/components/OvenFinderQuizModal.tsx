@@ -111,25 +111,25 @@ const OvenFinderQuizModal = ({ open, onOpenChange }: OvenFinderQuizModalProps) =
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto p-0">
-        <div className="bg-gradient-to-br from-vesuviano-600 to-vesuviano-800 px-6 py-4 text-white">
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-4 h-4" />
-            <span className="text-xs font-semibold tracking-wider uppercase">
+      <DialogContent className="sm:max-w-[600px] max-h-[100dvh] sm:max-h-[90vh] h-[100dvh] sm:h-auto p-0 gap-0 rounded-none sm:rounded-lg flex flex-col overflow-hidden">
+        <div className="bg-gradient-to-br from-vesuviano-600 to-vesuviano-800 px-5 py-3 sm:px-6 sm:py-4 text-white flex-shrink-0">
+          <div className="flex items-center gap-2 mb-1">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span className="text-[10px] sm:text-xs font-semibold tracking-wider uppercase">
               {t("ovenFinder.badge", "AI Oven Finder")}
             </span>
           </div>
-          <h2 className="font-playfair text-xl sm:text-2xl font-bold">
+          <h2 className="font-playfair text-base sm:text-2xl font-bold leading-tight pr-8">
             {step < 4 && t("ovenFinder.title", "Find your perfect oven")}
             {step === 4 && t("ovenFinder.contactTitle", "Almost there! Discover our match")}
             {step === 5 && t("ovenFinder.resultTitle", "Your perfect match")}
           </h2>
           {step < 5 && (
-            <Progress value={progress} className="mt-3 h-1.5 bg-white/20" />
+            <Progress value={progress} className="mt-2 sm:mt-3 h-1 sm:h-1.5 bg-white/20" />
           )}
         </div>
 
-        <div className="p-6">
+        <div className="p-5 sm:p-6 flex-1 overflow-y-auto">
           {/* Step 0: Usage */}
           {step === 0 && (
             <div className="space-y-4 animate-fade-in">
@@ -141,10 +141,10 @@ const OvenFinderQuizModal = ({ open, onOpenChange }: OvenFinderQuizModalProps) =
                     <button
                       key={o.id}
                       onClick={() => select("usage", o.id)}
-                      className="flex flex-col items-center gap-3 p-6 rounded-xl border-2 border-border hover:border-vesuviano-500 hover:bg-vesuviano-50 transition-all"
+                      className="flex flex-col items-center gap-2 p-4 sm:p-6 rounded-xl border border-border hover:border-vesuviano-500 hover:bg-vesuviano-50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-vesuviano-500"
                     >
-                      <Icon className="w-8 h-8 text-vesuviano-600" />
-                      <span className="text-sm font-medium text-center">{o.label}</span>
+                      <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-vesuviano-600" />
+                      <span className="text-xs sm:text-sm font-medium text-center leading-tight">{o.label}</span>
                     </button>
                   );
                 })}
@@ -165,7 +165,7 @@ const OvenFinderQuizModal = ({ open, onOpenChange }: OvenFinderQuizModalProps) =
                   <button
                     key={o.id}
                     onClick={() => select("covers", o.id)}
-                    className="p-4 rounded-xl border-2 border-border hover:border-vesuviano-500 hover:bg-vesuviano-50 transition-all text-sm font-medium"
+                    className="p-4 rounded-xl border border-border hover:border-vesuviano-500 hover:bg-vesuviano-50 transition-all text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-vesuviano-500"
                   >
                     {o.label}
                   </button>
@@ -183,7 +183,7 @@ const OvenFinderQuizModal = ({ open, onOpenChange }: OvenFinderQuizModalProps) =
                   <button
                     key={o.id}
                     onClick={() => select("style", o.id)}
-                    className="p-4 rounded-xl border-2 border-border hover:border-vesuviano-500 hover:bg-vesuviano-50 transition-all text-sm font-medium text-left"
+                    className="p-4 rounded-xl border border-border hover:border-vesuviano-500 hover:bg-vesuviano-50 transition-all text-sm font-medium text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-vesuviano-500"
                   >
                     {o.label}
                   </button>
@@ -203,7 +203,7 @@ const OvenFinderQuizModal = ({ open, onOpenChange }: OvenFinderQuizModalProps) =
                     <button
                       key={o.id}
                       onClick={() => select("fuel", o.id)}
-                      className="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-border hover:border-vesuviano-500 hover:bg-vesuviano-50 transition-all"
+                      className="flex flex-col items-center gap-2 p-4 rounded-xl border border-border hover:border-vesuviano-500 hover:bg-vesuviano-50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-vesuviano-500"
                     >
                       <Icon className="w-6 h-6 text-vesuviano-600" />
                       <span className="text-xs font-medium text-center">{o.label}</span>
