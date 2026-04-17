@@ -157,7 +157,6 @@ const Hero = () => {
                 : ''
             }`}
           >
-            <Sparkles className="w-4 h-4 mr-2" />
             {t('hero.quizCtaShort', { defaultValue: 'Find your perfect oven in 60s' })}
           </Button>
           {highlightCta && selectedCat && (
