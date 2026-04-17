@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
 import ConsultationForm from '@/components/ConsultationForm';
+import RivestimentiCompact from '@/components/RivestimentiCompact';
 import { Button } from '@/components/ui/button';
 import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
@@ -126,6 +127,9 @@ const LocalizedRotatingOven = ({ lang }: LocalizedRotatingOvenProps) => {
             </div>
           </div>
         </section>
+
+        {/* Coatings (compact) */}
+        <RivestimentiCompact />
 
         {/* Consultation Form */}
         <section id="consultation" className="py-20 bg-stone-50">

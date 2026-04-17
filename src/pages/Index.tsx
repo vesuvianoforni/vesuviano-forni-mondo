@@ -17,11 +17,9 @@ import ReviewsStrip from "@/components/ReviewsStrip";
 // Lazy loaded below-fold components
 
 const Services = lazy(() => import("@/components/Services"));
-const Rivestimenti = lazy(() => import("@/components/Rivestimenti"));
 const ClientsMap = lazy(() => import("@/components/ClientsMap"));
 const OvenGallery = lazy(() => import("@/components/OvenGallery"));
 import OvenDataInitializer from "@/components/OvenDataInitializer";
-const ConsultationForm = lazy(() => import("@/components/ConsultationForm"));
 const FAQSection = lazy(() => import("@/components/FAQSection"));
 const HomeBlogSection = lazy(() => import("@/components/HomeBlogSection"));
 
@@ -95,14 +93,6 @@ const Index = () => {
           <Suspense fallback={null}>
             <section id="services" aria-label="Servizi offerti">
               <Services />
-            </section>
-          </Suspense>
-        </LazySection>
-        
-        <LazySection minHeight="400px">
-          <Suspense fallback={null}>
-            <section id="rivestimenti" aria-label="Rivestimenti forni">
-              <Rivestimenti />
             </section>
           </Suspense>
         </LazySection>
