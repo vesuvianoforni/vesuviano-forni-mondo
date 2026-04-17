@@ -118,6 +118,7 @@ const App = () => {
               <Route path="/en/useful-information" element={<LocalizedUsefulInfo lang="en" />} />
               <Route path="/en/collections" element={<LocalizedCollections lang="en" />} />
               <Route path="/en/about-us" element={<LocalizedAboutUs lang="en" />} />
+              <Route path="/en/services" element={<LocalizedServices lang="en" />} />
               
               {/* French Routes */}
               <Route path="/fr" element={<LocalizedIndex lang="fr" />} />
