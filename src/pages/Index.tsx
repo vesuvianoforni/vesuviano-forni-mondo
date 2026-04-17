@@ -28,6 +28,7 @@ const AIChatWidget = lazy(() => import("@/components/chat/AIChatWidget"));
 
 const ReadyToShipPopup = lazy(() => import("@/components/ReadyToShipPopup"));
 const CallbackPopup = lazy(() => import("@/components/CallbackPopup"));
+const PreFooterSimpleForm = lazy(() => import("@/components/PreFooterSimpleForm"));
 
 const Index = () => {
   const navigate = useNavigate();
