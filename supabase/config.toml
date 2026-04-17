@@ -71,3 +71,6 @@ verify_jwt = false
 
 [functions.verify-proforma-payment]
 verify_jwt = false
+
+[functions.oven-finder-recommend]
+verify_jwt = false
