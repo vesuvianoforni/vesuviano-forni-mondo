@@ -16,7 +16,6 @@ import ReviewsStrip from "@/components/ReviewsStrip";
 
 // Lazy loaded below-fold components
 
-const Services = lazy(() => import("@/components/Services"));
 const ClientsMap = lazy(() => import("@/components/ClientsMap"));
 
 import OvenDataInitializer from "@/components/OvenDataInitializer";
@@ -90,13 +89,7 @@ const Index = () => {
 
         
         
-        <LazySection minHeight="400px">
-          <Suspense fallback={null}>
-            <section id="services" aria-label="Servizi offerti">
-              <Services />
-            </section>
-          </Suspense>
-        </LazySection>
+        
 
         
         

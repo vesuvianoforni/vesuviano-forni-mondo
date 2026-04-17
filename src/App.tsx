@@ -38,6 +38,7 @@ const LocalizedBlogPost = lazy(() => import("./pages/LocalizedBlogPost"));
 const ProformaPage = lazy(() => import("./pages/ProformaPage"));
 const BuiltOnPlace = lazy(() => import("./pages/BuiltOnPlace"));
 const LocalizedCollections = lazy(() => import("./pages/LocalizedCollections"));
+const LocalizedServices = lazy(() => import("./pages/LocalizedServices"));
 import ClarityPageView from "./components/ClarityPageView";
 
 
@@ -98,6 +99,7 @@ const App = () => {
               <Route path="/it/informazioni-utili" element={<LocalizedUsefulInfo lang="it" />} />
               <Route path="/it/collezioni" element={<LocalizedCollections lang="it" />} />
               <Route path="/it/chi-siamo" element={<LocalizedAboutUs lang="it" />} />
+              <Route path="/it/servizi" element={<LocalizedServices lang="it" />} />
               
               {/* English Routes */}
               <Route path="/en" element={<LocalizedIndex lang="en" />} />
@@ -116,6 +118,7 @@ const App = () => {
               <Route path="/en/useful-information" element={<LocalizedUsefulInfo lang="en" />} />
               <Route path="/en/collections" element={<LocalizedCollections lang="en" />} />
               <Route path="/en/about-us" element={<LocalizedAboutUs lang="en" />} />
+              <Route path="/en/services" element={<LocalizedServices lang="en" />} />
               
               {/* French Routes */}
               <Route path="/fr" element={<LocalizedIndex lang="fr" />} />
@@ -134,6 +137,7 @@ const App = () => {
               <Route path="/fr/informations-utiles" element={<LocalizedUsefulInfo lang="fr" />} />
               <Route path="/fr/collections" element={<LocalizedCollections lang="fr" />} />
               <Route path="/fr/qui-sommes-nous" element={<LocalizedAboutUs lang="fr" />} />
+              <Route path="/fr/services" element={<LocalizedServices lang="fr" />} />
               
               {/* Spanish Routes */}
               <Route path="/es" element={<LocalizedIndex lang="es" />} />
@@ -152,6 +156,7 @@ const App = () => {
               <Route path="/es/informacion-util" element={<LocalizedUsefulInfo lang="es" />} />
               <Route path="/es/colecciones" element={<LocalizedCollections lang="es" />} />
               <Route path="/es/quienes-somos" element={<LocalizedAboutUs lang="es" />} />
+              <Route path="/es/servicios" element={<LocalizedServices lang="es" />} />
               
               {/* German Routes */}
               <Route path="/de" element={<LocalizedIndex lang="de" />} />
@@ -170,6 +175,7 @@ const App = () => {
               <Route path="/de/nuetzliche-informationen" element={<LocalizedUsefulInfo lang="de" />} />
               <Route path="/de/kollektionen" element={<LocalizedCollections lang="de" />} />
               <Route path="/de/ueber-uns" element={<LocalizedAboutUs lang="de" />} />
+              <Route path="/de/dienstleistungen" element={<LocalizedServices lang="de" />} />
               
               {/* Public pages */}
               <Route path="/book-a-slot-call" element={<BookAppointment />} />
