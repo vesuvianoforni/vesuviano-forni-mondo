@@ -1,139 +1,74 @@
-
-import { Button } from "@/components/ui/button";
-import CtaButton from './CtaButton';
 import { useTranslation } from 'react-i18next';
+import { Compass, Palette, Truck, GraduationCap } from 'lucide-react';
+import CtaButton from './CtaButton';
 
 const Services = () => {
   const { t } = useTranslation();
+
   const services = [
-    {
-      title: t('services.consultation.title'),
-      description: t('services.consultation.description'),
-      features: [
-        t('services.consultation.features.0'),
-        t('services.consultation.features.1'),
-        t('services.consultation.features.2'),
-        t('services.consultation.features.3')
-      ]
-    },
-    {
-      title: t('services.design.title'),
-      description: t('services.design.description'),
-      features: [
-        t('services.design.features.0'),
-        t('services.design.features.1'),
-        t('services.design.features.2'),
-        t('services.design.features.3')
-      ]
-    },
-    {
-      title: t('services.logistics.title'),
-      description: t('services.logistics.description'),
-      features: [
-        t('services.logistics.features.0'),
-        t('services.logistics.features.1'),
-        t('services.logistics.features.2'),
-        t('services.logistics.features.3')
-      ]
-    },
-    {
-      title: t('services.training.title'),
-      description: t('services.training.description'),
-      features: [
-        t('services.training.features.0'),
-        t('services.training.features.1'),
-        t('services.training.features.2'),
-        t('services.training.features.3')
-      ]
-    }
+    { key: 'consultation', Icon: Compass },
+    { key: 'design', Icon: Palette },
+    { key: 'logistics', Icon: Truck },
+    { key: 'training', Icon: GraduationCap },
   ];
 
   return (
-    <section className="py-20 bg-white">      
-      <div className="container mx-auto px-6">
+    <section className="py-16 md:py-20 bg-white">
+      <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="font-playfair text-4xl md:text-5xl font-bold text-charcoal-900 mb-6">
+          <div className="text-center mb-10 md:mb-12">
+            <h2 className="font-playfair text-3xl md:text-5xl font-bold text-charcoal-900 mb-4">
               {t('services.title')} <span className="text-vesuviano-600">{t('services.titleHighlight')}</span>
             </h2>
-            <p className="font-inter text-xl text-stone-600 max-w-3xl mx-auto">
+            <p className="font-inter text-base md:text-lg text-stone-600 max-w-2xl mx-auto">
               {t('services.subtitle')}
             </p>
           </div>
 
-          {/* Services Grid */}
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            {services.map((service, index) => (
-              <div 
-                key={service.title}
-                className="bg-stone-50 rounded-xl p-8 hover:shadow-lg transition-all duration-500 hover:scale-105 animate-fade-in group border border-stone-200 hover:border-vesuviano-300"
-                style={{ animationDelay: `${index * 0.2}s` }}
+          {/* Compact services grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
+            {services.map(({ key, Icon }) => (
+              <div
+                key={key}
+                className="group bg-stone-50 rounded-xl p-5 md:p-6 border border-stone-200 hover:border-vesuviano-300 hover:shadow-md transition-all duration-300 text-center"
               >
-                <h3 className="font-playfair text-2xl font-semibold text-charcoal-900 mb-4 group-hover:text-vesuviano-600 transition-colors duration-300">
-                  {service.title}
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-vesuviano-100 text-vesuviano-600 flex items-center justify-center group-hover:bg-vesuviano-600 group-hover:text-white transition-colors">
+                  <Icon className="w-6 h-6" />
+                </div>
+                <h3 className="font-playfair text-base md:text-lg font-semibold text-charcoal-900 mb-1">
+                  {t(`services.${key}.title`)}
                 </h3>
-                <p className="text-stone-600 leading-relaxed mb-6">
-                  {service.description}
+                <p className="text-xs md:text-sm text-stone-600 leading-snug">
+                  {t(`services.${key}.description`)}
                 </p>
-
-                <ul className="space-y-3">
-                  {service.features.map((feature, idx) => (
-                    <li 
-                      key={feature} 
-                      className="flex items-center text-sm text-stone-600 hover:text-vesuviano-600 transition-colors duration-300 hover:translate-x-1"
-                      style={{ transitionDelay: `${idx * 0.1}s` }}
-                    >
-                      <div className="w-2 h-2 bg-vesuviano-500 rounded-full mr-3 flex-shrink-0"></div>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
               </div>
             ))}
           </div>
 
-          {/* Bottom CTA */}
-          <div className="text-center animate-scale-in" style={{ animationDelay: '0.8s' }}>
-            <div className="bg-vesuviano-50 rounded-xl p-8 max-w-3xl mx-auto border border-vesuviano-200 hover:shadow-xl transition-all duration-500 hover:scale-105">
-              <h4 className="font-playfair text-2xl font-semibold text-charcoal-900 mb-4">
-                {t('services.cta.title')}
-              </h4>
-              <p className="text-stone-600 mb-6">
-                {t('services.cta.description')}
-              </p>
-              <CtaButton className="px-8 py-3 hover:shadow-xl" />
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Logistics Photo Section */}
-      <div className="container mx-auto px-6 mt-16">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8">
-            <h3 className="font-playfair text-2xl md:text-3xl font-semibold text-charcoal-900 mb-4">
-              {t('services.logisticsSection.title')} <span className="text-vesuviano-600">{t('services.logisticsSection.titleHighlight')}</span>
-            </h3>
-            <p className="text-stone-600 text-lg">
-              {t('services.logisticsSection.subtitle')}
-            </p>
-          </div>
-          
-          <div className="relative rounded-2xl overflow-hidden shadow-2xl group">
-            <img 
+          {/* Logistics highlight + CTA combined */}
+          <div className="relative rounded-2xl overflow-hidden shadow-xl group">
+            <img
               src="/lovable-uploads/logistica-internazionale-nyc.webp"
-              alt="Consegna forno Vesuviano a New York - Logistica internazionale efficace"
-              className="w-full h-64 md:h-96 object-cover transition-transform duration-700 group-hover:scale-105"
+              alt="Vesuviano oven delivery in New York - International logistics"
+              loading="lazy"
+              className="w-full h-64 md:h-80 object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-vesuviano-900/60 via-transparent to-transparent opacity-80"></div>
-            <div className="absolute bottom-6 left-6 right-6 text-white">
-              <h4 className="font-playfair text-xl md:text-2xl font-semibold mb-2">
-                {t('services.logisticsSection.caption')}
-              </h4>
-              <p className="text-stone-200 text-sm md:text-base">
-                {t('services.logisticsSection.description')}
-              </p>
+            <div className="absolute inset-0 bg-gradient-to-t from-vesuviano-900/85 via-vesuviano-900/40 to-transparent" />
+            <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-10">
+              <div className="max-w-2xl">
+                <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-medium mb-3 w-fit">
+                  <Truck className="w-3.5 h-3.5" />
+                  <span>{t('services.logisticsSection.titleHighlight')}</span>
+                </div>
+                <h3 className="font-playfair text-xl md:text-3xl font-bold text-white mb-2">
+                  {t('services.logisticsSection.caption')}
+                </h3>
+                <p className="text-stone-100 text-sm md:text-base mb-5 max-w-xl">
+                  {t('services.logisticsSection.description')}
+                </p>
+                <CtaButton className="px-6 py-3" />
+              </div>
             </div>
           </div>
         </div>
