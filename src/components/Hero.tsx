@@ -23,6 +23,7 @@ const Hero = () => {
   const [selectedCat, setSelectedCat] = useState<string | null>(null);
   const [quizOpen, setQuizOpen] = useState(false);
   const [geo, setGeo] = useState<{ name: string; flag: string } | null>(null);
+  const [highlightCta, setHighlightCta] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -125,7 +126,8 @@ const Hero = () => {
                     navigate(cat.path[lang] || cat.path.it);
                   } else {
                     setSelectedCat(cat.labelKey);
-                    setQuizOpen(true);
+                    setHighlightCta(true);
+                    window.setTimeout(() => setHighlightCta(false), 4000);
                   }
                 }}
                 className={`group flex items-center gap-1.5 sm:gap-2 backdrop-blur-sm rounded-full px-3 py-1.5 sm:px-5 sm:py-2.5 transition-all duration-300 hover:scale-105 ${
@@ -133,6 +135,7 @@ const Hero = () => {
                     ? 'bg-vesuviano-600/40 border-2 border-vesuviano-400 shadow-[0_0_16px_rgba(200,120,50,0.3)]'
                     : 'bg-white/[0.08] hover:bg-vesuviano-600/30 border border-white/15 hover:border-vesuviano-400/50'
                 }`}
+                aria-label={isSelected ? `Open ${cat.fallback} page` : `Select ${cat.fallback}`}
               >
                 <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors ${isSelected ? 'text-vesuviano-300' : 'text-vesuviano-400 group-hover:text-vesuviano-300'}`} />
                 <span className={`text-[11px] sm:text-sm font-medium tracking-wide ${isSelected ? 'text-white' : 'text-white/90'}`}>
@@ -146,13 +149,22 @@ const Hero = () => {
         {/* AI Oven Finder CTA - minimal one-liner + button */}
         <div className="w-full max-w-sm mx-auto mb-5 animate-fade-in" style={{ animationDelay: '0.8s' }}>
           <Button
-            onClick={() => setQuizOpen(true)}
+            onClick={() => { setHighlightCta(false); setQuizOpen(true); }}
             size="lg"
-            className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white font-semibold rounded-full shadow-lg shadow-black/30 h-12"
+            className={`w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white font-semibold rounded-full shadow-lg shadow-black/30 h-12 transition-all duration-300 ${
+              highlightCta
+                ? 'animate-pulse ring-4 ring-vesuviano-400/60 scale-105 shadow-[0_0_28px_rgba(200,120,50,0.6)]'
+                : ''
+            }`}
           >
             <Sparkles className="w-4 h-4 mr-2" />
             {t('hero.quizCtaShort', { defaultValue: 'Find your perfect oven in 60s' })}
           </Button>
+          {highlightCta && selectedCat && (
+            <p className="text-vesuviano-300 text-[11px] sm:text-xs text-center mt-2 animate-fade-in">
+              {t('hero.tapAgainHint', { defaultValue: 'Tap the tag again to see all models, or start the quiz ✨' })}
+            </p>
+          )}
         </div>
 
         {/* Scroll Indicator */}
