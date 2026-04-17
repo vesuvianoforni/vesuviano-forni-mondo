@@ -38,6 +38,7 @@ const LocalizedBlogPost = lazy(() => import("./pages/LocalizedBlogPost"));
 const ProformaPage = lazy(() => import("./pages/ProformaPage"));
 const BuiltOnPlace = lazy(() => import("./pages/BuiltOnPlace"));
 const LocalizedCollections = lazy(() => import("./pages/LocalizedCollections"));
+const LocalizedServices = lazy(() => import("./pages/LocalizedServices"));
 import ClarityPageView from "./components/ClarityPageView";
 
 
