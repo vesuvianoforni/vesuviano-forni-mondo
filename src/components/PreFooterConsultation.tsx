@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import { useLocation } from "react-router-dom";
 
-const ConsultationForm = lazy(() => import("@/components/ConsultationForm"));
+const ConsultationForm = lazy(() => import("@/components/PreFooterSimpleForm"));
 
 /**
  * Routes (or path prefixes) where this pre-footer form must NOT appear:
