@@ -56,8 +56,8 @@ const OvenFinderQuizModal = ({ open, onOpenChange }: OvenFinderQuizModalProps) =
     onOpenChange(o);
   };
 
-  const next = () => setStep((s) => Math.min(5, (s + 1) as Step));
-  const prev = () => setStep((s) => Math.max(0, (s - 1) as Step));
+  const next = () => setStep((s) => Math.min(5, s + 1) as Step);
+  const prev = () => setStep((s) => Math.max(0, s - 1) as Step);
 
   const select = (key: keyof Answers, value: string) => {
     setAnswers((a) => ({ ...a, [key]: value }));
