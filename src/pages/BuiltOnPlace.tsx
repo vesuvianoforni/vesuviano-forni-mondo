@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import LazyImage from "@/components/LazyImage";
+import RivestimentiCompact from "@/components/RivestimentiCompact";
 
 const WHATSAPP_LINK = "https://wa.me/393509286941?text=Ciao,%20vorrei%20informazioni%20sui%20vostri%20forni%20professionali";
 
@@ -354,6 +355,9 @@ const BuiltOnPlace = () => {
           </form>
         </div>
       </section>
+
+      {/* Coatings (compact) */}
+      <RivestimentiCompact />
 
       {/* Final CTA */}
       <section className="py-12 bg-vesuviano-500 text-center">
