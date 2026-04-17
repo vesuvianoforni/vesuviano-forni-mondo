@@ -32,6 +32,9 @@
     "description": "Nos fours artisanaux sont les protagonistes de cet événement spécial qui a lieu chaque année, où la tradition napolitaine rencontre l'excellence culinaire.",
     "caption": "Vesuviano - Partenaire officiel de l'événement Pizza a Vico"
   },
+  "reviewsStrip": {
+    "headline": "Pizzerias et restaurants qui nous choisissent en"
+  },
   "hero": {
     "quizBadge": "Conseil personnalisé",
     "quizTitle": "Vous ne savez pas quel four vous convient ?",
