@@ -18,7 +18,7 @@ import ReviewsStrip from "@/components/ReviewsStrip";
 
 const Services = lazy(() => import("@/components/Services"));
 const ClientsMap = lazy(() => import("@/components/ClientsMap"));
-const OvenGallery = lazy(() => import("@/components/OvenGallery"));
+
 import OvenDataInitializer from "@/components/OvenDataInitializer";
 const FAQSection = lazy(() => import("@/components/FAQSection"));
 const HomeBlogSection = lazy(() => import("@/components/HomeBlogSection"));
@@ -110,13 +110,7 @@ const Index = () => {
           </Suspense>
         </LazySection>
         
-        <LazySection minHeight="400px">
-          <Suspense fallback={null}>
-            <section id="oven-gallery" aria-label="Galleria forni">
-              <OvenGallery />
-            </section>
-          </Suspense>
-        </LazySection>
+        
         
         
         <LazySection minHeight="300px">
