@@ -33,6 +33,11 @@
     "caption": "Vesuviano - Socio oficial del evento Pizza a Vico"
   },
   "hero": {
+    "quizBadge": "AI Oven Finder",
+    "quizTitle": "¿No sabes qué horno es para ti?",
+    "quizSubtitle": "Responde 4 preguntas rápidas y nuestra IA encuentra el horno perfecto para ti",
+    "quizCta": "Encuentra mi horno perfecto",
+    "quizFooter": "Gratis • Personalizado • 60 segundos",
     "subtitle": "Para Pizzerías y Restaurantes en el mundo que buscan autenticidad",
     "title": "Tu Horno Ideal Existe.\nTe Ayudamos a Encontrarlo.",
     "description": "Hornos profesionales directamente del sur de Italia, diseñados para pizzerías de alto rendimiento y resultados consistentemente replicables cada día.",

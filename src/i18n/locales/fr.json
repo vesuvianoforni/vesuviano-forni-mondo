@@ -33,6 +33,11 @@
     "caption": "Vesuviano - Partenaire officiel de l'événement Pizza a Vico"
   },
   "hero": {
+    "quizBadge": "AI Oven Finder",
+    "quizTitle": "Vous ne savez pas quel four vous convient ?",
+    "quizSubtitle": "Répondez à 4 questions rapides et notre IA trouve le four parfait pour vous",
+    "quizCta": "Trouver mon four parfait",
+    "quizFooter": "Gratuit • Personnalisé • 60 secondes",
     "subtitle": "Pour Pizzerias et Restaurants dans le monde en quête d'authenticité",
     "title": "Votre Four Idéal Existe.\nNous Vous Aidons à le Trouver.",
     "description": "Fours professionnels directement du Sud de l'Italie, conçus pour les pizzerias haute performance et des résultats reproductibles chaque jour.",
