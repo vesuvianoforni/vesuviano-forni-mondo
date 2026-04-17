@@ -143,33 +143,16 @@ const Hero = () => {
           })}
         </div>
 
-        {/* AI Oven Finder CTA - mobile + desktop */}
-        <div className="w-full max-w-md mx-auto mb-5 animate-fade-in" style={{ animationDelay: '0.8s' }}>
-          <div className="bg-white/[0.07] backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-white/15">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <Sparkles className="w-4 h-4 text-vesuviano-400" />
-              <span className="text-vesuviano-300 text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase">
-                {t('hero.quizBadge', 'AI Oven Finder')}
-              </span>
-            </div>
-            <h3 className="text-white text-sm sm:text-base font-semibold text-center mb-1">
-              {t('hero.quizTitle', "Not sure which oven is right for you?")}
-            </h3>
-            <p className="text-white/70 text-[11px] sm:text-xs text-center mb-3">
-              {t('hero.quizSubtitle', 'Answer 4 quick questions and our AI finds your perfect match')}
-            </p>
-            <Button
-              onClick={() => setQuizOpen(true)}
-              size="lg"
-              className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white font-semibold"
-            >
-              <Sparkles className="w-4 h-4 mr-2" />
-              {t('hero.quizCta', 'Find my perfect oven')}
-            </Button>
-            <p className="text-white/40 text-[10px] text-center mt-2">
-              {t('hero.quizFooter', 'Free • Personalized • Takes 60 seconds')}
-            </p>
-          </div>
+        {/* AI Oven Finder CTA - minimal one-liner + button */}
+        <div className="w-full max-w-sm mx-auto mb-5 animate-fade-in" style={{ animationDelay: '0.8s' }}>
+          <Button
+            onClick={() => setQuizOpen(true)}
+            size="lg"
+            className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white font-semibold rounded-full shadow-lg shadow-black/30 h-12"
+          >
+            <Sparkles className="w-4 h-4 mr-2" />
+            {t('hero.quizCtaShort', { defaultValue: 'Find your perfect oven in 60s' })}
+          </Button>
         </div>
 
         {/* Scroll Indicator */}
