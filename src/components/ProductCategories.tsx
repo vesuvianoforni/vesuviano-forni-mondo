@@ -254,8 +254,9 @@ const ProductCategories = () => {
                             ovenType: category.key,
                             datasheetUrl: getDatasheetUrl(category.key)
                           })}
+                          aria-label={`${t('products.downloadDatasheet')} — ${t(`products.${category.key}.title`)}`}
                         >
-                          {t('products.downloadDatasheet')}
+                          {t(`products.${category.key}.cta`, t('products.downloadDatasheet'))}
                         </Button>
                       </>
                     )}
