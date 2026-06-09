@@ -40,6 +40,8 @@ const BuiltOnPlace = lazy(() => import("./pages/BuiltOnPlace"));
 const LocalizedCollections = lazy(() => import("./pages/LocalizedCollections"));
 const LocalizedServices = lazy(() => import("./pages/LocalizedServices"));
 const LocalizedNeapolitanPizzaOvens = lazy(() => import("./pages/LocalizedNeapolitanPizzaOvens"));
+const ForniLegnaEsterno = lazy(() => import("./pages/ForniLegnaEsterno"));
+const FourAPizzaBois = lazy(() => import("./pages/FourAPizzaBois"));
 import ClarityPageView from "./components/ClarityPageView";
 
 
