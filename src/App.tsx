@@ -144,6 +144,7 @@ const App = () => {
               <Route path="/fr/qui-sommes-nous" element={<LocalizedAboutUs lang="fr" />} />
               <Route path="/fr/services" element={<LocalizedServices lang="fr" />} />
               <Route path="/fr/fours-a-pizza-napolitains" element={<LocalizedNeapolitanPizzaOvens lang="fr" />} />
+              <Route path="/fr/four-a-pizza-bois" element={<FourAPizzaBois />} />
               
               {/* Spanish Routes */}
               <Route path="/es" element={<LocalizedIndex lang="es" />} />
