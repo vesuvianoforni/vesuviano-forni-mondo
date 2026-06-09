@@ -25,6 +25,11 @@ const LocalizedGasOven = ({ lang }: LocalizedGasOvenProps) => {
   return (
     <div className="min-h-screen bg-white">
         <Header />
+        <RouteSEO
+          lang={lang}
+          title={`${t('products.gas.title')} | Vesuviano Forni`}
+          description={t('products.gas.subtitle', { defaultValue: t('products.gas.title') })}
+        />
         
         {/* Hero Section */}
         <section className="relative h-[60vh] min-h-[500px] overflow-hidden">
