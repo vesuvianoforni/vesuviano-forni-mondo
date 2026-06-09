@@ -218,6 +218,91 @@
     }
     </script>
 
+    <!-- Structured Data - LocalBusiness (Naples manufacturing) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "@id": "https://vesuvianoforni.com/#localbusiness",
+      "name": "Vesuviano Forni",
+      "description": "Laboratorio artigianale di forni napoletani professionali a Napoli, dal 1950.",
+      "url": "https://vesuvianoforni.com",
+      "telephone": "+39 081 19231684",
+      "email": "info@vesuvianoforni.com",
+      "image": "https://vesuvianoforni.com/lovable-uploads/vesuviano-social-banner.jpg",
+      "priceRange": "€€€",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Sant'Anastasia",
+        "addressRegion": "Campania",
+        "addressCountry": "IT",
+        "postalCode": "80048"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 40.8665,
+        "longitude": 14.4036
+      },
+      "areaServed": { "@type": "Place", "name": "Worldwide" },
+      "openingHoursSpecification": [{
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+        "opens": "09:00",
+        "closes": "18:00"
+      }]
+    }
+    </script>
+
+    <!-- Structured Data - FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Posso personalizzare il forno in base al mio locale?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Assolutamente sì. Ogni forno può essere personalizzato nella verniciatura, nel rivestimento in piastrelle e persino nel design della cupola. Offriamo anche un render 3D gratuito per visualizzare il forno nel tuo ambiente prima della produzione."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Effettuate consegna e installazione?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sì, ci occupiamo di trasporto e installazione completa in Italia e all'estero. Il forno arriva già assemblato e testato, pronto all'uso. Il nostro team tecnico può anche fornire formazione iniziale sul corretto utilizzo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quanto tempo serve per ricevere il forno?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "I tempi medi di consegna variano da 20 a 45 giorni, in base al livello di personalizzazione richiesto. Dopo la conferma dell'ordine, riceverai una data stimata di consegna garantita."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Offrite assistenza o garanzia?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tutti i nostri forni sono coperti da 3 anni di garanzia ufficiale su struttura e componenti. In più, il nostro centro tecnico a Napoli fornisce assistenza post-vendita e ricambi originali sempre disponibili."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quanto costa un forno?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "I nostri forni artigianali partono da 2.700,00 € per i modelli base fino a circa 23.000,00 € per realizzazioni speciali. Ogni progetto è realizzato su misura. Per un preventivo personalizzato puoi richiedere una consulenza gratuita."
+          }
+        }
+      ]
+    }
+    </script>
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://vesuvianoforni.com/" />
