@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 interface RouteSEOProps {
   title: string;
   description: string;
-  /** Path beginning with "/" — used to build canonical and og:url */
-  path: string;
+  /** Path beginning with "/". If omitted, derived from current location. */
+  path?: string;
   /** Absolute URL of social image. Optional. */
   image?: string;
   lang?: string;
