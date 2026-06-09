@@ -25,6 +25,11 @@ const LocalizedRotatingOven = ({ lang }: LocalizedRotatingOvenProps) => {
   return (
     <div className="min-h-screen bg-white">
         <Header />
+        <RouteSEO
+          lang={lang}
+          title={`${t('products.rotating.title')} | Vesuviano Forni`}
+          description={t('products.rotating.subtitle', { defaultValue: t('products.rotating.title') })}
+        />
         
         {/* Hero Section */}
         <section className="relative h-[60vh] min-h-[500px] overflow-hidden">
