@@ -1021,4 +1021,18 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://vesuvianoforni.com/book-a-slot-call" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vesuvianoforni.com/book-a-slot-call" />
   </url>
+  <url>
+    <loc>https://vesuvianoforni.com/it/forno-a-legna-da-esterno</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="it" href="https://vesuvianoforni.com/it/forno-a-legna-da-esterno" />
+  </url>
+  <url>
+    <loc>https://vesuvianoforni.com/fr/four-a-pizza-bois</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vesuvianoforni.com/fr/four-a-pizza-bois" />
+  </url>
 </urlset>
