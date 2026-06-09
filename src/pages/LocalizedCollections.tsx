@@ -30,6 +30,11 @@ const LocalizedCollections = ({ lang }: Props) => {
     <div className="min-h-screen w-full overflow-x-hidden bg-white">
       <OvenDataInitializer />
       <Header />
+      <RouteSEO
+        lang={lang}
+        title={`${t('collections.title', { defaultValue: 'Oven Collections' })} | Vesuviano Forni`}
+        description={t('collections.subtitle', { defaultValue: 'Explore the full Vesuviano collection: Anastasia, Ottavio, Real Bosco, Sebastian, VesuvioBuono and Rotating ovens.' })}
+      />
       <main className="pt-20">
         <Suspense fallback={null}>
           <OvenGallery />
