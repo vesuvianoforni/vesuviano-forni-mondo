@@ -40,6 +40,8 @@ const BuiltOnPlace = lazy(() => import("./pages/BuiltOnPlace"));
 const LocalizedCollections = lazy(() => import("./pages/LocalizedCollections"));
 const LocalizedServices = lazy(() => import("./pages/LocalizedServices"));
 const LocalizedNeapolitanPizzaOvens = lazy(() => import("./pages/LocalizedNeapolitanPizzaOvens"));
+const ForniLegnaEsterno = lazy(() => import("./pages/ForniLegnaEsterno"));
+const FourAPizzaBois = lazy(() => import("./pages/FourAPizzaBois"));
 import ClarityPageView from "./components/ClarityPageView";
 
 
@@ -101,6 +103,7 @@ const App = () => {
               <Route path="/it/collezioni" element={<LocalizedCollections lang="it" />} />
               <Route path="/it/chi-siamo" element={<LocalizedAboutUs lang="it" />} />
               <Route path="/it/servizi" element={<LocalizedServices lang="it" />} />
+              <Route path="/it/forno-a-legna-da-esterno" element={<ForniLegnaEsterno />} />
               
               {/* English Routes */}
               <Route path="/en" element={<LocalizedIndex lang="en" />} />
@@ -141,6 +144,7 @@ const App = () => {
               <Route path="/fr/qui-sommes-nous" element={<LocalizedAboutUs lang="fr" />} />
               <Route path="/fr/services" element={<LocalizedServices lang="fr" />} />
               <Route path="/fr/fours-a-pizza-napolitains" element={<LocalizedNeapolitanPizzaOvens lang="fr" />} />
+              <Route path="/fr/four-a-pizza-bois" element={<FourAPizzaBois />} />
               
               {/* Spanish Routes */}
               <Route path="/es" element={<LocalizedIndex lang="es" />} />
