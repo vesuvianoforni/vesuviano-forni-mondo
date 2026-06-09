@@ -94,8 +94,28 @@ const Header = () => {
     return paths[currentLang] || paths['it'];
   };
 
+  const getNeapolitanPath = (): string | null => {
+    const paths: Record<string, string> = {
+      'en': '/en/neapolitan-pizza-ovens',
+      'fr': '/fr/fours-a-pizza-napolitains',
+      'es': '/es/hornos-pizza-napolitana',
+      'de': '/de/neapolitanische-pizzaoefen'
+    };
+    return paths[currentLang] || null;
+  };
+
+  const neapolitanLabels: Record<string, string> = {
+    en: 'Neapolitan Pizza Ovens',
+    fr: 'Fours à Pizza Napolitains',
+    es: 'Hornos Pizza Napolitana',
+    de: 'Neapolitanische Pizzaöfen'
+  };
+
+  const neapolitanPath = getNeapolitanPath();
+
   const productDropdownItems = [
     { key: 'traditional', label: t('products.traditional.title'), path: getOvenPath('traditional') },
+    ...(neapolitanPath ? [{ key: 'neapolitan', label: neapolitanLabels[currentLang], path: neapolitanPath }] : []),
     { key: 'gas', label: t('products.gas.title'), path: getOvenPath('gas') },
     { key: 'electric', label: t('products.electric.title'), path: getOvenPath('electric') },
     { key: 'rotating', label: t('products.rotating.title'), path: getOvenPath('rotating') },
@@ -105,6 +125,7 @@ const Header = () => {
     { key: 'smokePurifier', label: t('zapper.menuTitle', 'Wood Smoke Purifier'), path: getOvenPath('smokePurifier') },
     { key: 'readyToShip', label: t('readyToShip.menuTitle', 'Ready to Ship'), path: getReadyToShipPath() }
   ];
+
 
   const navItems: Array<{ href: string; label: string; type: 'anchor' | 'link' }> = [
     { href: "#ai-architect", label: "Architetto AI", type: 'anchor' },
