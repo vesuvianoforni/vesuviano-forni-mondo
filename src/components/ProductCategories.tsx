@@ -175,6 +175,7 @@ const ProductCategories = () => {
                               navigate('/built-on-place');
                             }
                           }}
+                          aria-label={isReadyToShip ? 'View ready to ship ovens' : 'Explore built on place ovens'}
                         >
                           {t(`products.${category.key}.cta`)}
                         </Button>
