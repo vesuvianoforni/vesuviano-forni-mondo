@@ -168,11 +168,13 @@ const Hero = () => {
 
         {/* Scroll Indicator */}
         <div className="mt-6 sm:mt-8 animate-bounce" style={{ animationDelay: '1.2s' }}>
-          <ArrowDown 
-            className="mx-auto text-white/50 cursor-pointer hover:text-vesuviano-400 transition-colors hover:scale-125 duration-300" 
-            size={22}
+          <button
             onClick={scrollToProducts}
-          />
+            aria-label="Scroll to product categories"
+            className="mx-auto block text-white/50 hover:text-vesuviano-400 transition-colors hover:scale-125 duration-300"
+          >
+            <ArrowDown size={22} />
+          </button>
         </div>
       </div>
 

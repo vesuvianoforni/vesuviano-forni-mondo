@@ -175,6 +175,7 @@ const ProductCategories = () => {
                               navigate('/built-on-place');
                             }
                           }}
+                          aria-label={isReadyToShip ? 'View ready to ship ovens' : 'Explore built on place ovens'}
                         >
                           {t(`products.${category.key}.cta`)}
                         </Button>
@@ -210,6 +211,7 @@ const ProductCategories = () => {
                           size="lg"
                           className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white transition-all duration-300 text-base sm:text-lg py-6 font-semibold shadow-lg hover:shadow-xl"
                           onClick={() => setConsultationModalOpen(true)}
+                          aria-label="Book free consultation with our experts"
                         >
                           {t(`products.${category.key}.cta`)}
                         </Button>
@@ -252,8 +254,9 @@ const ProductCategories = () => {
                             ovenType: category.key,
                             datasheetUrl: getDatasheetUrl(category.key)
                           })}
+                          aria-label={`${t('products.downloadDatasheet')} — ${t(`products.${category.key}.title`)}`}
                         >
-                          {t('products.downloadDatasheet')}
+                          {t(`products.${category.key}.cta`, t('products.downloadDatasheet'))}
                         </Button>
                       </>
                     )}
