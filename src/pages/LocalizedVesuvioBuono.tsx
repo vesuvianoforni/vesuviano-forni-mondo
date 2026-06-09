@@ -26,6 +26,7 @@ const LocalizedVesuvioBuono = ({ lang }: LocalizedVesuvioBuonoProps) => {
   return (
     <div className="min-h-screen bg-charcoal-900">
         <Header />
+        <RouteSEO lang={lang} title={pageTitle} description={pageDescription} />
         
         <main>
           {/* VesuvioBuono Section */}
