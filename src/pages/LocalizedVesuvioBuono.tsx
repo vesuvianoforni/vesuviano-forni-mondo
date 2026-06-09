@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { loadLanguage } from '@/i18n/config';
 import Header from "@/components/Header";
+import RouteSEO from "@/components/RouteSEO";
 import VesuvioBuono from "@/components/VesuvioBuono";
 import ConsultationForm from "@/components/ConsultationForm";
 import AIChatWidget from "@/components/chat/AIChatWidget";
