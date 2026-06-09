@@ -71,7 +71,7 @@ const RouteSEO = ({ title, description, path, image, lang }: RouteSEOProps) => {
     return () => {
       document.title = prevTitle;
     };
-  }, [title, description, path, image, lang]);
+  }, [title, description, effectivePath, image, lang]);
 
   return null;
 };
