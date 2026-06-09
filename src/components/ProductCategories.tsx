@@ -211,6 +211,7 @@ const ProductCategories = () => {
                           size="lg"
                           className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white transition-all duration-300 text-base sm:text-lg py-6 font-semibold shadow-lg hover:shadow-xl"
                           onClick={() => setConsultationModalOpen(true)}
+                          aria-label="Book free consultation with our experts"
                         >
                           {t(`products.${category.key}.cta`)}
                         </Button>
