@@ -28,6 +28,11 @@ const LocalizedServices = ({ lang }: Props) => {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-white">
       <Header />
+      <RouteSEO
+        lang={lang}
+        title={`${t('services.title', { defaultValue: 'Services' })} | Vesuviano Forni`}
+        description={t('services.subtitle', { defaultValue: 'Technical consultation, 3D renders, international logistics and after-sales support for Vesuviano ovens.' })}
+      />
       <main className="pt-20">
         <Services />
         <Suspense fallback={null}>
