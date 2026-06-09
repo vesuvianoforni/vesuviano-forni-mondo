@@ -54,6 +54,41 @@ Deno.serve(async (req) => {
       .select()
       .single();
 
+    // Sync lead to external ERP via webhook (same pattern as consultation form)
+    const erpWebhookUrl = Deno.env.get("ERP_WEBHOOK_URL");
+    if (erpWebhookUrl && lead?.id) {
+      const erpPayload = {
+        id: lead.id,
+        source: "vesuviano_website",
+        event_type: "website_lead_created",
+        form_type: "oven_finder_quiz",
+        customer_name: name.trim(),
+        first_name: name.trim(),
+        last_name: null,
+        email: email.trim(),
+        phone: phone.trim(),
+        city: null,
+        company: null,
+        oven_type: fuel || null,
+        notes: `Quiz: usage=${usage} | covers=${covers || "n/a"} | style=${style || "n/a"} | fuel=${fuel || "any"}`,
+        metadata: { usage, covers, style, fuel, lang },
+        timestamp: new Date().toISOString(),
+      };
+      try {
+        const erpRes = await fetch(erpWebhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(erpPayload),
+        });
+        const erpText = await erpRes.text();
+        console.log("ERP webhook (oven-finder) status:", erpRes.status, "body:", erpText);
+      } catch (err) {
+        console.error("ERP webhook (oven-finder) error:", err instanceof Error ? err.message : err);
+      }
+    } else if (!erpWebhookUrl) {
+      console.log("ERP_WEBHOOK_URL not configured, skipping ERP sync");
+    }
+
     // Fetch active ovens
     const { data: ovens } = await supabase
       .from("configurator_ovens")
