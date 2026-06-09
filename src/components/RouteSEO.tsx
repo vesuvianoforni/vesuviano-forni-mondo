@@ -44,8 +44,10 @@ const setLink = (rel: string, href: string) => {
  * original homepage values when the component unmounts.
  */
 const RouteSEO = ({ title, description, path, image, lang }: RouteSEOProps) => {
+  const location = useLocation();
+  const effectivePath = path || location.pathname || '/';
   useEffect(() => {
-    const url = `${BASE_URL}${path.startsWith('/') ? path : `/${path}`}`;
+    const url = `${BASE_URL}${effectivePath.startsWith('/') ? effectivePath : `/${effectivePath}`}`;
     const img = image || `${BASE_URL}/lovable-uploads/vesuviano-social-banner.jpg`;
 
     const prevTitle = document.title;
