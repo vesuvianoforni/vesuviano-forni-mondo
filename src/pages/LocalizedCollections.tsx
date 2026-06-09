@@ -2,6 +2,7 @@ import { useEffect, useState, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
+import RouteSEO from '@/components/RouteSEO';
 import OvenDataInitializer from '@/components/OvenDataInitializer';
 
 const OvenGallery = lazy(() => import('@/components/OvenGallery'));
