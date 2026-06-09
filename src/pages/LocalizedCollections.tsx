@@ -13,7 +13,7 @@ interface Props {
 }
 
 const LocalizedCollections = ({ lang }: Props) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [ready, setReady] = useState(i18n.language === lang);
 
   useEffect(() => {
