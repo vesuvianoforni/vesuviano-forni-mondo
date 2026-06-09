@@ -1021,4 +1021,48 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://vesuvianoforni.com/book-a-slot-call" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vesuvianoforni.com/book-a-slot-call" />
   </url>
+  <url>
+    <loc>https://vesuvianoforni.com/en/neapolitan-pizza-ovens</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vesuvianoforni.com/en/neapolitan-pizza-ovens" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vesuvianoforni.com/fr/fours-a-pizza-napolitains" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://vesuvianoforni.com/de/neapolitanische-pizzaoefen" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://vesuvianoforni.com/es/hornos-pizza-napolitana" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vesuvianoforni.com/en/neapolitan-pizza-ovens" />
+  </url>
+  <url>
+    <loc>https://vesuvianoforni.com/fr/fours-a-pizza-napolitains</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vesuvianoforni.com/en/neapolitan-pizza-ovens" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vesuvianoforni.com/fr/fours-a-pizza-napolitains" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://vesuvianoforni.com/de/neapolitanische-pizzaoefen" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://vesuvianoforni.com/es/hornos-pizza-napolitana" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vesuvianoforni.com/en/neapolitan-pizza-ovens" />
+  </url>
+  <url>
+    <loc>https://vesuvianoforni.com/de/neapolitanische-pizzaoefen</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vesuvianoforni.com/en/neapolitan-pizza-ovens" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vesuvianoforni.com/fr/fours-a-pizza-napolitains" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://vesuvianoforni.com/de/neapolitanische-pizzaoefen" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://vesuvianoforni.com/es/hornos-pizza-napolitana" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vesuvianoforni.com/en/neapolitan-pizza-ovens" />
+  </url>
+  <url>
+    <loc>https://vesuvianoforni.com/es/hornos-pizza-napolitana</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vesuvianoforni.com/en/neapolitan-pizza-ovens" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://vesuvianoforni.com/fr/fours-a-pizza-napolitains" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://vesuvianoforni.com/de/neapolitanische-pizzaoefen" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://vesuvianoforni.com/es/hornos-pizza-napolitana" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vesuvianoforni.com/en/neapolitan-pizza-ovens" />
+  </url>
 </urlset>
