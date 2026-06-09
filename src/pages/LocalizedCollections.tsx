@@ -2,6 +2,7 @@ import { useEffect, useState, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
+import RouteSEO from '@/components/RouteSEO';
 import OvenDataInitializer from '@/components/OvenDataInitializer';
 
 const OvenGallery = lazy(() => import('@/components/OvenGallery'));
@@ -12,7 +13,7 @@ interface Props {
 }
 
 const LocalizedCollections = ({ lang }: Props) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [ready, setReady] = useState(i18n.language === lang);
 
   useEffect(() => {
@@ -29,6 +30,11 @@ const LocalizedCollections = ({ lang }: Props) => {
     <div className="min-h-screen w-full overflow-x-hidden bg-white">
       <OvenDataInitializer />
       <Header />
+      <RouteSEO
+        lang={lang}
+        title={`${t('collections.title', { defaultValue: 'Oven Collections' })} | Vesuviano Forni`}
+        description={t('collections.subtitle', { defaultValue: 'Explore the full Vesuviano collection: Anastasia, Ottavio, Real Bosco, Sebastian, VesuvioBuono and Rotating ovens.' })}
+      />
       <main className="pt-20">
         <Suspense fallback={null}>
           <OvenGallery />

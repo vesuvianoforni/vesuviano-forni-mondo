@@ -2,6 +2,7 @@ import { useEffect, useState, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
+import RouteSEO from '@/components/RouteSEO';
 import Services from '@/components/Services';
 
 const PreFooterSimpleForm = lazy(() => import('@/components/PreFooterSimpleForm'));
@@ -11,7 +12,7 @@ interface Props {
 }
 
 const LocalizedServices = ({ lang }: Props) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [ready, setReady] = useState(i18n.language === lang);
 
   useEffect(() => {
@@ -27,6 +28,11 @@ const LocalizedServices = ({ lang }: Props) => {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-white">
       <Header />
+      <RouteSEO
+        lang={lang}
+        title={`${t('services.title', { defaultValue: 'Services' })} | Vesuviano Forni`}
+        description={t('services.subtitle', { defaultValue: 'Technical consultation, 3D renders, international logistics and after-sales support for Vesuviano ovens.' })}
+      />
       <main className="pt-20">
         <Services />
         <Suspense fallback={null}>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { loadLanguage } from '@/i18n/config';
 import Header from "@/components/Header";
+import RouteSEO from "@/components/RouteSEO";
 import VesuvioBuono from "@/components/VesuvioBuono";
 import ConsultationForm from "@/components/ConsultationForm";
 import AIChatWidget from "@/components/chat/AIChatWidget";
@@ -25,6 +26,7 @@ const LocalizedVesuvioBuono = ({ lang }: LocalizedVesuvioBuonoProps) => {
   return (
     <div className="min-h-screen bg-charcoal-900">
         <Header />
+        <RouteSEO lang={lang} title={pageTitle} description={pageDescription} />
         
         <main>
           {/* VesuvioBuono Section */}

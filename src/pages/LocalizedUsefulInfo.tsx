@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
+import RouteSEO from '@/components/RouteSEO';
 
 import AIChatWidget from '@/components/chat/AIChatWidget';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -237,6 +238,11 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
   return (
     <div className="min-h-screen bg-stone-50">
       <Header />
+      <RouteSEO
+        lang={lang}
+        title={`${c.title} | Vesuviano Forni`}
+        description={c.subtitle}
+      />
       
       
       <main className="pt-24 pb-16">
