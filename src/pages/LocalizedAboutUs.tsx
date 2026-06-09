@@ -35,6 +35,11 @@ const LocalizedAboutUs = ({ lang }: LocalizedAboutUsProps) => {
   return (
     <div className="min-h-screen bg-stone-50">
       <Header />
+      <RouteSEO
+        lang={lang}
+        title={`${t('aboutUs.title', { defaultValue: 'About Us' })} | Vesuviano Forni`}
+        description={t('aboutUs.subtitle', { defaultValue: 'Vesuviano Forni: artisan Neapolitan oven makers since 1950.' })}
+      />
       
       <main>
         <AboutUs />
