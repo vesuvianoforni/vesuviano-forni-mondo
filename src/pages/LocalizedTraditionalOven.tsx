@@ -25,6 +25,11 @@ const LocalizedTraditionalOven = ({ lang }: LocalizedTraditionalOvenProps) => {
   return (
     <div className="min-h-screen bg-white">
         <Header />
+        <RouteSEO
+          lang={lang}
+          title={`${t('products.traditional.title')} | Vesuviano Forni`}
+          description={t('products.traditional.subtitle', { defaultValue: t('products.traditional.title') })}
+        />
         
         {/* Hero Section */}
         <section className="relative h-[60vh] min-h-[500px] overflow-hidden">
