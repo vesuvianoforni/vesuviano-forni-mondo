@@ -370,26 +370,9 @@ const CommercialWoodFiredPizzaOven = () => {
       </section>
 
       {/* CTA Form */}
-      <section id="quote-form" className="py-20 bg-stone-100 scroll-mt-20">
-        <div className="container mx-auto px-6 max-w-4xl">
-          <div className="text-center mb-10">
-            <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-4">
-              Request a quote for your wood-fired oven
-            </h2>
-            <p className="text-lg text-stone-600">
-              Our experts will help you choose the right model, from design to UK delivery.
-            </p>
-          </div>
-          <ConsultationForm
-            phonePlaceholder="+44 7123 456789"
-            messagePlaceholder="Tell us about your venue: covers, expected volume, space available…"
-            submitLabel="Request my free quote"
-          />
-          <p className="text-center text-sm text-stone-500 mt-6">
-            We'll reply within 24 hours. Your details stay private and are never shared.
-          </p>
-        </div>
-      </section>
+      <div id="quote-form" className="scroll-mt-20">
+        <ConsultationForm />
+      </div>
     </div>
   );
 };
