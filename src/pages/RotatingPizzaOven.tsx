@@ -120,7 +120,7 @@ const RotatingPizzaOven = () => {
       </div>
 
       {/* Hero */}
-      <section className="relative h-[70vh] min-h-[560px] overflow-hidden">
+      <section className="relative min-h-[600px] h-[80vh] md:h-[70vh] md:min-h-[560px] overflow-hidden">
         <video
           autoPlay
           muted
@@ -131,19 +131,19 @@ const RotatingPizzaOven = () => {
           <source src={heroVideo.url} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/75" />
-        <div className="relative h-full container mx-auto px-6 flex items-center">
-          <div className="max-w-3xl text-white">
-            <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+        <div className="relative h-full container mx-auto px-4 sm:px-6 flex items-center pt-20 pb-8 md:py-0">
+          <div className="max-w-3xl text-white w-full">
+            <h1 className="font-playfair text-[2rem] leading-[1.1] sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 break-words hyphens-auto">
               Commercial Rotating Pizza Ovens, Handmade in Naples
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 mb-8">
+            <p className="text-base sm:text-lg md:text-2xl text-white/90 mb-6 md:mb-8">
               A rotating deck for an even bake on every pizza — high throughput with less skill required. Wood or gas. UK delivery and installation.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
               <Button
                 onClick={scrollToForm as any}
                 size="lg"
-                className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-lg px-8 py-6"
+                className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-base md:text-lg px-6 md:px-8 py-5 md:py-6 w-full sm:w-auto"
               >
                 Request a quote
               </Button>
@@ -151,12 +151,12 @@ const RotatingPizzaOven = () => {
                 onClick={openModal}
                 size="lg"
                 variant="outline"
-                className="border-white/70 text-white hover:bg-white/10 hover:text-white text-base px-6 py-6 bg-transparent"
+                className="border-white/70 text-white hover:bg-white/10 hover:text-white text-sm md:text-base px-4 md:px-6 py-5 md:py-6 bg-transparent w-full sm:w-auto whitespace-normal h-auto text-center leading-snug"
               >
-                Not sure which model? Find your perfect oven in 60s →
+                Not sure which model? Find yours in 60s →
               </Button>
             </div>
-            <p className="text-sm text-white/80">
+            <p className="text-xs sm:text-sm text-white/80">
               Family workshop since 1950 · Wood or gas · UK delivery & install
             </p>
           </div>
