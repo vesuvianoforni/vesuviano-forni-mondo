@@ -200,25 +200,6 @@ const ConsultationForm = () => {
                 </CardContent>
               </Card>
 
-              <Card className="shadow-sm border-stone-200/60 bg-vesuviano-50/50">
-                <CardContent className="p-5 md:p-6">
-                  <div className="flex items-start gap-3">
-                    <Download className="text-vesuviano-600 mt-0.5 flex-shrink-0" size={20} />
-                    <div>
-                      <h4 className="font-semibold text-foreground mb-1 text-sm">{t('consultation.download.title')}</h4>
-                      <p className="text-xs text-muted-foreground mb-3">{t('consultation.download.description')}</p>
-                      <a
-                        href="/lovable-uploads/vesuviobuono-scheda-tecnica.pdf"
-                        download
-                        className="inline-flex items-center gap-1.5 text-vesuviano-600 hover:text-vesuviano-700 text-sm font-medium transition-colors"
-                      >
-                        <Download size={14} />
-                        {t('consultation.download.button')}
-                      </a>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>

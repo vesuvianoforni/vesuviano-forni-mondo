@@ -5,26 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import DownloadDatasheetModal from './DownloadDatasheetModal';
+
 import ConsultationModal from './ConsultationModal';
 
 const ProductCategories = () => {
   const { t, i18n } = useTranslation();
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
-  const [downloadModal, setDownloadModal] = useState<{
-    ovenType: string;
-    datasheetUrl?: string;
-  } | null>(null);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const getDatasheetUrl = (ovenType: string) => {
-    const datasheetUrls: Record<string, string> = {
-      'vesuviobuono': '/lovable-uploads/vesuviobuono-scheda-tecnica.pdf',
-      // Add other datasheet URLs as needed
-    };
-    return datasheetUrls[ovenType];
-  };
 
   const categories = [
     {
