@@ -293,17 +293,17 @@ const CommercialWoodFiredPizzaOven = () => {
           </h2>
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
-              { city: 'Pizzolo Bar — Brighton, UK', desc: 'Vesuviano wood-fired oven, commissioned and installed on site.', img: '/lovable-uploads/vesuviobuono-verde-mosaico.webp' },
-              { city: 'Naples Authentic — London, UK', desc: 'Anastasia 120 cm dome, serving 300+ pizzas per night.', img: '/lovable-uploads/vesuviobuono-forno-legna.webp' },
-              { city: 'Vera Pizza Co. — Manchester, UK', desc: 'Real Bosco 140 cm for high-volume weekend service.', img: '/lovable-uploads/vesuviobuono-verde-mosaico.webp' },
+              { city: 'Pizzolo Siciliano — UK', desc: 'Sebastian model, built on place by our master builders.', img: pizzoloLogo.url },
             ].map((p) => (
-              <div key={p.city} className="bg-stone-50 rounded-lg overflow-hidden shadow-sm">
-                <img
-                  src={p.img}
-                  alt={`Commercial wood-fired Neapolitan pizza oven installed at ${p.city}`}
-                  className="w-full h-56 object-cover"
-                  loading="lazy"
-                />
+              <div key={p.city} className="bg-stone-50 rounded-lg overflow-hidden shadow-sm flex flex-col">
+                <div className="bg-white h-56 flex items-center justify-center p-6">
+                  <img
+                    src={p.img}
+                    alt={`${p.city} — Vesuviano Forni client`}
+                    className="max-h-full max-w-full object-contain"
+                    loading="lazy"
+                  />
+                </div>
                 <div className="p-5">
                   <h3 className="font-playfair font-bold text-charcoal-900 mb-1">{p.city}</h3>
                   <p className="text-sm text-stone-600">{p.desc}</p>
