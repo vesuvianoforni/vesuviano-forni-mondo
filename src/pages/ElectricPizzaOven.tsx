@@ -7,6 +7,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
+import ansumLogo from '@/assets/ansum-logo.png.asset.json';
+import pizzoloLogo from '@/assets/pizzolo-siciliano-logo.png.asset.json';
+import cuginiLogo from '@/assets/cugini-pizza-logo.png.asset.json';
 
 const PATH = '/en/electric-pizza-oven';
 const URL = `https://vesuvianoforni.com${PATH}`;
@@ -279,6 +282,11 @@ const ElectricPizzaOven = () => {
           <p className="text-center text-stone-600 max-w-2xl mx-auto mb-12">
             From indoor venues without a flue to shopping centres and hotel kitchens, our patented electric ovens are baking authentic Neapolitan pizza every day.
           </p>
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+            <img src={ansumLogo.url} alt="Ansum Pizza logo" className="h-16 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src={pizzoloLogo.url} alt="Pizzolo Siciliano logo" className="h-16 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+            <img src={cuginiLogo.url} alt="Cugini Pizza logo" className="h-16 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+          </div>
         </div>
       </section>
 
