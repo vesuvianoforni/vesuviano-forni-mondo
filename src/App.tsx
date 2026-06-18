@@ -44,6 +44,7 @@ const ForniLegnaEsterno = lazy(() => import("./pages/ForniLegnaEsterno"));
 const FourAPizzaBois = lazy(() => import("./pages/FourAPizzaBois"));
 const CommercialWoodFiredPizzaOven = lazy(() => import("./pages/CommercialWoodFiredPizzaOven"));
 const RotatingPizzaOven = lazy(() => import("./pages/RotatingPizzaOven"));
+const ElectricPizzaOven = lazy(() => import("./pages/ElectricPizzaOven"));
 import ClarityPageView from "./components/ClarityPageView";
 
 
@@ -128,6 +129,7 @@ const App = () => {
               <Route path="/en/neapolitan-pizza-ovens" element={<LocalizedNeapolitanPizzaOvens lang="en" />} />
               <Route path="/en/commercial-wood-fired-pizza-oven" element={<CommercialWoodFiredPizzaOven />} />
               <Route path="/en/rotating-pizza-oven" element={<RotatingPizzaOven />} />
+              <Route path="/en/electric-pizza-oven" element={<ElectricPizzaOven />} />
               
               {/* French Routes */}
               <Route path="/fr" element={<LocalizedIndex lang="fr" />} />
