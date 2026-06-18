@@ -118,7 +118,7 @@ const CommercialWoodFiredPizzaOven = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-x-hidden pb-20 md:pb-0">
       <Header />
       <RouteSEO
         lang="en"
@@ -136,7 +136,7 @@ const CommercialWoodFiredPizzaOven = () => {
       </div>
 
       {/* Hero */}
-      <section className="relative h-[70vh] min-h-[560px] overflow-hidden">
+      <section className="relative min-h-[600px] h-[80vh] md:h-[70vh] md:min-h-[560px] overflow-hidden">
         <img
           src={heroBg.url}
           alt="Burning logs inside a traditional Neapolitan wood-fired pizza oven"
@@ -145,15 +145,15 @@ const CommercialWoodFiredPizzaOven = () => {
           height={1080}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/75" />
-        <div className="relative h-full container mx-auto px-6 flex items-center">
+        <div className="relative h-full container mx-auto px-4 sm:px-6 flex items-center pt-20 pb-8 md:py-0">
           <div className="max-w-3xl text-white">
-            <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            <h1 className="font-playfair text-[2rem] leading-[1.1] sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 break-words hyphens-auto">
               Commercial Wood-Fired Pizza Ovens, Handmade in Naples
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 mb-8">
+            <p className="text-base sm:text-lg md:text-2xl text-white/90 mb-6 md:mb-8">
               Authentic Neapolitan wood-fired ovens built for professional pizzerias and restaurants — since 1950. Delivered and installed across the UK.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
               <Button
                 onClick={scrollToForm as any}
                 size="lg"
