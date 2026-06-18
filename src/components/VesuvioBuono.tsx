@@ -1,13 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Leaf, Award, Flame, Download, Shield, CheckCircle } from "lucide-react";
+import { Leaf, Award, Flame, Shield, CheckCircle } from "lucide-react";
 import VideoPlayer from "./VideoPlayer";
-import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/hooks/use-toast";
 import { useTranslation } from 'react-i18next';
 
 const VesuvioBuono = () => {
