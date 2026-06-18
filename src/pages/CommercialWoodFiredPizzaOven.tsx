@@ -10,6 +10,7 @@ import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 import heroBg from '@/assets/commercial-wood-fire-bg.jpg.asset.json';
 import pizzoloLogo from '@/assets/pizzolo-siciliano-logo.png.asset.json';
 import ansumLogo from '@/assets/ansum-logo.png.asset.json';
+import cuginiLogo from '@/assets/cugini-pizza-logo.png.asset.json';
 
 
 const PATH = '/en/commercial-wood-fired-pizza-oven';
@@ -293,10 +294,11 @@ const CommercialWoodFiredPizzaOven = () => {
           <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-12 text-center">
             Trusted by pizzerias across the UK and Europe
           </h2>
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
               { city: 'Pizzolo Bar — Brighton, UK', desc: '37 Ship Street, The Lanes, Brighton BN1 1AB. Sebastian model, built on place by our master builders.', img: pizzoloLogo.url },
               { city: 'Ansum Food Co — Porth, Cornwall', desc: 'Alexandra Rd, Porth, Newquay TR7 3NB. Real Bosco (gas), shipped from Naples.', img: ansumLogo.url, ig: 'https://www.instagram.com/ansumfood/' },
+              { city: 'Cugini Pizza — UK', desc: 'Real Bosco wood-fired oven, shipped from Italy.', img: cuginiLogo.url, ig: 'https://www.instagram.com/cuginipizza_/' },
             ].map((p) => (
               <div key={p.city} className="bg-stone-50 rounded-lg overflow-hidden shadow-sm flex flex-col">
                 <div className="bg-white h-56 flex items-center justify-center p-6">
