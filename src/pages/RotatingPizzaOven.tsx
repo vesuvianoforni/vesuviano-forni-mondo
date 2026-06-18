@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
-import heroBg from '@/assets/commercial-wood-fire-bg.jpg.asset.json';
+import heroVideo from '@/assets/rotating-oven-hero-bg.mp4.asset.json';
 import pizzoloLogo from '@/assets/pizzolo-siciliano-logo.png.asset.json';
 import ansumLogo from '@/assets/ansum-logo.png.asset.json';
 import cuginiLogo from '@/assets/cugini-pizza-logo.png.asset.json';
@@ -121,13 +121,15 @@ const RotatingPizzaOven = () => {
 
       {/* Hero */}
       <section className="relative h-[70vh] min-h-[560px] overflow-hidden">
-        <img
-          src={heroBg.url}
-          alt="Commercial rotating pizza oven handmade in Naples, wood or gas fired"
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
           className="absolute inset-0 w-full h-full object-cover"
-          width={1920}
-          height={1080}
-        />
+        >
+          <source src={heroVideo.url} type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/75" />
         <div className="relative h-full container mx-auto px-6 flex items-center">
           <div className="max-w-3xl text-white">
