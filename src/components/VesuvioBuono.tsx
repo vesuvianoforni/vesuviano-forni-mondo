@@ -1,99 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Leaf, Award, Flame, Download, Shield, CheckCircle } from "lucide-react";
+import { Leaf, Award, Flame, Shield, CheckCircle } from "lucide-react";
 import VideoPlayer from "./VideoPlayer";
-import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/hooks/use-toast";
 import { useTranslation } from 'react-i18next';
 
 const VesuvioBuono = () => {
   const { t } = useTranslation();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    city: '',
-    phone: ''
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleDownloadPDF = async () => {
-    // Validate form
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.city || !formData.phone) {
-      toast({
-        title: t('vesuvioBuono.error'),
-        description: t('vesuvioBuono.fillAllFields'),
-        variant: "destructive"
-      });
-      return;
-    }
-
-    try {
-      // Send form data to our notification system
-      await supabase.functions.invoke('send-form-data', {
-        body: {
-          formType: 'vesuvio-buono',
-          data: formData
-        }
-      });
-
-      // Close dialog and download PDF
-      setIsDialogOpen(false);
-      const link = document.createElement('a');
-      link.href = '/lovable-uploads/vesuviobuono-scheda-tecnica.pdf';
-      link.download = 'VesuvioBuono_Scheda_Tecnica.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      // Reset form
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        city: '',
-        phone: ''
-      });
-
-      toast({
-        title: t('vesuvioBuono.downloadComplete'),
-        description: t('vesuvioBuono.downloadCompleteDesc'),
-      });
-
-    } catch (error) {
-      console.error('Error:', error);
-      toast({
-        title: t('vesuvioBuono.error'),
-        description: t('vesuvioBuono.errorDesc'),
-        variant: "destructive"
-      });
-    }
-  };
-
-  const downloadPDF = () => {
-    const link = document.createElement('a');
-    link.href = '/lovable-uploads/vesuviobuono-scheda-tecnica.pdf';
-    link.download = 'VesuvioBuono_Scheda_Tecnica.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const visitWebsite = () => {
-    window.open("https://www.vesuviobuono.com", "_blank");
-  };
 
   return (
     <section id="vesuviobuono" className="py-20 bg-vesuviano-900 relative overflow-hidden">
@@ -266,88 +178,6 @@ const VesuvioBuono = () => {
                   </li>
                 </ul>
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button className="bg-white text-vesuviano-700 hover:bg-stone-100 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-lg">
-                        <Download className="mr-2" size={20} />
-                        {t('vesuvioBuono.downloadSheet')}
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle className="text-vesuviano-800">{t('vesuvioBuono.modal.title')}</DialogTitle>
-                        <DialogDescription>
-                          {t('vesuvioBuono.modal.description')}
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="grid gap-2">
-                            <Label htmlFor="firstName">{t('vesuvioBuono.modal.firstName')}</Label>
-                            <Input
-                              id="firstName"
-                              name="firstName"
-                              value={formData.firstName}
-                              onChange={handleInputChange}
-                              required
-                            />
-                          </div>
-                          <div className="grid gap-2">
-                            <Label htmlFor="lastName">{t('vesuvioBuono.modal.lastName')}</Label>
-                            <Input
-                              id="lastName"
-                              name="lastName"
-                              value={formData.lastName}
-                              onChange={handleInputChange}
-                              required
-                            />
-                          </div>
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="email">{t('vesuvioBuono.modal.email')}</Label>
-                          <Input
-                            id="email"
-                            name="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            required
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="city">{t('vesuvioBuono.modal.city')}</Label>
-                          <Input
-                            id="city"
-                            name="city"
-                            value={formData.city}
-                            onChange={handleInputChange}
-                            required
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="phone">{t('vesuvioBuono.modal.phone')}</Label>
-                          <Input
-                            id="phone"
-                            name="phone"
-                            type="tel"
-                            value={formData.phone}
-                            onChange={handleInputChange}
-                            required
-                          />
-                        </div>
-                      </div>
-                      <div className="flex justify-end gap-2">
-                        <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                          {t('vesuvioBuono.modal.cancel')}
-                        </Button>
-                        <Button onClick={handleDownloadPDF} className="bg-vesuviano-600 hover:bg-vesuviano-700">
-                          {t('vesuvioBuono.modal.download')}
-                        </Button>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                </div>
 
                 {/* Additional Photo Slot in Right Column */}
                 <div className="mt-8">

@@ -5,26 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import DownloadDatasheetModal from './DownloadDatasheetModal';
+
 import ConsultationModal from './ConsultationModal';
 
 const ProductCategories = () => {
   const { t, i18n } = useTranslation();
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
-  const [downloadModal, setDownloadModal] = useState<{
-    ovenType: string;
-    datasheetUrl?: string;
-  } | null>(null);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const getDatasheetUrl = (ovenType: string) => {
-    const datasheetUrls: Record<string, string> = {
-      'vesuviobuono': '/lovable-uploads/vesuviobuono-scheda-tecnica.pdf',
-      // Add other datasheet URLs as needed
-    };
-    return datasheetUrls[ovenType];
-  };
 
   const categories = [
     {
@@ -247,17 +236,6 @@ const ProductCategories = () => {
                             </span>
                           </div>
                         </div>
-
-                        <Button
-                          className="w-full bg-stone-100 text-stone-700 hover:bg-vesuviano-500 hover:text-white transition-all duration-300 text-sm sm:text-base py-2 sm:py-3"
-                          onClick={() => setDownloadModal({
-                            ovenType: category.key,
-                            datasheetUrl: getDatasheetUrl(category.key)
-                          })}
-                          aria-label={`${t('products.downloadDatasheet')} — ${t(`products.${category.key}.title`)}`}
-                        >
-                          {t(`products.${category.key}.cta`, t('products.downloadDatasheet'))}
-                        </Button>
                       </>
                     )}
                   </CardContent>
@@ -268,15 +246,6 @@ const ProductCategories = () => {
 
         </div>
 
-        {/* Download Datasheet Modal */}
-        {downloadModal && (
-          <DownloadDatasheetModal
-            isOpen={!!downloadModal}
-            onClose={() => setDownloadModal(null)}
-            ovenType={downloadModal.ovenType}
-            datasheetUrl={downloadModal.datasheetUrl}
-          />
-        )}
 
         {/* Consultation Modal */}
         <ConsultationModal
