@@ -114,16 +114,11 @@ const Header = () => {
   const neapolitanPath = getNeapolitanPath();
 
   const productDropdownItems = [
-    { key: 'traditional', label: t('products.traditional.title'), path: getOvenPath('traditional') },
-    ...(neapolitanPath ? [{ key: 'neapolitan', label: neapolitanLabels[currentLang], path: neapolitanPath }] : []),
-    { key: 'gas', label: t('products.gas.title'), path: getOvenPath('gas') },
-    { key: 'electric', label: t('products.electric.title'), path: getOvenPath('electric') },
-    { key: 'rotating', label: t('products.rotating.title'), path: getOvenPath('rotating') },
-    { key: 'vesuviobuono', label: t('products.vesuviobuono.title'), path: getVesuvioBuonoPath() },
+    { key: 'readyToShip', label: t('readyToShip.menuTitle', 'Ready to Ship'), path: getReadyToShipPath() },
     { key: 'builtOnPlace', label: t('products.builtOnPlace.title'), path: '/built-on-place' },
-    { key: 'burners', label: t('burners.pageTitle'), path: getOvenPath('burners') },
-    { key: 'smokePurifier', label: t('zapper.menuTitle', 'Wood Smoke Purifier'), path: getOvenPath('smokePurifier') },
-    { key: 'readyToShip', label: t('readyToShip.menuTitle', 'Ready to Ship'), path: getReadyToShipPath() }
+    { key: 'vesuviobuono', label: t('products.vesuviobuono.title'), path: getVesuvioBuonoPath() },
+    { key: 'woodFired', label: 'Commercial Wood-Fired', path: '/en/commercial-wood-fired-pizza-oven' },
+    { key: 'rotating', label: t('products.rotating.title'), path: '/en/rotating-pizza-oven' },
   ];
 
 
