@@ -179,7 +179,7 @@ const CommercialWoodFiredPizzaOven = () => {
 
       {/* Trust bar */}
       <section className="bg-stone-900 text-white py-4">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm md:text-base text-stone-200 text-center">
             <span>Since 1950 · Made in Naples</span>
             <span className="hidden md:inline text-stone-500">|</span>
@@ -194,7 +194,7 @@ const CommercialWoodFiredPizzaOven = () => {
 
       {/* Benefits */}
       <section className="py-20 bg-white">
-        <div className="container mx-auto px-6 max-w-6xl">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
           <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-12 text-center">
             Why a Vesuviano wood-fired oven
           </h2>
@@ -229,7 +229,7 @@ const CommercialWoodFiredPizzaOven = () => {
 
       {/* Why a real Neapolitan oven matters + Features */}
       <section className="py-20 bg-stone-50">
-        <div className="container mx-auto px-6 max-w-6xl">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
           <div className="grid md:grid-cols-2 gap-12 mb-20 items-center">
             <div>
               <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-6">
@@ -290,7 +290,7 @@ const CommercialWoodFiredPizzaOven = () => {
 
       {/* Social proof */}
       <section className="py-20 bg-white">
-        <div className="container mx-auto px-6 max-w-6xl">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
           <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-12 text-center">
             Trusted by pizzerias across the UK and Europe
           </h2>
@@ -343,7 +343,7 @@ const CommercialWoodFiredPizzaOven = () => {
 
       {/* How it works */}
       <section className="py-20 bg-charcoal-900 text-white">
-        <div className="container mx-auto px-6 max-w-6xl">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
           <h2 className="font-playfair text-3xl md:text-4xl font-bold mb-12 text-center">
             From Naples to your kitchen, handled end to end
           </h2>
@@ -368,7 +368,7 @@ const CommercialWoodFiredPizzaOven = () => {
 
       {/* FAQ */}
       <section className="py-20 bg-white">
-        <div className="container mx-auto px-6 max-w-3xl">
+        <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
           <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-12 text-center">
             Frequently asked questions
           </h2>
@@ -385,7 +385,7 @@ const CommercialWoodFiredPizzaOven = () => {
 
       {/* Related */}
       <section className="py-12 bg-stone-50 border-t border-stone-200">
-        <div className="container mx-auto px-6 max-w-6xl text-center">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl text-center">
           <p className="text-stone-600 mb-4">Looking at other fuel options?</p>
           <div className="flex flex-wrap justify-center gap-4 text-vesuviano-700">
             <Link to="/en/gas-ovens" className="hover:underline">Gas ovens</Link>
