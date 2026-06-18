@@ -127,6 +127,7 @@ const App = () => {
               <Route path="/en/services" element={<LocalizedServices lang="en" />} />
               <Route path="/en/neapolitan-pizza-ovens" element={<LocalizedNeapolitanPizzaOvens lang="en" />} />
               <Route path="/en/commercial-wood-fired-pizza-oven" element={<CommercialWoodFiredPizzaOven />} />
+              <Route path="/en/rotating-pizza-oven" element={<RotatingPizzaOven />} />
               
               {/* French Routes */}
               <Route path="/fr" element={<LocalizedIndex lang="fr" />} />
