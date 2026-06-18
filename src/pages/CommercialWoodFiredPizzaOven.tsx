@@ -296,7 +296,7 @@ const CommercialWoodFiredPizzaOven = () => {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             {[
               { city: 'Pizzolo Bar — Brighton, UK', desc: '37 Ship Street, The Lanes, Brighton BN1 1AB. Sebastian model, built on place by our master builders.', img: pizzoloLogo.url },
-              { city: 'Ansum Food Co — Porth, Cornwall', desc: 'Alexandra Rd, Porth, Newquay TR7 3NB. Gas oven, built on place.', img: ansumLogo.url, ig: 'https://www.instagram.com/ansumfood/' },
+              { city: 'Ansum Food Co — Porth, Cornwall', desc: 'Alexandra Rd, Porth, Newquay TR7 3NB. Real Bosco (gas), shipped from Naples.', img: ansumLogo.url, ig: 'https://www.instagram.com/ansumfood/' },
             ].map((p) => (
               <div key={p.city} className="bg-stone-50 rounded-lg overflow-hidden shadow-sm flex flex-col">
                 <div className="bg-white h-56 flex items-center justify-center p-6">
