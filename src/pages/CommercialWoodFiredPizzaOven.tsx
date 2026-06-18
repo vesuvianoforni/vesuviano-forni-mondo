@@ -7,6 +7,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
+import heroBg from '@/assets/commercial-wood-fire-bg.jpg.asset.json';
+
 
 const PATH = '/en/commercial-wood-fired-pizza-oven';
 const URL = `https://vesuvianoforni.com${PATH}`;
@@ -133,8 +135,8 @@ const CommercialWoodFiredPizzaOven = () => {
       {/* Hero */}
       <section className="relative h-[70vh] min-h-[560px] overflow-hidden">
         <img
-          src="/lovable-uploads/vesuviobuono-forno-legna.webp"
-          alt="Commercial wood-fired Neapolitan pizza oven installed in a UK pizzeria"
+          src={heroBg.url}
+          alt="Burning logs inside a traditional Neapolitan wood-fired pizza oven"
           className="absolute inset-0 w-full h-full object-cover"
           width={1920}
           height={1080}
