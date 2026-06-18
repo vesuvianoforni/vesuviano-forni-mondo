@@ -224,43 +224,53 @@ const CommercialWoodFiredPizzaOven = () => {
         </div>
       </section>
 
-      {/* Models */}
+      {/* Why a real Neapolitan oven matters + Features */}
       <section className="py-20 bg-stone-50">
         <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-4">
-              Our wood-fired range
-            </h2>
-            <p className="text-lg text-stone-600 max-w-2xl mx-auto">
-              Choose the size that fits your kitchen and your volume. Every model ships ready for professional use.
-            </p>
+          <div className="grid md:grid-cols-2 gap-12 mb-20 items-center">
+            <div>
+              <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-6">
+                Why a real Neapolitan oven matters
+              </h2>
+              <p className="text-lg text-stone-600 leading-relaxed mb-6">
+                A genuine Neapolitan pizza oven is not just a dome — it is a thermal machine engineered to hold 430–480°C on the cooking floor while the vault radiates the leopard-spot leoparding on the cornicione. Our ovens are built in Sant'Anastasia and Boscoreale, at the foot of Vesuvius, with refractory clay and volcanic sand drawn from the same soil that has fired Neapolitan pizza for two centuries.
+              </p>
+              <p className="text-lg text-stone-600 leading-relaxed">
+                Every dome is shaped by hand, cured slowly, and finished with the traditional mosaic or majolica that has become the signature of Vesuviano Forni in over 40 countries.
+              </p>
+            </div>
+            <div>
+              <img
+                src="/lovable-uploads/vesuviobuono-verde-mosaico.webp"
+                alt="Handmade Neapolitan wood-fired pizza oven with green mosaic finish"
+                className="w-full h-80 object-cover rounded-lg shadow-lg"
+                loading="lazy"
+              />
+            </div>
           </div>
 
-          <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-stone-200 mb-10">
-            <table className="w-full text-left">
-              <thead className="bg-stone-100 text-charcoal-900">
-                <tr>
-                  <th className="px-4 py-3 font-semibold">Model</th>
-                  <th className="px-4 py-3 font-semibold">Chamber Ø</th>
-                  <th className="px-4 py-3 font-semibold">Capacity</th>
-                  <th className="px-4 py-3 font-semibold">Footprint</th>
-                  <th className="px-4 py-3 font-semibold">Weight</th>
-                  <th className="px-4 py-3 font-semibold">Fuel</th>
-                </tr>
-              </thead>
-              <tbody>
-                {MODELS.map((m) => (
-                  <tr key={m.name} className="border-t border-stone-200">
-                    <td className="px-4 py-3 font-playfair font-bold text-vesuviano-700">{m.name}</td>
-                    <td className="px-4 py-3 text-stone-700">{m.diameter}</td>
-                    <td className="px-4 py-3 text-stone-700">{m.capacity}</td>
-                    <td className="px-4 py-3 text-stone-700">{m.footprint}</td>
-                    <td className="px-4 py-3 text-stone-700">{m.weight}</td>
-                    <td className="px-4 py-3 text-stone-700">{m.fuel}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="mb-12">
+            <h2 className="font-playfair text-3xl font-bold text-charcoal-900 mb-8 text-center">
+              Built for the true Neapolitan craft
+            </h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { t: 'AVPN-grade temperature', d: 'Floor 430–480°C, vault 480°C — the exact window required by the Associazione Verace Pizza Napoletana.' },
+                { t: '60–90 second bake', d: 'Cornicione, soft center, no burnt base. The cooking floor recovers heat between pies thanks to dense biscotto-style refractory.' },
+                { t: 'Volcanic stone dome', d: 'Vesuvian sand and refractory clay give superior thermal inertia and the deep, dry heat Neapolitan dough needs.' },
+                { t: 'Wood, gas or hybrid', d: 'Same dome geometry, three fuels. Hybrid configurations let you switch mid-service without flavour loss.' },
+              ].map((f) => (
+                <Card key={f.t} className="border-stone-200 hover:border-vesuviano-300 transition-colors">
+                  <CardContent className="p-6">
+                    <div className="w-12 h-12 bg-vesuviano-100 rounded-full flex items-center justify-center mb-4">
+                      <div className="w-6 h-6 bg-vesuviano-500 rounded-full" />
+                    </div>
+                    <h3 className="font-inter font-semibold text-charcoal-900 mb-2">{f.t}</h3>
+                    <p className="text-sm text-stone-600">{f.d}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
 
           <div className="text-center">
