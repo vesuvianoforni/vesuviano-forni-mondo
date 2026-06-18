@@ -52,12 +52,12 @@ const MODELS = [
     temp: 'Up to 500 °C',
   },
   {
-    name: 'Anastasia Electric — 120 cm',
-    diameter: '120 cm refractory brick dome',
-    capacity: '6–7 pizzas per bake · 130–180 pizzas/hour',
-    footprint: '160 × 160 cm',
-    weight: '2,300 kg',
-    power: 'Three-phase 400 V · ~24 kW',
+    name: 'Real Bosco Electric — 100 cm',
+    diameter: '100 cm refractory brick dome',
+    capacity: '5–6 pizzas per bake · 100–140 pizzas/hour',
+    footprint: '150 × 150 cm',
+    weight: '2,100 kg',
+    power: 'Three-phase 400 V · ~21 kW',
     temp: 'Up to 500 °C',
   },
 ];
