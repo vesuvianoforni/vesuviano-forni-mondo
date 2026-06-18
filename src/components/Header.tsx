@@ -119,6 +119,7 @@ const Header = () => {
     { key: 'vesuviobuono', label: t('products.vesuviobuono.title'), path: getVesuvioBuonoPath() },
     { key: 'woodFired', label: 'Commercial Wood-Fired', path: '/en/commercial-wood-fired-pizza-oven' },
     { key: 'rotating', label: t('products.rotating.title'), path: '/en/rotating-pizza-oven' },
+    { key: 'electric', label: 'Electric Neapolitan', path: '/en/electric-pizza-oven' },
   ];
 
 
