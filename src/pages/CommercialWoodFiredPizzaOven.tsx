@@ -294,7 +294,7 @@ const CommercialWoodFiredPizzaOven = () => {
           </h2>
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
-              { city: 'Pizzolo Siciliano — UK', desc: 'Sebastian model, built on place by our master builders.', img: pizzoloLogo.url },
+              { city: 'Pizzolo Bar — Brighton, UK', desc: '37 Ship Street, The Lanes, Brighton BN1 1AB. Sebastian model, built on place by our master builders.', img: pizzoloLogo.url },
             ].map((p) => (
               <div key={p.city} className="bg-stone-50 rounded-lg overflow-hidden shadow-sm flex flex-col">
                 <div className="bg-white h-56 flex items-center justify-center p-6">
