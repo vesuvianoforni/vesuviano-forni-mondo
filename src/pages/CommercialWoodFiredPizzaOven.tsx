@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 import heroBg from '@/assets/commercial-wood-fire-bg.jpg.asset.json';
+import pizzoloLogo from '@/assets/pizzolo-siciliano-logo.png.asset.json';
 
 
 const PATH = '/en/commercial-wood-fired-pizza-oven';
