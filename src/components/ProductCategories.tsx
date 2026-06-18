@@ -236,17 +236,6 @@ const ProductCategories = () => {
                             </span>
                           </div>
                         </div>
-
-                        <Button
-                          className="w-full bg-stone-100 text-stone-700 hover:bg-vesuviano-500 hover:text-white transition-all duration-300 text-sm sm:text-base py-2 sm:py-3"
-                          onClick={() => setDownloadModal({
-                            ovenType: category.key,
-                            datasheetUrl: getDatasheetUrl(category.key)
-                          })}
-                          aria-label={`${t('products.downloadDatasheet')} — ${t(`products.${category.key}.title`)}`}
-                        >
-                          {t(`products.${category.key}.cta`, t('products.downloadDatasheet'))}
-                        </Button>
                       </>
                     )}
                   </CardContent>
@@ -257,15 +246,6 @@ const ProductCategories = () => {
 
         </div>
 
-        {/* Download Datasheet Modal */}
-        {downloadModal && (
-          <DownloadDatasheetModal
-            isOpen={!!downloadModal}
-            onClose={() => setDownloadModal(null)}
-            ovenType={downloadModal.ovenType}
-            datasheetUrl={downloadModal.datasheetUrl}
-          />
-        )}
 
         {/* Consultation Modal */}
         <ConsultationModal
