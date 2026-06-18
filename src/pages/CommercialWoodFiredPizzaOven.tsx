@@ -157,7 +157,7 @@ const CommercialWoodFiredPizzaOven = () => {
               <Button
                 onClick={scrollToForm as any}
                 size="lg"
-                className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-lg px-8 py-6"
+                className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-base md:text-lg px-6 md:px-8 py-5 md:py-6 w-full sm:w-auto"
               >
                 Request a quote
               </Button>
@@ -165,12 +165,12 @@ const CommercialWoodFiredPizzaOven = () => {
                 onClick={openModal}
                 size="lg"
                 variant="outline"
-                className="border-white/70 text-white hover:bg-white/10 hover:text-white text-base px-6 py-6 bg-transparent"
+                className="border-white/70 text-white hover:bg-white/10 hover:text-white text-sm md:text-base px-4 md:px-6 py-5 md:py-6 bg-transparent w-full sm:w-auto whitespace-normal h-auto text-center leading-snug"
               >
-                Not sure which model? Find your perfect oven in 60s →
+                Not sure which model? Find yours in 60s →
               </Button>
             </div>
-            <p className="text-sm text-white/80">
+            <p className="text-xs sm:text-sm text-white/80">
               Family workshop since 1950 · Refractory Neapolitan build · Worldwide delivery & installation
             </p>
           </div>
