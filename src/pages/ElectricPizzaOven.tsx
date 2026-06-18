@@ -7,6 +7,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
+import ansumLogo from '@/assets/ansum-logo.png.asset.json';
+import pizzoloLogo from '@/assets/pizzolo-siciliano-logo.png.asset.json';
+import cuginiLogo from '@/assets/cugini-pizza-logo.png.asset.json';
 
 const PATH = '/en/electric-pizza-oven';
 const URL = `https://vesuvianoforni.com${PATH}`;
