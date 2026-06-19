@@ -1,0 +1,445 @@
+
+<!DOCTYPE html>
+<html lang="it" prefix="og: https://ogp.me/ns#">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vesuviano | Forni Napoletani Professionali dal 1950</title>
+    <meta name="description" content="Forni napoletani artigianali dal 1950: a legna, gas, elettrici e VesuvioBuono zero emissioni. Per pizzerie e ristoranti nel mondo.">
+    <meta name="keywords" content="vesuviano forni, forni a legna napoletani, forni pizza professionali, VesuvioBuono zero emissioni, forni artigianali Napoli, forno tradizionale italiano, forni per ristoranti, forni domestici, mattoni refrattari, forni ecologici">
+    <meta name="author" content="Vesuviano Forni" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="bingbot" content="index, follow" />
+    <meta name="google-site-verification" content="m2JEhd_gkm8hD14ME0U9AGRgWeF7xPG1RQY3zIpcnw8" />
+    <link rel="canonical" href="https://vesuvianoforni.com/" />
+    
+    <!-- Business Information -->
+    <meta name="geo.region" content="IT-NA" />
+    <meta name="geo.placename" content="Napoli" />
+    <meta name="geo.position" content="40.8518;14.2681" />
+    <meta name="ICBM" content="40.8518, 14.2681" />
+    
+    <!-- Language alternate links for SEO -->
+    <link rel="alternate" hreflang="it" href="https://vesuvianoforni.com/it" />
+    <link rel="alternate" hreflang="en" href="https://vesuvianoforni.com/en" />
+    <link rel="alternate" hreflang="fr" href="https://vesuvianoforni.com/fr" />
+    <link rel="alternate" hreflang="de" href="https://vesuvianoforni.com/de" />
+    <link rel="alternate" hreflang="es" href="https://vesuvianoforni.com/es" />
+    <link rel="alternate" hreflang="x-default" href="https://vesuvianoforni.com/it" />
+    
+    <!-- Structured Data - Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Vesuviano Forni",
+      "alternateName": "Vesuviano",
+      "description": "Produttore di forni artigianali napoletani dal 1950. Specializzati in forni a legna tradizionali, forni a gas/elettrici moderni e la rivoluzionaria linea VesuvioBuono a zero emissioni.",
+      "url": "https://vesuvianoforni.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://vesuvianoforni.com/lovable-uploads/vesuviano-logo-bianco.png",
+        "width": 400,
+        "height": 400
+      },
+      "image": "https://vesuvianoforni.com/lovable-uploads/vesuviano-social-banner.jpg",
+      "sameAs": [
+        "https://www.facebook.com/vesuviano",
+        "https://www.instagram.com/vesuviano",
+        "https://www.linkedin.com/company/vesuviano-forni"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Napoli",
+        "addressRegion": "Campania",
+        "addressCountry": "IT",
+        "postalCode": "80100"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 40.8518,
+        "longitude": 14.2681
+      },
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "Customer Service",
+          "availableLanguage": ["Italian", "English", "French", "German", "Spanish"],
+          "areaServed": "Worldwide"
+        },
+        {
+          "@type": "ContactPoint",
+          "contactType": "Sales",
+          "availableLanguage": ["Italian", "English"],
+          "areaServed": "Europe"
+        }
+      ],
+      "foundingDate": "1950",
+      "founder": {
+        "@type": "Person",
+        "name": "Famiglia Vesuviano"
+      },
+      "numberOfEmployees": {
+        "@type": "QuantitativeValue",
+        "value": "20-50"
+      },
+      "knowsAbout": [
+        "Forni a legna",
+        "Forni tradizionali napoletani",
+        "Forni pizza",
+        "Tecnologie a zero emissioni",
+        "Artigianato italiano",
+        "Mattoni refrattari"
+      ],
+      "makesOffer": [
+        {
+          "@type": "Product",
+          "name": "Forni a Legna Tradizionali",
+          "description": "Forni a legna artigianali napoletani per pizza e pane, realizzati con mattoni refrattari di alta qualità",
+          "category": "Forni a Legna",
+          "brand": {
+            "@type": "Brand",
+            "name": "Vesuviano"
+          },
+          "manufacturer": {
+            "@type": "Organization",
+            "name": "Vesuviano Forni"
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "VesuvioBuono - Forni a Zero Emissioni",
+          "description": "Forni innovativi a zero impatto ambientale con abbattitore di fuliggine integrato, per un futuro sostenibile",
+          "category": "Forni Ecologici",
+          "brand": {
+            "@type": "Brand", 
+            "name": "VesuvioBuono"
+          },
+          "manufacturer": {
+            "@type": "Organization",
+            "name": "Vesuviano Forni"
+          },
+          "offers": {
+            "@type": "Offer",
+            "availability": "https://schema.org/InStock",
+            "priceRange": "€€€",
+            "seller": {
+              "@type": "Organization",
+              "name": "Vesuviano Forni"
+            }
+          }
+        }
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "150",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "areaServed": {
+        "@type": "Place",
+        "name": "Worldwide"
+      },
+      "slogan": "Tradizione e innovazione dal 1950"
+    }
+    </script>
+    
+    <!-- Structured Data - WebSite -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Vesuviano Forni",
+      "alternateName": "Vesuviano",
+      "url": "https://vesuvianoforni.com",
+      "description": "Sito ufficiale di Vesuviano Forni - produttore di forni artigianali napoletani dal 1950",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Vesuviano Forni"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://vesuvianoforni.com/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "inLanguage": ["it-IT", "en-US", "fr-FR", "de-DE", "es-ES"]
+    }
+    </script>
+
+    <!-- Structured Data - Sitelinks -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Sezioni Principali",
+      "description": "Navigazione principale del sito Vesuviano Forni",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Chi Siamo",
+          "url": "https://vesuvianoforni.com/#craftsmanship",
+          "description": "Scopri la nostra storia e tradizione artigianale napoletana dal 1950"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "I Nostri Servizi",
+          "url": "https://vesuvianoforni.com/#services",
+          "description": "Consulenza tecnica, progettazione 3D, logistica internazionale e formazione"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "VesuvioBuono",
+          "url": "https://vesuvianoforni.com/#vesuviobuono",
+          "description": "Forni rivoluzionari a zero emissioni per un futuro sostenibile"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Richiedi Offerta",
+          "url": "https://vesuvianoforni.com/#consultation",
+          "description": "Contattaci per una consulenza gratuita personalizzata"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "Architetto AI",
+          "url": "https://vesuvianoforni.com/architettoai",
+          "description": "Visualizza il tuo forno nel tuo spazio con AI e Realtà Aumentata"
+        }
+      ]
+    }
+    </script>
+
+    <!-- Structured Data - LocalBusiness (Naples manufacturing) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "@id": "https://vesuvianoforni.com/#localbusiness",
+      "name": "Vesuviano Forni",
+      "description": "Laboratorio artigianale di forni napoletani professionali a Napoli, dal 1950.",
+      "url": "https://vesuvianoforni.com",
+      "telephone": "+39 081 19231684",
+      "email": "info@vesuvianoforni.com",
+      "image": "https://vesuvianoforni.com/lovable-uploads/vesuviano-social-banner.jpg",
+      "priceRange": "€€€",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Sant'Anastasia",
+        "addressRegion": "Campania",
+        "addressCountry": "IT",
+        "postalCode": "80048"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 40.8665,
+        "longitude": 14.4036
+      },
+      "areaServed": { "@type": "Place", "name": "Worldwide" },
+      "openingHoursSpecification": [{
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+        "opens": "09:00",
+        "closes": "18:00"
+      }]
+    }
+    </script>
+
+    <!-- Structured Data - FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Posso personalizzare il forno in base al mio locale?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Assolutamente sì. Ogni forno può essere personalizzato nella verniciatura, nel rivestimento in piastrelle e persino nel design della cupola. Offriamo anche un render 3D gratuito per visualizzare il forno nel tuo ambiente prima della produzione."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Effettuate consegna e installazione?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sì, ci occupiamo di trasporto e installazione completa in Italia e all'estero. Il forno arriva già assemblato e testato, pronto all'uso. Il nostro team tecnico può anche fornire formazione iniziale sul corretto utilizzo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quanto tempo serve per ricevere il forno?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "I tempi medi di consegna variano da 20 a 45 giorni, in base al livello di personalizzazione richiesto. Dopo la conferma dell'ordine, riceverai una data stimata di consegna garantita."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Offrite assistenza o garanzia?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tutti i nostri forni sono coperti da 3 anni di garanzia ufficiale su struttura e componenti. In più, il nostro centro tecnico a Napoli fornisce assistenza post-vendita e ricambi originali sempre disponibili."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quanto costa un forno?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "I nostri forni artigianali partono da 2.700,00 € per i modelli base fino a circa 23.000,00 € per realizzazioni speciali. Ogni progetto è realizzato su misura. Per un preventivo personalizzato puoi richiedere una consulenza gratuita."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vesuvianoforni.com/" />
+    <meta property="og:title" content="Vesuviano | Forni Napoletani Professionali | Per Pizzerie e Ristoranti nel Mondo" />
+    <meta property="og:description" content="🔥 Scopri i nostri forni artigianali napoletani: tradizionali a legna, moderni a gas/elettrici e VesuvioBuono a zero emissioni. Tradizione e innovazione dal 1950." />
+    <meta property="og:image" content="https://vesuvianoforni.com/lovable-uploads/vesuviano-social-banner.jpg" />
+    <meta property="og:image:alt" content="Vesuviano Forni - Forni artigianali napoletani dal 1950" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Vesuviano Forni" />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale:alternate" content="fr_FR" />
+    <meta property="og:locale:alternate" content="de_DE" />
+    <meta property="og:locale:alternate" content="es_ES" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://vesuvianoforni.com/" />
+    <meta name="twitter:title" content="Vesuviano | Forni Napoletani Professionali | Per Pizzerie e Ristoranti nel Mondo" />
+    <meta name="twitter:description" content="🔥 Scopri i nostri forni artigianali napoletani: tradizionali a legna, moderni a gas/elettrici e VesuvioBuono a zero emissioni. Tradizione e innovazione dal 1950." />
+    <meta name="twitter:image" content="https://vesuvianoforni.com/lovable-uploads/vesuviano-social-banner.jpg" />
+    <meta name="twitter:image:alt" content="Vesuviano Forni - Forni artigianali napoletani dal 1950" />
+    <meta name="twitter:creator" content="@vesuviano" />
+    <meta name="twitter:site" content="@vesuviano" />
+    
+    <!-- Favicons and Touch Icons -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="msapplication-TileColor" content="#d4631a" />
+    <meta name="theme-color" content="#d4631a" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Preload hero image - highest priority for LCP -->
+    <link rel="preload" href="/hero.webp" as="image" type="image/webp" fetchpriority="high">
+    
+    <!-- Critical CSS -->
+    <style>
+      /* React root invisible until hydrated */
+      #root { position: relative; z-index: 1; opacity: 0; }
+      #root.ready { opacity: 1; }
+      /* Hero pre-render: paints immediately as LCP */
+      #hero-prerender {
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        z-index: 0; background: #1c1917;
+      }
+      #hero-prerender img { width: 100%; height: 100%; -o-object-fit: cover; object-fit: cover; }
+      #hero-prerender .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); }
+    </style>
+    
+    <script type="module" crossorigin src="/assets/index-_H7LXuKn.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-KYKAIa5k.js">
+    <link rel="modulepreload" crossorigin href="/assets/ui-vendor-D07j3LEz.js">
+    <link rel="modulepreload" crossorigin href="/assets/three-vendor-D2mZ53ho.js">
+    <link rel="modulepreload" crossorigin href="/assets/i18n-vendor-CVCkRl5_.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-BHbjF0FZ.css">
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MDPBPR29"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <!-- Meta Pixel (noscript) -->
+    <noscript><img height="1" width="1" style="display:none" 
+    src="https://www.facebook.com/tr?id=1313336124052811&ev=PageView&noscript=1" 
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    
+    <!-- Hero prerender FIRST — paints as LCP before React loads -->
+    <div id="hero-prerender">
+      <img src="/hero.webp" alt="Vesuviano Forni" width="1600" height="1066" fetchpriority="high" decoding="sync" />
+      <div class="overlay"></div>
+    </div>
+    <div id="root"></div>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    
+    <!-- Microsoft Clarity - loaded after first paint -->
+    <script>
+      (window.requestIdleCallback||setTimeout)(function(){
+        (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window,document,"clarity","script","tclp11ayhu");
+      }, {timeout: 3000});
+    </script>
+    <script>
+      // Load fonts after first paint
+      requestAnimationFrame(function() {
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap';
+        document.head.appendChild(link);
+      });
+      
+      // Defer analytics (GTM + GA + Meta Pixel)
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          // Google Tag Manager
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-MDPBPR29');
+          
+          // Google Analytics
+          var ga=document.createElement('script');ga.async=true;
+          ga.src='https://www.googletagmanager.com/gtag/js?id=G-EJPHCZPXTR';
+          document.head.appendChild(ga);
+          window.dataLayer=window.dataLayer||[];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js',new Date());gtag('config','G-EJPHCZPXTR');
+          
+          // Meta Pixel (Facebook)
+          !function(f,b,e,v,n,t,s)
+          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script',
+          'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', '1313336124052811');
+          fbq('track', 'PageView');
+        }, 2000);
+      });
+    </script>
+  </body>
+</html>
