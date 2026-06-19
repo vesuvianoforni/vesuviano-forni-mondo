@@ -7,10 +7,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
-import heroVideo from '@/assets/rotating-oven-hero-bg.mp4.asset.json';
-import pizzoloLogo from '@/assets/pizzolo-siciliano-logo.png.asset.json';
-import ansumLogo from '@/assets/ansum-logo.png.asset.json';
-import cuginiLogo from '@/assets/cugini-pizza-logo.png.asset.json';
+const HERO_VIDEO = '/lovable-uploads/rotating-oven-hero-bg.mp4';
+const PIZZOLO_LOGO = '/lovable-uploads/pizzolo-siciliano-logo.png';
+const ANSUM_LOGO = '/lovable-uploads/ansum-logo.png';
+const CUGINI_LOGO = '/lovable-uploads/cugini-pizza-logo.png';
 
 const PATH = '/en/rotating-pizza-oven';
 const URL = `https://vesuvianoforni.com${PATH}`;
