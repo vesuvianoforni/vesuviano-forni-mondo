@@ -8,6 +8,7 @@ import RivestimentiCompact from '@/components/RivestimentiCompact';
 import { Button } from '@/components/ui/button';
 import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
+import heroVideo from '@/assets/rotating-oven-hero-bg.mp4.asset.json';
 
 interface LocalizedRotatingOvenProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
