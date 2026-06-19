@@ -128,7 +128,7 @@ const RotatingPizzaOven = () => {
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
         >
-          <source src={heroVideo.url} type="video/mp4" />
+          <source src={HERO_VIDEO} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/75" />
         <div className="relative h-full container mx-auto px-4 sm:px-6 flex items-center pt-20 pb-8 md:py-0">
@@ -281,9 +281,9 @@ const RotatingPizzaOven = () => {
           </h2>
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
-              { city: 'Pizzolo Bar — Brighton, UK', desc: '37 Ship Street, The Lanes, Brighton BN1 1AB. Sebastian model, built on place by our master builders.', img: pizzoloLogo.url },
-              { city: 'Ansum Food Co — Porth, Cornwall', desc: 'Alexandra Rd, Porth, Newquay TR7 3NB. Real Bosco (gas), shipped from Naples.', img: ansumLogo.url, ig: 'https://www.instagram.com/ansumfood/' },
-              { city: 'Cugini Pizza — UK', desc: 'Real Bosco wood-fired oven, shipped from Italy.', img: cuginiLogo.url, ig: 'https://www.instagram.com/cuginipizza_/' },
+              { city: 'Pizzolo Bar — Brighton, UK', desc: '37 Ship Street, The Lanes, Brighton BN1 1AB. Sebastian model, built on place by our master builders.', img: PIZZOLO_LOGO },
+              { city: 'Ansum Food Co — Porth, Cornwall', desc: 'Alexandra Rd, Porth, Newquay TR7 3NB. Real Bosco (gas), shipped from Naples.', img: ANSUM_LOGO, ig: 'https://www.instagram.com/ansumfood/' },
+              { city: 'Cugini Pizza — UK', desc: 'Real Bosco wood-fired oven, shipped from Italy.', img: CUGINI_LOGO, ig: 'https://www.instagram.com/cuginipizza_/' },
             ].map((p) => (
               <div key={p.city} className="bg-stone-50 rounded-lg overflow-hidden shadow-sm flex flex-col">
                 <div className="bg-white h-56 flex items-center justify-center p-8 border-b border-stone-100 rounded-t-lg">
