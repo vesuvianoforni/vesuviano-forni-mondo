@@ -8,7 +8,7 @@ import RivestimentiCompact from '@/components/RivestimentiCompact';
 import { Button } from '@/components/ui/button';
 import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
-import heroVideo from '@/assets/rotating-oven-hero-bg.mp4.asset.json';
+const HERO_VIDEO = '/lovable-uploads/rotating-oven-hero-bg.mp4';
 
 interface LocalizedRotatingOvenProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
@@ -41,7 +41,7 @@ const LocalizedRotatingOven = ({ lang }: LocalizedRotatingOvenProps) => {
             playsInline
             className="absolute inset-0 w-full h-full object-cover"
           >
-            <source src={heroVideo.url} type="video/mp4" />
+            <source src={HERO_VIDEO} type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
           <div className="relative h-full container mx-auto px-6 flex items-center">
