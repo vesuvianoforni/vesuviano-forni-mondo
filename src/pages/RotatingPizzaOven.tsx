@@ -286,11 +286,11 @@ const RotatingPizzaOven = () => {
               { city: 'Cugini Pizza — UK', desc: 'Real Bosco wood-fired oven, shipped from Italy.', img: cuginiLogo.url, ig: 'https://www.instagram.com/cuginipizza_/' },
             ].map((p) => (
               <div key={p.city} className="bg-stone-50 rounded-lg overflow-hidden shadow-sm flex flex-col">
-                <div className="bg-white h-56 flex items-center justify-center p-6">
+                <div className="bg-white h-56 flex items-center justify-center p-8 border-b border-stone-100 rounded-t-lg">
                   <img
                     src={p.img}
                     alt={`${p.city} — Vesuviano Forni client`}
-                    className="max-h-full max-w-full object-contain"
+                    className="max-h-full max-w-full object-contain bg-white"
                     loading="lazy"
                   />
                 </div>
