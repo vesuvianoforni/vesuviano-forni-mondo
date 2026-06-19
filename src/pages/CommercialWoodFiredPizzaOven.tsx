@@ -7,10 +7,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
-import heroBg from '@/assets/commercial-wood-fire-bg.jpg.asset.json';
 const pizzoloLogo = { url: '/lovable-uploads/client-logo-pizzolo.png' };
 const ansumLogo = { url: '/lovable-uploads/client-logo-ansum.png' };
 const cuginiLogo = { url: '/lovable-uploads/client-logo-cugini-pizza.png' };
+const heroBg = { url: '/lovable-uploads/vesuviobuono-forno-azione.jpg' };
 
 
 const PATH = '/en/commercial-wood-fired-pizza-oven';
