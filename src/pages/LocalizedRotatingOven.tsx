@@ -8,6 +8,7 @@ import RivestimentiCompact from '@/components/RivestimentiCompact';
 import { Button } from '@/components/ui/button';
 import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
+import heroVideo from '@/assets/rotating-oven-hero-bg.mp4.asset.json';
 
 interface LocalizedRotatingOvenProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
@@ -33,11 +34,15 @@ const LocalizedRotatingOven = ({ lang }: LocalizedRotatingOvenProps) => {
         
         {/* Hero Section */}
         <section className="relative h-[60vh] min-h-[500px] overflow-hidden">
-          <img 
-            src="/lovable-uploads/vesuviobuono-osteria-pizza.webp"
-            alt={t('products.rotating.title')}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
             className="absolute inset-0 w-full h-full object-cover"
-          />
+          >
+            <source src={heroVideo.url} type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
           <div className="relative h-full container mx-auto px-6 flex items-center">
             <div className="max-w-3xl text-white">
