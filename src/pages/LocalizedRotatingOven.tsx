@@ -34,11 +34,15 @@ const LocalizedRotatingOven = ({ lang }: LocalizedRotatingOvenProps) => {
         
         {/* Hero Section */}
         <section className="relative h-[60vh] min-h-[500px] overflow-hidden">
-          <img 
-            src="/lovable-uploads/vesuviobuono-osteria-pizza.webp"
-            alt={t('products.rotating.title')}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
             className="absolute inset-0 w-full h-full object-cover"
-          />
+          >
+            <source src={heroVideo.url} type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
           <div className="relative h-full container mx-auto px-6 flex items-center">
             <div className="max-w-3xl text-white">
