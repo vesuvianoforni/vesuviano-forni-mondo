@@ -10,7 +10,7 @@ export default async (request, context) => {
   if (request.method !== 'GET' || !isHtmlRequest) return context.next();
 
   const headers = {
-    'x-lovablehtml-api-key': "xjcBYpLR0oDRPTI2IappjheAplY0nuIU",
+    'x-lovablehtml-api-key': Netlify.env.get('LOVABLEHTML_API_KEY') || '',
     accept: 'text/html',
     'accept-language': request.headers.get('accept-language') || '',
     'sec-fetch-mode': request.headers.get('sec-fetch-mode') || '',
