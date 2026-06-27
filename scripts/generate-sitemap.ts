@@ -104,6 +104,16 @@ async function generateSitemap() {
     }
   }
 
+  // Single-language SEO pages
+  for (const p of singleLangPages) {
+    urls.push(`  <url>
+    <loc>${DOMAIN}${escapeXml(p.path)}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>${p.changefreq}</changefreq>
+    <priority>${p.priority}</priority>
+  </url>`);
+  }
+
   // Blog posts
   const posts = await fetchBlogPosts();
   for (const post of posts) {
