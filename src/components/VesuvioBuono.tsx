@@ -24,9 +24,9 @@ const VesuvioBuono = () => {
                 {t('vesuvioBuono.badges.patented')}
               </Badge>
             </div>
-            <h2 className="font-playfair text-5xl md:text-7xl font-bold text-white mb-6 animate-slide-in-left">
-              Vesuvio<span className="text-vesuviano-500 drop-shadow-lg">Buono</span>
-            </h2>
+            <h1 className="font-playfair text-5xl md:text-7xl font-bold text-white mb-6 animate-slide-in-left">
+              Vesuvio<span className="text-vesuviano-500 drop-shadow-lg">Buono</span> — Zero-Emission Wood-Fired Pizza Oven System
+            </h1>
             <p className="font-inter text-xl text-vesuviano-200 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.3s' }}>
               {t('vesuvioBuono.subtitle')}
             </p>
