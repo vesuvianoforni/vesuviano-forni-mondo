@@ -19,6 +19,7 @@ import ReviewsStrip from "@/components/ReviewsStrip";
 const ClientsMap = lazy(() => import("@/components/ClientsMap"));
 
 import OvenDataInitializer from "@/components/OvenDataInitializer";
+import SEOHead from '@/components/SEOHead';
 const FAQSection = lazy(() => import("@/components/FAQSection"));
 const HomeBlogSection = lazy(() => import("@/components/HomeBlogSection"));
 
@@ -68,7 +69,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden">
+
+    <>
+      <SEOHead title="Vesuviano | Forni Napoletani Professionali dal 1950" description="Forni napoletani artigianali dal 1950: a legna, gas, elettrici e VesuvioBuono zero emissioni. Per pizzerie e ristoranti nel mondo." lang="it" />
+      <div className="min-h-screen w-full overflow-x-hidden">
       <OvenDataInitializer />
       <Header />
       
@@ -333,6 +337,7 @@ const Index = () => {
         <CallbackPopup />
       </Suspense>
     </div>
+    </>
   );
 };
 

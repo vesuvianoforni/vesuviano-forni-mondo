@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { Loader2, FileText, Palette, CreditCard, Check, Truck, Shield, Flame, Pizza, PlayCircle, Image as ImageIcon, Download, Landmark, Copy } from 'lucide-react';
 import ColorRenderGenerator from '@/components/configurator/ColorRenderGenerator';
 import ImageZoomModal from '@/components/ImageZoomModal';
+import SEOHead from '@/components/SEOHead';
 
 interface ProformaItem {
   id: string;
@@ -993,13 +994,17 @@ const ProformaPage = () => {
                 const oven = getOvenForModel(item.model_name || '');
                 const price = oven && config ? getPrice(oven, config.fuelType, config.diameter || 0, config.coating, pl) : item.line_total;
                 return (
-                  <div key={item.id} className="flex justify-between text-sm">
+
+    <>
+      <SEOHead title="Pro-Forma | Vesuviano" description="Pro-forma cliente Vesuviano." lang="it" noIndex />
+      <div key={item.id} className="flex justify-between text-sm">
                     <span className="text-gray-300">
                       {item.model_name} — {config?.fuelType} Ø{config?.diameter}cm
                     </span>
                     <span className="text-amber-200 font-semibold">{formatPrice(price * item.quantity)}</span>
                   </div>
-                );
+    </>
+  );
               })}
               {shouldShowBurners && selectedBurnerId && (() => {
                 const burner = burners.find(b => b.id === selectedBurnerId);

@@ -35,6 +35,7 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import LanguageSelector from "@/components/LanguageSelector";
+import SEOHead from '@/components/SEOHead';
 
 const BookAppointment = () => {
   const { t, i18n } = useTranslation();
@@ -107,7 +108,10 @@ const BookAppointment = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4">
+
+    <>
+      <SEOHead title="Prenota un Appuntamento | Vesuviano" description="Prenota una consulenza tecnica gratuita con il team Vesuviano per scegliere il forno giusto." lang="it" noIndex />
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Language Selector */}
         <div className="flex justify-between items-center mb-6">
@@ -315,6 +319,7 @@ const BookAppointment = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

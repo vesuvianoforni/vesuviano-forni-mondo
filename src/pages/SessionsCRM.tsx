@@ -17,6 +17,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { SendLinkEmailModal } from '@/components/admin/SendLinkEmailModal';
 import { AIConversionMessageModal } from '@/components/admin/AIConversionMessageModal';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import SEOHead from '@/components/SEOHead';
 
 interface EmailHistoryItem {
   id: string;
@@ -899,7 +900,10 @@ const SessionsCRM = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+
+    <>
+      <SEOHead title="Sessioni CRM | Vesuviano" description="Gestione sessioni clienti CRM." lang="it" noIndex />
+      <div className="min-h-screen bg-background">
       <div className="border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -1241,6 +1245,7 @@ const SessionsCRM = () => {
         }}
       />
     </div>
+    </>
   );
 };
 

@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import ZapperSection from '@/components/ZapperSection';
 import ConsultationForm from '@/components/ConsultationForm';
 import AIChatWidget from '@/components/chat/AIChatWidget';
+import SEOHead from '@/components/SEOHead';
 
 interface SmokePurifierPageProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
@@ -20,7 +21,10 @@ const SmokePurifierPage = ({ lang }: SmokePurifierPageProps) => {
   }, [lang, i18n]);
 
   return (
-    <div className="min-h-screen bg-stone-900">
+
+    <>
+      <SEOHead title="Abbattitore Fumi SmokeZapper | Vesuviano" description="Sistema SmokeZapper per abbattere il 95% dei fumi dei forni a legna." lang="it" />
+      <div className="min-h-screen bg-stone-900">
       <Header />
       <main className="pt-16">
         <ZapperSection />
@@ -30,6 +34,7 @@ const SmokePurifierPage = ({ lang }: SmokePurifierPageProps) => {
       </main>
       <AIChatWidget />
     </div>
+    </>
   );
 };
 

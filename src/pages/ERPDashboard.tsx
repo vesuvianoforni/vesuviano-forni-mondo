@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, FileText, TrendingUp, Package, Flame, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import SEOHead from '@/components/SEOHead';
 
 const ERPDashboard = () => {
   const navigate = useNavigate();
@@ -16,7 +17,10 @@ const ERPDashboard = () => {
   ];
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto">
+
+    <>
+      <SEOHead title="ERP Dashboard | Vesuviano" description="Dashboard gestionale Vesuviano." lang="it" noIndex />
+      <div className="p-6 md:p-8 max-w-7xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-amber-100">Dashboard</h1>
         <p className="text-gray-400 mt-1">Benvenuto nel gestionale Vesuviano</p>
@@ -42,6 +46,7 @@ const ERPDashboard = () => {
         ))}
       </div>
     </div>
+    </>
   );
 };
 

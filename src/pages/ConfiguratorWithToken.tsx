@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import SEOHead from '@/components/SEOHead';
 
 export default function ConfiguratorWithToken() {
   const { token } = useParams();
@@ -130,6 +131,9 @@ export default function ConfiguratorWithToken() {
 
   if (!valid) {
     return (
+
+    <>
+      <SEOHead title="Configuratore Forno | Vesuviano" description="Configuratore con sessione personalizzata." lang="it" noIndex />
       <>
         <Dialog open={showExpiredDialog} onOpenChange={(open) => {
           if (!open) window.location.href = "/";
@@ -165,7 +169,8 @@ export default function ConfiguratorWithToken() {
           </div>
         </div>
       </>
-    );
+    </>
+  );
   }
 
   return <Configurator sessionId={session?.id} />;

@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Home, ArrowLeft } from "lucide-react";
+import SEOHead from '@/components/SEOHead';
 
 const NotFound = () => {
   const location = useLocation();
@@ -16,7 +17,10 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-stone-50 to-stone-100">
+
+    <>
+      <SEOHead title="Pagina non trovata | Vesuviano" description="La pagina richiesta non è stata trovata." lang="it" noIndex />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-stone-50 to-stone-100">
       <div className="text-center max-w-md mx-auto px-6">
         {/* Logo */}
         <div className="mb-8">
@@ -65,6 +69,7 @@ const NotFound = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

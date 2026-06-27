@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { toast } from "sonner";
 import { CheckCircle, Loader2 } from "lucide-react";
 import { syncEventToERP } from "@/services/erpSyncService";
+import SEOHead from '@/components/SEOHead';
 
 export default function PaymentSuccess() {
   const [searchParams] = useSearchParams();
@@ -132,7 +133,10 @@ export default function PaymentSuccess() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 py-12 px-4">
+
+    <>
+      <SEOHead title="Pagamento Confermato | Vesuviano" description="Pagamento ricevuto con successo." lang="it" noIndex />
+      <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 py-12 px-4">
       <div className="max-w-4xl mx-auto space-y-8">
         {/* Success Header */}
         <div className="text-center space-y-4">
@@ -240,7 +244,9 @@ export default function PaymentSuccess() {
                   id="delivery_address"
                   value={formData.delivery_address}
                   onChange={(e) => setFormData({ ...formData, delivery_address: e.target.value })}
-                  placeholder="Via, Numero Civico, CAP, Città, Provincia (se diverso dall'indirizzo di fatturazione)"
+                  placeholder="Via, Numero Civico, CAP, Città, Provincia (se diverso dall'indirizzo di fatturazione
+    </>
+  )"
                   rows={3}
                   required
                 />
