@@ -52,6 +52,8 @@ export default function ERPChatLogs() {
   });
 
   return (
+    <>
+      <SEOHead title="ERP Chat Logs | Vesuviano" description="Log conversazioni AI ERP." lang="it" noIndex />
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white flex items-center gap-2">
