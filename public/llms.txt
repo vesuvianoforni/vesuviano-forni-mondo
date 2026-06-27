@@ -7,11 +7,11 @@ Vesuviano Forni progetta e costruisce forni napoletani a mano nei laboratori di 
 ## Prodotti
 
 - [Forni Tradizionali a Legna](/it/forni-tradizionali): Modelli artigianali napoletani cotti a legna (Anastasia, Ottavio, Real Bosco, Sebastian).
-- [Forni a Gas](/it/forni-a-gas): Forni napoletani alimentati a gas per uso professionale continuo.
+- [Forni a Gas](/it/forni-gas): Forni napoletani alimentati a gas per uso professionale continuo.
 - [Forni Elettrici](/it/forni-elettrici): Forni elettrici per pizzerie senza canna fumaria.
 - [Forni Rotanti](/it/forni-rotanti): Forni con piano rotante in pietra refrattaria, 5/6 pizze in cottura.
-- [VesuvioBuono](/it/vesuviobuono): Linea a zero emissioni con abbattitore di fuliggine integrato.
-- [SmokeZapper](/it/smoke-purifier): Abbattitore fumi in partnership che riduce le emissioni del 95%.
+- [VesuvioBuono](/it/sistema-vesuviobuono): Linea a zero emissioni con abbattitore di fuliggine integrato.
+- [SmokeZapper](/it/depuratore-fumi): Abbattitore fumi in partnership che riduce le emissioni del 95%.
 - [Bruciatori](/it/bruciatori): Catalogo bruciatori serie A, B, C per forni professionali.
 - [Pronta Consegna](/it/pronta-consegna): Forni disponibili a magazzino con spedizione inclusa.
 
@@ -20,7 +20,7 @@ Vesuviano Forni progetta e costruisce forni napoletani a mano nei laboratori di 
 - [Servizi](/it/servizi): Consulenza tecnica, progettazione 3D, logistica internazionale e formazione.
 - [Architetto AI](/it/architettoai): Visualizza il forno nel tuo spazio con AI e realtà aumentata.
 - [Chi Siamo](/it/chi-siamo): Storia e tradizione artigianale napoletana dal 1950.
-- [Dove Siamo](/it/dove-siamo): Laboratori a Sant'Anastasia e Boscoreale, Napoli.
+
 - [Informazioni Utili](/it/informazioni-utili): Guide tecniche, pagamenti, garanzia, spedizioni.
 
 ## Blog
@@ -39,4 +39,4 @@ Vesuviano Forni progetta e costruisce forni napoletani a mano nei laboratori di 
 ## Optional
 
 - [Prenota una chiamata](/book-a-slot-call): Pianifica una consulenza gratuita.
-- [Configuratore Forni](/configurator): Personalizza il tuo forno e ricevi un preventivo.
+- [Configuratore Forni](/configuratore): Personalizza il tuo forno e ricevi un preventivo.
