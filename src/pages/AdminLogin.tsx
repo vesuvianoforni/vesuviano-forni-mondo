@@ -72,6 +72,8 @@ const AdminLogin = () => {
   };
 
   return (
+    <>
+      <SEOHead title="Admin Login | Vesuviano" description="Accesso area amministrativa." lang="it" noIndex />
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
