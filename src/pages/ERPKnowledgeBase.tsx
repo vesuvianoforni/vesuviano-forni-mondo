@@ -296,6 +296,7 @@ const ERPKnowledgeBase = () => {
         </DialogContent>
       </Dialog>
     </div>
+    </>
   );
 };
 
