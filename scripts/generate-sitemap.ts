@@ -29,6 +29,18 @@ const staticPages = [
 
   // Other
   { paths: { it: '/book-a-slot-call', en: '/book-a-slot-call', fr: '/book-a-slot-call', de: '/book-a-slot-call', es: '/book-a-slot-call' }, priority: '0.7', changefreq: 'monthly' },
+
+  // Neapolitan pizza ovens SEO cluster (no IT variant — IT alternate points to EN as fallback)
+  { paths: { it: '/en/neapolitan-pizza-ovens', en: '/en/neapolitan-pizza-ovens', fr: '/fr/fours-a-pizza-napolitains', de: '/de/neapolitanische-pizzaoefen', es: '/es/hornos-pizza-napolitana' }, priority: '0.8', changefreq: 'monthly' },
+];
+
+// Single-language SEO landing pages (no hreflang siblings)
+const singleLangPages: { path: string; priority: string; changefreq: string }[] = [
+  { path: '/it/forno-a-legna-da-esterno', priority: '0.7', changefreq: 'monthly' },
+  { path: '/fr/four-a-pizza-bois', priority: '0.7', changefreq: 'monthly' },
+  { path: '/en/commercial-wood-fired-pizza-oven', priority: '0.7', changefreq: 'monthly' },
+  { path: '/en/rotating-pizza-oven', priority: '0.7', changefreq: 'monthly' },
+  { path: '/en/electric-pizza-oven', priority: '0.7', changefreq: 'monthly' },
 ];
 
 function escapeXml(s: string) {
