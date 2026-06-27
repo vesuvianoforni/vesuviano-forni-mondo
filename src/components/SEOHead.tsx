@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { getAlternatesForPath, LANGS, type AlternatesMap } from '@/lib/hreflang';
 
 const BASE_URL = 'https://vesuvianoforni.com';
 
@@ -19,6 +20,8 @@ export interface SEOHeadProps {
   lang?: string;
   /** og:type, defaults to 'website'. */
   ogType?: string;
+  /** Optional explicit hreflang alternates map. If omitted, auto-derived from canonical path. */
+  alternates?: AlternatesMap;
 }
 
 const toAbsolute = (urlOrPath: string) => {
@@ -26,6 +29,20 @@ const toAbsolute = (urlOrPath: string) => {
   if (/^https?:\/\//i.test(urlOrPath)) return urlOrPath;
   return `${BASE_URL}${urlOrPath.startsWith('/') ? urlOrPath : `/${urlOrPath}`}`;
 };
+
+const pathOf = (urlOrPath: string) => {
+  if (/^https?:\/\//i.test(urlOrPath)) {
+    try { return new URL(urlOrPath).pathname; } catch { return urlOrPath; }
+  }
+  return urlOrPath.startsWith('/') ? urlOrPath : `/${urlOrPath}`;
+};
+
+const ogLocale = (lang: string) =>
+  lang === 'en' ? 'en_US'
+  : lang === 'fr' ? 'fr_FR'
+  : lang === 'de' ? 'de_DE'
+  : lang === 'es' ? 'es_ES'
+  : 'it_IT';
 
 const SEOHead = ({
   title,
@@ -36,12 +53,18 @@ const SEOHead = ({
   schemaJson,
   lang = 'it',
   ogType = 'website',
+  alternates,
 }: SEOHeadProps) => {
-  const canonicalUrl = toAbsolute(canonical || (typeof window !== 'undefined' ? window.location.pathname : '/'));
+  const canonicalInput = canonical || (typeof window !== 'undefined' ? window.location.pathname : '/');
+  const canonicalUrl = toAbsolute(canonicalInput);
+  const canonicalPath = pathOf(canonicalInput);
   const image = ogImage ? toAbsolute(ogImage) : `${BASE_URL}/lovable-uploads/vesuviano-social-banner.jpg`;
   const schemas = schemaJson
     ? (Array.isArray(schemaJson) ? schemaJson : [schemaJson])
     : [];
+
+  const resolvedAlternates = alternates ?? getAlternatesForPath(canonicalPath) ?? undefined;
+  const xDefaultPath = resolvedAlternates?.it ?? resolvedAlternates?.en;
 
   return (
     <Helmet>
@@ -55,6 +78,14 @@ const SEOHead = ({
       )}
       <link rel="canonical" href={canonicalUrl} />
 
+      {/* hreflang alternates (includes self-reference + x-default) */}
+      {resolvedAlternates && LANGS.map((l) => (
+        <link key={`hreflang-${l}`} rel="alternate" hrefLang={l} href={`${BASE_URL}${resolvedAlternates[l]}`} />
+      ))}
+      {resolvedAlternates && xDefaultPath && (
+        <link rel="alternate" hrefLang="x-default" href={`${BASE_URL}${xDefaultPath}`} />
+      )}
+
       {/* Open Graph */}
       <meta property="og:type" content={ogType} />
       <meta property="og:title" content={title} />
@@ -62,6 +93,7 @@ const SEOHead = ({
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:image" content={image} />
       <meta property="og:site_name" content="Vesuviano Forni" />
+      <meta property="og:locale" content={ogLocale(lang)} />
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
