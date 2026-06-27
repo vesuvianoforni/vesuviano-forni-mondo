@@ -20,7 +20,7 @@ Vesuviano Forni progetta e costruisce forni napoletani a mano nei laboratori di 
 - [Servizi](/it/servizi): Consulenza tecnica, progettazione 3D, logistica internazionale e formazione.
 - [Architetto AI](/it/architettoai): Visualizza il forno nel tuo spazio con AI e realtà aumentata.
 - [Chi Siamo](/it/chi-siamo): Storia e tradizione artigianale napoletana dal 1950.
-- [Dove Siamo](/it/dove-siamo): Laboratori a Sant'Anastasia e Boscoreale, Napoli.
+
 - [Informazioni Utili](/it/informazioni-utili): Guide tecniche, pagamenti, garanzia, spedizioni.
 
 ## Blog
