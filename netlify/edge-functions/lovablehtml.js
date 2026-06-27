@@ -9,8 +9,9 @@ export default async (request, context) => {
   const isHtmlRequest = !accept || accept === '*/*' || accept.includes('text/html');
   if (request.method !== 'GET' || !isHtmlRequest) return context.next();
 
+  const apiKey = Deno.env.get('LOVABLEHTML_API_KEY') || '';
   const headers = {
-    'x-lovablehtml-api-key': 'xjcBYpLR0oDRPTI2IappjheAplY0nuIU',
+    'x-lovablehtml-api-key': apiKey,
     accept: 'text/html',
     'accept-language': request.headers.get('accept-language') || '',
     'sec-fetch-mode': request.headers.get('sec-fetch-mode') || '',
