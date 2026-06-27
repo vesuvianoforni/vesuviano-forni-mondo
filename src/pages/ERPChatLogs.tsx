@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
+import SEOHead from '@/components/SEOHead';
 
 type ChatConversation = {
   id: string;
