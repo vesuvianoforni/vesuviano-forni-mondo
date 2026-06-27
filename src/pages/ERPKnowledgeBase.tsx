@@ -129,6 +129,8 @@ const ERPKnowledgeBase = () => {
   const catLabel = (cat: string) => CATEGORIES.find(c => c.value === cat)?.label || cat;
 
   return (
+    <>
+      <SEOHead title="ERP Knowledge Base | Vesuviano" description="Knowledge base AI ERP." lang="it" noIndex />
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
