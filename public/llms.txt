@@ -39,4 +39,4 @@ Vesuviano Forni progetta e costruisce forni napoletani a mano nei laboratori di 
 ## Optional
 
 - [Prenota una chiamata](/book-a-slot-call): Pianifica una consulenza gratuita.
-- [Configuratore Forni](/configurator): Personalizza il tuo forno e ricevi un preventivo.
+- [Configuratore Forni](/configuratore): Personalizza il tuo forno e ricevi un preventivo.
