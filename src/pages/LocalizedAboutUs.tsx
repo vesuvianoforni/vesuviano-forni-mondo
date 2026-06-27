@@ -12,8 +12,17 @@ interface LocalizedAboutUsProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
 }
 
+const META: Record<string, { title: string; description: string }> = {
+  it: { title: 'Chi Siamo — Forni Napoletani Artigianali dal 1950 | Vesuviano Forni', description: "Vesuviano Forni: dal 1950 costruiamo forni napoletani artigianali a Sant'Anastasia e Boscoreale. Sabbia vulcanica, mattoni refrattari, esportazione in tutto il mondo." },
+  en: { title: 'About Us — Handcrafted Neapolitan Ovens Since 1950 | Vesuviano Forni', description: "Vesuviano Forni: handcrafting Neapolitan ovens since 1950 in Sant'Anastasia and Boscoreale. Volcanic sand, refractory bricks, shipping worldwide." },
+  fr: { title: 'Qui Sommes-Nous — Fours Napolitains Artisanaux depuis 1950 | Vesuviano Forni', description: "Vesuviano Forni : fabricants artisanaux de fours napolitains depuis 1950 à Sant'Anastasia et Boscoreale. Sable volcanique, briques réfractaires, export mondial." },
+  de: { title: 'Über Uns — Handgefertigte Neapolitanische Öfen seit 1950 | Vesuviano Forni', description: "Vesuviano Forni: handwerkliche neapolitanische Öfen seit 1950 aus Sant'Anastasia und Boscoreale. Vulkansand, Schamottsteine, weltweiter Export." },
+  es: { title: 'Quiénes Somos — Hornos Napolitanos Artesanales desde 1950 | Vesuviano Forni', description: "Vesuviano Forni: fabricantes artesanales de hornos napolitanos desde 1950 en Sant'Anastasia y Boscoreale. Arena volcánica, refractarios, envío mundial." },
+};
+
 const LocalizedAboutUs = ({ lang }: LocalizedAboutUsProps) => {
   const { i18n, t } = useTranslation();
+  const meta = META[lang] || META.it;
 
   useEffect(() => {
     if (i18n.language !== lang) {
@@ -35,11 +44,7 @@ const LocalizedAboutUs = ({ lang }: LocalizedAboutUsProps) => {
   return (
     <div className="min-h-screen bg-stone-50">
       <Header />
-      <SEOHead
-        lang={lang}
-        title={`${t('aboutUs.title', { defaultValue: 'About Us' })} | Vesuviano Forni`}
-        description={t('aboutUs.subtitle', { defaultValue: 'Vesuviano Forni: artisan Neapolitan oven makers since 1950.' })}
-      />
+      <SEOHead lang={lang} title={meta.title} description={meta.description} />
       
       <main>
         <AboutUs />

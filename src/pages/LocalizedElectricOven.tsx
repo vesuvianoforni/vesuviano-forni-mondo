@@ -13,8 +13,17 @@ interface LocalizedElectricOvenProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
 }
 
+const META: Record<string, { title: string; description: string }> = {
+  it: { title: 'Forni Elettrici per Pizza | Vesuviano Forni', description: 'Forni elettrici per pizza: ideali per locali senza canna fumaria, controllo digitale e bassi consumi. Performance napoletana in versione tutta elettrica.' },
+  en: { title: 'Electric Pizza Ovens | Vesuviano Forni', description: 'Electric pizza ovens: perfect for venues without a flue, with digital controls and low energy use. Neapolitan baking performance in an all-electric build.' },
+  fr: { title: 'Fours à Pizza Électriques | Vesuviano Forni', description: 'Fours à pizza électriques : idéaux pour locaux sans conduit de fumée, commandes numériques et faible consommation. La cuisson napolitaine en version électrique.' },
+  de: { title: 'Elektrische Pizzaöfen | Vesuviano Forni', description: 'Elektrische Pizzaöfen: ideal für Räume ohne Schornstein, digitale Steuerung und geringer Verbrauch. Neapolitanische Backleistung in vollelektrischer Bauweise.' },
+  es: { title: 'Hornos Eléctricos para Pizza | Vesuviano Forni', description: 'Hornos eléctricos para pizza: ideales para locales sin chimenea, control digital y bajo consumo. Rendimiento napolitano en versión totalmente eléctrica.' },
+};
+
 const LocalizedElectricOven = ({ lang }: LocalizedElectricOvenProps) => {
   const { i18n, t } = useTranslation();
+  const meta = META[lang] || META.it;
 
   useEffect(() => {
     loadLanguage(lang);
@@ -25,11 +34,7 @@ const LocalizedElectricOven = ({ lang }: LocalizedElectricOvenProps) => {
   return (
     <div className="min-h-screen bg-white">
         <Header />
-        <SEOHead
-          lang={lang}
-          title={`${t('products.electric.title')} | Vesuviano Forni`}
-          description={t('products.electric.subtitle', { defaultValue: t('products.electric.title') })}
-        />
+        <SEOHead lang={lang} title={meta.title} description={meta.description} />
         
         {/* Hero Section */}
         <section className="relative h-[60vh] min-h-[500px] overflow-hidden">

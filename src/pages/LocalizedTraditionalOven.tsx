@@ -13,8 +13,17 @@ interface LocalizedTraditionalOvenProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
 }
 
+const META: Record<string, { title: string; description: string }> = {
+  it: { title: 'Forni a Legna Tradizionali Napoletani | Vesuviano Forni', description: "Forni a legna tradizionali napoletani: cottura autentica a 450°C, cupola in mattoni refrattari e camera unica per la vera pizza verace. Per pizzerie e ristoranti." },
+  en: { title: 'Traditional Wood-Fired Neapolitan Ovens | Vesuviano Forni', description: 'Traditional Neapolitan wood-fired ovens: authentic 450°C baking, refractory brick dome and single chamber for true Neapolitan pizza. Built for restaurants worldwide.' },
+  fr: { title: 'Fours à Bois Napolitains Traditionnels | Vesuviano Forni', description: "Fours à bois napolitains traditionnels : cuisson authentique à 450°C, voûte en briques réfractaires et chambre unique pour la vraie pizza napolitaine." },
+  de: { title: 'Traditionelle Neapolitanische Holzöfen | Vesuviano Forni', description: 'Traditionelle neapolitanische Holzöfen: authentisches Backen bei 450°C, Kuppel aus Schamottsteinen und Einkammersystem für echte neapolitanische Pizza.' },
+  es: { title: 'Hornos de Leña Tradicionales Napolitanos | Vesuviano Forni', description: 'Hornos de leña tradicionales napolitanos: cocción auténtica a 450°C, cúpula en ladrillos refractarios y cámara única para verdadera pizza napolitana.' },
+};
+
 const LocalizedTraditionalOven = ({ lang }: LocalizedTraditionalOvenProps) => {
   const { i18n, t } = useTranslation();
+  const meta = META[lang] || META.it;
 
   useEffect(() => {
     loadLanguage(lang);
@@ -25,11 +34,7 @@ const LocalizedTraditionalOven = ({ lang }: LocalizedTraditionalOvenProps) => {
   return (
     <div className="min-h-screen bg-white">
         <Header />
-        <SEOHead
-          lang={lang}
-          title={`${t('products.traditional.title')} | Vesuviano Forni`}
-          description={t('products.traditional.subtitle', { defaultValue: t('products.traditional.title') })}
-        />
+        <SEOHead lang={lang} title={meta.title} description={meta.description} />
         
         {/* Hero Section */}
         <section className="relative h-[60vh] min-h-[500px] overflow-hidden">
