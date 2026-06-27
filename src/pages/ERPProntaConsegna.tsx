@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { toast } from 'sonner';
 import { Plus, Trash2, Edit, Search, PackageCheck, Loader2, Upload, ShoppingCart, X, Image } from 'lucide-react';
+import SEOHead from '@/components/SEOHead';
 
 interface ReadyToShipOven {
   id: string;
@@ -347,7 +348,10 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+
+    <>
+      <SEOHead title="ERP Pronta Consegna | Vesuviano" description="Gestione pronta consegna ERP." lang="it" noIndex />
+      <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{isEditing ? 'Modifica Pronta Consegna' : 'Aggiungi Pronta Consegna'}</DialogTitle>
@@ -508,6 +512,7 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
         </div>
       </DialogContent>
     </Dialog>
+    </>
   );
 };
 

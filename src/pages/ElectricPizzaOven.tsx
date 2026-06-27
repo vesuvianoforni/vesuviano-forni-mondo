@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
-import RouteSEO from '@/components/RouteSEO';
+import SEOHead from '@/components/SEOHead';
 import ConsultationForm from '@/components/ConsultationForm';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -103,9 +103,9 @@ const ElectricPizzaOven = () => {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden pb-20 md:pb-0">
       <Header />
-      <RouteSEO
+      <SEOHead
         lang="en"
-        path={PATH}
+        canonical={PATH}
         title="Electric Neapolitan Pizza Ovens | Patented Brick Dome | Vesuviano"
         description="Patented electric Neapolitan pizza ovens with a refractory brick dome — the authentic wood-fired bake, no flue, plug-in. Handmade in Naples. UK delivery. Request a quote."
       />

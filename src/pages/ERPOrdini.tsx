@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { Plus, Search, Loader2, Truck, Package, FileText, Eye, Edit, Trash2, ArrowRight, Upload, X, Download, File } from 'lucide-react';
 import { format } from 'date-fns';
+import SEOHead from '@/components/SEOHead';
 
 const ORDER_STATUSES = [
   { value: 'nuovo', label: 'Nuovo', color: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
@@ -482,7 +483,10 @@ const ERPOrdini = () => {
   );
 
   return (
-    <div className="p-6 md:p-8 space-y-6">
+
+    <>
+      <SEOHead title="ERP Ordini | Vesuviano" description="Gestione ordini ERP." lang="it" noIndex />
+      <div className="p-6 md:p-8 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-amber-100">Ordini</h1>
         <div className="flex gap-2">
@@ -634,6 +638,7 @@ const ERPOrdini = () => {
         </DialogContent>
       </Dialog>
     </div>
+    </>
   );
 };
 

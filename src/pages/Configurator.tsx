@@ -17,6 +17,7 @@ import Video360Modal from '@/components/Video360Modal';
 import ConfiguratorLanguageSelector from '@/components/ConfiguratorLanguageSelector';
 import ImageZoomModal from '@/components/ImageZoomModal';
 import { syncEventToERP } from '@/services/erpSyncService';
+import SEOHead from '@/components/SEOHead';
 
 interface ConfiguratorOven {
   id: string;
@@ -1553,7 +1554,10 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 {['tooExpensive', 'tooLong', 'urgent', 'dontLike', 'noModel', 'otherSupplier'].map((key) => {
                   const reason = t(`configurator.feedback.reasons.${key}`);
                   return (
-                    <div key={key} className="flex items-center space-x-2">
+
+    <>
+      <SEOHead title="Configuratore Forno | Vesuviano" description="Configura il tuo forno Vesuviano personalizzato." lang="it" noIndex />
+      <div key={key} className="flex items-center space-x-2">
                       <Checkbox
                         id={key}
                         checked={feedbackReasons.includes(reason)}
@@ -1566,7 +1570,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         {reason}
                       </label>
                     </div>
-                  );
+    </>
+  );
                 })}
               </div>
               

@@ -5,13 +5,17 @@ import OvenVisualizer from '@/components/OvenVisualizer';
 import AIChatWidget from '@/components/chat/AIChatWidget';
 import wiseLogo from '@/assets/wise-logo.png';
 import paypalLogo from '@/assets/paypal-logo.png';
+import SEOHead from '@/components/SEOHead';
 
 const ArchitettoAI = () => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
 
   return (
-    <div className="min-h-screen bg-stone-50">
+
+    <>
+      <SEOHead title="Architetto AI | Vesuviano" description="Visualizza il tuo forno Vesuviano nel tuo spazio con AI e Realtà Aumentata." lang="it" />
+      <div className="min-h-screen bg-stone-50">
       <Header />
       <div className="pt-8">
         <OvenVisualizer />
@@ -154,6 +158,7 @@ const ArchitettoAI = () => {
         </div>
       </footer>
     </div>
+    </>
   );
 };
 

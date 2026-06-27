@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { Eye, EyeOff } from 'lucide-react';
+import SEOHead from '@/components/SEOHead';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -72,6 +73,8 @@ const AdminLogin = () => {
   };
 
   return (
+    <>
+      <SEOHead title="Admin Login | Vesuviano" description="Accesso area amministrativa." lang="it" noIndex />
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
@@ -118,6 +121,7 @@ const AdminLogin = () => {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 };
 

@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { DollarSign, Save, Loader2, Search, ChevronDown, ChevronRight, Flame, ImagePlus } from 'lucide-react';
+import SEOHead from '@/components/SEOHead';
 
 type PriceListCode = 'A' | 'B' | 'C';
 type PriceField = 'base' | 'gas' | 'electric' | 'rotating' | 'onSite';
@@ -436,7 +437,10 @@ const ERPListini = () => {
                           ? editedBurnerPrices[b.id][list]
                           : (b as any)[priceKey] || 0;
                         return (
-                          <td key={list} className="py-2 text-center">
+
+    <>
+      <SEOHead title="ERP Listini | Vesuviano" description="Gestione listini ERP." lang="it" noIndex />
+      <td key={list} className="py-2 text-center">
                             <Input
                               type="number"
                               value={currentVal}
@@ -444,7 +448,8 @@ const ERPListini = () => {
                               className="h-7 text-xs text-center bg-[#111] border-amber-900/15 text-amber-100 w-24 mx-auto [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             />
                           </td>
-                        );
+    </>
+  );
                       })}
                       <td className="py-2 text-right">
                         {editedBurnerPrices[b.id] && Object.keys(editedBurnerPrices[b.id]).length > 0 && (

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
-import RouteSEO from '@/components/RouteSEO';
+import SEOHead from '@/components/SEOHead';
 import ConsultationForm from '@/components/ConsultationForm';
 import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
@@ -58,9 +58,9 @@ const FourAPizzaBois = () => {
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      <RouteSEO
+      <SEOHead
         lang="fr"
-        path={PATH}
+        canonical={PATH}
         title="Four à Pizza Bois | Artisanal Napolitain — Vesuviano Forni"
         description="Fours à pizza bois fabriqués à la main à Naples avec la pierre volcanique du Vésuve. Modèles prêts à l'emploi ou sur mesure pour pizzerias, restaurants et particuliers. Livraison mondiale."
       />

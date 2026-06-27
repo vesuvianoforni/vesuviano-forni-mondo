@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { Plus, Loader2, Users, Shield, Trash2 } from 'lucide-react';
+import SEOHead from '@/components/SEOHead';
 
 type UserRole = {
   id: string;
@@ -98,7 +99,10 @@ const ERPUtenti = () => {
   };
 
   return (
-    <div className="p-6 md:p-8 space-y-6">
+
+    <>
+      <SEOHead title="ERP Utenti | Vesuviano" description="Gestione utenti ERP." lang="it" noIndex />
+      <div className="p-6 md:p-8 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-amber-100">Gestione Utenti</h1>
         <Button onClick={() => setShowCreateModal(true)} className="bg-amber-600 hover:bg-amber-700 text-white">
@@ -191,6 +195,7 @@ const ERPUtenti = () => {
         </DialogContent>
       </Dialog>
     </div>
+    </>
   );
 };
 

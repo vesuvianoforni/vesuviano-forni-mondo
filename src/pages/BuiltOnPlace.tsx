@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import LazyImage from "@/components/LazyImage";
 import RivestimentiCompact from "@/components/RivestimentiCompact";
+import SEOHead from '@/components/SEOHead';
 
 const WHATSAPP_LINK = "https://wa.me/393509286941?text=Ciao,%20vorrei%20informazioni%20sui%20vostri%20forni%20professionali";
 
@@ -100,7 +101,10 @@ const BuiltOnPlace = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+
+    <>
+      <SEOHead title="Forni Costruiti sul Posto | Vesuviano" description="Forni napoletani costruiti direttamente nella tua location. Apertura 45cm, installazione personalizzata." lang="it" />
+      <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 overflow-hidden">
         <div className="absolute inset-0">
@@ -376,6 +380,7 @@ const BuiltOnPlace = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 

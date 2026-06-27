@@ -18,6 +18,7 @@ import { LogOut, Edit, Plus, Trash2, TrendingUp, Users, CheckCircle, Clock, Arro
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Input } from '@/components/ui/input';
+import SEOHead from '@/components/SEOHead';
 
 const AdminConfigurator = () => {
   const navigate = useNavigate();
@@ -353,7 +354,10 @@ const AdminConfigurator = () => {
                     };
 
                     return (
-                      <TableRow key={oven.id}>
+
+    <>
+      <SEOHead title="Admin Configurator | Vesuviano" description="Area amministrativa configuratore." lang="it" noIndex />
+      <TableRow key={oven.id}>
                         <TableCell>
                           {oven.image_url && (
                             <img src={oven.image_url} alt={oven.model_name} className="w-16 h-16 object-cover rounded" />
@@ -391,7 +395,8 @@ const AdminConfigurator = () => {
                           </div>
                         </TableCell>
                       </TableRow>
-                    );
+    </>
+  );
                   })}
                 </TableBody>
               </Table>

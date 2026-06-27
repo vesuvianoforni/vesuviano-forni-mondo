@@ -4,6 +4,7 @@ import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { ERPSidebar } from '@/components/erp/ERPSidebar';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
+import SEOHead from '@/components/SEOHead';
 
 const ERPLayout = () => {
   const navigate = useNavigate();
@@ -49,7 +50,10 @@ const ERPLayout = () => {
   }
 
   return (
-    <SidebarProvider>
+
+    <>
+      <SEOHead title="ERP | Vesuviano" description="Layout principale ERP." lang="it" noIndex />
+      <SidebarProvider>
       <div className="min-h-screen flex w-full bg-[#0f0f0f]">
         <ERPSidebar />
         <div className="flex-1 flex flex-col min-w-0">
@@ -63,6 +67,7 @@ const ERPLayout = () => {
         </div>
       </div>
     </SidebarProvider>
+    </>
   );
 };
 

@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import EditOvenModal from '@/components/admin/EditOvenModal';
 import { AddOvenModal } from '@/components/admin/AddOvenModal';
 import { Plus, Trash2, Edit, Search, Flame, Loader2, ChevronDown, ChevronRight, DollarSign, FileText } from 'lucide-react';
+import SEOHead from '@/components/SEOHead';
 
 const PRICE_LISTS = [
   { code: 'A', name: 'Listino A' },
@@ -245,7 +246,10 @@ const ERPForni = () => {
                                     {size.coatings.map((c: any, cIdx: number) => {
                                       const p = c.prices?.[listKey] || {};
                                       return (
-                                        <tr key={cIdx} className="border-t border-amber-900/10">
+
+    <>
+      <SEOHead title="ERP Forni | Vesuviano" description="Gestione forni ERP." lang="it" noIndex />
+      <tr key={cIdx} className="border-t border-amber-900/10">
                                           <td className="py-1.5 pr-4 text-amber-100 flex items-center gap-2">
                                             {c.image_url && <img src={c.image_url} alt={c.name} className="w-8 h-8 rounded object-cover" />}
                                             {c.name}
@@ -255,7 +259,8 @@ const ERPForni = () => {
                                           <td className="text-right py-1.5 px-2 text-amber-200">{formatPrice(p.electric)}</td>
                                           {size.can_be_built_on_site && <td className="text-right py-1.5 px-2 text-amber-200">{formatPrice(p.onSite)}</td>}
                                         </tr>
-                                      );
+    </>
+  );
                                     })}
                                   </tbody>
                                 </table>

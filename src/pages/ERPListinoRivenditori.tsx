@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { DollarSign, Save, Loader2, Search, ChevronDown, ChevronRight, Flame, Download, Globe } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import SEOHead from '@/components/SEOHead';
 
 const pdfTranslations: Record<string, Record<string, string>> = {
   it: {
@@ -430,7 +431,10 @@ const ERPListinoRivenditori = () => {
                             {size.coatings.map((c: any, cIdx: number) => {
                               const listAPrice = c.prices?.listA?.base || 0;
                               return (
-                                <tr key={cIdx} className="border-t border-amber-900/10">
+
+    <>
+      <SEOHead title="ERP Listino Rivenditori | Vesuviano" description="Listino dedicato ai rivenditori." lang="it" noIndex />
+      <tr key={cIdx} className="border-t border-amber-900/10">
                                   <td className="py-2 pr-4 text-amber-100 flex items-center gap-2">
                                     {c.image_url && <img src={c.image_url} alt={c.name} className="w-8 h-8 rounded object-cover" />}
                                     {c.name}
@@ -473,7 +477,8 @@ const ERPListinoRivenditori = () => {
                                     </td>
                                   )}
                                 </tr>
-                              );
+    </>
+  );
                             })}
                           </tbody>
                         </table>

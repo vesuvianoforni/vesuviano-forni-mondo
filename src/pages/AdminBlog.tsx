@@ -13,6 +13,7 @@ import { ArrowLeft, Plus, Pencil, Trash2, Eye, Sparkles, Image, Loader2, Upload,
 import { toast } from 'sonner';
 import type { BlogPost } from '@/hooks/useBlogPosts';
 import { calculateSEOScore, getGradeColor, type SEOResult } from '@/utils/seoScore';
+import SEOHead from '@/components/SEOHead';
 
 const LANGS = ['it', 'en', 'fr', 'de', 'es'] as const;
 const CATEGORIES = ['general', 'guide', 'ricette', 'novita', 'tecnica'];
@@ -474,7 +475,10 @@ const AdminBlog = () => {
                 {(() => {
                   const seo = calculateSEOScore(editingPost, activeLang);
                   return (
-                    <details className="border rounded-lg" open>
+
+    <>
+      <SEOHead title="Admin Blog | Vesuviano" description="Area amministrativa blog Vesuviano." lang="it" noIndex />
+      <details className="border rounded-lg" open>
                       <summary className="px-4 py-3 cursor-pointer text-sm font-medium flex items-center gap-2">
                         <BarChart3 className="h-4 w-4" />
                         SEO Score: <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${getGradeColor(seo.grade)}`}>{seo.grade} · {seo.score}%</span>
@@ -495,7 +499,8 @@ const AdminBlog = () => {
                         ))}
                       </div>
                     </details>
-                  );
+    </>
+  );
                 })()}
 
                 {/* Inline Preview */}

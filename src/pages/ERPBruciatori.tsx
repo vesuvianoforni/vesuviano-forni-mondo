@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Plus, Trash2, Edit, Package, Loader2, Search } from 'lucide-react';
+import SEOHead from '@/components/SEOHead';
 
 interface Burner {
   id: string;
@@ -133,7 +134,10 @@ const ERPBruciatori = () => {
   }
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto">
+
+    <>
+      <SEOHead title="ERP Bruciatori | Vesuviano" description="Gestione bruciatori ERP." lang="it" noIndex />
+      <div className="p-6 md:p-8 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <Package className="w-7 h-7 text-green-400" />
@@ -251,6 +255,7 @@ const ERPBruciatori = () => {
         </DialogContent>
       </Dialog>
     </div>
+    </>
   );
 };
 

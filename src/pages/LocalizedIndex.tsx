@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { loadLanguage } from '@/i18n/config';
 import Index from './Index';
-import RouteSEO from '@/components/RouteSEO';
+import SEOHead from '@/components/SEOHead';
 
 interface LocalizedIndexProps {
   lang: string;
@@ -48,7 +48,7 @@ const LocalizedIndex = ({ lang }: LocalizedIndexProps) => {
   const meta = TITLES[lang] || TITLES.it;
   return (
     <>
-      <RouteSEO title={meta.title} description={meta.description} lang={lang} />
+      <SEOHead title={meta.title} description={meta.description} lang={lang} />
       <Index />
     </>
   );

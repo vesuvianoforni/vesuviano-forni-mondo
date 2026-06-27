@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { loadLanguage } from '@/i18n/config';
 import ReadyToShip from './ReadyToShip';
-import RouteSEO from '@/components/RouteSEO';
+import SEOHead from '@/components/SEOHead';
 
 interface LocalizedReadyToShipProps {
   lang: string;
@@ -28,7 +28,7 @@ const LocalizedReadyToShip = ({ lang }: LocalizedReadyToShipProps) => {
   const meta = META[lang] || META.it;
   return (
     <>
-      <RouteSEO lang={lang} title={meta.title} description={meta.description} />
+      <SEOHead lang={lang} title={meta.title} description={meta.description} />
       <ReadyToShip />
     </>
   );

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
+import SEOHead from '@/components/SEOHead';
 
 type ChatConversation = {
   id: string;
@@ -51,6 +52,8 @@ export default function ERPChatLogs() {
   });
 
   return (
+    <>
+      <SEOHead title="ERP Chat Logs | Vesuviano" description="Log conversazioni AI ERP." lang="it" noIndex />
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white flex items-center gap-2">
@@ -173,5 +176,6 @@ export default function ERPChatLogs() {
         </div>
       </div>
     </div>
+    </>
   );
 }

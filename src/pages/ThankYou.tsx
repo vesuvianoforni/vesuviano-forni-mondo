@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Home, Phone, Mail } from "lucide-react";
+import SEOHead from '@/components/SEOHead';
 
 interface ThankYouProps {
   lang: string;
@@ -22,7 +23,10 @@ const ThankYou = ({ lang }: ThankYouProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-vesuviano-50 flex items-center justify-center px-4">
+
+    <>
+      <SEOHead title="Grazie | Vesuviano" description="Grazie per averci contattato. Ti risponderemo al più presto." lang="it" noIndex />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-vesuviano-50 flex items-center justify-center px-4">
       <Card className="max-w-2xl w-full">
         <CardContent className="pt-12 pb-12 px-6 md:px-12 text-center">
           <div className="mb-8 flex justify-center">
@@ -87,6 +91,7 @@ const ThankYou = ({ lang }: ThankYouProps) => {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 };
 

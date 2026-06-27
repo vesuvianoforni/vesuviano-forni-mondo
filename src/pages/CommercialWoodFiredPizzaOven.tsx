@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
-import RouteSEO from '@/components/RouteSEO';
+import SEOHead from '@/components/SEOHead';
 import ConsultationForm from '@/components/ConsultationForm';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -120,9 +120,9 @@ const CommercialWoodFiredPizzaOven = () => {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden pb-20 md:pb-0">
       <Header />
-      <RouteSEO
+      <SEOHead
         lang="en"
-        path={PATH}
+        canonical={PATH}
         title="Commercial Wood-Fired Pizza Ovens | Handmade in Naples | Vesuviano"
         description="Authentic Neapolitan wood-fired pizza ovens for professional pizzerias and restaurants. Handmade in Naples since 1950. UK delivery and installation. Request a quote."
       />

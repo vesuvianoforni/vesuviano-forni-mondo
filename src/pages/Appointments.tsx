@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, Phone, MessageCircle, Video, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import SEOHead from '@/components/SEOHead';
 
 interface Appointment {
   id: string;
@@ -116,7 +117,10 @@ const Appointments = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4">
+
+    <>
+      <SEOHead title="Appuntamenti | Vesuviano" description="Gestione appuntamenti Vesuviano." lang="it" noIndex />
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-2">
@@ -209,6 +213,7 @@ const Appointments = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

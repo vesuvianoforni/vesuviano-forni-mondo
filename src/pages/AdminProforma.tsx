@@ -16,6 +16,7 @@ import { Plus, Trash2, ArrowLeft, FileText, Copy, ExternalLink, Loader2, Globe, 
 import { Checkbox } from '@/components/ui/checkbox';
 import { format } from 'date-fns';
 import { it as itLocale } from 'date-fns/locale';
+import SEOHead from '@/components/SEOHead';
 
 interface ProformaItem {
   id?: string;
@@ -792,7 +793,10 @@ const AdminProforma = () => {
                                 {config.sizes.map(s => {
                                   const isAllowed = allowedSizes.length === 0 || allowedSizes.includes(s.diameter);
                                   return (
-                                    <label key={s.diameter} className="flex items-center gap-1.5 text-xs cursor-pointer">
+
+    <>
+      <SEOHead title="Admin Proforma | Vesuviano" description="Gestione proforma area admin." lang="it" noIndex />
+      <label key={s.diameter} className="flex items-center gap-1.5 text-xs cursor-pointer">
                                       <Checkbox
                                         checked={isAllowed && allowedSizes.length > 0}
                                         onCheckedChange={(checked) => {
@@ -817,7 +821,8 @@ const AdminProforma = () => {
                                       />
                                       Ø {s.diameter}cm
                                     </label>
-                                  );
+    </>
+  );
                                 })}
                               </div>
                               {allowedSizes.length === 0 && (

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
-import RouteSEO from '@/components/RouteSEO';
+import SEOHead from '@/components/SEOHead';
 import ConsultationForm from '@/components/ConsultationForm';
 import RivestimentiCompact from '@/components/RivestimentiCompact';
 import { Button } from '@/components/ui/button';
@@ -26,7 +26,7 @@ const LocalizedRotatingOven = ({ lang }: LocalizedRotatingOvenProps) => {
   return (
     <div className="min-h-screen bg-white">
         <Header />
-        <RouteSEO
+        <SEOHead
           lang={lang}
           title={`${t('products.rotating.title')} | Vesuviano Forni`}
           description={t('products.rotating.subtitle', { defaultValue: t('products.rotating.title') })}
