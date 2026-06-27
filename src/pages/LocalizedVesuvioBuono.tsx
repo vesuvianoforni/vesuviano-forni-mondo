@@ -11,8 +11,17 @@ interface LocalizedVesuvioBuonoProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
 }
 
+const META: Record<string, { title: string; description: string }> = {
+  it: { title: 'Sistema VesuvioBuono® — Forno a Legna Zero Emissioni | Vesuviano Forni', description: 'VesuvioBuono®: il forno a legna napoletano a zero emissioni con abbattimento fumi integrato. Cottura tradizionale e conformità ambientale per le città.' },
+  en: { title: 'VesuvioBuono® System — Zero-Emission Wood-Fired Oven | Vesuviano Forni', description: 'VesuvioBuono®: the zero-emission Neapolitan wood-fired oven with integrated smoke abatement. Traditional baking, urban-friendly environmental compliance.' },
+  fr: { title: 'Système VesuvioBuono® — Four à Bois Zéro Émission | Vesuviano Forni', description: 'VesuvioBuono® : le four à bois napolitain zéro émission avec abattement des fumées intégré. Cuisson traditionnelle, conformité environnementale urbaine.' },
+  de: { title: 'VesuvioBuono®-System — Emissionsfreier Holzofen | Vesuviano Forni', description: 'VesuvioBuono®: der emissionsfreie neapolitanische Holzofen mit integrierter Rauchabscheidung. Traditionelles Backen, urbane Umweltkonformität.' },
+  es: { title: 'Sistema VesuvioBuono® — Horno de Leña Cero Emisiones | Vesuviano Forni', description: 'VesuvioBuono®: el horno de leña napolitano cero emisiones con abatimiento de humos integrado. Cocción tradicional y cumplimiento ambiental urbano.' },
+};
+
 const LocalizedVesuvioBuono = ({ lang }: LocalizedVesuvioBuonoProps) => {
   const { i18n, t } = useTranslation();
+  const meta = META[lang] || META.it;
 
   useEffect(() => {
     if (i18n.language !== lang) {
@@ -20,13 +29,10 @@ const LocalizedVesuvioBuono = ({ lang }: LocalizedVesuvioBuonoProps) => {
     }
   }, [lang, i18n]);
 
-  const pageTitle = `VesuvioBuono® - ${t('vesuvioBuono.subtitle')} | Vesuviano Forni`;
-  const pageDescription = t('vesuvioBuono.subtitle');
-
   return (
     <div className="min-h-screen bg-charcoal-900">
         <Header />
-        <SEOHead lang={lang} title={pageTitle} description={pageDescription} />
+        <SEOHead lang={lang} title={meta.title} description={meta.description} />
         
         <main>
           {/* VesuvioBuono Section */}

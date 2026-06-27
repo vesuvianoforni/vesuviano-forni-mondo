@@ -235,13 +235,20 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
     : lang === 'de' ? "Es wird empfohlen, die Erstbeheizung mit beiden Brennstoffarten durchzuführen – Holz und Gas."
     : "It is recommended to perform initial heating using both types of fuel – wood and gas. Wood burning can be done on a basic way – one or two pieces of wood with low burning intensity.";
 
+  const seoDesc =
+    lang === 'it' ? "Informazioni utili Vesuviano: sollevamento, primo riscaldamento, cottura mista legna e gas, manutenzione e cura del tuo forno napoletano." :
+    lang === 'fr' ? "Informations utiles Vesuviano : levage, premier chauffage, cuisson mixte bois/gaz, entretien et soin de votre four napolitain." :
+    lang === 'es' ? "Información útil Vesuviano: izado, primer calentamiento, cocción mixta leña/gas, mantenimiento y cuidado de tu horno napolitano." :
+    lang === 'de' ? "Nützliche Vesuviano-Informationen: Anheben, erste Befeuerung, Misch-Betrieb Holz/Gas, Wartung und Pflege Ihres neapolitanischen Ofens." :
+    "Vesuviano useful information: lifting, first heating, mixed wood/gas firing, maintenance and care guidance for your Neapolitan pizza oven.";
+
   return (
     <div className="min-h-screen bg-stone-50">
       <Header />
       <SEOHead
         lang={lang}
         title={`${c.title} | Vesuviano Forni`}
-        description={c.subtitle}
+        description={seoDesc}
       />
       
       
