@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { loadLanguage } from '@/i18n/config';
 import Header from "@/components/Header";
-import RouteSEO from "@/components/RouteSEO";
+import SEOHead from "@/components/SEOHead";
 import AboutUs from "@/components/AboutUs";
 import ConsultationForm from "@/components/ConsultationForm";
 import AIChatWidget from "@/components/chat/AIChatWidget";
@@ -35,7 +35,7 @@ const LocalizedAboutUs = ({ lang }: LocalizedAboutUsProps) => {
   return (
     <div className="min-h-screen bg-stone-50">
       <Header />
-      <RouteSEO
+      <SEOHead
         lang={lang}
         title={`${t('aboutUs.title', { defaultValue: 'About Us' })} | Vesuviano Forni`}
         description={t('aboutUs.subtitle', { defaultValue: 'Vesuviano Forni: artisan Neapolitan oven makers since 1950.' })}

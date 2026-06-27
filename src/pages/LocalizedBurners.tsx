@@ -1,5 +1,5 @@
 import BurnersPage from './BurnersPage';
-import RouteSEO from '@/components/RouteSEO';
+import SEOHead from '@/components/SEOHead';
 
 interface LocalizedBurnersProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
@@ -17,7 +17,7 @@ const LocalizedBurners = ({ lang }: LocalizedBurnersProps) => {
   const meta = META[lang] || META.it;
   return (
     <>
-      <RouteSEO lang={lang} title={meta.title} description={meta.description} />
+      <SEOHead lang={lang} title={meta.title} description={meta.description} />
       <BurnersPage lang={lang} />
     </>
   );

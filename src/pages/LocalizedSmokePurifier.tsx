@@ -1,5 +1,5 @@
 import SmokePurifierPage from './SmokePurifierPage';
-import RouteSEO from '@/components/RouteSEO';
+import SEOHead from '@/components/SEOHead';
 
 interface LocalizedSmokePurifierProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
@@ -17,7 +17,7 @@ const LocalizedSmokePurifier = ({ lang }: LocalizedSmokePurifierProps) => {
   const meta = META[lang] || META.it;
   return (
     <>
-      <RouteSEO lang={lang} title={meta.title} description={meta.description} />
+      <SEOHead lang={lang} title={meta.title} description={meta.description} />
       <SmokePurifierPage lang={lang} />
     </>
   );

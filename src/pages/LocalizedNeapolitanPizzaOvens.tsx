@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
-import RouteSEO from '@/components/RouteSEO';
+import SEOHead from '@/components/SEOHead';
 import ConsultationForm from '@/components/ConsultationForm';
 import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
@@ -133,7 +133,7 @@ const LocalizedNeapolitanPizzaOvens = ({ lang }: Props) => {
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      <RouteSEO lang={lang} path={path} title={c.seoTitle} description={c.seoDesc} />
+      <SEOHead lang={lang} canonical={path} title={c.seoTitle} description={c.seoDesc} />
 
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[500px] overflow-hidden">

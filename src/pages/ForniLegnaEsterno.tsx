@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
-import RouteSEO from '@/components/RouteSEO';
+import SEOHead from '@/components/SEOHead';
 import ConsultationForm from '@/components/ConsultationForm';
 import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
@@ -58,9 +58,9 @@ const ForniLegnaEsterno = () => {
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      <RouteSEO
+      <SEOHead
         lang="it"
-        path={PATH}
+        canonical={PATH}
         title="Forno a Legna da Esterno | Artigianale Napoletano — Vesuviano Forni"
         description="Forni a legna da esterno costruiti a mano a Napoli con pietra vulcanica del Vesuvio. Modelli pronti all'uso o su misura per pizzerie, ristoranti e ville. Spedizione in tutto il mondo."
       />
