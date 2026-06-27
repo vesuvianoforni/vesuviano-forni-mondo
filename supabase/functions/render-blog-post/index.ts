@@ -116,7 +116,7 @@ function buildHtml(post: Record<string, unknown>, lang: string, slug: string): s
           ${post.published_at ? new Date(post.published_at as string).toLocaleDateString(lang) : ""} 
           ${post.author ? `&middot; ${escapeHtml(post.author as string)}` : ""}
         </div>
-        <div class="content">${content}</div>
+        <div class="content">${(content as string).replace(/<h1(\s[^>]*)?>/gi, "<h2$1>").replace(/<\/h1>/gi, "</h2>")}</div>
       </article>
       <a class="back-link" href="${DOMAIN}/${lang}/blog">&larr; ${readMoreLabels[lang] || readMoreLabels.it}</a>
     </main>
