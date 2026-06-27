@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Plus, Pencil, Trash2, Brain, GripVertical } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import SEOHead from '@/components/SEOHead';
 
 interface KnowledgeEntry {
   id: string;
