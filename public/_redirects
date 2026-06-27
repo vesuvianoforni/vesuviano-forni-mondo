@@ -4,4 +4,12 @@
 /fr/blog/:slug  /.netlify/functions/blog-html-proxy?lang=fr&slug=:slug&proxy=v2  200!
 /de/blog/:slug  /.netlify/functions/blog-html-proxy?lang=de&slug=:slug&proxy=v2  200!
 /es/blog/:slug  /.netlify/functions/blog-html-proxy?lang=es&slug=:slug&proxy=v2  200!
+
+# Phantom URLs -> canonical equivalents (SEO 301s)
+/en/oven-ranges/electric-ovens    /en/electric-ovens         301!
+/en/oven-ranges/hybrid-ovens      /en/gas-ovens              301!
+/en/oven-ranges/rotating-ovens    /en/rotating-ovens         301!
+/en/oven-ranges/wood-fired-ovens  /en/traditional-ovens      301!
+/en/sistema-vesuviobuono          /en/vesuviobuono-system    301!
+
 /*    /index.html   200
