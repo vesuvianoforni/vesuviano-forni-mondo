@@ -176,5 +176,6 @@ export default function ERPChatLogs() {
         </div>
       </div>
     </div>
+    </>
   );
 }
