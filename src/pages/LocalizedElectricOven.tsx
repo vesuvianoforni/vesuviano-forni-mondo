@@ -47,7 +47,7 @@ const LocalizedElectricOven = ({ lang }: LocalizedElectricOvenProps) => {
           <div className="relative h-full container mx-auto px-6 flex items-center">
             <div className="max-w-3xl text-white">
               <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-                {t('products.electric.title')}
+                {t('products.electric.title', 'Professional Electric Pizza Ovens')}
               </h1>
               <p className="text-xl md:text-2xl text-white/90 mb-8">
                 {t('products.electric.subtitle')}
