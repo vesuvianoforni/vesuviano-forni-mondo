@@ -27,7 +27,7 @@ const LanguageRedirect = () => {
   return (
 
     <>
-      <SEOHead title="Vesuviano Forni" description="Vesuviano - forni napoletani professionali." lang="it" noIndex />
+      <SEOHead title="Vesuviano Forni" description="Vesuviano - forni napoletani professionali." lang="it" canonical="/it" noIndex />
       <div className="min-h-screen flex items-center justify-center bg-stone-50">
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-vesuviano-500 mx-auto"></div>
