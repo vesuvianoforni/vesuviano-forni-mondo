@@ -30,6 +30,15 @@ const estimateReadTime = (html: string): number => {
   return Math.max(1, Math.ceil(words / 200));
 };
 
+/**
+ * Downgrade any <h1> inside article body HTML to <h2> so the page keeps
+ * a single H1 (the article title rendered above the content).
+ */
+const normalizeContentHeadings = (html: string): string =>
+  html
+    .replace(/<h1(\s[^>]*)?>/gi, '<h2$1>')
+    .replace(/<\/h1>/gi, '</h2>');
+
 const BlogPostPage = ({ lang }: BlogPostProps) => {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
@@ -63,7 +72,8 @@ const BlogPostPage = ({ lang }: BlogPostProps) => {
   }
 
   const title = getLocalizedField(post, 'title', lang);
-  const content = getLocalizedField(post, 'content', lang);
+  const rawContent = getLocalizedField(post, 'content', lang);
+  const content = normalizeContentHeadings(rawContent);
   const metaDesc = getLocalizedField(post, 'meta_description', lang);
   const readTime = estimateReadTime(content);
   const categoryLabel = categoryLabels[post.category]?.[lang] || post.category;
