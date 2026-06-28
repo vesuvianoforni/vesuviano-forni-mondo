@@ -118,6 +118,7 @@ const Header = () => {
     { key: 'builtOnPlace', label: t('products.builtOnPlace.title'), path: '/built-on-place' },
     { key: 'vesuviobuono', label: t('products.vesuviobuono.title'), path: getVesuvioBuonoPath() },
     { key: 'woodFired', label: 'Commercial Wood-Fired', path: '/en/commercial-wood-fired-pizza-oven' },
+    { key: 'gasFired', label: 'Commercial Gas', path: '/en/commercial-gas-pizza-oven' },
     { key: 'rotating', label: t('products.rotating.title'), path: '/en/rotating-pizza-oven' },
     { key: 'electric', label: 'Electric Neapolitan', path: '/en/electric-pizza-oven' },
   ];
