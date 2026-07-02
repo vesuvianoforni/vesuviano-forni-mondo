@@ -84,7 +84,7 @@
     "tagline": "Fours Volcaniques Sélectionnés",
     "products": "Produits",
     "vesuviobuono": "VesuvioBuono",
-    "gallery": "Galerie",
+    "gallery": "Visualisez votre four",
     "consultation": "Consultation",
     "contact": "Contactez-nous"
   },
@@ -92,7 +92,7 @@
     "home": "Accueil",
     "products": "Produits",
     "craftsmanship": "Artisanat",
-    "gallery": "Galerie",
+    "gallery": "Visualisez votre four",
     "contact": "Contact"
   },
   "footer": {
@@ -1234,5 +1234,18 @@
     "statSmoke": "Réduction des fumées",
     "statClients": "Clients satisfaits",
     "menuTitle": "Purificateur de Fumée"
+  },
+  "ovenGallery": {
+    "title": "Visualisez votre four",
+    "subtitle": "Explorez nos modèles en 3D et obtenez une consultation gratuite pour trouver le four parfait",
+    "filterByFuel": "Filtrer par Combustible",
+    "filterByCoating": "Filtrer par Revêtement",
+    "filters": {
+      "all": "Tous",
+      "wood": "Bois",
+      "gas": "Gaz",
+      "electric": "Électrique",
+      "rotating": "Rotatif"
+    }
   }
 }

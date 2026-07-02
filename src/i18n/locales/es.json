@@ -75,7 +75,7 @@
     "tagline": "Hornos Volcánicos Seleccionados",
     "products": "Productos",
     "vesuviobuono": "VesuvioBuono",
-    "gallery": "Galería",
+    "gallery": "Visualiza tu horno",
     "consultation": "Consulta",
     "contact": "Contáctanos"
   },
@@ -878,5 +878,18 @@
     "statSmoke": "Reducción de humos",
     "statClients": "Clientes satisfechos",
     "menuTitle": "Purificador de Humo"
+  },
+  "ovenGallery": {
+    "title": "Visualiza tu horno",
+    "subtitle": "Visualiza nuestros modelos en 3D y recibe una consulta gratuita para encontrar el horno perfecto",
+    "filterByFuel": "Filtrar por Combustible",
+    "filterByCoating": "Filtrar por Revestimiento",
+    "filters": {
+      "all": "Todos",
+      "wood": "Leña",
+      "gas": "Gas",
+      "electric": "Eléctrico",
+      "rotating": "Rotativo"
+    }
   }
 }
