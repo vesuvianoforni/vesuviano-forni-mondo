@@ -69,7 +69,6 @@ const ImmersiveOvenGallery = () => {
   const [ovens, setOvens] = useState<Oven[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedModel, setSelectedModel] = useState('all');
-  const [selectedCoating, setSelectedCoating] = useState('all');
   const [zoomed, setZoomed] = useState<Oven | null>(null);
 
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
@@ -82,14 +81,6 @@ const ImmersiveOvenGallery = () => {
     { value: 'Anastasia', label: 'Anastasia' },
   ];
 
-  const coatingFilters = [
-    { value: 'all', label: 'Tutti i rivestimenti' },
-    { value: 'mezzo-mosaico', label: 'Mezzo mosaico' },
-    { value: 'mosaico', label: 'Mosaico' },
-    { value: 'palladiana', label: 'Palladiana' },
-    { value: 'verniciato', label: 'Verniciato' },
-    { value: 'doghe-metalliche', label: 'Doghe metalliche' },
-  ];
 
   useEffect(() => {
     (async () => {
@@ -127,11 +118,7 @@ const ImmersiveOvenGallery = () => {
     })();
   }, []);
 
-  const filtered = ovens.filter((o) => {
-    const m = selectedModel === 'all' || o.name === selectedModel;
-    const k = selectedCoating === 'all' || o.coatings.includes(selectedCoating);
-    return m && k;
-  });
+  const filtered = ovens.filter((o) => selectedModel === 'all' || o.name === selectedModel);
   const shown = filtered;
 
 
@@ -247,32 +234,6 @@ const ImmersiveOvenGallery = () => {
               </div>
             </div>
 
-            <div className="hidden md:block w-px h-6 bg-stone-800" />
-
-            {/* Coating filter */}
-            <div className="flex items-center gap-3 min-w-0">
-              <span className="hidden md:inline shrink-0 text-[9px] uppercase tracking-[0.3em] text-stone-500">
-                Rivestimento
-              </span>
-              <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-1 px-1 snap-x">
-                {coatingFilters.map((c) => {
-                  const active = selectedCoating === c.value;
-                  return (
-                    <button
-                      key={c.value}
-                      onClick={() => setSelectedCoating(c.value)}
-                      className={`shrink-0 snap-start px-4 py-1.5 rounded-full border text-xs whitespace-nowrap transition-all cursor-pointer ${
-                        active
-                          ? 'bg-orange-600 border-orange-500 text-white'
-                          : 'border-stone-700 text-stone-300 hover:border-orange-600/60'
-                      }`}
-                    >
-                      {c.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -343,14 +304,6 @@ const ImmersiveOvenGallery = () => {
                       )}
                     </dl>
                     <div className="flex flex-wrap items-center gap-2 pt-2">
-                      {oven.coatings.map((c) => (
-                        <span
-                          key={c}
-                          className="text-[10px] text-stone-400 uppercase tracking-widest border border-stone-800 rounded-full px-3 py-1"
-                        >
-                          {coatingFilters.find((f) => f.value === c)?.label || c}
-                        </span>
-                      ))}
                       {oven.canBuiltOnPlace && (
                         <Link
                           to={builtOnPlaceHref}
