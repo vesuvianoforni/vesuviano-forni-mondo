@@ -1,0 +1,368 @@
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { supabase } from '@/integrations/supabase/client';
+import { Loader2, ArrowRight } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import ImageZoomModal from './ImageZoomModal';
+
+interface Oven {
+  id: string;
+  name: string;
+  category: string;
+  subcategory?: string | null;
+  image_url: string;
+  description?: string | null;
+  fuel_type?: string | null;
+  coating_type?: string | null;
+}
+
+const ImmersiveOvenGallery = () => {
+  const { t } = useTranslation();
+  const { toast } = useToast();
+  const [ovens, setOvens] = useState<Oven[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCoating, setSelectedCoating] = useState('all');
+  const [displayCount, setDisplayCount] = useState(6);
+  const [zoomed, setZoomed] = useState<Oven | null>(null);
+
+  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+  const [submitting, setSubmitting] = useState(false);
+
+  const categories = [
+    { value: 'all', label: t('ovenGallery.filters.allOvens') },
+    { value: 'mosaico', label: t('ovenGallery.filters.mosaicOvens') },
+    { value: 'misto', label: t('ovenGallery.filters.mixedOvens') },
+    { value: 'legna', label: t('ovenGallery.filters.woodOvens') },
+  ];
+
+  const coatings = [
+    { value: 'all', label: t('ovenGallery.coatings.all') },
+    { value: 'mosaico', label: t('ovenGallery.coatings.mosaic') },
+    { value: 'verniciato', label: t('ovenGallery.coatings.painted') },
+    { value: 'metallico', label: t('ovenGallery.coatings.metallic') },
+  ];
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('ovens')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        setOvens(data || []);
+      } catch (e) {
+        console.error('Error fetching ovens', e);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  const filtered = ovens.filter((o) => {
+    const c = selectedCategory === 'all' || o.category === selectedCategory;
+    const k = selectedCoating === 'all' || o.coating_type === selectedCoating;
+    return c && k;
+  });
+  const shown = filtered.slice(0, displayCount);
+
+  const scrollToForm = () => {
+    document.getElementById('immersive-consultation')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name || !form.email) {
+      toast({
+        title: t('consultation.messages.requiredFields'),
+        description: t('consultation.messages.fillRequired'),
+        variant: 'destructive',
+      });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const { error } = await supabase.functions.invoke('send-consultation-email', {
+        body: { ...form, country: '', ovenType: '' },
+      });
+      if (error) throw error;
+      toast({
+        title: t('consultation.messages.success'),
+        description: t('consultation.messages.successDescription'),
+      });
+      setForm({ name: '', email: '', phone: '', message: '' });
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: t('consultation.messages.error'),
+        description: t('consultation.messages.errorDescription'),
+        variant: 'destructive',
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-32 bg-[#0c0c0c]">
+        <Loader2 className="w-8 h-8 animate-spin text-orange-600" />
+      </div>
+    );
+  }
+
+  return (
+    <section
+      id="oven-gallery"
+      className="bg-[#0c0c0c] text-stone-200 selection:bg-orange-900/50 selection:text-orange-200"
+    >
+      <div className="max-w-7xl mx-auto px-6 py-24 space-y-24 md:space-y-32">
+        {/* Header + editorial filters */}
+        <header className="text-center space-y-8">
+          <div className="inline-block border border-orange-900/40 px-4 py-1.5 rounded-full">
+            <span className="text-orange-500 text-[10px] uppercase tracking-[0.4em] font-semibold">
+              {t('craftsmanship.since', 'Handcrafted Since 1950')}
+            </span>
+          </div>
+          <h1 className="font-playfair text-5xl md:text-7xl lg:text-8xl text-stone-100 font-light leading-tight">
+            {t('ovenGallery.title')}
+          </h1>
+          <p className="max-w-2xl mx-auto text-stone-400 font-light text-base md:text-lg leading-relaxed">
+            {t('ovenGallery.subtitle')}
+          </p>
+
+          <div className="flex flex-col md:flex-row flex-wrap justify-center gap-10 md:gap-12 pt-12 border-t border-stone-800/60">
+            <div className="flex flex-col items-center gap-4">
+              <span className="text-[9px] uppercase tracking-[0.3em] text-stone-500">
+                {t('ovenGallery.filterByFuel')}
+              </span>
+              <div className="flex flex-wrap justify-center gap-3">
+                {categories.map((c) => {
+                  const active = selectedCategory === c.value;
+                  return (
+                    <button
+                      key={c.value}
+                      onClick={() => { setSelectedCategory(c.value); setDisplayCount(6); }}
+                      className={`px-5 py-2 rounded-full border text-xs transition-all cursor-pointer ${
+                        active
+                          ? 'bg-orange-900/20 border-orange-700/60 text-orange-100'
+                          : 'border-stone-800 text-stone-300 hover:border-orange-700/50'
+                      }`}
+                    >
+                      {c.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="w-px h-12 bg-stone-800 hidden md:block self-end" />
+            <div className="flex flex-col items-center gap-4">
+              <span className="text-[9px] uppercase tracking-[0.3em] text-stone-500">
+                {t('ovenGallery.filterByCoating')}
+              </span>
+              <div className="flex flex-wrap justify-center gap-3">
+                {coatings.map((c) => {
+                  const active = selectedCoating === c.value;
+                  return (
+                    <button
+                      key={c.value}
+                      onClick={() => { setSelectedCoating(c.value); setDisplayCount(6); }}
+                      className={`px-5 py-2 rounded-full border text-xs transition-all cursor-pointer ${
+                        active
+                          ? 'bg-orange-900/20 border-orange-700/60 text-orange-100'
+                          : 'border-stone-800 text-stone-300 hover:border-orange-700/50'
+                      }`}
+                    >
+                      {c.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Immersive gallery */}
+        {shown.length === 0 ? (
+          <div className="text-center py-20 text-stone-500">{t('ovenGallery.noOvensFound')}</div>
+        ) : (
+          <div className="grid grid-cols-1 gap-24 md:gap-40">
+            {shown.map((oven, idx) => {
+              const reversed = idx % 2 === 1;
+              const num = String(idx + 1).padStart(2, '0');
+              return (
+                <article
+                  key={oven.id}
+                  className="group relative grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center animate-fade-in"
+                >
+                  <div className={`lg:col-span-7 relative ${reversed ? 'lg:order-2' : 'lg:order-1'}`}>
+                    <div className="absolute -inset-20 bg-orange-600/10 blur-[120px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+                    <button
+                      onClick={() => setZoomed(oven)}
+                      className="block w-full aspect-[3/2] rounded-sm border border-stone-800 overflow-hidden shadow-2xl transition-transform duration-700 group-hover:scale-[1.02] cursor-zoom-in"
+                    >
+                      <img
+                        src={oven.image_url}
+                        alt={oven.name}
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                    <div
+                      className={`absolute top-4 ${reversed ? 'right-6' : 'left-6'} text-stone-700/30 text-8xl md:text-9xl font-playfair italic select-none pointer-events-none`}
+                    >
+                      {num}
+                    </div>
+                  </div>
+                  <div className={`lg:col-span-5 space-y-6 md:space-y-8 ${reversed ? 'lg:order-1' : 'lg:order-2'}`}>
+                    <div className="space-y-2">
+                      {oven.subcategory && (
+                        <h3 className="text-orange-500 text-xs tracking-[0.3em] uppercase">
+                          {oven.subcategory}
+                        </h3>
+                      )}
+                      <h2 className="font-playfair text-4xl md:text-5xl text-stone-100 leading-tight">
+                        {oven.name}
+                      </h2>
+                    </div>
+                    {oven.description && (
+                      <p className="text-stone-400 font-light leading-relaxed text-base md:text-lg">
+                        {oven.description}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-6">
+                      <div className="h-px flex-1 bg-stone-800" />
+                      {oven.coating_type && (
+                        <span className="text-[10px] text-stone-500 uppercase tracking-widest">
+                          {oven.coating_type}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+
+        {filtered.length > displayCount && (
+          <div className="text-center">
+            <button
+              onClick={() => setDisplayCount((n) => n + 6)}
+              className="px-8 py-3 border border-stone-800 rounded-full text-xs uppercase tracking-[0.3em] text-stone-300 hover:border-orange-700/60 hover:text-orange-100 transition-all cursor-pointer"
+            >
+              {t('ovenGallery.showMore', { count: filtered.length - displayCount })}
+            </button>
+          </div>
+        )}
+
+        {/* Unified consultation */}
+        <section
+          id="immersive-consultation"
+          className="bg-[#121212] border border-stone-800/50 p-8 md:p-16 lg:p-24 relative overflow-hidden rounded-sm scroll-mt-24"
+        >
+          <div className="absolute top-0 right-0 w-96 h-96 bg-orange-900/20 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+          <div className="max-w-3xl mx-auto text-center space-y-6 md:space-y-8 mb-14 md:mb-20 relative">
+            <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl text-stone-100">
+              {t('consultation.header.title')}
+            </h2>
+            <p className="text-stone-400 text-base md:text-lg font-light">
+              {t('consultation.header.subtitle')}
+            </p>
+          </div>
+
+          <form onSubmit={submit} className="max-w-4xl mx-auto relative">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 md:gap-x-12 gap-y-8 md:gap-y-10">
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-500">
+                  {t('consultation.form.name')}
+                </label>
+                <input
+                  type="text"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className="w-full bg-transparent border-b border-stone-800 py-3 text-stone-200 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-700"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-500">
+                  {t('consultation.form.email')}
+                </label>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  className="w-full bg-transparent border-b border-stone-800 py-3 text-stone-200 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-700"
+                  required
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-500">
+                  {t('consultation.form.phone')}
+                </label>
+                <input
+                  type="tel"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  className="w-full bg-transparent border-b border-stone-800 py-3 text-stone-200 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-700"
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-500">
+                  {t('consultation.form.message')}
+                </label>
+                <textarea
+                  rows={2}
+                  value={form.message}
+                  onChange={(e) => setForm({ ...form, message: e.target.value })}
+                  className="w-full bg-transparent border-b border-stone-800 py-3 text-stone-200 focus:outline-none focus:border-orange-600 transition-colors resize-none placeholder:text-stone-700"
+                />
+              </div>
+            </div>
+
+            <div className="mt-12 md:mt-16 text-center">
+              <button
+                type="submit"
+                disabled={submitting}
+                className="inline-flex items-center gap-4 px-10 md:px-12 py-5 bg-orange-700 text-stone-100 text-xs uppercase tracking-[0.3em] font-bold hover:bg-orange-600 transition-all shadow-[0_10px_40px_-10px_rgba(194,65,12,0.5)] cursor-pointer group disabled:opacity-60"
+              >
+                {submitting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    {t('cta.getQuote')}
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </button>
+              <p className="mt-6 text-stone-600 text-[10px] uppercase tracking-widest italic">
+                {t('consultation.responseTime', 'Response within 24-48h')}
+              </p>
+            </div>
+          </form>
+        </section>
+
+        <footer className="text-center">
+          <p className="text-stone-600 text-xs tracking-[0.3em] uppercase">
+            • Napoli • Since 1950 •
+          </p>
+        </footer>
+      </div>
+
+      {zoomed && (
+        <ImageZoomModal
+          isOpen={!!zoomed}
+          onClose={() => setZoomed(null)}
+          imageUrl={zoomed.image_url}
+          imageAlt={zoomed.name}
+          title={zoomed.name}
+        />
+      )}
+    </section>
+  );
+};
+
+export default ImmersiveOvenGallery;
