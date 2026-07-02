@@ -11,25 +11,34 @@ const Rivestimenti = () => {
   const rivestimenti = [
     {
       key: 'mosaicato',
+      title: 'Mosaico',
+      description: 'Tessere ceramiche artigianali lavorate a mano per un effetto artistico unico e senza tempo.',
       image: "/lovable-uploads/forno-mosaico-rosso.jpg",
       colors: ['Mosaico Classico', 'Mosaico Moderno', 'Mosaico Artistico']
     },
     {
       key: 'verniciato',
+      title: 'Verniciato',
+      description: 'Finitura liscia e uniforme con vernici resistenti al calore, disponibile in un ampio ventaglio di colori.',
       image: "/lovable-uploads/forno-arancione-terra-del-gusto.webp",
       colors: ['Rosso Vesuvio', 'Nero Antracite', 'Bianco Panna', 'Verde Oliva']
     },
     {
       key: 'palladiana',
+      title: 'Palladiana',
+      description: 'Composizione irregolare di frammenti di marmo per un look elegante ispirato alla tradizione veneziana.',
       image: "/lovable-uploads/forno-mosaico-nero-beige.jpg",
       colors: ['Marmi Misti', 'Toni Neutri', 'Contrasto Scuro']
     },
     {
       key: 'dogheMetalliche',
+      title: 'Doghe Metalliche',
+      description: 'Rivestimento moderno in doghe di metallo per un design contemporaneo e industriale.',
       image: "/lovable-uploads/forno-nero-metallico-nuovo.webp",
       colors: ['Acciaio Spazzolato', 'Nero Opaco', 'Bianco Metallizzato']
     }
   ];
+
 
 
   return (
