@@ -8,39 +8,60 @@ import ImageZoomModal from './ImageZoomModal';
 interface Oven {
   id: string;
   name: string;
-  category: string;
-  subcategory?: string | null;
+  tagline: string;
   image_url: string;
   description?: string | null;
-  fuel_type?: string | null;
-  coating_type?: string | null;
+  fuel_type?: string[] | null;
+  diameter?: number | null;
+  coatings: string[]; // available coatings for this model
 }
+
+// The 3 model names we surface from configurator_ovens
+const MODEL_NAMES = ['Anastasia', 'Real Bosco', 'Sebastian'];
+
+const MODEL_META: Record<string, { tagline: string; description: string; coatings: string[] }> = {
+  'Anastasia': {
+    tagline: 'Signature Collection',
+    description: 'Linea di punta Vesuviano — cupola da 100cm, disponibile a legna, gas ed elettrico. Firma artigianale in ogni dettaglio.',
+    coatings: ['mezzo-mosaico', 'mosaico', 'verniciato', 'doghe-metalliche'],
+  },
+  'Real Bosco': {
+    tagline: 'Heritage Line',
+    description: 'Il forno napoletano essenziale, 80cm di puro carattere. Compatto, iconico, costruito per durare generazioni.',
+    coatings: ['mezzo-mosaico', 'mosaico', 'verniciato', 'doghe-metalliche'],
+  },
+  'Sebastian': {
+    tagline: 'Professional Series',
+    description: 'Progettato per pizzerie ad alto volume, 100cm multi-combustibile. Prestazione senza compromessi.',
+    coatings: ['mezzo-mosaico', 'mosaico', 'verniciato', 'doghe-metalliche'],
+  },
+};
 
 const ImmersiveOvenGallery = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const [ovens, setOvens] = useState<Oven[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedModel, setSelectedModel] = useState('all');
   const [selectedCoating, setSelectedCoating] = useState('all');
-  const [displayCount, setDisplayCount] = useState(6);
   const [zoomed, setZoomed] = useState<Oven | null>(null);
 
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
 
-  const categories = [
-    { value: 'all', label: t('ovenGallery.filters.allOvens') },
-    { value: 'mosaico', label: t('ovenGallery.filters.mosaicOvens') },
-    { value: 'misto', label: t('ovenGallery.filters.mixedOvens') },
-    { value: 'legna', label: t('ovenGallery.filters.woodOvens') },
+  const modelFilters = [
+    { value: 'all', label: 'Tutti i modelli' },
+    { value: 'Real Bosco', label: 'Real Bosco' },
+    { value: 'Sebastian', label: 'Sebastian' },
+    { value: 'Anastasia', label: 'Anastasia' },
   ];
 
-  const coatings = [
-    { value: 'all', label: t('ovenGallery.coatings.all') },
-    { value: 'mosaico', label: t('ovenGallery.coatings.mosaic') },
-    { value: 'verniciato', label: t('ovenGallery.coatings.painted') },
-    { value: 'metallico', label: t('ovenGallery.coatings.metallic') },
+  const coatingFilters = [
+    { value: 'all', label: 'Tutti i rivestimenti' },
+    { value: 'mezzo-mosaico', label: 'Mezzo mosaico' },
+    { value: 'mosaico', label: 'Mosaico' },
+    { value: 'verniciato', label: 'Verniciato' },
+    { value: 'doghe-metalliche', label: 'Doghe metalliche' },
   ];
 
   useEffect(() => {
@@ -48,11 +69,25 @@ const ImmersiveOvenGallery = () => {
       try {
         setLoading(true);
         const { data, error } = await supabase
-          .from('ovens')
-          .select('*')
-          .order('created_at', { ascending: false });
+          .from('configurator_ovens')
+          .select('id, model_name, image_url, description, fuel_type, diameter')
+          .eq('is_active', true)
+          .in('model_name', MODEL_NAMES);
         if (error) throw error;
-        setOvens(data || []);
+        const ordered = MODEL_NAMES
+          .map((n) => (data || []).find((d: any) => d.model_name === n))
+          .filter(Boolean)
+          .map((d: any) => ({
+            id: d.id,
+            name: d.model_name,
+            image_url: d.image_url,
+            description: d.description || MODEL_META[d.model_name]?.description || '',
+            fuel_type: d.fuel_type,
+            diameter: d.diameter,
+            tagline: MODEL_META[d.model_name]?.tagline || '',
+            coatings: MODEL_META[d.model_name]?.coatings || [],
+          }));
+        setOvens(ordered);
       } catch (e) {
         console.error('Error fetching ovens', e);
       } finally {
@@ -62,11 +97,12 @@ const ImmersiveOvenGallery = () => {
   }, []);
 
   const filtered = ovens.filter((o) => {
-    const c = selectedCategory === 'all' || o.category === selectedCategory;
-    const k = selectedCoating === 'all' || o.coating_type === selectedCoating;
-    return c && k;
+    const m = selectedModel === 'all' || o.name === selectedModel;
+    const k = selectedCoating === 'all' || o.coatings.includes(selectedCoating);
+    return m && k;
   });
-  const shown = filtered.slice(0, displayCount);
+  const shown = filtered;
+
 
   const scrollToForm = () => {
     document.getElementById('immersive-consultation')?.scrollIntoView({ behavior: 'smooth' });
