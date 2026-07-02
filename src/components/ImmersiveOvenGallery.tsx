@@ -294,16 +294,16 @@ const ImmersiveOvenGallery = () => {
                       </p>
                     )}
                     <dl className="grid grid-cols-2 gap-4 pt-4 text-sm">
-                      {oven.diameter && (
+                      {oven.diameters.length > 0 && (
                         <div>
-                          <dt className="text-[10px] uppercase tracking-widest text-stone-500 mb-1">Diametro</dt>
-                          <dd className="text-stone-200">{oven.diameter} cm</dd>
+                          <dt className="text-[10px] uppercase tracking-widest text-stone-500 mb-1">Diametri</dt>
+                          <dd className="text-stone-200">{oven.diameters.join(' · ')} cm</dd>
                         </div>
                       )}
-                      {oven.fuel_type && oven.fuel_type.length > 0 && (
+                      {oven.fuels.length > 0 && (
                         <div>
                           <dt className="text-[10px] uppercase tracking-widest text-stone-500 mb-1">Alimentazione</dt>
-                          <dd className="text-stone-200">{oven.fuel_type.join(' · ')}</dd>
+                          <dd className="text-stone-200">{oven.fuels.join(' · ')}</dd>
                         </div>
                       )}
                     </dl>
@@ -316,6 +316,11 @@ const ImmersiveOvenGallery = () => {
                           {coatingFilters.find((f) => f.value === c)?.label || c}
                         </span>
                       ))}
+                      {oven.canBuiltOnPlace && (
+                        <span className="text-[10px] text-orange-300 uppercase tracking-widest border border-orange-800/60 bg-orange-950/30 rounded-full px-3 py-1">
+                          Può essere costruito sul posto
+                        </span>
+                      )}
                     </div>
                   </div>
                 </article>
