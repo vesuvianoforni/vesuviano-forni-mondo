@@ -208,29 +208,43 @@
     "badge": "Customization",
     "title": "Exclusive",
     "titleHighlight": "Coatings",
-    "subtitle": "Choose from a wide range of premium coatings to customize your oven according to your unique style.",
-    "options": {
-      "verniciato": "Painted",
-      "mosaicato": "Mosaic",
-      "mattoni": "Exposed Brick"
+    "subtitle": "Every Vesuviano oven can be personalized with high-quality coatings that combine aesthetics and functionality, to integrate perfectly into your environment.",
+    "availableOptions": "Available Options",
+    "viewSamples": "View Samples",
+    "mosaicato": {
+      "title": "Mosaic",
+      "description": "Appiani Mosaic, among the best Italian ceramic brands. Hand-crafted tesserae for a unique and timeless artistic effect."
     },
-    "colors": {
-      "available": "available colors",
-      "viewSamples": "View Samples"
+    "verniciato": {
+      "title": "Painted",
+      "description": "Smooth and uniform finish with heat-resistant paints, available in a wide range of colors."
+    },
+    "palladiana": {
+      "title": "Palladiana",
+      "description": "Irregular composition of marble fragments for an elegant look inspired by the Venetian tradition."
+    },
+    "dogheMetalliche": {
+      "title": "Metal Slats",
+      "description": "Modern coating in metal slats for a contemporary and industrial design."
     },
     "process": {
       "title": "Customization Process",
+      "description": "From concept to realization, we accompany you at every stage to create the perfect oven for you.",
       "step1": {
         "title": "Consultation",
-        "description": "We help you choose"
+        "desc": "Analysis of your needs"
       },
       "step2": {
         "title": "Design",
-        "description": "We create the perfect design"
+        "desc": "Personalized design"
       },
       "step3": {
+        "title": "Samples",
+        "desc": "Material selection"
+      },
+      "step4": {
         "title": "Realization",
-        "description": "We build your oven"
+        "desc": "Artisan production"
       }
     },
     "startCustomization": "Start Customization"

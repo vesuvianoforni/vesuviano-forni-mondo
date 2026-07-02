@@ -200,24 +200,24 @@
     "title": "Revestimientos",
     "titleHighlight": "Exclusivos",
     "subtitle": "Cada horno Vesuviano puede ser personalizado con revestimientos de alta calidad que unen estética y funcionalidad, para integrarse perfectamente en tu ambiente.",
-    "verniciato": {
-      "title": "Pintado",
-      "description": "Acabado pintado de calidad superior, resistente a altas temperaturas"
-    },
+    "availableOptions": "Opciones Disponibles",
+    "viewSamples": "Ver Muestras",
     "mosaicato": {
       "title": "Mosaico",
       "description": "Mosaico Appiani, entre las mejores marcas italianas de cerámica. Tessere trabajadas a mano para un efecto artístico único y atemporal."
     },
-    "ferro": {
-      "title": "Hierro",
-      "description": "Estilo industrial moderno con acabado en hierro natural"
+    "verniciato": {
+      "title": "Pintado",
+      "description": "Acabado liso y uniforme con pinturas resistentes al calor, disponible en una amplia gama de colores."
     },
-    "personalizzato": {
-      "title": "Personalizado",
-      "description": "Diseño a medida según tus especificaciones exactas"
+    "palladiana": {
+      "title": "Palladiana",
+      "description": "Composición irregular de fragmentos de mármol para un look elegante inspirado en la tradición veneciana."
     },
-    "availableOptions": "Opciones Disponibles",
-    "viewSamples": "Ver Muestras",
+    "dogheMetalliche": {
+      "title": "Lamas Metálicas",
+      "description": "Revestimiento moderno en lamas de metal para un diseño contemporáneo e industrial."
+    },
     "process": {
       "title": "Proceso de Personalización",
       "description": "Del concepto a la realización, te acompañamos en cada fase para crear el horno perfecto para ti.",
