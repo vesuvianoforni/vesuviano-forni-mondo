@@ -84,7 +84,8 @@
     "tagline": "Fours Volcaniques Sélectionnés",
     "products": "Produits",
     "vesuviobuono": "VesuvioBuono",
-    "gallery": "Visualisez votre four",
+    "gallery": "Modèles",
+    "visualizer": "Visualisez votre four",
     "consultation": "Consultation",
     "contact": "Contactez-nous"
   },
@@ -1236,8 +1237,8 @@
     "menuTitle": "Purificateur de Fumée"
   },
   "ovenGallery": {
-    "title": "Visualisez votre four",
-    "subtitle": "Explorez nos modèles en 3D et obtenez une consultation gratuite pour trouver le four parfait",
+    "title": "Nos Modèles",
+    "subtitle": "Découvrez tous nos modèles de fours napolitains et obtenez une consultation gratuite pour trouver le vôtre",
     "filterByFuel": "Filtrer par Combustible",
     "filterByCoating": "Filtrer par Revêtement",
     "filters": {
