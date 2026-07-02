@@ -321,9 +321,13 @@ const ImmersiveOvenGallery = () => {
                         </span>
                       ))}
                       {oven.canBuiltOnPlace && (
-                        <span className="text-[10px] text-orange-300 uppercase tracking-widest border border-orange-800/60 bg-orange-950/30 rounded-full px-3 py-1">
+                        <Link
+                          to={builtOnPlaceHref}
+                          className="inline-flex items-center gap-1.5 text-[10px] text-orange-300 hover:text-orange-100 uppercase tracking-widest border border-orange-800/60 hover:border-orange-500 bg-orange-950/30 hover:bg-orange-900/40 rounded-full px-3 py-1 transition-colors"
+                        >
                           Può essere costruito sul posto
-                        </span>
+                          <ArrowUpRight className="w-3 h-3" />
+                        </Link>
                       )}
                     </div>
                   </div>
