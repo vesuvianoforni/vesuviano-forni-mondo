@@ -62,6 +62,8 @@ const MODEL_META: Record<
 const ImmersiveOvenGallery = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const { lang } = useParams<{ lang?: string }>();
+  const builtOnPlaceHref = `/${lang || 'it'}/built-on-place`;
   const [ovens, setOvens] = useState<Oven[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedModel, setSelectedModel] = useState('all');
