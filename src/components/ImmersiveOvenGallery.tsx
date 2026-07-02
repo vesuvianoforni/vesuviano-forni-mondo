@@ -98,16 +98,20 @@ const ImmersiveOvenGallery = () => {
         const ordered = MODEL_NAMES
           .map((n) => (data || []).find((d: any) => d.model_name === n))
           .filter(Boolean)
-          .map((d: any) => ({
-            id: d.id,
-            name: d.model_name,
-            image_url: d.image_url,
-            description: d.description || MODEL_META[d.model_name]?.description || '',
-            fuel_type: d.fuel_type,
-            diameter: d.diameter,
-            tagline: MODEL_META[d.model_name]?.tagline || '',
-            coatings: MODEL_META[d.model_name]?.coatings || [],
-          }));
+          .map((d: any) => {
+            const meta = MODEL_META[d.model_name];
+            return {
+              id: d.id,
+              name: d.model_name,
+              image_url: d.image_url,
+              description: d.description || meta?.description || '',
+              fuels: meta?.fuels || (d.fuel_type ?? []),
+              diameters: meta?.diameters || (d.diameter ? [d.diameter] : []),
+              tagline: meta?.tagline || '',
+              coatings: meta?.coatings || [],
+              canBuiltOnPlace: meta?.canBuiltOnPlace,
+            } as Oven;
+          });
         setOvens(ordered);
       } catch (e) {
         console.error('Error fetching ovens', e);
