@@ -218,29 +218,43 @@
     "badge": "Personnalisation",
     "title": "Revêtements",
     "titleHighlight": "Exclusifs",
-    "subtitle": "Choisissez parmi une large gamme de revêtements premium pour personnaliser votre four selon votre style unique.",
-    "options": {
-      "verniciato": "Peint",
-      "mosaicato": "Mosaïque",
-      "mattoni": "Briques Apparentes"
+    "subtitle": "Chaque four Vesuviano peut être personnalisé avec des revêtements de haute qualité qui allient esthétique et fonctionnalité, pour s'intégrer parfaitement dans votre environnement.",
+    "availableOptions": "Options Disponibles",
+    "viewSamples": "Voir les Échantillons",
+    "mosaicato": {
+      "title": "Mosaïque",
+      "description": "Mosaïque Appiani, parmi les meilleures marques italiennes de céramique. Tesselles travaillées à la main pour un effet artistique unique et intemporel."
     },
-    "colors": {
-      "available": "couleurs disponibles",
-      "viewSamples": "Voir les Échantillons"
+    "verniciato": {
+      "title": "Peint",
+      "description": "Finition lisse et uniforme avec des peintures résistantes à la chaleur, disponible dans une large gamme de couleurs."
+    },
+    "palladiana": {
+      "title": "Palladiana",
+      "description": "Composition irrégulière de fragments de marbre pour un look élégant inspiré de la tradition vénitienne."
+    },
+    "dogheMetalliche": {
+      "title": "Lames Métalliques",
+      "description": "Revêtement moderne en lames de métal pour un design contemporain et industriel."
     },
     "process": {
       "title": "Processus de Personnalisation",
+      "description": "Du concept à la réalisation, nous vous accompagnons à chaque étape pour créer le four parfait pour vous.",
       "step1": {
         "title": "Consultation",
-        "description": "Nous vous aidons à choisir"
+        "desc": "Analyse de vos besoins"
       },
       "step2": {
-        "title": "Conception",
-        "description": "Nous créons le design parfait"
+        "title": "Design",
+        "desc": "Conception personnalisée"
       },
       "step3": {
+        "title": "Échantillons",
+        "desc": "Sélection des matériaux"
+      },
+      "step4": {
         "title": "Réalisation",
-        "description": "Nous réalisons votre four"
+        "desc": "Production artisanale"
       }
     },
     "startCustomization": "Commencer la Personnalisation"

@@ -209,24 +209,24 @@
     "title": "Verkleidungen",
     "titleHighlight": "Exklusiv",
     "subtitle": "Jeder Vesuviano-Ofen kann mit hochwertigen Verkleidungen personalisiert werden, die Ästhetik und Funktionalität verbinden, um sich perfekt in Ihre Umgebung zu integrieren.",
-    "verniciato": {
-      "title": "Lackiert",
-      "description": "Hochwertige Lackierung, beständig gegen hohe Temperaturen"
-    },
+    "availableOptions": "Verfügbare Optionen",
+    "viewSamples": "Muster Ansehen",
     "mosaicato": {
       "title": "Mosaik",
       "description": "Appiani-Mosaik, eine der besten italienischen Keramikmarken. Handgefertigte Tessere für einen einzigartigen und zeitlosen künstlerischen Effekt."
     },
-    "ferro": {
-      "title": "Eisen",
-      "description": "Moderner Industriestil mit natürlicher Eisenoberfläche"
+    "verniciato": {
+      "title": "Lackiert",
+      "description": "Glatte und gleichmäßige Oberfläche mit hitzebeständigen Lacken, in einer breiten Farbpalette erhältlich."
     },
-    "personalizzato": {
-      "title": "Personalisiert",
-      "description": "Maßgeschneidertes Design nach Ihren genauen Spezifikationen"
+    "palladiana": {
+      "title": "Palladiana",
+      "description": "Unregelmäßige Zusammensetzung aus Marmorfragmenten für einen eleganten Look, inspiriert von der venezianischen Tradition."
     },
-    "availableOptions": "Verfügbare Optionen",
-    "viewSamples": "Muster Ansehen",
+    "dogheMetalliche": {
+      "title": "Metalllamellen",
+      "description": "Moderne Verkleidung aus Metalllamellen für ein zeitgemäßes und industrielles Design."
+    },
     "process": {
       "title": "Personalisierungsprozess",
       "description": "Vom Konzept bis zur Realisierung begleiten wir Sie bei jedem Schritt, um den perfekten Ofen für Sie zu schaffen.",

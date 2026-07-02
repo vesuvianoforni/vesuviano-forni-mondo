@@ -208,29 +208,43 @@
     "badge": "Personalizzazione",
     "title": "Rivestimenti",
     "titleHighlight": "Esclusivi",
-    "subtitle": "Scegli tra una vasta gamma di rivestimenti premium per personalizzare il tuo forno secondo il tuo stile unico.",
-    "options": {
-      "verniciato": "Verniciato",
-      "mosaicato": "Mosaicato",
-      "mattoni": "Mattoni a Vista"
+    "subtitle": "Ogni forno Vesuviano può essere personalizzato con rivestimenti di alta qualità che uniscono estetica e funzionalità, per integrarsi perfettamente nel tuo ambiente.",
+    "availableOptions": "Opzioni Disponibili",
+    "viewSamples": "Vedi Campioni",
+    "mosaicato": {
+      "title": "Mosaico",
+      "description": "Mosaico Appiani, tra le migliori marche italiane di ceramica. Tessere lavorate a mano per un effetto artistico unico e senza tempo."
     },
-    "colors": {
-      "available": "colori disponibili",
-      "viewSamples": "Vedi Campioni"
+    "verniciato": {
+      "title": "Verniciato",
+      "description": "Finitura liscia e uniforme con vernici resistenti al calore, disponibile in un ampio ventaglio di colori."
+    },
+    "palladiana": {
+      "title": "Palladiana",
+      "description": "Composizione irregolare di frammenti di marmo per un look elegante ispirato alla tradizione veneziana."
+    },
+    "dogheMetalliche": {
+      "title": "Doghe Metalliche",
+      "description": "Rivestimento moderno in doghe di metallo per un design contemporaneo e industriale."
     },
     "process": {
       "title": "Processo di Personalizzazione",
+      "description": "Dal concept alla realizzazione, ti accompagniamo in ogni fase per creare il forno perfetto per te.",
       "step1": {
         "title": "Consulenza",
-        "description": "Ti aiutiamo a scegliere"
+        "desc": "Analisi delle tue esigenze"
       },
       "step2": {
-        "title": "Progettazione",
-        "description": "Creiamo il design perfetto"
+        "title": "Design",
+        "desc": "Progettazione personalizzata"
       },
       "step3": {
+        "title": "Campioni",
+        "desc": "Selezione materiali"
+      },
+      "step4": {
         "title": "Realizzazione",
-        "description": "Realizziamo il tuo forno"
+        "desc": "Produzione artigianale"
       }
     },
     "startCustomization": "Inizia Personalizzazione"
