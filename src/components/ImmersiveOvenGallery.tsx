@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, ArrowRight } from 'lucide-react';
+import { Loader2, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ImageZoomModal from './ImageZoomModal';
 
@@ -53,7 +54,7 @@ const MODEL_META: Record<
       'Progettato per pizzerie ad alto volume, da 60 a 140 cm. Rivestimento tecnico in doghe metalliche, può essere costruito sul posto.',
     coatings: ['doghe-metalliche'],
     diameters: [60, 80, 100, 120, 130, 140],
-    fuels: ['Legna', 'Gas'],
+    fuels: ['Legna', 'Gas', 'Elettrico'],
     canBuiltOnPlace: true,
   },
 };
@@ -61,6 +62,8 @@ const MODEL_META: Record<
 const ImmersiveOvenGallery = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const { lang } = useParams<{ lang?: string }>();
+  const builtOnPlaceHref = '/built-on-place';
   const [ovens, setOvens] = useState<Oven[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedModel, setSelectedModel] = useState('all');
@@ -318,9 +321,13 @@ const ImmersiveOvenGallery = () => {
                         </span>
                       ))}
                       {oven.canBuiltOnPlace && (
-                        <span className="text-[10px] text-orange-300 uppercase tracking-widest border border-orange-800/60 bg-orange-950/30 rounded-full px-3 py-1">
+                        <Link
+                          to={builtOnPlaceHref}
+                          className="inline-flex items-center gap-1.5 text-[10px] text-orange-300 hover:text-orange-100 uppercase tracking-widest border border-orange-800/60 hover:border-orange-500 bg-orange-950/30 hover:bg-orange-900/40 rounded-full px-3 py-1 transition-colors"
+                        >
                           Può essere costruito sul posto
-                        </span>
+                          <ArrowUpRight className="w-3 h-3" />
+                        </Link>
                       )}
                     </div>
                   </div>
