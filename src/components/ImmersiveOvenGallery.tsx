@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { Loader2, ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ImageZoomModal from './ImageZoomModal';
+import galleryHeroBg from '@/assets/gallery-hero-bg.jpg';
 
 interface Oven {
   id: string;
@@ -183,37 +184,59 @@ const ImmersiveOvenGallery = () => {
       id="oven-gallery"
       className="bg-[#0c0c0c] text-stone-200 selection:bg-orange-900/50 selection:text-orange-200"
     >
-      <div className="max-w-7xl mx-auto px-6 py-24 space-y-24 md:space-y-32">
-        {/* Header + editorial filters */}
-        <header className="text-center space-y-8">
-          <div className="inline-block border border-orange-900/40 px-4 py-1.5 rounded-full">
-            <span className="text-orange-500 text-[10px] uppercase tracking-[0.4em] font-semibold">
-              {t('craftsmanship.since', 'Handcrafted Since 1950')}
-            </span>
-          </div>
-          <h1 className="font-playfair text-5xl md:text-7xl lg:text-8xl text-stone-100 font-light leading-tight">
-            {t('ovenGallery.title')}
-          </h1>
-          <p className="max-w-2xl mx-auto text-stone-400 font-light text-base md:text-lg leading-relaxed">
-            {t('ovenGallery.subtitle')}
-          </p>
+      {/* Immersive hero with background image */}
+      <div className="relative min-h-[85vh] md:min-h-[92vh] flex items-end overflow-hidden">
+        <img
+          src={galleryHeroBg}
+          alt="Vesuviano oven collection"
+          width={1920}
+          height={1280}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-[#0c0c0c]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
 
-          <div className="flex flex-col md:flex-row flex-wrap justify-center gap-10 md:gap-12 pt-12 border-t border-stone-800/60">
-            <div className="flex flex-col items-center gap-4">
-              <span className="text-[9px] uppercase tracking-[0.3em] text-stone-500">
-                Per modello
+        <div className="relative w-full max-w-7xl mx-auto px-6 pb-16 md:pb-24 pt-32 md:pt-40">
+          <div className="max-w-3xl space-y-6 md:space-y-8">
+            <div className="inline-block border border-orange-500/50 px-4 py-1.5 rounded-full backdrop-blur-sm">
+              <span className="text-orange-400 text-[10px] uppercase tracking-[0.4em] font-semibold">
+                {t('craftsmanship.since', 'Handcrafted Since 1950')}
               </span>
-              <div className="flex flex-wrap justify-center gap-3">
+            </div>
+            <h1 className="font-playfair text-5xl md:text-7xl lg:text-8xl text-stone-50 font-light leading-[1.05]">
+              {t('ovenGallery.title')}
+            </h1>
+            <p className="max-w-xl text-stone-300 font-light text-base md:text-lg leading-relaxed">
+              {t('ovenGallery.subtitle')}
+            </p>
+            <div className="flex items-center gap-3 pt-2 text-stone-400 text-[10px] uppercase tracking-[0.3em] animate-pulse">
+              <ChevronDown className="w-4 h-4" />
+              <span>Scorri per esplorare</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sticky compact filter bar */}
+      <div className="sticky top-16 md:top-20 z-30 bg-[#0c0c0c]/95 backdrop-blur-md border-y border-stone-800/80">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-5">
+          <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-8">
+            {/* Model filter */}
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="hidden md:inline shrink-0 text-[9px] uppercase tracking-[0.3em] text-stone-500">
+                Modello
+              </span>
+              <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-1 px-1 snap-x">
                 {modelFilters.map((c) => {
                   const active = selectedModel === c.value;
                   return (
                     <button
                       key={c.value}
                       onClick={() => setSelectedModel(c.value)}
-                      className={`px-5 py-2 rounded-full border text-xs transition-all cursor-pointer ${
+                      className={`shrink-0 snap-start px-4 py-1.5 rounded-full border text-xs whitespace-nowrap transition-all cursor-pointer ${
                         active
-                          ? 'bg-orange-900/20 border-orange-700/60 text-orange-100'
-                          : 'border-stone-800 text-stone-300 hover:border-orange-700/50'
+                          ? 'bg-orange-600 border-orange-500 text-white'
+                          : 'border-stone-700 text-stone-300 hover:border-orange-600/60'
                       }`}
                     >
                       {c.label}
@@ -222,22 +245,25 @@ const ImmersiveOvenGallery = () => {
                 })}
               </div>
             </div>
-            <div className="w-px h-12 bg-stone-800 hidden md:block self-end" />
-            <div className="flex flex-col items-center gap-4">
-              <span className="text-[9px] uppercase tracking-[0.3em] text-stone-500">
-                Per rivestimento
+
+            <div className="hidden md:block w-px h-6 bg-stone-800" />
+
+            {/* Coating filter */}
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="hidden md:inline shrink-0 text-[9px] uppercase tracking-[0.3em] text-stone-500">
+                Rivestimento
               </span>
-              <div className="flex flex-wrap justify-center gap-3">
+              <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-1 px-1 snap-x">
                 {coatingFilters.map((c) => {
                   const active = selectedCoating === c.value;
                   return (
                     <button
                       key={c.value}
                       onClick={() => setSelectedCoating(c.value)}
-                      className={`px-5 py-2 rounded-full border text-xs transition-all cursor-pointer ${
+                      className={`shrink-0 snap-start px-4 py-1.5 rounded-full border text-xs whitespace-nowrap transition-all cursor-pointer ${
                         active
-                          ? 'bg-orange-900/20 border-orange-700/60 text-orange-100'
-                          : 'border-stone-800 text-stone-300 hover:border-orange-700/50'
+                          ? 'bg-orange-600 border-orange-500 text-white'
+                          : 'border-stone-700 text-stone-300 hover:border-orange-600/60'
                       }`}
                     >
                       {c.label}
@@ -247,7 +273,11 @@ const ImmersiveOvenGallery = () => {
               </div>
             </div>
           </div>
-        </header>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-16 md:py-24 space-y-24 md:space-y-32">
+
 
         {/* Immersive gallery */}
         {shown.length === 0 ? (
