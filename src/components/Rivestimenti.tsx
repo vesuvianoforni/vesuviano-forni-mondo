@@ -10,26 +10,27 @@ const Rivestimenti = () => {
 
   const rivestimenti = [
     {
+      key: 'mosaicato',
+      image: "/lovable-uploads/forno-mosaico-rosso.jpg",
+      colors: ['Mosaico Classico', 'Mosaico Moderno', 'Mosaico Artistico']
+    },
+    {
       key: 'verniciato',
       image: "/lovable-uploads/forno-arancione-terra-del-gusto.webp",
       colors: ['Rosso Vesuvio', 'Nero Antracite', 'Bianco Panna', 'Verde Oliva']
     },
     {
-      key: 'mosaicato', 
-      image: "/lovable-uploads/vesuviobuono-verde-mosaico.webp",
-      colors: ['Mosaico Classico', 'Mosaico Moderno', 'Mosaico Artistico']
+      key: 'palladiana',
+      image: "/lovable-uploads/forno-mosaico-nero-beige.jpg",
+      colors: ['Marmi Misti', 'Toni Neutri', 'Contrasto Scuro']
     },
     {
-      key: 'ferro',
+      key: 'dogheMetalliche',
       image: "/lovable-uploads/forno-nero-metallico-nuovo.webp",
-      colors: ['Ferro Naturale', 'Ferro Ossidato', 'Ferro Spazzolato']
-    },
-    {
-      key: 'personalizzato',
-      image: "/lovable-uploads/vesuviobuono-osteria-pizza.webp",
-      colors: ['Su Misura', 'Design Esclusivo', 'Materiali Premium']
+      colors: ['Acciaio Spazzolato', 'Nero Opaco', 'Bianco Metallizzato']
     }
   ];
+
 
   return (
     <section id="rivestimenti" className="py-20 bg-gradient-to-br from-stone-50 to-vesuviano-50">
