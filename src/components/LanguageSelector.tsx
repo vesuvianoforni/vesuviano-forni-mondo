@@ -84,8 +84,16 @@ const LanguageSelector = () => {
       fr: '/thank-you-fr',
       es: '/thank-you-es',
       de: '/thank-you-de'
+    },
+    'finishes': {
+      it: '/rivestimenti',
+      en: '/finishes',
+      fr: '/revetements',
+      es: '/revestimientos',
+      de: '/verkleidungen'
     }
   };
+
 
   const changeLanguage = (languageCode: string) => {
     const currentPath = location.pathname;
