@@ -69,20 +69,20 @@ const Rivestimenti = () => {
                 <div className="relative h-48 overflow-hidden">
                   <img 
                     src={rivestimento.image} 
-                    alt={t(`rivestimenti.${rivestimento.key}.title`)}
+                    alt={t(`rivestimenti.${rivestimento.key}.title`, rivestimento.title)}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                   <div className="absolute bottom-3 left-3 text-white">
                     <h3 className="font-playfair text-xl font-bold">
-                      {t(`rivestimenti.${rivestimento.key}.title`, rivestimento.key.charAt(0).toUpperCase() + rivestimento.key.slice(1))}
+                      {t(`rivestimenti.${rivestimento.key}.title`, rivestimento.title)}
                     </h3>
                   </div>
                 </div>
                 
                 <CardContent className="p-4">
                   <p className="text-stone-600 text-sm mb-4 leading-relaxed">
-                    {t(`rivestimenti.${rivestimento.key}.description`, 'Rivestimento di qualità superiore')}
+                    {t(`rivestimenti.${rivestimento.key}.description`, rivestimento.description)}
                   </p>
                   
                   <div className="space-y-2 mb-4">
