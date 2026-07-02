@@ -20,7 +20,7 @@ const Rivestimenti = () => {
       key: 'verniciato',
       title: 'Verniciato',
       description: 'Finitura liscia e uniforme con vernici resistenti al calore, disponibile in un ampio ventaglio di colori.',
-      image: "/lovable-uploads/forno-arancione-terra-del-gusto.webp",
+      image: "/__l5e/assets-v1/28d0f035-ead8-4446-91cd-2d27069cfcec/verniciato-rivestimento.png",
       colors: ['Rosso Vesuvio', 'Nero Antracite', 'Bianco Panna', 'Verde Oliva']
     },
     {
