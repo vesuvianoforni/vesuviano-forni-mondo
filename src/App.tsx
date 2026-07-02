@@ -38,6 +38,7 @@ const LocalizedBlogPost = lazy(() => import("./pages/LocalizedBlogPost"));
 const ProformaPage = lazy(() => import("./pages/ProformaPage"));
 const BuiltOnPlace = lazy(() => import("./pages/BuiltOnPlace"));
 const LocalizedCollections = lazy(() => import("./pages/LocalizedCollections"));
+const LocalizedRivestimenti = lazy(() => import("./pages/LocalizedRivestimenti"));
 const LocalizedServices = lazy(() => import("./pages/LocalizedServices"));
 const LocalizedNeapolitanPizzaOvens = lazy(() => import("./pages/LocalizedNeapolitanPizzaOvens"));
 const ForniLegnaEsterno = lazy(() => import("./pages/ForniLegnaEsterno"));
@@ -105,6 +106,7 @@ const App = () => {
               <Route path="/it/thank-you-it" element={<ThankYou lang="it" />} />
               <Route path="/it/informazioni-utili" element={<LocalizedUsefulInfo lang="it" />} />
               <Route path="/it/collezioni" element={<LocalizedCollections lang="it" />} />
+              <Route path="/it/rivestimenti" element={<LocalizedRivestimenti lang="it" />} />
               <Route path="/it/chi-siamo" element={<LocalizedAboutUs lang="it" />} />
               <Route path="/it/servizi" element={<LocalizedServices lang="it" />} />
               <Route path="/it/forno-a-legna-da-esterno" element={<ForniLegnaEsterno />} />
@@ -125,6 +127,7 @@ const App = () => {
               <Route path="/en/thank-you-en" element={<ThankYou lang="en" />} />
               <Route path="/en/useful-information" element={<LocalizedUsefulInfo lang="en" />} />
               <Route path="/en/collections" element={<LocalizedCollections lang="en" />} />
+              <Route path="/en/finishes" element={<LocalizedRivestimenti lang="en" />} />
               <Route path="/en/about-us" element={<LocalizedAboutUs lang="en" />} />
               <Route path="/en/services" element={<LocalizedServices lang="en" />} />
               <Route path="/en/neapolitan-pizza-ovens" element={<LocalizedNeapolitanPizzaOvens lang="en" />} />
@@ -149,6 +152,7 @@ const App = () => {
               <Route path="/fr/thank-you-fr" element={<ThankYou lang="fr" />} />
               <Route path="/fr/informations-utiles" element={<LocalizedUsefulInfo lang="fr" />} />
               <Route path="/fr/collections" element={<LocalizedCollections lang="fr" />} />
+              <Route path="/fr/revetements" element={<LocalizedRivestimenti lang="fr" />} />
               <Route path="/fr/qui-sommes-nous" element={<LocalizedAboutUs lang="fr" />} />
               <Route path="/fr/services" element={<LocalizedServices lang="fr" />} />
               <Route path="/fr/fours-a-pizza-napolitains" element={<LocalizedNeapolitanPizzaOvens lang="fr" />} />
@@ -170,6 +174,7 @@ const App = () => {
               <Route path="/es/thank-you-es" element={<ThankYou lang="es" />} />
               <Route path="/es/informacion-util" element={<LocalizedUsefulInfo lang="es" />} />
               <Route path="/es/colecciones" element={<LocalizedCollections lang="es" />} />
+              <Route path="/es/revestimientos" element={<LocalizedRivestimenti lang="es" />} />
               <Route path="/es/quienes-somos" element={<LocalizedAboutUs lang="es" />} />
               <Route path="/es/servicios" element={<LocalizedServices lang="es" />} />
               <Route path="/es/hornos-pizza-napolitana" element={<LocalizedNeapolitanPizzaOvens lang="es" />} />
@@ -190,6 +195,7 @@ const App = () => {
               <Route path="/de/thank-you-de" element={<ThankYou lang="de" />} />
               <Route path="/de/nuetzliche-informationen" element={<LocalizedUsefulInfo lang="de" />} />
               <Route path="/de/kollektionen" element={<LocalizedCollections lang="de" />} />
+              <Route path="/de/verkleidungen" element={<LocalizedRivestimenti lang="de" />} />
               <Route path="/de/ueber-uns" element={<LocalizedAboutUs lang="de" />} />
               <Route path="/de/dienstleistungen" element={<LocalizedServices lang="de" />} />
               <Route path="/de/neapolitanische-pizzaoefen" element={<LocalizedNeapolitanPizzaOvens lang="de" />} />

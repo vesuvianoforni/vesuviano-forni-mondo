@@ -124,10 +124,24 @@ const Header = () => {
   ];
 
 
+  const getCollectionsPath = () => {
+    const paths: Record<string, string> = {
+      it: '/it/collezioni', en: '/en/collections', fr: '/fr/collections', es: '/es/colecciones', de: '/de/kollektionen'
+    };
+    return paths[currentLang] || paths.it;
+  };
+
+  const getRivestimentiPath = () => {
+    const paths: Record<string, string> = {
+      it: '/it/rivestimenti', en: '/en/finishes', fr: '/fr/revetements', es: '/es/revestimientos', de: '/de/verkleidungen'
+    };
+    return paths[currentLang] || paths.it;
+  };
+
   const navItems: Array<{ href: string; label: string; type: 'anchor' | 'link' }> = [
-    { href: "#ai-architect", label: "Architetto AI", type: 'anchor' },
-    { href: "#oven-gallery", label: t('header.gallery'), type: 'anchor' },
-    { href: "#rivestimenti", label: "Rivestimenti", type: 'anchor' },
+    { href: `/${currentLang}/architettoai`, label: "Architetto AI", type: 'link' },
+    { href: getCollectionsPath(), label: t('header.gallery'), type: 'link' },
+    { href: getRivestimentiPath(), label: "Rivestimenti", type: 'link' },
     { href: "#clients-map", label: "Clienti", type: 'anchor' },
     { href: `/${currentLang}/blog`, label: "Blog", type: 'link' },
     { href: "#consultation", label: t('header.contact'), type: 'anchor' }
