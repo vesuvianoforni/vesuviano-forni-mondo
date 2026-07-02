@@ -5,7 +5,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { Loader2, ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ImageZoomModal from './ImageZoomModal';
-import galleryHeroBg from '@/assets/gallery-hero-bg.jpg';
+const HERO_BG_URL =
+  'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/0.11061114972663866.jpg';
 
 interface Oven {
   id: string;
