@@ -195,6 +195,7 @@ const App = () => {
               <Route path="/de/thank-you-de" element={<ThankYou lang="de" />} />
               <Route path="/de/nuetzliche-informationen" element={<LocalizedUsefulInfo lang="de" />} />
               <Route path="/de/kollektionen" element={<LocalizedCollections lang="de" />} />
+              <Route path="/de/verkleidungen" element={<LocalizedRivestimenti lang="de" />} />
               <Route path="/de/ueber-uns" element={<LocalizedAboutUs lang="de" />} />
               <Route path="/de/dienstleistungen" element={<LocalizedServices lang="de" />} />
               <Route path="/de/neapolitanische-pizzaoefen" element={<LocalizedNeapolitanPizzaOvens lang="de" />} />
