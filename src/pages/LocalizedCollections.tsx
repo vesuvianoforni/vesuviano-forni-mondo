@@ -5,8 +5,7 @@ import Header from '@/components/Header';
 import SEOHead from '@/components/SEOHead';
 import OvenDataInitializer from '@/components/OvenDataInitializer';
 
-const OvenGallery = lazy(() => import('@/components/OvenGallery'));
-const PreFooterSimpleForm = lazy(() => import('@/components/PreFooterSimpleForm'));
+const ImmersiveOvenGallery = lazy(() => import('@/components/ImmersiveOvenGallery'));
 
 interface Props {
   lang: string;
