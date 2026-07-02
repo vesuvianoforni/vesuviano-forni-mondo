@@ -53,7 +53,7 @@ const MODEL_META: Record<
       'Progettato per pizzerie ad alto volume, da 60 a 140 cm. Rivestimento tecnico in doghe metalliche, può essere costruito sul posto.',
     coatings: ['doghe-metalliche'],
     diameters: [60, 80, 100, 120, 130, 140],
-    fuels: ['Legna', 'Gas'],
+    fuels: ['Legna', 'Gas', 'Elettrico'],
     canBuiltOnPlace: true,
   },
 };
