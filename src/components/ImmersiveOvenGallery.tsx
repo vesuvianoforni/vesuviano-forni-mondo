@@ -234,32 +234,6 @@ const ImmersiveOvenGallery = () => {
               </div>
             </div>
 
-            <div className="hidden md:block w-px h-6 bg-stone-800" />
-
-            {/* Coating filter */}
-            <div className="flex items-center gap-3 min-w-0">
-              <span className="hidden md:inline shrink-0 text-[9px] uppercase tracking-[0.3em] text-stone-500">
-                Rivestimento
-              </span>
-              <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-1 px-1 snap-x">
-                {coatingFilters.map((c) => {
-                  const active = selectedCoating === c.value;
-                  return (
-                    <button
-                      key={c.value}
-                      onClick={() => setSelectedCoating(c.value)}
-                      className={`shrink-0 snap-start px-4 py-1.5 rounded-full border text-xs whitespace-nowrap transition-all cursor-pointer ${
-                        active
-                          ? 'bg-orange-600 border-orange-500 text-white'
-                          : 'border-stone-700 text-stone-300 hover:border-orange-600/60'
-                      }`}
-                    >
-                      {c.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
           </div>
         </div>
       </div>
