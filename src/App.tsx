@@ -38,6 +38,7 @@ const LocalizedBlogPost = lazy(() => import("./pages/LocalizedBlogPost"));
 const ProformaPage = lazy(() => import("./pages/ProformaPage"));
 const BuiltOnPlace = lazy(() => import("./pages/BuiltOnPlace"));
 const LocalizedCollections = lazy(() => import("./pages/LocalizedCollections"));
+const LocalizedRivestimenti = lazy(() => import("./pages/LocalizedRivestimenti"));
 const LocalizedServices = lazy(() => import("./pages/LocalizedServices"));
 const LocalizedNeapolitanPizzaOvens = lazy(() => import("./pages/LocalizedNeapolitanPizzaOvens"));
 const ForniLegnaEsterno = lazy(() => import("./pages/ForniLegnaEsterno"));
