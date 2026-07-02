@@ -27,7 +27,7 @@ const Rivestimenti = () => {
       key: 'palladiana',
       title: 'Palladiana',
       description: 'Composizione irregolare di frammenti di marmo per un look elegante ispirato alla tradizione veneziana.',
-      image: "/lovable-uploads/forno-mosaico-nero-beige.jpg",
+      image: "/__l5e/assets-v1/80c530da-0a3d-4a62-a52d-87243b188552/palladiana-rivestimento.png",
       colors: ['Marmi Misti', 'Toni Neutri', 'Contrasto Scuro']
     },
     {
