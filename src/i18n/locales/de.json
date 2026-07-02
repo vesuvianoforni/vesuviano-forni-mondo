@@ -84,7 +84,8 @@
     "tagline": "Ausgewählte Vulkanöfen",
     "products": "Produkte",
     "vesuviobuono": "VesuvioBuono",
-    "gallery": "Visualisieren Sie Ihren Ofen",
+    "gallery": "Modelle",
+    "visualizer": "Visualisieren Sie Ihren Ofen",
     "consultation": "Beratung",
     "contact": "Kontaktieren Sie Uns"
   },
@@ -889,8 +890,8 @@
     "menuTitle": "Rauchfilter"
   },
   "ovenGallery": {
-    "title": "Visualisieren Sie Ihren Ofen",
-    "subtitle": "Entdecken Sie unsere Modelle in 3D-Renderings und erhalten Sie eine kostenlose Beratung, um den perfekten Ofen zu finden",
+    "title": "Unsere Modelle",
+    "subtitle": "Entdecken Sie alle unsere neapolitanischen Ofenmodelle und erhalten Sie eine kostenlose Beratung für Ihren perfekten Ofen",
     "filterByFuel": "Filtern nach Brennstoff",
     "filterByCoating": "Filtern nach Verkleidung",
     "filters": {

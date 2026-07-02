@@ -75,7 +75,8 @@
     "tagline": "Hornos Volcánicos Seleccionados",
     "products": "Productos",
     "vesuviobuono": "VesuvioBuono",
-    "gallery": "Visualiza tu horno",
+    "gallery": "Modelos",
+    "visualizer": "Visualiza tu horno",
     "consultation": "Consulta",
     "contact": "Contáctanos"
   },
@@ -880,8 +881,8 @@
     "menuTitle": "Purificador de Humo"
   },
   "ovenGallery": {
-    "title": "Visualiza tu horno",
-    "subtitle": "Visualiza nuestros modelos en 3D y recibe una consulta gratuita para encontrar el horno perfecto",
+    "title": "Nuestros Modelos",
+    "subtitle": "Descubre todos nuestros modelos de hornos napolitanos y recibe una consulta gratuita para encontrar el perfecto",
     "filterByFuel": "Filtrar por Combustible",
     "filterByCoating": "Filtrar por Revestimiento",
     "filters": {

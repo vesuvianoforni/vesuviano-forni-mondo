@@ -84,7 +84,8 @@
     "tagline": "Forni Vulcanici Selezionati",
     "products": "Prodotti",
     "vesuviobuono": "VesuvioBuono",
-    "gallery": "Visualizza il tuo forno",
+    "gallery": "Modelli",
+    "visualizer": "Visualizza il tuo forno",
     "consultation": "Consulenza",
     "contact": "Contattaci"
   },
@@ -504,8 +505,8 @@
     "message": "Ciao, vorrei informazioni sui vostri forni professionali 🔥"
   },
   "ovenGallery": {
-    "title": "Visualizza il tuo forno",
-    "subtitle": "Esplora i modelli in render 3D e ricevi una consulenza gratuita per trovare il forno perfetto",
+    "title": "I Nostri Modelli",
+    "subtitle": "Scopri tutti i modelli di forni napoletani e ricevi una consulenza gratuita per trovare quello perfetto",
     "filterByFuel": "Filtra per Combustibile",
     "filterByCoating": "Filtra per Rivestimento",
     "filters": {

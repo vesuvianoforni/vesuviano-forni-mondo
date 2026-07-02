@@ -84,7 +84,8 @@
     "tagline": "Selected Volcanic Ovens",
     "products": "Products",
     "vesuviobuono": "VesuvioBuono",
-    "gallery": "View Your Oven",
+    "gallery": "Models",
+    "visualizer": "View Your Oven",
     "consultation": "Consultation",
     "contact": "Contact Us"
   },
@@ -517,8 +518,8 @@
     }
   },
   "ovenGallery": {
-    "title": "View Your Oven",
-    "subtitle": "Explore our models in 3D renders and get a free consultation to find your perfect oven",
+    "title": "Our Models",
+    "subtitle": "Discover all our Neapolitan oven models and get a free consultation to find your perfect one",
     "filterByFuel": "Filter by Fuel",
     "filterByCoating": "Filter by Coating",
     "filters": {

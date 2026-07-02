@@ -139,7 +139,7 @@ const Header = () => {
   };
 
   const navItems: Array<{ href: string; label: string; type: 'anchor' | 'link' }> = [
-    { href: `/${currentLang}/architettoai`, label: "Architetto AI", type: 'link' },
+    { href: `/${currentLang}/architettoai`, label: t('header.visualizer'), type: 'link' },
     { href: getCollectionsPath(), label: t('header.gallery'), type: 'link' },
     { href: getRivestimentiPath(), label: "Rivestimenti", type: 'link' },
     { href: "#clients-map", label: "Clienti", type: 'anchor' },
