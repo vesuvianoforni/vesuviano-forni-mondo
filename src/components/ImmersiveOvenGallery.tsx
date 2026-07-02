@@ -304,14 +304,6 @@ const ImmersiveOvenGallery = () => {
                       )}
                     </dl>
                     <div className="flex flex-wrap items-center gap-2 pt-2">
-                      {oven.coatings.map((c) => (
-                        <span
-                          key={c}
-                          className="text-[10px] text-stone-400 uppercase tracking-widest border border-stone-800 rounded-full px-3 py-1"
-                        >
-                          {coatingFilters.find((f) => f.value === c)?.label || c}
-                        </span>
-                      ))}
                       {oven.canBuiltOnPlace && (
                         <Link
                           to={builtOnPlaceHref}
