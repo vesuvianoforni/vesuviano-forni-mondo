@@ -118,11 +118,7 @@ const ImmersiveOvenGallery = () => {
     })();
   }, []);
 
-  const filtered = ovens.filter((o) => {
-    const m = selectedModel === 'all' || o.name === selectedModel;
-    const k = selectedCoating === 'all' || o.coatings.includes(selectedCoating);
-    return m && k;
-  });
+  const filtered = ovens.filter((o) => selectedModel === 'all' || o.name === selectedModel);
   const shown = filtered;
 
 
