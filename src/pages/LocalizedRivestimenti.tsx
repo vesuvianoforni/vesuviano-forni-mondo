@@ -12,11 +12,11 @@ interface Props {
 }
 
 const META: Record<string, { title: string; description: string }> = {
-  it: { title: 'Rivestimenti Forni Napoletani — Verniciato, Mosaico, Ferro | Vesuviano Forni', description: 'Scopri i rivestimenti Vesuviano: verniciato, mosaicato, ferro e personalizzato. Finiture artigianali per ogni forno napoletano.' },
-  en: { title: 'Neapolitan Oven Finishes — Painted, Mosaic, Iron | Vesuviano Forni', description: 'Discover Vesuviano finishes: painted, mosaic, iron and custom. Handcrafted coatings for every Neapolitan oven.' },
-  fr: { title: 'Revêtements Fours Napolitains — Peint, Mosaïque, Fer | Vesuviano Forni', description: 'Découvrez les revêtements Vesuviano : peint, mosaïque, fer et personnalisé. Finitions artisanales pour chaque four napolitain.' },
-  de: { title: 'Verkleidungen Neapolitanische Öfen — Lackiert, Mosaik, Eisen | Vesuviano Forni', description: 'Entdecken Sie die Vesuviano-Verkleidungen: lackiert, Mosaik, Eisen und maßgefertigt. Handwerkliche Oberflächen für jeden Ofen.' },
-  es: { title: 'Revestimientos Hornos Napolitanos — Pintado, Mosaico, Hierro | Vesuviano Forni', description: 'Descubre los revestimientos Vesuviano: pintado, mosaico, hierro y personalizado. Acabados artesanales para cada horno napolitano.' },
+  it: { title: 'Rivestimenti Forni — Mosaico, Verniciato, Palladiana, Doghe Metalliche | Vesuviano Forni', description: 'Personalizza il tuo forno napoletano con i rivestimenti Vesuviano: mosaico, verniciato, palladiana e doghe metalliche. Finiture artigianali su misura.' },
+  en: { title: 'Oven Finishes — Mosaic, Painted, Palladiana, Metal Slats | Vesuviano Forni', description: 'Customize your Neapolitan oven with Vesuviano finishes: mosaic, painted, palladiana and metal slats. Handcrafted made-to-measure coatings.' },
+  fr: { title: 'Revêtements Fours — Mosaïque, Peint, Palladiana, Lames Métalliques | Vesuviano Forni', description: 'Personnalisez votre four napolitain avec les revêtements Vesuviano : mosaïque, peint, palladiana et lames métalliques. Finitions artisanales sur mesure.' },
+  de: { title: 'Ofen-Verkleidungen — Mosaik, Lackiert, Palladiana, Metallleisten | Vesuviano Forni', description: 'Personalisieren Sie Ihren neapolitanischen Ofen mit Vesuviano-Verkleidungen: Mosaik, lackiert, Palladiana und Metallleisten. Handgefertigte Maßoberflächen.' },
+  es: { title: 'Revestimientos Hornos — Mosaico, Pintado, Palladiana, Lamas Metálicas | Vesuviano Forni', description: 'Personaliza tu horno napolitano con los revestimientos Vesuviano: mosaico, pintado, palladiana y lamas metálicas. Acabados artesanales a medida.' },
 };
 
 const LocalizedRivestimenti = ({ lang }: Props) => {

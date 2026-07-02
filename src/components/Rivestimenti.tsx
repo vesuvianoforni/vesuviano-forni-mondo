@@ -10,26 +10,36 @@ const Rivestimenti = () => {
 
   const rivestimenti = [
     {
+      key: 'mosaicato',
+      title: 'Mosaico',
+      description: 'Tessere ceramiche artigianali lavorate a mano per un effetto artistico unico e senza tempo.',
+      image: "/lovable-uploads/forno-mosaico-rosso.jpg",
+      colors: ['Mosaico Classico', 'Mosaico Moderno', 'Mosaico Artistico']
+    },
+    {
       key: 'verniciato',
+      title: 'Verniciato',
+      description: 'Finitura liscia e uniforme con vernici resistenti al calore, disponibile in un ampio ventaglio di colori.',
       image: "/lovable-uploads/forno-arancione-terra-del-gusto.webp",
       colors: ['Rosso Vesuvio', 'Nero Antracite', 'Bianco Panna', 'Verde Oliva']
     },
     {
-      key: 'mosaicato', 
-      image: "/lovable-uploads/vesuviobuono-verde-mosaico.webp",
-      colors: ['Mosaico Classico', 'Mosaico Moderno', 'Mosaico Artistico']
+      key: 'palladiana',
+      title: 'Palladiana',
+      description: 'Composizione irregolare di frammenti di marmo per un look elegante ispirato alla tradizione veneziana.',
+      image: "/lovable-uploads/forno-mosaico-nero-beige.jpg",
+      colors: ['Marmi Misti', 'Toni Neutri', 'Contrasto Scuro']
     },
     {
-      key: 'ferro',
+      key: 'dogheMetalliche',
+      title: 'Doghe Metalliche',
+      description: 'Rivestimento moderno in doghe di metallo per un design contemporaneo e industriale.',
       image: "/lovable-uploads/forno-nero-metallico-nuovo.webp",
-      colors: ['Ferro Naturale', 'Ferro Ossidato', 'Ferro Spazzolato']
-    },
-    {
-      key: 'personalizzato',
-      image: "/lovable-uploads/vesuviobuono-osteria-pizza.webp",
-      colors: ['Su Misura', 'Design Esclusivo', 'Materiali Premium']
+      colors: ['Acciaio Spazzolato', 'Nero Opaco', 'Bianco Metallizzato']
     }
   ];
+
+
 
   return (
     <section id="rivestimenti" className="py-20 bg-gradient-to-br from-stone-50 to-vesuviano-50">
@@ -59,20 +69,20 @@ const Rivestimenti = () => {
                 <div className="relative h-48 overflow-hidden">
                   <img 
                     src={rivestimento.image} 
-                    alt={t(`rivestimenti.${rivestimento.key}.title`)}
+                    alt={t(`rivestimenti.${rivestimento.key}.title`, rivestimento.title)}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                   <div className="absolute bottom-3 left-3 text-white">
                     <h3 className="font-playfair text-xl font-bold">
-                      {t(`rivestimenti.${rivestimento.key}.title`, rivestimento.key.charAt(0).toUpperCase() + rivestimento.key.slice(1))}
+                      {t(`rivestimenti.${rivestimento.key}.title`, rivestimento.title)}
                     </h3>
                   </div>
                 </div>
                 
                 <CardContent className="p-4">
                   <p className="text-stone-600 text-sm mb-4 leading-relaxed">
-                    {t(`rivestimenti.${rivestimento.key}.description`, 'Rivestimento di qualità superiore')}
+                    {t(`rivestimenti.${rivestimento.key}.description`, rivestimento.description)}
                   </p>
                   
                   <div className="space-y-2 mb-4">
