@@ -11,29 +11,50 @@ interface Oven {
   tagline: string;
   image_url: string;
   description?: string | null;
-  fuel_type?: string[] | null;
-  diameter?: number | null;
-  coatings: string[]; // available coatings for this model
+  fuels: string[];
+  diameters: number[];
+  coatings: string[];
+  canBuiltOnPlace?: boolean;
 }
 
 // The 3 model names we surface from configurator_ovens
 const MODEL_NAMES = ['Anastasia', 'Real Bosco', 'Sebastian'];
 
-const MODEL_META: Record<string, { tagline: string; description: string; coatings: string[] }> = {
+const MODEL_META: Record<
+  string,
+  {
+    tagline: string;
+    description: string;
+    coatings: string[];
+    diameters: number[];
+    fuels: string[];
+    canBuiltOnPlace?: boolean;
+  }
+> = {
   'Anastasia': {
     tagline: 'Signature Collection',
-    description: 'Linea di punta Vesuviano — cupola da 100cm, disponibile a legna, gas ed elettrico. Firma artigianale in ogni dettaglio.',
-    coatings: ['mezzo-mosaico', 'mosaico', 'verniciato', 'doghe-metalliche'],
+    description:
+      'Linea di punta Vesuviano — disponibile da 100 a 140 cm. Rivestimenti nobili in mosaico o palladiana, firma artigianale in ogni dettaglio.',
+    coatings: ['mezzo-mosaico', 'mosaico', 'palladiana'],
+    diameters: [100, 110, 120, 130, 140],
+    fuels: ['Legna', 'Gas', 'Elettrico'],
   },
   'Real Bosco': {
     tagline: 'Heritage Line',
-    description: 'Il forno napoletano essenziale, 80cm di puro carattere. Compatto, iconico, costruito per durare generazioni.',
+    description:
+      'Il forno napoletano essenziale, dalle dimensioni compatte alle più generose (80–140 cm). Disponibile a legna, gas e nella versione rotante.',
     coatings: ['mezzo-mosaico', 'mosaico', 'verniciato', 'doghe-metalliche'],
+    diameters: [80, 100, 110, 120, 130, 140],
+    fuels: ['Legna', 'Gas', 'Rotante'],
   },
   'Sebastian': {
     tagline: 'Professional Series',
-    description: 'Progettato per pizzerie ad alto volume, 100cm multi-combustibile. Prestazione senza compromessi.',
-    coatings: ['mezzo-mosaico', 'mosaico', 'verniciato', 'doghe-metalliche'],
+    description:
+      'Progettato per pizzerie ad alto volume, da 60 a 140 cm. Rivestimento tecnico in doghe metalliche, può essere costruito sul posto.',
+    coatings: ['doghe-metalliche'],
+    diameters: [60, 80, 100, 120, 130, 140],
+    fuels: ['Legna', 'Gas'],
+    canBuiltOnPlace: true,
   },
 };
 
@@ -60,6 +81,7 @@ const ImmersiveOvenGallery = () => {
     { value: 'all', label: 'Tutti i rivestimenti' },
     { value: 'mezzo-mosaico', label: 'Mezzo mosaico' },
     { value: 'mosaico', label: 'Mosaico' },
+    { value: 'palladiana', label: 'Palladiana' },
     { value: 'verniciato', label: 'Verniciato' },
     { value: 'doghe-metalliche', label: 'Doghe metalliche' },
   ];
@@ -77,16 +99,20 @@ const ImmersiveOvenGallery = () => {
         const ordered = MODEL_NAMES
           .map((n) => (data || []).find((d: any) => d.model_name === n))
           .filter(Boolean)
-          .map((d: any) => ({
-            id: d.id,
-            name: d.model_name,
-            image_url: d.image_url,
-            description: d.description || MODEL_META[d.model_name]?.description || '',
-            fuel_type: d.fuel_type,
-            diameter: d.diameter,
-            tagline: MODEL_META[d.model_name]?.tagline || '',
-            coatings: MODEL_META[d.model_name]?.coatings || [],
-          }));
+          .map((d: any) => {
+            const meta = MODEL_META[d.model_name];
+            return {
+              id: d.id,
+              name: d.model_name,
+              image_url: d.image_url,
+              description: d.description || meta?.description || '',
+              fuels: meta?.fuels || (d.fuel_type ?? []),
+              diameters: meta?.diameters || (d.diameter ? [d.diameter] : []),
+              tagline: meta?.tagline || '',
+              coatings: meta?.coatings || [],
+              canBuiltOnPlace: meta?.canBuiltOnPlace,
+            } as Oven;
+          });
         setOvens(ordered);
       } catch (e) {
         console.error('Error fetching ovens', e);
@@ -269,16 +295,16 @@ const ImmersiveOvenGallery = () => {
                       </p>
                     )}
                     <dl className="grid grid-cols-2 gap-4 pt-4 text-sm">
-                      {oven.diameter && (
+                      {oven.diameters.length > 0 && (
                         <div>
-                          <dt className="text-[10px] uppercase tracking-widest text-stone-500 mb-1">Diametro</dt>
-                          <dd className="text-stone-200">{oven.diameter} cm</dd>
+                          <dt className="text-[10px] uppercase tracking-widest text-stone-500 mb-1">Diametri</dt>
+                          <dd className="text-stone-200">{oven.diameters.join(' · ')} cm</dd>
                         </div>
                       )}
-                      {oven.fuel_type && oven.fuel_type.length > 0 && (
+                      {oven.fuels.length > 0 && (
                         <div>
                           <dt className="text-[10px] uppercase tracking-widest text-stone-500 mb-1">Alimentazione</dt>
-                          <dd className="text-stone-200">{oven.fuel_type.join(' · ')}</dd>
+                          <dd className="text-stone-200">{oven.fuels.join(' · ')}</dd>
                         </div>
                       )}
                     </dl>
@@ -291,6 +317,11 @@ const ImmersiveOvenGallery = () => {
                           {coatingFilters.find((f) => f.value === c)?.label || c}
                         </span>
                       ))}
+                      {oven.canBuiltOnPlace && (
+                        <span className="text-[10px] text-orange-300 uppercase tracking-widest border border-orange-800/60 bg-orange-950/30 rounded-full px-3 py-1">
+                          Può essere costruito sul posto
+                        </span>
+                      )}
                     </div>
                   </div>
                 </article>
