@@ -81,6 +81,7 @@ const ImmersiveOvenGallery = () => {
     { value: 'all', label: 'Tutti i rivestimenti' },
     { value: 'mezzo-mosaico', label: 'Mezzo mosaico' },
     { value: 'mosaico', label: 'Mosaico' },
+    { value: 'palladiana', label: 'Palladiana' },
     { value: 'verniciato', label: 'Verniciato' },
     { value: 'doghe-metalliche', label: 'Doghe metalliche' },
   ];
