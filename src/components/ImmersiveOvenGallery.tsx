@@ -69,7 +69,6 @@ const ImmersiveOvenGallery = () => {
   const [ovens, setOvens] = useState<Oven[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedModel, setSelectedModel] = useState('all');
-  const [selectedCoating, setSelectedCoating] = useState('all');
   const [zoomed, setZoomed] = useState<Oven | null>(null);
 
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
