@@ -5,8 +5,7 @@ import Header from '@/components/Header';
 import SEOHead from '@/components/SEOHead';
 import OvenDataInitializer from '@/components/OvenDataInitializer';
 
-const OvenGallery = lazy(() => import('@/components/OvenGallery'));
-const PreFooterSimpleForm = lazy(() => import('@/components/PreFooterSimpleForm'));
+const ImmersiveOvenGallery = lazy(() => import('@/components/ImmersiveOvenGallery'));
 
 interface Props {
   lang: string;
@@ -36,16 +35,13 @@ const LocalizedCollections = ({ lang }: Props) => {
   if (!ready) return null;
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-white">
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#0c0c0c]">
       <OvenDataInitializer />
       <Header />
       <SEOHead lang={lang} title={meta.title} description={meta.description} />
       <main className="pt-20">
         <Suspense fallback={null}>
-          <OvenGallery />
-        </Suspense>
-        <Suspense fallback={null}>
-          <PreFooterSimpleForm />
+          <ImmersiveOvenGallery />
         </Suspense>
       </main>
     </div>
