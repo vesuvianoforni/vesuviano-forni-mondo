@@ -12,8 +12,8 @@ const Rivestimenti = () => {
     {
       key: 'mosaicato',
       title: 'Mosaico',
-      description: 'Tessere ceramiche artigianali lavorate a mano per un effetto artistico unico e senza tempo.',
-      image: "/lovable-uploads/forno-mosaico-rosso.jpg",
+      description: 'Mosaico Appiani, tra le migliori marche italiane di ceramica. Tessere lavorate a mano per un effetto artistico unico e senza tempo.',
+      image: "/__l5e/assets-v1/de255509-511f-467a-b6f6-1d4e87d8365e/mosaico-appiani.png",
       colors: ['Mosaico Classico', 'Mosaico Moderno', 'Mosaico Artistico']
     },
     {
