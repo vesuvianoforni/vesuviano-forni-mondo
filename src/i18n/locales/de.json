@@ -887,5 +887,18 @@
     "statSmoke": "Rauchreduzierung",
     "statClients": "Zufriedene Kunden",
     "menuTitle": "Rauchfilter"
+  },
+  "ovenGallery": {
+    "title": "Visualisieren Sie Ihren Ofen",
+    "subtitle": "Entdecken Sie unsere Modelle in 3D-Renderings und erhalten Sie eine kostenlose Beratung, um den perfekten Ofen zu finden",
+    "filterByFuel": "Filtern nach Brennstoff",
+    "filterByCoating": "Filtern nach Verkleidung",
+    "filters": {
+      "all": "Alle",
+      "wood": "Holz",
+      "gas": "Gas",
+      "electric": "Elektrisch",
+      "rotating": "Rotierend"
+    }
   }
 }

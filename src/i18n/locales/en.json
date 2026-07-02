@@ -517,8 +517,8 @@
     }
   },
   "ovenGallery": {
-    "title": "Our Oven Collection",
-    "subtitle": "Discover our selection of artisan ovens, classified by type and technical characteristics",
+    "title": "View Your Oven",
+    "subtitle": "Explore our models in 3D renders and get a free consultation to find your perfect oven",
     "filterByFuel": "Filter by Fuel",
     "filterByCoating": "Filter by Coating",
     "filters": {

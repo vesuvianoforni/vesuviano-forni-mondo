@@ -1234,5 +1234,18 @@
     "statSmoke": "Réduction des fumées",
     "statClients": "Clients satisfaits",
     "menuTitle": "Purificateur de Fumée"
+  },
+  "ovenGallery": {
+    "title": "Visualisez votre four",
+    "subtitle": "Explorez nos modèles en 3D et obtenez une consultation gratuite pour trouver le four parfait",
+    "filterByFuel": "Filtrer par Combustible",
+    "filterByCoating": "Filtrer par Revêtement",
+    "filters": {
+      "all": "Tous",
+      "wood": "Bois",
+      "gas": "Gaz",
+      "electric": "Électrique",
+      "rotating": "Rotatif"
+    }
   }
 }

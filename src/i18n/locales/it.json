@@ -504,8 +504,8 @@
     "message": "Ciao, vorrei informazioni sui vostri forni professionali 🔥"
   },
   "ovenGallery": {
-    "title": "La Nostra Collezione di Forni",
-    "subtitle": "Scopri la nostra selezione di forni artigianali, classificati per tipologia e caratteristiche tecniche",
+    "title": "Visualizza il tuo forno",
+    "subtitle": "Esplora i modelli in render 3D e ricevi una consulenza gratuita per trovare il forno perfetto",
     "filterByFuel": "Filtra per Combustibile",
     "filterByCoating": "Filtra per Rivestimento",
     "filters": {

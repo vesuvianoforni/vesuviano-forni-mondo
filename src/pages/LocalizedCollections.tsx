@@ -12,11 +12,11 @@ interface Props {
 }
 
 const META: Record<string, { title: string; description: string }> = {
-  it: { title: 'Collezioni Forni Napoletani — Anastasia, Ottavio, Real Bosco | Vesuviano Forni', description: 'Collezioni Vesuviano: scopri Anastasia, Ottavio, Real Bosco, Sebastian, VesuvioBuono e Forno Rotante. Modelli, rivestimenti e specifiche tecniche.' },
-  en: { title: 'Neapolitan Oven Collections — Anastasia, Ottavio, Real Bosco | Vesuviano Forni', description: 'Vesuviano collections: discover Anastasia, Ottavio, Real Bosco, Sebastian, VesuvioBuono and Rotating ovens — models, finishes and full technical specs.' },
-  fr: { title: 'Collections de Fours Napolitains — Anastasia, Ottavio, Real Bosco | Vesuviano Forni', description: 'Collections Vesuviano : découvrez Anastasia, Ottavio, Real Bosco, Sebastian, VesuvioBuono et le four rotatif — modèles, revêtements et fiches techniques.' },
-  de: { title: 'Neapolitanische Ofen-Kollektionen — Anastasia, Ottavio, Real Bosco | Vesuviano Forni', description: 'Vesuviano-Kollektionen: Anastasia, Ottavio, Real Bosco, Sebastian, VesuvioBuono und Drehofen — Modelle, Verkleidungen und technische Daten.' },
-  es: { title: 'Colecciones de Hornos Napolitanos — Anastasia, Ottavio, Real Bosco | Vesuviano Forni', description: 'Colecciones Vesuviano: descubre Anastasia, Ottavio, Real Bosco, Sebastian, VesuvioBuono y el horno rotativo — modelos, acabados y fichas técnicas.' },
+  it: { title: 'Visualizza il tuo forno — Render 3D Forni Napoletani | Vesuviano Forni', description: 'Visualizza i forni Vesuviano in render 3D fotorealistici. Anastasia, Real Bosco, Sebastian: trova il modello perfetto per la tua pizzeria con una consulenza gratuita.' },
+  en: { title: 'View Your Oven — 3D Neapolitan Oven Renders | Vesuviano Forni', description: 'View Vesuviano ovens in photorealistic 3D renders. Anastasia, Real Bosco, Sebastian: find the perfect model for your pizzeria with a free consultation.' },
+  fr: { title: 'Visualisez votre four — Renders 3D Fours Napolitains | Vesuviano Forni', description: 'Visualisez les fours Vesuviano en renders 3D photoréalistes. Anastasia, Real Bosco, Sebastian : trouvez le modèle parfait pour votre pizzeria avec une consultation gratuite.' },
+  de: { title: 'Visualisieren Sie Ihren Ofen — 3D Neapolitanische Ofen-Renderings | Vesuviano Forni', description: 'Visualisieren Sie Vesuviano-Öfen in fotorealistischen 3D-Renderings. Anastasia, Real Bosco, Sebastian: Finden Sie das perfekte Modell für Ihre Pizzeria mit einer kostenlosen Beratung.' },
+  es: { title: 'Visualiza tu horno — Renders 3D Hornos Napolitanos | Vesuviano Forni', description: 'Visualiza los hornos Vesuviano en renders 3D fotorrealistas. Anastasia, Real Bosco, Sebastian: encuentra el modelo perfecto para tu pizzería con una consulta gratuita.' },
 };
 
 const LocalizedCollections = ({ lang }: Props) => {
