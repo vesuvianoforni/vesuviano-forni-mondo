@@ -8,39 +8,60 @@ import ImageZoomModal from './ImageZoomModal';
 interface Oven {
   id: string;
   name: string;
-  category: string;
-  subcategory?: string | null;
+  tagline: string;
   image_url: string;
   description?: string | null;
-  fuel_type?: string | null;
-  coating_type?: string | null;
+  fuel_type?: string[] | null;
+  diameter?: number | null;
+  coatings: string[]; // available coatings for this model
 }
+
+// The 3 model names we surface from configurator_ovens
+const MODEL_NAMES = ['Anastasia', 'Real Bosco', 'Sebastian'];
+
+const MODEL_META: Record<string, { tagline: string; description: string; coatings: string[] }> = {
+  'Anastasia': {
+    tagline: 'Signature Collection',
+    description: 'Linea di punta Vesuviano — cupola da 100cm, disponibile a legna, gas ed elettrico. Firma artigianale in ogni dettaglio.',
+    coatings: ['mezzo-mosaico', 'mosaico', 'verniciato', 'doghe-metalliche'],
+  },
+  'Real Bosco': {
+    tagline: 'Heritage Line',
+    description: 'Il forno napoletano essenziale, 80cm di puro carattere. Compatto, iconico, costruito per durare generazioni.',
+    coatings: ['mezzo-mosaico', 'mosaico', 'verniciato', 'doghe-metalliche'],
+  },
+  'Sebastian': {
+    tagline: 'Professional Series',
+    description: 'Progettato per pizzerie ad alto volume, 100cm multi-combustibile. Prestazione senza compromessi.',
+    coatings: ['mezzo-mosaico', 'mosaico', 'verniciato', 'doghe-metalliche'],
+  },
+};
 
 const ImmersiveOvenGallery = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const [ovens, setOvens] = useState<Oven[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedModel, setSelectedModel] = useState('all');
   const [selectedCoating, setSelectedCoating] = useState('all');
-  const [displayCount, setDisplayCount] = useState(6);
   const [zoomed, setZoomed] = useState<Oven | null>(null);
 
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
 
-  const categories = [
-    { value: 'all', label: t('ovenGallery.filters.allOvens') },
-    { value: 'mosaico', label: t('ovenGallery.filters.mosaicOvens') },
-    { value: 'misto', label: t('ovenGallery.filters.mixedOvens') },
-    { value: 'legna', label: t('ovenGallery.filters.woodOvens') },
+  const modelFilters = [
+    { value: 'all', label: 'Tutti i modelli' },
+    { value: 'Real Bosco', label: 'Real Bosco' },
+    { value: 'Sebastian', label: 'Sebastian' },
+    { value: 'Anastasia', label: 'Anastasia' },
   ];
 
-  const coatings = [
-    { value: 'all', label: t('ovenGallery.coatings.all') },
-    { value: 'mosaico', label: t('ovenGallery.coatings.mosaic') },
-    { value: 'verniciato', label: t('ovenGallery.coatings.painted') },
-    { value: 'metallico', label: t('ovenGallery.coatings.metallic') },
+  const coatingFilters = [
+    { value: 'all', label: 'Tutti i rivestimenti' },
+    { value: 'mezzo-mosaico', label: 'Mezzo mosaico' },
+    { value: 'mosaico', label: 'Mosaico' },
+    { value: 'verniciato', label: 'Verniciato' },
+    { value: 'doghe-metalliche', label: 'Doghe metalliche' },
   ];
 
   useEffect(() => {
@@ -48,11 +69,25 @@ const ImmersiveOvenGallery = () => {
       try {
         setLoading(true);
         const { data, error } = await supabase
-          .from('ovens')
-          .select('*')
-          .order('created_at', { ascending: false });
+          .from('configurator_ovens')
+          .select('id, model_name, image_url, description, fuel_type, diameter')
+          .eq('is_active', true)
+          .in('model_name', MODEL_NAMES);
         if (error) throw error;
-        setOvens(data || []);
+        const ordered = MODEL_NAMES
+          .map((n) => (data || []).find((d: any) => d.model_name === n))
+          .filter(Boolean)
+          .map((d: any) => ({
+            id: d.id,
+            name: d.model_name,
+            image_url: d.image_url,
+            description: d.description || MODEL_META[d.model_name]?.description || '',
+            fuel_type: d.fuel_type,
+            diameter: d.diameter,
+            tagline: MODEL_META[d.model_name]?.tagline || '',
+            coatings: MODEL_META[d.model_name]?.coatings || [],
+          }));
+        setOvens(ordered);
       } catch (e) {
         console.error('Error fetching ovens', e);
       } finally {
@@ -62,11 +97,12 @@ const ImmersiveOvenGallery = () => {
   }, []);
 
   const filtered = ovens.filter((o) => {
-    const c = selectedCategory === 'all' || o.category === selectedCategory;
-    const k = selectedCoating === 'all' || o.coating_type === selectedCoating;
-    return c && k;
+    const m = selectedModel === 'all' || o.name === selectedModel;
+    const k = selectedCoating === 'all' || o.coatings.includes(selectedCoating);
+    return m && k;
   });
-  const shown = filtered.slice(0, displayCount);
+  const shown = filtered;
+
 
   const scrollToForm = () => {
     document.getElementById('immersive-consultation')?.scrollIntoView({ behavior: 'smooth' });
@@ -136,15 +172,15 @@ const ImmersiveOvenGallery = () => {
           <div className="flex flex-col md:flex-row flex-wrap justify-center gap-10 md:gap-12 pt-12 border-t border-stone-800/60">
             <div className="flex flex-col items-center gap-4">
               <span className="text-[9px] uppercase tracking-[0.3em] text-stone-500">
-                {t('ovenGallery.filterByFuel')}
+                Per modello
               </span>
               <div className="flex flex-wrap justify-center gap-3">
-                {categories.map((c) => {
-                  const active = selectedCategory === c.value;
+                {modelFilters.map((c) => {
+                  const active = selectedModel === c.value;
                   return (
                     <button
                       key={c.value}
-                      onClick={() => { setSelectedCategory(c.value); setDisplayCount(6); }}
+                      onClick={() => setSelectedModel(c.value)}
                       className={`px-5 py-2 rounded-full border text-xs transition-all cursor-pointer ${
                         active
                           ? 'bg-orange-900/20 border-orange-700/60 text-orange-100'
@@ -160,15 +196,15 @@ const ImmersiveOvenGallery = () => {
             <div className="w-px h-12 bg-stone-800 hidden md:block self-end" />
             <div className="flex flex-col items-center gap-4">
               <span className="text-[9px] uppercase tracking-[0.3em] text-stone-500">
-                {t('ovenGallery.filterByCoating')}
+                Per rivestimento
               </span>
               <div className="flex flex-wrap justify-center gap-3">
-                {coatings.map((c) => {
+                {coatingFilters.map((c) => {
                   const active = selectedCoating === c.value;
                   return (
                     <button
                       key={c.value}
-                      onClick={() => { setSelectedCoating(c.value); setDisplayCount(6); }}
+                      onClick={() => setSelectedCoating(c.value)}
                       className={`px-5 py-2 rounded-full border text-xs transition-all cursor-pointer ${
                         active
                           ? 'bg-orange-900/20 border-orange-700/60 text-orange-100'
@@ -186,7 +222,7 @@ const ImmersiveOvenGallery = () => {
 
         {/* Immersive gallery */}
         {shown.length === 0 ? (
-          <div className="text-center py-20 text-stone-500">{t('ovenGallery.noOvensFound')}</div>
+          <div className="text-center py-20 text-stone-500">Nessun modello trovato</div>
         ) : (
           <div className="grid grid-cols-1 gap-24 md:gap-40">
             {shown.map((oven, idx) => {
@@ -201,13 +237,13 @@ const ImmersiveOvenGallery = () => {
                     <div className="absolute -inset-20 bg-orange-600/10 blur-[120px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
                     <button
                       onClick={() => setZoomed(oven)}
-                      className="block w-full aspect-[3/2] rounded-sm border border-stone-800 overflow-hidden shadow-2xl transition-transform duration-700 group-hover:scale-[1.02] cursor-zoom-in"
+                      className="block w-full aspect-[3/2] rounded-sm border border-stone-800 overflow-hidden shadow-2xl transition-transform duration-700 group-hover:scale-[1.02] cursor-zoom-in bg-stone-900"
                     >
                       <img
                         src={oven.image_url}
                         alt={oven.name}
                         loading="lazy"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                       />
                     </button>
                     <div
@@ -218,9 +254,9 @@ const ImmersiveOvenGallery = () => {
                   </div>
                   <div className={`lg:col-span-5 space-y-6 md:space-y-8 ${reversed ? 'lg:order-1' : 'lg:order-2'}`}>
                     <div className="space-y-2">
-                      {oven.subcategory && (
+                      {oven.tagline && (
                         <h3 className="text-orange-500 text-xs tracking-[0.3em] uppercase">
-                          {oven.subcategory}
+                          {oven.tagline}
                         </h3>
                       )}
                       <h2 className="font-playfair text-4xl md:text-5xl text-stone-100 leading-tight">
@@ -232,13 +268,29 @@ const ImmersiveOvenGallery = () => {
                         {oven.description}
                       </p>
                     )}
-                    <div className="flex items-center gap-6">
-                      <div className="h-px flex-1 bg-stone-800" />
-                      {oven.coating_type && (
-                        <span className="text-[10px] text-stone-500 uppercase tracking-widest">
-                          {oven.coating_type}
-                        </span>
+                    <dl className="grid grid-cols-2 gap-4 pt-4 text-sm">
+                      {oven.diameter && (
+                        <div>
+                          <dt className="text-[10px] uppercase tracking-widest text-stone-500 mb-1">Diametro</dt>
+                          <dd className="text-stone-200">{oven.diameter} cm</dd>
+                        </div>
                       )}
+                      {oven.fuel_type && oven.fuel_type.length > 0 && (
+                        <div>
+                          <dt className="text-[10px] uppercase tracking-widest text-stone-500 mb-1">Alimentazione</dt>
+                          <dd className="text-stone-200">{oven.fuel_type.join(' · ')}</dd>
+                        </div>
+                      )}
+                    </dl>
+                    <div className="flex flex-wrap items-center gap-2 pt-2">
+                      {oven.coatings.map((c) => (
+                        <span
+                          key={c}
+                          className="text-[10px] text-stone-400 uppercase tracking-widest border border-stone-800 rounded-full px-3 py-1"
+                        >
+                          {coatingFilters.find((f) => f.value === c)?.label || c}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </article>
@@ -247,16 +299,6 @@ const ImmersiveOvenGallery = () => {
           </div>
         )}
 
-        {filtered.length > displayCount && (
-          <div className="text-center">
-            <button
-              onClick={() => setDisplayCount((n) => n + 6)}
-              className="px-8 py-3 border border-stone-800 rounded-full text-xs uppercase tracking-[0.3em] text-stone-300 hover:border-orange-700/60 hover:text-orange-100 transition-all cursor-pointer"
-            >
-              {t('ovenGallery.showMore', { count: filtered.length - displayCount })}
-            </button>
-          </div>
-        )}
 
         {/* Unified consultation */}
         <section
