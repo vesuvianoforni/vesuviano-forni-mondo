@@ -188,7 +188,7 @@ const ImmersiveOvenGallery = () => {
       {/* Immersive hero with background image */}
       <div className="relative min-h-[85vh] md:min-h-[92vh] flex items-end overflow-hidden">
         <img
-          src={galleryHeroBg}
+          src={HERO_BG_URL}
           alt="Vesuviano oven collection"
           width={1920}
           height={1280}
