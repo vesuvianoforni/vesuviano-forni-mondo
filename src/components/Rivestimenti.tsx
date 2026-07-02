@@ -34,7 +34,7 @@ const Rivestimenti = () => {
       key: 'dogheMetalliche',
       title: 'Doghe Metalliche',
       description: 'Rivestimento moderno in doghe di metallo per un design contemporaneo e industriale.',
-      image: "/lovable-uploads/forno-nero-metallico-nuovo.webp",
+      image: "/__l5e/assets-v1/b885b811-59cb-4437-a25c-7f1d3fe9df0d/doghe-metalliche-rivestimento.png",
       colors: ['Acciaio Spazzolato', 'Nero Opaco', 'Bianco Metallizzato']
     }
   ];
