@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, ArrowRight } from 'lucide-react';
+import { Loader2, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ImageZoomModal from './ImageZoomModal';
 
