@@ -11,29 +11,50 @@ interface Oven {
   tagline: string;
   image_url: string;
   description?: string | null;
-  fuel_type?: string[] | null;
-  diameter?: number | null;
-  coatings: string[]; // available coatings for this model
+  fuels: string[];
+  diameters: number[];
+  coatings: string[];
+  canBuiltOnPlace?: boolean;
 }
 
 // The 3 model names we surface from configurator_ovens
 const MODEL_NAMES = ['Anastasia', 'Real Bosco', 'Sebastian'];
 
-const MODEL_META: Record<string, { tagline: string; description: string; coatings: string[] }> = {
+const MODEL_META: Record<
+  string,
+  {
+    tagline: string;
+    description: string;
+    coatings: string[];
+    diameters: number[];
+    fuels: string[];
+    canBuiltOnPlace?: boolean;
+  }
+> = {
   'Anastasia': {
     tagline: 'Signature Collection',
-    description: 'Linea di punta Vesuviano — cupola da 100cm, disponibile a legna, gas ed elettrico. Firma artigianale in ogni dettaglio.',
-    coatings: ['mezzo-mosaico', 'mosaico', 'verniciato', 'doghe-metalliche'],
+    description:
+      'Linea di punta Vesuviano — disponibile da 100 a 140 cm. Rivestimenti nobili in mosaico o palladiana, firma artigianale in ogni dettaglio.',
+    coatings: ['mezzo-mosaico', 'mosaico', 'palladiana'],
+    diameters: [100, 110, 120, 130, 140],
+    fuels: ['Legna', 'Gas', 'Elettrico'],
   },
   'Real Bosco': {
     tagline: 'Heritage Line',
-    description: 'Il forno napoletano essenziale, 80cm di puro carattere. Compatto, iconico, costruito per durare generazioni.',
+    description:
+      'Il forno napoletano essenziale, dalle dimensioni compatte alle più generose (80–140 cm). Disponibile a legna, gas e nella versione rotante.',
     coatings: ['mezzo-mosaico', 'mosaico', 'verniciato', 'doghe-metalliche'],
+    diameters: [80, 100, 110, 120, 130, 140],
+    fuels: ['Legna', 'Gas', 'Rotante'],
   },
   'Sebastian': {
     tagline: 'Professional Series',
-    description: 'Progettato per pizzerie ad alto volume, 100cm multi-combustibile. Prestazione senza compromessi.',
-    coatings: ['mezzo-mosaico', 'mosaico', 'verniciato', 'doghe-metalliche'],
+    description:
+      'Progettato per pizzerie ad alto volume, da 60 a 140 cm. Rivestimento tecnico in doghe metalliche, può essere costruito sul posto.',
+    coatings: ['doghe-metalliche'],
+    diameters: [60, 80, 100, 120, 130, 140],
+    fuels: ['Legna', 'Gas'],
+    canBuiltOnPlace: true,
   },
 };
 
