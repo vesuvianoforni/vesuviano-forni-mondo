@@ -5,8 +5,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { Loader2, ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ImageZoomModal from './ImageZoomModal';
-const HERO_BG_URL =
-  'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/0.11061114972663866.jpg';
+import heroBgAsset from '@/assets/gallery-hero-bg.jpg.asset.json';
+const HERO_BG_URL = heroBgAsset.url;
 
 interface Oven {
   id: string;
@@ -192,7 +192,7 @@ const ImmersiveOvenGallery = () => {
           alt="Vesuviano oven collection"
           width={1920}
           height={1280}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover object-[70%_center] md:object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-[#0c0c0c]" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
