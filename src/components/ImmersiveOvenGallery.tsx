@@ -179,9 +179,6 @@ const ImmersiveOvenGallery = () => {
     );
   }
 
-  const activeModelLabel = modelFilters.find((f) => f.value === selectedModel)?.label;
-  const activeCoatingLabel = coatingFilters.find((f) => f.value === selectedCoating)?.label;
-
   return (
     <section
       id="oven-gallery"
