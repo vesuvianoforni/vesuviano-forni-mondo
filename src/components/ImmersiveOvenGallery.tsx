@@ -192,7 +192,7 @@ const ImmersiveOvenGallery = () => {
           alt="Vesuviano oven collection"
           width={1920}
           height={1280}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover object-[70%_center] md:object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-[#0c0c0c]" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
