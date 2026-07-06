@@ -77,3 +77,6 @@ verify_jwt = false
 
 [functions.geo-detect]
 verify_jwt = false
+
+[functions.babylovegrowth-webhook]
+verify_jwt = false
