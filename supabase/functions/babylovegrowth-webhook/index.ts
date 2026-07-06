@@ -95,10 +95,15 @@ serve(async (req) => {
   }
 
   try {
-    // --- Auth: shared secret in header ---
+    // --- Auth: shared secret (Bearer token, custom header, or query string) ---
     const expected = Deno.env.get("BLOG_WEBHOOK_SECRET");
     if (!expected) throw new Error("BLOG_WEBHOOK_SECRET not configured");
+    const authHeader = req.headers.get("authorization") || req.headers.get("Authorization") || "";
+    const bearer = authHeader.toLowerCase().startsWith("bearer ")
+      ? authHeader.slice(7).trim()
+      : "";
     const provided =
+      bearer ||
       req.headers.get("x-webhook-secret") ||
       req.headers.get("X-Webhook-Secret") ||
       new URL(req.url).searchParams.get("secret");
@@ -107,6 +112,7 @@ serve(async (req) => {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
 
     // --- Parse payload (flexible: accept common Babylovegrowth field names) ---
     const body = await req.json();
