@@ -14,6 +14,8 @@ const LANGS: Record<string, string> = {
   es: "Spanish",
 };
 
+type BlogWebhookPayload = Record<string, any>;
+
 // Slugify for non-Italian target languages when the payload doesn't provide one.
 function slugify(s: string): string {
   return s
@@ -86,6 +88,106 @@ Respond ONLY with a valid JSON object (no markdown, no code blocks):
   };
 }
 
+async function publishArticleInBackground(body: BlogWebhookPayload) {
+  const title: string =
+    body.title || body.title_en || body.article?.title || body.name || "";
+  const content: string =
+    body.content || body.content_html || body.html || body.body ||
+    body.article?.content || body.article?.html || "";
+  const metaDescription: string =
+    body.meta_description || body.metaDescription || body.description ||
+    body.excerpt || body.article?.meta_description || "";
+  const providedSlug: string =
+    body.slug || body.slug_en || body.article?.slug || "";
+  const featuredImage: string | null =
+    body.featured_image || body.heroImageUrl || body.image || body.cover_image ||
+    body.article?.featured_image || null;
+  const category: string = body.category || "general";
+  const author: string = body.author || "Vesuviano Forni";
+
+  if (!title || !content) {
+    console.error("[babylovegrowth-webhook] Background skipped: missing title/content");
+    return;
+  }
+
+  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+  if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  );
+
+  const slugEn = providedSlug ? slugify(providedSlug) : slugify(title);
+  console.log(`[babylovegrowth-webhook] Processing article: "${title}"`);
+
+  const { data: existing, error: existingError } = await supabase
+    .from("blog_posts")
+    .select("id, slug_en, slug_it")
+    .eq("slug_en", slugEn)
+    .maybeSingle();
+
+  if (existingError) throw existingError;
+  if (existing) {
+    console.log(`[babylovegrowth-webhook] Article already exists ${existing.id}`);
+    return;
+  }
+
+  // --- Translate to IT/FR/DE/ES in parallel ---
+  const [it, fr, de, es] = await Promise.all([
+    translate(LOVABLE_API_KEY, title, content, "it"),
+    translate(LOVABLE_API_KEY, title, content, "fr"),
+    translate(LOVABLE_API_KEY, title, content, "de"),
+    translate(LOVABLE_API_KEY, title, content, "es"),
+  ]);
+
+  const row = {
+    slug_en: slugEn,
+    slug_it: it.slug,
+    slug_fr: fr.slug,
+    slug_de: de.slug,
+    slug_es: es.slug,
+    title_en: title,
+    title_it: it.title,
+    title_fr: fr.title,
+    title_de: de.title,
+    title_es: es.title,
+    meta_description_en: metaDescription || null,
+    meta_description_it: it.meta_description || null,
+    meta_description_fr: fr.meta_description || null,
+    meta_description_de: de.meta_description || null,
+    meta_description_es: es.meta_description || null,
+    content_en: content,
+    content_it: it.content,
+    content_fr: fr.content,
+    content_de: de.content,
+    content_es: es.content,
+    featured_image: featuredImage,
+    category,
+    author,
+    is_published: true,
+    published_at: new Date().toISOString(),
+  };
+
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .insert(row)
+    .select("id, slug_en, slug_it")
+    .single();
+
+  if (error) {
+    if (error.code === "23505") {
+      console.log(`[babylovegrowth-webhook] Duplicate article skipped: ${error.message}`);
+      return;
+    }
+
+    console.error("[babylovegrowth-webhook] Insert error:", error);
+    throw error;
+  }
+
+  console.log(`[babylovegrowth-webhook] Published post ${data.id}`);
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   if (req.method !== "POST") {
@@ -141,16 +243,6 @@ serve(async (req) => {
     const content: string =
       body.content || body.content_html || body.html || body.body ||
       body.article?.content || body.article?.html || "";
-    const metaDescription: string =
-      body.meta_description || body.metaDescription || body.description ||
-      body.excerpt || body.article?.meta_description || "";
-    const providedSlug: string =
-      body.slug || body.slug_en || body.article?.slug || "";
-    const featuredImage: string | null =
-      body.featured_image || body.image || body.cover_image ||
-      body.article?.featured_image || null;
-    const category: string = body.category || "general";
-    const author: string = body.author || "Vesuviano Forni";
 
     if (!title || !content) {
       return new Response(JSON.stringify({
@@ -158,74 +250,17 @@ serve(async (req) => {
       }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
-
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    console.log(`[babylovegrowth-webhook] Accepted article: "${title}"`);
+    EdgeRuntime.waitUntil(
+      publishArticleInBackground(body).catch((error) => {
+        console.error("[babylovegrowth-webhook] Background error:", error?.message || error);
+      }),
     );
-
-    console.log(`[babylovegrowth-webhook] Received article: "${title}"`);
-
-    // --- Translate to IT/FR/DE/ES in parallel ---
-    const [it, fr, de, es] = await Promise.all([
-      translate(LOVABLE_API_KEY, title, content, "it"),
-      translate(LOVABLE_API_KEY, title, content, "fr"),
-      translate(LOVABLE_API_KEY, title, content, "de"),
-      translate(LOVABLE_API_KEY, title, content, "es"),
-    ]);
-
-    const slugEn = providedSlug ? slugify(providedSlug) : slugify(title);
-
-    const row = {
-      slug_en: slugEn,
-      slug_it: it.slug,
-      slug_fr: fr.slug,
-      slug_de: de.slug,
-      slug_es: es.slug,
-      title_en: title,
-      title_it: it.title,
-      title_fr: fr.title,
-      title_de: de.title,
-      title_es: es.title,
-      meta_description_en: metaDescription || null,
-      meta_description_it: it.meta_description || null,
-      meta_description_fr: fr.meta_description || null,
-      meta_description_de: de.meta_description || null,
-      meta_description_es: es.meta_description || null,
-      content_en: content,
-      content_it: it.content,
-      content_fr: fr.content,
-      content_de: de.content,
-      content_es: es.content,
-      featured_image: featuredImage,
-      category,
-      author,
-      is_published: true,
-      published_at: new Date().toISOString(),
-    };
-
-    const { data, error } = await supabase
-      .from("blog_posts")
-      .insert(row)
-      .select("id, slug_en, slug_it")
-      .single();
-
-    if (error) {
-      console.error("[babylovegrowth-webhook] Insert error:", error);
-      throw error;
-    }
-
-    console.log(`[babylovegrowth-webhook] Published post ${data.id}`);
 
     return new Response(JSON.stringify({
       success: true,
-      id: data.id,
-      urls: {
-        en: `https://vesuvianoforni.com/en/blog/${data.slug_en}`,
-        it: `https://vesuvianoforni.com/it/blog/${data.slug_it}`,
-      },
+      accepted: true,
+      message: "Article accepted for background publishing",
     }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (e: any) {
     console.error("[babylovegrowth-webhook] Error:", e?.message || e);
