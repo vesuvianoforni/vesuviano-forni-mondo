@@ -98,15 +98,35 @@ serve(async (req) => {
     // --- Auth: shared secret (Bearer token, custom header, or query string) ---
     const expected = Deno.env.get("BLOG_WEBHOOK_SECRET");
     if (!expected) throw new Error("BLOG_WEBHOOK_SECRET not configured");
+
+    // Log every incoming header to diagnose which auth scheme the sender uses
+    const headerDump: Record<string, string> = {};
+    req.headers.forEach((v, k) => {
+      headerDump[k] = k.toLowerCase().includes("auth") || k.toLowerCase().includes("secret") || k.toLowerCase().includes("sign") || k.toLowerCase().includes("token")
+        ? `${v.slice(0, 6)}…(${v.length} chars)`
+        : v;
+    });
+    console.log("[babylovegrowth-webhook] Headers:", JSON.stringify(headerDump));
+    console.log("[babylovegrowth-webhook] URL:", req.url);
+
     const authHeader = req.headers.get("authorization") || req.headers.get("Authorization") || "";
     const bearer = authHeader.toLowerCase().startsWith("bearer ")
       ? authHeader.slice(7).trim()
       : "";
     const provided =
       bearer ||
+      authHeader ||
       req.headers.get("x-webhook-secret") ||
-      req.headers.get("X-Webhook-Secret") ||
-      new URL(req.url).searchParams.get("secret");
+      req.headers.get("x-api-key") ||
+      req.headers.get("x-babylovegrowth-secret") ||
+      req.headers.get("x-signature") ||
+      new URL(req.url).searchParams.get("secret") ||
+      new URL(req.url).searchParams.get("token");
+
+    console.log(
+      `[babylovegrowth-webhook] Provided length: ${provided?.length ?? 0}, expected length: ${expected.length}, match: ${provided === expected}`,
+    );
+
     if (provided !== expected) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
