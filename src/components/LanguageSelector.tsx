@@ -120,9 +120,9 @@ const LanguageSelector = () => {
         const currentSlugField = `slug_${currentLang}`;
         const targetSlugField = `slug_${languageCode}`;
         try {
-          const { data } = await supabase
-            .from('blog_posts')
-            .select(`${targetSlugField}`)
+          const { data } = await (supabase
+            .from('blog_posts') as any)
+            .select(targetSlugField)
             .eq(currentSlugField, currentSlug)
             .maybeSingle();
           const targetSlug = (data as any)?.[targetSlugField];
