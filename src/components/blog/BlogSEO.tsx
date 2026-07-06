@@ -84,6 +84,7 @@ const BlogSEO = ({ post, lang, isList }: BlogSEOProps) => {
       ogImage={image}
       ogType="article"
       lang={lang}
+      alternates={alternates}
       schemaJson={[articleSchema, breadcrumbSchema]}
     />
   );
