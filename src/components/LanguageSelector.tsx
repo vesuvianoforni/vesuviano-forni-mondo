@@ -96,7 +96,7 @@ const LanguageSelector = () => {
   };
 
 
-  const changeLanguage = (languageCode: string) => {
+  const changeLanguage = async (languageCode: string) => {
     const currentPath = location.pathname;
     const currentLangMatch = currentPath.match(/^\/(it|en|fr|de|es)/);
     const currentLang = currentLangMatch ? currentLangMatch[1] : 'it';
@@ -111,24 +111,42 @@ const LanguageSelector = () => {
     let newPath = `/${languageCode}`;
     
     if (pathWithoutLang === '/' || pathWithoutLang === '') {
-      // Home page - just language prefix
       newPath = `/${languageCode}`;
     } else {
-      // Try to find a mapping for this path
-      let mappingFound = false;
-      
-      for (const [key, mapping] of Object.entries(pathMappings)) {
-        if (mapping[currentLang] === pathWithoutLang) {
-          // Found the current page in mappings, use the translated version
-          newPath = `/${languageCode}${mapping[languageCode]}`;
-          mappingFound = true;
-          break;
+      // Blog post: look up localized slug in DB
+      const blogMatch = pathWithoutLang.match(/^\/blog\/(.+)$/);
+      if (blogMatch) {
+        const currentSlug = blogMatch[1];
+        const currentSlugField = `slug_${currentLang}`;
+        const targetSlugField = `slug_${languageCode}`;
+        try {
+          const { data } = await supabase
+            .from('blog_posts')
+            .select(`${targetSlugField}`)
+            .eq(currentSlugField, currentSlug)
+            .maybeSingle();
+          const targetSlug = (data as any)?.[targetSlugField];
+          if (targetSlug) {
+            newPath = `/${languageCode}/blog/${targetSlug}`;
+          } else {
+            newPath = `/${languageCode}/blog`;
+          }
+        } catch {
+          newPath = `/${languageCode}/blog`;
         }
-      }
-      
-      // If no mapping found, keep the same path (for pages that don't need translation)
-      if (!mappingFound) {
-        newPath = `/${languageCode}${pathWithoutLang}`;
+      } else {
+        // Try static path mappings
+        let mappingFound = false;
+        for (const [key, mapping] of Object.entries(pathMappings)) {
+          if (mapping[currentLang] === pathWithoutLang) {
+            newPath = `/${languageCode}${mapping[languageCode]}`;
+            mappingFound = true;
+            break;
+          }
+        }
+        if (!mappingFound) {
+          newPath = `/${languageCode}${pathWithoutLang}`;
+        }
       }
     }
     
