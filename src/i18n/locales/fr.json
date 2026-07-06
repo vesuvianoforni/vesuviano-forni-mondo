@@ -438,7 +438,19 @@
       "services": "Services Demandés",
       "message": "Message",
       "submit": "Envoyer Demande de Consultation Gratuite",
-      "submitting": "Envoi en cours..."
+      "submitting": "Envoi en cours...",
+      "title": "Demande de Consultation",
+      "name": "Nom Complet",
+      "fullNamePlaceholder": "Votre nom",
+      "emailPlaceholder": "votre-email@exemple.com",
+      "phonePlaceholder": "+33 1 23 45 67 89",
+      "companyPlaceholder": "Nom de votre activité",
+      "countryPlaceholder": "Ex. France, Belgique, Suisse...",
+      "ovenTypePlaceholder": "Sélectionnez le type",
+      "capacityPlaceholder": "Ex. 100 pizzas/heure, 50 cm diamètre...",
+      "budgetPlaceholder": "Ex. 5 000 € - 15 000 €",
+      "servicesLabel": "Services Demandés :",
+      "messagePlaceholder": "Décrivez-nous votre projet, vos besoins spécifiques ou toute question..."
     },
     "services": {
       "identification": "Identification de la meilleure solution",
@@ -483,6 +495,10 @@
       "privacy": "Nous vous contacterons dans les 24 heures. Vos données sont protégées et ne seront pas partagées avec des tiers.",
       "catalogDownloaded": "Catalogue Téléchargé!",
       "catalogSuccess": "Le catalogue complet a été téléchargé sur votre appareil."
+    },
+    "header": {
+      "title": "Commencez Votre Projet",
+      "subtitle": "Nos experts vous guideront dans le choix de la solution parfaite, de la conception au transport international."
     }
   },
   "consultationModal": {

@@ -417,7 +417,37 @@
     "sendErrorDesc": "Se ha verificado un problema. Reintenta o contáctanos directamente al 081 19231684",
     "catalogDownloaded": "¡Catálogo Descargado!",
     "catalogDownloadedDesc": "El catálogo completo ha sido descargado en tu dispositivo.",
-    "privacyNote": "Te contactaremos dentro de 24 horas. Tus datos están protegidos y no serán compartidos con terceros."
+    "privacyNote": "Te contactaremos dentro de 24 horas. Tus datos están protegidos y no serán compartidos con terceros.",
+    "header": {
+      "title": "Inicia Tu Proyecto",
+      "subtitle": "Nuestros expertos te guiarán en la elección de la solución perfecta, desde el diseño hasta el transporte internacional."
+    },
+    "form": {
+      "title": "Solicitud de Consulta",
+      "name": "Nombre Completo",
+      "fullName": "Nombre Completo",
+      "fullNamePlaceholder": "Tu nombre",
+      "email": "Email",
+      "emailPlaceholder": "tu-email@ejemplo.com",
+      "phone": "Teléfono",
+      "phonePlaceholder": "+34 91 234 56 78",
+      "company": "Empresa/Restaurante",
+      "companyPlaceholder": "Nombre de tu actividad",
+      "country": "País de Destino",
+      "countryPlaceholder": "Ej. Francia, Alemania, USA...",
+      "ovenType": "Tipo de Horno",
+      "ovenTypePlaceholder": "Seleccionar tipo",
+      "capacity": "Capacidad Requerida",
+      "capacityPlaceholder": "Ej. 100 pizzas/hora, 50 cm diámetro...",
+      "budget": "Presupuesto Orientativo",
+      "budgetPlaceholder": "Ej. 5.000 € - 15.000 €",
+      "services": "Servicios Solicitados",
+      "servicesLabel": "Servicios Solicitados:",
+      "message": "Mensaje",
+      "messagePlaceholder": "Descríbenos tu proyecto, tus necesidades específicas o cualquier pregunta...",
+      "submit": "Enviar Solicitud de Consulta Gratuita",
+      "submitting": "Enviando..."
+    }
   },
   "whatsapp": {
     "tooltip": "Contáctanos en WhatsApp",
