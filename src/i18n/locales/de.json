@@ -426,7 +426,37 @@
     "sendErrorDesc": "Es ist ein Problem aufgetreten. Versuchen Sie es erneut oder kontaktieren Sie uns direkt unter 081 19231684",
     "catalogDownloaded": "Katalog Heruntergeladen!",
     "catalogDownloadedDesc": "Der vollständige Katalog wurde auf Ihr Gerät heruntergeladen.",
-    "privacyNote": "Wir werden Sie innerhalb von 24 Stunden kontaktieren. Ihre Daten sind geschützt und werden nicht an Dritte weitergegeben."
+    "privacyNote": "Wir werden Sie innerhalb von 24 Stunden kontaktieren. Ihre Daten sind geschützt und werden nicht an Dritte weitergegeben.",
+    "header": {
+      "title": "Starten Sie Ihr Projekt",
+      "subtitle": "Unsere Experten führen Sie bei der Auswahl der perfekten Lösung, von der Planung bis zum internationalen Transport."
+    },
+    "form": {
+      "title": "Beratungsanfrage",
+      "name": "Vollständiger Name",
+      "fullName": "Vollständiger Name",
+      "fullNamePlaceholder": "Ihr Name",
+      "email": "E-Mail",
+      "emailPlaceholder": "ihre-email@beispiel.com",
+      "phone": "Telefon",
+      "phonePlaceholder": "+49 30 12345678",
+      "company": "Unternehmen/Restaurant",
+      "companyPlaceholder": "Name Ihres Unternehmens",
+      "country": "Zielland",
+      "countryPlaceholder": "Z.B. Frankreich, Deutschland, USA...",
+      "ovenType": "Ofentyp",
+      "ovenTypePlaceholder": "Typ auswählen",
+      "capacity": "Erforderliche Kapazität",
+      "capacityPlaceholder": "Z.B. 100 Pizzen/Stunde, 50 cm Durchmesser...",
+      "budget": "Richtwert Budget",
+      "budgetPlaceholder": "Z.B. 5.000 € - 15.000 €",
+      "services": "Angeforderte Dienstleistungen",
+      "servicesLabel": "Angeforderte Dienstleistungen:",
+      "message": "Nachricht",
+      "messagePlaceholder": "Beschreiben Sie uns Ihr Projekt, Ihre spezifischen Bedürfnisse oder Fragen...",
+      "submit": "Kostenlose Beratungsanfrage Senden",
+      "submitting": "Wird gesendet..."
+    }
   },
   "whatsapp": {
     "tooltip": "Kontaktieren Sie uns auf WhatsApp",
