@@ -41,6 +41,13 @@ const BlogSEO = ({ post, lang, isList }: BlogSEOProps) => {
   const articleUrl = `${BASE_URL}/${lang}/blog/${slug}`;
   const image = post.featured_image || `${BASE_URL}/lovable-uploads/vesuviano-social-banner.jpg`;
 
+  // Build hreflang alternates from per-language slugs on this post
+  const alternates: AlternatesMap = LANGS.reduce((acc, l) => {
+    const s = getLocalizedField(post, 'slug', l);
+    acc[l] = s ? `/${l}/blog/${s}` : `/${l}/blog`;
+    return acc;
+  }, {} as AlternatesMap);
+
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
