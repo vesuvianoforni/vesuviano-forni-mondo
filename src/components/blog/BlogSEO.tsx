@@ -1,5 +1,6 @@
 import { BlogPost, getLocalizedField } from '@/hooks/useBlogPosts';
 import SEOHead from '@/components/SEOHead';
+import { LANGS, type AlternatesMap, type Lang } from '@/lib/hreflang';
 
 interface BlogSEOProps {
   post?: BlogPost;
