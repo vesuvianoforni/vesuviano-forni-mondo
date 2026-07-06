@@ -204,7 +204,8 @@ serve(async (req) => {
     // Log every incoming header to diagnose which auth scheme the sender uses
     const headerDump: Record<string, string> = {};
     req.headers.forEach((v, k) => {
-      headerDump[k] = k.toLowerCase().includes("auth") || k.toLowerCase().includes("secret") || k.toLowerCase().includes("sign") || k.toLowerCase().includes("token")
+      const lowerKey = k.toLowerCase();
+      headerDump[k] = lowerKey.includes("auth") || lowerKey.includes("secret") || lowerKey.includes("sign") || lowerKey.includes("token") || lowerKey.includes("api-key")
         ? `${v.slice(0, 6)}…(${v.length} chars)`
         : v;
     });
