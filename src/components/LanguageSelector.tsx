@@ -92,6 +92,13 @@ const LanguageSelector = () => {
       fr: '/revetements',
       es: '/revestimientos',
       de: '/verkleidungen'
+    },
+    'about-us': {
+      it: '/chi-siamo',
+      en: '/about-us',
+      fr: '/qui-sommes-nous',
+      es: '/quienes-somos',
+      de: '/ueber-uns'
     }
   };
 
