@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Plus, Trash2, Edit, FileText, Loader2, Search, Download, Sparkles, Wand2 } from 'lucide-react';
+import { Plus, Trash2, Edit, FileText, Loader2, Search, Download, Sparkles, Wand2, Link as LinkIcon, CheckCircle2 } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { generateContractPdf, type ContractVariableFields } from '@/components/erp/contractPdf';
 
