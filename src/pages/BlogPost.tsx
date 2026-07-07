@@ -7,6 +7,7 @@ import BlogSEO from '@/components/blog/BlogSEO';
 import LazyImage from '@/components/LazyImage';
 import AIChatWidget from '@/components/chat/AIChatWidget';
 import NotFound from './NotFound';
+import { sanitizeBlogHtml } from '@/lib/sanitizeBlogHtml';
 
 interface BlogPostProps {
   lang: string;
@@ -73,7 +74,7 @@ const BlogPostPage = ({ lang }: BlogPostProps) => {
 
   const title = getLocalizedField(post, 'title', lang);
   const rawContent = getLocalizedField(post, 'content', lang);
-  const content = normalizeContentHeadings(rawContent);
+  const content = sanitizeBlogHtml(normalizeContentHeadings(rawContent), lang);
   const metaDesc = getLocalizedField(post, 'meta_description', lang);
   const readTime = estimateReadTime(content);
   const categoryLabel = categoryLabels[post.category]?.[lang] || post.category;
