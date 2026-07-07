@@ -277,7 +277,7 @@ Vesuviano Forni si riserva il diritto di accettare o rifiutare l'ordine qualora 
 `Gli accordi di pagamento sono i seguenti:
 
 ${paymentAgreements}
-
+${vf.bank_details ? `\nCoordinate bancarie per bonifico:\n${vf.bank_details}\n` : ''}
 Salvo diverso accordo scritto, la spedizione, il ritiro o la consegna del prodotto avverranno solo dopo l'integrale pagamento del prezzo pattuito.
 
 La comunicazione di "merce pronta", "forno pronto" o "prodotto pronto per la spedizione" comporta l'obbligo del Cliente di procedere al pagamento del saldo secondo gli accordi indicati.
