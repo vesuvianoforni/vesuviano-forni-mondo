@@ -1,4 +1,133 @@
 import jsPDF from 'jspdf';
+import { supabase } from '@/integrations/supabase/client';
+
+export type ContractLanguage = 'it' | 'en' | 'fr' | 'de' | 'es';
+
+const UI_LABELS: Record<ContractLanguage, Record<string, string>> = {
+  it: {
+    title: 'CONDIZIONI GENERALI DI VENDITA',
+    date: 'Data',
+    offerRef: 'Rif. Offerta',
+    client: 'Cliente',
+    page: 'Pagina',
+    of: 'di',
+    footer: 'vesuvianoforni.com  ·  Condizioni Generali di Vendita',
+    placeDate: 'Luogo e data:',
+    clientLabel: 'Cliente:',
+    accept: 'Il Cliente dichiara di aver letto, compreso e accettato integralmente le presenti Condizioni Generali di Vendita.',
+    clientSig: 'Firma del Cliente',
+    supplier: 'Vesuviano Forni — UNITA 1 di Stanislao Elefante',
+    supplierRole: 'Il Fornitore',
+    stampSign: '(timbro e firma per accettazione)',
+    signedOn: 'Firmato digitalmente il',
+    approval: 'Ai sensi e per gli effetti degli artt. 1341 e 1342 c.c., il Cliente dichiara di approvare specificamente le clausole di cui ai punti: 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 18.',
+    approvalSig: 'Firma del Cliente per approvazione specifica',
+    section20: '20. Accettazione delle Condizioni Generali di Vendita',
+  },
+  en: {
+    title: 'GENERAL CONDITIONS OF SALE',
+    date: 'Date',
+    offerRef: 'Offer ref.',
+    client: 'Client',
+    page: 'Page',
+    of: 'of',
+    footer: 'vesuvianoforni.com  ·  General Conditions of Sale',
+    placeDate: 'Place and date:',
+    clientLabel: 'Client:',
+    accept: 'The Client declares to have read, understood and fully accepted these General Conditions of Sale.',
+    clientSig: "Client's signature",
+    supplier: 'Vesuviano Forni — UNITA 1 di Stanislao Elefante',
+    supplierRole: 'The Supplier',
+    stampSign: '(stamp and signature for acceptance)',
+    signedOn: 'Digitally signed on',
+    approval: 'Pursuant to Articles 1341 and 1342 of the Italian Civil Code, the Client specifically approves the clauses set out in sections: 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 18.',
+    approvalSig: "Client's signature for specific approval",
+    section20: '20. Acceptance of the General Conditions of Sale',
+  },
+  fr: {
+    title: 'CONDITIONS GÉNÉRALES DE VENTE',
+    date: 'Date',
+    offerRef: 'Réf. offre',
+    client: 'Client',
+    page: 'Page',
+    of: 'sur',
+    footer: 'vesuvianoforni.com  ·  Conditions Générales de Vente',
+    placeDate: 'Lieu et date :',
+    clientLabel: 'Client :',
+    accept: "Le Client déclare avoir lu, compris et accepté intégralement les présentes Conditions Générales de Vente.",
+    clientSig: 'Signature du Client',
+    supplier: 'Vesuviano Forni — UNITA 1 di Stanislao Elefante',
+    supplierRole: 'Le Fournisseur',
+    stampSign: "(cachet et signature pour acceptation)",
+    signedOn: 'Signé numériquement le',
+    approval: "Conformément aux articles 1341 et 1342 du Code civil italien, le Client approuve spécifiquement les clauses figurant aux points : 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 18.",
+    approvalSig: 'Signature du Client pour approbation spécifique',
+    section20: '20. Acceptation des Conditions Générales de Vente',
+  },
+  de: {
+    title: 'ALLGEMEINE VERKAUFSBEDINGUNGEN',
+    date: 'Datum',
+    offerRef: 'Angebots-Nr.',
+    client: 'Kunde',
+    page: 'Seite',
+    of: 'von',
+    footer: 'vesuvianoforni.com  ·  Allgemeine Verkaufsbedingungen',
+    placeDate: 'Ort und Datum:',
+    clientLabel: 'Kunde:',
+    accept: 'Der Kunde erklärt, die vorliegenden Allgemeinen Verkaufsbedingungen gelesen, verstanden und vollständig akzeptiert zu haben.',
+    clientSig: 'Unterschrift des Kunden',
+    supplier: 'Vesuviano Forni — UNITA 1 di Stanislao Elefante',
+    supplierRole: 'Der Lieferant',
+    stampSign: '(Stempel und Unterschrift zur Annahme)',
+    signedOn: 'Digital unterzeichnet am',
+    approval: 'Gemäß Art. 1341 und 1342 des italienischen Zivilgesetzbuchs genehmigt der Kunde ausdrücklich die Klauseln der Ziffern: 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 18.',
+    approvalSig: 'Unterschrift des Kunden zur ausdrücklichen Genehmigung',
+    section20: '20. Annahme der Allgemeinen Verkaufsbedingungen',
+  },
+  es: {
+    title: 'CONDICIONES GENERALES DE VENTA',
+    date: 'Fecha',
+    offerRef: 'Ref. oferta',
+    client: 'Cliente',
+    page: 'Página',
+    of: 'de',
+    footer: 'vesuvianoforni.com  ·  Condiciones Generales de Venta',
+    placeDate: 'Lugar y fecha:',
+    clientLabel: 'Cliente:',
+    accept: 'El Cliente declara haber leído, comprendido y aceptado íntegramente las presentes Condiciones Generales de Venta.',
+    clientSig: 'Firma del Cliente',
+    supplier: 'Vesuviano Forni — UNITA 1 di Stanislao Elefante',
+    supplierRole: 'El Proveedor',
+    stampSign: '(sello y firma para aceptación)',
+    signedOn: 'Firmado digitalmente el',
+    approval: 'De conformidad con los arts. 1341 y 1342 del Código Civil italiano, el Cliente aprueba específicamente las cláusulas indicadas en los puntos: 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 18.',
+    approvalSig: 'Firma del Cliente para aprobación específica',
+    section20: '20. Aceptación de las Condiciones Generales de Venta',
+  },
+};
+
+const LOCALE_BY_LANG: Record<ContractLanguage, string> = { it: 'it-IT', en: 'en-GB', fr: 'fr-FR', de: 'de-DE', es: 'es-ES' };
+
+async function translateSections(
+  sections: { title: string; body: string }[],
+  targetLanguage: ContractLanguage,
+): Promise<{ title: string; body: string }[]> {
+  if (targetLanguage === 'it') return sections;
+  try {
+    const { data, error } = await supabase.functions.invoke('contract-ai-assist', {
+      body: { action: 'translate', target_language: targetLanguage, sections },
+    });
+    if (error) throw error;
+    const out = (data as any)?.sections;
+    if (Array.isArray(out) && out.length === sections.length) return out;
+    return sections;
+  } catch (e) {
+    console.warn('[contractPdf] translation failed, falling back to IT', e);
+    return sections;
+  }
+}
+
+
 
 export interface ContractClause {
   title: string;
