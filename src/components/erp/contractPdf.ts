@@ -197,7 +197,9 @@ export interface ContractData {
   created_at?: string;
   client_signature?: string | null;
   client_signed_at?: string | null;
+  language?: ContractLanguage;
 }
+
 
 const COMPANY = {
   brand: 'VESUVIANO FORNI',
