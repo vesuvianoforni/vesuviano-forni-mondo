@@ -190,11 +190,51 @@ const ERPContratti = () => {
   const [vf, setVf] = useState<ContractVariableFields>(DEFAULT_VF);
   const [status, setStatus] = useState<'draft' | 'sent' | 'signed'>('draft');
   const [notes, setNotes] = useState('');
+  const [language, setLanguage] = useState<ContractLanguage>('it');
+  const [presets, setPresets] = useState<Record<string, Preset[]>>({});
 
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
 
-  useEffect(() => { fetchContracts(); }, []);
+  useEffect(() => { fetchContracts(); fetchPresets(); }, []);
+
+  // ===== Dynamic date computation: offer_date + production_days => ready_date; + shipping_days => ship/delivery
+  useEffect(() => {
+    if (!offerDate) return;
+    const pDays = parseInt(vf.production_days || '', 10);
+    const sDays = parseInt(vf.shipping_days || '', 10);
+    const patch: Partial<ContractVariableFields> = {};
+    if (!isNaN(pDays) && pDays > 0) {
+      patch.ready_date = addDays(offerDate, pDays);
+      patch.ship_date = addDays(offerDate, pDays + 2);
+      if (!isNaN(sDays) && sDays > 0) {
+        const delivery = addDays(offerDate, pDays + 2 + sDays);
+        patch.delivery_estimate = `${delivery} (≈ ${pDays + 2 + sDays} giorni dall'ordine)`;
+      }
+    }
+    if (Object.keys(patch).length > 0) {
+      setVf(prev => {
+        const changed = Object.keys(patch).some(k => (prev as any)[k] !== (patch as any)[k]);
+        return changed ? { ...prev, ...patch } : prev;
+      });
+    }
+  }, [offerDate, vf.production_days, vf.shipping_days]);
+
+  const fetchPresets = async () => {
+    const { data, error } = await supabase
+      .from('contract_field_presets')
+      .select('id, field_key, value, label')
+      .order('sort_order', { ascending: true });
+    if (error) { console.warn('presets:', error); return; }
+    const grouped: Record<string, Preset[]> = {};
+    (data || []).forEach((row: any) => {
+      grouped[row.field_key] = grouped[row.field_key] || [];
+      grouped[row.field_key].push({ id: row.id, value: row.value, label: row.label });
+    });
+    setPresets(grouped);
+  };
+
 
   const fetchContracts = async () => {
     setLoading(true);
