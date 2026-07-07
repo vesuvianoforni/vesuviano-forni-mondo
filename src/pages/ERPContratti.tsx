@@ -472,9 +472,13 @@ const ERPContratti = () => {
                 {filtered.map(c => (
                   <TableRow key={c.id} className="border-amber-900/10 hover:bg-amber-900/5">
                     <TableCell className="font-medium text-amber-100">
-                      <div>{c.client_name}</div>
+                      <div className="flex items-center gap-2">
+                        <span>{c.client_name}</span>
+                        <span className="text-xs">{LANGUAGES.find(l => l.value === (c.language || 'it'))?.flag}</span>
+                      </div>
                       {c.client_email && <div className="text-xs text-gray-500">{c.client_email}</div>}
                     </TableCell>
+
                     <TableCell className="text-gray-300">{c.offer_number || '—'}</TableCell>
                     <TableCell className="text-amber-200 font-medium">
                       {new Intl.NumberFormat('it-IT', { style: 'currency', currency: c.currency || 'EUR' }).format(c.total_amount || 0)}
