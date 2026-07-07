@@ -278,8 +278,10 @@ const ERPContratti = () => {
     setVf({ ...DEFAULT_VF, ...(c.variable_fields || {}) });
     setStatus((c.status as any) || 'draft');
     setNotes(c.notes || '');
+    setLanguage(((c as any).language as ContractLanguage) || 'it');
     setShowForm(true);
   };
+
 
   const handleSave = async () => {
     if (!clientName.trim()) { toast.error('Inserisci il nome cliente'); return; }
