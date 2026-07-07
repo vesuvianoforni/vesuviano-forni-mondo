@@ -478,6 +478,14 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   // Signature lines
   ensureSpace(40);
   const colW = (contentWidth - 10) / 2;
+
+  // Embed client signature image above the line if present
+  if (data.client_signature) {
+    try {
+      doc.addImage(data.client_signature, 'PNG', marginX, y - 2, colW, 16);
+    } catch { /* ignore */ }
+  }
+
   doc.setDrawColor(150);
   doc.line(marginX, y + 15, marginX + colW, y + 15);
   doc.line(marginX + colW + 10, y + 15, marginX + contentWidth, y + 15);
@@ -487,7 +495,11 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.text('Vesuviano Forni — UNITA 1 di Stanislao Elefante', marginX + colW + 10, y + 20);
   doc.setFontSize(7.5);
   doc.setTextColor(110);
-  doc.text('(timbro e firma per accettazione)', marginX, y + 24);
+  if (data.client_signed_at) {
+    doc.text(`Firmato digitalmente il ${new Date(data.client_signed_at).toLocaleString('it-IT')}`, marginX, y + 24);
+  } else {
+    doc.text('(timbro e firma per accettazione)', marginX, y + 24);
+  }
   doc.text('Il Fornitore', marginX + colW + 10, y + 24);
   y += 34;
 
@@ -501,6 +513,11 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   );
   approvazione.forEach((ln: string) => { doc.text(ln, marginX, y); y += 4; });
   y += 6;
+  if (data.client_signature) {
+    try {
+      doc.addImage(data.client_signature, 'PNG', marginX + contentWidth - 80, y - 14, 80, 14);
+    } catch { /* ignore */ }
+  }
   doc.line(marginX + contentWidth - 80, y, marginX + contentWidth, y);
   doc.text('Firma del Cliente per approvazione specifica', marginX + contentWidth - 80, y + 4);
 
