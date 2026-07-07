@@ -267,25 +267,30 @@ const AboutUs = () => {
 
           {/* Pillars */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10">
-            {l.pillars.map((p, i) => (
-              <div key={p.title} className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <img
-                    src={PILLAR_IMAGES[i]}
-                    alt={p.title}
-                    width={1024}
-                    height={1024}
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-transparent" />
+            {l.pillars.map((p, i) => {
+              const isDrawing = i === 2;
+              return (
+                <div key={p.title} className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
+                  <div className={`relative aspect-[4/3] overflow-hidden ${isDrawing ? 'bg-stone-50' : ''}`}>
+                    <img
+                      src={PILLAR_IMAGES[i]}
+                      alt={p.title}
+                      width={1024}
+                      height={1024}
+                      loading="lazy"
+                      className={`w-full h-full ${isDrawing ? 'object-contain p-4' : 'object-cover'} group-hover:scale-105 transition-transform duration-500`}
+                    />
+                    {!isDrawing && (
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-transparent" />
+                    )}
+                  </div>
+                  <div className="p-4 text-center">
+                    <h4 className="font-playfair font-semibold text-charcoal-900 text-base md:text-lg mb-1">{p.title}</h4>
+                    <p className="text-xs md:text-sm text-stone-600 leading-relaxed">{p.desc}</p>
+                  </div>
                 </div>
-                <div className="p-4 text-center">
-                  <h4 className="font-playfair font-semibold text-charcoal-900 text-base md:text-lg mb-1">{p.title}</h4>
-                  <p className="text-xs md:text-sm text-stone-600 leading-relaxed">{p.desc}</p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Where We Are */}
