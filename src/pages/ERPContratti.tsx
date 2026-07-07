@@ -32,6 +32,9 @@ interface Contract {
   status: string;
   notes: string | null;
   created_at: string;
+  signature_token: string | null;
+  client_signature: string | null;
+  client_signed_at: string | null;
 }
 
 const DEFAULT_PAYMENT_TERMS =
