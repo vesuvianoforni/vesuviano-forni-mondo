@@ -91,6 +91,8 @@ const App = () => {
             <Routes>
               <Route path="/" element={<LanguageRedirect />} />
               <Route path="/architettoai" element={<ArchitettoAIRedirect />} />
+              <Route path="/contratto/:token" element={<PublicContractSign />} />
+
               
               {/* Italian Routes */}
               <Route path="/it" element={<LocalizedIndex lang="it" />} />
