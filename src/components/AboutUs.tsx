@@ -1,6 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { MapPin, Sparkles, Wrench, Cpu, Globe2 } from 'lucide-react';
 import CtaButton from './CtaButton';
+import pillarCraftsmanship from '@/assets/about-craftsmanship.jpg';
+import pillarEngineering from '@/assets/about-engineering.jpg';
+import pillarInnovation from '@/assets/about-innovation.jpg';
+import pillarGlobal from '@/assets/about-global.jpg';
 
 type AboutCopy = {
   sectionTitle: string;
