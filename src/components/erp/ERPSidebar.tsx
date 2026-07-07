@@ -36,6 +36,7 @@ const mainItems = [
   { title: 'Dashboard', url: '/erp', icon: LayoutDashboard },
   { title: 'CRM', url: '/erp/crm', icon: Users },
   { title: 'Pro-Forma', url: '/erp/proforma', icon: FileText },
+  { title: 'Contratti', url: '/erp/contratti', icon: FileText },
   { title: 'Configuratore', url: '/erp/configuratore', icon: SettingsIcon },
 ];
 
