@@ -79,10 +79,8 @@ const DEFAULT_VF: ContractVariableFields = {
 
 type VFKey = keyof ContractVariableFields;
 
-const FIELD_GROUPS: {
-  title: string;
-  fields: { key: VFKey; label: string; type?: 'text' | 'textarea' | 'date' }[];
-}[] = [
+type FieldDef = { key: VFKey; label: string; type?: 'text' | 'textarea' | 'date' | 'number'; presetKey?: string };
+const FIELD_GROUPS: { title: string; fields: FieldDef[] }[] = [
   {
     title: 'Riferimento & Cliente',
     fields: [
@@ -95,31 +93,33 @@ const FIELD_GROUPS: {
   {
     title: 'Pagamento & Rimborsi',
     fields: [
-      { key: 'payment_agreements', label: 'Accordi di pagamento', type: 'textarea' },
+      { key: 'payment_agreements', label: 'Accordi di pagamento', type: 'textarea', presetKey: 'payment_terms' },
       { key: 'refund_days', label: 'Giorni lavorativi per rimborso' },
       { key: 'balance_due_days', label: 'Termine saldo da merce pronta' },
       { key: 'storage_cost', label: 'Costo deposito' },
     ],
   },
   {
-    title: 'Tempi',
+    title: 'Tempi (calcolo automatico)',
     fields: [
-      { key: 'work_time', label: 'Tempi di lavorazione' },
-      { key: 'production_time', label: 'Tempi di produzione' },
-      { key: 'delivery_estimate', label: 'Tempi consegna stimati' },
-      { key: 'ready_date', label: 'Data indicativa merce pronta' },
-      { key: 'ship_date', label: 'Data indicativa spedizione' },
+      { key: 'production_days', label: 'Giorni di produzione', type: 'number', presetKey: 'production_days' },
+      { key: 'shipping_days', label: 'Giorni di spedizione', type: 'number', presetKey: 'shipping_days' },
+      { key: 'ready_date', label: 'Data merce pronta (auto)', type: 'date' },
+      { key: 'ship_date', label: 'Data spedizione (auto)', type: 'date' },
+      { key: 'delivery_estimate', label: 'Consegna stimata (auto)' },
+      { key: 'work_time', label: 'Tempi di lavorazione (testo libero)' },
+      { key: 'production_time', label: 'Tempi di produzione (testo libero)' },
     ],
   },
   {
     title: 'Spedizione & Trasporto',
     fields: [
-      { key: 'shipping_method', label: 'Modalità di spedizione' },
+      { key: 'shipping_method', label: 'Modalità di spedizione', presetKey: 'shipping_terms' },
       { key: 'carrier', label: 'Corriere / vettore' },
       { key: 'shipping_included', label: 'Trasporto incluso nel prezzo' },
       { key: 'insurance_included', label: 'Assicurazione inclusa' },
       { key: 'delivery_responsibility', label: 'Responsabilità della consegna' },
-      { key: 'incoterms', label: 'Incoterms / resa' },
+      { key: 'incoterms', label: 'Incoterms / resa', presetKey: 'shipping_terms' },
     ],
   },
   {
@@ -136,8 +136,8 @@ const FIELD_GROUPS: {
   {
     title: 'Installazione & Predisposizioni',
     fields: [
-      { key: 'assembly_included', label: 'Montaggio incluso' },
-      { key: 'installation_included', label: 'Installazione inclusa' },
+      { key: 'assembly_included', label: 'Montaggio incluso', presetKey: 'installation' },
+      { key: 'installation_included', label: 'Installazione inclusa', presetKey: 'installation' },
       { key: 'startup_included', label: 'Primo avviamento incluso' },
       { key: 'training_included', label: "Formazione all'uso inclusa" },
       { key: 'chimney_responsible', label: 'Responsabile canna fumaria' },
@@ -153,12 +153,20 @@ const FIELD_GROUPS: {
       { key: 'dim_tolerance', label: 'Tolleranza dimensionale' },
       { key: 'color_tolerance', label: 'Tolleranza colore/finitura' },
       { key: 'weight_tolerance', label: 'Tolleranza peso' },
-      { key: 'warranty_duration', label: 'Durata garanzia (override)' },
-      { key: 'warranty_coverage', label: 'Copertura garanzia', type: 'textarea' },
+      { key: 'warranty_duration', label: 'Durata garanzia (override)', presetKey: 'warranty' },
+      { key: 'warranty_coverage', label: 'Copertura garanzia', type: 'textarea', presetKey: 'warranty' },
       { key: 'warranty_exclusions', label: 'Esclusioni particolari garanzia', type: 'textarea' },
     ],
   },
 ];
+
+const addDays = (isoDate: string, days: number): string => {
+  const d = new Date(isoDate + 'T00:00:00');
+  if (isNaN(d.getTime())) return '';
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+};
+
 
 const ERPContratti = () => {
   const [contracts, setContracts] = useState<Contract[]>([]);
