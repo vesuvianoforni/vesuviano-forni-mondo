@@ -585,7 +585,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(20, 20, 20);
-  doc.text('20. Accettazione delle Condizioni Generali di Vendita', marginX, y);
+  doc.text(L.section20, marginX, y);
   y += 5;
   doc.setDrawColor(245, 158, 11);
   doc.line(marginX, y, marginX + 30, y);
@@ -594,29 +594,25 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9.5);
   doc.setTextColor(45, 45, 45);
-  const accept = doc.splitTextToSize(
-    "Il Cliente dichiara di aver letto, compreso e accettato integralmente le presenti Condizioni Generali di Vendita.",
-    contentWidth,
-  );
+  const accept = doc.splitTextToSize(L.accept, contentWidth);
   accept.forEach((ln: string) => { doc.text(ln, marginX, y); y += 4.5; });
   y += 4;
 
   doc.setFont('helvetica', 'bold');
-  doc.text(`Luogo e data: `, marginX, y);
+  doc.text(L.placeDate + ' ', marginX, y);
   doc.setFont('helvetica', 'normal');
-  doc.text(`${V(vf.place_signed || data.place_signed)}  —  ${dateStr}`, marginX + 30, y);
+  doc.text(`${V(vf.place_signed || data.place_signed)}  —  ${dateStr}`, marginX + 34, y);
   y += 6;
   doc.setFont('helvetica', 'bold');
-  doc.text('Cliente: ', marginX, y);
+  doc.text(L.clientLabel + ' ', marginX, y);
   doc.setFont('helvetica', 'normal');
-  doc.text(V(vf.client_name || data.client_name), marginX + 30, y);
+  doc.text(V(vf.client_name || data.client_name), marginX + 34, y);
   y += 12;
 
   // Signature lines
   ensureSpace(40);
   const colW = (contentWidth - 10) / 2;
 
-  // Embed client signature image above the line if present
   if (data.client_signature) {
     try {
       doc.addImage(data.client_signature, 'PNG', marginX, y - 2, colW, 16);
@@ -628,26 +624,23 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.line(marginX + colW + 10, y + 15, marginX + contentWidth, y + 15);
   doc.setFontSize(9);
   doc.setTextColor(60);
-  doc.text('Firma del Cliente', marginX, y + 20);
-  doc.text('Vesuviano Forni — UNITA 1 di Stanislao Elefante', marginX + colW + 10, y + 20);
+  doc.text(L.clientSig, marginX, y + 20);
+  doc.text(L.supplier, marginX + colW + 10, y + 20);
   doc.setFontSize(7.5);
   doc.setTextColor(110);
   if (data.client_signed_at) {
-    doc.text(`Firmato digitalmente il ${new Date(data.client_signed_at).toLocaleString('it-IT')}`, marginX, y + 24);
+    doc.text(`${L.signedOn} ${new Date(data.client_signed_at).toLocaleString(locale)}`, marginX, y + 24);
   } else {
-    doc.text('(timbro e firma per accettazione)', marginX, y + 24);
+    doc.text(L.stampSign, marginX, y + 24);
   }
-  doc.text('Il Fornitore', marginX + colW + 10, y + 24);
+  doc.text(L.supplierRole, marginX + colW + 10, y + 24);
   y += 34;
 
   // Approvazione ex art. 1341 e 1342 c.c.
   ensureSpace(30);
   doc.setFontSize(8);
   doc.setTextColor(45);
-  const approvazione = doc.splitTextToSize(
-    'Ai sensi e per gli effetti degli artt. 1341 e 1342 c.c., il Cliente dichiara di approvare specificamente le clausole di cui ai punti: 3 (accordi di pagamento), 4 (acconto e rimborsi), 6 (tempi non essenziali), 7 (deposito e risoluzione), 8 (trasporto e rischio), 10 (scarico), 11 (installazione), 12 (tolleranze), 13 (garanzia), 14 (esclusione risultato), 16 (riserva di proprietà), 17 (forza maggiore), 18 (foro competente).',
-    contentWidth,
-  );
+  const approvazione = doc.splitTextToSize(L.approval, contentWidth);
   approvazione.forEach((ln: string) => { doc.text(ln, marginX, y); y += 4; });
   y += 6;
   if (data.client_signature) {
@@ -656,7 +649,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
     } catch { /* ignore */ }
   }
   doc.line(marginX + contentWidth - 80, y, marginX + contentWidth, y);
-  doc.text('Firma del Cliente per approvazione specifica', marginX + contentWidth - 80, y + 4);
+  doc.text(L.approvalSig, marginX + contentWidth - 80, y + 4);
 
   // ===== Footer with page numbers =====
   const pageCount = doc.getNumberOfPages();
@@ -664,9 +657,10 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
     doc.setPage(i);
     doc.setFontSize(7);
     doc.setTextColor(150);
-    doc.text(`Pagina ${i} di ${pageCount}`, pageWidth - marginX, pageHeight - 7, { align: 'right' });
-    doc.text('vesuvianoforni.com  ·  Condizioni Generali di Vendita', marginX, pageHeight - 7);
+    doc.text(`${L.page} ${i} ${L.of} ${pageCount}`, pageWidth - marginX, pageHeight - 7, { align: 'right' });
+    doc.text(L.footer, marginX, pageHeight - 7);
   }
+
 
   return doc;
 }
