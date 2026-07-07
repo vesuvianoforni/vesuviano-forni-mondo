@@ -37,7 +37,17 @@ interface Contract {
   signature_token: string | null;
   client_signature: string | null;
   client_signed_at: string | null;
+  language?: string | null;
 }
+
+const LANGUAGES: { value: ContractLanguage; label: string; flag: string }[] = [
+  { value: 'it', label: 'Italiano', flag: '🇮🇹' },
+  { value: 'en', label: 'English', flag: '🇬🇧' },
+  { value: 'fr', label: 'Français', flag: '🇫🇷' },
+  { value: 'de', label: 'Deutsch', flag: '🇩🇪' },
+  { value: 'es', label: 'Español', flag: '🇪🇸' },
+];
+
 
 const DEFAULT_PAYMENT_TERMS =
   "50% di acconto alla conferma dell'ordine (bonifico bancario), 50% a saldo a merce pronta per la spedizione, previo invio al Cliente di supporto fotografico dei prodotti finiti.";
