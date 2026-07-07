@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Plus, Trash2, Edit, FileText, Loader2, Search, Download, Sparkles, Wand2, Link as LinkIcon, CheckCircle2, Languages, Calculator } from 'lucide-react';
+import { Plus, Trash2, Edit, FileText, Loader2, Search, Download, Sparkles, Wand2, Link as LinkIcon, CheckCircle2, Languages, Calculator, User, Euro, FileSignature, CreditCard, Clock, Truck, PackageOpen, Wrench, ShieldCheck, Landmark, StickyNote, X } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { generateContractPdf, type ContractVariableFields, type ContractLanguage } from '@/components/erp/contractPdf';
 import SelectOrCustom, { type Preset } from '@/components/erp/SelectOrCustom';
@@ -202,6 +202,7 @@ const ERPContratti = () => {
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('cliente');
 
   useEffect(() => { fetchContracts(); fetchPresets(); }, []);
 
@@ -526,186 +527,320 @@ const ERPContratti = () => {
         </Card>
 
         <Dialog open={showForm} onOpenChange={setShowForm}>
-          <DialogContent className="bg-[#1a1a1a] border-amber-900/20 text-amber-100 max-w-5xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>{editing ? 'Modifica Contratto CGV' : 'Nuovo Contratto CGV'}</DialogTitle>
+          <DialogContent className="bg-[#141414] border-[#2a2a2a] text-amber-100 max-w-6xl w-[95vw] h-[88vh] p-0 gap-0 overflow-hidden flex flex-col">
+            {/* Header */}
+            <DialogHeader className="px-6 py-4 border-b border-[#2a2a2a] bg-[#1a1a1a] flex-row items-center justify-between space-y-0">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded bg-amber-500/10 flex items-center justify-center">
+                  <FileSignature className="w-4 h-4 text-amber-500" />
+                </div>
+                <DialogTitle className="text-base font-semibold text-white tracking-tight flex items-center gap-2">
+                  {editing ? 'Modifica Contratto CGV' : 'Nuovo Contratto CGV'}
+                  {(offerNumber || editing?.offer_number) && (
+                    <span className="text-xs font-mono text-zinc-500">#{offerNumber || editing?.offer_number}</span>
+                  )}
+                  <span className="text-xs ml-1">{LANGUAGES.find(l => l.value === language)?.flag}</span>
+                </DialogTitle>
+              </div>
             </DialogHeader>
 
-            <div className="space-y-6">
-              {/* Cliente */}
-              <section className="space-y-3">
-                <h3 className="text-amber-400 font-semibold text-sm uppercase tracking-wider">Dati Cliente</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div>
-                    <Label className="text-amber-300">Nome / Ragione Sociale *</Label>
-                    <Input value={clientName} onChange={e => setClientName(e.target.value)} className="bg-[#111] border-amber-900/30" />
-                  </div>
-                  <div>
-                    <Label className="text-amber-300">P.IVA / C.F.</Label>
-                    <Input value={clientVat} onChange={e => setClientVat(e.target.value)} className="bg-[#111] border-amber-900/30" />
-                  </div>
-                  <div>
-                    <Label className="text-amber-300">Email</Label>
-                    <Input type="email" value={clientEmail} onChange={e => setClientEmail(e.target.value)} className="bg-[#111] border-amber-900/30" />
-                  </div>
-                  <div>
-                    <Label className="text-amber-300">Indirizzo</Label>
-                    <Input value={clientAddress} onChange={e => setClientAddress(e.target.value)} className="bg-[#111] border-amber-900/30" />
-                  </div>
-                </div>
-              </section>
+            {/* Body: sidebar + content */}
+            <div className="flex flex-1 overflow-hidden">
+              {/* Sidebar */}
+              <nav className="w-60 border-r border-[#2a2a2a] bg-[#111] overflow-y-auto p-3 shrink-0">
+                {(() => {
+                  const groupCompleted = (title: string) => {
+                    const g = FIELD_GROUPS.find(x => x.title === title);
+                    if (!g) return false;
+                    return g.fields.some(f => {
+                      if (f.key === 'offer_number') return !!offerNumber;
+                      if (f.key === 'offer_date') return !!offerDate;
+                      if (f.key === 'destination') return !!destination;
+                      if (f.key === 'place_signed') return !!placeSigned;
+                      return !!(vf as any)[f.key];
+                    });
+                  };
+                  const clienteDone = !!clientName;
+                  const economicheDone = !!totalAmount;
+                  const noteDone = !!notes;
 
-              {/* Economiche base */}
-              <section className="space-y-3">
-                <h3 className="text-amber-400 font-semibold text-sm uppercase tracking-wider">Economiche</h3>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                  <div>
-                    <Label className="text-amber-300">N° Offerta</Label>
-                    <Input value={offerNumber} onChange={e => setOfferNumber(e.target.value)} placeholder="PF-2026-0001" className="bg-[#111] border-amber-900/30" />
-                  </div>
-                  <div>
-                    <Label className="text-amber-300">Importo</Label>
-                    <Input type="number" step="0.01" value={totalAmount} onChange={e => setTotalAmount(e.target.value)} className="bg-[#111] border-amber-900/30" />
-                  </div>
-                  <div>
-                    <Label className="text-amber-300">Valuta</Label>
-                    <Select value={currency} onValueChange={setCurrency}>
-                      <SelectTrigger className="bg-[#111] border-amber-900/30"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="EUR">EUR €</SelectItem>
-                        <SelectItem value="GBP">GBP £</SelectItem>
-                        <SelectItem value="USD">USD $</SelectItem>
-                        <SelectItem value="CHF">CHF</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label className="text-amber-300">Garanzia</Label>
-                    <Select value={String(warrantyYears)} onValueChange={v => setWarrantyYears(parseInt(v))}>
-                      <SelectTrigger className="bg-[#111] border-amber-900/30"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1">1 anno (standard)</SelectItem>
-                        <SelectItem value="2">2 anni (esteso)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div>
-                    <Label className="text-amber-300">Stato</Label>
-                    <Select value={status} onValueChange={v => setStatus(v as any)}>
-                      <SelectTrigger className="bg-[#111] border-amber-900/30"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="draft">Bozza</SelectItem>
-                        <SelectItem value="sent">Inviato</SelectItem>
-                        <SelectItem value="signed">Firmato</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label className="text-amber-300 flex items-center gap-1">
-                      <Languages className="w-3.5 h-3.5" /> Lingua del contratto
-                    </Label>
-                    <Select value={language} onValueChange={(v) => setLanguage(v as ContractLanguage)}>
-                      <SelectTrigger className="bg-[#111] border-amber-900/30"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {LANGUAGES.map(l => (
-                          <SelectItem key={l.value} value={l.value}>{l.flag} {l.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {language !== 'it' && (
-                      <p className="text-[10px] text-purple-300/70 mt-1">
-                        Il PDF verrà tradotto via AI (IT è il testo giuridico master).
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </section>
+                  const NAV: { section: string; label: string; icon: any; done?: boolean }[][] = [
+                    [
+                      { section: 'cliente', label: 'Dati Cliente', icon: User, done: clienteDone },
+                      { section: 'economiche', label: 'Economiche', icon: Euro, done: economicheDone },
+                      { section: 'riferimento', label: 'Riferimento', icon: FileSignature, done: groupCompleted('Riferimento & Cliente') },
+                    ],
+                    [
+                      { section: 'pagamento', label: 'Pagamento', icon: CreditCard, done: groupCompleted('Pagamento & Rimborsi') },
+                      { section: 'tempi', label: 'Tempi Auto', icon: Clock, done: groupCompleted('Tempi (calcolo automatico)') },
+                      { section: 'spedizione', label: 'Spedizione', icon: Truck, done: groupCompleted('Spedizione & Trasporto') },
+                      { section: 'scarico', label: 'Scarico & Logistica', icon: PackageOpen, done: groupCompleted('Scarico & Logistica') },
+                      { section: 'installazione', label: 'Installazione', icon: Wrench, done: groupCompleted('Installazione & Predisposizioni') },
+                    ],
+                    [
+                      { section: 'tolleranze', label: 'Tolleranze & Garanzia', icon: ShieldCheck, done: groupCompleted('Tolleranze & Garanzia') },
+                      { section: 'bancarie', label: 'Coordinate Bancarie', icon: Landmark, done: groupCompleted('Coordinate Bancarie') },
+                      { section: 'note', label: 'Note interne', icon: StickyNote, done: noteDone },
+                    ],
+                  ];
+                  const GROUP_LABELS = ['Configurazione', 'Logistica & Tempi', 'Aggiuntivi'];
 
+                  return NAV.map((items, gi) => (
+                    <div key={gi} className={gi > 0 ? 'pt-4' : ''}>
+                      <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 mb-2">{GROUP_LABELS[gi]}</div>
+                      <div className="space-y-0.5">
+                        {items.map(it => {
+                          const active = activeSection === it.section;
+                          const Icon = it.icon;
+                          return (
+                            <button
+                              key={it.section}
+                              type="button"
+                              onClick={() => setActiveSection(it.section)}
+                              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all text-left ${
+                                active
+                                  ? 'bg-amber-500/10 text-amber-400 font-medium'
+                                  : 'text-zinc-400 hover:bg-white/5 hover:text-white'
+                              }`}
+                            >
+                              <span className={`w-1 h-4 rounded-full ${active ? 'bg-amber-500' : 'bg-transparent'}`} />
+                              <Icon className="w-3.5 h-3.5 shrink-0" />
+                              <span className="flex-1 truncate">{it.label}</span>
+                              {it.done && !active && (
+                                <CheckCircle2 className="w-3 h-3 text-emerald-500/70 shrink-0" />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ));
+                })()}
+              </nav>
 
-              {/* AI */}
-              <section className="space-y-3 border border-purple-900/40 rounded-lg p-4 bg-purple-950/10">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-purple-400" />
-                  <h3 className="text-purple-300 font-semibold text-sm uppercase tracking-wider">Assistente AI · Compila campi variabili</h3>
-                </div>
-                <p className="text-xs text-gray-400">Descrivi in linguaggio naturale le condizioni: l'AI popola i campi variabili qui sotto.</p>
-                <Textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)} rows={2}
-                  placeholder="Es. 'Consegna in Francia entro 60 giorni, trasporto incluso, installazione a carico Vesuviano, garanzia 24 mesi'"
-                  className="bg-[#111] border-purple-900/30 text-amber-100" />
-                <Button size="sm" onClick={aiFillFields} disabled={aiLoading}
-                  className="bg-purple-700 hover:bg-purple-600 text-white">
-                  {aiLoading ? <Loader2 className="w-3 h-3 mr-2 animate-spin" /> : <Wand2 className="w-3 h-3 mr-2" />}
-                  Applica ai campi
-                </Button>
-              </section>
+              {/* Main content */}
+              <main className="flex-1 overflow-y-auto bg-[#0d0d0d] p-6 md:p-8">
+                <div className="max-w-3xl mx-auto space-y-8">
+                  {/* AI Assistant compact */}
+                  <section className="bg-purple-900/10 border border-purple-500/30 rounded-xl p-4 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-purple-600/10 blur-3xl -mr-16 -mt-16 pointer-events-none" />
+                    <div className="flex items-center gap-2 mb-3">
+                      <Sparkles className="w-4 h-4 text-purple-400" />
+                      <h3 className="text-[11px] font-bold text-purple-400 uppercase tracking-widest">Assistente AI · Compila campi variabili</h3>
+                    </div>
+                    <div className="flex gap-2">
+                      <Input
+                        value={aiPrompt}
+                        onChange={e => setAiPrompt(e.target.value)}
+                        placeholder="Es. Consegna in Francia entro 60 giorni, installazione inclusa, garanzia 24 mesi..."
+                        className="flex-1 bg-black/40 border-purple-500/20 text-purple-100 placeholder:text-purple-400/50 focus-visible:ring-purple-500"
+                      />
+                      <Button
+                        onClick={aiFillFields}
+                        disabled={aiLoading}
+                        className="bg-purple-600 hover:bg-purple-500 text-white shrink-0"
+                      >
+                        {aiLoading ? <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> : <Wand2 className="w-3.5 h-3.5 mr-1.5" />}
+                        Applica
+                      </Button>
+                    </div>
+                  </section>
 
-              {/* Campi variabili raggruppati */}
-              {FIELD_GROUPS.map(group => (
-                <section key={group.title} className="space-y-3">
-                  <h3 className="text-amber-400 font-semibold text-sm uppercase tracking-wider flex items-center gap-2">
-                    {group.title.includes('automatico') && <Calculator className="w-4 h-4 text-green-400" />}
-                    {group.title}
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {group.fields.map(f => {
-                      const isTop = ['offer_number','offer_date','destination','place_signed'].includes(f.key);
-                      const value = isTop ? (
-                        f.key === 'offer_number' ? offerNumber :
-                        f.key === 'offer_date' ? offerDate :
-                        f.key === 'destination' ? destination :
-                        placeSigned
-                      ) : ((vf as any)[f.key] || '');
-                      const setter = (v: string) => {
-                        if (f.key === 'offer_number') setOfferNumber(v);
-                        else if (f.key === 'offer_date') setOfferDate(v);
-                        else if (f.key === 'destination') setDestination(v);
-                        else if (f.key === 'place_signed') setPlaceSigned(v);
-                        else setField(f.key, v);
-                      };
-                      const fieldPresets = f.presetKey ? (presets[f.presetKey] || []) : [];
-                      return (
-                        <div key={f.key} className={f.type === 'textarea' ? 'md:col-span-2' : ''}>
-                          <Label className="text-amber-300 text-xs">{f.label}</Label>
-                          {fieldPresets.length > 0 || f.type === 'textarea' ? (
-                            <SelectOrCustom
-                              fieldKey={f.presetKey || f.key}
-                              value={value}
-                              onChange={setter}
-                              presets={fieldPresets}
-                              type={f.type as any}
-                              onPresetAdded={(p) => setPresets(prev => ({
-                                ...prev,
-                                [f.presetKey || f.key]: [...(prev[f.presetKey || f.key] || []), p],
-                              }))}
-                            />
-                          ) : (
-                            <Input type={f.type || 'text'} value={value} onChange={e => setter(e.target.value)}
-                              className="bg-[#111] border-amber-900/30" />
-                          )}
+                  {activeSection === 'cliente' && (
+                    <section className="space-y-5">
+                      <div className="flex items-center gap-4">
+                        <h2 className="text-lg font-bold text-white">Dati Cliente</h2>
+                        <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                        <div className="space-y-1.5">
+                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Ragione Sociale <span className="text-amber-500">*</span></Label>
+                          <Input value={clientName} onChange={e => setClientName(e.target.value)} className="bg-[#181818] border-[#333]" />
                         </div>
-                      );
-                    })}
-                  </div>
-                </section>
-              ))}
+                        <div className="space-y-1.5">
+                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">P.IVA / C.F.</Label>
+                          <Input value={clientVat} onChange={e => setClientVat(e.target.value)} className="bg-[#181818] border-[#333]" />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Email</Label>
+                          <Input type="email" value={clientEmail} onChange={e => setClientEmail(e.target.value)} className="bg-[#181818] border-[#333]" />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Indirizzo</Label>
+                          <Input value={clientAddress} onChange={e => setClientAddress(e.target.value)} className="bg-[#181818] border-[#333]" />
+                        </div>
+                      </div>
+                    </section>
+                  )}
 
+                  {activeSection === 'economiche' && (
+                    <section className="space-y-5">
+                      <div className="flex items-center gap-4">
+                        <h2 className="text-lg font-bold text-white">Dati Economici</h2>
+                        <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="md:col-span-2 space-y-1.5">
+                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">N° Offerta</Label>
+                          <Input value={offerNumber} onChange={e => setOfferNumber(e.target.value)} placeholder="PF-2026-0001" className="bg-[#181818] border-[#333] font-mono" />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Importo</Label>
+                          <Input type="number" step="0.01" value={totalAmount} onChange={e => setTotalAmount(e.target.value)} className="bg-[#181818] border-[#333] font-mono" />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Valuta</Label>
+                          <Select value={currency} onValueChange={setCurrency}>
+                            <SelectTrigger className="bg-[#181818] border-[#333]"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="EUR">EUR €</SelectItem>
+                              <SelectItem value="GBP">GBP £</SelectItem>
+                              <SelectItem value="USD">USD $</SelectItem>
+                              <SelectItem value="CHF">CHF</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="space-y-1.5">
+                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Garanzia</Label>
+                          <Select value={String(warrantyYears)} onValueChange={v => setWarrantyYears(parseInt(v))}>
+                            <SelectTrigger className="bg-[#181818] border-[#333]"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="1">1 anno (standard)</SelectItem>
+                              <SelectItem value="2">2 anni (esteso)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Stato</Label>
+                          <Select value={status} onValueChange={v => setStatus(v as any)}>
+                            <SelectTrigger className="bg-[#181818] border-[#333] text-amber-400 font-semibold"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="draft">Bozza</SelectItem>
+                              <SelectItem value="sent">Inviato</SelectItem>
+                              <SelectItem value="signed">Firmato</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight flex items-center gap-1">
+                            <Languages className="w-3 h-3" /> Lingua PDF
+                          </Label>
+                          <Select value={language} onValueChange={(v) => setLanguage(v as ContractLanguage)}>
+                            <SelectTrigger className="bg-[#181818] border-[#333]"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              {LANGUAGES.map(l => (
+                                <SelectItem key={l.value} value={l.value}>{l.flag} {l.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      {language !== 'it' && (
+                        <p className="text-[11px] text-purple-300/70">
+                          Il PDF verrà tradotto via AI (IT resta il testo giuridico master).
+                        </p>
+                      )}
+                    </section>
+                  )}
 
-              <div>
-                <Label className="text-amber-300">Note interne</Label>
-                <Textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} className="bg-[#111] border-amber-900/30" />
-              </div>
+                  {(() => {
+                    const map: Record<string, string> = {
+                      riferimento: 'Riferimento & Cliente',
+                      pagamento: 'Pagamento & Rimborsi',
+                      tempi: 'Tempi (calcolo automatico)',
+                      spedizione: 'Spedizione & Trasporto',
+                      scarico: 'Scarico & Logistica',
+                      installazione: 'Installazione & Predisposizioni',
+                      tolleranze: 'Tolleranze & Garanzia',
+                      bancarie: 'Coordinate Bancarie',
+                    };
+                    const groupTitle = map[activeSection];
+                    if (!groupTitle) return null;
+                    const group = FIELD_GROUPS.find(g => g.title === groupTitle);
+                    if (!group) return null;
+                    return (
+                      <section className="space-y-5">
+                        <div className="flex items-center gap-4">
+                          {group.title.includes('automatico') && <Calculator className="w-4 h-4 text-emerald-400" />}
+                          <h2 className="text-lg font-bold text-white">{group.title}</h2>
+                          <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                          {group.fields.map(f => {
+                            const isTop = ['offer_number','offer_date','destination','place_signed'].includes(f.key);
+                            const value = isTop ? (
+                              f.key === 'offer_number' ? offerNumber :
+                              f.key === 'offer_date' ? offerDate :
+                              f.key === 'destination' ? destination :
+                              placeSigned
+                            ) : ((vf as any)[f.key] || '');
+                            const setter = (v: string) => {
+                              if (f.key === 'offer_number') setOfferNumber(v);
+                              else if (f.key === 'offer_date') setOfferDate(v);
+                              else if (f.key === 'destination') setDestination(v);
+                              else if (f.key === 'place_signed') setPlaceSigned(v);
+                              else setField(f.key, v);
+                            };
+                            const fieldPresets = f.presetKey ? (presets[f.presetKey] || []) : [];
+                            return (
+                              <div key={f.key} className={`space-y-1.5 ${f.type === 'textarea' ? 'md:col-span-2' : ''}`}>
+                                <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">{f.label}</Label>
+                                {fieldPresets.length > 0 || f.type === 'textarea' ? (
+                                  <SelectOrCustom
+                                    fieldKey={f.presetKey || f.key}
+                                    value={value}
+                                    onChange={setter}
+                                    presets={fieldPresets}
+                                    type={f.type as any}
+                                    onPresetAdded={(p) => setPresets(prev => ({
+                                      ...prev,
+                                      [f.presetKey || f.key]: [...(prev[f.presetKey || f.key] || []), p],
+                                    }))}
+                                  />
+                                ) : (
+                                  <Input type={f.type || 'text'} value={value} onChange={e => setter(e.target.value)}
+                                    className="bg-[#181818] border-[#333]" />
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </section>
+                    );
+                  })()}
 
-              <div className="flex gap-2 sticky bottom-0 bg-[#1a1a1a] pt-3 border-t border-amber-900/20">
-                <Button variant="outline" onClick={handlePreviewPdf} disabled={pdfLoading} className="border-amber-700 text-amber-200">
-                  {pdfLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileText className="w-4 h-4 mr-2" />}
-                  Anteprima PDF ({language.toUpperCase()})
-                </Button>
+                  {activeSection === 'note' && (
+                    <section className="space-y-5">
+                      <div className="flex items-center gap-4">
+                        <h2 className="text-lg font-bold text-white">Note interne</h2>
+                        <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Note (non compaiono nel PDF)</Label>
+                        <Textarea value={notes} onChange={e => setNotes(e.target.value)} rows={8} className="bg-[#181818] border-[#333]" />
+                      </div>
+                    </section>
+                  )}
+                </div>
+              </main>
+            </div>
 
-                <div className="flex-1" />
-                <Button variant="ghost" onClick={() => setShowForm(false)}>Annulla</Button>
-                <Button onClick={handleSave} disabled={saving} className="bg-amber-600 hover:bg-amber-700">
+            {/* Footer */}
+            <div className="px-6 py-3.5 border-t border-[#2a2a2a] bg-[#1a1a1a] flex items-center justify-between shrink-0">
+              <Button
+                variant="outline"
+                onClick={handlePreviewPdf}
+                disabled={pdfLoading}
+                className="border-[#333] bg-transparent text-zinc-300 hover:bg-white/5 hover:text-white"
+              >
+                {pdfLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileText className="w-4 h-4 mr-2" />}
+                Anteprima PDF ({language.toUpperCase()})
+              </Button>
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" onClick={() => setShowForm(false)} className="text-zinc-400 hover:text-white">Annulla</Button>
+                <Button onClick={handleSave} disabled={saving} className="bg-amber-600 hover:bg-amber-500 text-black font-bold shadow-lg shadow-amber-900/20">
                   {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                   {editing ? 'Salva modifiche' : 'Crea contratto'}
                 </Button>
