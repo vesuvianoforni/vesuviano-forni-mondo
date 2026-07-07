@@ -20,10 +20,11 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json();
-    const action: 'rewrite' | 'add' | 'suggest' | 'improve_all' = body.action;
+    const action: 'rewrite' | 'add' | 'suggest' | 'improve_all' | 'fill_fields' = body.action;
     const prompt: string = body.prompt || '';
     const clause: Clause | undefined = body.clause;
     const clauses: Clause[] | undefined = body.clauses;
+    const currentFields: Record<string, string> | undefined = body.current_fields;
 
     const systemPrompt = `Sei un assistente legale specializzato in contratti commerciali B2B italiani per la fornitura di forni professionali da parte di Vesuviano Forni (UNITA 1 di Stanislao Elefante, P.IVA IT02192040661).
 Scrivi clausole giuridicamente valide, chiare, in italiano formale, adatte a contratti B2B tra un fornitore italiano e clienti in Italia o all'estero.
@@ -44,6 +45,19 @@ Rispondi SEMPRE e SOLO con JSON valido, senza markdown, senza spiegazioni aggiun
     } else if (action === 'improve_all' && clauses) {
       userPrompt = `Migliora e uniforma stilisticamente le seguenti clausole secondo questa istruzione: "${prompt || 'rendile più professionali e giuridicamente robuste'}".\n\nClausole:\n${JSON.stringify(clauses, null, 2)}\n\nRispondi con JSON: {"clauses": [{"title": "...", "content": "..."}, ...]} mantenendo lo stesso numero e ordine.`;
       schemaHint = '{"clauses": [{"title": "string", "content": "string"}]}';
+    } else if (action === 'fill_fields') {
+      const allowedKeys = [
+        'offer_number','offer_date','destination','place_signed','payment_agreements','refund_days',
+        'work_time','production_time','delivery_estimate','ready_date','ship_date','balance_due_days','storage_cost',
+        'shipping_method','carrier','shipping_included','insurance_included','delivery_responsibility','incoterms',
+        'unloading_included','internal_handling_included','unloading_means','unloading_responsible','handling_responsible','logistics_notes',
+        'assembly_included','installation_included','startup_included','training_included',
+        'chimney_responsible','gas_responsible','electric_responsible','masonry_responsible','permits_responsible',
+        'dim_tolerance','color_tolerance','weight_tolerance','warranty_duration','warranty_coverage','warranty_exclusions'
+      ];
+      userPrompt = `L'utente descrive le condizioni contrattuali per un contratto CGV Vesuviano Forni. Estrai e/o deduci i valori per i campi variabili indicati.\n\nDescrizione utente: "${prompt}"\n\nValori attuali (non modificarli se non pertinenti alla richiesta):\n${JSON.stringify(currentFields || {}, null, 2)}\n\nRestituisci SOLO le chiavi che devono essere aggiornate/aggiunte. Chiavi consentite: ${allowedKeys.join(', ')}.\n\nRispondi con JSON: {"fields": {"chiave": "valore in italiano formale", ...}}`;
+      schemaHint = '{"fields": { [key: string]: string }}';
+    }
     } else {
       return new Response(JSON.stringify({ error: 'Invalid action or missing params' }), {
         status: 400,
