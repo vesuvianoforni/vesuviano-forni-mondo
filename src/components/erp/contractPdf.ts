@@ -178,6 +178,7 @@ export interface ContractVariableFields {
   place_signed?: string;
   production_days?: string;
   shipping_days?: string;
+  bank_details?: string;
 }
 
 
