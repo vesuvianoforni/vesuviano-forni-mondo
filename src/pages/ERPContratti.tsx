@@ -396,10 +396,18 @@ const ERPContratti = () => {
                       {new Intl.NumberFormat('it-IT', { style: 'currency', currency: c.currency || 'EUR' }).format(c.total_amount || 0)}
                     </TableCell>
                     <TableCell className="text-gray-300">{c.warranty_years} {c.warranty_years === 1 ? 'anno' : 'anni'}</TableCell>
-                    <TableCell>{statusBadge(c.status)}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        {statusBadge(c.status)}
+                        {c.client_signature && <CheckCircle2 className="w-4 h-4 text-green-400" aria-label="Firmato dal cliente" />}
+                      </div>
+                    </TableCell>
                     <TableCell className="text-gray-400 text-sm">{new Date(c.created_at).toLocaleDateString('it-IT')}</TableCell>
                     <TableCell>
                       <div className="flex justify-end gap-1">
+                        <Button size="sm" variant="ghost" onClick={() => copySignLink(c)} className="text-purple-300 hover:text-purple-200" title="Copia link firma cliente">
+                          <LinkIcon className="w-4 h-4" />
+                        </Button>
                         <Button size="sm" variant="ghost" onClick={() => handleDownloadPdf(c)} className="text-blue-400 hover:text-blue-200" title="Scarica PDF">
                           <Download className="w-4 h-4" />
                         </Button>
