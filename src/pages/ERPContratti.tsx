@@ -202,6 +202,7 @@ const ERPContratti = () => {
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('cliente');
 
   useEffect(() => { fetchContracts(); fetchPresets(); }, []);
 
