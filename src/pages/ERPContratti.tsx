@@ -580,18 +580,39 @@ const ERPContratti = () => {
                     </Select>
                   </div>
                 </div>
-                <div>
-                  <Label className="text-amber-300">Stato</Label>
-                  <Select value={status} onValueChange={v => setStatus(v as any)}>
-                    <SelectTrigger className="bg-[#111] border-amber-900/30 max-w-xs"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="draft">Bozza</SelectItem>
-                      <SelectItem value="sent">Inviato</SelectItem>
-                      <SelectItem value="signed">Firmato</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <Label className="text-amber-300">Stato</Label>
+                    <Select value={status} onValueChange={v => setStatus(v as any)}>
+                      <SelectTrigger className="bg-[#111] border-amber-900/30"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="draft">Bozza</SelectItem>
+                        <SelectItem value="sent">Inviato</SelectItem>
+                        <SelectItem value="signed">Firmato</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label className="text-amber-300 flex items-center gap-1">
+                      <Languages className="w-3.5 h-3.5" /> Lingua del contratto
+                    </Label>
+                    <Select value={language} onValueChange={(v) => setLanguage(v as ContractLanguage)}>
+                      <SelectTrigger className="bg-[#111] border-amber-900/30"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {LANGUAGES.map(l => (
+                          <SelectItem key={l.value} value={l.value}>{l.flag} {l.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {language !== 'it' && (
+                      <p className="text-[10px] text-purple-300/70 mt-1">
+                        Il PDF verrà tradotto via AI (IT è il testo giuridico master).
+                      </p>
+                    )}
+                  </div>
                 </div>
               </section>
+
 
               {/* AI */}
               <section className="space-y-3 border border-purple-900/40 rounded-lg p-4 bg-purple-950/10">
