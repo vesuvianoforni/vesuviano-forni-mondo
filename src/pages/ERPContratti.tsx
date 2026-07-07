@@ -303,7 +303,9 @@ const ERPContratti = () => {
         variable_fields: vf as any,
         status,
         notes: notes.trim() || null,
+        language,
       };
+
       if (editing) {
         const { error } = await supabase.from('contracts').update(payload).eq('id', editing.id);
         if (error) throw error;
