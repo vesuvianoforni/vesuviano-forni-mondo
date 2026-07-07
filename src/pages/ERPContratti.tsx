@@ -10,9 +10,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Plus, Trash2, Edit, FileText, Loader2, Search, Download, Sparkles, Wand2, Link as LinkIcon, CheckCircle2 } from 'lucide-react';
+import { Plus, Trash2, Edit, FileText, Loader2, Search, Download, Sparkles, Wand2, Link as LinkIcon, CheckCircle2, Languages, Calculator } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
-import { generateContractPdf, type ContractVariableFields } from '@/components/erp/contractPdf';
+import { generateContractPdf, type ContractVariableFields, type ContractLanguage } from '@/components/erp/contractPdf';
+import SelectOrCustom, { type Preset } from '@/components/erp/SelectOrCustom';
+
 
 interface Contract {
   id: string;
@@ -35,7 +37,17 @@ interface Contract {
   signature_token: string | null;
   client_signature: string | null;
   client_signed_at: string | null;
+  language?: string | null;
 }
+
+const LANGUAGES: { value: ContractLanguage; label: string; flag: string }[] = [
+  { value: 'it', label: 'Italiano', flag: '🇮🇹' },
+  { value: 'en', label: 'English', flag: '🇬🇧' },
+  { value: 'fr', label: 'Français', flag: '🇫🇷' },
+  { value: 'de', label: 'Deutsch', flag: '🇩🇪' },
+  { value: 'es', label: 'Español', flag: '🇪🇸' },
+];
+
 
 const DEFAULT_PAYMENT_TERMS =
   "50% di acconto alla conferma dell'ordine (bonifico bancario), 50% a saldo a merce pronta per la spedizione, previo invio al Cliente di supporto fotografico dei prodotti finiti.";
@@ -67,10 +79,8 @@ const DEFAULT_VF: ContractVariableFields = {
 
 type VFKey = keyof ContractVariableFields;
 
-const FIELD_GROUPS: {
-  title: string;
-  fields: { key: VFKey; label: string; type?: 'text' | 'textarea' | 'date' }[];
-}[] = [
+type FieldDef = { key: VFKey; label: string; type?: 'text' | 'textarea' | 'date' | 'number'; presetKey?: string };
+const FIELD_GROUPS: { title: string; fields: FieldDef[] }[] = [
   {
     title: 'Riferimento & Cliente',
     fields: [
@@ -83,31 +93,33 @@ const FIELD_GROUPS: {
   {
     title: 'Pagamento & Rimborsi',
     fields: [
-      { key: 'payment_agreements', label: 'Accordi di pagamento', type: 'textarea' },
+      { key: 'payment_agreements', label: 'Accordi di pagamento', type: 'textarea', presetKey: 'payment_terms' },
       { key: 'refund_days', label: 'Giorni lavorativi per rimborso' },
       { key: 'balance_due_days', label: 'Termine saldo da merce pronta' },
       { key: 'storage_cost', label: 'Costo deposito' },
     ],
   },
   {
-    title: 'Tempi',
+    title: 'Tempi (calcolo automatico)',
     fields: [
-      { key: 'work_time', label: 'Tempi di lavorazione' },
-      { key: 'production_time', label: 'Tempi di produzione' },
-      { key: 'delivery_estimate', label: 'Tempi consegna stimati' },
-      { key: 'ready_date', label: 'Data indicativa merce pronta' },
-      { key: 'ship_date', label: 'Data indicativa spedizione' },
+      { key: 'production_days', label: 'Giorni di produzione', type: 'number', presetKey: 'production_days' },
+      { key: 'shipping_days', label: 'Giorni di spedizione', type: 'number', presetKey: 'shipping_days' },
+      { key: 'ready_date', label: 'Data merce pronta (auto)', type: 'date' },
+      { key: 'ship_date', label: 'Data spedizione (auto)', type: 'date' },
+      { key: 'delivery_estimate', label: 'Consegna stimata (auto)' },
+      { key: 'work_time', label: 'Tempi di lavorazione (testo libero)' },
+      { key: 'production_time', label: 'Tempi di produzione (testo libero)' },
     ],
   },
   {
     title: 'Spedizione & Trasporto',
     fields: [
-      { key: 'shipping_method', label: 'Modalità di spedizione' },
+      { key: 'shipping_method', label: 'Modalità di spedizione', presetKey: 'shipping_terms' },
       { key: 'carrier', label: 'Corriere / vettore' },
       { key: 'shipping_included', label: 'Trasporto incluso nel prezzo' },
       { key: 'insurance_included', label: 'Assicurazione inclusa' },
       { key: 'delivery_responsibility', label: 'Responsabilità della consegna' },
-      { key: 'incoterms', label: 'Incoterms / resa' },
+      { key: 'incoterms', label: 'Incoterms / resa', presetKey: 'shipping_terms' },
     ],
   },
   {
@@ -124,8 +136,8 @@ const FIELD_GROUPS: {
   {
     title: 'Installazione & Predisposizioni',
     fields: [
-      { key: 'assembly_included', label: 'Montaggio incluso' },
-      { key: 'installation_included', label: 'Installazione inclusa' },
+      { key: 'assembly_included', label: 'Montaggio incluso', presetKey: 'installation' },
+      { key: 'installation_included', label: 'Installazione inclusa', presetKey: 'installation' },
       { key: 'startup_included', label: 'Primo avviamento incluso' },
       { key: 'training_included', label: "Formazione all'uso inclusa" },
       { key: 'chimney_responsible', label: 'Responsabile canna fumaria' },
@@ -141,12 +153,20 @@ const FIELD_GROUPS: {
       { key: 'dim_tolerance', label: 'Tolleranza dimensionale' },
       { key: 'color_tolerance', label: 'Tolleranza colore/finitura' },
       { key: 'weight_tolerance', label: 'Tolleranza peso' },
-      { key: 'warranty_duration', label: 'Durata garanzia (override)' },
-      { key: 'warranty_coverage', label: 'Copertura garanzia', type: 'textarea' },
+      { key: 'warranty_duration', label: 'Durata garanzia (override)', presetKey: 'warranty' },
+      { key: 'warranty_coverage', label: 'Copertura garanzia', type: 'textarea', presetKey: 'warranty' },
       { key: 'warranty_exclusions', label: 'Esclusioni particolari garanzia', type: 'textarea' },
     ],
   },
 ];
+
+const addDays = (isoDate: string, days: number): string => {
+  const d = new Date(isoDate + 'T00:00:00');
+  if (isNaN(d.getTime())) return '';
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+};
+
 
 const ERPContratti = () => {
   const [contracts, setContracts] = useState<Contract[]>([]);
@@ -170,11 +190,51 @@ const ERPContratti = () => {
   const [vf, setVf] = useState<ContractVariableFields>(DEFAULT_VF);
   const [status, setStatus] = useState<'draft' | 'sent' | 'signed'>('draft');
   const [notes, setNotes] = useState('');
+  const [language, setLanguage] = useState<ContractLanguage>('it');
+  const [presets, setPresets] = useState<Record<string, Preset[]>>({});
 
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
 
-  useEffect(() => { fetchContracts(); }, []);
+  useEffect(() => { fetchContracts(); fetchPresets(); }, []);
+
+  // ===== Dynamic date computation: offer_date + production_days => ready_date; + shipping_days => ship/delivery
+  useEffect(() => {
+    if (!offerDate) return;
+    const pDays = parseInt(vf.production_days || '', 10);
+    const sDays = parseInt(vf.shipping_days || '', 10);
+    const patch: Partial<ContractVariableFields> = {};
+    if (!isNaN(pDays) && pDays > 0) {
+      patch.ready_date = addDays(offerDate, pDays);
+      patch.ship_date = addDays(offerDate, pDays + 2);
+      if (!isNaN(sDays) && sDays > 0) {
+        const delivery = addDays(offerDate, pDays + 2 + sDays);
+        patch.delivery_estimate = `${delivery} (≈ ${pDays + 2 + sDays} giorni dall'ordine)`;
+      }
+    }
+    if (Object.keys(patch).length > 0) {
+      setVf(prev => {
+        const changed = Object.keys(patch).some(k => (prev as any)[k] !== (patch as any)[k]);
+        return changed ? { ...prev, ...patch } : prev;
+      });
+    }
+  }, [offerDate, vf.production_days, vf.shipping_days]);
+
+  const fetchPresets = async () => {
+    const { data, error } = await supabase
+      .from('contract_field_presets')
+      .select('id, field_key, value, label')
+      .order('sort_order', { ascending: true });
+    if (error) { console.warn('presets:', error); return; }
+    const grouped: Record<string, Preset[]> = {};
+    (data || []).forEach((row: any) => {
+      grouped[row.field_key] = grouped[row.field_key] || [];
+      grouped[row.field_key].push({ id: row.id, value: row.value, label: row.label });
+    });
+    setPresets(grouped);
+  };
+
 
   const fetchContracts = async () => {
     setLoading(true);
@@ -195,7 +255,9 @@ const ERPContratti = () => {
     setWarrantyYears(1);
     setVf(DEFAULT_VF);
     setStatus('draft'); setNotes('');
+    setLanguage('it');
     setAiPrompt('');
+
   };
 
   const openCreate = () => { resetForm(); setShowForm(true); };
@@ -216,8 +278,10 @@ const ERPContratti = () => {
     setVf({ ...DEFAULT_VF, ...(c.variable_fields || {}) });
     setStatus((c.status as any) || 'draft');
     setNotes(c.notes || '');
+    setLanguage(((c as any).language as ContractLanguage) || 'it');
     setShowForm(true);
   };
+
 
   const handleSave = async () => {
     if (!clientName.trim()) { toast.error('Inserisci il nome cliente'); return; }
@@ -239,7 +303,9 @@ const ERPContratti = () => {
         variable_fields: vf as any,
         status,
         notes: notes.trim() || null,
+        language,
       };
+
       if (editing) {
         const { error } = await supabase.from('contracts').update(payload).eq('id', editing.id);
         if (error) throw error;
@@ -267,6 +333,7 @@ const ERPContratti = () => {
   const buildContractData = (c?: Contract) => c ? ({
     ...c,
     variable_fields: c.variable_fields || {},
+    language: ((c as any).language as ContractLanguage) || 'it',
   }) : ({
     client_name: clientName || 'Cliente',
     client_email: clientEmail,
@@ -281,6 +348,7 @@ const ERPContratti = () => {
     payment_terms: vf.payment_agreements || DEFAULT_PAYMENT_TERMS,
     warranty_years: warrantyYears,
     variable_fields: vf,
+    language,
   });
 
   const copySignLink = async (c: Contract) => {
@@ -295,23 +363,28 @@ const ERPContratti = () => {
   };
 
   const handleDownloadPdf = async (c: Contract) => {
+    setPdfLoading(true);
     try {
       const doc = await generateContractPdf(buildContractData(c) as any);
-      const filename = `CGV_${c.client_name.replace(/\s+/g, '_')}${c.offer_number ? `_${c.offer_number}` : ''}.pdf`;
+      const lang = ((c as any).language as ContractLanguage) || 'it';
+      const filename = `CGV_${lang.toUpperCase()}_${c.client_name.replace(/\s+/g, '_')}${c.offer_number ? `_${c.offer_number}` : ''}.pdf`;
       doc.save(filename);
     } catch (e: any) {
       toast.error('Errore PDF: ' + e.message);
-    }
+    } finally { setPdfLoading(false); }
   };
 
   const handlePreviewPdf = async () => {
+    setPdfLoading(true);
     try {
+      if (language !== 'it') toast.info('Traduzione AI in corso… può richiedere qualche secondo');
       const doc = await generateContractPdf(buildContractData() as any);
       window.open(doc.output('bloburl'), '_blank');
     } catch (e: any) {
       toast.error('Errore anteprima: ' + e.message);
-    }
+    } finally { setPdfLoading(false); }
   };
+
 
   const setField = (k: VFKey, v: string) => setVf(prev => ({ ...prev, [k]: v }));
 
@@ -399,9 +472,13 @@ const ERPContratti = () => {
                 {filtered.map(c => (
                   <TableRow key={c.id} className="border-amber-900/10 hover:bg-amber-900/5">
                     <TableCell className="font-medium text-amber-100">
-                      <div>{c.client_name}</div>
+                      <div className="flex items-center gap-2">
+                        <span>{c.client_name}</span>
+                        <span className="text-xs">{LANGUAGES.find(l => l.value === (c.language || 'it'))?.flag}</span>
+                      </div>
                       {c.client_email && <div className="text-xs text-gray-500">{c.client_email}</div>}
                     </TableCell>
+
                     <TableCell className="text-gray-300">{c.offer_number || '—'}</TableCell>
                     <TableCell className="text-amber-200 font-medium">
                       {new Intl.NumberFormat('it-IT', { style: 'currency', currency: c.currency || 'EUR' }).format(c.total_amount || 0)}
@@ -507,18 +584,39 @@ const ERPContratti = () => {
                     </Select>
                   </div>
                 </div>
-                <div>
-                  <Label className="text-amber-300">Stato</Label>
-                  <Select value={status} onValueChange={v => setStatus(v as any)}>
-                    <SelectTrigger className="bg-[#111] border-amber-900/30 max-w-xs"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="draft">Bozza</SelectItem>
-                      <SelectItem value="sent">Inviato</SelectItem>
-                      <SelectItem value="signed">Firmato</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <Label className="text-amber-300">Stato</Label>
+                    <Select value={status} onValueChange={v => setStatus(v as any)}>
+                      <SelectTrigger className="bg-[#111] border-amber-900/30"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="draft">Bozza</SelectItem>
+                        <SelectItem value="sent">Inviato</SelectItem>
+                        <SelectItem value="signed">Firmato</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label className="text-amber-300 flex items-center gap-1">
+                      <Languages className="w-3.5 h-3.5" /> Lingua del contratto
+                    </Label>
+                    <Select value={language} onValueChange={(v) => setLanguage(v as ContractLanguage)}>
+                      <SelectTrigger className="bg-[#111] border-amber-900/30"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {LANGUAGES.map(l => (
+                          <SelectItem key={l.value} value={l.value}>{l.flag} {l.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {language !== 'it' && (
+                      <p className="text-[10px] text-purple-300/70 mt-1">
+                        Il PDF verrà tradotto via AI (IT è il testo giuridico master).
+                      </p>
+                    )}
+                  </div>
                 </div>
               </section>
+
 
               {/* AI */}
               <section className="space-y-3 border border-purple-900/40 rounded-lg p-4 bg-purple-950/10">
@@ -540,10 +638,12 @@ const ERPContratti = () => {
               {/* Campi variabili raggruppati */}
               {FIELD_GROUPS.map(group => (
                 <section key={group.title} className="space-y-3">
-                  <h3 className="text-amber-400 font-semibold text-sm uppercase tracking-wider">{group.title}</h3>
+                  <h3 className="text-amber-400 font-semibold text-sm uppercase tracking-wider flex items-center gap-2">
+                    {group.title.includes('automatico') && <Calculator className="w-4 h-4 text-green-400" />}
+                    {group.title}
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {group.fields.map(f => {
-                      // Route the "riferimento & cliente" fields to top-level state
                       const isTop = ['offer_number','offer_date','destination','place_signed'].includes(f.key);
                       const value = isTop ? (
                         f.key === 'offer_number' ? offerNumber :
@@ -558,12 +658,22 @@ const ERPContratti = () => {
                         else if (f.key === 'place_signed') setPlaceSigned(v);
                         else setField(f.key, v);
                       };
+                      const fieldPresets = f.presetKey ? (presets[f.presetKey] || []) : [];
                       return (
                         <div key={f.key} className={f.type === 'textarea' ? 'md:col-span-2' : ''}>
                           <Label className="text-amber-300 text-xs">{f.label}</Label>
-                          {f.type === 'textarea' ? (
-                            <Textarea value={value} onChange={e => setter(e.target.value)} rows={2}
-                              className="bg-[#111] border-amber-900/30 text-sm" />
+                          {fieldPresets.length > 0 || f.type === 'textarea' ? (
+                            <SelectOrCustom
+                              fieldKey={f.presetKey || f.key}
+                              value={value}
+                              onChange={setter}
+                              presets={fieldPresets}
+                              type={f.type as any}
+                              onPresetAdded={(p) => setPresets(prev => ({
+                                ...prev,
+                                [f.presetKey || f.key]: [...(prev[f.presetKey || f.key] || []), p],
+                              }))}
+                            />
                           ) : (
                             <Input type={f.type || 'text'} value={value} onChange={e => setter(e.target.value)}
                               className="bg-[#111] border-amber-900/30" />
@@ -575,15 +685,18 @@ const ERPContratti = () => {
                 </section>
               ))}
 
+
               <div>
                 <Label className="text-amber-300">Note interne</Label>
                 <Textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} className="bg-[#111] border-amber-900/30" />
               </div>
 
               <div className="flex gap-2 sticky bottom-0 bg-[#1a1a1a] pt-3 border-t border-amber-900/20">
-                <Button variant="outline" onClick={handlePreviewPdf} className="border-amber-700 text-amber-200">
-                  <FileText className="w-4 h-4 mr-2" /> Anteprima PDF
+                <Button variant="outline" onClick={handlePreviewPdf} disabled={pdfLoading} className="border-amber-700 text-amber-200">
+                  {pdfLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileText className="w-4 h-4 mr-2" />}
+                  Anteprima PDF ({language.toUpperCase()})
                 </Button>
+
                 <div className="flex-1" />
                 <Button variant="ghost" onClick={() => setShowForm(false)}>Annulla</Button>
                 <Button onClick={handleSave} disabled={saving} className="bg-amber-600 hover:bg-amber-700">

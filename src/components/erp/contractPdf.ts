@@ -1,4 +1,133 @@
 import jsPDF from 'jspdf';
+import { supabase } from '@/integrations/supabase/client';
+
+export type ContractLanguage = 'it' | 'en' | 'fr' | 'de' | 'es';
+
+const UI_LABELS: Record<ContractLanguage, Record<string, string>> = {
+  it: {
+    title: 'CONDIZIONI GENERALI DI VENDITA',
+    date: 'Data',
+    offerRef: 'Rif. Offerta',
+    client: 'Cliente',
+    page: 'Pagina',
+    of: 'di',
+    footer: 'vesuvianoforni.com  ·  Condizioni Generali di Vendita',
+    placeDate: 'Luogo e data:',
+    clientLabel: 'Cliente:',
+    accept: 'Il Cliente dichiara di aver letto, compreso e accettato integralmente le presenti Condizioni Generali di Vendita.',
+    clientSig: 'Firma del Cliente',
+    supplier: 'Vesuviano Forni — UNITA 1 di Stanislao Elefante',
+    supplierRole: 'Il Fornitore',
+    stampSign: '(timbro e firma per accettazione)',
+    signedOn: 'Firmato digitalmente il',
+    approval: 'Ai sensi e per gli effetti degli artt. 1341 e 1342 c.c., il Cliente dichiara di approvare specificamente le clausole di cui ai punti: 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 18.',
+    approvalSig: 'Firma del Cliente per approvazione specifica',
+    section20: '20. Accettazione delle Condizioni Generali di Vendita',
+  },
+  en: {
+    title: 'GENERAL CONDITIONS OF SALE',
+    date: 'Date',
+    offerRef: 'Offer ref.',
+    client: 'Client',
+    page: 'Page',
+    of: 'of',
+    footer: 'vesuvianoforni.com  ·  General Conditions of Sale',
+    placeDate: 'Place and date:',
+    clientLabel: 'Client:',
+    accept: 'The Client declares to have read, understood and fully accepted these General Conditions of Sale.',
+    clientSig: "Client's signature",
+    supplier: 'Vesuviano Forni — UNITA 1 di Stanislao Elefante',
+    supplierRole: 'The Supplier',
+    stampSign: '(stamp and signature for acceptance)',
+    signedOn: 'Digitally signed on',
+    approval: 'Pursuant to Articles 1341 and 1342 of the Italian Civil Code, the Client specifically approves the clauses set out in sections: 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 18.',
+    approvalSig: "Client's signature for specific approval",
+    section20: '20. Acceptance of the General Conditions of Sale',
+  },
+  fr: {
+    title: 'CONDITIONS GÉNÉRALES DE VENTE',
+    date: 'Date',
+    offerRef: 'Réf. offre',
+    client: 'Client',
+    page: 'Page',
+    of: 'sur',
+    footer: 'vesuvianoforni.com  ·  Conditions Générales de Vente',
+    placeDate: 'Lieu et date :',
+    clientLabel: 'Client :',
+    accept: "Le Client déclare avoir lu, compris et accepté intégralement les présentes Conditions Générales de Vente.",
+    clientSig: 'Signature du Client',
+    supplier: 'Vesuviano Forni — UNITA 1 di Stanislao Elefante',
+    supplierRole: 'Le Fournisseur',
+    stampSign: "(cachet et signature pour acceptation)",
+    signedOn: 'Signé numériquement le',
+    approval: "Conformément aux articles 1341 et 1342 du Code civil italien, le Client approuve spécifiquement les clauses figurant aux points : 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 18.",
+    approvalSig: 'Signature du Client pour approbation spécifique',
+    section20: '20. Acceptation des Conditions Générales de Vente',
+  },
+  de: {
+    title: 'ALLGEMEINE VERKAUFSBEDINGUNGEN',
+    date: 'Datum',
+    offerRef: 'Angebots-Nr.',
+    client: 'Kunde',
+    page: 'Seite',
+    of: 'von',
+    footer: 'vesuvianoforni.com  ·  Allgemeine Verkaufsbedingungen',
+    placeDate: 'Ort und Datum:',
+    clientLabel: 'Kunde:',
+    accept: 'Der Kunde erklärt, die vorliegenden Allgemeinen Verkaufsbedingungen gelesen, verstanden und vollständig akzeptiert zu haben.',
+    clientSig: 'Unterschrift des Kunden',
+    supplier: 'Vesuviano Forni — UNITA 1 di Stanislao Elefante',
+    supplierRole: 'Der Lieferant',
+    stampSign: '(Stempel und Unterschrift zur Annahme)',
+    signedOn: 'Digital unterzeichnet am',
+    approval: 'Gemäß Art. 1341 und 1342 des italienischen Zivilgesetzbuchs genehmigt der Kunde ausdrücklich die Klauseln der Ziffern: 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 18.',
+    approvalSig: 'Unterschrift des Kunden zur ausdrücklichen Genehmigung',
+    section20: '20. Annahme der Allgemeinen Verkaufsbedingungen',
+  },
+  es: {
+    title: 'CONDICIONES GENERALES DE VENTA',
+    date: 'Fecha',
+    offerRef: 'Ref. oferta',
+    client: 'Cliente',
+    page: 'Página',
+    of: 'de',
+    footer: 'vesuvianoforni.com  ·  Condiciones Generales de Venta',
+    placeDate: 'Lugar y fecha:',
+    clientLabel: 'Cliente:',
+    accept: 'El Cliente declara haber leído, comprendido y aceptado íntegramente las presentes Condiciones Generales de Venta.',
+    clientSig: 'Firma del Cliente',
+    supplier: 'Vesuviano Forni — UNITA 1 di Stanislao Elefante',
+    supplierRole: 'El Proveedor',
+    stampSign: '(sello y firma para aceptación)',
+    signedOn: 'Firmado digitalmente el',
+    approval: 'De conformidad con los arts. 1341 y 1342 del Código Civil italiano, el Cliente aprueba específicamente las cláusulas indicadas en los puntos: 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 16, 17, 18.',
+    approvalSig: 'Firma del Cliente para aprobación específica',
+    section20: '20. Aceptación de las Condiciones Generales de Venta',
+  },
+};
+
+const LOCALE_BY_LANG: Record<ContractLanguage, string> = { it: 'it-IT', en: 'en-GB', fr: 'fr-FR', de: 'de-DE', es: 'es-ES' };
+
+async function translateSections(
+  sections: { title: string; body: string }[],
+  targetLanguage: ContractLanguage,
+): Promise<{ title: string; body: string }[]> {
+  if (targetLanguage === 'it') return sections;
+  try {
+    const { data, error } = await supabase.functions.invoke('contract-ai-assist', {
+      body: { action: 'translate', target_language: targetLanguage, sections },
+    });
+    if (error) throw error;
+    const out = (data as any)?.sections;
+    if (Array.isArray(out) && out.length === sections.length) return out;
+    return sections;
+  } catch (e) {
+    console.warn('[contractPdf] translation failed, falling back to IT', e);
+    return sections;
+  }
+}
+
+
 
 export interface ContractClause {
   title: string;
@@ -47,7 +176,10 @@ export interface ContractVariableFields {
   warranty_coverage?: string;
   warranty_exclusions?: string;
   place_signed?: string;
+  production_days?: string;
+  shipping_days?: string;
 }
+
 
 export interface ContractData {
   id?: string;
@@ -68,7 +200,9 @@ export interface ContractData {
   created_at?: string;
   client_signature?: string | null;
   client_signed_at?: string | null;
+  language?: ContractLanguage;
 }
+
 
 const COMPANY = {
   brand: 'VESUVIANO FORNI',
@@ -386,26 +520,31 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.text(COMPANY.address, pageWidth - marginX, 25, { align: 'right' });
   doc.text(COMPANY.pec, pageWidth - marginX, 29, { align: 'right' });
 
+  const lang: ContractLanguage = (data.language as ContractLanguage) || 'it';
+  const L = UI_LABELS[lang] || UI_LABELS.it;
+  const locale = LOCALE_BY_LANG[lang] || 'it-IT';
+
   // Title
   doc.setTextColor(20, 20, 20);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(15);
-  doc.text('CONDIZIONI GENERALI DI VENDITA', pageWidth / 2, 46, { align: 'center' });
+  doc.text(L.title, pageWidth / 2, 46, { align: 'center' });
 
   const today = data.created_at ? new Date(data.created_at) : new Date();
-  const dateStr = today.toLocaleDateString('it-IT');
+  const dateStr = today.toLocaleDateString(locale);
   const vf = data.variable_fields || {};
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(90, 90, 90);
-  const meta = `Data: ${dateStr}` +
-    ((vf.offer_number || data.offer_number) ? `  ·  Rif. Offerta: ${vf.offer_number || data.offer_number}` : '') +
-    `  ·  Cliente: ${data.client_name}`;
+  const meta = `${L.date}: ${dateStr}` +
+    ((vf.offer_number || data.offer_number) ? `  ·  ${L.offerRef}: ${vf.offer_number || data.offer_number}` : '') +
+    `  ·  ${L.client}: ${data.client_name}`;
   doc.text(meta, pageWidth / 2, 52, { align: 'center' });
 
-  // Body sections
+  // Body sections (translated if needed)
   let y = 60;
-  const sections = buildSections(data);
+  const italianSections = buildSections(data);
+  const sections = await translateSections(italianSections, lang);
 
   const ensureSpace = (needed: number) => {
     if (y + needed > pageHeight - 20) {
@@ -443,12 +582,13 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
     y += 3;
   });
 
+
   // ===== Section 20 — Signatures =====
   ensureSpace(70);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(20, 20, 20);
-  doc.text('20. Accettazione delle Condizioni Generali di Vendita', marginX, y);
+  doc.text(L.section20, marginX, y);
   y += 5;
   doc.setDrawColor(245, 158, 11);
   doc.line(marginX, y, marginX + 30, y);
@@ -457,29 +597,25 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9.5);
   doc.setTextColor(45, 45, 45);
-  const accept = doc.splitTextToSize(
-    "Il Cliente dichiara di aver letto, compreso e accettato integralmente le presenti Condizioni Generali di Vendita.",
-    contentWidth,
-  );
+  const accept = doc.splitTextToSize(L.accept, contentWidth);
   accept.forEach((ln: string) => { doc.text(ln, marginX, y); y += 4.5; });
   y += 4;
 
   doc.setFont('helvetica', 'bold');
-  doc.text(`Luogo e data: `, marginX, y);
+  doc.text(L.placeDate + ' ', marginX, y);
   doc.setFont('helvetica', 'normal');
-  doc.text(`${V(vf.place_signed || data.place_signed)}  —  ${dateStr}`, marginX + 30, y);
+  doc.text(`${V(vf.place_signed || data.place_signed)}  —  ${dateStr}`, marginX + 34, y);
   y += 6;
   doc.setFont('helvetica', 'bold');
-  doc.text('Cliente: ', marginX, y);
+  doc.text(L.clientLabel + ' ', marginX, y);
   doc.setFont('helvetica', 'normal');
-  doc.text(V(vf.client_name || data.client_name), marginX + 30, y);
+  doc.text(V(vf.client_name || data.client_name), marginX + 34, y);
   y += 12;
 
   // Signature lines
   ensureSpace(40);
   const colW = (contentWidth - 10) / 2;
 
-  // Embed client signature image above the line if present
   if (data.client_signature) {
     try {
       doc.addImage(data.client_signature, 'PNG', marginX, y - 2, colW, 16);
@@ -491,26 +627,23 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.line(marginX + colW + 10, y + 15, marginX + contentWidth, y + 15);
   doc.setFontSize(9);
   doc.setTextColor(60);
-  doc.text('Firma del Cliente', marginX, y + 20);
-  doc.text('Vesuviano Forni — UNITA 1 di Stanislao Elefante', marginX + colW + 10, y + 20);
+  doc.text(L.clientSig, marginX, y + 20);
+  doc.text(L.supplier, marginX + colW + 10, y + 20);
   doc.setFontSize(7.5);
   doc.setTextColor(110);
   if (data.client_signed_at) {
-    doc.text(`Firmato digitalmente il ${new Date(data.client_signed_at).toLocaleString('it-IT')}`, marginX, y + 24);
+    doc.text(`${L.signedOn} ${new Date(data.client_signed_at).toLocaleString(locale)}`, marginX, y + 24);
   } else {
-    doc.text('(timbro e firma per accettazione)', marginX, y + 24);
+    doc.text(L.stampSign, marginX, y + 24);
   }
-  doc.text('Il Fornitore', marginX + colW + 10, y + 24);
+  doc.text(L.supplierRole, marginX + colW + 10, y + 24);
   y += 34;
 
   // Approvazione ex art. 1341 e 1342 c.c.
   ensureSpace(30);
   doc.setFontSize(8);
   doc.setTextColor(45);
-  const approvazione = doc.splitTextToSize(
-    'Ai sensi e per gli effetti degli artt. 1341 e 1342 c.c., il Cliente dichiara di approvare specificamente le clausole di cui ai punti: 3 (accordi di pagamento), 4 (acconto e rimborsi), 6 (tempi non essenziali), 7 (deposito e risoluzione), 8 (trasporto e rischio), 10 (scarico), 11 (installazione), 12 (tolleranze), 13 (garanzia), 14 (esclusione risultato), 16 (riserva di proprietà), 17 (forza maggiore), 18 (foro competente).',
-    contentWidth,
-  );
+  const approvazione = doc.splitTextToSize(L.approval, contentWidth);
   approvazione.forEach((ln: string) => { doc.text(ln, marginX, y); y += 4; });
   y += 6;
   if (data.client_signature) {
@@ -519,7 +652,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
     } catch { /* ignore */ }
   }
   doc.line(marginX + contentWidth - 80, y, marginX + contentWidth, y);
-  doc.text('Firma del Cliente per approvazione specifica', marginX + contentWidth - 80, y + 4);
+  doc.text(L.approvalSig, marginX + contentWidth - 80, y + 4);
 
   // ===== Footer with page numbers =====
   const pageCount = doc.getNumberOfPages();
@@ -527,9 +660,10 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
     doc.setPage(i);
     doc.setFontSize(7);
     doc.setTextColor(150);
-    doc.text(`Pagina ${i} di ${pageCount}`, pageWidth - marginX, pageHeight - 7, { align: 'right' });
-    doc.text('vesuvianoforni.com  ·  Condizioni Generali di Vendita', marginX, pageHeight - 7);
+    doc.text(`${L.page} ${i} ${L.of} ${pageCount}`, pageWidth - marginX, pageHeight - 7, { align: 'right' });
+    doc.text(L.footer, marginX, pageHeight - 7);
   }
+
 
   return doc;
 }

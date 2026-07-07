@@ -554,6 +554,39 @@ export type Database = {
           },
         ]
       }
+      contract_field_presets: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          field_key: string
+          id: string
+          label: string
+          sort_order: number
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          field_key: string
+          id?: string
+          label: string
+          sort_order?: number
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          field_key?: string
+          id?: string
+          label?: string
+          sort_order?: number
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       contracts: {
         Row: {
           clauses: Json
@@ -568,13 +601,17 @@ export type Database = {
           created_by: string | null
           currency: string
           destination: string | null
+          estimated_delivery_date: string | null
           id: string
+          language: string
           notes: string | null
           offer_date: string | null
           offer_number: string | null
           payment_terms: string
           pdf_url: string | null
           place_signed: string | null
+          production_days: number | null
+          shipping_days: number | null
           signature_token: string | null
           signed_at: string | null
           status: string
@@ -596,13 +633,17 @@ export type Database = {
           created_by?: string | null
           currency?: string
           destination?: string | null
+          estimated_delivery_date?: string | null
           id?: string
+          language?: string
           notes?: string | null
           offer_date?: string | null
           offer_number?: string | null
           payment_terms?: string
           pdf_url?: string | null
           place_signed?: string | null
+          production_days?: number | null
+          shipping_days?: number | null
           signature_token?: string | null
           signed_at?: string | null
           status?: string
@@ -624,13 +665,17 @@ export type Database = {
           created_by?: string | null
           currency?: string
           destination?: string | null
+          estimated_delivery_date?: string | null
           id?: string
+          language?: string
           notes?: string | null
           offer_date?: string | null
           offer_number?: string | null
           payment_terms?: string
           pdf_url?: string | null
           place_signed?: string | null
+          production_days?: number | null
+          shipping_days?: number | null
           signature_token?: string | null
           signed_at?: string | null
           status?: string
