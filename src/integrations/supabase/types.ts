@@ -560,6 +560,9 @@ export type Database = {
           client_address: string | null
           client_email: string | null
           client_name: string
+          client_signature: string | null
+          client_signature_ip: string | null
+          client_signed_at: string | null
           client_vat: string | null
           created_at: string
           created_by: string | null
@@ -572,6 +575,7 @@ export type Database = {
           payment_terms: string
           pdf_url: string | null
           place_signed: string | null
+          signature_token: string | null
           signed_at: string | null
           status: string
           total_amount: number | null
@@ -584,6 +588,9 @@ export type Database = {
           client_address?: string | null
           client_email?: string | null
           client_name: string
+          client_signature?: string | null
+          client_signature_ip?: string | null
+          client_signed_at?: string | null
           client_vat?: string | null
           created_at?: string
           created_by?: string | null
@@ -596,6 +603,7 @@ export type Database = {
           payment_terms?: string
           pdf_url?: string | null
           place_signed?: string | null
+          signature_token?: string | null
           signed_at?: string | null
           status?: string
           total_amount?: number | null
@@ -608,6 +616,9 @@ export type Database = {
           client_address?: string | null
           client_email?: string | null
           client_name?: string
+          client_signature?: string | null
+          client_signature_ip?: string | null
+          client_signed_at?: string | null
           client_vat?: string | null
           created_at?: string
           created_by?: string | null
@@ -620,6 +631,7 @@ export type Database = {
           payment_terms?: string
           pdf_url?: string | null
           place_signed?: string | null
+          signature_token?: string | null
           signed_at?: string | null
           status?: string
           total_amount?: number | null

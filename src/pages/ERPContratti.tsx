@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Plus, Trash2, Edit, FileText, Loader2, Search, Download, Sparkles, Wand2 } from 'lucide-react';
+import { Plus, Trash2, Edit, FileText, Loader2, Search, Download, Sparkles, Wand2, Link as LinkIcon, CheckCircle2 } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { generateContractPdf, type ContractVariableFields } from '@/components/erp/contractPdf';
 
@@ -32,6 +32,9 @@ interface Contract {
   status: string;
   notes: string | null;
   created_at: string;
+  signature_token: string | null;
+  client_signature: string | null;
+  client_signed_at: string | null;
 }
 
 const DEFAULT_PAYMENT_TERMS =
@@ -280,6 +283,17 @@ const ERPContratti = () => {
     variable_fields: vf,
   });
 
+  const copySignLink = async (c: Contract) => {
+    if (!c.signature_token) { toast.error('Token firma mancante'); return; }
+    const url = `${window.location.origin}/contratto/${c.signature_token}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success('Link firma copiato negli appunti');
+    } catch {
+      window.prompt('Copia il link:', url);
+    }
+  };
+
   const handleDownloadPdf = async (c: Contract) => {
     try {
       const doc = await generateContractPdf(buildContractData(c) as any);
@@ -393,10 +407,18 @@ const ERPContratti = () => {
                       {new Intl.NumberFormat('it-IT', { style: 'currency', currency: c.currency || 'EUR' }).format(c.total_amount || 0)}
                     </TableCell>
                     <TableCell className="text-gray-300">{c.warranty_years} {c.warranty_years === 1 ? 'anno' : 'anni'}</TableCell>
-                    <TableCell>{statusBadge(c.status)}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        {statusBadge(c.status)}
+                        {c.client_signature && <CheckCircle2 className="w-4 h-4 text-green-400" aria-label="Firmato dal cliente" />}
+                      </div>
+                    </TableCell>
                     <TableCell className="text-gray-400 text-sm">{new Date(c.created_at).toLocaleDateString('it-IT')}</TableCell>
                     <TableCell>
                       <div className="flex justify-end gap-1">
+                        <Button size="sm" variant="ghost" onClick={() => copySignLink(c)} className="text-purple-300 hover:text-purple-200" title="Copia link firma cliente">
+                          <LinkIcon className="w-4 h-4" />
+                        </Button>
                         <Button size="sm" variant="ghost" onClick={() => handleDownloadPdf(c)} className="text-blue-400 hover:text-blue-200" title="Scarica PDF">
                           <Download className="w-4 h-4" />
                         </Button>
