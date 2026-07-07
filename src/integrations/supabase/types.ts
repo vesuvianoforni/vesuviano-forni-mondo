@@ -564,15 +564,19 @@ export type Database = {
           created_at: string
           created_by: string | null
           currency: string
+          destination: string | null
           id: string
           notes: string | null
+          offer_date: string | null
           offer_number: string | null
           payment_terms: string
           pdf_url: string | null
+          place_signed: string | null
           signed_at: string | null
           status: string
           total_amount: number | null
           updated_at: string
+          variable_fields: Json
           warranty_years: number
         }
         Insert: {
@@ -584,15 +588,19 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           currency?: string
+          destination?: string | null
           id?: string
           notes?: string | null
+          offer_date?: string | null
           offer_number?: string | null
           payment_terms?: string
           pdf_url?: string | null
+          place_signed?: string | null
           signed_at?: string | null
           status?: string
           total_amount?: number | null
           updated_at?: string
+          variable_fields?: Json
           warranty_years?: number
         }
         Update: {
@@ -604,15 +612,19 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           currency?: string
+          destination?: string | null
           id?: string
           notes?: string | null
+          offer_date?: string | null
           offer_number?: string | null
           payment_terms?: string
           pdf_url?: string | null
+          place_signed?: string | null
           signed_at?: string | null
           status?: string
           total_amount?: number | null
           updated_at?: string
+          variable_fields?: Json
           warranty_years?: number
         }
         Relationships: []
