@@ -40,9 +40,6 @@ const LocalizedServices = ({ lang }: Props) => {
       <SEOHead lang={lang} title={meta.title} description={meta.description} />
       <main className="pt-20">
         <Services />
-        <Suspense fallback={null}>
-          <PreFooterSimpleForm />
-        </Suspense>
       </main>
     </div>
   );
