@@ -13,11 +13,11 @@ interface LocalizedAboutUsProps {
 }
 
 const META: Record<string, { title: string; description: string }> = {
-  it: { title: 'Chi Siamo — Forni Napoletani Artigianali dal 1950 | Vesuviano Forni', description: "Vesuviano Forni: dal 1950 costruiamo forni napoletani artigianali a Sant'Anastasia e Boscoreale. Sabbia vulcanica, mattoni refrattari, esportazione in tutto il mondo." },
-  en: { title: 'About Us — Handcrafted Neapolitan Ovens Since 1950 | Vesuviano Forni', description: "Vesuviano Forni: handcrafting Neapolitan ovens since 1950 in Sant'Anastasia and Boscoreale. Volcanic sand, refractory bricks, shipping worldwide." },
-  fr: { title: 'Qui Sommes-Nous — Fours Napolitains Artisanaux depuis 1950 | Vesuviano Forni', description: "Vesuviano Forni : fabricants artisanaux de fours napolitains depuis 1950 à Sant'Anastasia et Boscoreale. Sable volcanique, briques réfractaires, export mondial." },
-  de: { title: 'Über Uns — Handgefertigte Neapolitanische Öfen seit 1950 | Vesuviano Forni', description: "Vesuviano Forni: handwerkliche neapolitanische Öfen seit 1950 aus Sant'Anastasia und Boscoreale. Vulkansand, Schamottsteine, weltweiter Export." },
-  es: { title: 'Quiénes Somos — Hornos Napolitanos Artesanales desde 1950 | Vesuviano Forni', description: "Vesuviano Forni: fabricantes artesanales de hornos napolitanos desde 1950 en Sant'Anastasia y Boscoreale. Arena volcánica, refractarios, envío mundial." },
+  it: { title: 'Chi Siamo — Vesuviano Forni | Brand napoletano, radici artigiane 50+ anni', description: "Vesuviano Forni: brand fondato nel 2025 che riunisce maestri artigiani napoletani con oltre 50 anni di esperienza. Forni professionali per pizza tra tradizione e innovazione." },
+  en: { title: 'About Us — Vesuviano Forni | Neapolitan brand with 50+ years of craft', description: 'Vesuviano Forni: a brand founded in 2025 uniting Neapolitan master artisans with 50+ years of experience. Professional pizza ovens where tradition meets innovation.' },
+  fr: { title: 'Qui Sommes-Nous — Vesuviano Forni | Marque napolitaine, 50+ ans de savoir-faire', description: "Vesuviano Forni : marque fondée en 2025 réunissant des maîtres artisans napolitains avec plus de 50 ans d'expérience. Fours à pizza professionnels, tradition et innovation." },
+  de: { title: 'Über Uns — Vesuviano Forni | Neapolitanische Marke, 50+ Jahre Handwerk', description: 'Vesuviano Forni: 2025 gegründete Marke, die neapolitanische Meisterhandwerker mit über 50 Jahren Erfahrung vereint. Professionelle Pizzaöfen zwischen Tradition und Innovation.' },
+  es: { title: 'Quiénes Somos — Vesuviano Forni | Marca napolitana, 50+ años de artesanía', description: 'Vesuviano Forni: marca fundada en 2025 que reúne a maestros artesanos napolitanos con más de 50 años de experiencia. Hornos profesionales entre tradición e innovación.' },
 };
 
 const LocalizedAboutUs = ({ lang }: LocalizedAboutUsProps) => {
