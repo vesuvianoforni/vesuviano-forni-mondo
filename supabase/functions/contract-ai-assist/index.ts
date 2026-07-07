@@ -20,10 +20,11 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json();
-    const action: 'rewrite' | 'add' | 'suggest' | 'improve_all' = body.action;
+    const action: 'rewrite' | 'add' | 'suggest' | 'improve_all' | 'fill_fields' = body.action;
     const prompt: string = body.prompt || '';
     const clause: Clause | undefined = body.clause;
     const clauses: Clause[] | undefined = body.clauses;
+    const currentFields: Record<string, string> | undefined = body.current_fields;
 
     const systemPrompt = `Sei un assistente legale specializzato in contratti commerciali B2B italiani per la fornitura di forni professionali da parte di Vesuviano Forni (UNITA 1 di Stanislao Elefante, P.IVA IT02192040661).
 Scrivi clausole giuridicamente valide, chiare, in italiano formale, adatte a contratti B2B tra un fornitore italiano e clienti in Italia o all'estero.
