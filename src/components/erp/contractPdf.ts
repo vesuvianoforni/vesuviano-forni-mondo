@@ -176,7 +176,10 @@ export interface ContractVariableFields {
   warranty_coverage?: string;
   warranty_exclusions?: string;
   place_signed?: string;
+  production_days?: string;
+  shipping_days?: string;
 }
+
 
 export interface ContractData {
   id?: string;
