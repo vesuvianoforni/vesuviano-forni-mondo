@@ -100,6 +100,12 @@ const FIELD_GROUPS: { title: string; fields: FieldDef[] }[] = [
     ],
   },
   {
+    title: 'Coordinate Bancarie',
+    fields: [
+      { key: 'bank_details' as VFKey, label: 'Coordinate bancarie per bonifico', type: 'textarea', presetKey: 'bank_account' },
+    ],
+  },
+  {
     title: 'Tempi (calcolo automatico)',
     fields: [
       { key: 'production_days', label: 'Giorni di produzione', type: 'number', presetKey: 'production_days' },
