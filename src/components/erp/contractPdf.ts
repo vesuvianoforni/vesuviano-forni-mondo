@@ -66,6 +66,8 @@ export interface ContractData {
   clauses?: ContractClause[];
   variable_fields?: ContractVariableFields;
   created_at?: string;
+  client_signature?: string | null;
+  client_signed_at?: string | null;
 }
 
 const COMPANY = {
