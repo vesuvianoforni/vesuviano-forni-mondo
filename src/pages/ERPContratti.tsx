@@ -688,9 +688,11 @@ const ERPContratti = () => {
               </div>
 
               <div className="flex gap-2 sticky bottom-0 bg-[#1a1a1a] pt-3 border-t border-amber-900/20">
-                <Button variant="outline" onClick={handlePreviewPdf} className="border-amber-700 text-amber-200">
-                  <FileText className="w-4 h-4 mr-2" /> Anteprima PDF
+                <Button variant="outline" onClick={handlePreviewPdf} disabled={pdfLoading} className="border-amber-700 text-amber-200">
+                  {pdfLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileText className="w-4 h-4 mr-2" />}
+                  Anteprima PDF ({language.toUpperCase()})
                 </Button>
+
                 <div className="flex-1" />
                 <Button variant="ghost" onClick={() => setShowForm(false)}>Annulla</Button>
                 <Button onClick={handleSave} disabled={saving} className="bg-amber-600 hover:bg-amber-700">
