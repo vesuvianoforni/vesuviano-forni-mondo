@@ -255,7 +255,9 @@ const ERPContratti = () => {
     setWarrantyYears(1);
     setVf(DEFAULT_VF);
     setStatus('draft'); setNotes('');
+    setLanguage('it');
     setAiPrompt('');
+
   };
 
   const openCreate = () => { resetForm(); setShowForm(true); };
