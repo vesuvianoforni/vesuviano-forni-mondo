@@ -517,26 +517,31 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.text(COMPANY.address, pageWidth - marginX, 25, { align: 'right' });
   doc.text(COMPANY.pec, pageWidth - marginX, 29, { align: 'right' });
 
+  const lang: ContractLanguage = (data.language as ContractLanguage) || 'it';
+  const L = UI_LABELS[lang] || UI_LABELS.it;
+  const locale = LOCALE_BY_LANG[lang] || 'it-IT';
+
   // Title
   doc.setTextColor(20, 20, 20);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(15);
-  doc.text('CONDIZIONI GENERALI DI VENDITA', pageWidth / 2, 46, { align: 'center' });
+  doc.text(L.title, pageWidth / 2, 46, { align: 'center' });
 
   const today = data.created_at ? new Date(data.created_at) : new Date();
-  const dateStr = today.toLocaleDateString('it-IT');
+  const dateStr = today.toLocaleDateString(locale);
   const vf = data.variable_fields || {};
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(90, 90, 90);
-  const meta = `Data: ${dateStr}` +
-    ((vf.offer_number || data.offer_number) ? `  ·  Rif. Offerta: ${vf.offer_number || data.offer_number}` : '') +
-    `  ·  Cliente: ${data.client_name}`;
+  const meta = `${L.date}: ${dateStr}` +
+    ((vf.offer_number || data.offer_number) ? `  ·  ${L.offerRef}: ${vf.offer_number || data.offer_number}` : '') +
+    `  ·  ${L.client}: ${data.client_name}`;
   doc.text(meta, pageWidth / 2, 52, { align: 'center' });
 
-  // Body sections
+  // Body sections (translated if needed)
   let y = 60;
-  const sections = buildSections(data);
+  const italianSections = buildSections(data);
+  const sections = await translateSections(italianSections, lang);
 
   const ensureSpace = (needed: number) => {
     if (y + needed > pageHeight - 20) {
@@ -573,6 +578,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
     });
     y += 3;
   });
+
 
   // ===== Section 20 — Signatures =====
   ensureSpace(70);
