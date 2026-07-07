@@ -68,6 +68,7 @@ const ERPKnowledgeBase = lazy(() => import("./pages/ERPKnowledgeBase"));
 const ERPChatLogs = lazy(() => import("./pages/ERPChatLogs"));
 const ERPListinoRivenditori = lazy(() => import("./pages/ERPListinoRivenditori"));
 const ERPContratti = lazy(() => import("./pages/ERPContratti"));
+const PublicContractSign = lazy(() => import("./pages/PublicContractSign"));
 
 const queryClient = new QueryClient();
 
