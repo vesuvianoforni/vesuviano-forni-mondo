@@ -138,11 +138,22 @@ const Header = () => {
     return paths[currentLang] || paths.it;
   };
 
+  const getAboutPath = () => {
+    const paths: Record<string, string> = {
+      it: '/it/chi-siamo', en: '/en/about-us', fr: '/fr/qui-sommes-nous', es: '/es/quienes-somos', de: '/de/ueber-uns'
+    };
+    return paths[currentLang] || paths.it;
+  };
+
+  const aboutLabels: Record<string, string> = {
+    it: 'Chi Siamo', en: 'About Us', fr: 'Qui Sommes-Nous', es: 'Quiénes Somos', de: 'Über Uns'
+  };
+
   const navItems: Array<{ href: string; label: string; type: 'anchor' | 'link' }> = [
     { href: `/${currentLang}/architettoai`, label: t('header.visualizer'), type: 'link' },
     { href: getCollectionsPath(), label: t('header.gallery'), type: 'link' },
     { href: getRivestimentiPath(), label: "Rivestimenti", type: 'link' },
-    { href: "#clients-map", label: "Clienti", type: 'anchor' },
+    { href: getAboutPath(), label: aboutLabels[currentLang] || aboutLabels.it, type: 'link' },
     { href: `/${currentLang}/blog`, label: "Blog", type: 'link' },
     { href: "#consultation", label: t('header.contact'), type: 'anchor' }
   ];
