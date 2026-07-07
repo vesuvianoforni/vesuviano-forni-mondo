@@ -554,6 +554,69 @@ export type Database = {
           },
         ]
       }
+      contracts: {
+        Row: {
+          clauses: Json
+          client_address: string | null
+          client_email: string | null
+          client_name: string
+          client_vat: string | null
+          created_at: string
+          created_by: string | null
+          currency: string
+          id: string
+          notes: string | null
+          offer_number: string | null
+          payment_terms: string
+          pdf_url: string | null
+          signed_at: string | null
+          status: string
+          total_amount: number | null
+          updated_at: string
+          warranty_years: number
+        }
+        Insert: {
+          clauses?: Json
+          client_address?: string | null
+          client_email?: string | null
+          client_name: string
+          client_vat?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          id?: string
+          notes?: string | null
+          offer_number?: string | null
+          payment_terms?: string
+          pdf_url?: string | null
+          signed_at?: string | null
+          status?: string
+          total_amount?: number | null
+          updated_at?: string
+          warranty_years?: number
+        }
+        Update: {
+          clauses?: Json
+          client_address?: string | null
+          client_email?: string | null
+          client_name?: string
+          client_vat?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          id?: string
+          notes?: string | null
+          offer_number?: string | null
+          payment_terms?: string
+          pdf_url?: string | null
+          signed_at?: string | null
+          status?: string
+          total_amount?: number | null
+          updated_at?: string
+          warranty_years?: number
+        }
+        Relationships: []
+      }
       email_history: {
         Row: {
           body: string
