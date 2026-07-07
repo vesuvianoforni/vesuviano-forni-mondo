@@ -634,10 +634,12 @@ const ERPContratti = () => {
               {/* Campi variabili raggruppati */}
               {FIELD_GROUPS.map(group => (
                 <section key={group.title} className="space-y-3">
-                  <h3 className="text-amber-400 font-semibold text-sm uppercase tracking-wider">{group.title}</h3>
+                  <h3 className="text-amber-400 font-semibold text-sm uppercase tracking-wider flex items-center gap-2">
+                    {group.title.includes('automatico') && <Calculator className="w-4 h-4 text-green-400" />}
+                    {group.title}
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {group.fields.map(f => {
-                      // Route the "riferimento & cliente" fields to top-level state
                       const isTop = ['offer_number','offer_date','destination','place_signed'].includes(f.key);
                       const value = isTop ? (
                         f.key === 'offer_number' ? offerNumber :
@@ -652,12 +654,22 @@ const ERPContratti = () => {
                         else if (f.key === 'place_signed') setPlaceSigned(v);
                         else setField(f.key, v);
                       };
+                      const fieldPresets = f.presetKey ? (presets[f.presetKey] || []) : [];
                       return (
                         <div key={f.key} className={f.type === 'textarea' ? 'md:col-span-2' : ''}>
                           <Label className="text-amber-300 text-xs">{f.label}</Label>
-                          {f.type === 'textarea' ? (
-                            <Textarea value={value} onChange={e => setter(e.target.value)} rows={2}
-                              className="bg-[#111] border-amber-900/30 text-sm" />
+                          {fieldPresets.length > 0 || f.type === 'textarea' ? (
+                            <SelectOrCustom
+                              fieldKey={f.presetKey || f.key}
+                              value={value}
+                              onChange={setter}
+                              presets={fieldPresets}
+                              type={f.type as any}
+                              onPresetAdded={(p) => setPresets(prev => ({
+                                ...prev,
+                                [f.presetKey || f.key]: [...(prev[f.presetKey || f.key] || []), p],
+                              }))}
+                            />
                           ) : (
                             <Input type={f.type || 'text'} value={value} onChange={e => setter(e.target.value)}
                               className="bg-[#111] border-amber-900/30" />
@@ -668,6 +680,7 @@ const ERPContratti = () => {
                   </div>
                 </section>
               ))}
+
 
               <div>
                 <Label className="text-amber-300">Note interne</Label>
