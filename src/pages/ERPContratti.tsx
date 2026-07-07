@@ -10,9 +10,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Plus, Trash2, Edit, FileText, Loader2, Search, Download, Sparkles, Wand2, PlusCircle } from 'lucide-react';
+import { Plus, Trash2, Edit, FileText, Loader2, Search, Download, Sparkles, Wand2 } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
-import { generateContractPdf, DEFAULT_CLAUSES, DEFAULT_PAYMENT_TERMS, type ContractClause } from '@/components/erp/contractPdf';
+import { generateContractPdf, type ContractVariableFields } from '@/components/erp/contractPdf';
 
 interface Contract {
   id: string;
@@ -21,16 +21,129 @@ interface Contract {
   client_address: string | null;
   client_vat: string | null;
   offer_number: string | null;
+  offer_date: string | null;
+  destination: string | null;
+  place_signed: string | null;
   total_amount: number;
   currency: string;
   payment_terms: string;
   warranty_years: number;
-  clauses: ContractClause[];
+  variable_fields: ContractVariableFields;
   status: string;
-  signed_at: string | null;
   notes: string | null;
   created_at: string;
 }
+
+const DEFAULT_PAYMENT_TERMS =
+  "50% di acconto alla conferma dell'ordine (bonifico bancario), 50% a saldo a merce pronta per la spedizione, previo invio al Cliente di supporto fotografico dei prodotti finiti.";
+
+const DEFAULT_VF: ContractVariableFields = {
+  payment_agreements: DEFAULT_PAYMENT_TERMS,
+  refund_days: '15',
+  shipping_included: 'No, salvo diverso accordo',
+  insurance_included: 'Sì, nei limiti della polizza del vettore',
+  delivery_responsibility: 'Vettore incaricato',
+  unloading_included: 'No — a carico del Cliente',
+  internal_handling_included: 'No — a carico del Cliente',
+  assembly_included: 'No, salvo diverso accordo scritto',
+  installation_included: 'No, salvo diverso accordo scritto',
+  startup_included: 'No, salvo diverso accordo scritto',
+  training_included: 'No, salvo diverso accordo scritto',
+  chimney_responsible: 'Cliente',
+  gas_responsible: 'Cliente',
+  electric_responsible: 'Cliente',
+  masonry_responsible: 'Cliente',
+  permits_responsible: 'Cliente',
+  dim_tolerance: '± 2 cm',
+  color_tolerance: 'Lievi variazioni cromatiche ammesse',
+  weight_tolerance: '± 5%',
+  balance_due_days: '7 giorni',
+  storage_cost: '1,5% del prezzo per mese o frazione',
+  warranty_coverage: 'Difetti di fabbricazione dei componenti forniti',
+};
+
+type VFKey = keyof ContractVariableFields;
+
+const FIELD_GROUPS: {
+  title: string;
+  fields: { key: VFKey; label: string; type?: 'text' | 'textarea' | 'date' }[];
+}[] = [
+  {
+    title: 'Riferimento & Cliente',
+    fields: [
+      { key: 'offer_number', label: 'N° offerta / preventivo' },
+      { key: 'offer_date', label: 'Data offerta', type: 'date' },
+      { key: 'destination', label: 'Destinazione merce' },
+      { key: 'place_signed', label: 'Luogo firma' },
+    ],
+  },
+  {
+    title: 'Pagamento & Rimborsi',
+    fields: [
+      { key: 'payment_agreements', label: 'Accordi di pagamento', type: 'textarea' },
+      { key: 'refund_days', label: 'Giorni lavorativi per rimborso' },
+      { key: 'balance_due_days', label: 'Termine saldo da merce pronta' },
+      { key: 'storage_cost', label: 'Costo deposito' },
+    ],
+  },
+  {
+    title: 'Tempi',
+    fields: [
+      { key: 'work_time', label: 'Tempi di lavorazione' },
+      { key: 'production_time', label: 'Tempi di produzione' },
+      { key: 'delivery_estimate', label: 'Tempi consegna stimati' },
+      { key: 'ready_date', label: 'Data indicativa merce pronta' },
+      { key: 'ship_date', label: 'Data indicativa spedizione' },
+    ],
+  },
+  {
+    title: 'Spedizione & Trasporto',
+    fields: [
+      { key: 'shipping_method', label: 'Modalità di spedizione' },
+      { key: 'carrier', label: 'Corriere / vettore' },
+      { key: 'shipping_included', label: 'Trasporto incluso nel prezzo' },
+      { key: 'insurance_included', label: 'Assicurazione inclusa' },
+      { key: 'delivery_responsibility', label: 'Responsabilità della consegna' },
+      { key: 'incoterms', label: 'Incoterms / resa' },
+    ],
+  },
+  {
+    title: 'Scarico & Logistica',
+    fields: [
+      { key: 'unloading_included', label: 'Scarico incluso' },
+      { key: 'internal_handling_included', label: 'Movimentazione interna inclusa' },
+      { key: 'unloading_means', label: 'Mezzi necessari allo scarico' },
+      { key: 'unloading_responsible', label: 'Responsabile scarico' },
+      { key: 'handling_responsible', label: 'Responsabile movimentazione interna' },
+      { key: 'logistics_notes', label: 'Note logistiche', type: 'textarea' },
+    ],
+  },
+  {
+    title: 'Installazione & Predisposizioni',
+    fields: [
+      { key: 'assembly_included', label: 'Montaggio incluso' },
+      { key: 'installation_included', label: 'Installazione inclusa' },
+      { key: 'startup_included', label: 'Primo avviamento incluso' },
+      { key: 'training_included', label: "Formazione all'uso inclusa" },
+      { key: 'chimney_responsible', label: 'Responsabile canna fumaria' },
+      { key: 'gas_responsible', label: 'Responsabile allaccio gas' },
+      { key: 'electric_responsible', label: 'Responsabile allaccio elettrico' },
+      { key: 'masonry_responsible', label: 'Responsabile opere murarie' },
+      { key: 'permits_responsible', label: 'Responsabile permessi' },
+    ],
+  },
+  {
+    title: 'Tolleranze & Garanzia',
+    fields: [
+      { key: 'dim_tolerance', label: 'Tolleranza dimensionale' },
+      { key: 'color_tolerance', label: 'Tolleranza colore/finitura' },
+      { key: 'weight_tolerance', label: 'Tolleranza peso' },
+      { key: 'warranty_duration', label: 'Durata garanzia (override)' },
+      { key: 'warranty_coverage', label: 'Copertura garanzia', type: 'textarea' },
+      { key: 'warranty_exclusions', label: 'Esclusioni particolari garanzia', type: 'textarea' },
+    ],
+  },
+];
 
 const ERPContratti = () => {
   const [contracts, setContracts] = useState<Contract[]>([]);
@@ -40,24 +153,23 @@ const ERPContratti = () => {
   const [editing, setEditing] = useState<Contract | null>(null);
   const [saving, setSaving] = useState(false);
 
-  // Form
   const [clientName, setClientName] = useState('');
   const [clientEmail, setClientEmail] = useState('');
   const [clientAddress, setClientAddress] = useState('');
   const [clientVat, setClientVat] = useState('');
   const [offerNumber, setOfferNumber] = useState('');
+  const [offerDate, setOfferDate] = useState('');
+  const [destination, setDestination] = useState('');
+  const [placeSigned, setPlaceSigned] = useState('');
   const [totalAmount, setTotalAmount] = useState('');
   const [currency, setCurrency] = useState('EUR');
-  const [paymentTerms, setPaymentTerms] = useState(DEFAULT_PAYMENT_TERMS);
   const [warrantyYears, setWarrantyYears] = useState<number>(1);
-  const [clauses, setClauses] = useState<ContractClause[]>(DEFAULT_CLAUSES);
+  const [vf, setVf] = useState<ContractVariableFields>(DEFAULT_VF);
   const [status, setStatus] = useState<'draft' | 'sent' | 'signed'>('draft');
   const [notes, setNotes] = useState('');
 
-  // AI
   const [aiPrompt, setAiPrompt] = useState('');
-  const [aiLoading, setAiLoading] = useState<string | null>(null);
-  const [aiTargetIndex, setAiTargetIndex] = useState<number | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
 
   useEffect(() => { fetchContracts(); }, []);
 
@@ -75,12 +187,12 @@ const ERPContratti = () => {
   const resetForm = () => {
     setEditing(null);
     setClientName(''); setClientEmail(''); setClientAddress(''); setClientVat('');
-    setOfferNumber(''); setTotalAmount(''); setCurrency('EUR');
-    setPaymentTerms(DEFAULT_PAYMENT_TERMS);
+    setOfferNumber(''); setOfferDate(''); setDestination(''); setPlaceSigned('');
+    setTotalAmount(''); setCurrency('EUR');
     setWarrantyYears(1);
-    setClauses(DEFAULT_CLAUSES);
+    setVf(DEFAULT_VF);
     setStatus('draft'); setNotes('');
-    setAiPrompt(''); setAiTargetIndex(null);
+    setAiPrompt('');
   };
 
   const openCreate = () => { resetForm(); setShowForm(true); };
@@ -92,11 +204,13 @@ const ERPContratti = () => {
     setClientAddress(c.client_address || '');
     setClientVat(c.client_vat || '');
     setOfferNumber(c.offer_number || '');
+    setOfferDate(c.offer_date || '');
+    setDestination(c.destination || '');
+    setPlaceSigned(c.place_signed || '');
     setTotalAmount(c.total_amount?.toString() || '');
     setCurrency(c.currency || 'EUR');
-    setPaymentTerms(c.payment_terms || DEFAULT_PAYMENT_TERMS);
     setWarrantyYears(c.warranty_years || 1);
-    setClauses(Array.isArray(c.clauses) && c.clauses.length ? c.clauses : DEFAULT_CLAUSES);
+    setVf({ ...DEFAULT_VF, ...(c.variable_fields || {}) });
     setStatus((c.status as any) || 'draft');
     setNotes(c.notes || '');
     setShowForm(true);
@@ -112,11 +226,14 @@ const ERPContratti = () => {
         client_address: clientAddress.trim() || null,
         client_vat: clientVat.trim() || null,
         offer_number: offerNumber.trim() || null,
+        offer_date: offerDate || null,
+        destination: destination.trim() || null,
+        place_signed: placeSigned.trim() || null,
         total_amount: parseFloat(totalAmount) || 0,
         currency,
-        payment_terms: paymentTerms,
+        payment_terms: vf.payment_agreements || DEFAULT_PAYMENT_TERMS,
         warranty_years: warrantyYears,
-        clauses: clauses as any,
+        variable_fields: vf as any,
         status,
         notes: notes.trim() || null,
       };
@@ -144,13 +261,29 @@ const ERPContratti = () => {
     else { toast.success('Eliminato'); fetchContracts(); }
   };
 
+  const buildContractData = (c?: Contract) => c ? ({
+    ...c,
+    variable_fields: c.variable_fields || {},
+  }) : ({
+    client_name: clientName || 'Cliente',
+    client_email: clientEmail,
+    client_address: clientAddress,
+    client_vat: clientVat,
+    offer_number: offerNumber,
+    offer_date: offerDate,
+    destination,
+    place_signed: placeSigned,
+    total_amount: parseFloat(totalAmount) || 0,
+    currency,
+    payment_terms: vf.payment_agreements || DEFAULT_PAYMENT_TERMS,
+    warranty_years: warrantyYears,
+    variable_fields: vf,
+  });
+
   const handleDownloadPdf = async (c: Contract) => {
     try {
-      const doc = await generateContractPdf({
-        ...c,
-        clauses: (Array.isArray(c.clauses) && c.clauses.length ? c.clauses : DEFAULT_CLAUSES) as ContractClause[],
-      });
-      const filename = `Contratto_${c.client_name.replace(/\s+/g, '_')}${c.offer_number ? `_${c.offer_number}` : ''}.pdf`;
+      const doc = await generateContractPdf(buildContractData(c) as any);
+      const filename = `CGV_${c.client_name.replace(/\s+/g, '_')}${c.offer_number ? `_${c.offer_number}` : ''}.pdf`;
       doc.save(filename);
     } catch (e: any) {
       toast.error('Errore PDF: ' + e.message);
@@ -159,85 +292,38 @@ const ERPContratti = () => {
 
   const handlePreviewPdf = async () => {
     try {
-      const doc = await generateContractPdf({
-        client_name: clientName || 'Cliente',
-        client_email: clientEmail, client_address: clientAddress, client_vat: clientVat,
-        offer_number: offerNumber,
-        total_amount: parseFloat(totalAmount) || 0,
-        currency, payment_terms: paymentTerms, warranty_years: warrantyYears,
-        clauses,
-      });
+      const doc = await generateContractPdf(buildContractData() as any);
       window.open(doc.output('bloburl'), '_blank');
     } catch (e: any) {
       toast.error('Errore anteprima: ' + e.message);
     }
   };
 
-  const updateClause = (i: number, field: 'title' | 'content', v: string) => {
-    setClauses(prev => prev.map((c, idx) => idx === i ? { ...c, [field]: v } : c));
-  };
-  const removeClause = (i: number) => setClauses(prev => prev.filter((_, idx) => idx !== i));
-  const addBlankClause = () => setClauses(prev => [...prev, { title: 'Nuova clausola', content: '' }]);
-  const moveClause = (i: number, dir: -1 | 1) => {
-    setClauses(prev => {
-      const arr = [...prev];
-      const t = i + dir;
-      if (t < 0 || t >= arr.length) return arr;
-      [arr[i], arr[t]] = [arr[t], arr[i]];
-      return arr;
-    });
-  };
+  const setField = (k: VFKey, v: string) => setVf(prev => ({ ...prev, [k]: v }));
 
-  const callAI = async (action: 'rewrite' | 'add' | 'suggest' | 'improve_all', body: any = {}) => {
-    setAiLoading(action);
+  const aiFillFields = async () => {
+    if (!aiPrompt.trim()) { toast.error("Descrivi cosa vuoi impostare"); return; }
+    setAiLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('contract-ai-assist', {
-        body: { action, prompt: aiPrompt, ...body },
+        body: {
+          action: 'fill_fields',
+          prompt: aiPrompt,
+          current_fields: vf,
+        },
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      return data;
+      if (data?.fields && typeof data.fields === 'object') {
+        setVf(prev => ({ ...prev, ...data.fields }));
+        toast.success('Campi aggiornati dall\'AI');
+        setAiPrompt('');
+      } else {
+        toast.error('AI: nessun campo restituito');
+      }
     } catch (e: any) {
       toast.error('AI: ' + (e.message || 'errore'));
-      return null;
-    } finally { setAiLoading(null); }
-  };
-
-  const aiRewrite = async (i: number) => {
-    if (!aiPrompt.trim()) { toast.error('Scrivi un\'istruzione per l\'AI'); return; }
-    setAiTargetIndex(i);
-    const res = await callAI('rewrite', { clause: clauses[i] });
-    if (res?.title && res?.content) {
-      updateClause(i, 'title', res.title);
-      updateClause(i, 'content', res.content);
-      toast.success('Clausola riscritta');
-      setAiPrompt('');
-    }
-    setAiTargetIndex(null);
-  };
-  const aiAdd = async () => {
-    if (!aiPrompt.trim()) { toast.error('Descrivi la clausola da aggiungere'); return; }
-    const res = await callAI('add');
-    if (res?.title && res?.content) {
-      setClauses(prev => [...prev, { title: res.title, content: res.content }]);
-      toast.success('Clausola aggiunta');
-      setAiPrompt('');
-    }
-  };
-  const aiSuggest = async () => {
-    const res = await callAI('suggest');
-    if (res?.clauses?.length) {
-      setClauses(res.clauses);
-      toast.success('Clausole standard generate');
-    }
-  };
-  const aiImproveAll = async () => {
-    const res = await callAI('improve_all', { clauses });
-    if (res?.clauses?.length) {
-      setClauses(res.clauses);
-      toast.success('Clausole migliorate');
-      setAiPrompt('');
-    }
+    } finally { setAiLoading(false); }
   };
 
   const filtered = contracts.filter(c => {
@@ -262,12 +348,12 @@ const ERPContratti = () => {
 
   return (
     <>
-      <SEOHead title="ERP Contratti | Vesuviano" description="Gestione contratti clienti." lang="it" noIndex />
+      <SEOHead title="ERP Contratti | Vesuviano" description="Gestione Condizioni Generali di Vendita per cliente." lang="it" noIndex />
       <div className="p-6 md:p-8 max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <FileText className="w-7 h-7 text-amber-400" />
-            <h1 className="text-2xl font-bold text-amber-100">Contratti</h1>
+            <h1 className="text-2xl font-bold text-amber-100">Contratti · CGV</h1>
             <Badge variant="secondary" className="ml-2">{contracts.length}</Badge>
           </div>
           <Button onClick={openCreate} className="bg-amber-600 hover:bg-amber-700">
@@ -334,11 +420,10 @@ const ERPContratti = () => {
           </CardContent>
         </Card>
 
-        {/* Dialog */}
         <Dialog open={showForm} onOpenChange={setShowForm}>
-          <DialogContent className="bg-[#1a1a1a] border-amber-900/20 text-amber-100 max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-[#1a1a1a] border-amber-900/20 text-amber-100 max-w-5xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{editing ? 'Modifica Contratto' : 'Nuovo Contratto'}</DialogTitle>
+              <DialogTitle>{editing ? 'Modifica Contratto CGV' : 'Nuovo Contratto CGV'}</DialogTitle>
             </DialogHeader>
 
             <div className="space-y-6">
@@ -365,13 +450,13 @@ const ERPContratti = () => {
                 </div>
               </section>
 
-              {/* Economiche */}
+              {/* Economiche base */}
               <section className="space-y-3">
-                <h3 className="text-amber-400 font-semibold text-sm uppercase tracking-wider">Condizioni Economiche</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <h3 className="text-amber-400 font-semibold text-sm uppercase tracking-wider">Economiche</h3>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div>
                     <Label className="text-amber-300">N° Offerta</Label>
-                    <Input value={offerNumber} onChange={e => setOfferNumber(e.target.value)} placeholder="es. PF-2026-0001" className="bg-[#111] border-amber-900/30" />
+                    <Input value={offerNumber} onChange={e => setOfferNumber(e.target.value)} placeholder="PF-2026-0001" className="bg-[#111] border-amber-900/30" />
                   </div>
                   <div>
                     <Label className="text-amber-300">Importo</Label>
@@ -389,12 +474,6 @@ const ERPContratti = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                </div>
-                <div>
-                  <Label className="text-amber-300">Modalità di pagamento</Label>
-                  <Textarea value={paymentTerms} onChange={e => setPaymentTerms(e.target.value)} className="bg-[#111] border-amber-900/30" rows={3} />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
                     <Label className="text-amber-300">Garanzia</Label>
                     <Select value={String(warrantyYears)} onValueChange={v => setWarrantyYears(parseInt(v))}>
@@ -405,17 +484,17 @@ const ERPContratti = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div>
-                    <Label className="text-amber-300">Stato</Label>
-                    <Select value={status} onValueChange={v => setStatus(v as any)}>
-                      <SelectTrigger className="bg-[#111] border-amber-900/30"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="draft">Bozza</SelectItem>
-                        <SelectItem value="sent">Inviato</SelectItem>
-                        <SelectItem value="signed">Firmato</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                </div>
+                <div>
+                  <Label className="text-amber-300">Stato</Label>
+                  <Select value={status} onValueChange={v => setStatus(v as any)}>
+                    <SelectTrigger className="bg-[#111] border-amber-900/30 max-w-xs"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="draft">Bozza</SelectItem>
+                      <SelectItem value="sent">Inviato</SelectItem>
+                      <SelectItem value="signed">Firmato</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </section>
 
@@ -423,62 +502,56 @@ const ERPContratti = () => {
               <section className="space-y-3 border border-purple-900/40 rounded-lg p-4 bg-purple-950/10">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-purple-400" />
-                  <h3 className="text-purple-300 font-semibold text-sm uppercase tracking-wider">Assistente AI Clausole</h3>
+                  <h3 className="text-purple-300 font-semibold text-sm uppercase tracking-wider">Assistente AI · Compila campi variabili</h3>
                 </div>
-                <p className="text-xs text-gray-400">Descrivi cosa vuoi modificare o aggiungere: l'AI aggiorna le clausole del contratto.</p>
+                <p className="text-xs text-gray-400">Descrivi in linguaggio naturale le condizioni: l'AI popola i campi variabili qui sotto.</p>
                 <Textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)} rows={2}
-                  placeholder="Es. 'Estendi la garanzia a 24 mesi'  ·  'Aggiungi clausola di penale per ritardo di pagamento'  ·  'Rendi tutto più formale'"
+                  placeholder="Es. 'Consegna in Francia entro 60 giorni, trasporto incluso, installazione a carico Vesuviano, garanzia 24 mesi'"
                   className="bg-[#111] border-purple-900/30 text-amber-100" />
-                <div className="flex flex-wrap gap-2">
-                  <Button size="sm" variant="outline" onClick={aiAdd} disabled={aiLoading !== null}
-                    className="border-purple-700 text-purple-200 hover:bg-purple-900/30">
-                    {aiLoading === 'add' ? <Loader2 className="w-3 h-3 mr-2 animate-spin" /> : <PlusCircle className="w-3 h-3 mr-2" />}
-                    Aggiungi clausola AI
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={aiImproveAll} disabled={aiLoading !== null}
-                    className="border-purple-700 text-purple-200 hover:bg-purple-900/30">
-                    {aiLoading === 'improve_all' ? <Loader2 className="w-3 h-3 mr-2 animate-spin" /> : <Wand2 className="w-3 h-3 mr-2" />}
-                    Migliora tutte
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={aiSuggest} disabled={aiLoading !== null}
-                    className="border-purple-700 text-purple-200 hover:bg-purple-900/30">
-                    {aiLoading === 'suggest' ? <Loader2 className="w-3 h-3 mr-2 animate-spin" /> : <Sparkles className="w-3 h-3 mr-2" />}
-                    Rigenera clausole standard
-                  </Button>
-                </div>
+                <Button size="sm" onClick={aiFillFields} disabled={aiLoading}
+                  className="bg-purple-700 hover:bg-purple-600 text-white">
+                  {aiLoading ? <Loader2 className="w-3 h-3 mr-2 animate-spin" /> : <Wand2 className="w-3 h-3 mr-2" />}
+                  Applica ai campi
+                </Button>
               </section>
 
-              {/* Clausole */}
-              <section className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-amber-400 font-semibold text-sm uppercase tracking-wider">Termini e Condizioni ({clauses.length})</h3>
-                  <Button size="sm" variant="ghost" onClick={addBlankClause} className="text-amber-300">
-                    <Plus className="w-4 h-4 mr-1" /> Aggiungi vuota
-                  </Button>
-                </div>
-                <div className="space-y-3">
-                  {clauses.map((cl, i) => (
-                    <div key={i} className="border border-amber-900/20 rounded-lg p-3 bg-[#111]">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs text-gray-500 font-mono">Art. {i + 1}</span>
-                        <Input value={cl.title} onChange={e => updateClause(i, 'title', e.target.value)}
-                          className="bg-transparent border-0 text-amber-200 font-semibold px-1 focus-visible:ring-0" />
-                        <Button size="sm" variant="ghost" onClick={() => moveClause(i, -1)} className="text-gray-500 h-7 px-2">↑</Button>
-                        <Button size="sm" variant="ghost" onClick={() => moveClause(i, 1)} className="text-gray-500 h-7 px-2">↓</Button>
-                        <Button size="sm" variant="ghost" onClick={() => aiRewrite(i)} disabled={aiLoading !== null}
-                          className="text-purple-400 hover:text-purple-200 h-7" title="Riscrivi con AI">
-                          {aiLoading === 'rewrite' && aiTargetIndex === i ? <Loader2 className="w-3 h-3 animate-spin" /> : <Wand2 className="w-3 h-3" />}
-                        </Button>
-                        <Button size="sm" variant="ghost" onClick={() => removeClause(i)} className="text-red-400 h-7">
-                          <Trash2 className="w-3 h-3" />
-                        </Button>
-                      </div>
-                      <Textarea value={cl.content} onChange={e => updateClause(i, 'content', e.target.value)} rows={4}
-                        className="bg-[#0a0a0a] border-amber-900/20 text-gray-200 text-sm" />
-                    </div>
-                  ))}
-                </div>
-              </section>
+              {/* Campi variabili raggruppati */}
+              {FIELD_GROUPS.map(group => (
+                <section key={group.title} className="space-y-3">
+                  <h3 className="text-amber-400 font-semibold text-sm uppercase tracking-wider">{group.title}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {group.fields.map(f => {
+                      // Route the "riferimento & cliente" fields to top-level state
+                      const isTop = ['offer_number','offer_date','destination','place_signed'].includes(f.key);
+                      const value = isTop ? (
+                        f.key === 'offer_number' ? offerNumber :
+                        f.key === 'offer_date' ? offerDate :
+                        f.key === 'destination' ? destination :
+                        placeSigned
+                      ) : ((vf as any)[f.key] || '');
+                      const setter = (v: string) => {
+                        if (f.key === 'offer_number') setOfferNumber(v);
+                        else if (f.key === 'offer_date') setOfferDate(v);
+                        else if (f.key === 'destination') setDestination(v);
+                        else if (f.key === 'place_signed') setPlaceSigned(v);
+                        else setField(f.key, v);
+                      };
+                      return (
+                        <div key={f.key} className={f.type === 'textarea' ? 'md:col-span-2' : ''}>
+                          <Label className="text-amber-300 text-xs">{f.label}</Label>
+                          {f.type === 'textarea' ? (
+                            <Textarea value={value} onChange={e => setter(e.target.value)} rows={2}
+                              className="bg-[#111] border-amber-900/30 text-sm" />
+                          ) : (
+                            <Input type={f.type || 'text'} value={value} onChange={e => setter(e.target.value)}
+                              className="bg-[#111] border-amber-900/30" />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+              ))}
 
               <div>
                 <Label className="text-amber-300">Note interne</Label>
