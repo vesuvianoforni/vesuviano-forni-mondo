@@ -283,6 +283,17 @@ const ERPContratti = () => {
     variable_fields: vf,
   });
 
+  const copySignLink = async (c: Contract) => {
+    if (!c.signature_token) { toast.error('Token firma mancante'); return; }
+    const url = `${window.location.origin}/contratto/${c.signature_token}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success('Link firma copiato negli appunti');
+    } catch {
+      window.prompt('Copia il link:', url);
+    }
+  };
+
   const handleDownloadPdf = async (c: Contract) => {
     try {
       const doc = await generateContractPdf(buildContractData(c) as any);
