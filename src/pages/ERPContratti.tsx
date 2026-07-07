@@ -333,6 +333,7 @@ const ERPContratti = () => {
   const buildContractData = (c?: Contract) => c ? ({
     ...c,
     variable_fields: c.variable_fields || {},
+    language: ((c as any).language as ContractLanguage) || 'it',
   }) : ({
     client_name: clientName || 'Cliente',
     client_email: clientEmail,
@@ -347,6 +348,7 @@ const ERPContratti = () => {
     payment_terms: vf.payment_agreements || DEFAULT_PAYMENT_TERMS,
     warranty_years: warrantyYears,
     variable_fields: vf,
+    language,
   });
 
   const copySignLink = async (c: Contract) => {
@@ -361,23 +363,28 @@ const ERPContratti = () => {
   };
 
   const handleDownloadPdf = async (c: Contract) => {
+    setPdfLoading(true);
     try {
       const doc = await generateContractPdf(buildContractData(c) as any);
-      const filename = `CGV_${c.client_name.replace(/\s+/g, '_')}${c.offer_number ? `_${c.offer_number}` : ''}.pdf`;
+      const lang = ((c as any).language as ContractLanguage) || 'it';
+      const filename = `CGV_${lang.toUpperCase()}_${c.client_name.replace(/\s+/g, '_')}${c.offer_number ? `_${c.offer_number}` : ''}.pdf`;
       doc.save(filename);
     } catch (e: any) {
       toast.error('Errore PDF: ' + e.message);
-    }
+    } finally { setPdfLoading(false); }
   };
 
   const handlePreviewPdf = async () => {
+    setPdfLoading(true);
     try {
+      if (language !== 'it') toast.info('Traduzione AI in corso… può richiedere qualche secondo');
       const doc = await generateContractPdf(buildContractData() as any);
       window.open(doc.output('bloburl'), '_blank');
     } catch (e: any) {
       toast.error('Errore anteprima: ' + e.message);
-    }
+    } finally { setPdfLoading(false); }
   };
+
 
   const setField = (k: VFKey, v: string) => setVf(prev => ({ ...prev, [k]: v }));
 
