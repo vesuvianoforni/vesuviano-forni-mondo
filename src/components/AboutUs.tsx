@@ -4,7 +4,7 @@ import CtaButton from './CtaButton';
 import pillarCraftsmanship from '@/assets/about-craftsmanship.jpg';
 import pillarEngineering from '@/assets/about-engineering.jpg';
 import pillarInnovation from '@/assets/about-innovation-rotante.png.asset.json';
-import pillarGlobal from '@/assets/about-global.jpg';
+import pillarGlobal from '@/assets/about-global-new.jpg';
 
 type AboutCopy = {
   sectionTitle: string;
