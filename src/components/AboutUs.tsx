@@ -186,7 +186,7 @@ const copy: Record<string, AboutCopy> = {
   },
 };
 
-const PILLAR_IMAGES = [pillarCraftsmanship, pillarEngineering, pillarInnovation, pillarGlobal];
+const PILLAR_IMAGES: string[] = [pillarCraftsmanship, pillarEngineering, pillarInnovation.url, pillarGlobal];
 
 const AboutUs = () => {
   const { i18n } = useTranslation();
