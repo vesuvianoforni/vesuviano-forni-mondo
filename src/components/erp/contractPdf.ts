@@ -1026,7 +1026,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
   doc.setTextColor(20, 20, 20);
-  doc.text('Firma del Cliente', rightX, rightY);
+  doc.text(L.clientSig, rightX, rightY);
   rightY += 4;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
@@ -1034,7 +1034,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   if (data.client_signed_at) {
     doc.text(`${L.signedOn} ${new Date(data.client_signed_at).toLocaleString(locale)}`, rightX, rightY);
   } else {
-    doc.text('(firma per accettazione)', rightX, rightY);
+    doc.text(L.stampSign, rightX, rightY);
   }
 
   y = Math.max(leftY, rightY) + 8;
