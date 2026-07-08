@@ -175,12 +175,14 @@ const PublicContractSign: React.FC = () => {
   const handleDownloadPdf = async () => {
     if (!contract) return;
     try {
-      const doc = await generateContractPdf({
-        ...contract,
-        variable_fields: contract.variable_fields || {},
-      } as any);
+      const url = await ensurePdfUrl(contract);
       const filename = `CGV_${contract.client_name.replace(/\s+/g, '_')}${contract.offer_number ? `_${contract.offer_number}` : ''}.pdf`;
-      doc.save(filename);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
     } catch (e: any) {
       toast.error('Errore PDF: ' + e.message);
     }
