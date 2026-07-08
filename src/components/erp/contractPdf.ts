@@ -837,7 +837,8 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   const termsIntro = orderConfirmation
     ? [{ title: ocL.termsHeader, body: ocL.termsIntro }]
     : [];
-  const translatedTermsSections = await translateSections([...termsIntro, ...buildSections(data)], lang);
+  // Only translate the general terms body; keep the intro heading in its native language.
+  const translatedTermsSections = [...termsIntro, ...(await translateSections(buildSections(data), lang))];
 
   const ensureSpace = (needed: number) => {
     if (y + needed > pageHeight - 20) {
