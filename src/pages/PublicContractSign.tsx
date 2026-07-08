@@ -337,9 +337,27 @@ const PublicContractSign: React.FC = () => {
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/30 backdrop-blur-sm">
                   <FileSignatureIcon />
                   <span className="text-xs font-semibold tracking-widest uppercase text-amber-300">
-                    {isOrderConfirmation ? "Conferma d'Ordine" : 'Documento Contrattuale'}
+                    {isOrderConfirmation ? T.badgeOC : T.badgeCGV}
                   </span>
                 </div>
+                {isOrderConfirmation && (
+                  <div className="inline-flex items-center gap-1 mt-2 rounded-full border border-amber-400/30 bg-black/30 backdrop-blur-sm p-0.5">
+                    <button
+                      type="button"
+                      onClick={() => setUiLang('fr')}
+                      className={`text-[10px] font-semibold px-2.5 py-1 rounded-full transition-colors ${uiLang === 'fr' ? 'bg-amber-500 text-black' : 'text-amber-200 hover:text-amber-100'}`}
+                    >
+                      FR
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setUiLang('it')}
+                      className={`text-[10px] font-semibold px-2.5 py-1 rounded-full transition-colors ${uiLang === 'it' ? 'bg-amber-500 text-black' : 'text-amber-200 hover:text-amber-100'}`}
+                    >
+                      IT
+                    </button>
+                  </div>
+                )}
                 <div className="text-[11px] text-stone-400 mt-2">
                   UNITA 1 di Stanislao Elefante
                 </div>
