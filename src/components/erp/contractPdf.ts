@@ -990,7 +990,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
   doc.setTextColor(20, 20, 20);
-  doc.text('Cliente', rightX, rightY + 5);
+  doc.text(lang === 'fr' ? 'Client' : 'Cliente', rightX, rightY + 5);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(70);
