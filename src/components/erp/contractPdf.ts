@@ -600,14 +600,7 @@ Questi componenti permetteranno al cliente, se necessario, di procedere facilmen
 In questi casi, il cliente dovrà rivolgersi alla propria società di energia, al proprio elettricista o al responsabile del proprio impianto elettrico per verificare e risolvere il problema.`,
     },
     {
-      title: '9. Attestazione assicurativa del produttore',
-      body:
-`Vesuviano Forni fornirà al cliente una attestazione assicurativa del produttore, trasmessa separatamente o allegata al presente documento.
-
-Tale attestazione farà parte dei documenti consegnati prima della validazione definitiva dell'ordine.`,
-    },
-    {
-      title: '10. Garanzia',
+      title: '9. Garanzia',
       body:
 `Il prodotto beneficia di una garanzia di 2 anni contro i difetti di fabbricazione dei componenti forniti da Vesuviano Forni.
 
@@ -616,7 +609,7 @@ La garanzia copre i difetti imputabili alla fabbricazione o ai componenti fornit
 Sono esclusi i danni legati a cattiva installazione, cattivo utilizzo, assenza di manutenzione, modifiche non autorizzate, problemi di alimentazione elettrica/gas, canna fumaria, tiraggio o impianti non forniti da Vesuviano Forni.`,
     },
     {
-      title: "11. Validazione dell'ordine",
+      title: "10. Validazione dell'ordine",
       body:
 `L'ordine sarà considerato confermato dopo:
 • accettazione scritta dell'offerta / conferma d'ordine;
