@@ -117,15 +117,25 @@ const PublicContractSign: React.FC = () => {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [buildingPdf, setBuildingPdf] = useState(false);
+  const [uiLang, setUiLang] = useState<'fr' | 'it'>('fr');
 
   const buildPdfBlobUrl = async (c: Contract) => {
     const doc = await generateContractPdf({
       ...c,
       variable_fields: c.variable_fields || {},
+      language: uiLang,
     } as any);
     const blob = doc.output('blob');
     return URL.createObjectURL(blob);
   };
+
+  useEffect(() => {
+    // Regenerate the PDF when language changes
+    if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+    setPdfUrl(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uiLang]);
+
 
   useEffect(() => {
     return () => { if (pdfUrl) URL.revokeObjectURL(pdfUrl); };
