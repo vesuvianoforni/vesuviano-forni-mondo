@@ -525,25 +525,6 @@ function buildOrderConfirmationSections(data: ContractData): { title: string; bo
 
   return [
     {
-      title: 'Intestazione',
-      body:
-`CLIENTE
-Pietra Calda — SAS L'Arche
-Domaine de l'Arche
-Route de Houdan
-78550 Richebourg — France
-TVA: FR79978282820
-
-FORNITORE
-Vesuviano Forni — UNITA 1 di Stanislao Elefante
-P.IVA IT02192040661 · C.F. LFNSNS94E20G813Z
-Via Piaia, 44 – 67034 Pettorano sul Gizio (AQ) – Italia · PEC u1@pec.it
-
-Riferimento offerta: ${offerRef}
-Destinazione: Francia
-Data: ${dateStr}`,
-    },
-    {
       title: "1. Oggetto dell'ordine",
       body:
 `La presente conferma riguarda la fornitura di un forno Vesuviano Forni, secondo l'offerta aggiornata e la fattura proforma trasmesse al cliente.
