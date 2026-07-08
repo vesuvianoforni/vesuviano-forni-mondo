@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Loader2, Download, PenLine, CheckCircle2, FileText, Eye, EyeOff, Calendar, Truck, Shield, Wrench, CreditCard, MapPin } from 'lucide-react';
+import { Loader2, Download, PenLine, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { generateContractPdf, buildOrderConfirmationSections, type ContractVariableFields } from '@/components/erp/contractPdf';
 import SEOHead from '@/components/SEOHead';
@@ -414,63 +414,6 @@ const PublicContractSign: React.FC = () => {
               );
             })()}
 
-            {/* Highlights contrattuali */}
-            {(() => {
-              const vf = contract.variable_fields || {};
-              const items: { icon: any; label: string; value: string }[] = [];
-              items.push({ icon: CreditCard, label: 'Importo complessivo', value: amountFmt });
-              items.push({ icon: CreditCard, label: 'Modalità di pagamento', value: contract.payment_terms });
-              items.push({ icon: Shield, label: 'Garanzia', value: `${contract.warranty_years} ${contract.warranty_years === 1 ? 'anno' : 'anni'}${vf.warranty_coverage ? ' — ' + vf.warranty_coverage : ''}` });
-              if (vf.production_time || vf.production_days) items.push({ icon: Calendar, label: 'Tempi di produzione', value: vf.production_time || `${vf.production_days} giorni` });
-              if (vf.delivery_estimate || vf.shipping_days) items.push({ icon: Truck, label: 'Consegna stimata', value: vf.delivery_estimate || `${vf.shipping_days} giorni` });
-              if (vf.shipping_method || vf.incoterms) items.push({ icon: Truck, label: 'Spedizione', value: [vf.shipping_method, vf.incoterms].filter(Boolean).join(' · ') });
-              if (vf.shipping_included) items.push({ icon: Truck, label: 'Trasporto incluso', value: vf.shipping_included });
-              if (vf.unloading_included) items.push({ icon: Wrench, label: 'Scarico incluso', value: vf.unloading_included });
-              if (vf.installation_included || vf.assembly_included) items.push({ icon: Wrench, label: 'Installazione/Montaggio', value: [vf.assembly_included, vf.installation_included].filter(Boolean).join(' · ') });
-              if (vf.startup_included) items.push({ icon: Wrench, label: 'Avviamento', value: vf.startup_included });
-              if (vf.training_included) items.push({ icon: Wrench, label: 'Formazione', value: vf.training_included });
-              if (contract.destination) items.push({ icon: MapPin, label: 'Destinazione', value: contract.destination });
-              if (vf.refund_days) items.push({ icon: CreditCard, label: 'Termini di recesso', value: `${vf.refund_days} giorni` });
-
-              return (
-                <div
-                  className="relative overflow-hidden rounded-2xl p-6 mb-8 border border-amber-200/70"
-                  style={{ background: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fed7aa 100%)' }}
-                >
-                  <div
-                    className="pointer-events-none absolute -top-16 -right-16 w-48 h-48 rounded-full opacity-30 blur-3xl"
-                    style={{ background: 'radial-gradient(circle, #f59e0b 0%, transparent 70%)' }}
-                  />
-                  <h2 className="relative font-bold text-stone-900 mb-5 flex items-center gap-2 text-lg">
-                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md">
-                      <FileText className="w-4 h-4" />
-                    </span>
-                    Highlights contrattuali
-                  </h2>
-                  <div className="relative grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {items.map((it, i) => (
-                      <div
-                        key={i}
-                        className="flex items-start gap-3 bg-white/90 backdrop-blur-sm rounded-xl p-3.5 border border-amber-100/80 shadow-sm hover:shadow-md hover:border-amber-300 transition-all"
-                      >
-                        <div className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-amber-50 border border-amber-200 shrink-0">
-                          <it.icon className="w-4 h-4 text-amber-700" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="text-[10px] uppercase tracking-widest text-amber-800/80 font-semibold">{it.label}</div>
-                          <div className="text-sm text-stone-900 break-words leading-snug mt-0.5">{it.value}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="relative mt-5 pt-4 border-t border-amber-300/40 text-xs text-amber-900/90">
-                    <strong>Cliente:</strong> {contract.client_name}
-                    {contract.client_vat && <> · <strong>P.IVA/CF:</strong> {contract.client_vat}</>}
-                    {contract.offer_number && <> · <strong>Offerta:</strong> {contract.offer_number}</>}
-                  </div>
-                </div>
-              );
-            })()}
 
             <div className="mb-6 flex flex-wrap gap-3">
               <Button
