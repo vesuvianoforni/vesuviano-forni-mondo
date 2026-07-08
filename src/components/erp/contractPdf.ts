@@ -215,9 +215,9 @@ const COMPANY = {
   pec: 'PEC: u1@pec.it',
 };
 
-async function loadLogo(): Promise<string | null> {
+async function loadImageAsDataUrl(url: string): Promise<string | null> {
   try {
-    const res = await fetch('/lovable-uploads/vesuviano-logo-bianco.png');
+    const res = await fetch(url);
     const blob = await res.blob();
     return await new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -229,6 +229,15 @@ async function loadLogo(): Promise<string | null> {
     return null;
   }
 }
+
+async function loadLogo(): Promise<string | null> {
+  return loadImageAsDataUrl('/lovable-uploads/vesuviano-logo-bianco.png');
+}
+
+async function loadSupplierSignature(): Promise<string | null> {
+  return loadImageAsDataUrl(firmaStanislaoAsset.url);
+}
+
 
 const V = (v?: string | null) => (v && String(v).trim() ? String(v).trim() : '_______________');
 
