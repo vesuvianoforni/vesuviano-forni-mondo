@@ -270,7 +270,28 @@ const PublicContractSign: React.FC = () => {
   const alreadySigned = !!contract.client_signature;
 
   const isOrderConfirmation = /pietra calda|l'?\s*arche/i.test(contract.client_name || '');
-  const docTitle = isOrderConfirmation ? "Conferma d'Ordine" : 'Condizioni Generali di Vendita';
+  const T = uiLang === 'fr'
+    ? {
+        docTitleOC: "Confirmation de Commande",
+        docTitleCGV: 'Conditions Générales de Vente',
+        badgeOC: 'Confirmation de Commande',
+        badgeCGV: 'Document Contractuel',
+        offerRef: 'Réf. offre',
+        client: 'Client',
+        amount: 'Montant',
+        supplier: 'Fournisseur',
+      }
+    : {
+        docTitleOC: "Conferma d'Ordine",
+        docTitleCGV: 'Condizioni Generali di Vendita',
+        badgeOC: "Conferma d'Ordine",
+        badgeCGV: 'Documento Contrattuale',
+        offerRef: 'Rif. Offerta',
+        client: 'Cliente',
+        amount: 'Importo',
+        supplier: 'Fornitore',
+      };
+  const docTitle = isOrderConfirmation ? T.docTitleOC : T.docTitleCGV;
 
   return (
     <>
