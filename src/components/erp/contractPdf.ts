@@ -727,32 +727,32 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
 
   // Render order confirmation first (compact, on the opening page)
   translatedOrderSections.forEach((sec) => {
-    ensureSpace(12);
+    ensureSpace(10);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10.5);
+    doc.setFontSize(10);
     doc.setTextColor(20, 20, 20);
     doc.text(sec.title, marginX, y);
-    y += 4;
+    y += 3.5;
     doc.setDrawColor(245, 158, 11);
     doc.setLineWidth(0.4);
     doc.line(marginX, y, marginX + 30, y);
-    y += 2;
+    y += 1.5;
 
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8.3);
+    doc.setFontSize(8);
     doc.setTextColor(45, 45, 45);
     const paragraphs = sec.body.split('\n');
     paragraphs.forEach((para) => {
-      if (para.trim() === '') { y += 1.5; return; }
+      if (para.trim() === '') { y += 1; return; }
       const lines = doc.splitTextToSize(para, contentWidth);
       lines.forEach((ln: string) => {
-        ensureSpace(4);
+        ensureSpace(3.8);
         doc.text(ln, marginX, y);
-        y += 4;
+        y += 3.8;
       });
-      y += 1;
+      y += 0.8;
     });
-    y += 1.5;
+    y += 1;
   });
 
   if (orderConfirmation) {
