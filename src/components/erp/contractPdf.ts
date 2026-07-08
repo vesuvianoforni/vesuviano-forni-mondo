@@ -789,13 +789,22 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
     } catch { /* ignore */ }
   }
 
+  // Supplier signature (Stanislao Elefante) — always applied
+  if (supplierSigDataUrl) {
+    try {
+      doc.addImage(supplierSigDataUrl, 'PNG', marginX + colW + 10, y - 4, colW, 20);
+    } catch { /* ignore */ }
+  }
+
   doc.setDrawColor(150);
   doc.line(marginX, y + 15, marginX + colW, y + 15);
   doc.line(marginX + colW + 10, y + 15, marginX + contentWidth, y + 15);
   doc.setFontSize(9);
   doc.setTextColor(60);
   doc.text(L.clientSig, marginX, y + 20);
-  doc.text(L.supplier, marginX + colW + 10, y + 20);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Stanislao Elefante', marginX + colW + 10, y + 20);
+  doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(110);
   if (data.client_signed_at) {
@@ -803,7 +812,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   } else {
     doc.text(L.stampSign, marginX, y + 24);
   }
-  doc.text(L.supplierRole, marginX + colW + 10, y + 24);
+  doc.text('General Director — Vesuviano Forni', marginX + colW + 10, y + 24);
   y += 34;
 
   // Approvazione ex art. 1341 e 1342 c.c.
