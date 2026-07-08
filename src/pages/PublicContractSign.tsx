@@ -259,28 +259,79 @@ const PublicContractSign: React.FC = () => {
 
   const alreadySigned = !!contract.client_signature;
 
+  const isOrderConfirmation = /pietra calda|l'?\s*arche/i.test(contract.client_name || '');
+  const docTitle = isOrderConfirmation ? "Conferma d'Ordine" : 'Condizioni Generali di Vendita';
+
   return (
     <>
-      <SEOHead title="Firma Contratto | Vesuviano Forni" description="Firma le Condizioni Generali di Vendita" lang="it" noIndex />
-      <div className="min-h-screen bg-stone-50 py-8 px-4">
+      <SEOHead title={`${docTitle} | Vesuviano Forni`} description="Firma le Condizioni Generali di Vendita" lang="it" noIndex />
+      <div
+        className="min-h-screen py-8 px-4"
+        style={{
+          background:
+            'radial-gradient(ellipse at top, hsl(28 40% 96%) 0%, hsl(30 25% 92%) 45%, hsl(24 20% 88%) 100%)',
+        }}
+      >
         <div className="max-w-3xl mx-auto">
           {/* Header brand */}
-          <div className="bg-neutral-900 text-white rounded-t-xl p-6 flex items-center justify-between">
-            <div>
-              <div className="text-amber-400 font-bold text-lg tracking-wide">VESUVIANO FORNI</div>
-              <div className="text-xs text-gray-400 mt-1">brand owned by UNITA 1 di Stanislao Elefante</div>
-              <div className="text-xs text-gray-400">P.IVA IT02192040661 · PEC u1@pec.it</div>
+          <div
+            className="relative overflow-hidden rounded-t-2xl p-6 md:p-8 text-white shadow-xl"
+            style={{
+              background:
+                'linear-gradient(135deg, #0a0a0a 0%, #1a1410 45%, #2a1a10 100%)',
+            }}
+          >
+            {/* Ember glow accents */}
+            <div
+              className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full opacity-30 blur-3xl"
+              style={{ background: 'radial-gradient(circle, #f59e0b 0%, transparent 70%)' }}
+            />
+            <div
+              className="pointer-events-none absolute -bottom-32 -left-16 w-80 h-80 rounded-full opacity-20 blur-3xl"
+              style={{ background: 'radial-gradient(circle, #dc2626 0%, transparent 70%)' }}
+            />
+            {/* Gold hairline */}
+            <div
+              className="absolute inset-x-0 bottom-0 h-[2px]"
+              style={{ background: 'linear-gradient(90deg, transparent, #f59e0b 50%, transparent)' }}
+            />
+
+            <div className="relative flex items-center justify-between gap-4 flex-wrap">
+              <img
+                src="/lovable-uploads/vesuviano-logo-bianco.png"
+                alt="Vesuviano Forni"
+                className="h-14 md:h-16 w-auto"
+              />
+              <div className="text-right">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/30 backdrop-blur-sm">
+                  <FileSignatureIcon />
+                  <span className="text-xs font-semibold tracking-widest uppercase text-amber-300">
+                    {isOrderConfirmation ? "Conferma d'Ordine" : 'Documento Contrattuale'}
+                  </span>
+                </div>
+                <div className="text-[11px] text-stone-400 mt-2">
+                  UNITA 1 di Stanislao Elefante
+                </div>
+                <div className="text-[11px] text-stone-500">
+                  P.IVA IT02192040661 · PEC u1@pec.it
+                </div>
+              </div>
             </div>
-            <FileText className="w-10 h-10 text-amber-400" />
           </div>
 
-          <div className="bg-white rounded-b-xl shadow-sm p-6 md:p-8 border border-t-0 border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">{/pietra calda|l'?\s*arche/i.test(contract.client_name || '') ? "Conferma d'Ordine" : 'Condizioni Generali di Vendita'}</h1>
-            <p className="text-sm text-gray-600 mb-6">
-              Rif. Offerta: <strong>{contract.offer_number || '—'}</strong> ·
-              Cliente: <strong>{contract.client_name}</strong> ·
-              Importo: <strong>{amountFmt}</strong>
-            </p>
+          <div className="bg-white rounded-b-2xl shadow-xl p-6 md:p-10 border border-t-0 border-stone-200/70">
+            <div className="mb-8">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-amber-700 font-semibold mb-2">Vesuviano Forni</div>
+              <h1 className="text-3xl md:text-4xl font-bold text-stone-900 leading-tight tracking-tight" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+                {docTitle}
+              </h1>
+              <div className="mt-3 h-[3px] w-16 rounded-full" style={{ background: 'linear-gradient(90deg, #b45309, #f59e0b)' }} />
+              <p className="text-sm text-stone-600 mt-4">
+                Rif. Offerta: <strong className="text-stone-900">{contract.offer_number || '—'}</strong> ·
+                Cliente: <strong className="text-stone-900">{contract.client_name}</strong> ·
+                Importo: <strong className="text-stone-900">{amountFmt}</strong>
+              </p>
+            </div>
 
             {/* Highlights contrattuali */}
             {(() => {
@@ -301,22 +352,37 @@ const PublicContractSign: React.FC = () => {
               if (vf.refund_days) items.push({ icon: CreditCard, label: 'Termini di recesso', value: `${vf.refund_days} giorni` });
 
               return (
-                <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5 mb-6">
-                  <h2 className="font-semibold text-amber-900 mb-4 flex items-center gap-2">
-                    <FileText className="w-5 h-5" /> Highlights contrattuali
+                <div
+                  className="relative overflow-hidden rounded-2xl p-6 mb-8 border border-amber-200/70"
+                  style={{ background: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fed7aa 100%)' }}
+                >
+                  <div
+                    className="pointer-events-none absolute -top-16 -right-16 w-48 h-48 rounded-full opacity-30 blur-3xl"
+                    style={{ background: 'radial-gradient(circle, #f59e0b 0%, transparent 70%)' }}
+                  />
+                  <h2 className="relative font-bold text-stone-900 mb-5 flex items-center gap-2 text-lg">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md">
+                      <FileText className="w-4 h-4" />
+                    </span>
+                    Highlights contrattuali
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="relative grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {items.map((it, i) => (
-                      <div key={i} className="flex items-start gap-3 bg-white/70 rounded-lg p-3 border border-amber-100">
-                        <it.icon className="w-4 h-4 text-amber-700 mt-0.5 shrink-0" />
-                        <div className="min-w-0">
-                          <div className="text-[11px] uppercase tracking-wide text-amber-800/70 font-medium">{it.label}</div>
-                          <div className="text-sm text-gray-900 break-words">{it.value}</div>
+                      <div
+                        key={i}
+                        className="flex items-start gap-3 bg-white/90 backdrop-blur-sm rounded-xl p-3.5 border border-amber-100/80 shadow-sm hover:shadow-md hover:border-amber-300 transition-all"
+                      >
+                        <div className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-amber-50 border border-amber-200 shrink-0">
+                          <it.icon className="w-4 h-4 text-amber-700" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-[10px] uppercase tracking-widest text-amber-800/80 font-semibold">{it.label}</div>
+                          <div className="text-sm text-stone-900 break-words leading-snug mt-0.5">{it.value}</div>
                         </div>
                       </div>
                     ))}
                   </div>
-                  <div className="mt-4 pt-3 border-t border-amber-200/60 text-xs text-amber-900/80">
+                  <div className="relative mt-5 pt-4 border-t border-amber-300/40 text-xs text-amber-900/90">
                     <strong>Cliente:</strong> {contract.client_name}
                     {contract.client_vat && <> · <strong>P.IVA/CF:</strong> {contract.client_vat}</>}
                     {contract.offer_number && <> · <strong>Offerta:</strong> {contract.offer_number}</>}
@@ -329,73 +395,78 @@ const PublicContractSign: React.FC = () => {
               <Button
                 onClick={handleTogglePreview}
                 disabled={buildingPdf}
-                className="bg-amber-600 hover:bg-amber-700 text-white"
+                className="text-white shadow-lg hover:shadow-xl transition-shadow"
+                style={{ background: 'linear-gradient(135deg, #b45309 0%, #d97706 50%, #ea580c 100%)' }}
               >
                 {buildingPdf ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : showPreview ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
                 {showPreview ? 'Nascondi anteprima' : 'Leggi il contratto qui'}
               </Button>
-              <Button variant="outline" onClick={handleDownloadPdf} className="border-amber-600 text-amber-800">
+              <Button variant="outline" onClick={handleDownloadPdf} className="border-amber-700 text-amber-800 hover:bg-amber-50">
                 <Download className="w-4 h-4 mr-2" /> Scarica PDF
               </Button>
             </div>
 
             {showPreview && pdfUrl && (
-              <div className="mb-6 border border-amber-200 rounded-lg overflow-hidden bg-neutral-100">
+              <div className="mb-6 border border-amber-200 rounded-xl overflow-hidden bg-neutral-100 shadow-inner">
                 <iframe
                   src={pdfUrl}
                   title="Anteprima contratto"
                   className="w-full"
                   style={{ height: '80vh', minHeight: 600 }}
                 />
-                <p className="text-xs text-gray-500 p-2 bg-white border-t border-amber-100">
+                <p className="text-xs text-stone-500 p-2 bg-white border-t border-amber-100">
                   Se l'anteprima non si vede sul tuo dispositivo, usa "Scarica PDF".
                 </p>
               </div>
             )}
 
-            <p className="text-xs text-gray-500 mb-6">
+            <p className="text-xs text-stone-500 mb-6">
               Leggi il contratto completo prima di firmare. La firma implica l'accettazione integrale delle Condizioni Generali di Vendita.
             </p>
 
             {alreadySigned ? (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-
-                <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto mb-3" />
-                <h3 className="font-semibold text-green-900 text-lg mb-1">Contratto già firmato</h3>
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-8 text-center shadow-sm">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg mx-auto mb-4">
+                  <CheckCircle2 className="w-9 h-9 text-white" />
+                </div>
+                <h3 className="font-bold text-green-900 text-xl mb-1">Contratto firmato</h3>
                 <p className="text-sm text-green-800 mb-4">
                   Firmato il {contract.client_signed_at ? new Date(contract.client_signed_at).toLocaleString('it-IT') : ''}
                 </p>
                 {contract.client_signature && (
-                  <img src={contract.client_signature} alt="Firma" className="mx-auto max-h-24 bg-white border rounded p-2 mb-4" />
+                  <img src={contract.client_signature} alt="Firma" className="mx-auto max-h-24 bg-white border border-green-200 rounded-lg p-2 mb-4 shadow-sm" />
                 )}
-                <Button onClick={handleDownloadPdf} className="bg-green-700 hover:bg-green-800">
+                <Button onClick={handleDownloadPdf} className="bg-green-700 hover:bg-green-800 shadow-md">
                   <Download className="w-4 h-4 mr-2" /> Scarica PDF firmato
                 </Button>
               </div>
             ) : (
-              <div className="space-y-4">
-                <h2 className="font-semibold text-gray-900 flex items-center gap-2">
-                  <PenLine className="w-5 h-5 text-amber-600" /> Firma
+              <div className="space-y-4 bg-stone-50/50 rounded-2xl p-6 border border-stone-200/70">
+                <h2 className="font-bold text-stone-900 flex items-center gap-2 text-lg">
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md">
+                    <PenLine className="w-4 h-4" />
+                  </span>
+                  Firma il documento
                 </h2>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Nome e cognome del firmatario</label>
+                  <label className="block text-sm font-medium text-stone-700 mb-1.5">Nome e cognome del firmatario</label>
                   <input
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-full border border-stone-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white"
                     placeholder="Es. Mario Rossi"
                   />
                 </div>
 
                 <SignaturePad onChange={setSignature} />
 
-                <label className="flex items-start gap-2 text-sm text-gray-700 cursor-pointer">
+                <label className="flex items-start gap-2 text-sm text-stone-700 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={accepted}
                     onChange={(e) => setAccepted(e.target.checked)}
-                    className="mt-1"
+                    className="mt-1 accent-amber-600"
                   />
                   <span>
                     Dichiaro di aver letto, compreso e accettato integralmente le Condizioni Generali di Vendita
@@ -407,25 +478,40 @@ const PublicContractSign: React.FC = () => {
                 <Button
                   onClick={handleSubmitSignature}
                   disabled={submitting || !signature || !accepted || !fullName.trim()}
-                  className="w-full bg-amber-600 hover:bg-amber-700 text-white py-6 text-base"
+                  className="w-full text-white py-6 text-base font-semibold shadow-lg hover:shadow-xl transition-shadow"
+                  style={{ background: 'linear-gradient(135deg, #b45309 0%, #d97706 50%, #ea580c 100%)' }}
                 >
                   {submitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                   Firma e scarica il PDF
                 </Button>
-                <p className="text-xs text-gray-500 text-center">
+                <p className="text-xs text-stone-500 text-center">
                   Dopo la firma il PDF firmato verrà scaricato automaticamente.
                 </p>
               </div>
             )}
           </div>
 
-          <p className="text-xs text-gray-400 text-center mt-4">
-            Vesuviano Forni · UNITA 1 di Stanislao Elefante · Via Piaia, 44 – 67034 Pettorano sul Gizio (AQ)
-          </p>
+          <div className="mt-6 text-center">
+            <img
+              src="/lovable-uploads/vesuviano-logo-bianco.png"
+              alt=""
+              className="h-6 w-auto mx-auto opacity-40 mb-2 invert"
+            />
+            <p className="text-xs text-stone-500">
+              Vesuviano Forni · UNITA 1 di Stanislao Elefante
+            </p>
+            <p className="text-[11px] text-stone-400">
+              Via Piaia, 44 – 67034 Pettorano sul Gizio (AQ) · Italia
+            </p>
+          </div>
         </div>
       </div>
     </>
   );
 };
+
+const FileSignatureIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-300"><path d="M20 19.5V6.4c0-.7-.4-1.4-1-1.7l-6.4-3.2c-.5-.3-1.2-.3-1.7 0L4.6 4.7c-.6.3-1 1-1 1.7v13.1c0 1.1.9 2 2 2h12.3c1.2 0 2.1-.9 2.1-2Z"/><path d="M8 12h4"/><path d="M8 16h6"/><path d="M14 3.5v3a1 1 0 0 0 1 1h3"/></svg>
+);
 
 export default PublicContractSign;
