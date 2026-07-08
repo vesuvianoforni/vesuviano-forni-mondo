@@ -703,7 +703,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.text(meta, pageWidth / 2, 52, { align: 'center' });
 
   // Body sections (translated if needed)
-  let y = 60;
+  let y = 55;
   const orderConfirmationSections = orderConfirmation
     ? buildOrderConfirmationSections(data).filter((s) => s.title !== '— TERMINI E CONDIZIONI GENERALI DI VENDITA —')
     : [];
