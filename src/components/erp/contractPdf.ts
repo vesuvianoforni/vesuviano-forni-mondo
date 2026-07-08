@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import { supabase } from '@/integrations/supabase/client';
+import firmaStanislaoAsset from '@/assets/firma-stanislao-elefante.png.asset.json';
 
 export type ContractLanguage = 'it' | 'en' | 'fr' | 'de' | 'es';
 
