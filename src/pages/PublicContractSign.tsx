@@ -376,27 +376,27 @@ const PublicContractSign: React.FC = () => {
               </h1>
               <div className="mt-3 h-[3px] w-16 rounded-full" style={{ background: 'linear-gradient(90deg, #b45309, #f59e0b)' }} />
               <p className="text-sm text-stone-600 mt-4">
-                Rif. Offerta: <strong className="text-stone-900">{contract.offer_number || '—'}</strong> ·
-                Cliente: <strong className="text-stone-900">{contract.client_name}</strong> ·
-                Importo: <strong className="text-stone-900">{amountFmt}</strong>
+                {T.offerRef}: <strong className="text-stone-900">{contract.offer_number || '—'}</strong> ·
+                {' '}{T.client}: <strong className="text-stone-900">{contract.client_name}</strong> ·
+                {' '}{T.amount}: <strong className="text-stone-900">{amountFmt}</strong>
               </p>
             </div>
 
             {/* Conferma d'Ordine — testo completo (prima degli highlights) */}
             {isOrderConfirmation && (() => {
-              const sections = buildOrderConfirmationSections(contract as any);
+              const sections = buildOrderConfirmationSections(contract as any, uiLang);
               return (
                 <div className="relative overflow-hidden rounded-2xl p-6 md:p-8 mb-8 border border-stone-200 bg-white shadow-sm">
                   <div className="flex items-start justify-between gap-4 mb-6 pb-4 border-b border-stone-200">
                     <div>
-                      <div className="text-[10px] uppercase tracking-widest text-amber-700 font-semibold">Fornitore</div>
+                      <div className="text-[10px] uppercase tracking-widest text-amber-700 font-semibold">{T.supplier}</div>
                       <div className="text-sm font-bold text-stone-900 mt-1">Vesuviano Forni — UNITA 1</div>
                       <div className="text-xs text-stone-600">di Stanislao Elefante</div>
                       <div className="text-[11px] text-stone-500 mt-1">P.IVA IT02192040661</div>
                       <div className="text-[11px] text-stone-500">Via Piaia, 44 — 67034 Pettorano sul Gizio (AQ)</div>
                     </div>
                     <div className="text-right">
-                      <div className="text-[10px] uppercase tracking-widest text-amber-700 font-semibold">Cliente</div>
+                      <div className="text-[10px] uppercase tracking-widest text-amber-700 font-semibold">{T.client}</div>
                       <div className="text-sm font-bold text-stone-900 mt-1">{contract.client_name}</div>
                       {contract.client_address && <div className="text-xs text-stone-600 whitespace-pre-line">{contract.client_address}</div>}
                       {contract.client_vat && <div className="text-[11px] text-stone-500 mt-1">TVA: {contract.client_vat}</div>}
