@@ -657,6 +657,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   const marginX = 15;
   const contentWidth = pageWidth - marginX * 2;
   const logoDataUrl = await loadLogo();
+  const supplierSigDataUrl = await loadSupplierSignature();
 
   // ===== Cover header =====
   doc.setFillColor(20, 20, 20);
