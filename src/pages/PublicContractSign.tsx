@@ -357,7 +357,9 @@ const PublicContractSign: React.FC = () => {
               Leggi il contratto completo prima di firmare. La firma implica l'accettazione integrale delle Condizioni Generali di Vendita.
             </p>
 
+            {alreadySigned ? (
               <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+
                 <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto mb-3" />
                 <h3 className="font-semibold text-green-900 text-lg mb-1">Contratto già firmato</h3>
                 <p className="text-sm text-green-800 mb-4">
