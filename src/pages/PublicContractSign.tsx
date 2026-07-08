@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Loader2, Download, PenLine, CheckCircle2, FileText } from 'lucide-react';
+import { Loader2, Download, PenLine, CheckCircle2, FileText, Eye, EyeOff, Calendar, Truck, Shield, Wrench, CreditCard, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
 import { generateContractPdf, type ContractVariableFields } from '@/components/erp/contractPdf';
 import SEOHead from '@/components/SEOHead';
