@@ -114,6 +114,45 @@ const PublicContractSign: React.FC = () => {
   const [fullName, setFullName] = useState('');
   const [accepted, setAccepted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
+  const [buildingPdf, setBuildingPdf] = useState(false);
+
+  const buildPdfBlobUrl = async (c: Contract) => {
+    const doc = await generateContractPdf({
+      ...c,
+      variable_fields: c.variable_fields || {},
+    } as any);
+    const blob = doc.output('blob');
+    return URL.createObjectURL(blob);
+  };
+
+  useEffect(() => {
+    return () => { if (pdfUrl) URL.revokeObjectURL(pdfUrl); };
+  }, [pdfUrl]);
+
+  const ensurePdfUrl = async (c: Contract) => {
+    if (pdfUrl) return pdfUrl;
+    setBuildingPdf(true);
+    try {
+      const url = await buildPdfBlobUrl(c);
+      setPdfUrl(url);
+      return url;
+    } finally {
+      setBuildingPdf(false);
+    }
+  };
+
+  const handleTogglePreview = async () => {
+    if (!contract) return;
+    if (showPreview) { setShowPreview(false); return; }
+    try {
+      await ensurePdfUrl(contract);
+      setShowPreview(true);
+    } catch (e: any) {
+      toast.error('Errore anteprima: ' + e.message);
+    }
+  };
 
   useEffect(() => {
     (async () => {
