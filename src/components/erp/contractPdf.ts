@@ -779,41 +779,102 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.text(V(vf.client_name || data.client_name), marginX + 34, y);
   y += 12;
 
-  // Signature lines
-  ensureSpace(40);
+  // ===== Signature block =====
+  ensureSpace(70);
   const colW = (contentWidth - 10) / 2;
+  const leftX = marginX;
+  const rightX = marginX + colW + 10;
+
+  // ---- LEFT: Fornitore (logo + intestazione + firma Stanislao) ----
+  let leftY = y;
+  if (logoDataUrl) {
+    // Small dark badge behind the white logo so it stays visible
+    doc.setFillColor(20, 20, 20);
+    doc.roundedRect(leftX, leftY, 42, 16, 2, 2, 'F');
+    try { doc.addImage(logoDataUrl, 'PNG', leftX + 2, leftY + 2, 38, 12); } catch { /* ignore */ }
+  }
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(20, 20, 20);
+  doc.text('Vesuviano Forni', leftX + 46, leftY + 5);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7.5);
+  doc.setTextColor(70);
+  doc.text('UNITA 1 di Stanislao Elefante', leftX + 46, leftY + 9);
+  doc.text('P.IVA IT02192040661 · C.F. LFNSNS94E20G813Z', leftX + 46, leftY + 12.5);
+  doc.text('Via Piaia, 44 — 67034 Pettorano sul Gizio (AQ)', leftX + 46, leftY + 16);
+  leftY += 22;
+
+  if (supplierSigDataUrl) {
+    try { doc.addImage(supplierSigDataUrl, 'PNG', leftX, leftY, colW, 22); } catch { /* ignore */ }
+  }
+  leftY += 24;
+  doc.setDrawColor(150);
+  doc.line(leftX, leftY, leftX + colW, leftY);
+  leftY += 4;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(20, 20, 20);
+  doc.text('Stanislao Elefante', leftX, leftY);
+  leftY += 4;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(90);
+  doc.text('General Director — Vesuviano Forni', leftX, leftY);
+
+  // ---- RIGHT: Cliente (intestazione + box firma) ----
+  let rightY = y;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(20, 20, 20);
+  doc.text('Cliente', rightX, rightY + 5);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(70);
+  const clientHeader = orderConfirmation
+    ? [
+        "Pietra Calda — SAS L'Arche",
+        "Domaine de l'Arche",
+        'Route de Houdan',
+        '78550 Richebourg — France',
+        'TVA: FR79978282820',
+      ]
+    : [
+        V(vf.client_name || data.client_name),
+        ...(data.client_address ? [data.client_address] : []),
+        ...(data.client_vat ? [`P.IVA/VAT: ${data.client_vat}`] : []),
+      ];
+  let hy = rightY + 9;
+  clientHeader.forEach((ln) => { doc.text(ln, rightX, hy); hy += 3.8; });
+  rightY += 22;
 
   if (data.client_signature) {
-    try {
-      doc.addImage(data.client_signature, 'PNG', marginX, y - 2, colW, 16);
-    } catch { /* ignore */ }
+    try { doc.addImage(data.client_signature, 'PNG', rightX, rightY, colW, 22); } catch { /* ignore */ }
+  } else {
+    // Empty signature box
+    doc.setDrawColor(210);
+    doc.setLineWidth(0.2);
+    doc.roundedRect(rightX, rightY, colW, 22, 1.5, 1.5, 'S');
   }
-
-  // Supplier signature (Stanislao Elefante) — always applied
-  if (supplierSigDataUrl) {
-    try {
-      doc.addImage(supplierSigDataUrl, 'PNG', marginX + colW + 10, y - 4, colW, 20);
-    } catch { /* ignore */ }
-  }
-
+  rightY += 24;
   doc.setDrawColor(150);
-  doc.line(marginX, y + 15, marginX + colW, y + 15);
-  doc.line(marginX + colW + 10, y + 15, marginX + contentWidth, y + 15);
-  doc.setFontSize(9);
-  doc.setTextColor(60);
-  doc.text(L.clientSig, marginX, y + 20);
+  doc.line(rightX, rightY, rightX + colW, rightY);
+  rightY += 4;
   doc.setFont('helvetica', 'bold');
-  doc.text('Stanislao Elefante', marginX + colW + 10, y + 20);
+  doc.setFontSize(9);
+  doc.setTextColor(20, 20, 20);
+  doc.text('Firma del Cliente', rightX, rightY);
+  rightY += 4;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(110);
   if (data.client_signed_at) {
-    doc.text(`${L.signedOn} ${new Date(data.client_signed_at).toLocaleString(locale)}`, marginX, y + 24);
+    doc.text(`${L.signedOn} ${new Date(data.client_signed_at).toLocaleString(locale)}`, rightX, rightY);
   } else {
-    doc.text(L.stampSign, marginX, y + 24);
+    doc.text('(firma per accettazione)', rightX, rightY);
   }
-  doc.text('General Director — Vesuviano Forni', marginX + colW + 10, y + 24);
-  y += 34;
+
+  y = Math.max(leftY, rightY) + 8;
 
   // Approvazione ex art. 1341 e 1342 c.c.
   ensureSpace(30);
