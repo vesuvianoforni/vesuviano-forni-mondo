@@ -69,6 +69,7 @@ const ERPChatLogs = lazy(() => import("./pages/ERPChatLogs"));
 const ERPListinoRivenditori = lazy(() => import("./pages/ERPListinoRivenditori"));
 const ERPContratti = lazy(() => import("./pages/ERPContratti"));
 const PublicContractSign = lazy(() => import("./pages/PublicContractSign"));
+const PublicContractTerms = lazy(() => import("./pages/PublicContractTerms"));
 
 const queryClient = new QueryClient();
 
@@ -91,6 +92,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<LanguageRedirect />} />
               <Route path="/architettoai" element={<ArchitettoAIRedirect />} />
+              <Route path="/contratto/:token/termini" element={<PublicContractTerms />} />
               <Route path="/contratto/:token" element={<PublicContractSign />} />
 
               
