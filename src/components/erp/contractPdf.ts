@@ -499,7 +499,7 @@ La versione applicabile al singolo ordine sarà quella accettata dal Cliente al 
   ];
 }
 
-function isPietraCalda(data: ContractData): boolean {
+export function isPietraCalda(data: ContractData): boolean {
   const name = (data.client_name || '').toLowerCase();
   return (
     name.includes('pietra calda') ||
@@ -509,7 +509,7 @@ function isPietraCalda(data: ContractData): boolean {
   );
 }
 
-function buildOrderConfirmationSections(data: ContractData): { title: string; body: string }[] {
+export function buildOrderConfirmationSections(data: ContractData): { title: string; body: string }[] {
   const vf = data.variable_fields || {};
   const amountFmt = new Intl.NumberFormat('it-IT', {
     style: 'currency',
