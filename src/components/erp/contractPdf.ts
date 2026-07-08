@@ -704,9 +704,19 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
 
   // Body sections (translated if needed)
   let y = 60;
-  const preamble = orderConfirmation ? buildOrderConfirmationSections(data) : [];
-  const italianSections = [...preamble, ...buildSections(data)];
-  const sections = await translateSections(italianSections, lang);
+  const orderConfirmationSections = orderConfirmation
+    ? buildOrderConfirmationSections(data).filter((s) => s.title !== '— TERMINI E CONDIZIONI GENERALI DI VENDITA —')
+    : [];
+  const termsIntro = orderConfirmation
+    ? [
+        {
+          title: '— TERMINI E CONDIZIONI GENERALI DI VENDITA —',
+          body: `Le clausole che seguono costituiscono i Termini e le Condizioni Generali di Vendita applicabili al presente ordine e ne formano parte integrante. Il Cliente, sottoscrivendo la presente Conferma d'Ordine, dichiara di averle lette, comprese e accettate integralmente.`,
+        },
+      ]
+    : [];
+  const translatedOrderSections = await translateSections(orderConfirmationSections, lang);
+  const translatedTermsSections = await translateSections([...termsIntro, ...buildSections(data)], lang);
 
   const ensureSpace = (needed: number) => {
     if (y + needed > pageHeight - 20) {
@@ -715,7 +725,43 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
     }
   };
 
-  sections.forEach((sec) => {
+  // Render order confirmation first (compact, on the opening page)
+  translatedOrderSections.forEach((sec) => {
+    ensureSpace(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(20, 20, 20);
+    doc.text(sec.title, marginX, y);
+    y += 5;
+    doc.setDrawColor(245, 158, 11);
+    doc.setLineWidth(0.4);
+    doc.line(marginX, y, marginX + 30, y);
+    y += 3;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.8);
+    doc.setTextColor(45, 45, 45);
+    const paragraphs = sec.body.split('\n');
+    paragraphs.forEach((para) => {
+      if (para.trim() === '') { y += 2; return; }
+      const lines = doc.splitTextToSize(para, contentWidth);
+      lines.forEach((ln: string) => {
+        ensureSpace(4.5);
+        doc.text(ln, marginX, y);
+        y += 4.2;
+      });
+      y += 1;
+    });
+    y += 2;
+  });
+
+  if (orderConfirmation) {
+    doc.addPage();
+    y = 20;
+  }
+
+  // Render general terms and conditions
+  translatedTermsSections.forEach((sec) => {
     ensureSpace(14);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
