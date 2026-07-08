@@ -399,7 +399,7 @@ const PublicContractSign: React.FC = () => {
                 style={{ background: 'linear-gradient(135deg, #b45309 0%, #d97706 50%, #ea580c 100%)' }}
               >
                 {buildingPdf ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : showPreview ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
-                {showPreview ? 'Nascondi anteprima' : 'Leggi il contratto qui'}
+                {showPreview ? 'Nascondi anteprima' : (isOrderConfirmation ? 'Leggi la conferma e i termini' : 'Leggi il contratto qui')}
               </Button>
               <Button variant="outline" onClick={handleDownloadPdf} className="border-amber-700 text-amber-800 hover:bg-amber-50">
                 <Download className="w-4 h-4 mr-2" /> Scarica PDF
@@ -410,7 +410,7 @@ const PublicContractSign: React.FC = () => {
               <div className="mb-6 border border-amber-200 rounded-xl overflow-hidden bg-neutral-100 shadow-inner">
                 <iframe
                   src={pdfUrl}
-                  title="Anteprima contratto"
+                  title={isOrderConfirmation ? "Anteprima conferma d'ordine" : 'Anteprima contratto'}
                   className="w-full"
                   style={{ height: '80vh', minHeight: 600 }}
                 />
@@ -421,7 +421,9 @@ const PublicContractSign: React.FC = () => {
             )}
 
             <p className="text-xs text-stone-500 mb-6">
-              Leggi il contratto completo prima di firmare. La firma implica l'accettazione integrale delle Condizioni Generali di Vendita.
+              {isOrderConfirmation
+                ? "Leggi la conferma d'ordine e i termini e condizioni prima di firmare. La firma implica l'accettazione integrale."
+                : "Leggi il contratto completo prima di firmare. La firma implica l'accettazione integrale delle Condizioni Generali di Vendita."}
             </p>
 
             {alreadySigned ? (
