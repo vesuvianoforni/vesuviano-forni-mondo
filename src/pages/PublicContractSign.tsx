@@ -275,7 +275,7 @@ const PublicContractSign: React.FC = () => {
           </div>
 
           <div className="bg-white rounded-b-xl shadow-sm p-6 md:p-8 border border-t-0 border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Condizioni Generali di Vendita</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">{/pietra calda|l'?\s*arche/i.test(contract.client_name || '') ? "Conferma d'Ordine" : 'Condizioni Generali di Vendita'}</h1>
             <p className="text-sm text-gray-600 mb-6">
               Rif. Offerta: <strong>{contract.offer_number || '—'}</strong> ·
               Cliente: <strong>{contract.client_name}</strong> ·
