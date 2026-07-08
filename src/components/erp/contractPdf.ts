@@ -749,17 +749,35 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.text(COMPANY.address, pageWidth - marginX, 25, { align: 'right' });
   doc.text(COMPANY.pec, pageWidth - marginX, 29, { align: 'right' });
 
-  const lang: ContractLanguage = (data.language as ContractLanguage) || 'it';
+  const orderConfirmation = isPietraCalda(data);
+  const lang: ContractLanguage = (data.language as ContractLanguage) || (orderConfirmation ? 'fr' : 'it');
   const L = UI_LABELS[lang] || UI_LABELS.it;
   const locale = LOCALE_BY_LANG[lang] || 'it-IT';
 
-  const orderConfirmation = isPietraCalda(data);
+  // Localised strings for order confirmation UI (per language)
+  const OC = {
+    it: {
+      title: "CONFERMA D'ORDINE",
+      supplier: 'FORNITORE',
+      client: 'CLIENTE',
+      termsHeader: '— TERMINI E CONDIZIONI GENERALI DI VENDITA —',
+      termsIntro: `Le clausole che seguono costituiscono i Termini e le Condizioni Generali di Vendita applicabili al presente ordine e ne formano parte integrante. Il Cliente, sottoscrivendo la presente Conferma d'Ordine, dichiara di averle lette, comprese e accettate integralmente.`,
+    },
+    fr: {
+      title: "CONFIRMATION DE COMMANDE",
+      supplier: 'FOURNISSEUR',
+      client: 'CLIENT',
+      termsHeader: '— CONDITIONS GÉNÉRALES DE VENTE —',
+      termsIntro: `Les clauses qui suivent constituent les Conditions Générales de Vente applicables à la présente commande et en font partie intégrante. Le Client, en signant la présente Confirmation de Commande, déclare les avoir lues, comprises et intégralement acceptées.`,
+    },
+  } as const;
+  const ocL = (lang === 'it' ? OC.it : OC.fr);
 
   // Title
   doc.setTextColor(20, 20, 20);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(15);
-  const titleText = orderConfirmation ? "CONFERMA D'ORDINE" : L.title;
+  const titleText = orderConfirmation ? ocL.title : L.title;
   doc.text(titleText, pageWidth / 2, 46, { align: 'center' });
 
   const today = data.created_at ? new Date(data.created_at) : new Date();
@@ -773,7 +791,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
     `  ·  ${L.client}: ${data.client_name}`;
   doc.text(meta, pageWidth / 2, 52, { align: 'center' });
 
-  // Body sections (translated if needed)
+  // Body sections
   let y = 56;
 
   // Compact two-column header for Pietra Calda order confirmation
@@ -786,8 +804,8 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(9);
     doc.setTextColor(20, 20, 20);
-    doc.text('FORNITORE', leftX, hy);
-    doc.text('CLIENTE', rightX, hy);
+    doc.text(ocL.supplier, leftX, hy);
+    doc.text(ocL.client, rightX, hy);
     hy += 4;
 
     doc.setFont('helvetica', 'normal');
@@ -812,18 +830,13 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
 
     y = Math.max(hy, hy2) + 5;
   }
-  const orderConfirmationSections = orderConfirmation
-    ? buildOrderConfirmationSections(data).filter((s) => s.title !== '— TERMINI E CONDIZIONI GENERALI DI VENDITA —')
+  // Order confirmation sections: use native IT/FR content (no AI translation).
+  const translatedOrderSections = orderConfirmation
+    ? buildOrderConfirmationSections(data, lang)
     : [];
   const termsIntro = orderConfirmation
-    ? [
-        {
-          title: '— TERMINI E CONDIZIONI GENERALI DI VENDITA —',
-          body: `Le clausole che seguono costituiscono i Termini e le Condizioni Generali di Vendita applicabili al presente ordine e ne formano parte integrante. Il Cliente, sottoscrivendo la presente Conferma d'Ordine, dichiara di averle lette, comprese e accettate integralmente.`,
-        },
-      ]
+    ? [{ title: ocL.termsHeader, body: ocL.termsIntro }]
     : [];
-  const translatedOrderSections = await translateSections(orderConfirmationSections, lang);
   const translatedTermsSections = await translateSections([...termsIntro, ...buildSections(data)], lang);
 
   const ensureSpace = (needed: number) => {
