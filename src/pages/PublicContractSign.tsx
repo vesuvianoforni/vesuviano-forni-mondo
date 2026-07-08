@@ -282,29 +282,81 @@ const PublicContractSign: React.FC = () => {
               Importo: <strong>{amountFmt}</strong>
             </p>
 
-            {/* Summary */}
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-              <h2 className="font-semibold text-amber-900 mb-2">Riepilogo</h2>
-              <ul className="text-sm text-amber-900/90 space-y-1">
-                <li>• <strong>Cliente:</strong> {contract.client_name}</li>
-                {contract.client_vat && <li>• <strong>P.IVA/CF:</strong> {contract.client_vat}</li>}
-                {contract.destination && <li>• <strong>Destinazione:</strong> {contract.destination}</li>}
-                <li>• <strong>Importo complessivo:</strong> {amountFmt}</li>
-                <li>• <strong>Modalità di pagamento:</strong> {contract.payment_terms}</li>
-                <li>• <strong>Garanzia:</strong> {contract.warranty_years} {contract.warranty_years === 1 ? 'anno' : 'anni'}</li>
-              </ul>
-            </div>
+            {/* Highlights contrattuali */}
+            {(() => {
+              const vf = contract.variable_fields || {};
+              const items: { icon: any; label: string; value: string }[] = [];
+              items.push({ icon: CreditCard, label: 'Importo complessivo', value: amountFmt });
+              items.push({ icon: CreditCard, label: 'Modalità di pagamento', value: contract.payment_terms });
+              items.push({ icon: Shield, label: 'Garanzia', value: `${contract.warranty_years} ${contract.warranty_years === 1 ? 'anno' : 'anni'}${vf.warranty_coverage ? ' — ' + vf.warranty_coverage : ''}` });
+              if (vf.production_time || vf.production_days) items.push({ icon: Calendar, label: 'Tempi di produzione', value: vf.production_time || `${vf.production_days} giorni` });
+              if (vf.delivery_estimate || vf.shipping_days) items.push({ icon: Truck, label: 'Consegna stimata', value: vf.delivery_estimate || `${vf.shipping_days} giorni` });
+              if (vf.shipping_method || vf.incoterms) items.push({ icon: Truck, label: 'Spedizione', value: [vf.shipping_method, vf.incoterms].filter(Boolean).join(' · ') });
+              if (vf.shipping_included) items.push({ icon: Truck, label: 'Trasporto incluso', value: vf.shipping_included });
+              if (vf.unloading_included) items.push({ icon: Wrench, label: 'Scarico incluso', value: vf.unloading_included });
+              if (vf.installation_included || vf.assembly_included) items.push({ icon: Wrench, label: 'Installazione/Montaggio', value: [vf.assembly_included, vf.installation_included].filter(Boolean).join(' · ') });
+              if (vf.startup_included) items.push({ icon: Wrench, label: 'Avviamento', value: vf.startup_included });
+              if (vf.training_included) items.push({ icon: Wrench, label: 'Formazione', value: vf.training_included });
+              if (contract.destination) items.push({ icon: MapPin, label: 'Destinazione', value: contract.destination });
+              if (vf.refund_days) items.push({ icon: CreditCard, label: 'Termini di recesso', value: `${vf.refund_days} giorni` });
 
-            <div className="mb-6">
-              <Button variant="outline" onClick={handleDownloadPdf} className="border-amber-600 text-amber-800">
-                <Download className="w-4 h-4 mr-2" /> Scarica il contratto completo (PDF)
+              return (
+                <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5 mb-6">
+                  <h2 className="font-semibold text-amber-900 mb-4 flex items-center gap-2">
+                    <FileText className="w-5 h-5" /> Highlights contrattuali
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {items.map((it, i) => (
+                      <div key={i} className="flex items-start gap-3 bg-white/70 rounded-lg p-3 border border-amber-100">
+                        <it.icon className="w-4 h-4 text-amber-700 mt-0.5 shrink-0" />
+                        <div className="min-w-0">
+                          <div className="text-[11px] uppercase tracking-wide text-amber-800/70 font-medium">{it.label}</div>
+                          <div className="text-sm text-gray-900 break-words">{it.value}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-amber-200/60 text-xs text-amber-900/80">
+                    <strong>Cliente:</strong> {contract.client_name}
+                    {contract.client_vat && <> · <strong>P.IVA/CF:</strong> {contract.client_vat}</>}
+                    {contract.offer_number && <> · <strong>Offerta:</strong> {contract.offer_number}</>}
+                  </div>
+                </div>
+              );
+            })()}
+
+            <div className="mb-6 flex flex-wrap gap-3">
+              <Button
+                onClick={handleTogglePreview}
+                disabled={buildingPdf}
+                className="bg-amber-600 hover:bg-amber-700 text-white"
+              >
+                {buildingPdf ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : showPreview ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+                {showPreview ? 'Nascondi anteprima' : 'Leggi il contratto qui'}
               </Button>
-              <p className="text-xs text-gray-500 mt-2">
-                Leggi il PDF completo prima di firmare. La firma implica l'accettazione integrale delle Condizioni Generali di Vendita.
-              </p>
+              <Button variant="outline" onClick={handleDownloadPdf} className="border-amber-600 text-amber-800">
+                <Download className="w-4 h-4 mr-2" /> Scarica PDF
+              </Button>
             </div>
 
-            {alreadySigned ? (
+            {showPreview && pdfUrl && (
+              <div className="mb-6 border border-amber-200 rounded-lg overflow-hidden bg-neutral-100">
+                <iframe
+                  src={pdfUrl}
+                  title="Anteprima contratto"
+                  className="w-full"
+                  style={{ height: '80vh', minHeight: 600 }}
+                />
+                <p className="text-xs text-gray-500 p-2 bg-white border-t border-amber-100">
+                  Se l'anteprima non si vede sul tuo dispositivo, usa "Scarica PDF".
+                </p>
+              </div>
+            )}
+
+            <p className="text-xs text-gray-500 mb-6">
+              Leggi il contratto completo prima di firmare. La firma implica l'accettazione integrale delle Condizioni Generali di Vendita.
+            </p>
+
               <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
                 <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto mb-3" />
                 <h3 className="font-semibold text-green-900 text-lg mb-1">Contratto già firmato</h3>
