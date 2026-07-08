@@ -509,60 +509,60 @@ export function isPietraCalda(data: ContractData): boolean {
   );
 }
 
-export function buildOrderConfirmationSections(data: ContractData): { title: string; body: string }[] {
+export function buildOrderConfirmationSections(
+  data: ContractData,
+  lang: ContractLanguage = 'fr',
+): { title: string; body: string }[] {
   const vf = data.variable_fields || {};
-  const amountFmt = new Intl.NumberFormat('it-IT', {
+  const locale = LOCALE_BY_LANG[lang] || 'fr-FR';
+  const amountFmt = new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: data.currency || 'EUR',
   }).format(data.total_amount || 0);
-  const today = data.client_signed_at
-    ? new Date(data.client_signed_at)
-    : (data.created_at ? new Date(data.created_at) : new Date());
-  const dateStr = today.toLocaleDateString('it-IT');
   const productionDays = vf.production_days || '30';
   const shippingDays = vf.shipping_days || '15';
-  const offerRef = vf.offer_number || data.offer_number || '—';
 
-  return [
-    {
-      title: "1. Oggetto dell'ordine",
-      body:
+  if (lang === 'it') {
+    return [
+      {
+        title: "1. Oggetto dell'ordine",
+        body:
 `La presente conferma riguarda la fornitura di un forno Vesuviano Forni, secondo l'offerta aggiornata e la fattura proforma trasmesse al cliente.
 
 Destinazione della merce: Francia.`,
-    },
-    {
-      title: '2. Prezzo finale e condizioni commerciali',
-      body:
+      },
+      {
+        title: '2. Prezzo finale e condizioni commerciali',
+        body:
 `Il prezzo finale validato eccezionalmente è di:
 
 ${amountFmt} consegna inclusa, secondo l'offerta aggiornata e la fattura proforma.
 
 Questo prezzo è validato in via eccezionale, a condizione che l'ordine venga confermato e l'acconto pagato entro il 10/07/2026.`,
-    },
-    {
-      title: '3. Condizioni di pagamento',
-      body:
+      },
+      {
+        title: '3. Condizioni di pagamento',
+        body:
 `Le condizioni di pagamento sono le seguenti:
 
 • 50% di acconto alla conferma dell'ordine;
 • 50% di saldo quando il forno sarà pronto per la spedizione, prima dell'invio della merce.
 
 Le coordinate bancarie saranno indicate nella fattura proforma.`,
-    },
-    {
-      title: '4. Tempi di produzione e consegna',
-      body:
+      },
+      {
+        title: '4. Tempi di produzione e consegna',
+        body:
 `I tempi stimati sono i seguenti:
 
 • Tempo di produzione / fabbricazione: circa ${productionDays} giorni dalla ricezione dell'acconto e dalla conferma completa delle informazioni tecniche, fiscali e logistiche;
 • Tempo di trasporto stimato: circa ${shippingDays} giorni, secondo l'organizzazione logistica e la disponibilità del trasportatore.
 
 I tempi sono indicativi e possono variare in funzione della produzione artigianale, della disponibilità dei materiali, del trasportatore o di cause indipendenti da Vesuviano Forni.`,
-    },
-    {
-      title: '5. Consegna e monitoraggio logistico',
-      body:
+      },
+      {
+        title: '5. Consegna e monitoraggio logistico',
+        body:
 `La consegna è inclusa nel prezzo, secondo le condizioni indicate nell'offerta e nella fattura proforma.
 
 Vesuviano Forni si impegna ad assicurare un monitoraggio serio della consegna, in coordinamento con il trasportatore / partner logistico incaricato della spedizione.
@@ -570,10 +570,10 @@ Vesuviano Forni si impegna ad assicurare un monitoraggio serio della consegna, i
 Il cliente sarà informato sull'avanzamento dell'ordine, della produzione e della spedizione.
 
 Lo scarico, la movimentazione interna, i mezzi di sollevamento, il muletto o qualsiasi altro mezzo necessario sul luogo di consegna restano a carico del cliente, salvo diverso accordo scritto.`,
-    },
-    {
-      title: '6. Servizio post-vendita e assistenza',
-      body:
+      },
+      {
+        title: '6. Servizio post-vendita e assistenza',
+        body:
 `Vesuviano Forni si impegna a restare disponibile dopo la consegna per accompagnare il cliente nello sviluppo del progetto.
 
 Il servizio post-vendita comprende:
@@ -584,37 +584,134 @@ Il servizio post-vendita comprende:
 • accompagnamento nelle prime fasi di utilizzo, secondo le necessità del cliente.
 
 Vesuviano Forni si impegna a gestire le richieste post-vendita in modo reattivo e professionale.`,
-    },
-    {
-      title: '7. Componenti di ricambio inclusi',
-      body:
+      },
+      {
+        title: '7. Componenti di ricambio inclusi',
+        body:
 `Per facilitare la manutenzione ordinaria del forno, Vesuviano Forni fornirà insieme all'ordine alcuni componenti di ricambio inclusi nell'offerta, come ad esempio lampade di illuminazione interne, che possono naturalmente usurarsi o spegnersi con il tempo.
 
 Questi componenti permetteranno al cliente, se necessario, di procedere facilmente alla loro sostituzione.`,
-    },
-    {
-      title: '8. Alimentazione elettrica e sbalzi di corrente',
-      body:
+      },
+      {
+        title: '8. Alimentazione elettrica e sbalzi di corrente',
+        body:
 `Vesuviano Forni non potrà essere ritenuta responsabile per problemi, guasti o danni causati da variazioni di tensione, sovratensioni, interruzioni elettriche, alimentazione elettrica instabile o anomalie provenienti dalla rete elettrica del cliente.
 
 In questi casi, il cliente dovrà rivolgersi alla propria società di energia, al proprio elettricista o al responsabile del proprio impianto elettrico per verificare e risolvere il problema.`,
-    },
-    {
-      title: '9. Garanzia',
-      body:
+      },
+      {
+        title: '9. Garanzia',
+        body:
 `Il prodotto beneficia di una garanzia di 2 anni contro i difetti di fabbricazione dei componenti forniti da Vesuviano Forni.
 
 La garanzia copre i difetti imputabili alla fabbricazione o ai componenti forniti, nei limiti delle normali condizioni di utilizzo.
 
 Sono esclusi i danni legati a cattiva installazione, cattivo utilizzo, assenza di manutenzione, modifiche non autorizzate, problemi di alimentazione elettrica/gas, canna fumaria, tiraggio o impianti non forniti da Vesuviano Forni.`,
-    },
-    {
-      title: "10. Validazione dell'ordine",
-      body:
+      },
+      {
+        title: "10. Validazione dell'ordine",
+        body:
 `L'ordine sarà considerato confermato dopo:
 • accettazione scritta dell'offerta / conferma d'ordine;
 • emissione della fattura proforma;
 • pagamento dell'acconto concordato.`,
+      },
+    ];
+  }
+
+  // Version française (par défaut)
+  return [
+    {
+      title: "1. Objet de la commande",
+      body:
+`La présente confirmation concerne la fourniture d'un four Vesuviano Forni, selon l'offre mise à jour et la facture proforma transmises au client.
+
+Destination de la marchandise : France.`,
+    },
+    {
+      title: '2. Prix final et conditions commerciales',
+      body:
+`Le prix final validé à titre exceptionnel est de :
+
+${amountFmt} livraison incluse, selon l'offre mise à jour et la facture proforma.
+
+Ce prix est validé à titre exceptionnel, à condition que la commande soit confirmée et l'acompte payé avant le 10/07/2026.`,
+    },
+    {
+      title: '3. Conditions de paiement',
+      body:
+`Les conditions de paiement sont les suivantes :
+
+• 50 % d'acompte à la confirmation de la commande ;
+• 50 % de solde lorsque le four sera prêt à être expédié, avant l'envoi de la marchandise.
+
+Les coordonnées bancaires seront indiquées dans la facture proforma.`,
+    },
+    {
+      title: '4. Délais de production et de livraison',
+      body:
+`Les délais estimés sont les suivants :
+
+• Délai de production / fabrication : environ ${productionDays} jours à compter de la réception de l'acompte et de la confirmation complète des informations techniques, fiscales et logistiques ;
+• Délai de transport estimé : environ ${shippingDays} jours, selon l'organisation logistique et la disponibilité du transporteur.
+
+Les délais sont indicatifs et peuvent varier en fonction de la production artisanale, de la disponibilité des matériaux, du transporteur ou de causes indépendantes de Vesuviano Forni.`,
+    },
+    {
+      title: '5. Livraison et suivi logistique',
+      body:
+`La livraison est incluse dans le prix, selon les conditions indiquées dans l'offre et la facture proforma.
+
+Vesuviano Forni s'engage à assurer un suivi sérieux de la livraison, en coordination avec le transporteur / partenaire logistique en charge de l'expédition.
+
+Le client sera informé de l'avancement de la commande, de la production et de l'expédition.
+
+Le déchargement, la manutention interne, les moyens de levage, le chariot élévateur ou tout autre moyen nécessaire sur le lieu de livraison restent à la charge du client, sauf accord écrit contraire.`,
+    },
+    {
+      title: '6. Service après-vente et assistance',
+      body:
+`Vesuviano Forni s'engage à rester disponible après la livraison pour accompagner le client dans le développement du projet.
+
+Le service après-vente comprend :
+• assistance technique à distance ;
+• support en cas de problèmes liés au produit fourni ;
+• disponibilité pour un diagnostic technique ;
+• fourniture éventuelle de pièces de rechange, si nécessaire ;
+• accompagnement dans les premières phases d'utilisation, selon les besoins du client.
+
+Vesuviano Forni s'engage à traiter les demandes après-vente de manière réactive et professionnelle.`,
+    },
+    {
+      title: '7. Composants de rechange inclus',
+      body:
+`Afin de faciliter l'entretien ordinaire du four, Vesuviano Forni fournira avec la commande certains composants de rechange inclus dans l'offre, tels que des lampes d'éclairage internes, qui peuvent naturellement s'user ou s'éteindre avec le temps.
+
+Ces composants permettront au client, si nécessaire, de procéder facilement à leur remplacement.`,
+    },
+    {
+      title: '8. Alimentation électrique et variations de courant',
+      body:
+`Vesuviano Forni ne pourra être tenue responsable des problèmes, pannes ou dommages causés par des variations de tension, surtensions, coupures électriques, alimentation électrique instable ou anomalies provenant du réseau électrique du client.
+
+Dans ces cas, le client devra s'adresser à sa société d'énergie, à son électricien ou au responsable de son installation électrique pour vérifier et résoudre le problème.`,
+    },
+    {
+      title: '9. Garantie',
+      body:
+`Le produit bénéficie d'une garantie de 2 ans contre les défauts de fabrication des composants fournis par Vesuviano Forni.
+
+La garantie couvre les défauts imputables à la fabrication ou aux composants fournis, dans les limites des conditions normales d'utilisation.
+
+Sont exclus les dommages liés à une mauvaise installation, une mauvaise utilisation, l'absence d'entretien, des modifications non autorisées, des problèmes d'alimentation électrique/gaz, de conduit de cheminée, de tirage ou d'installations non fournies par Vesuviano Forni.`,
+    },
+    {
+      title: '10. Validation de la commande',
+      body:
+`La commande sera considérée comme confirmée après :
+• acceptation écrite de l'offre / confirmation de commande ;
+• émission de la facture proforma ;
+• paiement de l'acompte convenu.`,
     },
   ];
 }
@@ -652,17 +749,35 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.text(COMPANY.address, pageWidth - marginX, 25, { align: 'right' });
   doc.text(COMPANY.pec, pageWidth - marginX, 29, { align: 'right' });
 
-  const lang: ContractLanguage = (data.language as ContractLanguage) || 'it';
+  const orderConfirmation = isPietraCalda(data);
+  const lang: ContractLanguage = (data.language as ContractLanguage) || (orderConfirmation ? 'fr' : 'it');
   const L = UI_LABELS[lang] || UI_LABELS.it;
   const locale = LOCALE_BY_LANG[lang] || 'it-IT';
 
-  const orderConfirmation = isPietraCalda(data);
+  // Localised strings for order confirmation UI (per language)
+  const OC = {
+    it: {
+      title: "CONFERMA D'ORDINE",
+      supplier: 'FORNITORE',
+      client: 'CLIENTE',
+      termsHeader: '— TERMINI E CONDIZIONI GENERALI DI VENDITA —',
+      termsIntro: `Le clausole che seguono costituiscono i Termini e le Condizioni Generali di Vendita applicabili al presente ordine e ne formano parte integrante. Il Cliente, sottoscrivendo la presente Conferma d'Ordine, dichiara di averle lette, comprese e accettate integralmente.`,
+    },
+    fr: {
+      title: "CONFIRMATION DE COMMANDE",
+      supplier: 'FOURNISSEUR',
+      client: 'CLIENT',
+      termsHeader: '— CONDITIONS GÉNÉRALES DE VENTE —',
+      termsIntro: `Les clauses qui suivent constituent les Conditions Générales de Vente applicables à la présente commande et en font partie intégrante. Le Client, en signant la présente Confirmation de Commande, déclare les avoir lues, comprises et intégralement acceptées.`,
+    },
+  } as const;
+  const ocL = (lang === 'it' ? OC.it : OC.fr);
 
   // Title
   doc.setTextColor(20, 20, 20);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(15);
-  const titleText = orderConfirmation ? "CONFERMA D'ORDINE" : L.title;
+  const titleText = orderConfirmation ? ocL.title : L.title;
   doc.text(titleText, pageWidth / 2, 46, { align: 'center' });
 
   const today = data.created_at ? new Date(data.created_at) : new Date();
@@ -676,7 +791,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
     `  ·  ${L.client}: ${data.client_name}`;
   doc.text(meta, pageWidth / 2, 52, { align: 'center' });
 
-  // Body sections (translated if needed)
+  // Body sections
   let y = 56;
 
   // Compact two-column header for Pietra Calda order confirmation
@@ -689,8 +804,8 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(9);
     doc.setTextColor(20, 20, 20);
-    doc.text('FORNITORE', leftX, hy);
-    doc.text('CLIENTE', rightX, hy);
+    doc.text(ocL.supplier, leftX, hy);
+    doc.text(ocL.client, rightX, hy);
     hy += 4;
 
     doc.setFont('helvetica', 'normal');
@@ -715,19 +830,15 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
 
     y = Math.max(hy, hy2) + 5;
   }
-  const orderConfirmationSections = orderConfirmation
-    ? buildOrderConfirmationSections(data).filter((s) => s.title !== '— TERMINI E CONDIZIONI GENERALI DI VENDITA —')
+  // Order confirmation sections: use native IT/FR content (no AI translation).
+  const translatedOrderSections = orderConfirmation
+    ? buildOrderConfirmationSections(data, lang)
     : [];
   const termsIntro = orderConfirmation
-    ? [
-        {
-          title: '— TERMINI E CONDIZIONI GENERALI DI VENDITA —',
-          body: `Le clausole che seguono costituiscono i Termini e le Condizioni Generali di Vendita applicabili al presente ordine e ne formano parte integrante. Il Cliente, sottoscrivendo la presente Conferma d'Ordine, dichiara di averle lette, comprese e accettate integralmente.`,
-        },
-      ]
+    ? [{ title: ocL.termsHeader, body: ocL.termsIntro }]
     : [];
-  const translatedOrderSections = await translateSections(orderConfirmationSections, lang);
-  const translatedTermsSections = await translateSections([...termsIntro, ...buildSections(data)], lang);
+  // Only translate the general terms body; keep the intro heading in its native language.
+  const translatedTermsSections = [...termsIntro, ...(await translateSections(buildSections(data), lang))];
 
   const ensureSpace = (needed: number) => {
     if (y + needed > pageHeight - 20) {
@@ -879,7 +990,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
   doc.setTextColor(20, 20, 20);
-  doc.text('Cliente', rightX, rightY + 5);
+  doc.text(lang === 'fr' ? 'Client' : 'Cliente', rightX, rightY + 5);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(70);
@@ -915,7 +1026,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
   doc.setTextColor(20, 20, 20);
-  doc.text('Firma del Cliente', rightX, rightY);
+  doc.text(L.clientSig, rightX, rightY);
   rightY += 4;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
@@ -923,7 +1034,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   if (data.client_signed_at) {
     doc.text(`${L.signedOn} ${new Date(data.client_signed_at).toLocaleString(locale)}`, rightX, rightY);
   } else {
-    doc.text('(firma per accettazione)', rightX, rightY);
+    doc.text(L.stampSign, rightX, rightY);
   }
 
   y = Math.max(leftY, rightY) + 8;
