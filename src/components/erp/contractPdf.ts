@@ -684,7 +684,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.text(meta, pageWidth / 2, 52, { align: 'center' });
 
   // Body sections (translated if needed)
-  let y = 58;
+  let y = 56;
 
   // Compact two-column header for Pietra Calda order confirmation
   if (orderConfirmation) {
