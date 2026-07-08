@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Loader2, Download, PenLine, CheckCircle2, Eye, EyeOff } from 'lucide-react';
@@ -280,6 +280,10 @@ const PublicContractSign: React.FC = () => {
         client: 'Client',
         amount: 'Montant',
         supplier: 'Fournisseur',
+        termsIntro: "Lisez la confirmation de commande et les conditions générales de vente avant de signer.",
+        termsIntroNonOC: "Lisez le document complet avant de signer.",
+        termsLink: 'Lire les conditions générales complètes',
+        termsAccept: "La signature implique l'acceptation intégrale.",
       }
     : {
         docTitleOC: "Conferma d'Ordine",
@@ -290,6 +294,10 @@ const PublicContractSign: React.FC = () => {
         client: 'Cliente',
         amount: 'Importo',
         supplier: 'Fornitore',
+        termsIntro: "Leggi la conferma d'ordine e i termini e condizioni prima di firmare.",
+        termsIntroNonOC: "Leggi il contratto completo prima di firmare.",
+        termsLink: 'Leggi i termini e condizioni completi',
+        termsAccept: "La firma implica l'accettazione integrale.",
       };
   const docTitle = isOrderConfirmation ? T.docTitleOC : T.docTitleCGV;
 
@@ -445,9 +453,11 @@ const PublicContractSign: React.FC = () => {
             )}
 
             <p className="text-xs text-stone-500 mb-6">
-              {isOrderConfirmation
-                ? "Leggi la conferma d'ordine e i termini e condizioni prima di firmare. La firma implica l'accettazione integrale."
-                : "Leggi il contratto completo prima di firmare. La firma implica l'accettazione integrale delle Condizioni Generali di Vendita."}
+              {isOrderConfirmation ? T.termsIntro : T.termsIntroNonOC}{' '}
+              <Link to="./termini" className="text-amber-700 hover:text-amber-900 underline">
+                {T.termsLink}
+              </Link>
+              . {T.termsAccept}
             </p>
 
             {alreadySigned ? (

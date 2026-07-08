@@ -716,7 +716,41 @@ Sont exclus les dommages liés à une mauvaise installation, une mauvaise utilis
   ];
 }
 
-export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
+export async function buildTermsSections(
+  data: ContractData,
+  lang: ContractLanguage,
+): Promise<{ title: string; body: string }[]> {
+  const isPietra = isPietraCalda(data);
+  const effectiveLang: ContractLanguage = lang || (data.language as ContractLanguage) || (isPietra ? 'fr' : 'it');
+
+  const OC = {
+    it: {
+      termsHeader: '— TERMINI E CONDIZIONI GENERALI DI VENDITA —',
+      termsIntro: `Le clausole che seguono costituiscono i Termini e le Condizioni Generali di Vendita applicabili al presente ordine e ne formano parte integrante. Il Cliente, sottoscrivendo la presente Conferma d'Ordine, dichiara di averle lette, comprese e accettate integralmente.`,
+    },
+    fr: {
+      termsHeader: '— CONDITIONS GÉNÉRALES DE VENTE —',
+      termsIntro: `Les clauses qui suivent constituent les Conditions Générales de Vente applicables à la présente commande et en font partie intégrante. Le Client, en signant la présente Confirmation de Commande, déclare les avoir lues, comprises et intégralement acceptées.`,
+    },
+  } as const;
+  const ocL = effectiveLang === 'it' ? OC.it : OC.fr;
+
+  const termsIntro = isPietra
+    ? [{ title: ocL.termsHeader, body: ocL.termsIntro }]
+    : [];
+
+  return [...termsIntro, ...(await translateSections(buildSections(data), effectiveLang))];
+}
+
+export interface GenerateContractPdfOptions {
+  termsOnly?: boolean;
+  language?: ContractLanguage;
+}
+
+export async function generateContractPdf(
+  data: ContractData,
+  options: GenerateContractPdfOptions = {},
+): Promise<jsPDF> {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
@@ -749,8 +783,10 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.text(COMPANY.address, pageWidth - marginX, 25, { align: 'right' });
   doc.text(COMPANY.pec, pageWidth - marginX, 29, { align: 'right' });
 
-  const orderConfirmation = isPietraCalda(data);
-  const lang: ContractLanguage = (data.language as ContractLanguage) || (orderConfirmation ? 'fr' : 'it');
+  const { termsOnly = false, language } = options;
+  const isPietra = isPietraCalda(data);
+  const orderConfirmation = !termsOnly && isPietra;
+  const lang: ContractLanguage = language || (data.language as ContractLanguage) || (isPietra ? 'fr' : 'it');
   const L = UI_LABELS[lang] || UI_LABELS.it;
   const locale = LOCALE_BY_LANG[lang] || 'it-IT';
 
@@ -834,7 +870,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   const translatedOrderSections = orderConfirmation
     ? buildOrderConfirmationSections(data, lang)
     : [];
-  const termsIntro = orderConfirmation
+  const termsIntro = isPietra
     ? [{ title: ocL.termsHeader, body: ocL.termsIntro }]
     : [];
   // Only translate the general terms body; keep the intro heading in its native language.
@@ -913,6 +949,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   });
 
 
+  if (!termsOnly) {
   // ===== Section 20 — Signatures =====
   ensureSpace(70);
   doc.setFont('helvetica', 'bold');
@@ -1053,6 +1090,7 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   }
   doc.line(marginX + contentWidth - 80, y, marginX + contentWidth, y);
   doc.text(L.approvalSig, marginX + contentWidth - 80, y + 4);
+  }
 
   // ===== Footer with page numbers =====
   const pageCount = doc.getNumberOfPages();
