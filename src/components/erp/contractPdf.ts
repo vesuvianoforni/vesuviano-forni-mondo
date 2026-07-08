@@ -642,11 +642,6 @@ Sono esclusi i danni legati a cattiva installazione, cattivo utilizzo, assenza d
 • emissione della fattura proforma;
 • pagamento dell'acconto concordato.`,
     },
-    {
-      title: '— TERMINI E CONDIZIONI GENERALI DI VENDITA —',
-      body:
-`Le clausole che seguono costituiscono i Termini e le Condizioni Generali di Vendita applicabili al presente ordine e ne formano parte integrante. Il Cliente, sottoscrivendo la presente Conferma d'Ordine, dichiara di averle lette, comprese e accettate integralmente.`,
-    },
   ];
 }
 
