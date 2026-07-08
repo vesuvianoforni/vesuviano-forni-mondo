@@ -757,20 +757,20 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
     y += 1.5;
 
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
+    doc.setFontSize(7.8);
     doc.setTextColor(45, 45, 45);
     const paragraphs = sec.body.split('\n');
     paragraphs.forEach((para) => {
-      if (para.trim() === '') { y += 1; return; }
+      if (para.trim() === '') { y += 0.8; return; }
       const lines = doc.splitTextToSize(para, contentWidth);
       lines.forEach((ln: string) => {
-        ensureSpace(3.8);
+        ensureSpace(3.6);
         doc.text(ln, marginX, y);
-        y += 3.8;
+        y += 3.6;
       });
-      y += 0.8;
+      y += 0.6;
     });
-    y += 1;
+    y += 0.8;
   });
 
   if (orderConfirmation) {
