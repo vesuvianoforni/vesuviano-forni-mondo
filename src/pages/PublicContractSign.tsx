@@ -333,6 +333,38 @@ const PublicContractSign: React.FC = () => {
               </p>
             </div>
 
+            {/* Conferma d'Ordine — testo completo (prima degli highlights) */}
+            {isOrderConfirmation && (() => {
+              const sections = buildOrderConfirmationSections(contract as any);
+              return (
+                <div className="relative overflow-hidden rounded-2xl p-6 md:p-8 mb-8 border border-stone-200 bg-white shadow-sm">
+                  <div className="flex items-start justify-between gap-4 mb-6 pb-4 border-b border-stone-200">
+                    <div>
+                      <div className="text-[10px] uppercase tracking-widest text-amber-700 font-semibold">Fornitore</div>
+                      <div className="text-sm font-bold text-stone-900 mt-1">Vesuviano Forni — UNITA 1</div>
+                      <div className="text-xs text-stone-600">di Stanislao Elefante</div>
+                      <div className="text-[11px] text-stone-500 mt-1">P.IVA IT02192040661</div>
+                      <div className="text-[11px] text-stone-500">Via Piaia, 44 — 67034 Pettorano sul Gizio (AQ)</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[10px] uppercase tracking-widest text-amber-700 font-semibold">Cliente</div>
+                      <div className="text-sm font-bold text-stone-900 mt-1">{contract.client_name}</div>
+                      {contract.client_address && <div className="text-xs text-stone-600 whitespace-pre-line">{contract.client_address}</div>}
+                      {contract.client_vat && <div className="text-[11px] text-stone-500 mt-1">TVA: {contract.client_vat}</div>}
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    {sections.map((sec, i) => (
+                      <div key={i}>
+                        <h3 className="text-sm font-bold text-stone-900 mb-1.5">{sec.title}</h3>
+                        <div className="text-[13px] text-stone-700 leading-relaxed whitespace-pre-line">{sec.body}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* Highlights contrattuali */}
             {(() => {
               const vf = contract.variable_fields || {};
