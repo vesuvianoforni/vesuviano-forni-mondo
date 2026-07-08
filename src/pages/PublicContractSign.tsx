@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Loader2, Download, PenLine, CheckCircle2, FileText, Eye, EyeOff, Calendar, Truck, Shield, Wrench, CreditCard, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
-import { generateContractPdf, type ContractVariableFields } from '@/components/erp/contractPdf';
+import { generateContractPdf, buildOrderConfirmationSections, type ContractVariableFields } from '@/components/erp/contractPdf';
 import SEOHead from '@/components/SEOHead';
 
 interface Contract {
