@@ -676,11 +676,14 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   const L = UI_LABELS[lang] || UI_LABELS.it;
   const locale = LOCALE_BY_LANG[lang] || 'it-IT';
 
+  const orderConfirmation = isPietraCalda(data);
+
   // Title
   doc.setTextColor(20, 20, 20);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(15);
-  doc.text(L.title, pageWidth / 2, 46, { align: 'center' });
+  const titleText = orderConfirmation ? "CONFERMA D'ORDINE" : L.title;
+  doc.text(titleText, pageWidth / 2, 46, { align: 'center' });
 
   const today = data.created_at ? new Date(data.created_at) : new Date();
   const dateStr = today.toLocaleDateString(locale);
@@ -695,7 +698,8 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
 
   // Body sections (translated if needed)
   let y = 60;
-  const italianSections = buildSections(data);
+  const preamble = orderConfirmation ? buildOrderConfirmationSections(data) : [];
+  const italianSections = [...preamble, ...buildSections(data)];
   const sections = await translateSections(italianSections, lang);
 
   const ensureSpace = (needed: number) => {
