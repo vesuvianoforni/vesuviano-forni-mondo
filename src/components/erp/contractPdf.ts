@@ -489,6 +489,157 @@ La versione applicabile al singolo ordine sarà quella accettata dal Cliente al 
   ];
 }
 
+function isPietraCalda(data: ContractData): boolean {
+  const name = (data.client_name || '').toLowerCase();
+  return (
+    name.includes('pietra calda') ||
+    name.includes("l'arche") ||
+    name.includes('l arche') ||
+    name.includes('larche')
+  );
+}
+
+function buildOrderConfirmationSections(data: ContractData): { title: string; body: string }[] {
+  const vf = data.variable_fields || {};
+  const amountFmt = new Intl.NumberFormat('it-IT', {
+    style: 'currency',
+    currency: data.currency || 'EUR',
+  }).format(data.total_amount || 0);
+  const today = data.client_signed_at
+    ? new Date(data.client_signed_at)
+    : (data.created_at ? new Date(data.created_at) : new Date());
+  const dateStr = today.toLocaleDateString('it-IT');
+  const productionDays = vf.production_days || '30';
+  const shippingDays = vf.shipping_days || '15';
+  const offerRef = vf.offer_number || data.offer_number || '—';
+
+  return [
+    {
+      title: 'Intestazione',
+      body:
+`CLIENTE
+Pietra Calda — SAS L'Arche
+Domaine de l'Arche
+Route de Houdan
+78550 Richebourg — France
+TVA: FR79978282820
+
+FORNITORE
+Vesuviano Forni — UNITA 1 di Stanislao Elefante
+P.IVA IT02192040661 · C.F. LFNSNS94E20G813Z
+Via Piaia, 44 – 67034 Pettorano sul Gizio (AQ) – Italia · PEC u1@pec.it
+
+Riferimento offerta: ${offerRef}
+Destinazione: Francia
+Data: ${dateStr}`,
+    },
+    {
+      title: "1. Oggetto dell'ordine",
+      body:
+`La presente conferma riguarda la fornitura di un forno Vesuviano Forni, secondo l'offerta aggiornata e la fattura proforma trasmesse al cliente.
+
+Destinazione della merce: Francia.`,
+    },
+    {
+      title: '2. Prezzo finale e condizioni commerciali',
+      body:
+`Il prezzo finale validato eccezionalmente è di:
+
+${amountFmt} consegna inclusa, secondo l'offerta aggiornata e la fattura proforma.
+
+Questo prezzo è validato in via eccezionale, a condizione che l'ordine venga confermato e l'acconto pagato entro il 10/07/2026.`,
+    },
+    {
+      title: '3. Condizioni di pagamento',
+      body:
+`Le condizioni di pagamento sono le seguenti:
+
+• 50% di acconto alla conferma dell'ordine;
+• 50% di saldo quando il forno sarà pronto per la spedizione, prima dell'invio della merce.
+
+Le coordinate bancarie saranno indicate nella fattura proforma.`,
+    },
+    {
+      title: '4. Tempi di produzione e consegna',
+      body:
+`I tempi stimati sono i seguenti:
+
+• Tempo di produzione / fabbricazione: circa ${productionDays} giorni dalla ricezione dell'acconto e dalla conferma completa delle informazioni tecniche, fiscali e logistiche;
+• Tempo di trasporto stimato: circa ${shippingDays} giorni, secondo l'organizzazione logistica e la disponibilità del trasportatore.
+
+I tempi sono indicativi e possono variare in funzione della produzione artigianale, della disponibilità dei materiali, del trasportatore o di cause indipendenti da Vesuviano Forni.`,
+    },
+    {
+      title: '5. Consegna e monitoraggio logistico',
+      body:
+`La consegna è inclusa nel prezzo, secondo le condizioni indicate nell'offerta e nella fattura proforma.
+
+Vesuviano Forni si impegna ad assicurare un monitoraggio serio della consegna, in coordinamento con il trasportatore / partner logistico incaricato della spedizione.
+
+Il cliente sarà informato sull'avanzamento dell'ordine, della produzione e della spedizione.
+
+Lo scarico, la movimentazione interna, i mezzi di sollevamento, il muletto o qualsiasi altro mezzo necessario sul luogo di consegna restano a carico del cliente, salvo diverso accordo scritto.`,
+    },
+    {
+      title: '6. Servizio post-vendita e assistenza',
+      body:
+`Vesuviano Forni si impegna a restare disponibile dopo la consegna per accompagnare il cliente nello sviluppo del progetto.
+
+Il servizio post-vendita comprende:
+• assistenza tecnica a distanza;
+• supporto in caso di problematiche relative al prodotto fornito;
+• disponibilità per diagnosi tecnica;
+• eventuale fornitura di pezzi di ricambio, se necessario;
+• accompagnamento nelle prime fasi di utilizzo, secondo le necessità del cliente.
+
+Vesuviano Forni si impegna a gestire le richieste post-vendita in modo reattivo e professionale.`,
+    },
+    {
+      title: '7. Componenti di ricambio inclusi',
+      body:
+`Per facilitare la manutenzione ordinaria del forno, Vesuviano Forni fornirà insieme all'ordine alcuni componenti di ricambio inclusi nell'offerta, come ad esempio lampade di illuminazione interne, che possono naturalmente usurarsi o spegnersi con il tempo.
+
+Questi componenti permetteranno al cliente, se necessario, di procedere facilmente alla loro sostituzione.`,
+    },
+    {
+      title: '8. Alimentazione elettrica e sbalzi di corrente',
+      body:
+`Vesuviano Forni non potrà essere ritenuta responsabile per problemi, guasti o danni causati da variazioni di tensione, sovratensioni, interruzioni elettriche, alimentazione elettrica instabile o anomalie provenienti dalla rete elettrica del cliente.
+
+In questi casi, il cliente dovrà rivolgersi alla propria società di energia, al proprio elettricista o al responsabile del proprio impianto elettrico per verificare e risolvere il problema.`,
+    },
+    {
+      title: '9. Attestazione assicurativa del produttore',
+      body:
+`Vesuviano Forni fornirà al cliente una attestazione assicurativa del produttore, trasmessa separatamente o allegata al presente documento.
+
+Tale attestazione farà parte dei documenti consegnati prima della validazione definitiva dell'ordine.`,
+    },
+    {
+      title: '10. Garanzia',
+      body:
+`Il prodotto beneficia di una garanzia di 2 anni contro i difetti di fabbricazione dei componenti forniti da Vesuviano Forni.
+
+La garanzia copre i difetti imputabili alla fabbricazione o ai componenti forniti, nei limiti delle normali condizioni di utilizzo.
+
+Sono esclusi i danni legati a cattiva installazione, cattivo utilizzo, assenza di manutenzione, modifiche non autorizzate, problemi di alimentazione elettrica/gas, canna fumaria, tiraggio o impianti non forniti da Vesuviano Forni.`,
+    },
+    {
+      title: "11. Validazione dell'ordine",
+      body:
+`L'ordine sarà considerato confermato dopo:
+• accettazione scritta dell'offerta / conferma d'ordine;
+• emissione della fattura proforma;
+• pagamento dell'acconto concordato.`,
+    },
+    {
+      title: '— TERMINI E CONDIZIONI GENERALI DI VENDITA —',
+      body:
+`Le clausole che seguono costituiscono i Termini e le Condizioni Generali di Vendita applicabili al presente ordine e ne formano parte integrante. Il Cliente, sottoscrivendo la presente Conferma d'Ordine, dichiara di averle lette, comprese e accettate integralmente.`,
+    },
+  ];
+}
+
 export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   const pageWidth = doc.internal.pageSize.getWidth();
