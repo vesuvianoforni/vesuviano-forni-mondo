@@ -525,25 +525,6 @@ function buildOrderConfirmationSections(data: ContractData): { title: string; bo
 
   return [
     {
-      title: 'Intestazione',
-      body:
-`CLIENTE
-Pietra Calda — SAS L'Arche
-Domaine de l'Arche
-Route de Houdan
-78550 Richebourg — France
-TVA: FR79978282820
-
-FORNITORE
-Vesuviano Forni — UNITA 1 di Stanislao Elefante
-P.IVA IT02192040661 · C.F. LFNSNS94E20G813Z
-Via Piaia, 44 – 67034 Pettorano sul Gizio (AQ) – Italia · PEC u1@pec.it
-
-Riferimento offerta: ${offerRef}
-Destinazione: Francia
-Data: ${dateStr}`,
-    },
-    {
       title: "1. Oggetto dell'ordine",
       body:
 `La presente conferma riguarda la fornitura di un forno Vesuviano Forni, secondo l'offerta aggiornata e la fattura proforma trasmesse al cliente.
@@ -642,11 +623,6 @@ Sono esclusi i danni legati a cattiva installazione, cattivo utilizzo, assenza d
 • emissione della fattura proforma;
 • pagamento dell'acconto concordato.`,
     },
-    {
-      title: '— TERMINI E CONDIZIONI GENERALI DI VENDITA —',
-      body:
-`Le clausole che seguono costituiscono i Termini e le Condizioni Generali di Vendita applicabili al presente ordine e ne formano parte integrante. Il Cliente, sottoscrivendo la presente Conferma d'Ordine, dichiara di averle lette, comprese e accettate integralmente.`,
-    },
   ];
 }
 
@@ -708,10 +684,57 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.text(meta, pageWidth / 2, 52, { align: 'center' });
 
   // Body sections (translated if needed)
-  let y = 60;
-  const preamble = orderConfirmation ? buildOrderConfirmationSections(data) : [];
-  const italianSections = [...preamble, ...buildSections(data)];
-  const sections = await translateSections(italianSections, lang);
+  let y = 56;
+
+  // Compact two-column header for Pietra Calda order confirmation
+  if (orderConfirmation) {
+    const headerColW = (contentWidth - 10) / 2;
+    const leftX = marginX;
+    const rightX = marginX + headerColW + 10;
+    let hy = y;
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(20, 20, 20);
+    doc.text('FORNITORE', leftX, hy);
+    doc.text('CLIENTE', rightX, hy);
+    hy += 4;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(45, 45, 45);
+    const supplierHeader = [
+      'Vesuviano Forni — UNITA 1 di Stanislao Elefante',
+      'P.IVA IT02192040661 · C.F. LFNSNS94E20G813Z',
+      'Via Piaia, 44 — 67034 Pettorano sul Gizio (AQ) — Italia',
+      'PEC u1@pec.it',
+    ];
+    const clientHeader = [
+      "Pietra Calda — SAS L'Arche",
+      "Domaine de l'Arche",
+      'Route de Houdan',
+      '78550 Richebourg — France',
+      'TVA: FR79978282820',
+    ];
+    supplierHeader.forEach((ln) => { doc.text(ln, leftX, hy); hy += 3.5; });
+    let hy2 = y + 4;
+    clientHeader.forEach((ln) => { doc.text(ln, rightX, hy2); hy2 += 3.5; });
+
+    y = Math.max(hy, hy2) + 5;
+  }
+  const orderConfirmationSections = orderConfirmation
+    ? buildOrderConfirmationSections(data).filter((s) => s.title !== '— TERMINI E CONDIZIONI GENERALI DI VENDITA —')
+    : [];
+  const termsIntro = orderConfirmation
+    ? [
+        {
+          title: '— TERMINI E CONDIZIONI GENERALI DI VENDITA —',
+          body: `Le clausole che seguono costituiscono i Termini e le Condizioni Generali di Vendita applicabili al presente ordine e ne formano parte integrante. Il Cliente, sottoscrivendo la presente Conferma d'Ordine, dichiara di averle lette, comprese e accettate integralmente.`,
+        },
+      ]
+    : [];
+  const translatedOrderSections = await translateSections(orderConfirmationSections, lang);
+  const translatedTermsSections = await translateSections([...termsIntro, ...buildSections(data)], lang);
 
   const ensureSpace = (needed: number) => {
     if (y + needed > pageHeight - 20) {
@@ -720,7 +743,43 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
     }
   };
 
-  sections.forEach((sec) => {
+  // Render order confirmation first (compact, on the opening page)
+  translatedOrderSections.forEach((sec) => {
+    ensureSpace(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(20, 20, 20);
+    doc.text(sec.title, marginX, y);
+    y += 3.5;
+    doc.setDrawColor(245, 158, 11);
+    doc.setLineWidth(0.4);
+    doc.line(marginX, y, marginX + 30, y);
+    y += 1.5;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.8);
+    doc.setTextColor(45, 45, 45);
+    const paragraphs = sec.body.split('\n');
+    paragraphs.forEach((para) => {
+      if (para.trim() === '') { y += 0.8; return; }
+      const lines = doc.splitTextToSize(para, contentWidth);
+      lines.forEach((ln: string) => {
+        ensureSpace(3.6);
+        doc.text(ln, marginX, y);
+        y += 3.6;
+      });
+      y += 0.6;
+    });
+    y += 0.8;
+  });
+
+  if (orderConfirmation) {
+    doc.addPage();
+    y = 20;
+  }
+
+  // Render general terms and conditions
+  translatedTermsSections.forEach((sec) => {
     ensureSpace(14);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
