@@ -684,7 +684,44 @@ export async function generateContractPdf(data: ContractData): Promise<jsPDF> {
   doc.text(meta, pageWidth / 2, 52, { align: 'center' });
 
   // Body sections (translated if needed)
-  let y = 50;
+  let y = 58;
+
+  // Compact two-column header for Pietra Calda order confirmation
+  if (orderConfirmation) {
+    const headerColW = (contentWidth - 10) / 2;
+    const leftX = marginX;
+    const rightX = marginX + headerColW + 10;
+    let hy = y;
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(20, 20, 20);
+    doc.text('FORNITORE', leftX, hy);
+    doc.text('CLIENTE', rightX, hy);
+    hy += 4;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(45, 45, 45);
+    const supplierHeader = [
+      'Vesuviano Forni — UNITA 1 di Stanislao Elefante',
+      'P.IVA IT02192040661 · C.F. LFNSNS94E20G813Z',
+      'Via Piaia, 44 — 67034 Pettorano sul Gizio (AQ) — Italia',
+      'PEC u1@pec.it',
+    ];
+    const clientHeader = [
+      "Pietra Calda — SAS L'Arche",
+      "Domaine de l'Arche",
+      'Route de Houdan',
+      '78550 Richebourg — France',
+      'TVA: FR79978282820',
+    ];
+    supplierHeader.forEach((ln) => { doc.text(ln, leftX, hy); hy += 3.5; });
+    let hy2 = y + 4;
+    clientHeader.forEach((ln) => { doc.text(ln, rightX, hy2); hy2 += 3.5; });
+
+    y = Math.max(hy, hy2) + 5;
+  }
   const orderConfirmationSections = orderConfirmation
     ? buildOrderConfirmationSections(data).filter((s) => s.title !== '— TERMINI E CONDIZIONI GENERALI DI VENDITA —')
     : [];
