@@ -99,6 +99,48 @@ const LanguageSelector = () => {
       fr: '/qui-sommes-nous',
       es: '/quienes-somos',
       de: '/ueber-uns'
+    },
+    'collections': {
+      it: '/collezioni',
+      en: '/collections',
+      fr: '/collections',
+      es: '/colecciones',
+      de: '/kollektionen'
+    },
+    'services': {
+      it: '/servizi',
+      en: '/services',
+      fr: '/services',
+      es: '/servicios',
+      de: '/dienstleistungen'
+    },
+    'burners': {
+      it: '/bruciatori',
+      en: '/burners',
+      fr: '/bruleurs',
+      es: '/quemadores',
+      de: '/brenner'
+    },
+    'smoke-purifier': {
+      it: '/depuratore-fumi',
+      en: '/wood-smoke-purifier',
+      fr: '/purificateur-fumee',
+      es: '/purificador-humo',
+      de: '/rauchfilter'
+    },
+    'useful-info': {
+      it: '/informazioni-utili',
+      en: '/useful-information',
+      fr: '/informations-utiles',
+      es: '/informacion-util',
+      de: '/nuetzliche-informationen'
+    },
+    'blog': {
+      it: '/blog',
+      en: '/blog',
+      fr: '/blog',
+      es: '/blog',
+      de: '/blog'
     }
   };
 
