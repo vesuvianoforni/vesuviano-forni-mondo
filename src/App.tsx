@@ -95,6 +95,136 @@ const App = () => {
               <Route path="/contratto/:token/termini" element={<PublicContractTerms />} />
               <Route path="/contratto/:token" element={<PublicContractSign />} />
 
+
+              {/* Cross-language slug aliases: redirect wrong-language slug to correct one */}
+              {/* Collections */}
+              <Route path="/it/collections" element={<Navigate to="/it/collezioni" replace />} />
+              <Route path="/it/colecciones" element={<Navigate to="/it/collezioni" replace />} />
+              <Route path="/it/kollektionen" element={<Navigate to="/it/collezioni" replace />} />
+              <Route path="/en/collezioni" element={<Navigate to="/en/collections" replace />} />
+              <Route path="/en/colecciones" element={<Navigate to="/en/collections" replace />} />
+              <Route path="/en/kollektionen" element={<Navigate to="/en/collections" replace />} />
+              <Route path="/fr/collezioni" element={<Navigate to="/fr/collections" replace />} />
+              <Route path="/fr/colecciones" element={<Navigate to="/fr/collections" replace />} />
+              <Route path="/fr/kollektionen" element={<Navigate to="/fr/collections" replace />} />
+              <Route path="/es/collezioni" element={<Navigate to="/es/colecciones" replace />} />
+              <Route path="/es/collections" element={<Navigate to="/es/colecciones" replace />} />
+              <Route path="/es/kollektionen" element={<Navigate to="/es/colecciones" replace />} />
+              <Route path="/de/collezioni" element={<Navigate to="/de/kollektionen" replace />} />
+              <Route path="/de/collections" element={<Navigate to="/de/kollektionen" replace />} />
+              <Route path="/de/colecciones" element={<Navigate to="/de/kollektionen" replace />} />
+
+              {/* Finishes / Rivestimenti */}
+              <Route path="/it/finishes" element={<Navigate to="/it/rivestimenti" replace />} />
+              <Route path="/it/revetements" element={<Navigate to="/it/rivestimenti" replace />} />
+              <Route path="/it/revestimientos" element={<Navigate to="/it/rivestimenti" replace />} />
+              <Route path="/it/verkleidungen" element={<Navigate to="/it/rivestimenti" replace />} />
+              <Route path="/en/rivestimenti" element={<Navigate to="/en/finishes" replace />} />
+              <Route path="/fr/rivestimenti" element={<Navigate to="/fr/revetements" replace />} />
+              <Route path="/fr/finishes" element={<Navigate to="/fr/revetements" replace />} />
+              <Route path="/es/rivestimenti" element={<Navigate to="/es/revestimientos" replace />} />
+              <Route path="/es/finishes" element={<Navigate to="/es/revestimientos" replace />} />
+              <Route path="/de/rivestimenti" element={<Navigate to="/de/verkleidungen" replace />} />
+              <Route path="/de/finishes" element={<Navigate to="/de/verkleidungen" replace />} />
+
+              {/* About Us */}
+              <Route path="/it/about-us" element={<Navigate to="/it/chi-siamo" replace />} />
+              <Route path="/it/qui-sommes-nous" element={<Navigate to="/it/chi-siamo" replace />} />
+              <Route path="/it/quienes-somos" element={<Navigate to="/it/chi-siamo" replace />} />
+              <Route path="/it/ueber-uns" element={<Navigate to="/it/chi-siamo" replace />} />
+              <Route path="/en/chi-siamo" element={<Navigate to="/en/about-us" replace />} />
+              <Route path="/fr/chi-siamo" element={<Navigate to="/fr/qui-sommes-nous" replace />} />
+              <Route path="/fr/about-us" element={<Navigate to="/fr/qui-sommes-nous" replace />} />
+              <Route path="/es/chi-siamo" element={<Navigate to="/es/quienes-somos" replace />} />
+              <Route path="/es/about-us" element={<Navigate to="/es/quienes-somos" replace />} />
+              <Route path="/de/chi-siamo" element={<Navigate to="/de/ueber-uns" replace />} />
+              <Route path="/de/about-us" element={<Navigate to="/de/ueber-uns" replace />} />
+
+              {/* Services */}
+              <Route path="/it/services" element={<Navigate to="/it/servizi" replace />} />
+              <Route path="/it/servicios" element={<Navigate to="/it/servizi" replace />} />
+              <Route path="/it/dienstleistungen" element={<Navigate to="/it/servizi" replace />} />
+              <Route path="/en/servizi" element={<Navigate to="/en/services" replace />} />
+              <Route path="/fr/servizi" element={<Navigate to="/fr/services" replace />} />
+              <Route path="/es/servizi" element={<Navigate to="/es/servicios" replace />} />
+              <Route path="/es/services" element={<Navigate to="/es/servicios" replace />} />
+              <Route path="/de/servizi" element={<Navigate to="/de/dienstleistungen" replace />} />
+              <Route path="/de/services" element={<Navigate to="/de/dienstleistungen" replace />} />
+
+              {/* Burners */}
+              <Route path="/it/burners" element={<Navigate to="/it/bruciatori" replace />} />
+              <Route path="/it/bruleurs" element={<Navigate to="/it/bruciatori" replace />} />
+              <Route path="/it/quemadores" element={<Navigate to="/it/bruciatori" replace />} />
+              <Route path="/it/brenner" element={<Navigate to="/it/bruciatori" replace />} />
+              <Route path="/en/bruciatori" element={<Navigate to="/en/burners" replace />} />
+              <Route path="/fr/bruciatori" element={<Navigate to="/fr/bruleurs" replace />} />
+              <Route path="/fr/burners" element={<Navigate to="/fr/bruleurs" replace />} />
+              <Route path="/es/bruciatori" element={<Navigate to="/es/quemadores" replace />} />
+              <Route path="/es/burners" element={<Navigate to="/es/quemadores" replace />} />
+              <Route path="/de/bruciatori" element={<Navigate to="/de/brenner" replace />} />
+              <Route path="/de/burners" element={<Navigate to="/de/brenner" replace />} />
+
+              {/* Smoke purifier */}
+              <Route path="/it/wood-smoke-purifier" element={<Navigate to="/it/depuratore-fumi" replace />} />
+              <Route path="/it/purificateur-fumee" element={<Navigate to="/it/depuratore-fumi" replace />} />
+              <Route path="/it/purificador-humo" element={<Navigate to="/it/depuratore-fumi" replace />} />
+              <Route path="/it/rauchfilter" element={<Navigate to="/it/depuratore-fumi" replace />} />
+              <Route path="/en/depuratore-fumi" element={<Navigate to="/en/wood-smoke-purifier" replace />} />
+              <Route path="/fr/depuratore-fumi" element={<Navigate to="/fr/purificateur-fumee" replace />} />
+              <Route path="/es/depuratore-fumi" element={<Navigate to="/es/purificador-humo" replace />} />
+              <Route path="/de/depuratore-fumi" element={<Navigate to="/de/rauchfilter" replace />} />
+
+              {/* Useful info */}
+              <Route path="/it/useful-information" element={<Navigate to="/it/informazioni-utili" replace />} />
+              <Route path="/it/informations-utiles" element={<Navigate to="/it/informazioni-utili" replace />} />
+              <Route path="/it/informacion-util" element={<Navigate to="/it/informazioni-utili" replace />} />
+              <Route path="/it/nuetzliche-informationen" element={<Navigate to="/it/informazioni-utili" replace />} />
+              <Route path="/en/informazioni-utili" element={<Navigate to="/en/useful-information" replace />} />
+              <Route path="/fr/informazioni-utili" element={<Navigate to="/fr/informations-utiles" replace />} />
+              <Route path="/es/informazioni-utili" element={<Navigate to="/es/informacion-util" replace />} />
+              <Route path="/de/informazioni-utili" element={<Navigate to="/de/nuetzliche-informationen" replace />} />
+
+              {/* Ready to ship */}
+              <Route path="/it/ready-to-ship" element={<Navigate to="/it/pronta-consegna" replace />} />
+              <Route path="/en/pronta-consegna" element={<Navigate to="/en/ready-to-ship" replace />} />
+              <Route path="/fr/pronta-consegna" element={<Navigate to="/fr/pret-a-expedier" replace />} />
+              <Route path="/es/pronta-consegna" element={<Navigate to="/es/listo-para-enviar" replace />} />
+              <Route path="/de/pronta-consegna" element={<Navigate to="/de/versandfertig" replace />} />
+
+              {/* Ovens - traditional */}
+              <Route path="/it/traditional-ovens" element={<Navigate to="/it/forni-tradizionali" replace />} />
+              <Route path="/en/forni-tradizionali" element={<Navigate to="/en/traditional-ovens" replace />} />
+              <Route path="/fr/forni-tradizionali" element={<Navigate to="/fr/fours-traditionnels" replace />} />
+              <Route path="/es/forni-tradizionali" element={<Navigate to="/es/hornos-tradicionales" replace />} />
+              <Route path="/de/forni-tradizionali" element={<Navigate to="/de/traditionelle-oefen" replace />} />
+
+              {/* Ovens - gas */}
+              <Route path="/it/gas-ovens" element={<Navigate to="/it/forni-gas" replace />} />
+              <Route path="/en/forni-gas" element={<Navigate to="/en/gas-ovens" replace />} />
+              <Route path="/fr/forni-gas" element={<Navigate to="/fr/fours-gaz" replace />} />
+              <Route path="/es/forni-gas" element={<Navigate to="/es/hornos-gas" replace />} />
+              <Route path="/de/forni-gas" element={<Navigate to="/de/gasoefen" replace />} />
+
+              {/* Ovens - electric */}
+              <Route path="/it/electric-ovens" element={<Navigate to="/it/forni-elettrici" replace />} />
+              <Route path="/en/forni-elettrici" element={<Navigate to="/en/electric-ovens" replace />} />
+              <Route path="/fr/forni-elettrici" element={<Navigate to="/fr/fours-electriques" replace />} />
+              <Route path="/es/forni-elettrici" element={<Navigate to="/es/hornos-electricos" replace />} />
+              <Route path="/de/forni-elettrici" element={<Navigate to="/de/elektrooefen" replace />} />
+
+              {/* Ovens - rotating */}
+              <Route path="/it/rotating-ovens" element={<Navigate to="/it/forni-rotanti" replace />} />
+              <Route path="/en/forni-rotanti" element={<Navigate to="/en/rotating-ovens" replace />} />
+              <Route path="/fr/forni-rotanti" element={<Navigate to="/fr/fours-rotatifs" replace />} />
+              <Route path="/es/forni-rotanti" element={<Navigate to="/es/hornos-rotativos" replace />} />
+              <Route path="/de/forni-rotanti" element={<Navigate to="/de/drehoefen" replace />} />
+
+              {/* VesuvioBuono */}
+              <Route path="/it/vesuviobuono-system" element={<Navigate to="/it/sistema-vesuviobuono" replace />} />
+              <Route path="/en/sistema-vesuviobuono" element={<Navigate to="/en/vesuviobuono-system" replace />} />
+              <Route path="/fr/sistema-vesuviobuono" element={<Navigate to="/fr/systeme-vesuviobuono" replace />} />
+              <Route path="/de/sistema-vesuviobuono" element={<Navigate to="/de/vesuviobuono-system" replace />} />
+
               
               {/* Italian Routes */}
               <Route path="/it" element={<LocalizedIndex lang="it" />} />
