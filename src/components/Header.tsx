@@ -149,13 +149,20 @@ const Header = () => {
     it: 'Chi Siamo', en: 'About Us', fr: 'Qui Sommes-Nous', es: 'Quiénes Somos', de: 'Über Uns'
   };
 
+  const getContactPath = () => {
+    const paths: Record<string, string> = {
+      it: '/it/contatti', en: '/en/contact', fr: '/fr/contact', es: '/es/contacto', de: '/de/kontakt'
+    };
+    return paths[currentLang] || paths.it;
+  };
+
   const navItems: Array<{ href: string; label: string; type: 'anchor' | 'link' }> = [
     { href: `/${currentLang}/architettoai`, label: t('header.visualizer'), type: 'link' },
     { href: getCollectionsPath(), label: t('header.gallery'), type: 'link' },
     
     { href: getAboutPath(), label: aboutLabels[currentLang] || aboutLabels.it, type: 'link' },
     { href: `/${currentLang}/blog`, label: "Blog", type: 'link' },
-    { href: "#consultation", label: t('header.contact'), type: 'anchor' }
+    { href: getContactPath(), label: t('header.contact'), type: 'link' }
   ];
 
   const handleNavClick = (href: string, type: 'anchor' | 'link' = 'anchor') => {
