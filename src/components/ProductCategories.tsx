@@ -53,7 +53,6 @@ import ConsultationModal from './ConsultationModal';
 
 const ProductCategories = () => {
   const { t, i18n } = useTranslation();
-  const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
   const navigate = useNavigate();
 
