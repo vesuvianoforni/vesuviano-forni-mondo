@@ -207,7 +207,7 @@ const ImmersiveOvenGallery = () => {
 
 
       {/* Sticky compact filter bar */}
-      <div className="sticky top-16 md:top-20 z-30 bg-[#0c0c0c]/95 backdrop-blur-md border-y border-stone-800/80">
+      <div className="sticky top-16 md:top-20 z-30 bg-[#f7f3ec]/95 backdrop-blur-md border-y border-stone-300/70">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-5">
           <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-8">
             {/* Model filter */}
@@ -225,7 +225,7 @@ const ImmersiveOvenGallery = () => {
                       className={`shrink-0 snap-start px-4 py-1.5 rounded-full border text-xs whitespace-nowrap transition-all cursor-pointer ${
                         active
                           ? 'bg-orange-600 border-orange-500 text-white'
-                          : 'border-stone-700 text-stone-300 hover:border-orange-600/60'
+                          : 'border-stone-300 text-stone-700 hover:border-orange-500/70 hover:text-orange-700'
                       }`}
                     >
                       {c.label}
@@ -238,6 +238,7 @@ const ImmersiveOvenGallery = () => {
           </div>
         </div>
       </div>
+
 
       <div className="max-w-7xl mx-auto px-6 py-16 md:py-24 space-y-24 md:space-y-32">
 
