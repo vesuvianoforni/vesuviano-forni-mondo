@@ -360,49 +360,49 @@ const ImmersiveOvenGallery = () => {
           <form onSubmit={submit} className="max-w-4xl mx-auto relative">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 md:gap-x-12 gap-y-8 md:gap-y-10">
               <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-500">
+                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-300">
                   {t('consultation.form.name')}
                 </label>
                 <input
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-400"
+                  className="w-full bg-transparent border-b border-stone-400/60 py-3 text-white focus:outline-none focus:border-orange-400 transition-colors placeholder:text-stone-400"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-500">
+                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-300">
                   {t('consultation.form.email')}
                 </label>
                 <input
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-400"
+                  className="w-full bg-transparent border-b border-stone-400/60 py-3 text-white focus:outline-none focus:border-orange-400 transition-colors placeholder:text-stone-400"
                   required
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
-                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-500">
+                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-300">
                   {t('consultation.form.phone')}
                 </label>
                 <input
                   type="tel"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-400"
+                  className="w-full bg-transparent border-b border-stone-400/60 py-3 text-white focus:outline-none focus:border-orange-400 transition-colors placeholder:text-stone-400"
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
-                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-500">
+                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-300">
                   {t('consultation.form.message')}
                 </label>
                 <textarea
                   rows={2}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors resize-none placeholder:text-stone-400"
+                  className="w-full bg-transparent border-b border-stone-400/60 py-3 text-white focus:outline-none focus:border-orange-400 transition-colors resize-none placeholder:text-stone-400"
                 />
               </div>
             </div>
@@ -422,7 +422,7 @@ const ImmersiveOvenGallery = () => {
                   </>
                 )}
               </button>
-              <p className="mt-6 text-stone-500 text-[10px] uppercase tracking-widest italic">
+              <p className="mt-6 text-stone-300 text-[10px] uppercase tracking-widest italic">
                 {t('consultation.responseTime', 'Response within 24-48h')}
               </p>
             </div>
