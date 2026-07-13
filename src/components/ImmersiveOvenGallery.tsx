@@ -161,7 +161,7 @@ const ImmersiveOvenGallery = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-32 bg-[#0c0c0c]">
+      <div className="flex items-center justify-center py-32 bg-[#f7f3ec]">
         <Loader2 className="w-8 h-8 animate-spin text-orange-600" />
       </div>
     );
@@ -170,7 +170,7 @@ const ImmersiveOvenGallery = () => {
   return (
     <section
       id="oven-gallery"
-      className="bg-[#0c0c0c] text-stone-200 selection:bg-orange-900/50 selection:text-orange-200"
+      className="bg-[#f7f3ec] text-stone-800 selection:bg-orange-200 selection:text-orange-900"
     >
       {/* Immersive hero with background image */}
       <div className="relative min-h-[85vh] md:min-h-[92vh] flex items-end overflow-hidden">
@@ -181,29 +181,30 @@ const ImmersiveOvenGallery = () => {
           height={1280}
           className="absolute inset-0 w-full h-full object-cover object-[70%_center] md:object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-[#0c0c0c]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/25 to-[#f7f3ec]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent" />
 
         <div className="relative w-full max-w-7xl mx-auto px-6 pb-16 md:pb-24 pt-32 md:pt-40">
           <div className="max-w-3xl space-y-6 md:space-y-8">
-            <div className="inline-block border border-orange-500/50 px-4 py-1.5 rounded-full backdrop-blur-sm">
-              <span className="text-orange-400 text-[10px] uppercase tracking-[0.4em] font-semibold">
+            <div className="inline-block border border-orange-300/80 bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-sm">
+              <span className="text-orange-100 text-[10px] uppercase tracking-[0.4em] font-semibold">
                 {t('craftsmanship.since', 'Handcrafted Since 1950')}
               </span>
             </div>
             <h1 className="font-playfair text-5xl md:text-7xl lg:text-8xl text-stone-50 font-light leading-[1.05]">
               {t('ovenGallery.title')}
             </h1>
-            <p className="max-w-xl text-stone-300 font-light text-base md:text-lg leading-relaxed">
+            <p className="max-w-xl text-stone-100/90 font-light text-base md:text-lg leading-relaxed">
               {t('ovenGallery.subtitle')}
             </p>
-            <div className="flex items-center gap-3 pt-2 text-stone-400 text-[10px] uppercase tracking-[0.3em] animate-pulse">
+            <div className="flex items-center gap-3 pt-2 text-stone-200/80 text-[10px] uppercase tracking-[0.3em] animate-pulse">
               <ChevronDown className="w-4 h-4" />
               <span>Scorri per esplorare</span>
             </div>
           </div>
         </div>
       </div>
+
 
       {/* Sticky compact filter bar */}
       <div className="sticky top-16 md:top-20 z-30 bg-[#0c0c0c]/95 backdrop-blur-md border-y border-stone-800/80">
