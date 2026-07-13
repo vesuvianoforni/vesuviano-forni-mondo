@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 import realBosco100 from '@/assets/real-bosco-100-gold-mosaic.jpg.asset.json';
 import realBosco120 from '@/assets/real-bosco-120-blue-mosaic.jpg.asset.json';
-import rotatingVideo from '@/assets/video_vesuviano_forno_rotating.mov.asset.json';
+import ProductVideoSection from '@/components/ProductVideoSection';
 const HERO_VIDEO = '/lovable-uploads/rotating-oven-hero-bg.mp4';
 const PIZZOLO_LOGO = '/lovable-uploads/pizzolo-siciliano-logo.png';
 const ANSUM_LOGO = '/lovable-uploads/ansum-logo.png';
@@ -285,19 +285,7 @@ const RotatingPizzaOven = () => {
         </div>
       </section>
 
-      {/* Product video */}
-      <section className="py-16 bg-stone-50">
-        <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
-          <video
-            src={rotatingVideo.url}
-            className="w-full rounded-lg shadow-lg"
-            controls
-            autoPlay
-            loop
-            playsInline
-          />
-        </div>
-      </section>
+      <ProductVideoSection />
 
       {/* Social proof */}
       <section className="py-20 bg-white">
