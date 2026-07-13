@@ -4,7 +4,50 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+interface AutoPlayVideoProps {
+  src: string;
+  poster: string;
+  alt: string;
+}
+
+const AutoPlayVideo = ({ src, poster, alt }: AutoPlayVideoProps) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.4 }
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <video
+      ref={videoRef}
+      src={src}
+      poster={poster}
+      aria-label={alt}
+      className="w-full h-full object-cover"
+      loop
+      muted
+      playsInline
+      preload="metadata"
+    />
+  );
+};
 
 import ConsultationModal from './ConsultationModal';
 
