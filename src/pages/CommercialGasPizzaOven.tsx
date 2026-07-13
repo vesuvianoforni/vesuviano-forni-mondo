@@ -12,6 +12,7 @@ import brickBgAsset from '@/assets/start-project-bg.jpg.asset.json';
 import heroVideoAsset from '@/assets/hero-gas.mp4.asset.json';
 import avanziniLogoAsset from '@/assets/avanzini-logo.png.asset.json';
 import spettaclVideoAsset from '@/assets/e_nu_spettacl_vesuviano.mp4.asset.json';
+import gasOvenMosaic from '@/assets/vesuviano-gas-oven-mosaic.png.asset.json';
 const BRICK_BG_URL = brickBgAsset.url;
 const HERO_VIDEO_URL = heroVideoAsset.url;
 const AVANZINI_LOGO_URL = avanziniLogoAsset.url;
@@ -252,9 +253,9 @@ const CommercialGasPizzaOven = () => {
             </div>
             <div>
               <img
-                src="/lovable-uploads/forno-nero-elegante.webp"
-                alt="Handmade Neapolitan gas pizza oven with elegant black finish"
-                className="w-full h-80 object-cover rounded-lg shadow-lg"
+                src={gasOvenMosaic.url}
+                alt="Handmade Neapolitan gas pizza oven with mosaic tile dome"
+                className="w-full h-[500px] object-contain rounded-lg shadow-lg bg-white"
                 loading="lazy"
               />
             </div>
