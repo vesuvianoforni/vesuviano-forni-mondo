@@ -152,7 +152,7 @@ const Header = () => {
   const navItems: Array<{ href: string; label: string; type: 'anchor' | 'link' }> = [
     { href: `/${currentLang}/architettoai`, label: t('header.visualizer'), type: 'link' },
     { href: getCollectionsPath(), label: t('header.gallery'), type: 'link' },
-    { href: getRivestimentiPath(), label: "Rivestimenti", type: 'link' },
+    
     { href: getAboutPath(), label: aboutLabels[currentLang] || aboutLabels.it, type: 'link' },
     { href: `/${currentLang}/blog`, label: "Blog", type: 'link' },
     { href: "#consultation", label: t('header.contact'), type: 'anchor' }
