@@ -260,15 +260,16 @@ const ImmersiveOvenGallery = () => {
                     <div className="absolute -inset-20 bg-orange-500/15 blur-[120px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
                     <button
                       onClick={() => setZoomed(oven)}
-                      className="block w-full aspect-[3/2] rounded-sm border border-stone-200 overflow-hidden shadow-xl transition-transform duration-700 group-hover:scale-[1.02] cursor-zoom-in bg-white"
+                      className="block w-full aspect-[3/2] rounded-sm border border-stone-300/60 overflow-hidden shadow-xl transition-transform duration-700 group-hover:scale-[1.02] cursor-zoom-in bg-[#f7f3ec]"
                     >
                       <img
                         src={oven.image_url}
                         alt={oven.name}
                         loading="lazy"
-                        className="w-full h-full object-contain"
+                        className="w-full h-full object-contain mix-blend-multiply"
                       />
                     </button>
+
                     <div
                       className={`absolute top-4 ${reversed ? 'right-6' : 'left-6'} text-stone-400/40 text-8xl md:text-9xl font-playfair italic select-none pointer-events-none`}
                     >
