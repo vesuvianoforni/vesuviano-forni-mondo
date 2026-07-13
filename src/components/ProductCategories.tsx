@@ -117,11 +117,7 @@ const ProductCategories = () => {
               return (
                 <Card 
                   key={category.key}
-                  className={`group overflow-hidden hover:shadow-2xl transition-all duration-500 border animate-fade-in ${
-                    isConsultation 
-                      ? 'border-vesuviano-400 bg-gradient-to-br from-vesuviano-50 to-white' 
-                      : 'border-stone-200 hover:border-vesuviano-300'
-                  }`}
+                  className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border border-stone-200 hover:border-vesuviano-300 animate-fade-in"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className={`relative h-64 sm:h-80 md:h-96 overflow-hidden`}>
