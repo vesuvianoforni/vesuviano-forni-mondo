@@ -252,9 +252,9 @@ const CommercialGasPizzaOven = () => {
             </div>
             <div>
               <img
-                src="/lovable-uploads/forno-nero-elegante.webp"
-                alt="Handmade Neapolitan gas pizza oven with elegant black finish"
-                className="w-full h-80 object-cover rounded-lg shadow-lg"
+                src={gasOvenMosaic.url}
+                alt="Handmade Neapolitan gas pizza oven with mosaic tile dome"
+                className="w-full h-[500px] object-contain rounded-lg shadow-lg bg-white"
                 loading="lazy"
               />
             </div>
