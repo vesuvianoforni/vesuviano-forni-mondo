@@ -4,6 +4,7 @@ import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
 import SEOHead from '@/components/SEOHead';
 import ConsultationForm from '@/components/ConsultationForm';
+import ProductVideoSection from '@/components/ProductVideoSection';
 import Rivestimenti from '@/components/Rivestimenti';
 import { Button } from '@/components/ui/button';
 import CtaButton from '@/components/CtaButton';
@@ -141,6 +142,8 @@ const LocalizedElectricOven = ({ lang }: LocalizedElectricOvenProps) => {
 
         {/* Coatings (compact) */}
         <Rivestimenti />
+
+        <ProductVideoSection />
 
         {/* Consultation Form */}
         <section id="consultation" className="py-20 bg-stone-50">

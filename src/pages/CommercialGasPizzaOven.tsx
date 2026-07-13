@@ -3,6 +3,7 @@ import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
 import SEOHead from '@/components/SEOHead';
 import ConsultationForm from '@/components/ConsultationForm';
+import ProductVideoSection from '@/components/ProductVideoSection';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -471,6 +472,8 @@ const CommercialGasPizzaOven = () => {
 
       {/* Finishes */}
       <Rivestimenti />
+
+      <ProductVideoSection />
 
       {/* CTA Form */}
       <div id="quote-form" className="scroll-mt-20">

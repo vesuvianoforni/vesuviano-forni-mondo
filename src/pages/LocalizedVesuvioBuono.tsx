@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import SEOHead from "@/components/SEOHead";
 import VesuvioBuono from "@/components/VesuvioBuono";
 import ConsultationForm from "@/components/ConsultationForm";
+import ProductVideoSection from "@/components/ProductVideoSection";
 import AIChatWidget from "@/components/chat/AIChatWidget";
 
 interface LocalizedVesuvioBuonoProps {
@@ -38,6 +39,8 @@ const LocalizedVesuvioBuono = ({ lang }: LocalizedVesuvioBuonoProps) => {
           {/* VesuvioBuono Section */}
           <VesuvioBuono />
           
+          <ProductVideoSection />
+
           {/* Consultation Section */}
           <section id="consultation" aria-label="Consultation form">
             <ConsultationForm />

@@ -4,6 +4,7 @@ import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
 import SEOHead from '@/components/SEOHead';
 import ConsultationForm from '@/components/ConsultationForm';
+import ProductVideoSection from '@/components/ProductVideoSection';
 import Rivestimenti from '@/components/Rivestimenti';
 import { Button } from '@/components/ui/button';
 import CtaButton from '@/components/CtaButton';
@@ -148,6 +149,7 @@ const LocalizedRotatingOven = ({ lang }: LocalizedRotatingOvenProps) => {
         <Rivestimenti />
 
         {/* Consultation Form */}
+        <ProductVideoSection />
         <section id="consultation" className="py-20 bg-stone-50">
           <div className="container mx-auto px-6 max-w-4xl">
             <div className="text-center mb-12">
