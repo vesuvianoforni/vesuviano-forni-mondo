@@ -126,7 +126,7 @@ const ProductCategories = () => {
                     isConsultation 
                       ? 'border-vesuviano-400 bg-gradient-to-br from-vesuviano-50 to-white' 
                       : 'border-stone-200 hover:border-vesuviano-300'
-                  } ${!isConsultation && category.video && playingVideo !== category.key ? 'cursor-pointer' : ''}`}
+                  }`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className={`relative h-64 sm:h-80 md:h-96 overflow-hidden`}>
