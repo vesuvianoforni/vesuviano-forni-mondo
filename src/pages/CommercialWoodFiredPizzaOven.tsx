@@ -400,6 +400,9 @@ const CommercialWoodFiredPizzaOven = () => {
         </div>
       </section>
 
+      {/* Finishes */}
+      <Rivestimenti />
+
       {/* CTA Form */}
       <div id="quote-form" className="scroll-mt-20">
         <ConsultationForm />
