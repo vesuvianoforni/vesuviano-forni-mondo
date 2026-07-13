@@ -49,11 +49,10 @@ const AutoPlayVideo = ({ src, poster, alt }: AutoPlayVideoProps) => {
   );
 };
 
-import ConsultationModal from './ConsultationModal';
+
 
 const ProductCategories = () => {
   const { t, i18n } = useTranslation();
-  const [consultationModalOpen, setConsultationModalOpen] = useState(false);
   const navigate = useNavigate();
 
 
@@ -221,13 +220,6 @@ const ProductCategories = () => {
           </div>
 
         </div>
-
-
-        {/* Consultation Modal */}
-        <ConsultationModal
-          isOpen={consultationModalOpen}
-          onClose={() => setConsultationModalOpen(false)}
-        />
       </div>
     </section>
   );
