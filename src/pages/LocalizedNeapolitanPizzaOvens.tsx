@@ -6,6 +6,7 @@ import ConsultationForm from '@/components/ConsultationForm';
 import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import AvanziniPartnerStrip from '@/components/AvanziniPartnerStrip';
 
 type Lang = 'en' | 'fr' | 'de' | 'es';
 
@@ -219,6 +220,8 @@ const LocalizedNeapolitanPizzaOvens = ({ lang }: Props) => {
           </div>
         </div>
       </section>
+
+      <AvanziniPartnerStrip />
 
       {/* CTA Form */}
       <section id="consultation" className="py-20 bg-stone-50">
