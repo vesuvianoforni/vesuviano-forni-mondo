@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
+import Rivestimenti from '@/components/Rivestimenti';
 const pizzoloLogo = { url: '/lovable-uploads/client-logo-pizzolo.png' };
 const ansumLogo = { url: '/lovable-uploads/client-logo-ansum.png' };
 const cuginiLogo = { url: '/lovable-uploads/client-logo-cugini-pizza.png' };
@@ -398,6 +399,9 @@ const CommercialWoodFiredPizzaOven = () => {
           </div>
         </div>
       </section>
+
+      {/* Finishes */}
+      <Rivestimenti />
 
       {/* CTA Form */}
       <div id="quote-form" className="scroll-mt-20">
