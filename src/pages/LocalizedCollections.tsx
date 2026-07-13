@@ -35,7 +35,7 @@ const LocalizedCollections = ({ lang }: Props) => {
   if (!ready) return null;
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-[#0c0c0c]">
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#f7f3ec]">
       <OvenDataInitializer />
       <Header />
       <SEOHead lang={lang} title={meta.title} description={meta.description} />
