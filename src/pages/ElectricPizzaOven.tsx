@@ -10,6 +10,8 @@ import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 const ansumLogo = { url: '/lovable-uploads/client-logo-ansum.png' };
 const pizzoloLogo = { url: '/lovable-uploads/client-logo-pizzolo.png' };
 const cuginiLogo = { url: '/lovable-uploads/client-logo-cugini-pizza.png' };
+import electricPizzaBake from '@/assets/electric-oven-pizza-bake.jpg.asset.json';
+import electricMosaicDome from '@/assets/electric-oven-mosaic-dome.jpg.asset.json';
 
 const PATH = '/en/electric-pizza-oven';
 const URL = `https://vesuvianoforni.com${PATH}`;
@@ -209,6 +211,53 @@ const ElectricPizzaOven = () => {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Refractory brick showcase */}
+      <section className="py-20 bg-stone-50">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+          <div className="grid md:grid-cols-2 gap-10 items-center">
+            <div className="space-y-4">
+              <img
+                src={electricMosaicDome.url}
+                alt="Neapolitan electric pizza oven with hand-tiled refractory brick dome"
+                loading="lazy"
+                className="w-full h-auto rounded-lg shadow-xl object-cover"
+              />
+              <img
+                src={electricPizzaBake.url}
+                alt="Leopard-spotted Neapolitan pizza baked inside our electric refractory brick oven"
+                loading="lazy"
+                className="w-full h-auto rounded-lg shadow-xl object-cover"
+              />
+            </div>
+            <div>
+              <span className="inline-block text-xs uppercase tracking-widest text-vesuviano-700 font-semibold mb-3">
+                Authentic Neapolitan oven — electric powered
+              </span>
+              <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-6">
+                A true refractory brick Neapolitan oven — with electric cooking
+              </h2>
+              <p className="text-stone-700 leading-relaxed mb-4">
+                This is not a metal-deck electric oven. It is a genuine Neapolitan oven, hand-built in Naples with a
+                <strong> refractory brick dome and refractory floor</strong>, exactly like our traditional wood-fired
+                models. The only thing that changes is the heat source: instead of wood or gas, dedicated electric
+                resistances heat the bricks, which store and radiate heat to bake the pizza.
+              </p>
+              <p className="text-stone-700 leading-relaxed mb-4">
+                The result is authentic Neapolitan pizza — <strong>leopard-spotted cornicione, soft pliable base,
+                60–90 seconds bake</strong> — with all the benefits of electric power: no flue, no combustion,
+                simpler installation, and full control over consumption.
+              </p>
+              <ul className="space-y-2 text-stone-700 mb-6">
+                <li className="flex gap-2"><span className="text-vesuviano-600">•</span> Hand-laid refractory brick dome (patented)</li>
+                <li className="flex gap-2"><span className="text-vesuviano-600">•</span> Refractory cooking floor, up to 500 °C</li>
+                <li className="flex gap-2"><span className="text-vesuviano-600">•</span> Electric heating — no wood, no gas, no flue</li>
+                <li className="flex gap-2"><span className="text-vesuviano-600">•</span> Same bake as a traditional Neapolitan wood oven</li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
