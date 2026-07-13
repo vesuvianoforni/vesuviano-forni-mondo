@@ -3,7 +3,7 @@ import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
 import SEOHead from '@/components/SEOHead';
 import ConsultationForm from '@/components/ConsultationForm';
-import AvanziniPartnerStrip from '@/components/AvanziniPartnerStrip';
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -274,7 +274,7 @@ const RotatingPizzaOven = () => {
         </div>
       </section>
 
-      <AvanziniPartnerStrip />
+      
 
       {/* Social proof */}
       <section className="py-20 bg-white">
