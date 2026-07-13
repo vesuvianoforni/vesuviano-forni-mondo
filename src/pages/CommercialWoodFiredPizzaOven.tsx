@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 import Rivestimenti from '@/components/Rivestimenti';
 import woodOvensWorkshop from '@/assets/vesuviano-wood-ovens-workshop.jpg.asset.json';
+import woodFireDetail from '@/assets/vesuviano-wood-fire-detail.jpg.asset.json';
 const pizzoloLogo = { url: '/lovable-uploads/client-logo-pizzolo.png' };
 const ansumLogo = { url: '/lovable-uploads/client-logo-ansum.png' };
 const cuginiLogo = { url: '/lovable-uploads/client-logo-cugini-pizza.png' };
@@ -200,6 +201,14 @@ const CommercialWoodFiredPizzaOven = () => {
           <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-12 text-center">
             Why a Vesuviano wood-fired oven
           </h2>
+          <div className="mb-12 overflow-hidden rounded-2xl shadow-xl group">
+            <img
+              src={woodFireDetail.url}
+              alt="Glowing embers and flames inside a traditional wood-fired oven"
+              className="w-full h-64 md:h-96 object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              loading="lazy"
+            />
+          </div>
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
