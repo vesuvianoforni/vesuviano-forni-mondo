@@ -39,6 +39,8 @@ const LocalizedVesuvioBuono = ({ lang }: LocalizedVesuvioBuonoProps) => {
           {/* VesuvioBuono Section */}
           <VesuvioBuono />
           
+          <ProductVideoSection />
+
           {/* Consultation Section */}
           <section id="consultation" aria-label="Consultation form">
             <ConsultationForm />
