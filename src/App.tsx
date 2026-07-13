@@ -293,6 +293,10 @@ const App = () => {
               <Route path="/fr/services" element={<LocalizedServices lang="fr" />} />
               <Route path="/fr/fours-a-pizza-napolitains" element={<LocalizedNeapolitanPizzaOvens lang="fr" />} />
               <Route path="/fr/four-a-pizza-bois" element={<FourAPizzaBois />} />
+              <Route path="/fr/commercial-wood-fired-pizza-oven" element={<CommercialWoodFiredPizzaOven />} />
+              <Route path="/fr/commercial-gas-pizza-oven" element={<CommercialGasPizzaOven />} />
+              <Route path="/fr/rotating-pizza-oven" element={<RotatingPizzaOven />} />
+              <Route path="/fr/electric-pizza-oven" element={<ElectricPizzaOven />} />
               
               {/* Spanish Routes */}
               <Route path="/es" element={<LocalizedIndex lang="es" />} />
@@ -314,6 +318,10 @@ const App = () => {
               <Route path="/es/quienes-somos" element={<LocalizedAboutUs lang="es" />} />
               <Route path="/es/servicios" element={<LocalizedServices lang="es" />} />
               <Route path="/es/hornos-pizza-napolitana" element={<LocalizedNeapolitanPizzaOvens lang="es" />} />
+              <Route path="/es/commercial-wood-fired-pizza-oven" element={<CommercialWoodFiredPizzaOven />} />
+              <Route path="/es/commercial-gas-pizza-oven" element={<CommercialGasPizzaOven />} />
+              <Route path="/es/rotating-pizza-oven" element={<RotatingPizzaOven />} />
+              <Route path="/es/electric-pizza-oven" element={<ElectricPizzaOven />} />
               
               {/* German Routes */}
               <Route path="/de" element={<LocalizedIndex lang="de" />} />
@@ -335,6 +343,10 @@ const App = () => {
               <Route path="/de/ueber-uns" element={<LocalizedAboutUs lang="de" />} />
               <Route path="/de/dienstleistungen" element={<LocalizedServices lang="de" />} />
               <Route path="/de/neapolitanische-pizzaoefen" element={<LocalizedNeapolitanPizzaOvens lang="de" />} />
+              <Route path="/de/commercial-wood-fired-pizza-oven" element={<CommercialWoodFiredPizzaOven />} />
+              <Route path="/de/commercial-gas-pizza-oven" element={<CommercialGasPizzaOven />} />
+              <Route path="/de/rotating-pizza-oven" element={<RotatingPizzaOven />} />
+              <Route path="/de/electric-pizza-oven" element={<ElectricPizzaOven />} />
               
               {/* Public pages */}
               <Route path="/book-a-slot-call" element={<BookAppointment />} />
