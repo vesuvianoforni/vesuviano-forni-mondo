@@ -119,13 +119,13 @@ const ElectricPizzaOven = () => {
           muted
           loop
           playsInline
-          poster="/lovable-uploads/forno-metallo-bianco-nuovo.webp"
+          poster={electricPizzaBake.url}
           className="absolute inset-0 w-full h-full object-cover"
         >
-          <source src="/lovable-uploads/forno-elettrico-360-video.mp4" type="video/mp4" />
+          <source src={electricShowcaseVideo.url} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/75" />
-        <div className="relative h-full container mx-auto px-4 sm:px-6 flex items-center pt-20 pb-8 md:py-0">
+        <div className="relative h-full container mx-auto px-4 sm:px-6 flex items-center pt-28 pb-8 md:pt-32 md:pb-12">
           <div className="max-w-3xl text-white w-full">
             <h1 className="font-playfair text-[2rem] leading-[1.1] sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 break-words hyphens-auto">
               Patented Electric Neapolitan Pizza Ovens, Made in Naples
