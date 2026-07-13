@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 import Rivestimenti from '@/components/Rivestimenti';
+import woodOvensWorkshop from '@/assets/vesuviano-wood-ovens-workshop.jpg.asset.json';
 const pizzoloLogo = { url: '/lovable-uploads/client-logo-pizzolo.png' };
 const ansumLogo = { url: '/lovable-uploads/client-logo-ansum.png' };
 const cuginiLogo = { url: '/lovable-uploads/client-logo-cugini-pizza.png' };
