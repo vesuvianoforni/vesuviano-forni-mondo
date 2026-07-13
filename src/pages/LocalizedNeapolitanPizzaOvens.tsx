@@ -221,6 +221,8 @@ const LocalizedNeapolitanPizzaOvens = ({ lang }: Props) => {
         </div>
       </section>
 
+      <AvanziniPartnerStrip />
+
       {/* CTA Form */}
       <section id="consultation" className="py-20 bg-stone-50">
         <div className="container mx-auto px-6 max-w-4xl">
