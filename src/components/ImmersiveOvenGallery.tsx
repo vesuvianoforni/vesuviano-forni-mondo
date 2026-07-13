@@ -328,14 +328,14 @@ const ImmersiveOvenGallery = () => {
         {/* Unified consultation */}
         <section
           id="immersive-consultation"
-          className="bg-[#121212] border border-stone-800/50 p-8 md:p-16 lg:p-24 relative overflow-hidden rounded-sm scroll-mt-24"
+          className="bg-white border border-stone-200 p-8 md:p-16 lg:p-24 relative overflow-hidden rounded-sm scroll-mt-24 shadow-sm"
         >
-          <div className="absolute top-0 right-0 w-96 h-96 bg-orange-900/20 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-orange-200/40 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
           <div className="max-w-3xl mx-auto text-center space-y-6 md:space-y-8 mb-14 md:mb-20 relative">
-            <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl text-stone-100">
+            <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl text-stone-900">
               {t('consultation.header.title')}
             </h2>
-            <p className="text-stone-400 text-base md:text-lg font-light">
+            <p className="text-stone-600 text-base md:text-lg font-light">
               {t('consultation.header.subtitle')}
             </p>
           </div>
@@ -350,7 +350,7 @@ const ImmersiveOvenGallery = () => {
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-800 py-3 text-stone-200 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-700"
+                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-400"
                   required
                 />
               </div>
@@ -362,7 +362,7 @@ const ImmersiveOvenGallery = () => {
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-800 py-3 text-stone-200 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-700"
+                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-400"
                   required
                 />
               </div>
@@ -374,7 +374,7 @@ const ImmersiveOvenGallery = () => {
                   type="tel"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-800 py-3 text-stone-200 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-700"
+                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-400"
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
@@ -385,7 +385,7 @@ const ImmersiveOvenGallery = () => {
                   rows={2}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-800 py-3 text-stone-200 focus:outline-none focus:border-orange-600 transition-colors resize-none placeholder:text-stone-700"
+                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors resize-none placeholder:text-stone-400"
                 />
               </div>
             </div>
@@ -394,7 +394,7 @@ const ImmersiveOvenGallery = () => {
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex items-center gap-4 px-10 md:px-12 py-5 bg-orange-700 text-stone-100 text-xs uppercase tracking-[0.3em] font-bold hover:bg-orange-600 transition-all shadow-[0_10px_40px_-10px_rgba(194,65,12,0.5)] cursor-pointer group disabled:opacity-60"
+                className="inline-flex items-center gap-4 px-10 md:px-12 py-5 bg-orange-600 text-white text-xs uppercase tracking-[0.3em] font-bold hover:bg-orange-700 transition-all shadow-[0_10px_40px_-10px_rgba(194,65,12,0.5)] cursor-pointer group disabled:opacity-60"
               >
                 {submitting ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -405,7 +405,7 @@ const ImmersiveOvenGallery = () => {
                   </>
                 )}
               </button>
-              <p className="mt-6 text-stone-600 text-[10px] uppercase tracking-widest italic">
+              <p className="mt-6 text-stone-500 text-[10px] uppercase tracking-widest italic">
                 {t('consultation.responseTime', 'Response within 24-48h')}
               </p>
             </div>
@@ -413,11 +413,12 @@ const ImmersiveOvenGallery = () => {
         </section>
 
         <footer className="text-center">
-          <p className="text-stone-600 text-xs tracking-[0.3em] uppercase">
+          <p className="text-stone-500 text-xs tracking-[0.3em] uppercase">
             • Napoli • Since 1950 •
           </p>
         </footer>
       </div>
+
 
       {zoomed && (
         <ImageZoomModal
