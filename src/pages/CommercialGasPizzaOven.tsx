@@ -9,7 +9,9 @@ import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 import Rivestimenti from '@/components/Rivestimenti';
 import brickBgAsset from '@/assets/start-project-bg.jpg.asset.json';
+import heroVideoAsset from '@/assets/hero-gas.mp4.asset.json';
 const BRICK_BG_URL = brickBgAsset.url;
+const HERO_VIDEO_URL = heroVideoAsset.url;
 
 const ansumLogo = { url: '/lovable-uploads/client-logo-ansum.png' };
 const cuginiLogo = { url: '/lovable-uploads/client-logo-cugini-pizza.png' };
@@ -108,12 +110,16 @@ const CommercialGasPizzaOven = () => {
 
       {/* Hero */}
       <section className="relative min-h-[600px] h-[80vh] md:h-[70vh] md:min-h-[560px] overflow-hidden">
-        <img
-          src={heroBg.url}
-          alt="Professional Neapolitan gas pizza oven in a commercial pizzeria"
+        <video
+          src={HERO_VIDEO_URL}
+          poster={heroBg.url}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-label="Professional Neapolitan gas pizza oven in a commercial pizzeria"
           className="absolute inset-0 w-full h-full object-cover"
-          width={1920}
-          height={1080}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/75" />
         <div className="relative h-full container mx-auto px-4 sm:px-6 flex items-center pt-20 pb-8 md:py-0">
