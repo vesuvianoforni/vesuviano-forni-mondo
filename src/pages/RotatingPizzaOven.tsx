@@ -8,6 +8,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
+import realBosco100 from '@/assets/real-bosco-100-gold-mosaic.jpg.asset.json';
+import realBosco120 from '@/assets/real-bosco-120-blue-mosaic.jpg.asset.json';
 const HERO_VIDEO = '/lovable-uploads/rotating-oven-hero-bg.mp4';
 const PIZZOLO_LOGO = '/lovable-uploads/pizzolo-siciliano-logo.png';
 const ANSUM_LOGO = '/lovable-uploads/ansum-logo.png';
@@ -49,6 +51,7 @@ const FAQS = [
 const MODELS = [
   {
     name: 'Real Bosco — 100 cm rotating plate',
+    image: realBosco100.url,
     diameter: '100 cm refractory rotating floor',
     capacity: '5–6 pizzas per bake · 150–200 pizzas/hour',
     footprint: '160 × 160 cm',
@@ -58,6 +61,7 @@ const MODELS = [
   },
   {
     name: 'Real Bosco — 120 cm rotating plate',
+    image: realBosco120.url,
     diameter: '120 cm refractory rotating floor',
     capacity: '7–8 pizzas per bake · 200–250+ pizzas/hour',
     footprint: '180 × 180 cm',
@@ -228,7 +232,13 @@ const RotatingPizzaOven = () => {
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             {MODELS.map((m) => (
-              <Card key={m.name} className="border-stone-200 hover:border-vesuviano-300 transition-colors">
+              <Card key={m.name} className="border-stone-200 hover:border-vesuviano-300 transition-colors overflow-hidden">
+                <img
+                  src={m.image}
+                  alt={m.name}
+                  className="w-full h-64 object-cover"
+                  loading="lazy"
+                />
                 <CardContent className="p-8">
                   <h3 className="font-playfair text-2xl font-bold text-charcoal-900 mb-4">{m.name}</h3>
                   <dl className="space-y-2 text-stone-700">
