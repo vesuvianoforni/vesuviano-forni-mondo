@@ -256,8 +256,8 @@ const CommercialWoodFiredPizzaOven = () => {
             </div>
             <div>
               <img
-                src={woodOvensWorkshop.url}
-                alt="Vesuviano wood-fired pizza ovens lined up in our Naples workshop"
+                src={goldMosaicOven.url}
+                alt="Handmade gold mosaic Vesuviano wood-fired pizza oven"
                 className="w-full h-[500px] object-contain bg-white rounded-lg shadow-lg"
                 loading="lazy"
               />
