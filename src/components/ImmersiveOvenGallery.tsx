@@ -161,7 +161,7 @@ const ImmersiveOvenGallery = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-32 bg-[#0c0c0c]">
+      <div className="flex items-center justify-center py-32 bg-[#f7f3ec]">
         <Loader2 className="w-8 h-8 animate-spin text-orange-600" />
       </div>
     );
@@ -170,7 +170,7 @@ const ImmersiveOvenGallery = () => {
   return (
     <section
       id="oven-gallery"
-      className="bg-[#0c0c0c] text-stone-200 selection:bg-orange-900/50 selection:text-orange-200"
+      className="bg-[#f7f3ec] text-stone-800 selection:bg-orange-200 selection:text-orange-900"
     >
       {/* Immersive hero with background image */}
       <div className="relative min-h-[85vh] md:min-h-[92vh] flex items-end overflow-hidden">
@@ -181,23 +181,23 @@ const ImmersiveOvenGallery = () => {
           height={1280}
           className="absolute inset-0 w-full h-full object-cover object-[70%_center] md:object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-[#0c0c0c]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/25 to-[#f7f3ec]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent" />
 
         <div className="relative w-full max-w-7xl mx-auto px-6 pb-16 md:pb-24 pt-32 md:pt-40">
           <div className="max-w-3xl space-y-6 md:space-y-8">
-            <div className="inline-block border border-orange-500/50 px-4 py-1.5 rounded-full backdrop-blur-sm">
-              <span className="text-orange-400 text-[10px] uppercase tracking-[0.4em] font-semibold">
+            <div className="inline-block border border-orange-300/80 bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-sm">
+              <span className="text-orange-100 text-[10px] uppercase tracking-[0.4em] font-semibold">
                 {t('craftsmanship.since', 'Handcrafted Since 1950')}
               </span>
             </div>
             <h1 className="font-playfair text-5xl md:text-7xl lg:text-8xl text-stone-50 font-light leading-[1.05]">
               {t('ovenGallery.title')}
             </h1>
-            <p className="max-w-xl text-stone-300 font-light text-base md:text-lg leading-relaxed">
+            <p className="max-w-xl text-stone-100/90 font-light text-base md:text-lg leading-relaxed">
               {t('ovenGallery.subtitle')}
             </p>
-            <div className="flex items-center gap-3 pt-2 text-stone-400 text-[10px] uppercase tracking-[0.3em] animate-pulse">
+            <div className="flex items-center gap-3 pt-2 text-stone-200/80 text-[10px] uppercase tracking-[0.3em] animate-pulse">
               <ChevronDown className="w-4 h-4" />
               <span>Scorri per esplorare</span>
             </div>
@@ -205,8 +205,9 @@ const ImmersiveOvenGallery = () => {
         </div>
       </div>
 
+
       {/* Sticky compact filter bar */}
-      <div className="sticky top-16 md:top-20 z-30 bg-[#0c0c0c]/95 backdrop-blur-md border-y border-stone-800/80">
+      <div className="sticky top-16 md:top-20 z-30 bg-[#f7f3ec]/95 backdrop-blur-md border-y border-stone-300/70">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-5">
           <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-8">
             {/* Model filter */}
@@ -224,7 +225,7 @@ const ImmersiveOvenGallery = () => {
                       className={`shrink-0 snap-start px-4 py-1.5 rounded-full border text-xs whitespace-nowrap transition-all cursor-pointer ${
                         active
                           ? 'bg-orange-600 border-orange-500 text-white'
-                          : 'border-stone-700 text-stone-300 hover:border-orange-600/60'
+                          : 'border-stone-300 text-stone-700 hover:border-orange-500/70 hover:text-orange-700'
                       }`}
                     >
                       {c.label}
@@ -237,6 +238,7 @@ const ImmersiveOvenGallery = () => {
           </div>
         </div>
       </div>
+
 
       <div className="max-w-7xl mx-auto px-6 py-16 md:py-24 space-y-24 md:space-y-32">
 
@@ -255,10 +257,10 @@ const ImmersiveOvenGallery = () => {
                   className="group relative grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center animate-fade-in"
                 >
                   <div className={`lg:col-span-7 relative ${reversed ? 'lg:order-2' : 'lg:order-1'}`}>
-                    <div className="absolute -inset-20 bg-orange-600/10 blur-[120px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+                    <div className="absolute -inset-20 bg-orange-500/15 blur-[120px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
                     <button
                       onClick={() => setZoomed(oven)}
-                      className="block w-full aspect-[3/2] rounded-sm border border-stone-800 overflow-hidden shadow-2xl transition-transform duration-700 group-hover:scale-[1.02] cursor-zoom-in bg-stone-900"
+                      className="block w-full aspect-[3/2] rounded-sm border border-stone-200 overflow-hidden shadow-xl transition-transform duration-700 group-hover:scale-[1.02] cursor-zoom-in bg-white"
                     >
                       <img
                         src={oven.image_url}
@@ -268,7 +270,7 @@ const ImmersiveOvenGallery = () => {
                       />
                     </button>
                     <div
-                      className={`absolute top-4 ${reversed ? 'right-6' : 'left-6'} text-stone-700/30 text-8xl md:text-9xl font-playfair italic select-none pointer-events-none`}
+                      className={`absolute top-4 ${reversed ? 'right-6' : 'left-6'} text-stone-400/40 text-8xl md:text-9xl font-playfair italic select-none pointer-events-none`}
                     >
                       {num}
                     </div>
@@ -276,16 +278,16 @@ const ImmersiveOvenGallery = () => {
                   <div className={`lg:col-span-5 space-y-6 md:space-y-8 ${reversed ? 'lg:order-1' : 'lg:order-2'}`}>
                     <div className="space-y-2">
                       {oven.tagline && (
-                        <h3 className="text-orange-500 text-xs tracking-[0.3em] uppercase">
+                        <h3 className="text-orange-600 text-xs tracking-[0.3em] uppercase">
                           {oven.tagline}
                         </h3>
                       )}
-                      <h2 className="font-playfair text-4xl md:text-5xl text-stone-100 leading-tight">
+                      <h2 className="font-playfair text-4xl md:text-5xl text-stone-900 leading-tight">
                         {oven.name}
                       </h2>
                     </div>
                     {oven.description && (
-                      <p className="text-stone-400 font-light leading-relaxed text-base md:text-lg">
+                      <p className="text-stone-600 font-light leading-relaxed text-base md:text-lg">
                         {oven.description}
                       </p>
                     )}
@@ -293,13 +295,13 @@ const ImmersiveOvenGallery = () => {
                       {oven.diameters.length > 0 && (
                         <div>
                           <dt className="text-[10px] uppercase tracking-widest text-stone-500 mb-1">Diametri</dt>
-                          <dd className="text-stone-200">{oven.diameters.join(' · ')} cm</dd>
+                          <dd className="text-stone-800">{oven.diameters.join(' · ')} cm</dd>
                         </div>
                       )}
                       {oven.fuels.length > 0 && (
                         <div>
                           <dt className="text-[10px] uppercase tracking-widest text-stone-500 mb-1">Alimentazione</dt>
-                          <dd className="text-stone-200">{oven.fuels.join(' · ')}</dd>
+                          <dd className="text-stone-800">{oven.fuels.join(' · ')}</dd>
                         </div>
                       )}
                     </dl>
@@ -307,7 +309,7 @@ const ImmersiveOvenGallery = () => {
                       {oven.canBuiltOnPlace && (
                         <Link
                           to={builtOnPlaceHref}
-                          className="inline-flex items-center gap-1.5 text-[10px] text-orange-300 hover:text-orange-100 uppercase tracking-widest border border-orange-800/60 hover:border-orange-500 bg-orange-950/30 hover:bg-orange-900/40 rounded-full px-3 py-1 transition-colors"
+                          className="inline-flex items-center gap-1.5 text-[10px] text-orange-700 hover:text-orange-900 uppercase tracking-widest border border-orange-300 hover:border-orange-500 bg-orange-50 hover:bg-orange-100 rounded-full px-3 py-1 transition-colors"
                         >
                           Può essere costruito sul posto
                           <ArrowUpRight className="w-3 h-3" />
@@ -322,17 +324,18 @@ const ImmersiveOvenGallery = () => {
         )}
 
 
+
         {/* Unified consultation */}
         <section
           id="immersive-consultation"
-          className="bg-[#121212] border border-stone-800/50 p-8 md:p-16 lg:p-24 relative overflow-hidden rounded-sm scroll-mt-24"
+          className="bg-white border border-stone-200 p-8 md:p-16 lg:p-24 relative overflow-hidden rounded-sm scroll-mt-24 shadow-sm"
         >
-          <div className="absolute top-0 right-0 w-96 h-96 bg-orange-900/20 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-orange-200/40 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
           <div className="max-w-3xl mx-auto text-center space-y-6 md:space-y-8 mb-14 md:mb-20 relative">
-            <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl text-stone-100">
+            <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl text-stone-900">
               {t('consultation.header.title')}
             </h2>
-            <p className="text-stone-400 text-base md:text-lg font-light">
+            <p className="text-stone-600 text-base md:text-lg font-light">
               {t('consultation.header.subtitle')}
             </p>
           </div>
@@ -347,7 +350,7 @@ const ImmersiveOvenGallery = () => {
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-800 py-3 text-stone-200 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-700"
+                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-400"
                   required
                 />
               </div>
@@ -359,7 +362,7 @@ const ImmersiveOvenGallery = () => {
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-800 py-3 text-stone-200 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-700"
+                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-400"
                   required
                 />
               </div>
@@ -371,7 +374,7 @@ const ImmersiveOvenGallery = () => {
                   type="tel"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-800 py-3 text-stone-200 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-700"
+                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-400"
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
@@ -382,7 +385,7 @@ const ImmersiveOvenGallery = () => {
                   rows={2}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-800 py-3 text-stone-200 focus:outline-none focus:border-orange-600 transition-colors resize-none placeholder:text-stone-700"
+                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors resize-none placeholder:text-stone-400"
                 />
               </div>
             </div>
@@ -391,7 +394,7 @@ const ImmersiveOvenGallery = () => {
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex items-center gap-4 px-10 md:px-12 py-5 bg-orange-700 text-stone-100 text-xs uppercase tracking-[0.3em] font-bold hover:bg-orange-600 transition-all shadow-[0_10px_40px_-10px_rgba(194,65,12,0.5)] cursor-pointer group disabled:opacity-60"
+                className="inline-flex items-center gap-4 px-10 md:px-12 py-5 bg-orange-600 text-white text-xs uppercase tracking-[0.3em] font-bold hover:bg-orange-700 transition-all shadow-[0_10px_40px_-10px_rgba(194,65,12,0.5)] cursor-pointer group disabled:opacity-60"
               >
                 {submitting ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -402,7 +405,7 @@ const ImmersiveOvenGallery = () => {
                   </>
                 )}
               </button>
-              <p className="mt-6 text-stone-600 text-[10px] uppercase tracking-widest italic">
+              <p className="mt-6 text-stone-500 text-[10px] uppercase tracking-widest italic">
                 {t('consultation.responseTime', 'Response within 24-48h')}
               </p>
             </div>
@@ -410,11 +413,12 @@ const ImmersiveOvenGallery = () => {
         </section>
 
         <footer className="text-center">
-          <p className="text-stone-600 text-xs tracking-[0.3em] uppercase">
+          <p className="text-stone-500 text-xs tracking-[0.3em] uppercase">
             • Napoli • Since 1950 •
           </p>
         </footer>
       </div>
+
 
       {zoomed && (
         <ImageZoomModal
