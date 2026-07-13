@@ -293,6 +293,10 @@ const App = () => {
               <Route path="/fr/services" element={<LocalizedServices lang="fr" />} />
               <Route path="/fr/fours-a-pizza-napolitains" element={<LocalizedNeapolitanPizzaOvens lang="fr" />} />
               <Route path="/fr/four-a-pizza-bois" element={<FourAPizzaBois />} />
+              <Route path="/fr/commercial-wood-fired-pizza-oven" element={<CommercialWoodFiredPizzaOven />} />
+              <Route path="/fr/commercial-gas-pizza-oven" element={<CommercialGasPizzaOven />} />
+              <Route path="/fr/rotating-pizza-oven" element={<RotatingPizzaOven />} />
+              <Route path="/fr/electric-pizza-oven" element={<ElectricPizzaOven />} />
               
               {/* Spanish Routes */}
               <Route path="/es" element={<LocalizedIndex lang="es" />} />
