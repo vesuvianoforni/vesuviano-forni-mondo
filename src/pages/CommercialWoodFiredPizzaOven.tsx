@@ -246,9 +246,9 @@ const CommercialWoodFiredPizzaOven = () => {
             </div>
             <div>
               <img
-                src="/lovable-uploads/vesuviobuono-verde-mosaico.webp"
-                alt="Handmade Neapolitan wood-fired pizza oven with green mosaic finish"
-                className="w-full h-80 object-cover rounded-lg shadow-lg"
+                src={woodOvensWorkshop.url}
+                alt="Vesuviano wood-fired pizza ovens lined up in our Naples workshop"
+                className="w-full h-[500px] object-contain bg-white rounded-lg shadow-lg"
                 loading="lazy"
               />
             </div>
