@@ -376,35 +376,6 @@ const CommercialGasPizzaOven = () => {
                 ))}
               </div>
 
-              <h3 className="font-playfair text-xl font-bold text-charcoal-900 mb-4">
-                Model matched to your oven diameter
-              </h3>
-              <div className="overflow-hidden rounded-lg border border-stone-200 bg-white">
-                <table className="w-full text-sm">
-                  <thead className="bg-stone-100 text-stone-700">
-                    <tr>
-                      <th className="text-left px-4 py-3 font-semibold">Oven diameter</th>
-                      <th className="text-left px-4 py-3 font-semibold">Drago model</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-stone-200 text-stone-700">
-                    <tr><td className="px-4 py-3">60 – 100 cm</td><td className="px-4 py-3 font-medium">Drago D1/m</td></tr>
-                    <tr><td className="px-4 py-3">100 – 160 cm</td><td className="px-4 py-3 font-medium">Drago D2 · D2/m · SIX</td></tr>
-                    <tr><td className="px-4 py-3">165 – 250 cm</td><td className="px-4 py-3 font-medium">Drago D3 SIX</td></tr>
-                    <tr><td className="px-4 py-3">Over 250 cm</td><td className="px-4 py-3 font-medium">Drago D4</td></tr>
-                    <tr><td className="px-4 py-3">Rotating ovens (under-floor)</td><td className="px-4 py-3 font-medium">Drago D1/s</td></tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <a
-                href="https://www.avanzinibruciatori.it/bruciatori-per-forni-da-pizza-ad-uso-professionale/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 mt-8 text-vesuviano-600 hover:text-vesuviano-700 font-semibold text-sm"
-              >
-                Learn more on Avanzini's official website →
-              </a>
             </div>
           </div>
         </div>
