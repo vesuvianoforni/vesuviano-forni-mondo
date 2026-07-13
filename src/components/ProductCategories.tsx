@@ -92,10 +92,6 @@ const ProductCategories = () => {
       key: 'readyToShip',
       image: "/lovable-uploads/forni-colorati-showroom.webp",
       link: 'readyToShip'
-    },
-    {
-      key: 'consultation',
-      image: "/lovable-uploads/forni-colorati-showroom.webp"
     }
   ];
 
