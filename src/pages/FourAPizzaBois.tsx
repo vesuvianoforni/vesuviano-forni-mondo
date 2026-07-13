@@ -173,6 +173,7 @@ const FourAPizzaBois = () => {
         </div>
       </section>
 
+      <ProductVideoSection />
       <section id="consultation" className="py-20 bg-stone-50">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-12">
