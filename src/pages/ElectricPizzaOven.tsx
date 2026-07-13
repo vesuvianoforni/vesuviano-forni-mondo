@@ -340,7 +340,7 @@ const ElectricPizzaOven = () => {
       </section>
 
       {/* Social proof */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-stone-50">
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
           <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-6 text-center">
             Trusted by pizzerias across the UK and Europe
@@ -348,10 +348,12 @@ const ElectricPizzaOven = () => {
           <p className="text-center text-stone-600 max-w-2xl mx-auto mb-12">
             From indoor venues without a flue to shopping centres and hotel kitchens, our patented electric ovens are baking authentic Neapolitan pizza every day.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-            <img src={ansumLogo.url} alt="Ansum Pizza logo" className="h-16 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
-            <img src={pizzoloLogo.url} alt="Pizzolo Siciliano logo" className="h-16 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
-            <img src={cuginiLogo.url} alt="Cugini Pizza logo" className="h-16 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0" />
+          <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-8 md:p-12">
+            <div className="flex flex-wrap items-center justify-center gap-10 md:gap-16">
+              <img src={ansumLogo.url} alt="Ansum Pizza logo" className="h-20 md:h-24 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity" />
+              <img src={pizzoloLogo.url} alt="Pizzolo Siciliano logo" className="h-20 md:h-24 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity" />
+              <img src={cuginiLogo.url} alt="Cugini Pizza logo" className="h-20 md:h-24 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity" />
+            </div>
           </div>
         </div>
       </section>
