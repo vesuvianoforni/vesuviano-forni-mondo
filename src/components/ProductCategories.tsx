@@ -49,11 +49,10 @@ const AutoPlayVideo = ({ src, poster, alt }: AutoPlayVideoProps) => {
   );
 };
 
-import ConsultationModal from './ConsultationModal';
+
 
 const ProductCategories = () => {
   const { t, i18n } = useTranslation();
-  const [consultationModalOpen, setConsultationModalOpen] = useState(false);
   const navigate = useNavigate();
 
 
@@ -92,10 +91,6 @@ const ProductCategories = () => {
       key: 'readyToShip',
       image: "/lovable-uploads/forni-colorati-showroom.webp",
       link: 'readyToShip'
-    },
-    {
-      key: 'consultation',
-      image: "/lovable-uploads/forni-colorati-showroom.webp"
     }
   ];
 
@@ -116,17 +111,12 @@ const ProductCategories = () => {
           {/* Categories Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-12 sm:mb-16">
             {categories.map((category, index) => {
-              const isConsultation = category.key === 'consultation';
               const isBuiltOnPlace = category.key === 'builtOnPlace';
               const isReadyToShip = category.key === 'readyToShip';
               return (
                 <Card 
                   key={category.key}
-                  className={`group overflow-hidden hover:shadow-2xl transition-all duration-500 border animate-fade-in ${
-                    isConsultation 
-                      ? 'border-vesuviano-400 bg-gradient-to-br from-vesuviano-50 to-white' 
-                      : 'border-stone-200 hover:border-vesuviano-300'
-                  }`}
+                  className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border border-stone-200 hover:border-vesuviano-300 animate-fade-in"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className={`relative h-64 sm:h-80 md:h-96 overflow-hidden`}>
@@ -190,42 +180,6 @@ const ProductCategories = () => {
                           {t(`products.${category.key}.cta`)}
                         </Button>
                       </>
-                    ) : isConsultation ? (
-                      <>
-                        <p className="text-stone-700 font-medium mb-4 leading-relaxed text-sm sm:text-base">
-                          {t(`products.${category.key}.description`)} 🍕
-                        </p>
-                        
-                        <ul className="space-y-2 mb-6">
-                          {Object.keys(t(`products.${category.key}.services`, { returnObjects: true }) as object).map((serviceKey) => (
-                            <li 
-                              key={serviceKey}
-                              className="flex items-center text-sm text-stone-700 font-medium"
-                            >
-                              <div className="w-2 h-2 bg-vesuviano-500 rounded-full mr-3 flex-shrink-0"></div>
-                              {t(`products.${category.key}.services.${serviceKey}`)}
-                            </li>
-                          ))}
-                        </ul>
-
-                        {/* Garanzia Badge */}
-                        <div className="flex justify-center mb-6">
-                          <div className="inline-flex items-center px-4 py-2 bg-green-50 border-2 border-green-400 rounded-full">
-                            <span className="text-sm font-bold text-green-700">
-                              ✓ {t('products.consultation.warranty')}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        <Button
-                          size="lg"
-                          className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white transition-all duration-300 text-base sm:text-lg py-6 font-semibold shadow-lg hover:shadow-xl"
-                          onClick={() => setConsultationModalOpen(true)}
-                          aria-label="Book free consultation with our experts"
-                        >
-                          {t(`products.${category.key}.cta`)}
-                        </Button>
-                      </>
                     ) : (
                       <>
                         <p className="text-stone-600 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base">
@@ -266,13 +220,6 @@ const ProductCategories = () => {
           </div>
 
         </div>
-
-
-        {/* Consultation Modal */}
-        <ConsultationModal
-          isOpen={consultationModalOpen}
-          onClose={() => setConsultationModalOpen(false)}
-        />
       </div>
     </section>
   );

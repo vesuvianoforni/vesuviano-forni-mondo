@@ -148,19 +148,6 @@
         "certified": "Environmentally certified"
       }
     },
-    "consultation": {
-      "title": "Don't know which oven is right for you?",
-      "subtitle": "Personalized Consultation",
-      "description": "Leave us your email: we'll help you choose the perfect model for your business",
-      "cta": "Request Free Consultation",
-      "services": {
-        "render3d": "Professional 3D rendering",
-        "digitalInsertion": "Digital insertion in your space",
-        "tilesChoice": "Tiles / painting selection",
-        "designChoice": "Custom design choice"
-      },
-      "warranty": "3 Years Warranty"
-    },
     "learnMore": "Learn More",
     "downloadDatasheet": "Download Datasheet",
     "badges": {
