@@ -47,6 +47,7 @@ const CommercialWoodFiredPizzaOven = lazy(() => import("./pages/CommercialWoodFi
 const CommercialGasPizzaOven = lazy(() => import("./pages/CommercialGasPizzaOven"));
 const RotatingPizzaOven = lazy(() => import("./pages/RotatingPizzaOven"));
 const ElectricPizzaOven = lazy(() => import("./pages/ElectricPizzaOven"));
+const LocalizedContact = lazy(() => import("./pages/LocalizedContact"));
 import ClarityPageView from "./components/ClarityPageView";
 
 
