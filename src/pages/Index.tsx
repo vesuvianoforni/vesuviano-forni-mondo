@@ -87,6 +87,8 @@ const Index = () => {
           <ProductCategories />
         </section>
 
+        <AvanziniPartnerStrip />
+
 
 
 
