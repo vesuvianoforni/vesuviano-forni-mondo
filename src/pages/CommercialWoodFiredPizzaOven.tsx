@@ -10,6 +10,7 @@ import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 import Rivestimenti from '@/components/Rivestimenti';
 import woodOvensWorkshop from '@/assets/vesuviano-wood-ovens-workshop.jpg.asset.json';
 import woodFireDetail from '@/assets/vesuviano-wood-fire-detail.jpg.asset.json';
+import goldMosaicOven from '@/assets/vesuviano-gold-mosaic-oven.png.asset.json';
 const pizzoloLogo = { url: '/lovable-uploads/client-logo-pizzolo.png' };
 const ansumLogo = { url: '/lovable-uploads/client-logo-ansum.png' };
 const cuginiLogo = { url: '/lovable-uploads/client-logo-cugini-pizza.png' };
@@ -255,8 +256,8 @@ const CommercialWoodFiredPizzaOven = () => {
             </div>
             <div>
               <img
-                src={woodOvensWorkshop.url}
-                alt="Vesuviano wood-fired pizza ovens lined up in our Naples workshop"
+                src={goldMosaicOven.url}
+                alt="Handmade gold mosaic Vesuviano wood-fired pizza oven"
                 className="w-full h-[500px] object-contain bg-white rounded-lg shadow-lg"
                 loading="lazy"
               />
@@ -350,6 +351,16 @@ const CommercialWoodFiredPizzaOven = () => {
             </Button>
           </div>
         </div>
+      </section>
+
+      {/* Workshop scroll insert */}
+      <section className="relative h-[400px] md:h-[520px] overflow-hidden">
+        <img
+          src={woodOvensWorkshop.url}
+          alt="Vesuviano wood-fired pizza ovens lined up in our Naples workshop"
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
       </section>
 
       {/* How it works */}
