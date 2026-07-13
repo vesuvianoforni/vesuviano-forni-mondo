@@ -57,15 +57,6 @@ const MODELS = [
     power: 'Three-phase 400 V · ~18 kW',
     temp: 'Up to 500 °C',
   },
-  {
-    name: 'Real Bosco Electric — 100 cm',
-    diameter: '100 cm refractory brick dome',
-    capacity: '5–6 pizzas per bake · 100–140 pizzas/hour',
-    footprint: '150 × 150 cm',
-    weight: '2,100 kg',
-    power: 'Three-phase 400 V · ~21 kW',
-    temp: 'Up to 500 °C',
-  },
 ];
 
 const scrollToForm = (e: React.MouseEvent) => {
@@ -300,7 +291,7 @@ const ElectricPizzaOven = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
+          <div className="grid gap-8 mb-12 max-w-2xl mx-auto">
             {MODELS.map((m) => (
               <Card key={m.name} className="border-stone-200 hover:border-vesuviano-300 transition-colors">
                 <CardContent className="p-8">
