@@ -185,11 +185,9 @@ const CommercialGasPizzaOven = () => {
             <div className="relative rounded-xl overflow-hidden shadow-lg bg-stone-100 aspect-[9/16] max-h-[520px]">
               <video
                 src={SPETTACL_VIDEO_URL}
-                autoPlay
-                muted
-                loop
+                controls
                 playsInline
-                preload="auto"
+                preload="metadata"
                 aria-label="A Vesuviano gas oven in action"
                 className="absolute inset-0 w-full h-full object-cover"
               />
