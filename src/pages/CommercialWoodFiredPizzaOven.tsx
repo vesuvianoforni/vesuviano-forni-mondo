@@ -353,6 +353,16 @@ const CommercialWoodFiredPizzaOven = () => {
         </div>
       </section>
 
+      {/* Workshop scroll insert */}
+      <section className="relative h-[400px] md:h-[520px] overflow-hidden">
+        <img
+          src={woodOvensWorkshop.url}
+          alt="Vesuviano wood-fired pizza ovens lined up in our Naples workshop"
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+      </section>
+
       {/* How it works */}
       <section className="py-20 bg-charcoal-900 text-white">
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
