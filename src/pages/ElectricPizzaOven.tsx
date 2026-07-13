@@ -291,7 +291,7 @@ const ElectricPizzaOven = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
+          <div className="grid gap-8 mb-12 max-w-2xl mx-auto">
             {MODELS.map((m) => (
               <Card key={m.name} className="border-stone-200 hover:border-vesuviano-300 transition-colors">
                 <CardContent className="p-8">
