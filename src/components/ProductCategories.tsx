@@ -181,42 +181,6 @@ const ProductCategories = () => {
                           {t(`products.${category.key}.cta`)}
                         </Button>
                       </>
-                    ) : isConsultation ? (
-                      <>
-                        <p className="text-stone-700 font-medium mb-4 leading-relaxed text-sm sm:text-base">
-                          {t(`products.${category.key}.description`)} 🍕
-                        </p>
-                        
-                        <ul className="space-y-2 mb-6">
-                          {Object.keys(t(`products.${category.key}.services`, { returnObjects: true }) as object).map((serviceKey) => (
-                            <li 
-                              key={serviceKey}
-                              className="flex items-center text-sm text-stone-700 font-medium"
-                            >
-                              <div className="w-2 h-2 bg-vesuviano-500 rounded-full mr-3 flex-shrink-0"></div>
-                              {t(`products.${category.key}.services.${serviceKey}`)}
-                            </li>
-                          ))}
-                        </ul>
-
-                        {/* Garanzia Badge */}
-                        <div className="flex justify-center mb-6">
-                          <div className="inline-flex items-center px-4 py-2 bg-green-50 border-2 border-green-400 rounded-full">
-                            <span className="text-sm font-bold text-green-700">
-                              ✓ {t('products.consultation.warranty')}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        <Button
-                          size="lg"
-                          className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white transition-all duration-300 text-base sm:text-lg py-6 font-semibold shadow-lg hover:shadow-xl"
-                          onClick={() => setConsultationModalOpen(true)}
-                          aria-label="Book free consultation with our experts"
-                        >
-                          {t(`products.${category.key}.cta`)}
-                        </Button>
-                      </>
                     ) : (
                       <>
                         <p className="text-stone-600 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base">
