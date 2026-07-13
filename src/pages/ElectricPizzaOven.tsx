@@ -12,6 +12,7 @@ const pizzoloLogo = { url: '/lovable-uploads/client-logo-pizzolo.png' };
 const cuginiLogo = { url: '/lovable-uploads/client-logo-cugini-pizza.png' };
 import electricPizzaBake from '@/assets/electric-oven-pizza-bake.jpg.asset.json';
 import electricMosaicDome from '@/assets/electric-oven-mosaic-dome.jpg.asset.json';
+import electricShowcaseVideo from '@/assets/electric-oven-showcase.mp4.asset.json';
 
 const PATH = '/en/electric-pizza-oven';
 const URL = `https://vesuvianoforni.com${PATH}`;
