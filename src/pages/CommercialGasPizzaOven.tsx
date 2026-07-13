@@ -179,6 +179,33 @@ const CommercialGasPizzaOven = () => {
           <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-12 text-center">
             Why a Vesuviano gas oven
           </h2>
+
+          <div className="grid md:grid-cols-2 gap-10 items-center mb-16 max-w-5xl mx-auto">
+            <div className="relative rounded-xl overflow-hidden shadow-lg bg-stone-100 aspect-[9/16] max-h-[520px]">
+              <video
+                src={SPETTACL_VIDEO_URL}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                aria-label="A Vesuviano gas oven in action"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+            <div className="text-center md:text-left">
+              <blockquote className="font-playfair text-4xl md:text-5xl font-bold text-charcoal-900 leading-tight mb-4">
+                “E' nu spettacl”
+              </blockquote>
+              <p className="text-xl md:text-2xl text-vesuviano-600 font-medium">
+                It’s a beautiful oven
+              </p>
+              <p className="text-stone-500 mt-4">
+                A real reaction from a real pizzeria — because a Vesuviano gas oven is not just a tool, it’s the heart of the show.
+              </p>
+            </div>
+          </div>
+
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
