@@ -6,7 +6,13 @@ import { Loader2, ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ImageZoomModal from './ImageZoomModal';
 import heroBgAsset from '@/assets/gallery-hero-bg.jpg.asset.json';
+import realBoscoCutout from '@/assets/real-bosco-cutout.png.asset.json';
+import sebastianCutout from '@/assets/sebastian-cutout.png.asset.json';
 const HERO_BG_URL = heroBgAsset.url;
+const IMAGE_OVERRIDES: Record<string, string> = {
+  'Real Bosco': realBoscoCutout.url,
+  'Sebastian': sebastianCutout.url,
+};
 
 interface Oven {
   id: string;
@@ -100,7 +106,7 @@ const ImmersiveOvenGallery = () => {
             return {
               id: d.id,
               name: d.model_name,
-              image_url: d.image_url,
+              image_url: IMAGE_OVERRIDES[d.model_name] || d.image_url,
               description: d.description || meta?.description || '',
               fuels: meta?.fuels || (d.fuel_type ?? []),
               diameters: meta?.diameters || (d.diameter ? [d.diameter] : []),
