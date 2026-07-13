@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 import Rivestimenti from '@/components/Rivestimenti';
+import brickBgAsset from '@/assets/start-project-bg.jpg.asset.json';
+const BRICK_BG_URL = brickBgAsset.url;
 
 const ansumLogo = { url: '/lovable-uploads/client-logo-ansum.png' };
 const cuginiLogo = { url: '/lovable-uploads/client-logo-cugini-pizza.png' };
@@ -308,8 +310,10 @@ const CommercialGasPizzaOven = () => {
       </section>
 
       {/* How it works */}
-      <section className="py-20 bg-charcoal-900 text-white">
-        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+      <section className="relative py-20 text-white overflow-hidden">
+        <div aria-hidden className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${BRICK_BG_URL})` }} />
+        <div aria-hidden className="absolute inset-0 bg-charcoal-900/80" />
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl relative">
           <h2 className="font-playfair text-3xl md:text-4xl font-bold mb-12 text-center">
             From Naples to your kitchen, handled end to end
           </h2>
