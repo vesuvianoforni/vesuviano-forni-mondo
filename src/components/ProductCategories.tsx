@@ -130,40 +130,19 @@ const ProductCategories = () => {
                   } ${!isConsultation && category.video && playingVideo !== category.key ? 'cursor-pointer' : ''}`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <div 
-                    className={`relative h-64 sm:h-80 md:h-96 overflow-hidden`}
-                    onClick={() => {
-                      if (!isConsultation && category.video && playingVideo !== category.key) {
-                        setPlayingVideo(category.key);
-                      }
-                    }}
-                  >
-                    {playingVideo === category.key && category.video ? (
-                      <video
+                  <div className={`relative h-64 sm:h-80 md:h-96 overflow-hidden`}>
+                    {category.video ? (
+                      <AutoPlayVideo
                         src={category.video}
-                        className="w-full h-full object-cover"
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
+                        poster={category.image}
+                        alt={t(`products.${category.key}.title`)}
                       />
                     ) : (
-                      <>
-                        <img 
-                          src={category.image} 
-                          alt={t(`products.${category.key}.title`)}
-                          className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
-                        />
-                        {!isConsultation && category.video && (
-                          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/30">
-                            <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center animate-pulse">
-                              <svg className="w-8 h-8 text-vesuviano-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z"/>
-                              </svg>
-                            </div>
-                          </div>
-                        )}
-                      </>
+                      <img 
+                        src={category.image} 
+                        alt={t(`products.${category.key}.title`)}
+                        className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
+                      />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none"></div>
                     <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 text-white">
