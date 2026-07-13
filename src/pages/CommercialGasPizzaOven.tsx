@@ -10,8 +10,10 @@ import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 import Rivestimenti from '@/components/Rivestimenti';
 import brickBgAsset from '@/assets/start-project-bg.jpg.asset.json';
 import heroVideoAsset from '@/assets/hero-gas.mp4.asset.json';
+import avanziniLogoAsset from '@/assets/avanzini-logo.png.asset.json';
 const BRICK_BG_URL = brickBgAsset.url;
 const HERO_VIDEO_URL = heroVideoAsset.url;
+const AVANZINI_LOGO_URL = avanziniLogoAsset.url;
 
 const ansumLogo = { url: '/lovable-uploads/client-logo-ansum.png' };
 const cuginiLogo = { url: '/lovable-uploads/client-logo-cugini-pizza.png' };
@@ -311,6 +313,99 @@ const CommercialGasPizzaOven = () => {
             >
               Request a quote
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Avanzini burners */}
+      <section className="py-20 bg-stone-50 border-t border-stone-200">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+          <div className="grid md:grid-cols-[1fr_2fr] gap-10 md:gap-16 items-start">
+            <div>
+              <a
+                href="https://www.avanzinibruciatori.it/bruciatori-per-forni-da-pizza-ad-uso-professionale/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+                aria-label="Avanzini Bruciatori — official website"
+              >
+                <img
+                  src={AVANZINI_LOGO_URL}
+                  alt="Avanzini Bruciatori — since 1960"
+                  className="w-full max-w-[220px] mx-auto"
+                  loading="lazy"
+                />
+              </a>
+              <p className="text-xs uppercase tracking-[0.2em] text-vesuviano-600 mt-6 font-semibold">
+                Official partner
+              </p>
+              <p className="text-sm text-stone-600 mt-2 leading-relaxed">
+                Every gas oven we ship is fitted with an Avanzini <em>Drago</em> series D burner —
+                the industry benchmark for professional pizza ovens since 1960, IMQ-certified and
+                trusted by the most prestigious oven makers in Italy.
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-vesuviano-600 font-semibold mb-3">
+                The burner inside every oven
+              </p>
+              <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-6">
+                Avanzini Drago — the quiet, efficient heart of a gas oven
+              </h2>
+              <p className="text-stone-600 leading-relaxed mb-8">
+                Drago is an atmospheric multigas burner designed specifically for pizza ovens.
+                Combustion happens through natural chimney draft — no fan, no noise, no constant
+                maintenance. Two independent flames (maintenance and boost) give you fast heat-up,
+                stable service temperature and real fuel savings compared to wood.
+              </p>
+
+              <div className="grid sm:grid-cols-2 gap-4 mb-8">
+                {[
+                  { t: 'Only 3 cm inside the oven', d: 'Recessed into the cooking floor — hidden from view, never overheats or deforms.' },
+                  { t: 'Silent operation', d: 'No fan means no vibration, no noise and far less servicing than blown-air burners.' },
+                  { t: 'Uniform cooking', d: 'The Venturi flame is soft, highly radiant and luminous — even heat across the whole floor.' },
+                  { t: 'Fully automatic', d: 'External control panel, safety-certified auto-ignition, easy two-flame regulation.' },
+                  { t: 'Natural gas or LPG', d: 'Multigas ready. Configured for UK regulations before shipping.' },
+                  { t: 'IMQ certified', d: 'Efficiency and safety verified by independent Italian testing.' },
+                ].map((f) => (
+                  <div key={f.t} className="bg-white rounded-lg p-5 border border-stone-200">
+                    <h3 className="font-inter font-semibold text-charcoal-900 mb-1 text-sm">{f.t}</h3>
+                    <p className="text-sm text-stone-600 leading-relaxed">{f.d}</p>
+                  </div>
+                ))}
+              </div>
+
+              <h3 className="font-playfair text-xl font-bold text-charcoal-900 mb-4">
+                Model matched to your oven diameter
+              </h3>
+              <div className="overflow-hidden rounded-lg border border-stone-200 bg-white">
+                <table className="w-full text-sm">
+                  <thead className="bg-stone-100 text-stone-700">
+                    <tr>
+                      <th className="text-left px-4 py-3 font-semibold">Oven diameter</th>
+                      <th className="text-left px-4 py-3 font-semibold">Drago model</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-stone-200 text-stone-700">
+                    <tr><td className="px-4 py-3">60 – 100 cm</td><td className="px-4 py-3 font-medium">Drago D1/m</td></tr>
+                    <tr><td className="px-4 py-3">100 – 160 cm</td><td className="px-4 py-3 font-medium">Drago D2 · D2/m · SIX</td></tr>
+                    <tr><td className="px-4 py-3">165 – 250 cm</td><td className="px-4 py-3 font-medium">Drago D3 SIX</td></tr>
+                    <tr><td className="px-4 py-3">Over 250 cm</td><td className="px-4 py-3 font-medium">Drago D4</td></tr>
+                    <tr><td className="px-4 py-3">Rotating ovens (under-floor)</td><td className="px-4 py-3 font-medium">Drago D1/s</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <a
+                href="https://www.avanzinibruciatori.it/bruciatori-per-forni-da-pizza-ad-uso-professionale/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 mt-8 text-vesuviano-600 hover:text-vesuviano-700 font-semibold text-sm"
+              >
+                Learn more on Avanzini's official website →
+              </a>
+            </div>
           </div>
         </div>
       </section>
