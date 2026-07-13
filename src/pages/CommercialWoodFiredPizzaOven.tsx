@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 import Rivestimenti from '@/components/Rivestimenti';
+import woodOvensWorkshop from '@/assets/vesuviano-wood-ovens-workshop.jpg.asset.json';
 const pizzoloLogo = { url: '/lovable-uploads/client-logo-pizzolo.png' };
 const ansumLogo = { url: '/lovable-uploads/client-logo-ansum.png' };
 const cuginiLogo = { url: '/lovable-uploads/client-logo-cugini-pizza.png' };
@@ -245,9 +246,9 @@ const CommercialWoodFiredPizzaOven = () => {
             </div>
             <div>
               <img
-                src="/lovable-uploads/vesuviobuono-verde-mosaico.webp"
-                alt="Handmade Neapolitan wood-fired pizza oven with green mosaic finish"
-                className="w-full h-80 object-cover rounded-lg shadow-lg"
+                src={woodOvensWorkshop.url}
+                alt="Vesuviano wood-fired pizza ovens lined up in our Naples workshop"
+                className="w-full h-[500px] object-contain bg-white rounded-lg shadow-lg"
                 loading="lazy"
               />
             </div>
