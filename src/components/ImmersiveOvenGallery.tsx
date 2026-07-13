@@ -8,7 +8,9 @@ import ImageZoomModal from './ImageZoomModal';
 import heroBgAsset from '@/assets/gallery-hero-bg.jpg.asset.json';
 import realBoscoCutout from '@/assets/real-bosco-cutout.png.asset.json';
 import sebastianCutout from '@/assets/sebastian-cutout.png.asset.json';
+import startProjectBgAsset from '@/assets/start-project-bg.jpg.asset.json';
 const HERO_BG_URL = heroBgAsset.url;
+const START_PROJECT_BG_URL = startProjectBgAsset.url;
 const IMAGE_OVERRIDES: Record<string, string> = {
   'Real Bosco': realBoscoCutout.url,
   'Sebastian': sebastianCutout.url,
@@ -335,14 +337,22 @@ const ImmersiveOvenGallery = () => {
         {/* Unified consultation */}
         <section
           id="immersive-consultation"
-          className="bg-white border border-stone-200 p-8 md:p-16 lg:p-24 relative overflow-hidden rounded-sm scroll-mt-24 shadow-sm"
+          className="relative overflow-hidden rounded-sm scroll-mt-24 shadow-lg p-8 md:p-16 lg:p-24"
         >
-          <div className="absolute top-0 right-0 w-96 h-96 bg-orange-200/40 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+          {/* Background image */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${START_PROJECT_BG_URL})` }}
+          />
+          {/* Overlay for readability */}
+          <div aria-hidden className="absolute inset-0 bg-stone-950/70" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-orange-500/20 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
           <div className="max-w-3xl mx-auto text-center space-y-6 md:space-y-8 mb-14 md:mb-20 relative">
-            <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl text-stone-900">
+            <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl text-white">
               {t('consultation.header.title')}
             </h2>
-            <p className="text-stone-600 text-base md:text-lg font-light">
+            <p className="text-stone-200 text-base md:text-lg font-light">
               {t('consultation.header.subtitle')}
             </p>
           </div>
@@ -350,49 +360,49 @@ const ImmersiveOvenGallery = () => {
           <form onSubmit={submit} className="max-w-4xl mx-auto relative">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 md:gap-x-12 gap-y-8 md:gap-y-10">
               <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-500">
+                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-300">
                   {t('consultation.form.name')}
                 </label>
                 <input
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-400"
+                  className="w-full bg-transparent border-b border-stone-400/60 py-3 text-white focus:outline-none focus:border-orange-400 transition-colors placeholder:text-stone-400"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-500">
+                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-300">
                   {t('consultation.form.email')}
                 </label>
                 <input
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-400"
+                  className="w-full bg-transparent border-b border-stone-400/60 py-3 text-white focus:outline-none focus:border-orange-400 transition-colors placeholder:text-stone-400"
                   required
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
-                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-500">
+                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-300">
                   {t('consultation.form.phone')}
                 </label>
                 <input
                   type="tel"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors placeholder:text-stone-400"
+                  className="w-full bg-transparent border-b border-stone-400/60 py-3 text-white focus:outline-none focus:border-orange-400 transition-colors placeholder:text-stone-400"
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
-                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-500">
+                <label className="text-[10px] uppercase tracking-[0.2em] text-stone-300">
                   {t('consultation.form.message')}
                 </label>
                 <textarea
                   rows={2}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:outline-none focus:border-orange-600 transition-colors resize-none placeholder:text-stone-400"
+                  className="w-full bg-transparent border-b border-stone-400/60 py-3 text-white focus:outline-none focus:border-orange-400 transition-colors resize-none placeholder:text-stone-400"
                 />
               </div>
             </div>
@@ -412,7 +422,7 @@ const ImmersiveOvenGallery = () => {
                   </>
                 )}
               </button>
-              <p className="mt-6 text-stone-500 text-[10px] uppercase tracking-widest italic">
+              <p className="mt-6 text-stone-300 text-[10px] uppercase tracking-widest italic">
                 {t('consultation.responseTime', 'Response within 24-48h')}
               </p>
             </div>
