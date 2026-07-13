@@ -274,6 +274,8 @@ const RotatingPizzaOven = () => {
         </div>
       </section>
 
+      <AvanziniPartnerStrip />
+
       {/* Social proof */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
