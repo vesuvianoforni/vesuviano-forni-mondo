@@ -356,6 +356,11 @@ const App = () => {
               <Route path="/configuratore/:token" element={<ConfiguratorWithToken />} />
               <Route path="/success" element={<PaymentSuccess />} />
               <Route path="/contatti" element={<ContattiRedirect />} />
+              <Route path="/it/contatti" element={<LocalizedContact lang="it" />} />
+              <Route path="/en/contact" element={<LocalizedContact lang="en" />} />
+              <Route path="/fr/contact" element={<LocalizedContact lang="fr" />} />
+              <Route path="/es/contacto" element={<LocalizedContact lang="es" />} />
+              <Route path="/de/kontakt" element={<LocalizedContact lang="de" />} />
               <Route path="/proforma/:token" element={<ProformaPage />} />
               <Route path="/built-on-place" element={<BuiltOnPlace />} />
 
