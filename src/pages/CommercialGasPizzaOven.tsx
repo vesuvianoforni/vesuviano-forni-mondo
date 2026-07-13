@@ -11,9 +11,11 @@ import Rivestimenti from '@/components/Rivestimenti';
 import brickBgAsset from '@/assets/start-project-bg.jpg.asset.json';
 import heroVideoAsset from '@/assets/hero-gas.mp4.asset.json';
 import avanziniLogoAsset from '@/assets/avanzini-logo.png.asset.json';
+import spettaclVideoAsset from '@/assets/e_nu_spettacl_vesuviano.mp4.asset.json';
 const BRICK_BG_URL = brickBgAsset.url;
 const HERO_VIDEO_URL = heroVideoAsset.url;
 const AVANZINI_LOGO_URL = avanziniLogoAsset.url;
+const SPETTACL_VIDEO_URL = spettaclVideoAsset.url;
 
 const ansumLogo = { url: '/lovable-uploads/client-logo-ansum.png' };
 const cuginiLogo = { url: '/lovable-uploads/client-logo-cugini-pizza.png' };
