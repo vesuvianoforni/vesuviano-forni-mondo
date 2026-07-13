@@ -410,10 +410,10 @@ const CommercialGasPizzaOven = () => {
       </section>
 
       {/* How it works */}
-      <section className="relative py-20 text-white overflow-hidden">
+      <section className="relative py-28 md:py-36 text-white overflow-hidden">
         <div aria-hidden className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${BRICK_BG_URL})` }} />
-        <div aria-hidden className="absolute inset-0 bg-charcoal-900/80" />
-        <div className="container mx-auto px-4 sm:px-6 max-w-6xl relative">
+        <div aria-hidden className="absolute inset-0 bg-charcoal-900/85" />
+        <div className="container mx-auto px-6 sm:px-8 max-w-6xl relative">
           <h2 className="font-playfair text-3xl md:text-4xl font-bold mb-12 text-center">
             From Naples to your kitchen, handled end to end
           </h2>
