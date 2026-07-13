@@ -263,6 +263,28 @@ const ElectricPizzaOven = () => {
         </div>
       </section>
 
+      {/* Video showcase */}
+      <section className="py-16 md:py-20 bg-charcoal-900">
+        <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+          <div className="text-center mb-8">
+            <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white mb-3">
+              See our electric Neapolitan oven at work
+            </h2>
+            <p className="text-stone-300 max-w-2xl mx-auto">
+              A closer look at the refractory brick dome baking authentic Neapolitan pizza — powered by electricity.
+            </p>
+          </div>
+          <div className="rounded-lg overflow-hidden shadow-2xl aspect-video bg-black">
+            <video
+              src={electricShowcaseVideo.url}
+              controls
+              playsInline
+              preload="metadata"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+
       {/* Models & specs */}
       <section className="py-20 bg-stone-50">
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
