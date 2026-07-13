@@ -257,10 +257,10 @@ const ImmersiveOvenGallery = () => {
                   className="group relative grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center animate-fade-in"
                 >
                   <div className={`lg:col-span-7 relative ${reversed ? 'lg:order-2' : 'lg:order-1'}`}>
-                    <div className="absolute -inset-20 bg-orange-600/10 blur-[120px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+                    <div className="absolute -inset-20 bg-orange-500/15 blur-[120px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
                     <button
                       onClick={() => setZoomed(oven)}
-                      className="block w-full aspect-[3/2] rounded-sm border border-stone-800 overflow-hidden shadow-2xl transition-transform duration-700 group-hover:scale-[1.02] cursor-zoom-in bg-stone-900"
+                      className="block w-full aspect-[3/2] rounded-sm border border-stone-200 overflow-hidden shadow-xl transition-transform duration-700 group-hover:scale-[1.02] cursor-zoom-in bg-white"
                     >
                       <img
                         src={oven.image_url}
@@ -270,7 +270,7 @@ const ImmersiveOvenGallery = () => {
                       />
                     </button>
                     <div
-                      className={`absolute top-4 ${reversed ? 'right-6' : 'left-6'} text-stone-700/30 text-8xl md:text-9xl font-playfair italic select-none pointer-events-none`}
+                      className={`absolute top-4 ${reversed ? 'right-6' : 'left-6'} text-stone-400/40 text-8xl md:text-9xl font-playfair italic select-none pointer-events-none`}
                     >
                       {num}
                     </div>
@@ -278,16 +278,16 @@ const ImmersiveOvenGallery = () => {
                   <div className={`lg:col-span-5 space-y-6 md:space-y-8 ${reversed ? 'lg:order-1' : 'lg:order-2'}`}>
                     <div className="space-y-2">
                       {oven.tagline && (
-                        <h3 className="text-orange-500 text-xs tracking-[0.3em] uppercase">
+                        <h3 className="text-orange-600 text-xs tracking-[0.3em] uppercase">
                           {oven.tagline}
                         </h3>
                       )}
-                      <h2 className="font-playfair text-4xl md:text-5xl text-stone-100 leading-tight">
+                      <h2 className="font-playfair text-4xl md:text-5xl text-stone-900 leading-tight">
                         {oven.name}
                       </h2>
                     </div>
                     {oven.description && (
-                      <p className="text-stone-400 font-light leading-relaxed text-base md:text-lg">
+                      <p className="text-stone-600 font-light leading-relaxed text-base md:text-lg">
                         {oven.description}
                       </p>
                     )}
@@ -295,13 +295,13 @@ const ImmersiveOvenGallery = () => {
                       {oven.diameters.length > 0 && (
                         <div>
                           <dt className="text-[10px] uppercase tracking-widest text-stone-500 mb-1">Diametri</dt>
-                          <dd className="text-stone-200">{oven.diameters.join(' · ')} cm</dd>
+                          <dd className="text-stone-800">{oven.diameters.join(' · ')} cm</dd>
                         </div>
                       )}
                       {oven.fuels.length > 0 && (
                         <div>
                           <dt className="text-[10px] uppercase tracking-widest text-stone-500 mb-1">Alimentazione</dt>
-                          <dd className="text-stone-200">{oven.fuels.join(' · ')}</dd>
+                          <dd className="text-stone-800">{oven.fuels.join(' · ')}</dd>
                         </div>
                       )}
                     </dl>
@@ -309,7 +309,7 @@ const ImmersiveOvenGallery = () => {
                       {oven.canBuiltOnPlace && (
                         <Link
                           to={builtOnPlaceHref}
-                          className="inline-flex items-center gap-1.5 text-[10px] text-orange-300 hover:text-orange-100 uppercase tracking-widest border border-orange-800/60 hover:border-orange-500 bg-orange-950/30 hover:bg-orange-900/40 rounded-full px-3 py-1 transition-colors"
+                          className="inline-flex items-center gap-1.5 text-[10px] text-orange-700 hover:text-orange-900 uppercase tracking-widest border border-orange-300 hover:border-orange-500 bg-orange-50 hover:bg-orange-100 rounded-full px-3 py-1 transition-colors"
                         >
                           Può essere costruito sul posto
                           <ArrowUpRight className="w-3 h-3" />
@@ -322,6 +322,7 @@ const ImmersiveOvenGallery = () => {
             })}
           </div>
         )}
+
 
 
         {/* Unified consultation */}
