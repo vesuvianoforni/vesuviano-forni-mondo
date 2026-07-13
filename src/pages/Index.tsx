@@ -13,6 +13,7 @@ import LazySection from "@/components/LazySection";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ValueProposition from "@/components/ValueProposition";
 import ReviewsStrip from "@/components/ReviewsStrip";
+import AvanziniPartnerStrip from "@/components/AvanziniPartnerStrip";
 
 // Lazy loaded below-fold components
 
@@ -86,6 +87,8 @@ const Index = () => {
         <section id="products" aria-label="Categorie prodotti">
           <ProductCategories />
         </section>
+
+        <AvanziniPartnerStrip />
 
 
 
