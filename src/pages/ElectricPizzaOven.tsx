@@ -284,6 +284,9 @@ const ElectricPizzaOven = () => {
             />
           </div>
         </div>
+      </section>
+
+
 
       {/* Models & specs */}
       <section className="py-20 bg-stone-50">
