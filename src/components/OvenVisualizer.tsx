@@ -65,19 +65,19 @@ const OvenVisualizer = () => {
     { 
       value: "vesuviobuono", 
       label: "VesuvioBuono (Con depuratore fumi)",
-      image: "/lovable-uploads/vesuviobuono-ar.webp",
+      image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-ar.webp",
       modelKey: "CABIN_MOSAIC_v001"
     },
     { 
       value: "tradizionale", 
       label: "Tradizionale a cupola",
-      image: "/lovable-uploads/tradizionale-cupola-ar.webp",
+      image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/tradizionale-cupola-ar.webp",
       modelKey: "BLACK_MOSAIC_v001"
     },
     { 
       value: "metallico", 
       label: "Metallico di design",
-      image: "/lovable-uploads/metallico-design-ar.webp",
+      image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/metallico-design-ar.webp",
       modelKey: "METAL_v001"
     }
   ];

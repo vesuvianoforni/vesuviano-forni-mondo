@@ -13,28 +13,28 @@ const Rivestimenti = () => {
       key: 'mosaicato',
       title: 'Mosaico',
       description: 'Mosaico Appiani, tra le migliori marche italiane di ceramica. Tessere lavorate a mano per un effetto artistico unico e senza tempo.',
-      image: "/__l5e/assets-v1/de255509-511f-467a-b6f6-1d4e87d8365e/mosaico-appiani.png",
+      image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/mosaico-appiani.png",
       colors: ['Mosaico Classico', 'Mosaico Moderno', 'Mosaico Artistico']
     },
     {
       key: 'verniciato',
       title: 'Verniciato',
       description: 'Finitura liscia e uniforme con vernici resistenti al calore, disponibile in un ampio ventaglio di colori.',
-      image: "/__l5e/assets-v1/28d0f035-ead8-4446-91cd-2d27069cfcec/verniciato-rivestimento.png",
+      image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/verniciato-rivestimento.png",
       colors: ['Rosso Vesuvio', 'Nero Antracite', 'Bianco Panna', 'Verde Oliva']
     },
     {
       key: 'palladiana',
       title: 'Palladiana',
       description: 'Composizione irregolare di frammenti di marmo per un look elegante ispirato alla tradizione veneziana.',
-      image: "/__l5e/assets-v1/80c530da-0a3d-4a62-a52d-87243b188552/palladiana-rivestimento.png",
+      image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/palladiana-rivestimento.png",
       colors: ['Marmi Misti', 'Toni Neutri', 'Contrasto Scuro']
     },
     {
       key: 'dogheMetalliche',
       title: 'Doghe Metalliche',
       description: 'Rivestimento moderno in doghe di metallo per un design contemporaneo e industriale.',
-      image: "/__l5e/assets-v1/b885b811-59cb-4437-a25c-7f1d3fe9df0d/doghe-metalliche-rivestimento.png",
+      image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/doghe-metalliche-rivestimento.png",
       colors: ['Acciaio Spazzolato', 'Nero Opaco', 'Bianco Metallizzato']
     }
   ];

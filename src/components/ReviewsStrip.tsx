@@ -4,9 +4,9 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouse
 import Autoplay from "embla-carousel-autoplay";
 
 const clients = [
-  { logo: '/lovable-uploads/client-logo-cugini-pizza.png', name: 'Cugini Pizza', reviewKey: 1 },
-  { logo: '/lovable-uploads/client-logo-hands.png', name: 'Rosso Mazara', reviewKey: 2 },
-  { logo: '/lovable-uploads/client-logo-ansun.png', name: 'Ansun', reviewKey: 3 },
+  { logo: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-cugini-pizza.png', name: 'Cugini Pizza', reviewKey: 1 },
+  { logo: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-hands.png', name: 'Rosso Mazara', reviewKey: 2 },
+  { logo: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-ansun.png', name: 'Ansun', reviewKey: 3 },
 ];
 
 const ReviewsStrip = () => {

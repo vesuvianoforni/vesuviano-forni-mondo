@@ -16,7 +16,7 @@ interface SendLinkRequest {
 }
 
 const getEmailTemplate = (name: string, link: string, language: 'it' | 'en' | 'fr') => {
-  const logoUrl = 'https://vesuvianoforni.com/lovable-uploads/vesuviano-logo-bianco.png';
+  const logoUrl = 'https://vesuvianoforni.comhttps://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-logo-bianco.png';
   
   const templates = {
     it: {

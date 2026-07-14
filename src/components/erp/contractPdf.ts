@@ -231,7 +231,7 @@ async function loadImageAsDataUrl(url: string): Promise<string | null> {
 }
 
 async function loadLogo(): Promise<string | null> {
-  return loadImageAsDataUrl('/lovable-uploads/vesuviano-logo-bianco.png');
+  return loadImageAsDataUrl('https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-logo-bianco.png');
 }
 
 async function loadSupplierSignature(): Promise<string | null> {

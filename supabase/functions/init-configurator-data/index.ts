@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
     const models = [
       { name: 'Sebastian', image: '/lovable-uploads/forno-metallo-nero-nuovo.png', basePrice: 3500, deliveryWeeks: 4 },
       { name: 'Realbosco', image: '/lovable-uploads/vesuviobuono-verde-mosaico.jpg', basePrice: 4000, deliveryWeeks: 4 },
-      { name: 'Anastasia', image: '/lovable-uploads/forno-mosaico-rosso.jpg', basePrice: 3800, deliveryWeeks: 4 },
+      { name: 'Anastasia', image: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/forno-mosaico-rosso.jpg', basePrice: 3800, deliveryWeeks: 4 },
       { name: 'Ottavio', image: '/lovable-uploads/forno-metallo-bianco-nuovo.png', basePrice: 4500, deliveryWeeks: 5 }
     ];
 

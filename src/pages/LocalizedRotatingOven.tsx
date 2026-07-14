@@ -9,7 +9,7 @@ import Rivestimenti from '@/components/Rivestimenti';
 import { Button } from '@/components/ui/button';
 import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
-const HERO_VIDEO = '/lovable-uploads/rotating-oven-hero-bg.mp4';
+const HERO_VIDEO = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/videos/site/rotating-oven-hero-bg.mp4';
 
 interface LocalizedRotatingOvenProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
@@ -80,7 +80,7 @@ const LocalizedRotatingOven = ({ lang }: LocalizedRotatingOvenProps) => {
               </div>
               <div className="space-y-6">
                 <img 
-                  src="/lovable-uploads/vesuviobuono-marrone-completo.webp"
+                  src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-marrone-completo.webp"
                   alt={t('products.rotating.title')}
                   className="w-full h-80 object-cover rounded-lg shadow-lg"
                 />

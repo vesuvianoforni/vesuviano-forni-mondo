@@ -70,7 +70,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="max-width: 650px; margin: 0 auto; background: white;">
             <!-- Header con logo -->
             <div style="background: linear-gradient(135deg, #8B4513 0%, #CD5C5C 100%); padding: 40px 30px; text-align: center;">
-              <img src="https://vesuvianoforni.com/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano Forni" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
+              <img src="https://vesuvianoforni.comhttps://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-logo-bianco.png" alt="Vesuviano Forni" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
               <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600;">Vesuviano Forni</h1>
               <p style="color: #fef2f2; margin: 10px 0 0 0; font-size: 14px;">L'arte della tradizione napoletana</p>
             </div>

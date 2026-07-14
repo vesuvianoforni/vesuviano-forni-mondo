@@ -230,7 +230,7 @@ const Header = () => {
           {/* Logo */}
           <div className="flex items-center cursor-pointer" onClick={handleLogoClick}>
             <LazyImage 
-              src="/lovable-uploads/255a7344-f5ab-411b-8b37-6ed61e01d472.png" 
+              src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/255a7344-f5ab-411b-8b37-6ed61e01d472.png" 
               alt="Vesuviano - Forni artigianali napoletani, produttori di forni a legna e a zero emissioni" 
               className="h-10 sm:h-12 w-auto hover:scale-105 transition-transform duration-300"
               priority={true}

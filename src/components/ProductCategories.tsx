@@ -59,37 +59,37 @@ const ProductCategories = () => {
   const categories = [
     {
       key: 'traditional',
-      image: "/lovable-uploads/vesuviobuono-verde-mosaico.webp",
-      video: "/lovable-uploads/forno-360-video.mp4"
+      image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-verde-mosaico.webp",
+      video: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/videos/site/forno-360-video.mp4"
     },
     {
       key: 'gas',
-      image: "/lovable-uploads/forno-gas-verde-mosaico.webp",
-      video: "/lovable-uploads/forno-gas-360-video.mp4"
+      image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/forno-gas-verde-mosaico.webp",
+      video: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/videos/site/forno-gas-360-video.mp4"
     },
     {
       key: 'electric',
-      image: "/lovable-uploads/forno-metallo-bianco-nuovo.webp",
-      video: "/lovable-uploads/forno-elettrico-360-video.mp4"
+      image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/forno-metallo-bianco-nuovo.webp",
+      video: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/videos/site/forno-elettrico-360-video.mp4"
     },
     {
       key: 'rotating',
-      image: "/lovable-uploads/forno-rotativo-mosaico-nero.webp",
-      video: "/lovable-uploads/forno-rotativo-360-video.mp4"
+      image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/forno-rotativo-mosaico-nero.webp",
+      video: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/videos/site/forno-rotativo-360-video.mp4"
     },
     {
       key: 'vesuviobuono',
-      image: "/lovable-uploads/vesuviobuono-ostepizza-completo.webp",
-      video: "/lovable-uploads/vesuviobuono-360-video.mp4"
+      image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-ostepizza-completo.webp",
+      video: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/videos/site/vesuviobuono-360-video.mp4"
     },
     {
       key: 'builtOnPlace',
-      image: "/lovable-uploads/built-on-place-card.png",
+      image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/built-on-place-card.png",
       link: "/built-on-place"
     },
     {
       key: 'readyToShip',
-      image: "/lovable-uploads/forni-colorati-showroom.webp",
+      image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/forni-colorati-showroom.webp",
       link: 'readyToShip'
     }
   ];

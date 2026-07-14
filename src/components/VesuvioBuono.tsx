@@ -41,7 +41,7 @@ const VesuvioBuono = () => {
               <div className="aspect-video rounded-lg overflow-hidden relative">
                 <VideoPlayer
                   src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/videos/ENG%20-%20VIDEO%20PRESENTAZIONE%20VESUVIO%20BUONO%20(1)%20-%20RESIZE%20-%20Videobolt.net.mp4"
-                  poster="/lovable-uploads/vesuviobuono-forno-azione.webp"
+                  poster="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-forno-azione.webp"
                   className="w-full h-full"
                 />
                 {/* Overlay to hide watermark in bottom right */}
@@ -60,7 +60,7 @@ const VesuvioBuono = () => {
               <div className="bg-stone-900 rounded-xl p-4 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
                 <div className="aspect-video rounded-lg overflow-hidden">
                   <img 
-                    src="/lovable-uploads/vesuviobuono-forno-azione.webp" 
+                    src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-forno-azione.webp" 
                     alt="Forno VesuvioBuono in azione" 
                     className="w-full h-full object-cover"
                   />
@@ -72,7 +72,7 @@ const VesuvioBuono = () => {
               <div className="bg-stone-900 rounded-xl p-4 border-2 border-vesuviano-400 hover:border-vesuviano-300 transition-all duration-300 hover:scale-105">
                 <div className="aspect-video rounded-lg overflow-hidden">
                   <img 
-                    src="/lovable-uploads/vesuviobuono-zero-emissioni.webp" 
+                    src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-zero-emissioni.webp" 
                     alt="Forno VesuvioBuono zero emissioni" 
                     className="w-full h-full object-cover"
                   />
@@ -124,7 +124,7 @@ const VesuvioBuono = () => {
                   <div className="bg-stone-100 rounded-lg p-3 hover:scale-105 transition-all duration-300">
                     <div className="aspect-square rounded overflow-hidden">
                       <img 
-                        src="/lovable-uploads/vesuviobuono-forno-legna.webp" 
+                        src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-forno-legna.webp" 
                         alt="Installazione VesuvioBuono" 
                         className="w-full h-full object-cover"
                       />
@@ -134,7 +134,7 @@ const VesuvioBuono = () => {
                   <div className="bg-stone-100 rounded-lg p-3 hover:scale-105 transition-all duration-300">
                     <div className="aspect-square rounded overflow-hidden">
                       <img 
-                        src="/lovable-uploads/vesuviobuono-ostepizza-aperto.webp" 
+                        src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-ostepizza-aperto.webp" 
                         alt="Certificazioni VesuvioBuono" 
                         className="w-full h-full object-cover"
                       />
@@ -184,7 +184,7 @@ const VesuvioBuono = () => {
                   <div className="bg-vesuviano-700 rounded-lg p-4 hover:scale-105 transition-all duration-300">
                     <div className="aspect-video rounded overflow-hidden">
                       <img 
-                        src="/lovable-uploads/artigiano-lavorazione.webp" 
+                        src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/artigiano-lavorazione.webp" 
                         alt="Produzione artigianale VesuvioBuono" 
                         className="w-full h-full object-cover"
                       />
@@ -248,7 +248,7 @@ const VesuvioBuono = () => {
                   <div className="bg-stone-800/50 rounded-xl p-6 border-2 border-vesuviano-400/40 shadow-2xl hover:scale-105 transition-all duration-300">
                     <div className="aspect-video rounded-lg overflow-hidden shadow-xl">
                       <img 
-                        src="/lovable-uploads/abbattitore-fuliggine-acqua.webp" 
+                        src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/abbattitore-fuliggine-acqua.webp" 
                         alt="Abbattitore di Fuliggine ad Acqua - Sistema interno" 
                         className="w-full h-full object-cover"
                       />

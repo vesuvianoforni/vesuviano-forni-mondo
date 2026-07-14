@@ -69,7 +69,7 @@ const FourAPizzaBois = () => {
 
       <section className="relative h-[60vh] min-h-[500px] overflow-hidden">
         <img
-          src="/lovable-uploads/vesuviobuono-forno-legna.webp"
+          src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-forno-legna.webp"
           alt="Four à pizza bois artisanal Vesuviano"
           className="absolute inset-0 w-full h-full object-cover"
           width={1920}
@@ -105,7 +105,7 @@ const FourAPizzaBois = () => {
             </div>
             <div>
               <img
-                src="/lovable-uploads/vesuviobuono-verde-mosaico.webp"
+                src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-verde-mosaico.webp"
                 alt="Four à pizza bois mosaïque"
                 className="w-full h-80 object-cover rounded-lg shadow-lg"
                 loading="lazy"

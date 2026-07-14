@@ -272,7 +272,7 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
               ))}
             </ul>
             <div className="mt-6">
-              <img src="/lovable-uploads/sollevamento-forno-diagramma.webp" alt="Diagramma sollevamento forno Vesuviano" className="rounded-lg shadow-md w-full max-w-3xl mx-auto" loading="lazy" />
+              <img src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/sollevamento-forno-diagramma.webp" alt="Diagramma sollevamento forno Vesuviano" className="rounded-lg shadow-md w-full max-w-3xl mx-auto" loading="lazy" />
             </div>
           </section>
 

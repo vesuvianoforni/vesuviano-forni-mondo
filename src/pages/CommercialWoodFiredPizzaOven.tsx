@@ -13,10 +13,10 @@ import woodOvensWorkshop from '@/assets/vesuviano-wood-ovens-workshop.jpg.asset.
 import woodFireDetail from '@/assets/vesuviano-wood-fire-detail.jpg.asset.json';
 import goldMosaicOven from '@/assets/vesuviano-gold-mosaic-oven.png.asset.json';
 import vesuvianoVideo from '@/assets/video_vesuviano_forno.mov.asset.json';
-const pizzoloLogo = { url: '/lovable-uploads/client-logo-pizzolo.png' };
-const ansumLogo = { url: '/lovable-uploads/client-logo-ansum.png' };
-const cuginiLogo = { url: '/lovable-uploads/client-logo-cugini-pizza.png' };
-const heroBg = { url: '/lovable-uploads/vesuviobuono-forno-azione.jpg' };
+const pizzoloLogo = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-pizzolo.png' };
+const ansumLogo = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-ansum.png' };
+const cuginiLogo = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-cugini-pizza.png' };
+const heroBg = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-forno-azione.jpg' };
 
 
 const PATH = '/en/commercial-wood-fired-pizza-oven';

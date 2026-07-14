@@ -3,10 +3,10 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 const items = [
-  { key: 'verniciato', image: "/lovable-uploads/forno-arancione-terra-del-gusto.webp" },
-  { key: 'mosaicato', image: "/lovable-uploads/vesuviobuono-verde-mosaico.webp" },
-  { key: 'ferro', image: "/lovable-uploads/forno-nero-metallico-nuovo.webp" },
-  { key: 'personalizzato', image: "/lovable-uploads/vesuviobuono-osteria-pizza.webp" },
+  { key: 'verniciato', image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/forno-arancione-terra-del-gusto.webp" },
+  { key: 'mosaicato', image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-verde-mosaico.webp" },
+  { key: 'ferro', image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/forno-nero-metallico-nuovo.webp" },
+  { key: 'personalizzato', image: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-osteria-pizza.webp" },
 ];
 
 const RivestimentiCompact = () => {

@@ -63,7 +63,7 @@ const WhereWeAre = () => {
           {/* Map Image */}
           <div className="relative rounded-xl overflow-hidden shadow-lg">
             <img
-              src="/lovable-uploads/vesuvio-mappa-laboratori.webp"
+              src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuvio-mappa-laboratori.webp"
               alt="Mappa dei laboratori Vesuviano alle pendici del Vesuvio"
               className="w-full h-48 md:h-72 object-cover"
             />

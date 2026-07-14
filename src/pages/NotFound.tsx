@@ -25,7 +25,7 @@ const NotFound = () => {
         {/* Logo */}
         <div className="mb-8">
           <img 
-            src="/lovable-uploads/vesuviano-logo-bianco.png" 
+            src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-logo-bianco.png" 
             alt="Vesuviano Forni" 
             className="w-20 h-20 mx-auto opacity-60"
           />

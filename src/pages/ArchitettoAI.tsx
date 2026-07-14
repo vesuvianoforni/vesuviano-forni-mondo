@@ -30,7 +30,7 @@ const ArchitettoAI = () => {
             <div className="lg:col-span-2">
               <div className="flex items-center mb-6">
                 <img 
-                  src="/lovable-uploads/vesuviano-logo-bianco.png" 
+                  src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-logo-bianco.png" 
                   alt="Vesuviano - Forni Vulcanici Selezionati" 
                   className="h-12 w-auto"
                 />

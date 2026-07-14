@@ -58,7 +58,7 @@ const SEOHead = ({
   const canonicalInput = canonical || (typeof window !== 'undefined' ? window.location.pathname : '/');
   const canonicalUrl = toAbsolute(canonicalInput);
   const canonicalPath = pathOf(canonicalInput);
-  const image = ogImage ? toAbsolute(ogImage) : `${BASE_URL}/lovable-uploads/vesuviano-social-banner.jpg`;
+  const image = ogImage ? toAbsolute(ogImage) : `${BASE_URL}https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-social-banner.jpg`;
   const schemas = schemaJson
     ? (Array.isArray(schemaJson) ? schemaJson : [schemaJson])
     : [];

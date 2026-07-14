@@ -107,7 +107,7 @@ const Gallery = () => {
                   <div 
                     className="relative overflow-hidden cursor-zoom-in"
                     onClick={() => setZoomedImage({
-                      url: "/lovable-uploads/vesuviobuono-verde-dettaglio.webp",
+                      url: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-verde-dettaglio.webp",
                       alt: image.title,
                       title: image.title
                     })}
@@ -116,7 +116,7 @@ const Gallery = () => {
                   <div className="w-full h-64 bg-stone-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-700">
                     <div className="text-center">
                       <img 
-                        src="/lovable-uploads/vesuviobuono-verde-dettaglio.webp" 
+                        src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-verde-dettaglio.webp" 
                         alt="Forno Vesuviano" 
                         className="w-16 h-16 mx-auto mb-4 object-cover rounded"
                       />

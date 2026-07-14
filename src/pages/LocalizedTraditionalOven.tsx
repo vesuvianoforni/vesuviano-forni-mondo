@@ -40,7 +40,7 @@ const LocalizedTraditionalOven = ({ lang }: LocalizedTraditionalOvenProps) => {
         {/* Hero Section */}
         <section className="relative h-[60vh] min-h-[500px] overflow-hidden">
           <img 
-            src="/lovable-uploads/vesuviobuono-verde-mosaico.webp"
+            src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-verde-mosaico.webp"
             alt={t('products.traditional.title')}
             className="absolute inset-0 w-full h-full object-cover"
           />
@@ -75,7 +75,7 @@ const LocalizedTraditionalOven = ({ lang }: LocalizedTraditionalOvenProps) => {
               </div>
               <div className="space-y-6">
                 <img 
-                  src="/lovable-uploads/vesuviobuono-forno-legna.webp"
+                  src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-forno-legna.webp"
                   alt={t('products.traditional.title')}
                   className="w-full h-80 object-cover rounded-lg shadow-lg"
                 />

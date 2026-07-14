@@ -232,7 +232,7 @@ const AboutUs = () => {
               </div>
               <div className="relative rounded-xl overflow-hidden shadow-lg">
                 <img
-                  src="/lovable-uploads/artigiano-mani-argilla.webp"
+                  src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/artigiano-mani-argilla.webp"
                   alt="Mani esperte di artigiano napoletano che lavora l'argilla refrattaria"
                   className="w-full h-48 md:h-56 object-cover"
                   loading="lazy"
@@ -310,7 +310,7 @@ const AboutUs = () => {
             </p>
             <div className="relative rounded-lg overflow-hidden">
               <img
-                src="/lovable-uploads/vesuvio-mappa-laboratori.webp"
+                src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuvio-mappa-laboratori.webp"
                 alt="Mappa dei laboratori Vesuviano alle pendici del Vesuvio"
                 className="w-full h-48 md:h-64 object-cover"
                 loading="lazy"
