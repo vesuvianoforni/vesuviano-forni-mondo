@@ -12,7 +12,7 @@ import Rivestimenti from '@/components/Rivestimenti';
 import woodOvensWorkshop from '@/assets/vesuviano-wood-ovens-workshop.jpg.asset.json';
 import woodFireDetail from '@/assets/vesuviano-wood-fire-detail.jpg.asset.json';
 import goldMosaicOven from '@/assets/vesuviano-gold-mosaic-oven.png.asset.json';
-import vesuvianoVideo from '@/assets/video_vesuviano_forno.mov.asset.json';
+
 const pizzoloLogo = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-pizzolo.png' };
 const ansumLogo = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-ansum.png' };
 const cuginiLogo = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-cugini-pizza.png' };
@@ -256,20 +256,12 @@ const CommercialWoodFiredPizzaOven = () => {
                 Every dome is shaped by hand, cured slowly, and finished with the traditional mosaic or majolica that has become the signature of Vesuviano Forni in over 40 countries.
               </p>
             </div>
-            <div className="space-y-6">
+            <div>
               <img
                 src={goldMosaicOven.url}
                 alt="Handmade gold mosaic Vesuviano wood-fired pizza oven"
                 className="w-full h-[500px] object-contain bg-white rounded-lg shadow-lg"
                 loading="lazy"
-              />
-              <video
-                src={vesuvianoVideo.url}
-                className="w-full rounded-lg shadow-lg"
-                controls
-                autoPlay
-                loop
-                playsInline
               />
             </div>
           </div>
