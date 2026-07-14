@@ -14,7 +14,7 @@ const OvenModelsInfo = () => {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mt-6 md:mt-8">
           <div className="text-center">
             <img 
-              src="/lovable-uploads/vesuviobuono-marrone-completo.webp" 
+              src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-marrone-completo.webp" 
               alt="VesuvioBuono" 
               className="w-16 h-16 md:w-24 md:h-24 object-cover mx-auto mb-3 md:mb-4 rounded-lg border border-stone-200"
             />
@@ -23,7 +23,7 @@ const OvenModelsInfo = () => {
           </div>
           <div className="text-center">
             <img 
-              src="/lovable-uploads/forno-arancione-terra-del-gusto.webp" 
+              src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/forno-arancione-terra-del-gusto.webp" 
               alt="Verniciato" 
               className="w-16 h-16 md:w-24 md:h-24 object-cover mx-auto mb-3 md:mb-4 rounded-lg border border-stone-200"
             />
@@ -32,7 +32,7 @@ const OvenModelsInfo = () => {
           </div>
           <div className="text-center">
             <img 
-              src="/lovable-uploads/vesuviobuono-verde-mosaico.webp" 
+              src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-verde-mosaico.webp" 
               alt="Mosaicato" 
               className="w-16 h-16 md:w-24 md:h-24 object-cover mx-auto mb-3 md:mb-4 rounded-lg border border-stone-200"
             />

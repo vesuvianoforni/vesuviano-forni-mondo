@@ -39,7 +39,7 @@ const BlogSEO = ({ post, lang, isList }: BlogSEOProps) => {
   const description = getLocalizedField(post, 'meta_description', lang) || title;
   const slug = getLocalizedField(post, 'slug', lang);
   const articleUrl = `${BASE_URL}/${lang}/blog/${slug}`;
-  const image = post.featured_image || `${BASE_URL}/lovable-uploads/vesuviano-social-banner.jpg`;
+  const image = post.featured_image || `${BASE_URL}https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-social-banner.jpg`;
 
   // Build hreflang alternates from per-language slugs on this post
   const alternates: AlternatesMap = LANGS.reduce((acc, l) => {
@@ -58,7 +58,7 @@ const BlogSEO = ({ post, lang, isList }: BlogSEOProps) => {
     publisher: {
       '@type': 'Organization',
       name: 'Vesuviano Forni',
-      logo: { '@type': 'ImageObject', url: `${BASE_URL}/lovable-uploads/255a7344-f5ab-411b-8b37-6ed61e01d472.png` },
+      logo: { '@type': 'ImageObject', url: `${BASE_URL}https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/255a7344-f5ab-411b-8b37-6ed61e01d472.png` },
     },
     datePublished: post.published_at,
     dateModified: post.updated_at,

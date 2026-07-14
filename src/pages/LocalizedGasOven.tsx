@@ -40,7 +40,7 @@ const LocalizedGasOven = ({ lang }: LocalizedGasOvenProps) => {
         {/* Hero Section */}
         <section className="relative h-[60vh] min-h-[500px] overflow-hidden">
           <img 
-            src="/lovable-uploads/forno-arancione-terra-del-gusto.webp"
+            src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/forno-arancione-terra-del-gusto.webp"
             alt={t('products.gas.title')}
             className="absolute inset-0 w-full h-full object-cover"
           />
@@ -75,7 +75,7 @@ const LocalizedGasOven = ({ lang }: LocalizedGasOvenProps) => {
               </div>
               <div className="space-y-6">
                 <img 
-                  src="/lovable-uploads/forno-nero-elegante.webp"
+                  src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/forno-nero-elegante.webp"
                   alt={t('products.gas.title')}
                   className="w-full h-80 object-cover rounded-lg shadow-lg"
                 />

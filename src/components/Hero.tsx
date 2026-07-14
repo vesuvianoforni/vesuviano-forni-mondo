@@ -78,7 +78,7 @@ const Hero = () => {
         {/* Logo Section - hidden on mobile since it's in header */}
         <div className="mb-4 sm:mb-8 animate-scale-in hidden sm:block">
           <LazyImage 
-            src="/lovable-uploads/vesuviano-logo-bianco.png"
+            src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-logo-bianco.png"
             alt="Vesuviano - Forni artigianali napoletani di alta qualità" 
             className="h-12 sm:h-20 md:h-24 lg:h-32 w-auto mx-auto hover:scale-105 transition-transform duration-500"
             priority={true}

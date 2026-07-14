@@ -22,7 +22,7 @@ interface FormData {
   city: string;
 }
 
-const FALLBACK_CATALOG_URL = '/lovable-uploads/vesuviano-catalogo-eng.pdf';
+const FALLBACK_CATALOG_URL = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/datasheets/site/vesuviano-catalogo-eng.pdf';
 
 const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: DownloadDatasheetModalProps) => {
   const { t } = useTranslation();

@@ -337,7 +337,7 @@ const PublicContractSign: React.FC = () => {
 
             <div className="relative flex items-center justify-between gap-4 flex-wrap">
               <img
-                src="/lovable-uploads/vesuviano-logo-bianco.png"
+                src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-logo-bianco.png"
                 alt="Vesuviano Forni"
                 className="h-14 md:h-16 w-auto"
               />
@@ -529,7 +529,7 @@ const PublicContractSign: React.FC = () => {
 
           <div className="mt-6 text-center">
             <img
-              src="/lovable-uploads/vesuviano-logo-bianco.png"
+              src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-logo-bianco.png"
               alt=""
               className="h-6 w-auto mx-auto opacity-40 mb-2 invert"
             />

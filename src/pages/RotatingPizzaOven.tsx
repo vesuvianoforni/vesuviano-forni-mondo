@@ -11,10 +11,10 @@ import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 import realBosco100 from '@/assets/real-bosco-100-gold-mosaic.jpg.asset.json';
 import realBosco120 from '@/assets/real-bosco-120-blue-mosaic.jpg.asset.json';
 import ProductVideoSection from '@/components/ProductVideoSection';
-const HERO_VIDEO = '/lovable-uploads/rotating-oven-hero-bg.mp4';
-const PIZZOLO_LOGO = '/lovable-uploads/pizzolo-siciliano-logo.png';
-const ANSUM_LOGO = '/lovable-uploads/ansum-logo.png';
-const CUGINI_LOGO = '/lovable-uploads/cugini-pizza-logo.png';
+const HERO_VIDEO = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/videos/site/rotating-oven-hero-bg.mp4';
+const PIZZOLO_LOGO = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/pizzolo-siciliano-logo.png';
+const ANSUM_LOGO = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/ansum-logo.png';
+const CUGINI_LOGO = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/cugini-pizza-logo.png';
 
 const PATH = '/en/rotating-pizza-oven';
 const URL = `https://vesuvianoforni.com${PATH}`;

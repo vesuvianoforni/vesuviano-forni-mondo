@@ -710,7 +710,7 @@ const ProformaPage = () => {
       <div className="bg-gradient-to-r from-[#2a1810] to-[#1a1a1a] border-b border-amber-900/30">
         <div className="container mx-auto px-4 py-6 sm:py-8 max-w-4xl">
           <div className="flex items-center justify-between">
-            <img src="/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano" className="h-8 sm:h-10" />
+            <img src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-logo-bianco.png" alt="Vesuviano" className="h-8 sm:h-10" />
             {proforma.proforma_number && (
               <span className="font-mono text-xs sm:text-sm text-amber-300/70">{proforma.proforma_number}</span>
             )}

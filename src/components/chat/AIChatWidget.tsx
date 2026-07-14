@@ -453,7 +453,7 @@ export default function AIChatWidget() {
             style={{ height: '100dvh' }}
           >
             <div className="bg-vesuviano-500 text-white px-4 py-3 flex items-center gap-3 flex-shrink-0">
-              <img src="/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano" className="h-6 w-auto" />
+              <img src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-logo-bianco.png" alt="Vesuviano" className="h-6 w-auto" />
               <div>
                 <p className="font-semibold text-sm">Assistente Vesuviano</p>
                 <p className="text-xs opacity-80">AI Oven Consultant</p>
@@ -527,7 +527,7 @@ export default function AIChatWidget() {
             style={{ height: "min(500px, calc(100dvh - 10rem))" }}
           >
             <div className="bg-vesuviano-500 text-white px-4 py-3 flex items-center gap-3">
-              <img src="/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano" className="h-6 w-auto" />
+              <img src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-logo-bianco.png" alt="Vesuviano" className="h-6 w-auto" />
               <div>
                 <p className="font-semibold text-sm">Assistente Vesuviano</p>
                 <p className="text-xs opacity-80">AI Oven Consultant</p>

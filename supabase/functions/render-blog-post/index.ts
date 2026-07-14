@@ -25,8 +25,8 @@ function buildHtml(post: Record<string, unknown>, lang: string, slug: string): s
   const description = getField(post, "meta_description", lang) || title;
   const content = getField(post, "content", lang);
   const articleUrl = `${DOMAIN}/${lang}/blog/${slug}`;
-  const image = (post.featured_image as string) || `${DOMAIN}/lovable-uploads/vesuviano-social-banner.jpg`;
-  const logoUrl = `${DOMAIN}/lovable-uploads/255a7344-f5ab-411b-8b37-6ed61e01d472.png`;
+  const image = (post.featured_image as string) || `${DOMAIN}https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-social-banner.jpg`;
+  const logoUrl = `${DOMAIN}https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/255a7344-f5ab-411b-8b37-6ed61e01d472.png`;
 
   const ogLocaleMap: Record<string, string> = {
     it: "it_IT", en: "en_US", fr: "fr_FR", de: "de_DE", es: "es_ES",

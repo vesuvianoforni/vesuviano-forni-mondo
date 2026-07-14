@@ -49,7 +49,7 @@ const Services = () => {
           {/* Logistics highlight + CTA combined */}
           <div className="relative rounded-2xl overflow-hidden shadow-xl group">
             <img
-              src="/lovable-uploads/logistica-internazionale-nyc.webp"
+              src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/logistica-internazionale-nyc.webp"
               alt="Vesuviano oven delivery in New York - International logistics"
               loading="lazy"
               className="w-full h-64 md:h-80 object-cover transition-transform duration-700 group-hover:scale-105"

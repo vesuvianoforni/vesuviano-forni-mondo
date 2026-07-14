@@ -19,10 +19,10 @@ const HERO_VIDEO_URL = heroVideoAsset.url;
 const AVANZINI_LOGO_URL = avanziniLogoAsset.url;
 const SPETTACL_VIDEO_URL = spettaclVideoAsset.url;
 
-const ansumLogo = { url: '/lovable-uploads/client-logo-ansum.png' };
-const cuginiLogo = { url: '/lovable-uploads/client-logo-cugini-pizza.png' };
-const pizzoloLogo = { url: '/lovable-uploads/client-logo-pizzolo.png' };
-const heroBg = { url: '/lovable-uploads/forno-arancione-terra-del-gusto.webp' };
+const ansumLogo = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-ansum.png' };
+const cuginiLogo = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-cugini-pizza.png' };
+const pizzoloLogo = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-pizzolo.png' };
+const heroBg = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/forno-arancione-terra-del-gusto.webp' };
 
 const PATH = '/en/commercial-gas-pizza-oven';
 const URL = `https://vesuvianoforni.com${PATH}`;

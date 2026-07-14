@@ -159,7 +159,7 @@ export const SendLinkEmailModal = ({ isOpen, onClose, session }: SendLinkEmailMo
                     borderRadius: '8px 8px 0 0'
                   }}>
                     <img 
-                      src="/lovable-uploads/vesuviano-logo-bianco.png" 
+                      src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-logo-bianco.png" 
                       alt="Vesuviano Forni" 
                       style={{ maxWidth: '160px', height: 'auto', margin: '0 auto 10px' }}
                     />

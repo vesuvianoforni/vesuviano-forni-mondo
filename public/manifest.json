@@ -30,7 +30,7 @@
   ],
   "screenshots": [
     {
-      "src": "/lovable-uploads/vesuviobuono-osteria-pizza.jpg",
+      "src": "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviobuono-osteria-pizza.jpg",
       "sizes": "1200x630",
       "type": "image/jpeg",
       "form_factor": "wide"

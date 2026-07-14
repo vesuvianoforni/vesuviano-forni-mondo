@@ -119,7 +119,7 @@ const BuiltOnPlace = () => {
             <source src="/videos/built-on-place-bg.mp4" type="video/mp4" />
           </video>
           <LazyImage
-            src="/lovable-uploads/255a7344-f5ab-411b-8b37-6ed61e01d472.png"
+            src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/255a7344-f5ab-411b-8b37-6ed61e01d472.png"
             alt=""
             className="absolute top-6 left-6 h-10 w-auto opacity-80 z-10"
             priority
@@ -190,17 +190,17 @@ const BuiltOnPlace = () => {
               {
                 title: "Fits Through Any Door",
                 desc: "Our ovens are assembled on-site, piece by piece. They pass through spaces as narrow as 45 cm — doorways where no pre-built oven could ever fit.",
-                img: "/lovable-uploads/fits-through-door.png",
+                img: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/fits-through-door.png",
               },
               {
                 title: "Authentic Craftsmanship",
                 desc: "Neapolitan master builders travel to your restaurant and use techniques passed down through generations, with real volcanic sand from Mount Vesuvius.",
-                img: "/lovable-uploads/authentic-craftsmanship.png",
+                img: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/authentic-craftsmanship.png",
               },
               {
                 title: "Superior Performance",
                 desc: "On-site construction allows for optimal thermal mass, reaching 500°C and retaining heat for hours.",
-                img: "/lovable-uploads/built-on-place-oven.png",
+                img: "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/built-on-place-oven.png",
               },
             ].map((item) => (
               <div key={item.title} className="bg-stone-50 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">

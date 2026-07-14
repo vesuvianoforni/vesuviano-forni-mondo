@@ -29,7 +29,7 @@ const WhatsAppButton = () => {
       data-whatsapp-link="https://wa.link/a2959l"
     >
       <img 
-        src="/lovable-uploads/whatsapp-logo-inline.png" 
+        src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/whatsapp-logo-inline.png" 
         alt="WhatsApp" 
         className="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
       />
