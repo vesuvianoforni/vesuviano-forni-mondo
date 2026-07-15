@@ -19,8 +19,9 @@ const FALLBACK_COUNTRY = 'GB';
 
 const TrustedByPizzerias = () => {
   const { i18n } = useTranslation();
-  const [country, setCountry] = useState<string>('Italy');
-  const [flag, setFlag] = useState<string>('🇮🇹');
+  const [country, setCountry] = useState<string>('United Kingdom');
+  const [countryCode, setCountryCode] = useState<string>(FALLBACK_COUNTRY);
+  const [flag, setFlag] = useState<string>('🇬🇧');
 
   useEffect(() => {
     (async () => {
@@ -28,12 +29,23 @@ const TrustedByPizzerias = () => {
         const { data, error } = await supabase.functions.invoke('geo-detect');
         if (error) throw error;
         if (data?.country_name) setCountry(data.country_name);
+        if (data?.country_code) setCountryCode(data.country_code);
         if (data?.flag) setFlag(data.flag);
       } catch (e) {
         console.error('geo-detect failed', e);
       }
     })();
   }, []);
+
+  let visibleClients = clients.filter((c) => c.countries.includes(countryCode));
+  let displayCountry = country;
+  let displayFlag = flag;
+  if (visibleClients.length === 0) {
+    visibleClients = clients.filter((c) => c.countries.includes(FALLBACK_COUNTRY));
+    displayCountry = 'United Kingdom';
+    displayFlag = '🇬🇧';
+  }
+
 
   const lang = i18n.language;
   const title =
