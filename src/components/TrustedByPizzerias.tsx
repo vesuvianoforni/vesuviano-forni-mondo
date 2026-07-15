@@ -48,26 +48,27 @@ const TrustedByPizzerias = () => {
 
 
   const lang = i18n.language;
+  const c = displayCountry;
   const title =
-    lang.startsWith('it') ? `Scelti dalle pizzerie in ${country}` :
-    lang.startsWith('fr') ? `Choisi par les pizzerias en ${country}` :
-    lang.startsWith('de') ? `Vertraut von Pizzerien in ${country}` :
-    lang.startsWith('es') ? `Elegidos por pizzerías en ${country}` :
-    `Trusted by pizzerias in ${country}`;
+    lang.startsWith('it') ? `Scelti dalle pizzerie in ${c}` :
+    lang.startsWith('fr') ? `Choisi par les pizzerias en ${c}` :
+    lang.startsWith('de') ? `Vertraut von Pizzerien in ${c}` :
+    lang.startsWith('es') ? `Elegidos por pizzerías en ${c}` :
+    `Trusted by pizzerias in ${c}`;
 
   const subtitle =
-    lang.startsWith('it') ? `Noi di Vesuviano siamo specializzati nella fornitura e assistenza dei nostri forni napoletani in ${country}, con numerose pizzerie già soddisfatte.` :
-    lang.startsWith('fr') ? `Chez Vesuviano, nous sommes spécialisés dans la fourniture et l'assistance de nos fours napolitains en ${country}, avec de nombreuses pizzerias déjà satisfaites.` :
-    lang.startsWith('de') ? `Wir bei Vesuviano sind spezialisiert auf Lieferung und Service unserer neapolitanischen Öfen in ${country}, mit zahlreichen bereits zufriedenen Pizzerien.` :
-    lang.startsWith('es') ? `En Vesuviano estamos especializados en el suministro y la asistencia de nuestros hornos napolitanos en ${country}, con numerosas pizzerías ya satisfechas.` :
-    `At Vesuviano we specialize in the supply and support of our Neapolitan ovens in ${country}, with many pizzerias already satisfied.`;
+    lang.startsWith('it') ? `Noi di Vesuviano siamo specializzati nella fornitura e assistenza dei nostri forni napoletani in ${c}, con numerose pizzerie già soddisfatte.` :
+    lang.startsWith('fr') ? `Chez Vesuviano, nous sommes spécialisés dans la fourniture et l'assistance de nos fours napolitains en ${c}, avec de nombreuses pizzerias déjà satisfaites.` :
+    lang.startsWith('de') ? `Wir bei Vesuviano sind spezialisiert auf Lieferung und Service unserer neapolitanischen Öfen in ${c}, mit zahlreichen bereits zufriedenen Pizzerien.` :
+    lang.startsWith('es') ? `En Vesuviano estamos especializados en el suministro y la asistencia de nuestros hornos napolitanos en ${c}, con numerosas pizzerías ya satisfechas.` :
+    `At Vesuviano we specialize in the supply and support of our Neapolitan ovens in ${c}, with many pizzerias already satisfied.`;
 
   return (
     <section id="clients-map" className="py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
         <div className="text-center mb-12">
           <h2 className="font-playfair text-3xl md:text-5xl font-bold text-charcoal-900 mb-4">
-            {title} <span aria-hidden="true">{flag}</span>
+            {title} <span aria-hidden="true">{displayFlag}</span>
           </h2>
           <p className="font-inter text-lg text-stone-600 max-w-3xl mx-auto">
             {subtitle}
@@ -75,7 +76,7 @@ const TrustedByPizzerias = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {clients.map((p) => (
+          {visibleClients.map((p) => (
             <div key={p.city} className="bg-stone-50 rounded-lg overflow-hidden shadow-sm flex flex-col">
               <div className="bg-white h-56 flex items-center justify-center p-6">
                 <img
