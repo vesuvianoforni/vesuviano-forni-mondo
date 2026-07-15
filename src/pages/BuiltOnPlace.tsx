@@ -134,12 +134,9 @@ const BuiltOnPlace = () => {
             Your Authentic Neapolitan<br />
             <span className="text-vesuviano-400">Pizza Oven</span>, Built On-Site
           </h1>
-          <p className="text-lg sm:text-xl text-stone-300 max-w-2xl mx-auto mb-4">
+          <p className="text-lg sm:text-xl text-stone-300 max-w-2xl mx-auto mb-8">
             Our master craftsmen travel from Naples to build your oven directly at your restaurant. 
             Made with volcanic sand from Mount Vesuvius.
-          </p>
-          <p className="text-3xl sm:text-4xl font-bold text-white mb-8">
-            Starting from <span className="text-vesuviano-400">£13,500</span>
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
@@ -289,7 +286,7 @@ const BuiltOnPlace = () => {
               Get Your Free Quote Today
             </h2>
             <p className="text-stone-300">
-              Starting from <span className="text-vesuviano-400 font-bold text-xl">£13,500</span> · No obligation · Response within 24h
+              No obligation · Response within 24h
             </p>
           </div>
 
@@ -369,7 +366,7 @@ const BuiltOnPlace = () => {
           <h2 className="font-playfair text-2xl md:text-3xl font-bold text-white mb-4">
             Ready to bring Naples to your restaurant?
           </h2>
-          <p className="text-white/80 mb-6">Starting from £13,500 · Free consultation · Handcrafted in Italy</p>
+          <p className="text-white/80 mb-6">Free consultation · Handcrafted in Italy</p>
           <Button
             size="lg"
             className="bg-white text-vesuviano-600 hover:bg-stone-100 text-lg px-10 py-6 font-bold"
