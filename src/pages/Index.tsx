@@ -17,7 +17,7 @@ import AvanziniPartnerStrip from "@/components/AvanziniPartnerStrip";
 
 // Lazy loaded below-fold components
 
-const ClientsMap = lazy(() => import("@/components/ClientsMap"));
+const ClientsMap = lazy(() => import("@/components/TrustedByPizzerias"));
 
 import OvenDataInitializer from "@/components/OvenDataInitializer";
 import SEOHead from '@/components/SEOHead';
