@@ -94,7 +94,8 @@
     "products": "Produits",
     "craftsmanship": "Artisanat",
     "gallery": "Visualisez votre four",
-    "contact": "Contact"
+    "contact": "Contact",
+    "about": "About Us"
   },
   "footer": {
     "rights": "Tous droits réservés"
@@ -342,6 +343,16 @@
       "subtitle": "Livraisons dans le monde entier, même dans les métropoles les plus complexes comme New York",
       "caption": "Four Vesuviano en livraison à Manhattan",
       "description": "Notre logistique spécialisée garantit des livraisons sûres même dans les centres urbains les plus exigeants"
+    },
+    "consultation": {
+      "title": "Specialized Technical Consulting",
+      "description": "Our experts guide you in choosing the perfect oven for your specific needs, considering space, production volume and type of cuisine.",
+      "features": [
+        "Needs analysis",
+        "Personalized advice",
+        "Support in choosing",
+        "Technical evaluation"
+      ]
     }
   },
   "vesuvioBuono": {
@@ -360,7 +371,12 @@
       "pizza": "Pizza Parfaite",
       "emissions": "Zéro Émission",
       "wood": "Four à bois",
-      "purifier": "Épurateur de fumées"
+      "purifier": "Épurateur de fumées",
+      "ovenInAction": "Oven in Action",
+      "perfectPizza": "Perfect Pizza",
+      "zeroEmissions": "Zero Emissions",
+      "woodOven": "Wood-fired oven",
+      "smokePurifier": "Smoke purifier"
     },
     "zeroEmissions": {
       "title": "Zéro Émission",
@@ -385,7 +401,14 @@
         "flavor": "Maintien de la saveur authentique de la cuisson au bois",
         "environment": "Respect total de l'environnement et de la communauté",
         "warranty": "Garantie internationale et support technique spécialisé"
-      }
+      },
+      "list": [
+        "Installation in any urban area without restrictions",
+        "Drastic reduction in chimney maintenance costs",
+        "Maintaining the authentic flavor of wood-fired cooking",
+        "Total respect for the environment and community",
+        "International warranty and specialized technical support"
+      ]
     },
     "actions": {
       "downloadSpec": "Télécharger Fiche Technique",
@@ -407,7 +430,32 @@
       "downloadComplete": "Téléchargement terminé!",
       "downloadSuccess": "La fiche technique a été téléchargée avec succès.",
       "error": "Une erreur s'est produite. Réessayez plus tard."
-    }
+    },
+    "features": {
+      "zeroEmissions": {
+        "title": "Zero Emissions"
+      },
+      "patented": {
+        "title": "Patented Technology",
+        "description": "Complete combustion system that eliminates 99.9% of soot particles."
+      },
+      "certifications": {
+        "title": "Environmental Certifications",
+        "description": "Compliant with the strictest European and international emission standards."
+      },
+      "dualFuel": {
+        "title": "Dual Fuel",
+        "description": "Works perfectly with both wood and gas/wood combination."
+      }
+    },
+    "videoTitle": "VesuvioBuono in Action",
+    "videoDescription": "Discover how VesuvioBuono revolutionizes wood-fired cooking without emissions",
+    "downloadSheet": "Download Spec Sheet",
+    "fillAllFields": "Please fill in all fields",
+    "downloadComplete": "Download completed!",
+    "downloadCompleteDesc": "The spec sheet has been downloaded successfully.",
+    "error": "Error",
+    "errorDesc": "An error occurred. Please try again later."
   },
   "consultation": {
     "title": "Consultation",
@@ -486,7 +534,8 @@
     "header": {
       "title": "Commencez Votre Projet",
       "subtitle": "Nos experts vous guideront dans le choix de la solution parfaite, de la conception au transport international."
-    }
+    },
+    "badge": "Free Consultation"
   },
   "consultationModal": {
     "title": "Demander une Consultation Gratuite",
@@ -516,7 +565,13 @@
   "gallery": {
     "title": "Notre",
     "titleHighlight": "Collection",
-    "subtitle": "Découvrez nos créations uniques pour chaque exigence professionnelle"
+    "subtitle": "Découvrez nos créations uniques pour chaque exigence professionnelle",
+    "categories": {
+      "all": "All",
+      "traditional": "Traditional",
+      "modern": "Modern",
+      "installations": "Installations"
+    }
   },
   "whatsapp": {
     "tooltip": "Contactez-nous sur WhatsApp",
@@ -1263,7 +1318,25 @@
       "wood": "Bois",
       "gas": "Gaz",
       "electric": "Électrique",
-      "rotating": "Rotatif"
+      "rotating": "Rotatif",
+      "allOvens": "All Ovens",
+      "mosaicOvens": "Mosaic Ovens",
+      "mixedOvens": "Mixed Ovens",
+      "woodOvens": "Wood-Fired Ovens"
+    },
+    "coatings": {
+      "all": "All Coatings",
+      "mosaic": "Mosaic Coating",
+      "painted": "Painted Coating",
+      "metallic": "Metallic Coating"
+    },
+    "noOvensFound": "No ovens found for this category.",
+    "requestInfo": "Request Information",
+    "showMore": "Show More Ovens ({{count}} remaining)",
+    "cta": {
+      "title": "Need personalized advice?",
+      "description": "Our experts are available to help you choose the most suitable oven for your needs",
+      "button": "Contact an Expert"
     }
   }
 }
