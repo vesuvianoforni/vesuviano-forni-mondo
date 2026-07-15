@@ -69,7 +69,17 @@
       "popupDiscount": "20% de descuento en modelos listos para enviar",
       "popupShipping": "Envío en 7 días",
       "popupCta": "Verifica qué modelos están listos"
-    }
+    },
+    "review1": "Exceptional quality and impeccable service. Our Vesuviano oven has transformed our pizzeria.",
+    "reviewer1": "Marco Rossi, Pizzeria Da Marco",
+    "review2": "Consistent temperature and even cooking make all the difference. Perfect pizza every time!",
+    "reviewer2": "Giuseppe Esposito, Antica Pizzeria Napoli",
+    "review3": "Best investment we've made. Customers are thrilled and productivity has doubled.",
+    "reviewer3": "Lucia Ferrara, Ristorante Il Vesuvio",
+    "review4": "Italian craftsmanship at its finest. Beautiful to look at and even better to use.",
+    "reviewer4": "Antonio Bianchi, Pizzeria Tradizione",
+    "review5": "Excellent Oven, Excellent Pizza, Excellent customer service that helped me with the purchase and shipping to Belgium 🇧🇪",
+    "reviewer5": "Francesca Romano, Trattoria La Famiglia"
   },
   "header": {
     "tagline": "Hornos Volcánicos Seleccionados",
@@ -242,7 +252,43 @@
     "labDesc": "En Sant'Anastasia, a los pies del Vesubio, nuestro laboratorio artesanal une tradición e innovación. Aquí nacen los hornos que conquistan el mundo.",
     "experience": "Años de Experiencia",
     "clients": "Clientes Satisfechos",
-    "countries": "Países Atendidos"
+    "countries": "Países Atendidos",
+    "traditionLives": {
+      "title": "Living Tradition",
+      "description": "In the heart of Naples, our master craftsmen pass down from generation to generation the secrets of oven manufacturing. Each piece is handmade with selected materials and techniques refined over centuries.",
+      "features": {
+        "manual": {
+          "title": "Completely Manual Manufacturing",
+          "description": "Every detail is crafted by the expert hands of our artisans"
+        },
+        "materials": {
+          "title": "Traditional Materials",
+          "description": "Refractory clay and selected materials from Neapolitan tradition"
+        },
+        "expertise": {
+          "title": "Generational Expertise",
+          "description": "Techniques passed down from father to son for over a century"
+        }
+      }
+    },
+    "laboratory": {
+      "title": "Our Laboratory",
+      "description": "In the heart of Sant'Anastasia (NA), our artisan laboratory is where Vesuviano ovens come to life. A 2000 sqm space where tradition and innovation meet, equipped with the most modern equipment but guided by the expert hands of our masters.",
+      "location": "Sant'Anastasia, Naples - Italy"
+    },
+    "stats": {
+      "years": "Years of Tradition",
+      "yearsDescription": "A century of Neapolitan artisan experience",
+      "masters": "Master Craftsmen",
+      "mastersDescription": "Experts selected for their mastery",
+      "passion": "Infinite Passion",
+      "passionDescription": "Love for art that knows no limits"
+    },
+    "cta": {
+      "title": "Discover the Difference of Craftsmanship",
+      "description": "Every oven tells a story of passion, tradition and mastery. Discover how Neapolitan craftsmanship can transform your culinary experience.",
+      "button": "Request Information"
+    }
   },
   "services": {
     "badge": "Servicios Profesionales",
@@ -255,17 +301,57 @@
     },
     "design": {
       "title": "Diseño y Personalización",
-      "description": "Diseño a medida y rendering 3D de alta fidelidad para visualizar tu horno."
+      "description": "Diseño a medida y rendering 3D de alta fidelidad para visualizar tu horno.",
+      "features": [
+        "Photorealistic renders",
+        "Environmental integration",
+        "Design modifications",
+        "Realistic preview"
+      ]
     },
     "logistics": {
       "title": "Logística Internacional",
-      "description": "Organización del transporte y entrega en todo el mundo con asistencia aduanera."
+      "description": "Organización del transporte y entrega en todo el mundo con asistencia aduanera.",
+      "features": [
+        "Worldwide shipping",
+        "Safe packaging",
+        "Complete tracking",
+        "Guaranteed delivery"
+      ]
     },
     "training": {
       "title": "Formación y Asistencia",
-      "description": "Formación completa sobre uso y mantenimiento, con soporte técnico continuo."
+      "description": "Formación completa sobre uso y mantenimiento, con soporte técnico continuo.",
+      "features": [
+        "Practical courses",
+        "Technical assistance",
+        "Maintenance",
+        "Continuous support"
+      ]
     },
-    "freeConsultation": "Consulta Gratuita"
+    "freeConsultation": "Consulta Gratuita",
+    "consultation": {
+      "title": "Specialized Technical Consulting",
+      "description": "Our experts guide you in choosing the perfect oven for your specific needs, considering space, production volume and type of cuisine.",
+      "features": [
+        "Needs analysis",
+        "Personalized advice",
+        "Support in choosing",
+        "Technical evaluation"
+      ]
+    },
+    "cta": {
+      "title": "Need personalized support?",
+      "description": "Our team is always available to offer you the best assistance and find together the ideal solution for your business.",
+      "button": "Contact Us Now"
+    },
+    "logisticsSection": {
+      "title": "Our",
+      "titleHighlight": "Logistic Efficiency",
+      "subtitle": "Deliveries worldwide, even in the most complex metropolises like New York",
+      "caption": "Vesuviano oven delivery in Manhattan",
+      "description": "Our specialized logistics guarantees safe deliveries even in the most challenging urban centers"
+    }
   },
   "vesuvioBuono": {
     "worldExclusive": "EXCLUSIVA MUNDIAL",
@@ -294,7 +380,15 @@
       "maintenance": "Reducción drástica de los costos de mantenimiento de chimeneas",
       "flavor": "Mantiene el sabor auténtico de la cocción a leña",
       "environment": "Respeto total del ambiente y la comunidad",
-      "warranty": "Garantía internacional y soporte técnico especializado"
+      "warranty": "Garantía internacional y soporte técnico especializado",
+      "title": "Exclusive Advantages",
+      "list": [
+        "Installation in any urban area without restrictions",
+        "Drastic reduction in chimney maintenance costs",
+        "Maintaining the authentic flavor of wood-fired cooking",
+        "Total respect for the environment and community",
+        "International warranty and specialized technical support"
+      ]
     },
     "downloadTechSheet": "Descargar Ficha Técnica",
     "downloadTechSheetTitle": "Descargar Ficha Técnica",
@@ -313,7 +407,52 @@
     "fillAllFields": "Por favor completa todos los campos",
     "visitWebsite": "Visitar Sitio Web",
     "exclusivePartnership": "Asociación Exclusiva",
-    "exclusivePartnershipDesc": "Vesuviano es el distribuidor oficial exclusivo de la tecnología VesuvioBuono en Europa y en el mundo."
+    "exclusivePartnershipDesc": "Vesuviano es el distribuidor oficial exclusivo de la tecnología VesuvioBuono en Europa y en el mundo.",
+    "badges": {
+      "exclusive": "WORLD EXCLUSIVE",
+      "patented": "PATENTED"
+    },
+    "video": {
+      "title": "VesuvioBuono in Action",
+      "description": "Discover how VesuvioBuono revolutionizes wood-fired cooking without emissions"
+    },
+    "gallery": {
+      "ovenInAction": "Oven in Action",
+      "perfectPizza": "Perfect Pizza",
+      "zeroEmissions": "Zero Emissions",
+      "woodOven": "Wood-fired oven",
+      "smokePurifier": "Smoke purifier"
+    },
+    "features": {
+      "zeroEmissions": {
+        "title": "Zero Emissions"
+      },
+      "patented": {
+        "title": "Patented Technology",
+        "description": "Complete combustion system that eliminates 99.9% of soot particles."
+      },
+      "certifications": {
+        "title": "Environmental Certifications",
+        "description": "Compliant with the strictest European and international emission standards."
+      },
+      "dualFuel": {
+        "title": "Dual Fuel",
+        "description": "Works perfectly with both wood and gas/wood combination."
+      }
+    },
+    "videoDescription": "Discover how VesuvioBuono revolutionizes wood-fired cooking without emissions",
+    "downloadSheet": "Download Spec Sheet",
+    "modal": {
+      "title": "Download Spec Sheet",
+      "description": "Fill in your details to download the VesuvioBuono spec sheet",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "city": "City",
+      "phone": "Phone Number",
+      "cancel": "Cancel",
+      "download": "Download PDF"
+    }
   },
   "gallery": {
     "title": "Galería de Nuestros Hornos",
@@ -343,7 +482,14 @@
     "ctaTitle": "¿Quieres ver nuestros hornos en vivo?",
     "ctaDesc": "Organizamos visitas a nuestro laboratorio en Nápoles o realizamos renderings 3D de alta fidelidad para mostrarte tu horno antes de la producción.",
     "bookVisit": "Reservar Visita al Laboratorio",
-    "request3D": "Solicitar Rendering 3D"
+    "request3D": "Solicitar Rendering 3D",
+    "titleHighlight": "Gallery",
+    "categories": {
+      "all": "All",
+      "traditional": "Traditional",
+      "modern": "Modern",
+      "installations": "Installations"
+    }
   },
   "consultation": {
     "badge": "CONSULTA GRATUITA",
@@ -385,7 +531,9 @@
       "electricRotating": "Horno Eléctrico Rotativo",
       "vesuviobuonoWood": "VesuvioBuono a Leña",
       "vesuviobuonoCombined": "VesuvioBuono Combinado Gas/Leña",
-      "unsure": "No estoy seguro - necesito consulta"
+      "unsure": "No estoy seguro - necesito consulta",
+      "vesuvioWood": "VesuvioBuono Wood-Fired",
+      "vesuvioCombi": "VesuvioBuono Combined Gas/Wood"
     },
     "capacity": "Capacidad Solicitada",
     "capacityPlaceholder": "Ej. 100 pizzas/hora, 50 cm diámetro...",
@@ -434,6 +582,29 @@
       "messagePlaceholder": "Descríbenos tu proyecto, tus necesidades específicas o cualquier pregunta...",
       "submit": "Enviar Solicitud de Consulta Gratuita",
       "submitting": "Enviando..."
+    },
+    "titleHighlight": "Consultation",
+    "contact": {
+      "title": "Our Services",
+      "directTitle": "Direct Contact",
+      "phone": "Phone",
+      "phoneNumber": "081 19231684",
+      "email": "Email",
+      "emailAddress": "info@vesuvianoforni.com",
+      "laboratory": "Laboratory",
+      "location": "Naples, Italy",
+      "downloadCatalog": "Download Full Catalog"
+    },
+    "messages": {
+      "requiredFields": "Required Fields",
+      "fillRequired": "Name and Email are required to send the request.",
+      "success": "🔥 Request Sent Successfully!",
+      "successDescription": "We have sent you a confirmation email. We will contact you within 24 hours for your free consultation.",
+      "error": "Sending Error",
+      "errorDescription": "An issue occurred. Please try again or contact us directly at 081 19231684",
+      "privacy": "We will contact you within 24 hours. Your data is protected and will not be shared with third parties.",
+      "catalogDownloaded": "Catalog Downloaded!",
+      "catalogSuccess": "The full catalog has been downloaded to your device."
     }
   },
   "whatsapp": {
@@ -450,7 +621,22 @@
       "visualize": "Visualiza el resultado en tiempo real"
     },
     "tryNow": "Probar Arquitecto AI",
-    "later": "Más tarde"
+    "later": "Más tarde",
+    "takePhoto": "Take a Photo",
+    "takePhotoDescription": "Use the camera",
+    "uploadImage": "Upload Image",
+    "uploadImageDescription": "From your device",
+    "or": "OR",
+    "generateButton": "Generate AI Render",
+    "downloadButton": "Download Render",
+    "errors": {
+      "noImage": "First upload a photo of your environment",
+      "generationFailed": "Error generating render"
+    },
+    "success": {
+      "generated": "Render generated successfully!",
+      "downloaded": "Download completed!"
+    }
   },
   "ovenVisualizer": {
     "badge": "Novedad Absoluta IA",
@@ -907,7 +1093,327 @@
       "wood": "Leña",
       "gas": "Gas",
       "electric": "Eléctrico",
-      "rotating": "Rotativo"
+      "rotating": "Rotativo",
+      "allOvens": "All Ovens",
+      "mosaicOvens": "Mosaic Ovens",
+      "mixedOvens": "Mixed Ovens",
+      "woodOvens": "Wood-Fired Ovens"
+    },
+    "coatings": {
+      "all": "All Coatings",
+      "mosaic": "Mosaic Coating",
+      "painted": "Painted Coating",
+      "metallic": "Metallic Coating"
+    },
+    "noOvensFound": "No ovens found for this category.",
+    "requestInfo": "Request Information",
+    "showMore": "Show More Ovens ({{count}} remaining)",
+    "cta": {
+      "title": "Need personalized advice?",
+      "description": "Our experts are available to help you choose the most suitable oven for your needs",
+      "button": "Contact an Expert"
+    }
+  },
+  "consultationModal": {
+    "title": "Request Free Consultation",
+    "form": {
+      "firstName": "First Name",
+      "firstNamePlaceholder": "John",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Smith",
+      "email": "Email",
+      "emailPlaceholder": "john.smith@example.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 123 456 7890",
+      "city": "City",
+      "cityPlaceholder": "New York",
+      "submit": "Send Request",
+      "submitting": "Sending...",
+      "needHelp": "I need help choosing the oven"
+    },
+    "messages": {
+      "requiredFields": "Required Fields",
+      "fillRequired": "All fields are required to send the request.",
+      "error": "Sending Error",
+      "errorDescription": "An issue occurred. Please try again or contact us directly.",
+      "autoMessage": "Request via product consultation form - the customer needs help choosing the perfect oven for their business."
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "gallery": "Gallery",
+    "about": "About Us",
+    "contact": "Contact"
+  },
+  "configurator": {
+    "loading": "Loading...",
+    "title": "Oven Configurator",
+    "subtitle": "Configure your perfect oven",
+    "buildType": {
+      "title": "How do you prefer your oven?",
+      "readyToUse": "Ready to Use",
+      "readyToUseDesc": "Oven built artisanally in our laboratory and shipped ready to use. Requires adequate space for passage.",
+      "builtOnSite": "Built on Site",
+      "builtOnSiteDesc": "The oven is built directly at your location by our expert craftsmen. Ideal for small spaces or personalized installations."
+    },
+    "selectModel": "Select Model",
+    "selectFuel": "Select Fuel Type",
+    "selectSize": "Select Size",
+    "selectCoating": "Select Coating",
+    "steps": {
+      "chooseModel": "Choose Model",
+      "chooseFuel": "Choose Fuel Type",
+      "chooseDiameter": "Choose Diameter",
+      "chooseCoating": "Choose Coating",
+      "additionalOptions": "Additional Options and Summary"
+    },
+    "preview": {
+      "fuelTypes": "Fuel Types:",
+      "dimensions": "Dimensions:"
+    },
+    "fuelTypes": {
+      "Legna": "Wood",
+      "Gas": "Gas",
+      "Elettrico": "Electric"
+    },
+    "view360": "View 360° Video",
+    "viewPhotos": "View Photos",
+    "deliveryOptions": {
+      "title": "Delivery Options",
+      "shipping": "Shipping to Europe",
+      "pickupSite": "Pickup at installation site"
+    },
+    "summary": {
+      "title": "Configuration Summary",
+      "model": "Model",
+      "fuel": "Fuel Type",
+      "size": "Size",
+      "diameter": "Diameter",
+      "capacity": "Capacity",
+      "coating": "Coating",
+      "deliveryTime": "Delivery Time",
+      "weeks": "weeks",
+      "ovenPrice": "Oven Price",
+      "shippingPrice": "Shipping Cost",
+      "onSitePrice": "On-Site Build Price",
+      "discount5": "5% Discount (book now)",
+      "savings": "You save",
+      "total": "Total:",
+      "buildType": "Type:",
+      "depositAmount": "Deposit Amount (1%)",
+      "discount": {
+        "title": "Special 5% Discount - Limited Time Offer!",
+        "description": "Lock in your order now and save",
+        "discountedPrice": "Discounted price:"
+      },
+      "paymentTerms": {
+        "title": "Payment Terms:",
+        "deposit": "50% deposit",
+        "depositDescription": "upon order confirmation",
+        "balance": "50% balance",
+        "balanceDescription": "upon oven completion (ready for delivery)"
+      }
+    },
+    "benefits": {
+      "deposit": "1% deposit fully refundable within 7 days",
+      "support": "Our team will call you within 24h to support you",
+      "production": "Your oven production starts tomorrow"
+    },
+    "cta": {
+      "payDeposit": "Pay 1% Deposit — Your oven production starts tomorrow! Don't waste time",
+      "interested": "I want to be contacted",
+      "notInterested": "Not interested"
+    },
+    "contactMethod": {
+      "title": "How do you prefer to be contacted?",
+      "whatsapp": "WhatsApp",
+      "phone": "Phone Call",
+      "submit": "Submit Request"
+    },
+    "thankYou": {
+      "title": "Thank you for your interest!",
+      "message": "Our sales team will contact you within 24 hours via {method}."
+    },
+    "feedback": {
+      "title": "Why are you not interested?",
+      "subtitle": "Your feedback helps us improve",
+      "reasons": {
+        "tooExpensive": "Too expensive",
+        "tooLong": "Takes too long",
+        "urgent": "I need it urgently",
+        "dontLike": "I don't like it",
+        "noModel": "Model not available",
+        "otherSupplier": "I prefer another supplier"
+      },
+      "otherReason": "Other reason...",
+      "submit": "Send Feedback",
+      "submitting": "Sending..."
+    },
+    "errors": {
+      "loadingError": "Loading error",
+      "completeConfig": "Complete the configuration",
+      "missingCustomer": "Customer data missing",
+      "selectContactMethod": "Select a contact method",
+      "savingError": "Error saving"
+    },
+    "success": {
+      "thankYouInterest": "Thank you for your interest! We will contact you soon.",
+      "quoteSaved": "Quote saved!",
+      "feedbackSent": "Thank you for your feedback!"
+    },
+    "expired": {
+      "greeting": "Hello {{name}}",
+      "greetingGeneric": "Hello",
+      "message": "This link has expired. Request a new link from our sales team, it will be provided shortly.",
+      "returnHome": "Return to Home",
+      "requestNew": "Request New Link",
+      "requesting": "Sending...",
+      "invalidLink": "Invalid link",
+      "requestSent": "Request sent! Our sales team will contact you shortly.",
+      "requestError": "Error sending request",
+      "missingData": "Customer data missing"
+    },
+    "delivery": {
+      "spaceRequired": "Required passage space:",
+      "shippingEurope": "Shipping to Europe",
+      "shippingDescription": "Shipping with wooden crate packaging",
+      "selectDelivery": "Select a delivery option to proceed",
+      "chooseBuildType": "Choose how you prefer your oven to start"
+    },
+    "media": {
+      "videoNotSupported": "Your browser does not support the video tag.",
+      "viewAlt": "View"
+    },
+    "price": {
+      "total": "Total Price",
+      "oven": "Oven:",
+      "shipping": "Shipping:",
+      "discount": "5% Discount (book now)",
+      "youSave": "You Save"
+    },
+    "configuration": {
+      "title": "Configuration Summary",
+      "description": "Artisan wood-fired oven built with high-quality materials. Ideal for professional Neapolitan pizza and baked goods cooking.",
+      "pizzas": "Number of pizzas:",
+      "deliveryTime": "Delivery time:",
+      "coating": "Coating:"
+    },
+    "payment": {
+      "title": "Pay Deposit and Start Production Immediately",
+      "benefit1": "1% deposit fully refundable within 7 days",
+      "benefit2": "Our team will call you within 24h to support you in finalizing",
+      "benefit3": "Your oven production starts tomorrow",
+      "depositButton": "Pay 1% Deposit and Start Production",
+      "interestedButton": "I'm interested - I want to be contacted",
+      "interestedButtonShort": "I'm interested",
+      "interestedButtonShortSub": "Request contact",
+      "notInterestedButton": "Not interested",
+      "needHelp": "Need assistance?",
+      "teamWillCall": "Our team will call you to answer all your questions"
+    },
+    "modals": {
+      "quote": {
+        "title": "Request Quote",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "notes": "Notes",
+        "submit": "Send Request",
+        "submitting": "Sending..."
+      },
+      "notInterested": {
+        "title": "Help us improve",
+        "description": "We're sorry you're not interested. What can we improve?",
+        "mainReason": "What is the main reason?",
+        "otherComments": "Other comments or suggestions:",
+        "otherPlaceholder": "Share other details that could help us...",
+        "submit": "Send Feedback",
+        "submitting": "Sending..."
+      }
+    },
+    "colorRender": {
+      "title": "Real Time Render",
+      "subtitle": "Visualize the oven with the selected color in real time",
+      "selectedCoating": "Selected coating:",
+      "desiredColor": "Desired Color",
+      "customColor": "Custom Color",
+      "customColorPlaceholder": "E.g.: Ferrari Red, Ocean Blue, Forest Green...",
+      "customColorDescription": "Describe the color you want (max 50 characters)",
+      "selected": "Selected:",
+      "generateButton": "Generate Real Time Render",
+      "generateDescription": "View the oven render in the selected color",
+      "downloadButton": "Download Image",
+      "colors": {
+        "Nero": "Black",
+        "Bianco": "White",
+        "Rosso Mattone": "Brick Red",
+        "Grigio Pietra": "Stone Gray",
+        "Terracotta": "Terracotta",
+        "Beige": "Beige",
+        "Marrone": "Brown",
+        "Verde Oliva": "Olive Green"
+      },
+      "errors": {
+        "selectColor": "Select a color or enter a custom color!",
+        "maxLength": "Custom color cannot exceed 50 characters",
+        "invalidChars": "Color can only contain letters, numbers, spaces and hyphens"
+      },
+      "success": {
+        "generated": "Render generated successfully!",
+        "downloaded": "Download started!"
+      }
+    },
+    "architectAI": {
+      "title": "AI Architect",
+      "subtitle": "Insert the oven in your environment with artificial intelligence",
+      "takePhoto": "Take a Photo",
+      "takePhotoDescription": "Use the camera",
+      "uploadImage": "Upload Image",
+      "uploadImageDescription": "From your device",
+      "or": "OR",
+      "generateButton": "Generate AI Render",
+      "downloadButton": "Download Render",
+      "errors": {
+        "noImage": "First upload a photo of your environment",
+        "generationFailed": "Error generating render"
+      },
+      "success": {
+        "generated": "Render generated successfully!",
+        "downloaded": "Download completed!"
+      }
+    }
+  },
+  "colorRender": {
+    "title": "Real Time Render",
+    "subtitle": "Visualize the oven with the selected color in real time",
+    "selectedCoating": "Selected coating:",
+    "desiredColor": "Desired Color",
+    "customColor": "Custom Color",
+    "customColorPlaceholder": "E.g.: Ferrari Red, Ocean Blue, Forest Green...",
+    "customColorDescription": "Describe the color you want (max 50 characters)",
+    "selected": "Selected:",
+    "generateButton": "Generate Real Time Render",
+    "generateDescription": "View the oven render in the selected color",
+    "downloadButton": "Download Image",
+    "colors": {
+      "Nero": "Black",
+      "Bianco": "White",
+      "Rosso Mattone": "Brick Red",
+      "Grigio Pietra": "Stone Gray",
+      "Terracotta": "Terracotta",
+      "Beige": "Beige",
+      "Marrone": "Brown",
+      "Verde Oliva": "Olive Green"
+    },
+    "errors": {
+      "selectColor": "Select a color or enter a custom color!",
+      "maxLength": "Custom color cannot exceed 50 characters",
+      "invalidChars": "Color can only contain letters, numbers, spaces and hyphens"
+    },
+    "success": {
+      "generated": "Render generated successfully!",
+      "downloaded": "Download started!"
     }
   }
 }
