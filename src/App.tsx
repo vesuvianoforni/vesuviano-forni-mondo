@@ -333,7 +333,7 @@ const App = () => {
               <Route path="/de/elektrooefen" element={<LocalizedElectricOven lang="de" />} />
               <Route path="/de/drehoefen" element={<LocalizedRotatingOven lang="de" />} />
               <Route path="/de/vesuviobuono-system" element={<LocalizedVesuvioBuono lang="de" />} />
-              <Route path="/de/versandfertig" element={<LocalizedReadyToShip lang="de" />} />
+              <Route path="/de/sofort-lieferbar" element={<LocalizedReadyToShip lang="de" />} />
               <Route path="/de/brenner" element={<LocalizedBurners lang="de" />} />
               <Route path="/de/rauchfilter" element={<LocalizedSmokePurifier lang="de" />} />
               <Route path="/de/blog" element={<LocalizedBlogList lang="de" />} />
