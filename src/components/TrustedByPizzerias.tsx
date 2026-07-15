@@ -6,11 +6,16 @@ const pizzoloLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/
 const ansumLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-ansum.png';
 const cuginiLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-cugini-pizza.png';
 
-const clients = [
-  { city: 'Pizzolo Bar — Brighton, UK', desc: '37 Ship Street, The Lanes, Brighton BN1 1AB. Sebastian model, built on place by our master builders.', img: pizzoloLogo },
-  { city: 'Ansum Food Co — Porth, Cornwall', desc: 'Alexandra Rd, Porth, Newquay TR7 3NB. Real Bosco (gas), shipped from Naples.', img: ansumLogo, ig: 'https://www.instagram.com/ansumfood/' },
-  { city: 'Cugini Pizza — UK', desc: 'Real Bosco wood-fired oven, shipped from Italy.', img: cuginiLogo, ig: 'https://www.instagram.com/cuginipizza_/' },
+type Client = { city: string; desc: string; img: string; ig?: string; countries: string[] };
+
+const clients: Client[] = [
+  { city: 'Pizzolo Bar — Brighton, UK', desc: '37 Ship Street, The Lanes, Brighton BN1 1AB. Sebastian model, built on place by our master builders.', img: pizzoloLogo, countries: ['GB'] },
+  { city: 'Ansum Food Co — Porth, Cornwall', desc: 'Alexandra Rd, Porth, Newquay TR7 3NB. Real Bosco (gas), shipped from Naples.', img: ansumLogo, ig: 'https://www.instagram.com/ansumfood/', countries: ['GB'] },
+  { city: 'Cugini Pizza — UK', desc: 'Real Bosco wood-fired oven, shipped from Italy.', img: cuginiLogo, ig: 'https://www.instagram.com/cuginipizza_/', countries: ['GB'] },
 ];
+
+// Fallback country when we have no clients for detected country
+const FALLBACK_COUNTRY = 'GB';
 
 const TrustedByPizzerias = () => {
   const { i18n } = useTranslation();
