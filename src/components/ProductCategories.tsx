@@ -168,7 +168,7 @@ const ProductCategories = () => {
                                 'en': '/en/ready-to-ship',
                                 'fr': '/fr/pret-a-expedier',
                                 'es': '/es/listo-para-enviar',
-                                'de': '/de/versandfertig'
+                                'de': '/de/sofort-lieferbar'
                               };
                               navigate(readyToShipPaths[i18n.language] || readyToShipPaths['it']);
                             } else {
