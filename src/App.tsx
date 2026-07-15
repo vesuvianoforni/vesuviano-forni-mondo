@@ -190,7 +190,8 @@ const App = () => {
               <Route path="/en/pronta-consegna" element={<Navigate to="/en/ready-to-ship" replace />} />
               <Route path="/fr/pronta-consegna" element={<Navigate to="/fr/pret-a-expedier" replace />} />
               <Route path="/es/pronta-consegna" element={<Navigate to="/es/listo-para-enviar" replace />} />
-              <Route path="/de/pronta-consegna" element={<Navigate to="/de/versandfertig" replace />} />
+              <Route path="/de/pronta-consegna" element={<Navigate to="/de/sofort-lieferbar" replace />} />
+              <Route path="/de/versandfertig" element={<Navigate to="/de/sofort-lieferbar" replace />} />
 
               {/* Ovens - traditional */}
               <Route path="/it/traditional-ovens" element={<Navigate to="/it/forni-tradizionali" replace />} />
@@ -332,7 +333,7 @@ const App = () => {
               <Route path="/de/elektrooefen" element={<LocalizedElectricOven lang="de" />} />
               <Route path="/de/drehoefen" element={<LocalizedRotatingOven lang="de" />} />
               <Route path="/de/vesuviobuono-system" element={<LocalizedVesuvioBuono lang="de" />} />
-              <Route path="/de/versandfertig" element={<LocalizedReadyToShip lang="de" />} />
+              <Route path="/de/sofort-lieferbar" element={<LocalizedReadyToShip lang="de" />} />
               <Route path="/de/brenner" element={<LocalizedBurners lang="de" />} />
               <Route path="/de/rauchfilter" element={<LocalizedSmokePurifier lang="de" />} />
               <Route path="/de/blog" element={<LocalizedBlogList lang="de" />} />

@@ -63,7 +63,7 @@ const LanguageSelector = () => {
       en: '/ready-to-ship',
       fr: '/pret-a-expedier',
       es: '/listo-para-enviar',
-      de: '/versandfertig'
+      de: '/sofort-lieferbar'
     },
     'vesuviobuono': {
       it: '/sistema-vesuviobuono',

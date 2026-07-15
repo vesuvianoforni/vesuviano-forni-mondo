@@ -16,7 +16,7 @@ const CLUSTERS: AlternatesMap[] = [
   { it: '/it/forni-rotanti', en: '/en/rotating-ovens', fr: '/fr/fours-rotatifs', de: '/de/drehoefen', es: '/es/hornos-rotativos' },
   { it: '/it/sistema-vesuviobuono', en: '/en/vesuviobuono-system', fr: '/fr/systeme-vesuviobuono', de: '/de/vesuviobuono-system', es: '/es/sistema-vesuviobuono' },
   // Secondary
-  { it: '/it/pronta-consegna', en: '/en/ready-to-ship', fr: '/fr/pret-a-expedier', de: '/de/versandfertig', es: '/es/listo-para-enviar' },
+  { it: '/it/pronta-consegna', en: '/en/ready-to-ship', fr: '/fr/pret-a-expedier', de: '/de/sofort-lieferbar', es: '/es/listo-para-enviar' },
   { it: '/it/architettoai', en: '/en/architettoai', fr: '/fr/architettoai', de: '/de/architettoai', es: '/es/architettoai' },
   { it: '/it/blog', en: '/en/blog', fr: '/fr/blog', de: '/de/blog', es: '/es/blog' },
   { it: '/it/bruciatori', en: '/en/burners', fr: '/fr/bruleurs', de: '/de/brenner', es: '/es/quemadores' },

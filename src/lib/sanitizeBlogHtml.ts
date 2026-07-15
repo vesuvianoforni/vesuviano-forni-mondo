@@ -28,7 +28,7 @@ const VALID_PATHS: Record<string, Set<string>> = {
   ]),
   de: new Set([
     "/de", "/de/traditionelle-oefen", "/de/gasoefen", "/de/elektrooefen",
-    "/de/drehoefen", "/de/vesuviobuono-system", "/de/versandfertig",
+    "/de/drehoefen", "/de/vesuviobuono-system", "/de/sofort-lieferbar",
     "/de/brenner", "/de/rauchfilter", "/de/blog",
   ]),
   es: new Set([
