@@ -6,16 +6,22 @@ const pizzoloLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/
 const ansumLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-ansum.png';
 const cuginiLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-cugini-pizza.png';
 
-const clients = [
-  { city: 'Pizzolo Bar — Brighton, UK', desc: '37 Ship Street, The Lanes, Brighton BN1 1AB. Sebastian model, built on place by our master builders.', img: pizzoloLogo },
-  { city: 'Ansum Food Co — Porth, Cornwall', desc: 'Alexandra Rd, Porth, Newquay TR7 3NB. Real Bosco (gas), shipped from Naples.', img: ansumLogo, ig: 'https://www.instagram.com/ansumfood/' },
-  { city: 'Cugini Pizza — UK', desc: 'Real Bosco wood-fired oven, shipped from Italy.', img: cuginiLogo, ig: 'https://www.instagram.com/cuginipizza_/' },
+type Client = { city: string; desc: string; img: string; ig?: string; countries: string[] };
+
+const clients: Client[] = [
+  { city: 'Pizzolo Bar — Brighton, UK', desc: '37 Ship Street, The Lanes, Brighton BN1 1AB. Sebastian model, built on place by our master builders.', img: pizzoloLogo, countries: ['GB'] },
+  { city: 'Ansum Food Co — Porth, Cornwall', desc: 'Alexandra Rd, Porth, Newquay TR7 3NB. Real Bosco (gas), shipped from Naples.', img: ansumLogo, ig: 'https://www.instagram.com/ansumfood/', countries: ['GB'] },
+  { city: 'Cugini Pizza — UK', desc: 'Real Bosco wood-fired oven, shipped from Italy.', img: cuginiLogo, ig: 'https://www.instagram.com/cuginipizza_/', countries: ['GB'] },
 ];
+
+// Fallback country when we have no clients for detected country
+const FALLBACK_COUNTRY = 'GB';
 
 const TrustedByPizzerias = () => {
   const { i18n } = useTranslation();
-  const [country, setCountry] = useState<string>('Italy');
-  const [flag, setFlag] = useState<string>('🇮🇹');
+  const [country, setCountry] = useState<string>('United Kingdom');
+  const [countryCode, setCountryCode] = useState<string>(FALLBACK_COUNTRY);
+  const [flag, setFlag] = useState<string>('🇬🇧');
 
   useEffect(() => {
     (async () => {
@@ -23,6 +29,7 @@ const TrustedByPizzerias = () => {
         const { data, error } = await supabase.functions.invoke('geo-detect');
         if (error) throw error;
         if (data?.country_name) setCountry(data.country_name);
+        if (data?.country_code) setCountryCode(data.country_code);
         if (data?.flag) setFlag(data.flag);
       } catch (e) {
         console.error('geo-detect failed', e);
@@ -30,27 +37,38 @@ const TrustedByPizzerias = () => {
     })();
   }, []);
 
+  let visibleClients = clients.filter((c) => c.countries.includes(countryCode));
+  let displayCountry = country;
+  let displayFlag = flag;
+  if (visibleClients.length === 0) {
+    visibleClients = clients.filter((c) => c.countries.includes(FALLBACK_COUNTRY));
+    displayCountry = 'United Kingdom';
+    displayFlag = '🇬🇧';
+  }
+
+
   const lang = i18n.language;
+  const c = displayCountry;
   const title =
-    lang.startsWith('it') ? `Scelti dalle pizzerie in ${country}` :
-    lang.startsWith('fr') ? `Choisi par les pizzerias en ${country}` :
-    lang.startsWith('de') ? `Vertraut von Pizzerien in ${country}` :
-    lang.startsWith('es') ? `Elegidos por pizzerías en ${country}` :
-    `Trusted by pizzerias in ${country}`;
+    lang.startsWith('it') ? `Scelti dalle pizzerie in ${c}` :
+    lang.startsWith('fr') ? `Choisi par les pizzerias en ${c}` :
+    lang.startsWith('de') ? `Vertraut von Pizzerien in ${c}` :
+    lang.startsWith('es') ? `Elegidos por pizzerías en ${c}` :
+    `Trusted by pizzerias in ${c}`;
 
   const subtitle =
-    lang.startsWith('it') ? `Noi di Vesuviano siamo specializzati nella fornitura e assistenza dei nostri forni napoletani in ${country}, con numerose pizzerie già soddisfatte.` :
-    lang.startsWith('fr') ? `Chez Vesuviano, nous sommes spécialisés dans la fourniture et l'assistance de nos fours napolitains en ${country}, avec de nombreuses pizzerias déjà satisfaites.` :
-    lang.startsWith('de') ? `Wir bei Vesuviano sind spezialisiert auf Lieferung und Service unserer neapolitanischen Öfen in ${country}, mit zahlreichen bereits zufriedenen Pizzerien.` :
-    lang.startsWith('es') ? `En Vesuviano estamos especializados en el suministro y la asistencia de nuestros hornos napolitanos en ${country}, con numerosas pizzerías ya satisfechas.` :
-    `At Vesuviano we specialize in the supply and support of our Neapolitan ovens in ${country}, with many pizzerias already satisfied.`;
+    lang.startsWith('it') ? `Noi di Vesuviano siamo specializzati nella fornitura e assistenza dei nostri forni napoletani in ${c}, con numerose pizzerie già soddisfatte.` :
+    lang.startsWith('fr') ? `Chez Vesuviano, nous sommes spécialisés dans la fourniture et l'assistance de nos fours napolitains en ${c}, avec de nombreuses pizzerias déjà satisfaites.` :
+    lang.startsWith('de') ? `Wir bei Vesuviano sind spezialisiert auf Lieferung und Service unserer neapolitanischen Öfen in ${c}, mit zahlreichen bereits zufriedenen Pizzerien.` :
+    lang.startsWith('es') ? `En Vesuviano estamos especializados en el suministro y la asistencia de nuestros hornos napolitanos en ${c}, con numerosas pizzerías ya satisfechas.` :
+    `At Vesuviano we specialize in the supply and support of our Neapolitan ovens in ${c}, with many pizzerias already satisfied.`;
 
   return (
     <section id="clients-map" className="py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
         <div className="text-center mb-12">
           <h2 className="font-playfair text-3xl md:text-5xl font-bold text-charcoal-900 mb-4">
-            {title} <span aria-hidden="true">{flag}</span>
+            {title} <span aria-hidden="true">{displayFlag}</span>
           </h2>
           <p className="font-inter text-lg text-stone-600 max-w-3xl mx-auto">
             {subtitle}
@@ -58,7 +76,7 @@ const TrustedByPizzerias = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {clients.map((p) => (
+          {visibleClients.map((p) => (
             <div key={p.city} className="bg-stone-50 rounded-lg overflow-hidden shadow-sm flex flex-col">
               <div className="bg-white h-56 flex items-center justify-center p-6">
                 <img
