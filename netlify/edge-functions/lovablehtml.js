@@ -23,29 +23,38 @@ export default async (request, context) => {
     'user-agent': request.headers.get('user-agent') || '',
   };
 
-  const r = await fetch('https://encited.com/api/prerender/render?url=' + encodeURIComponent(request.url), { headers });
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    const r = await fetch('https://encited.com/api/prerender/render?url=' + encodeURIComponent(request.url), { headers, signal: controller.signal });
+    clearTimeout(timeout);
 
-  // 301 = configured redirect rule matched — forward to client
-  if (r.status === 301) {
-    const loc = r.headers.get('location');
-    if (loc) {
-      return new Response(null, {
-        status: 301,
-        headers: { location: loc, 'cache-control': 'no-store' },
-      });
+    // 301 = configured redirect rule matched — forward to client
+    if (r.status === 301) {
+      const loc = r.headers.get('location');
+      if (loc) {
+        return new Response(null, {
+          status: 301,
+          headers: { location: loc, 'cache-control': 'no-store' },
+        });
+      }
     }
-  }
 
-  // 304 = not pre-rendered, pass through to origin
-  if (r.status === 304) {
+    // 304 = not pre-rendered, pass through to origin
+    if (r.status === 304) {
+      return context.next();
+    }
+
+    if ((r.headers.get('content-type') || '').includes('text/html')) {
+      return new Response(await r.text(), { headers: { 'content-type': 'text/html; charset=utf-8' } });
+    }
+
+    return context.next();
+  } catch (err) {
+    // Prerender service unreachable/timeout — never crash the edge; fall back to origin.
+    console.error('lovablehtml prerender failed:', err && err.message);
     return context.next();
   }
-
-  if ((r.headers.get('content-type') || '').includes('text/html')) {
-    return new Response(await r.text(), { headers: { 'content-type': 'text/html; charset=utf-8' } });
-  }
-
-  return context.next();
 };
 
 export const config = {
