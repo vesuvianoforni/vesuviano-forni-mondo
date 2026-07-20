@@ -16,6 +16,7 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const { openModal } = useConsultationModal();
   
   // Extract current language from path
   const getCurrentLang = () => {
