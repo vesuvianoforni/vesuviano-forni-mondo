@@ -336,7 +336,7 @@ const Header = () => {
                   ))}
                   <Button 
                     className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white w-full mt-6"
-                    onClick={() => handleNavClick('#consultation')}
+                    onClick={() => { openModal(); setIsOpen(false); }}
                   >
                     {t('header.consultation')}
                   </Button>
