@@ -276,18 +276,18 @@ const Header = () => {
           </nav>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
             <LanguageSelector />
             <Button 
               className="bg-vesuviano-500 hover:bg-vesuviano-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-              onClick={() => handleNavClick('#consultation')}
+              onClick={openModal}
             >
               {t('header.consultation')}
             </Button>
           </div>
 
-          {/* Mobile Menu */}
-          <div className="flex items-center gap-2 md:hidden">
+          {/* Mobile / Tablet Menu */}
+          <div className="flex items-center gap-2 lg:hidden">
             <LanguageSelector />
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
