@@ -9,6 +9,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Menu, ChevronDown } from "lucide-react";
 import { useState } from 'react';
 import LazyImage from './LazyImage';
+import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 
 const Header = () => {
   const { t, i18n } = useTranslation();
