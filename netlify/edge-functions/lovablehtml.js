@@ -9,13 +9,6 @@ export default async (request, context) => {
   const isHtmlRequest = !accept || accept === '*/*' || accept.includes('text/html');
   if (request.method !== 'GET' || !isHtmlRequest) return context.next();
 
-  // Skip prerender for blog article routes — they are already server-rendered
-  // as fully styled HTML by the blog-html-proxy Netlify function. Passing them
-  // through the prerender service strips the inline <style> and breaks layout.
-  const url = new URL(request.url);
-  if (/^\/(it|en|fr|de|es)\/blog\/[^/]+/.test(url.pathname)) {
-    return context.next();
-  }
 
   const apiKey = Deno.env.get('LOVABLEHTML_API_KEY') || '';
   const headers = {
