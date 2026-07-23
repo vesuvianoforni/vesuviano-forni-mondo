@@ -9,6 +9,13 @@ export default async (request, context) => {
   const isHtmlRequest = !accept || accept === '*/*' || accept.includes('text/html');
   if (request.method !== 'GET' || !isHtmlRequest) return context.next();
 
+  // Only serve the prerendered (SEO) HTML to bots/crawlers.
+  // Real users get the styled app from origin — the prerender strips inline <style>.
+  const ua = (request.headers.get('user-agent') || '').toLowerCase();
+  const isBot = /bot|crawler|spider|crawling|googlebot|bingbot|yandex|duckduckbot|baiduspider|slurp|facebookexternalhit|facebot|twitterbot|linkedinbot|whatsapp|telegrambot|slackbot|discordbot|embedly|quora link preview|pinterest|applebot|ia_archiver|semrushbot|ahrefsbot|mj12bot|dotbot|petalbot|screaming frog|lighthouse|chrome-lighthouse|gptbot|oai-searchbot|chatgpt-user|perplexitybot|claudebot|anthropic-ai|cohere-ai|google-extended|bytespider|amazonbot/i.test(ua);
+  if (!isBot) return context.next();
+
+
 
   const apiKey = Deno.env.get('LOVABLEHTML_API_KEY') || '';
   const headers = {
