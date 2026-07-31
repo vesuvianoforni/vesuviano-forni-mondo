@@ -67,6 +67,7 @@ const ArchitettoAI = () => {
                   <Link to={`/${currentLang}/sistema-vesuviobuono`} className="text-gray-400 hover:text-white transition-colors">
                     VesuvioBuono
                   </Link>
+                </li>
                 <li>
                   <Link to={(() => {
                     const paths: Record<string, string> = {
