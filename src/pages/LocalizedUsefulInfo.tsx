@@ -27,7 +27,8 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
         items: [
           "Il forno deve essere sollevato e spostato con l'aiuto di un carrello elevatore o una carriola da personale formato e istruito sulle procedure di sicurezza.",
           "Il forno deve essere posizionato su una piattaforma ben livellata. Non è necessario fissarlo alla fondazione."
-        ]
+        ],
+        note: "Se non espressamente previsto nella quotazione, allo scarico il cliente dovrà predisporre un muletto sollevatore in grado di sollevare fino a 1.500 kg per scaricare il forno dal camion di trasporto, e un transpallet per movimentare e posizionare il forno all'interno del locale."
       },
       chimney: {
         title: "Evacuazione dei Fumi",
@@ -64,7 +65,8 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
         items: [
           "The oven has to be lifted and moved with the help of a forklift or wheelbarrow by equipped and instructed in safety procedures personnel.",
           "The oven has to be placed on a well levelled platform. It is not necessary to be fixed to the foundation."
-        ]
+        ],
+        note: "Unless expressly included in the quotation, at delivery the customer must provide a forklift able to lift up to 1,500 kg to unload the oven from the transport truck, and a pallet truck to move and position the oven inside the premises."
       },
       chimney: {
         title: "Leading Smoke Gases Away",
@@ -101,7 +103,8 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
         items: [
           "Le four doit être soulevé et déplacé à l'aide d'un chariot élévateur ou d'une brouette par du personnel formé et instruit aux procédures de sécurité.",
           "Le four doit être placé sur une plateforme bien nivelée. Il n'est pas nécessaire de le fixer à la fondation."
-        ]
+        ],
+        note: "Sauf mention expresse dans le devis, le client doit prévoir au déchargement un chariot élévateur capable de lever jusqu'à 1 500 kg pour décharger le four du camion, ainsi qu'un transpalette pour déplacer et positionner le four à l'intérieur du local."
       },
       chimney: {
         title: "Évacuation des Fumées",
@@ -138,7 +141,8 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
         items: [
           "El horno debe ser levantado y movido con la ayuda de una carretilla elevadora o carretilla por personal capacitado en procedimientos de seguridad.",
           "El horno debe colocarse sobre una plataforma bien nivelada. No es necesario fijarlo a la base."
-        ]
+        ],
+        note: "Salvo que esté expresamente incluido en el presupuesto, en la descarga el cliente deberá disponer de una carretilla elevadora capaz de levantar hasta 1.500 kg para descargar el horno del camión, y de una transpaleta para mover y colocar el horno dentro del local."
       },
       chimney: {
         title: "Evacuación de Humos",
@@ -175,7 +179,8 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
         items: [
           "Der Ofen muss mit Hilfe eines Gabelstaplers oder einer Schubkarre von geschultem Personal angehoben und bewegt werden.",
           "Der Ofen muss auf einer gut nivellierten Plattform aufgestellt werden. Eine Befestigung am Fundament ist nicht erforderlich."
-        ]
+        ],
+        note: "Sofern im Angebot nicht ausdrücklich vorgesehen, muss der Kunde bei der Anlieferung einen Gabelstapler mit einer Tragkraft von bis zu 1.500 kg zum Abladen des Ofens vom LKW sowie einen Hubwagen zum Bewegen und Positionieren des Ofens im Innenraum bereitstellen."
       },
       chimney: {
         title: "Rauchgasabführung",
@@ -274,6 +279,11 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
             <div className="mt-6">
               <img src="/images/sollevamento-forno-muletto.webp" alt="Diagramma sollevamento forno Vesuviano con muletto" className="rounded-lg shadow-md w-full max-w-3xl mx-auto" loading="lazy" />
             </div>
+            {'note' in c.lifting && c.lifting.note && (
+              <p className="mt-6 p-4 bg-amber-50 border-l-4 border-vesuviano-500 rounded-r-lg text-stone-700">
+                {c.lifting.note}
+              </p>
+            )}
           </section>
 
           {/* Chimney */}
