@@ -42,7 +42,9 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
           "Il cambio di direzione è possibile in non più di 3 punti, incluso l'ingresso della canna fumaria.",
           "Le curve non devono avere un angolo superiore a 90 gradi.",
           "Il diametro del tubo deve rimanere costante lungo tutta la lunghezza."
-        ]
+        ],
+        diameter: "Il diametro della canna fumaria del forno è di 200 mm.",
+        note: "Per l'installazione definitiva della canna fumaria, rivolgersi a tecnici qualificati e rispettare le normative locali del paese in cui viene installato il forno."
       },
       heating: {
         title: "Riscaldamento Iniziale",
