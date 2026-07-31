@@ -308,6 +308,14 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
                 </li>
               ))}
             </ul>
+            <div className="mt-6 space-y-4">
+              <p className="p-4 bg-stone-100 border-l-4 border-vesuviano-500 rounded-r-lg text-stone-800 font-medium">
+                {c.chimney.diameter}
+              </p>
+              <p className="p-4 bg-amber-50 border-l-4 border-amber-500 rounded-r-lg text-stone-700">
+                {c.chimney.note}
+              </p>
+            </div>
           </section>
 
           {/* Initial Heating */}
