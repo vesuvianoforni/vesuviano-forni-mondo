@@ -103,7 +103,8 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
         items: [
           "Le four doit être soulevé et déplacé à l'aide d'un chariot élévateur ou d'une brouette par du personnel formé et instruit aux procédures de sécurité.",
           "Le four doit être placé sur une plateforme bien nivelée. Il n'est pas nécessaire de le fixer à la fondation."
-        ]
+        ],
+        note: "Sauf mention expresse dans le devis, le client doit prévoir au déchargement un chariot élévateur capable de lever jusqu'à 1 500 kg pour décharger le four du camion, ainsi qu'un transpalette pour déplacer et positionner le four à l'intérieur du local."
       },
       chimney: {
         title: "Évacuation des Fumées",
