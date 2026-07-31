@@ -141,7 +141,8 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
         items: [
           "El horno debe ser levantado y movido con la ayuda de una carretilla elevadora o carretilla por personal capacitado en procedimientos de seguridad.",
           "El horno debe colocarse sobre una plataforma bien nivelada. No es necesario fijarlo a la base."
-        ]
+        ],
+        note: "Salvo que esté expresamente incluido en el presupuesto, en la descarga el cliente deberá disponer de una carretilla elevadora capaz de levantar hasta 1.500 kg para descargar el horno del camión, y de una transpaleta para mover y colocar el horno dentro del local."
       },
       chimney: {
         title: "Evacuación de Humos",
