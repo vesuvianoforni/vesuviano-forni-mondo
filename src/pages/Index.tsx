@@ -219,6 +219,29 @@ const Index = () => {
                   </Link>
                 </li>
                 <li>
+                  <Link 
+                    to={(() => {
+                      const paths: Record<string, string> = {
+                        'it': '/it/informazioni-utili',
+                        'en': '/en/useful-information',
+                        'fr': '/fr/informations-utiles',
+                        'es': '/es/informacion-util',
+                        'de': '/de/nuetzliche-informationen'
+                      };
+                      return paths[currentLang] || paths['it'];
+                    })()}
+                    className="text-gray-400 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {({
+                      it: 'Informazioni Utili',
+                      en: 'Useful Information',
+                      fr: 'Informations Utiles',
+                      es: 'Información Útil',
+                      de: 'Nützliche Informationen'
+                    } as Record<string, string>)[currentLang] || 'Informazioni Utili'}
+                  </Link>
+                </li>
+                <li>
                   <a 
                     href={`/${currentLang}#clients-map`}
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
