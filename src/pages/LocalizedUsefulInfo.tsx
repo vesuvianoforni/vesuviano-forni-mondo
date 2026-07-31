@@ -23,7 +23,7 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
       title: "Informazioni Utili",
       subtitle: "Tutto quello che devi sapere per installare e utilizzare il tuo forno Vesuviano",
       lifting: {
-        title: "Sollevamento e Rimozione",
+        title: "Scarico, sollevamento e posizionamento del forno",
         items: [
           "Il forno deve essere sollevato e spostato con l'aiuto di un carrello elevatore o una carriola da personale formato e istruito sulle procedure di sicurezza.",
           "Il forno deve essere posizionato su una piattaforma ben livellata. Non è necessario fissarlo alla fondazione."
@@ -61,7 +61,7 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
       title: "Useful Information",
       subtitle: "Everything you need to know to install and use your Vesuviano oven",
       lifting: {
-        title: "Lifting and Removal",
+        title: "Unloading, lifting and positioning of the oven",
         items: [
           "The oven has to be lifted and moved with the help of a forklift or wheelbarrow by equipped and instructed in safety procedures personnel.",
           "The oven has to be placed on a well levelled platform. It is not necessary to be fixed to the foundation."
@@ -99,7 +99,7 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
       title: "Informations Utiles",
       subtitle: "Tout ce que vous devez savoir pour installer et utiliser votre four Vesuviano",
       lifting: {
-        title: "Levage et Déplacement",
+        title: "Déchargement, levage et positionnement du four",
         items: [
           "Le four doit être soulevé et déplacé à l'aide d'un chariot élévateur ou d'une brouette par du personnel formé et instruit aux procédures de sécurité.",
           "Le four doit être placé sur une plateforme bien nivelée. Il n'est pas nécessaire de le fixer à la fondation."
@@ -137,7 +137,7 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
       title: "Información Útil",
       subtitle: "Todo lo que necesitas saber para instalar y usar tu horno Vesuviano",
       lifting: {
-        title: "Levantamiento y Traslado",
+        title: "Descarga, elevación y colocación del horno",
         items: [
           "El horno debe ser levantado y movido con la ayuda de una carretilla elevadora o carretilla por personal capacitado en procedimientos de seguridad.",
           "El horno debe colocarse sobre una plataforma bien nivelada. No es necesario fijarlo a la base."
@@ -175,7 +175,7 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
       title: "Nützliche Informationen",
       subtitle: "Alles, was Sie über die Installation und Nutzung Ihres Vesuviano-Ofens wissen müssen",
       lifting: {
-        title: "Anheben und Transport",
+        title: "Abladen, Anheben und Positionieren des Ofens",
         items: [
           "Der Ofen muss mit Hilfe eines Gabelstaplers oder einer Schubkarre von geschultem Personal angehoben und bewegt werden.",
           "Der Ofen muss auf einer gut nivellierten Plattform aufgestellt werden. Eine Befestigung am Fundament ist nicht erforderlich."
