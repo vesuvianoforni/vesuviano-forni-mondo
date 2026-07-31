@@ -42,7 +42,9 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
           "Il cambio di direzione è possibile in non più di 3 punti, incluso l'ingresso della canna fumaria.",
           "Le curve non devono avere un angolo superiore a 90 gradi.",
           "Il diametro del tubo deve rimanere costante lungo tutta la lunghezza."
-        ]
+        ],
+        diameter: "Il diametro della canna fumaria del forno è di 200 mm.",
+        note: "Per l'installazione definitiva della canna fumaria, rivolgersi a tecnici qualificati e rispettare le normative locali del paese in cui viene installato il forno."
       },
       heating: {
         title: "Riscaldamento Iniziale",
@@ -80,7 +82,9 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
           "The change of direction is possible in no more than 3 places, including the chimney's inlet.",
           "The bends must not have an angle more than 90 degrees.",
           "The pipe diameter along the whole length has to be permanent."
-        ]
+        ],
+        diameter: "The oven chimney diameter is 200 mm.",
+        note: "For the final installation of the chimney, please consult qualified technicians and comply with the local regulations of the country where the oven is installed."
       },
       heating: {
         title: "Initial Heating",
@@ -118,7 +122,9 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
           "Le changement de direction est possible en 3 points maximum, y compris l'entrée de la cheminée.",
           "Les coudes ne doivent pas avoir un angle supérieur à 90 degrés.",
           "Le diamètre du tuyau doit rester constant sur toute la longueur."
-        ]
+        ],
+        diameter: "Le diamètre de la cheminée du four est de 200 mm.",
+        note: "Pour l'installation définitive de la cheminée, veuillez consulter des techniciens qualifiés et respecter la réglementation locale du pays où le four est installé."
       },
       heating: {
         title: "Chauffage Initial",
@@ -156,7 +162,9 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
           "El cambio de dirección es posible en no más de 3 puntos, incluyendo la entrada de la chimenea.",
           "Las curvas no deben tener un ángulo superior a 90 grados.",
           "El diámetro del tubo debe permanecer constante en toda su longitud."
-        ]
+        ],
+        diameter: "El diámetro de la chimenea del horno es de 200 mm.",
+        note: "Para la instalación definitiva de la chimenea, consulte a técnicos cualificados y cumpla con la normativa local del país donde se instale el horno."
       },
       heating: {
         title: "Calentamiento Inicial",
@@ -194,7 +202,9 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
           "Richtungsänderungen sind an maximal 3 Stellen möglich, einschließlich des Schornsteineingangs.",
           "Die Bögen dürfen keinen Winkel von mehr als 90 Grad haben.",
           "Der Rohrdurchmesser muss über die gesamte Länge konstant bleiben."
-        ]
+        ],
+        diameter: "Der Schornsteindurchmesser des Ofens beträgt 200 mm.",
+        note: "Für die endgültige Installation des Schornsteins wenden Sie sich bitte an qualifizierte Fachleute und beachten Sie die örtlichen Vorschriften des Landes, in dem der Ofen installiert wird."
       },
       heating: {
         title: "Erstbeheizung",
@@ -298,6 +308,14 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
                 </li>
               ))}
             </ul>
+            <div className="mt-6 space-y-4">
+              <p className="p-4 bg-stone-100 border-l-4 border-vesuviano-500 rounded-r-lg text-stone-800 font-medium">
+                {c.chimney.diameter}
+              </p>
+              <p className="p-4 bg-amber-50 border-l-4 border-amber-500 rounded-r-lg text-stone-700">
+                {c.chimney.note}
+              </p>
+            </div>
           </section>
 
           {/* Initial Heating */}
