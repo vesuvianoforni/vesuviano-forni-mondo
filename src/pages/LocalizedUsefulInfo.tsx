@@ -65,7 +65,8 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
         items: [
           "The oven has to be lifted and moved with the help of a forklift or wheelbarrow by equipped and instructed in safety procedures personnel.",
           "The oven has to be placed on a well levelled platform. It is not necessary to be fixed to the foundation."
-        ]
+        ],
+        note: "Unless expressly included in the quotation, at delivery the customer must provide a forklift able to lift up to 1,500 kg to unload the oven from the transport truck, and a pallet truck to move and position the oven inside the premises."
       },
       chimney: {
         title: "Leading Smoke Gases Away",
