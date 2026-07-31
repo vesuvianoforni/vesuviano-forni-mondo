@@ -179,7 +179,8 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
         items: [
           "Der Ofen muss mit Hilfe eines Gabelstaplers oder einer Schubkarre von geschultem Personal angehoben und bewegt werden.",
           "Der Ofen muss auf einer gut nivellierten Plattform aufgestellt werden. Eine Befestigung am Fundament ist nicht erforderlich."
-        ]
+        ],
+        note: "Sofern im Angebot nicht ausdrücklich vorgesehen, muss der Kunde bei der Anlieferung einen Gabelstapler mit einer Tragkraft von bis zu 1.500 kg zum Abladen des Ofens vom LKW sowie einen Hubwagen zum Bewegen und Positionieren des Ofens im Innenraum bereitstellen."
       },
       chimney: {
         title: "Rauchgasabführung",
