@@ -279,6 +279,11 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
             <div className="mt-6">
               <img src="/images/sollevamento-forno-muletto.webp" alt="Diagramma sollevamento forno Vesuviano con muletto" className="rounded-lg shadow-md w-full max-w-3xl mx-auto" loading="lazy" />
             </div>
+            {'note' in c.lifting && c.lifting.note && (
+              <p className="mt-6 p-4 bg-amber-50 border-l-4 border-vesuviano-500 rounded-r-lg text-stone-700">
+                {c.lifting.note}
+              </p>
+            )}
           </section>
 
           {/* Chimney */}
