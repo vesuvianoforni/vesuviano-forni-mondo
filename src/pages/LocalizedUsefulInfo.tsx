@@ -27,7 +27,8 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
         items: [
           "Il forno deve essere sollevato e spostato con l'aiuto di un carrello elevatore o una carriola da personale formato e istruito sulle procedure di sicurezza.",
           "Il forno deve essere posizionato su una piattaforma ben livellata. Non è necessario fissarlo alla fondazione."
-        ]
+        ],
+        note: "Se non espressamente previsto nella quotazione, allo scarico il cliente dovrà predisporre un muletto sollevatore in grado di sollevare fino a 1.500 kg per scaricare il forno dal camion di trasporto, e un transpallet per movimentare e posizionare il forno all'interno del locale."
       },
       chimney: {
         title: "Evacuazione dei Fumi",
