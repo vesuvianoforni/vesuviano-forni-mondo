@@ -49,6 +49,27 @@ serve(async (req) => {
     let emailContent = ''
 
     switch (formType) {
+      case 'callback_request':
+        subject = `📞 Richiesta Callback - ${data.firstName || ''} ${data.lastName || ''} (${data.phone})`
+        emailContent = `
+          <h2>🔔 Nuova Richiesta di Callback (Chat AI)</h2>
+          <p><strong>Data:</strong> ${new Date().toLocaleString('it-IT')}</p>
+
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3>Contatto:</h3>
+            <p><strong>Nome:</strong> ${data.firstName || '-'} ${data.lastName || '-'}</p>
+            <p><strong>Città:</strong> ${data.city || '-'}</p>
+            <p><strong>Telefono:</strong> <a href="tel:${data.phone}">${data.phone}</a></p>
+          </div>
+
+          <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+            <strong>⚡ AZIONE RICHIESTA:</strong> Il cliente ha chiesto di essere richiamato. Ricontattarlo il prima possibile.
+          </div>
+
+          <p><em>Richiesta inviata dall'assistente AI del sito.</em></p>
+        `
+        break
+
       case 'hero_callback':
         subject = `📞 Richiesta Callback - ${data.phone}`
         emailContent = `

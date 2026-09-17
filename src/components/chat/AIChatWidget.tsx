@@ -77,6 +77,22 @@ const CALLBACK_ASK_PHONE: Record<string, string> = {
   es: "¡Por supuesto! 📞 ¿Cuál es tu número de teléfono?",
 };
 
+const CALLBACK_ASK_NAME: Record<string, string> = {
+  it: "Grazie! 🙏 Come ti chiami?",
+  en: "Thanks! 🙏 What's your name?",
+  fr: "Merci ! 🙏 Comment vous appelez-vous ?",
+  de: "Danke! 🙏 Wie ist Ihr Name?",
+  es: "¡Gracias! 🙏 ¿Cómo te llamas?",
+};
+
+const CALLBACK_ASK_CITY: Record<string, string> = {
+  it: "Perfetto! E da quale città ci contatti? 📍",
+  en: "Perfect! And which city are you contacting us from? 📍",
+  fr: "Parfait ! Et de quelle ville nous contactez-vous ? 📍",
+  de: "Perfekt! Und aus welcher Stadt kontaktieren Sie uns? 📍",
+  es: "¡Perfecto! ¿Y desde qué ciudad nos contactas? 📍",
+};
+
 const CALLBACK_CONFIRM: Record<string, string> = {
   it: "Perfetto! Ti chiameremo il prima possibile 🤙",
   en: "Got it! We'll call you as soon as possible 🤙",
@@ -177,6 +193,8 @@ export default function AIChatWidget() {
   const [showPulse, setShowPulse] = useState(true);
   const [pendingMessage, setPendingMessage] = useState<string | null>(null);
   const [callbackMode, setCallbackMode] = useState(false);
+  const [callbackStep, setCallbackStep] = useState<"phone" | "name" | "city">("phone");
+  const callbackDataRef = useRef<{ phone: string; name: string }>({ phone: "", name: "" });
   const conversationIdRef = useRef<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -225,6 +243,8 @@ export default function AIChatWidget() {
   useEffect(() => {
     const handleCallbackRequest = () => {
       setCallbackMode(true);
+      setCallbackStep("phone");
+      callbackDataRef.current = { phone: "", name: "" };
       setOpen(true);
       setShowMobileBubble(false);
       const askPhone = CALLBACK_ASK_PHONE[lang] || CALLBACK_ASK_PHONE.en;
@@ -358,27 +378,57 @@ export default function AIChatWidget() {
       const userMsg: Msg = { role: "user", content: text.trim() };
       setInput("");
 
-      // Callback mode: user is giving their phone number
+      // Callback mode: collect phone -> name -> city
       if (callbackMode) {
+        if (callbackStep === "phone") {
+          callbackDataRef.current.phone = text.trim();
+          const askName = CALLBACK_ASK_NAME[lang] || CALLBACK_ASK_NAME.en;
+          setMessages((prev) => {
+            const updated = [...prev, userMsg, { role: "assistant" as const, content: askName }];
+            saveConversation(updated, { phone: text.trim() });
+            return updated;
+          });
+          setCallbackStep("name");
+          return;
+        }
+        if (callbackStep === "name") {
+          callbackDataRef.current.name = text.trim();
+          const askCity = CALLBACK_ASK_CITY[lang] || CALLBACK_ASK_CITY.en;
+          setMessages((prev) => {
+            const updated = [...prev, userMsg, { role: "assistant" as const, content: askCity }];
+            saveConversation(updated, { name: text.trim(), phone: callbackDataRef.current.phone });
+            return updated;
+          });
+          setCallbackStep("city");
+          return;
+        }
+        // Final step: city
+        const city = text.trim();
+        const { phone, name } = callbackDataRef.current;
         const confirmMsg = CALLBACK_CONFIRM[lang] || CALLBACK_CONFIRM.en;
+        const personalized = name ? confirmMsg.replace("!", ` ${name}!`) : confirmMsg;
         setMessages((prev) => {
-          const updated = [...prev, userMsg, { role: "assistant" as const, content: confirmMsg }];
-          saveConversation(updated, { phone: text.trim() });
+          const updated = [...prev, userMsg, { role: "assistant" as const, content: personalized }];
+          saveConversation(updated, { name, phone });
           return updated;
         });
-        // Save as lead
+        // Save as lead (with notification email to the team)
+        const nameParts = name.split(/\s+/).filter(Boolean);
         supabase.functions.invoke("send-form-data", {
           body: {
             formType: "callback_request",
             data: {
-              firstName: "-",
-              lastName: "-",
-              phone: text.trim(),
+              firstName: nameParts[0] || "-",
+              lastName: nameParts.slice(1).join(" ") || "-",
+              phone,
+              city,
               notes: "Richiesta di richiamata dall'assistente AI del sito.",
             },
           },
         }).then(() => {});
         setCallbackMode(false);
+        setCallbackStep("phone");
+        callbackDataRef.current = { phone: "", name: "" };
         setContactSubmitted(true);
         localStorage.setItem(VISITOR_SUBMITTED_KEY, "true");
         return;
@@ -402,7 +452,7 @@ export default function AIChatWidget() {
         });
       }
     },
-    [isLoading, contactSubmitted, callbackMode, lang, callAI, saveConversation]
+    [isLoading, contactSubmitted, callbackMode, callbackStep, lang, callAI, saveConversation]
   );
 
   const renderMessageContent = (msg: Msg) => {
