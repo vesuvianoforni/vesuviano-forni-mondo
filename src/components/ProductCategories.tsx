@@ -289,6 +289,12 @@ const ProductCategories = () => {
             })}
           </div>
 
+          <DownloadDatasheetModal
+            isOpen={datasheetOven !== null}
+            onClose={() => setDatasheetOven(null)}
+            ovenType={datasheetOven || ''}
+          />
+
         </div>
       </div>
     </section>
