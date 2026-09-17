@@ -262,6 +262,25 @@ const ProductCategories = () => {
                             </span>
                           </div>
                         </div>
+
+                        <div className="flex flex-col sm:flex-row gap-2">
+                          {getLanding(category.key) && (
+                            <Button
+                              className="flex-1 bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-sm py-2"
+                              onClick={() => navigate(getLanding(category.key)!)}
+                            >
+                              {t('products.learnMore')}
+                            </Button>
+                          )}
+                          <Button
+                            variant="outline"
+                            className="flex-1 border-stone-300 text-stone-700 hover:bg-stone-50 text-sm py-2"
+                            onClick={() => setDatasheetOven(t(`products.${category.key}.title`))}
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            {t('products.downloadDatasheet')}
+                          </Button>
+                        </div>
                       </>
                     )}
                   </CardContent>
