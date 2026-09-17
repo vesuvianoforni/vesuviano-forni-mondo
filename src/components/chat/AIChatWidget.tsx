@@ -243,6 +243,8 @@ export default function AIChatWidget() {
   useEffect(() => {
     const handleCallbackRequest = () => {
       setCallbackMode(true);
+      setCallbackStep("phone");
+      callbackDataRef.current = { phone: "", name: "" };
       setOpen(true);
       setShowMobileBubble(false);
       const askPhone = CALLBACK_ASK_PHONE[lang] || CALLBACK_ASK_PHONE.en;
