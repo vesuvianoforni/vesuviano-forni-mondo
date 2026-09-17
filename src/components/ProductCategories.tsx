@@ -263,22 +263,25 @@ const ProductCategories = () => {
                           </div>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row gap-2">
+                        <div className="flex flex-col gap-3">
                           {getLanding(category.key) && (
                             <Button
-                              className="flex-1 bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-sm py-2"
-                              onClick={() => navigate(getLanding(category.key)!)}
+                              className="w-full bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-sm font-semibold py-3 px-4"
+                              onClick={() => {
+                                const path = getLanding(category.key);
+                                if (path) navigate(path);
+                              }}
                             >
                               {t('products.learnMore')}
                             </Button>
                           )}
                           <Button
                             variant="outline"
-                            className="flex-1 border-stone-300 text-stone-700 hover:bg-stone-50 text-sm py-2"
+                            className="w-full min-h-11 h-auto border-stone-300 text-stone-700 hover:bg-stone-50 text-sm font-semibold py-3 px-4 whitespace-normal leading-tight"
                             onClick={() => setDatasheetOven(t(`products.${category.key}.title`))}
                           >
-                            <Download className="w-4 h-4 mr-2" />
-                            {t('products.downloadDatasheet')}
+                            <Download className="w-4 h-4 mr-2 shrink-0" />
+                            <span className="min-w-0 text-center">{t('products.downloadDatasheet')}</span>
                           </Button>
                         </div>
                       </>
