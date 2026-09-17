@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useRef } from 'react';
+import { Download } from 'lucide-react';
+import DownloadDatasheetModal from '@/components/DownloadDatasheetModal';
 
 interface AutoPlayVideoProps {
   src: string;
