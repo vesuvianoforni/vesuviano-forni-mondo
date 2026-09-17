@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -6,22 +6,29 @@ const pizzoloLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/
 const ansumLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-ansum.png';
 const cuginiLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-cugini-pizza.png';
 
-type Client = { city: string; desc: string; img: string; ig?: string; countries: string[] };
+type Client = { name: string; oven: 'sebastian' | 'realBoscoGas' | 'realBoscoWood'; img: string; ig?: string };
 
 const clients: Client[] = [
-  { city: 'Pizzolo Bar — Brighton, UK', desc: '37 Ship Street, The Lanes, Brighton BN1 1AB. Sebastian model, built on place by our master builders.', img: pizzoloLogo, countries: ['GB'] },
-  { city: 'Ansum Food Co — Porth, Cornwall', desc: 'Alexandra Rd, Porth, Newquay TR7 3NB. Real Bosco (gas), shipped from Naples.', img: ansumLogo, ig: 'https://www.instagram.com/ansumfood/', countries: ['GB'] },
-  { city: 'Cugini Pizza — UK', desc: 'Real Bosco wood-fired oven, shipped from Italy.', img: cuginiLogo, ig: 'https://www.instagram.com/cuginipizza_/', countries: ['GB'] },
+  { name: 'Pizzolo Bar', oven: 'sebastian', img: pizzoloLogo },
+  { name: 'Ansum Food Co', oven: 'realBoscoGas', img: ansumLogo, ig: 'https://www.instagram.com/ansumfood/' },
+  { name: 'Cugini Pizza', oven: 'realBoscoWood', img: cuginiLogo, ig: 'https://www.instagram.com/cuginipizza_/' },
 ];
 
-// Fallback country when we have no clients for detected country
-const FALLBACK_COUNTRY = 'GB';
+const ovenDescriptions = {
+  it: { sebastian: 'Forno Sebastian, costruito sul posto dai nostri maestri artigiani.', realBoscoGas: 'Forno Real Bosco a gas.', realBoscoWood: 'Forno Real Bosco a legna.' },
+  en: { sebastian: 'Sebastian oven, built on site by our master builders.', realBoscoGas: 'Real Bosco gas oven.', realBoscoWood: 'Real Bosco wood-fired oven.' },
+  fr: { sebastian: 'Four Sebastian, construit sur place par nos maîtres artisans.', realBoscoGas: 'Four Real Bosco à gaz.', realBoscoWood: 'Four Real Bosco à bois.' },
+  de: { sebastian: 'Sebastian-Ofen, vor Ort von unseren Ofenbaumeistern gebaut.', realBoscoGas: 'Real Bosco Gasofen.', realBoscoWood: 'Real Bosco Holzofen.' },
+  es: { sebastian: 'Horno Sebastian, construido in situ por nuestros maestros artesanos.', realBoscoGas: 'Horno Real Bosco de gas.', realBoscoWood: 'Horno Real Bosco de leña.' },
+};
 
-const TrustedByPizzerias = () => {
+type TrustedByPizzeriasProps = { children?: ReactNode };
+
+const TrustedByPizzerias = ({ children }: TrustedByPizzeriasProps) => {
   const { i18n } = useTranslation();
-  const [country, setCountry] = useState<string>('United Kingdom');
-  const [countryCode, setCountryCode] = useState<string>(FALLBACK_COUNTRY);
-  const [flag, setFlag] = useState<string>('🇬🇧');
+  const [country, setCountry] = useState<string>('Italy');
+  const [countryCode, setCountryCode] = useState<string>('IT');
+  const [flag, setFlag] = useState<string>('🇮🇹');
 
   useEffect(() => {
     (async () => {
@@ -37,18 +44,16 @@ const TrustedByPizzerias = () => {
     })();
   }, []);
 
-  let visibleClients = clients.filter((c) => c.countries.includes(countryCode));
-  let displayCountry = country;
-  let displayFlag = flag;
-  if (visibleClients.length === 0) {
-    visibleClients = clients.filter((c) => c.countries.includes(FALLBACK_COUNTRY));
-    displayCountry = 'United Kingdom';
-    displayFlag = '🇬🇧';
-  }
-
-
   const lang = i18n.language;
-  const c = displayCountry;
+  const languageKey = (['it', 'fr', 'de', 'es'].find((code) => lang.startsWith(code)) || 'en') as keyof typeof ovenDescriptions;
+  const localizedCountry = useMemo(() => {
+    try {
+      return new Intl.DisplayNames([lang], { type: 'region' }).of(countryCode) || country;
+    } catch {
+      return country;
+    }
+  }, [country, countryCode, lang]);
+  const c = localizedCountry;
   const title =
     lang.startsWith('it') ? `Scelti dalle pizzerie in ${c}` :
     lang.startsWith('fr') ? `Choisi par les pizzerias en ${c}` :
@@ -68,7 +73,7 @@ const TrustedByPizzerias = () => {
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
         <div className="text-center mb-12">
           <h2 className="font-playfair text-3xl md:text-5xl font-bold text-charcoal-900 mb-4">
-            {title} <span aria-hidden="true">{displayFlag}</span>
+            {title} <span aria-hidden="true">{flag}</span>
           </h2>
           <p className="font-inter text-lg text-stone-600 max-w-3xl mx-auto">
             {subtitle}
@@ -76,19 +81,19 @@ const TrustedByPizzerias = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {visibleClients.map((p) => (
-            <div key={p.city} className="bg-stone-50 rounded-lg overflow-hidden shadow-sm flex flex-col">
+          {clients.map((p) => (
+            <div key={p.name} className="bg-stone-50 rounded-lg overflow-hidden shadow-sm flex flex-col">
               <div className="bg-white h-56 flex items-center justify-center p-6">
                 <img
                   src={p.img}
-                  alt={`${p.city} — Vesuviano Forni client`}
+                  alt={`${p.name} — Vesuviano Forni client`}
                   className="max-h-full max-w-full object-contain"
                   loading="lazy"
                 />
               </div>
               <div className="p-5">
-                <h3 className="font-playfair font-bold text-charcoal-900 mb-1">{p.city}</h3>
-                <p className="text-sm text-stone-600">{p.desc}</p>
+                <h3 className="font-playfair font-bold text-charcoal-900 mb-1">{p.name}</h3>
+                <p className="text-sm text-stone-600">{ovenDescriptions[languageKey][p.oven]}</p>
                 {p.ig && (
                   <a
                     href={p.ig}
@@ -96,13 +101,14 @@ const TrustedByPizzerias = () => {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-sm text-vesuviano-600 hover:text-vesuviano-700 mt-2"
                   >
-                    Follow on Instagram
+                    {lang.startsWith('it') ? 'Segui su Instagram' : lang.startsWith('fr') ? 'Suivre sur Instagram' : lang.startsWith('de') ? 'Auf Instagram folgen' : lang.startsWith('es') ? 'Seguir en Instagram' : 'Follow on Instagram'}
                   </a>
                 )}
               </div>
             </div>
           ))}
         </div>
+        {children && <div className="text-center mt-12">{children}</div>}
       </div>
     </section>
   );

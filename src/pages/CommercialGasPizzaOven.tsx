@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import SEOHead from '@/components/SEOHead';
 import ConsultationForm from '@/components/ConsultationForm';
 import ProductVideoSection from '@/components/ProductVideoSection';
+import TrustedByPizzerias from '@/components/TrustedByPizzerias';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -19,9 +20,6 @@ const HERO_VIDEO_URL = heroVideoAsset.url;
 const AVANZINI_LOGO_URL = avanziniLogoAsset.url;
 const SPETTACL_VIDEO_URL = spettaclVideoAsset.url;
 
-const ansumLogo = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-ansum.png' };
-const cuginiLogo = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-cugini-pizza.png' };
-const pizzoloLogo = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-pizzolo.png' };
 const heroBg = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/forno-arancione-terra-del-gusto.webp' };
 
 const PATH = '/en/commercial-gas-pizza-oven';
@@ -296,55 +294,11 @@ const CommercialGasPizzaOven = () => {
         </div>
       </section>
 
-      {/* Social proof */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal-900 mb-12 text-center">
-            Trusted by pizzerias across the UK and Europe
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            {[
-              { city: 'Ansum Food Co — Porth, Cornwall', desc: 'Alexandra Rd, Porth, Newquay TR7 3NB. Real Bosco gas oven, shipped from Naples.', img: ansumLogo.url, ig: 'https://www.instagram.com/ansumfood/' },
-              { city: 'Cugini Pizza — UK', desc: 'Real Bosco oven, shipped from Italy and configured for commercial UK service.', img: cuginiLogo.url, ig: 'https://www.instagram.com/cuginipizza_/' },
-              { city: 'Pizzolo Bar — Brighton, UK', desc: '37 Ship Street, The Lanes, Brighton BN1 1AB. Sebastian model, built on place by our master builders.', img: pizzoloLogo.url },
-            ].map((p) => (
-              <div key={p.city} className="bg-stone-50 rounded-lg overflow-hidden shadow-sm flex flex-col">
-                <div className="bg-white h-56 flex items-center justify-center p-6">
-                  <img
-                    src={p.img}
-                    alt={`${p.city} — Vesuviano Forni client`}
-                    className="max-h-full max-w-full object-contain"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className="font-playfair font-bold text-charcoal-900 mb-1">{p.city}</h3>
-                  <p className="text-sm text-stone-600">{p.desc}</p>
-                  {p.ig && (
-                    <a
-                      href={p.ig}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-vesuviano-600 hover:text-vesuviano-700 mt-2"
-                    >
-                      Follow on Instagram
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="text-center">
-            <Button
-              onClick={scrollToForm as any}
-              size="lg"
-              className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-lg px-8 py-6"
-            >
-              Request a quote
-            </Button>
-          </div>
-        </div>
-      </section>
+      <TrustedByPizzerias>
+        <Button onClick={scrollToForm as any} size="lg" className="bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-lg px-8 py-6">
+          Request a quote
+        </Button>
+      </TrustedByPizzerias>
 
       {/* Avanzini burners */}
       <section className="py-20 bg-stone-50 border-t border-stone-200">
