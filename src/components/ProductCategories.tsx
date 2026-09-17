@@ -164,7 +164,13 @@ const ProductCategories = () => {
                   className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border border-stone-200 hover:border-vesuviano-300 animate-fade-in"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <div className={`relative h-64 sm:h-80 md:h-96 overflow-hidden`}>
+                  <div
+                    className={`relative h-64 sm:h-80 md:h-96 overflow-hidden ${getLanding(category.key) ? 'cursor-pointer' : ''}`}
+                    onClick={() => {
+                      const path = getLanding(category.key);
+                      if (path) navigate(path);
+                    }}
+                  >
                     {category.video ? (
                       <AutoPlayVideo
                         src={category.video}
