@@ -77,6 +77,22 @@ const CALLBACK_ASK_PHONE: Record<string, string> = {
   es: "¡Por supuesto! 📞 ¿Cuál es tu número de teléfono?",
 };
 
+const CALLBACK_ASK_NAME: Record<string, string> = {
+  it: "Grazie! 🙏 Come ti chiami?",
+  en: "Thanks! 🙏 What's your name?",
+  fr: "Merci ! 🙏 Comment vous appelez-vous ?",
+  de: "Danke! 🙏 Wie ist Ihr Name?",
+  es: "¡Gracias! 🙏 ¿Cómo te llamas?",
+};
+
+const CALLBACK_ASK_CITY: Record<string, string> = {
+  it: "Perfetto! E da quale città ci contatti? 📍",
+  en: "Perfect! And which city are you contacting us from? 📍",
+  fr: "Parfait ! Et de quelle ville nous contactez-vous ? 📍",
+  de: "Perfekt! Und aus welcher Stadt kontaktieren Sie uns? 📍",
+  es: "¡Perfecto! ¿Y desde qué ciudad nos contactas? 📍",
+};
+
 const CALLBACK_CONFIRM: Record<string, string> = {
   it: "Perfetto! Ti chiameremo il prima possibile 🤙",
   en: "Got it! We'll call you as soon as possible 🤙",
@@ -177,6 +193,8 @@ export default function AIChatWidget() {
   const [showPulse, setShowPulse] = useState(true);
   const [pendingMessage, setPendingMessage] = useState<string | null>(null);
   const [callbackMode, setCallbackMode] = useState(false);
+  const [callbackStep, setCallbackStep] = useState<"phone" | "name" | "city">("phone");
+  const callbackDataRef = useRef<{ phone: string; name: string }>({ phone: "", name: "" });
   const conversationIdRef = useRef<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
