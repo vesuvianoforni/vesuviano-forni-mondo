@@ -367,12 +367,16 @@ export default function AIChatWidget() {
           return updated;
         });
         // Save as lead
-        supabase.from("website_leads").insert({
-          first_name: "-",
-          last_name: "-",
-          phone: text.trim(),
-          form_type: "callback_request",
-          notes: "Richiesta di richiamata dal popup del sito.",
+        supabase.functions.invoke("send-form-data", {
+          body: {
+            formType: "callback_request",
+            data: {
+              firstName: "-",
+              lastName: "-",
+              phone: text.trim(),
+              notes: "Richiesta di richiamata dall'assistente AI del sito.",
+            },
+          },
         }).then(() => {});
         setCallbackMode(false);
         setContactSubmitted(true);
