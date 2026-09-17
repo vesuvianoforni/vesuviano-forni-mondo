@@ -51,9 +51,52 @@ const AutoPlayVideo = ({ src, poster, alt }: AutoPlayVideoProps) => {
 
 
 
+const LANDING_PATHS: Record<string, Record<string, string>> = {
+  traditional: {
+    it: '/it/forno-a-legna-da-esterno',
+    en: '/en/commercial-wood-fired-pizza-oven',
+    fr: '/fr/four-a-pizza-bois',
+    es: '/es/hornos-tradicionales',
+    de: '/de/traditionelle-oefen'
+  },
+  gas: {
+    it: '/it/forni-gas',
+    en: '/en/commercial-gas-pizza-oven',
+    fr: '/fr/fours-gaz',
+    es: '/es/hornos-gas',
+    de: '/de/gasoefen'
+  },
+  electric: {
+    it: '/it/forni-elettrici',
+    en: '/en/electric-pizza-oven',
+    fr: '/fr/fours-electriques',
+    es: '/es/hornos-electricos',
+    de: '/de/elektrooefen'
+  },
+  rotating: {
+    it: '/it/forni-rotativi',
+    en: '/en/rotating-pizza-oven',
+    fr: '/fr/fours-rotatifs',
+    es: '/es/hornos-rotativos',
+    de: '/de/drehoefen'
+  },
+  vesuviobuono: {
+    it: '/it/sistema-vesuviobuono',
+    en: '/en/vesuviobuono-system',
+    fr: '/fr/systeme-vesuviobuono',
+    es: '/es/sistema-vesuviobuono',
+    de: '/de/vesuviobuono-system'
+  }
+};
+
 const ProductCategories = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const [datasheetOven, setDatasheetOven] = useState<string | null>(null);
+
+  const lang = ['it', 'en', 'fr', 'es', 'de'].includes(i18n.language) ? i18n.language : 'it';
+  const getLanding = (key: string) => LANDING_PATHS[key]?.[lang] || LANDING_PATHS[key]?.it;
+
 
 
   const categories = [
