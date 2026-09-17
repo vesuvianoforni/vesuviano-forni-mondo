@@ -452,7 +452,7 @@ export default function AIChatWidget() {
         });
       }
     },
-    [isLoading, contactSubmitted, callbackMode, lang, callAI, saveConversation]
+    [isLoading, contactSubmitted, callbackMode, callbackStep, lang, callAI, saveConversation]
   );
 
   const renderMessageContent = (msg: Msg) => {
