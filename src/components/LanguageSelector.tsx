@@ -141,6 +141,34 @@ const LanguageSelector = () => {
       fr: '/blog',
       es: '/blog',
       de: '/blog'
+    },
+    'wood-landing': {
+      it: '/forno-a-legna-da-esterno',
+      en: '/commercial-wood-fired-pizza-oven',
+      fr: '/four-a-pizza-bois',
+      es: '/hornos-tradicionales',
+      de: '/traditionelle-oefen'
+    },
+    'gas-landing': {
+      it: '/forni-gas',
+      en: '/commercial-gas-pizza-oven',
+      fr: '/fours-gaz',
+      es: '/hornos-gas',
+      de: '/gasoefen'
+    },
+    'rotating-landing': {
+      it: '/forni-rotativi',
+      en: '/rotating-pizza-oven',
+      fr: '/fours-rotatifs',
+      es: '/hornos-rotativos',
+      de: '/drehoefen'
+    },
+    'electric-landing': {
+      it: '/forni-elettrici',
+      en: '/electric-pizza-oven',
+      fr: '/fours-electriques',
+      es: '/hornos-electricos',
+      de: '/elektrooefen'
     }
   };
 
