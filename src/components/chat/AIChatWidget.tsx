@@ -95,13 +95,17 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string, email?
     if (!form.email.trim() && !form.phone.trim()) return;
     setSubmitting(true);
     try {
-      await supabase.from("website_leads").insert({
-        first_name: form.name.split(" ")[0] || "-",
-        last_name: form.name.split(" ").slice(1).join(" ") || "-",
-        email: form.email || null,
-        phone: form.phone || null,
-        form_type: "ai_chat",
-        notes: "Contatto generato dall'assistente AI del sito.",
+      await supabase.functions.invoke("send-form-data", {
+        body: {
+          formType: "ai_chat",
+          data: {
+            firstName: form.name.split(" ")[0] || "-",
+            lastName: form.name.split(" ").slice(1).join(" ") || "-",
+            email: form.email || null,
+            phone: form.phone || null,
+            notes: "Contatto generato dall'assistente AI del sito.",
+          },
+        },
       });
       onSubmitted(form.name.split(" ")[0] || "", form.email || undefined, form.phone || undefined);
     } catch {
@@ -363,12 +367,16 @@ export default function AIChatWidget() {
           return updated;
         });
         // Save as lead
-        supabase.from("website_leads").insert({
-          first_name: "-",
-          last_name: "-",
-          phone: text.trim(),
-          form_type: "callback_request",
-          notes: "Richiesta di richiamata dal popup del sito.",
+        supabase.functions.invoke("send-form-data", {
+          body: {
+            formType: "callback_request",
+            data: {
+              firstName: "-",
+              lastName: "-",
+              phone: text.trim(),
+              notes: "Richiesta di richiamata dall'assistente AI del sito.",
+            },
+          },
         }).then(() => {});
         setCallbackMode(false);
         setContactSubmitted(true);
