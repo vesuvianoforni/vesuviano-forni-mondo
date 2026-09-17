@@ -333,7 +333,7 @@ const RotatingPizzaOven = () => {
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl text-center">
           <p className="text-stone-600 mb-4">Looking at other oven types?</p>
           <div className="flex flex-wrap justify-center gap-4 text-vesuviano-700">
-            <Link to="/en/commercial-wood-fired-pizza-oven" className="hover:underline">Wood-fired ovens</Link>
+            <Link to="/en/traditional-ovens" className="hover:underline">Wood-fired ovens</Link>
             <span className="text-stone-300">·</span>
             <Link to="/en/gas-ovens" className="hover:underline">Gas ovens</Link>
             <span className="text-stone-300">·</span>

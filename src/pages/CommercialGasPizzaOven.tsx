@@ -413,11 +413,11 @@ const CommercialGasPizzaOven = () => {
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl text-center">
           <p className="text-stone-600 mb-4">Looking at other fuel options?</p>
           <div className="flex flex-wrap justify-center gap-4 text-vesuviano-700">
-            <Link to="/en/commercial-wood-fired-pizza-oven" className="hover:underline">Wood-fired ovens</Link>
+            <Link to="/en/traditional-ovens" className="hover:underline">Wood-fired ovens</Link>
             <span className="text-stone-300">·</span>
-            <Link to="/en/rotating-pizza-oven" className="hover:underline">Rotating ovens</Link>
+            <Link to="/en/rotating-ovens" className="hover:underline">Rotating ovens</Link>
             <span className="text-stone-300">·</span>
-            <Link to="/en/electric-pizza-oven" className="hover:underline">Electric ovens</Link>
+            <Link to="/en/electric-ovens" className="hover:underline">Electric ovens</Link>
             <span className="text-stone-300">·</span>
             <Link to="/en/neapolitan-pizza-ovens" className="hover:underline">Neapolitan pizza ovens</Link>
           </div>
