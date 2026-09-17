@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useRef } from 'react';
+import { Download } from 'lucide-react';
+import DownloadDatasheetModal from '@/components/DownloadDatasheetModal';
 
 interface AutoPlayVideoProps {
   src: string;
@@ -51,9 +53,52 @@ const AutoPlayVideo = ({ src, poster, alt }: AutoPlayVideoProps) => {
 
 
 
+const LANDING_PATHS: Record<string, Record<string, string>> = {
+  traditional: {
+    it: '/it/forno-a-legna-da-esterno',
+    en: '/en/commercial-wood-fired-pizza-oven',
+    fr: '/fr/four-a-pizza-bois',
+    es: '/es/hornos-tradicionales',
+    de: '/de/traditionelle-oefen'
+  },
+  gas: {
+    it: '/it/forni-gas',
+    en: '/en/commercial-gas-pizza-oven',
+    fr: '/fr/fours-gaz',
+    es: '/es/hornos-gas',
+    de: '/de/gasoefen'
+  },
+  electric: {
+    it: '/it/forni-elettrici',
+    en: '/en/electric-pizza-oven',
+    fr: '/fr/fours-electriques',
+    es: '/es/hornos-electricos',
+    de: '/de/elektrooefen'
+  },
+  rotating: {
+    it: '/it/forni-rotativi',
+    en: '/en/rotating-pizza-oven',
+    fr: '/fr/fours-rotatifs',
+    es: '/es/hornos-rotativos',
+    de: '/de/drehoefen'
+  },
+  vesuviobuono: {
+    it: '/it/sistema-vesuviobuono',
+    en: '/en/vesuviobuono-system',
+    fr: '/fr/systeme-vesuviobuono',
+    es: '/es/sistema-vesuviobuono',
+    de: '/de/vesuviobuono-system'
+  }
+};
+
 const ProductCategories = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const [datasheetOven, setDatasheetOven] = useState<string | null>(null);
+
+  const lang = ['it', 'en', 'fr', 'es', 'de'].includes(i18n.language) ? i18n.language : 'it';
+  const getLanding = (key: string) => LANDING_PATHS[key]?.[lang] || LANDING_PATHS[key]?.it;
+
 
 
   const categories = [
@@ -119,7 +164,13 @@ const ProductCategories = () => {
                   className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border border-stone-200 hover:border-vesuviano-300 animate-fade-in"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <div className={`relative h-64 sm:h-80 md:h-96 overflow-hidden`}>
+                  <div
+                    className={`relative h-64 sm:h-80 md:h-96 overflow-hidden ${getLanding(category.key) ? 'cursor-pointer' : ''}`}
+                    onClick={() => {
+                      const path = getLanding(category.key);
+                      if (path) navigate(path);
+                    }}
+                  >
                     {category.video ? (
                       <AutoPlayVideo
                         src={category.video}
@@ -211,6 +262,25 @@ const ProductCategories = () => {
                             </span>
                           </div>
                         </div>
+
+                        <div className="flex flex-col sm:flex-row gap-2">
+                          {getLanding(category.key) && (
+                            <Button
+                              className="flex-1 bg-vesuviano-600 hover:bg-vesuviano-700 text-white text-sm py-2"
+                              onClick={() => navigate(getLanding(category.key)!)}
+                            >
+                              {t('products.learnMore')}
+                            </Button>
+                          )}
+                          <Button
+                            variant="outline"
+                            className="flex-1 border-stone-300 text-stone-700 hover:bg-stone-50 text-sm py-2"
+                            onClick={() => setDatasheetOven(t(`products.${category.key}.title`))}
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            {t('products.downloadDatasheet')}
+                          </Button>
+                        </div>
                       </>
                     )}
                   </CardContent>
@@ -218,6 +288,12 @@ const ProductCategories = () => {
               );
             })}
           </div>
+
+          <DownloadDatasheetModal
+            isOpen={datasheetOven !== null}
+            onClose={() => setDatasheetOven(null)}
+            ovenType={datasheetOven || ''}
+          />
 
         </div>
       </div>
