@@ -6,13 +6,21 @@ const pizzoloLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/
 const ansumLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-ansum.png';
 const cuginiLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-cugini-pizza.png';
 
-type Client = { name: string; desc: string; img: string; ig?: string };
+type Client = { name: string; oven: 'sebastian' | 'realBoscoGas' | 'realBoscoWood'; img: string; ig?: string };
 
 const clients: Client[] = [
-  { name: 'Pizzolo Bar', desc: 'Sebastian oven, built on site by our master builders.', img: pizzoloLogo },
-  { name: 'Ansum Food Co', desc: 'Real Bosco gas oven.', img: ansumLogo, ig: 'https://www.instagram.com/ansumfood/' },
-  { name: 'Cugini Pizza', desc: 'Real Bosco wood-fired oven.', img: cuginiLogo, ig: 'https://www.instagram.com/cuginipizza_/' },
+  { name: 'Pizzolo Bar', oven: 'sebastian', img: pizzoloLogo },
+  { name: 'Ansum Food Co', oven: 'realBoscoGas', img: ansumLogo, ig: 'https://www.instagram.com/ansumfood/' },
+  { name: 'Cugini Pizza', oven: 'realBoscoWood', img: cuginiLogo, ig: 'https://www.instagram.com/cuginipizza_/' },
 ];
+
+const ovenDescriptions = {
+  it: { sebastian: 'Forno Sebastian, costruito sul posto dai nostri maestri artigiani.', realBoscoGas: 'Forno Real Bosco a gas.', realBoscoWood: 'Forno Real Bosco a legna.' },
+  en: { sebastian: 'Sebastian oven, built on site by our master builders.', realBoscoGas: 'Real Bosco gas oven.', realBoscoWood: 'Real Bosco wood-fired oven.' },
+  fr: { sebastian: 'Four Sebastian, construit sur place par nos maîtres artisans.', realBoscoGas: 'Four Real Bosco à gaz.', realBoscoWood: 'Four Real Bosco à bois.' },
+  de: { sebastian: 'Sebastian-Ofen, vor Ort von unseren Ofenbaumeistern gebaut.', realBoscoGas: 'Real Bosco Gasofen.', realBoscoWood: 'Real Bosco Holzofen.' },
+  es: { sebastian: 'Horno Sebastian, construido in situ por nuestros maestros artesanos.', realBoscoGas: 'Horno Real Bosco de gas.', realBoscoWood: 'Horno Real Bosco de leña.' },
+};
 
 type TrustedByPizzeriasProps = { children?: ReactNode };
 
@@ -37,6 +45,7 @@ const TrustedByPizzerias = ({ children }: TrustedByPizzeriasProps) => {
   }, []);
 
   const lang = i18n.language;
+  const languageKey = (['it', 'fr', 'de', 'es'].find((code) => lang.startsWith(code)) || 'en') as keyof typeof ovenDescriptions;
   const localizedCountry = useMemo(() => {
     try {
       return new Intl.DisplayNames([lang], { type: 'region' }).of(countryCode) || country;
@@ -84,7 +93,7 @@ const TrustedByPizzerias = ({ children }: TrustedByPizzeriasProps) => {
               </div>
               <div className="p-5">
                 <h3 className="font-playfair font-bold text-charcoal-900 mb-1">{p.name}</h3>
-                <p className="text-sm text-stone-600">{p.desc}</p>
+                <p className="text-sm text-stone-600">{ovenDescriptions[languageKey][p.oven]}</p>
                 {p.ig && (
                   <a
                     href={p.ig}
