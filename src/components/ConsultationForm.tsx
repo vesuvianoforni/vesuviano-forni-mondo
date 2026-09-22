@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Phone, Mail, MapPin, Download, CheckCircle, Loader2, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { redirectToThankYou } from "@/lib/thankYou";
 
 const ConsultationForm = () => {
   const { toast } = useToast();
