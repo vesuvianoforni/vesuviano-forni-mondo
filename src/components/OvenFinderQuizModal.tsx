@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { ChefHat, Home, Flame, Zap, TreePine, ArrowLeft, ArrowRight, Loader2, Sparkles, CheckCircle2, Phone } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { redirectToThankYou } from "@/lib/thankYou";
 import { toast } from "sonner";
 
 interface OvenFinderQuizModalProps {
@@ -78,6 +79,8 @@ const OvenFinderQuizModal = ({ open, onOpenChange }: OvenFinderQuizModalProps) =
       if (data?.error) throw new Error(data.error);
       setRecommendation(data.recommendation);
       setStep(5);
+      // Redirect to thank-you page after successful lead submission (GTM conversion trigger)
+      redirectToThankYou(i18n.language);
     } catch (e: any) {
       console.error(e);
       toast.error(e?.message || t("ovenFinder.error", "Something went wrong, please try again"));

@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { redirectToThankYou } from '@/lib/thankYou';
 
 interface DownloadDatasheetModalProps {
   isOpen: boolean;
@@ -25,7 +26,7 @@ interface FormData {
 const FALLBACK_CATALOG_URL = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/datasheets/site/vesuviano-catalogo-eng.pdf';
 
 const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: DownloadDatasheetModalProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
@@ -83,16 +84,11 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
 
       if (error) throw error;
 
-      toast({
-        title: t('downloadDatasheet.success'),
-        description: t('downloadDatasheet.successMessage'),
-      });
-
-      // Trigger the actual PDF download
+      // Trigger the actual PDF download in a new tab
       const downloadUrl = datasheetUrl || FALLBACK_CATALOG_URL;
       window.open(downloadUrl, '_blank', 'noopener,noreferrer');
 
-      // Reset form and close modal
+      // Reset form, close modal, then redirect to thank-you (GTM conversion trigger)
       setFormData({
         firstName: '',
         lastName: '',
@@ -101,6 +97,7 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
         city: '',
       });
       onClose();
+      redirectToThankYou(i18n.language);
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
