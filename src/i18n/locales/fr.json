@@ -870,7 +870,9 @@
     "step3": "Nous discuterons ensemble de la solution parfaite pour vos besoins",
     "phone": "Téléphone",
     "email": "Email",
-    "backHome": "Retour à l'Accueil"
+    "backHome": "Retour à l'Accueil",
+    "recommendationTitle": "Notre recommandation pour vous",
+    "recommendationSubtitle": "D'après vos réponses, voici le four que nous vous conseillons :"
   },
   "common": {
     "loading": "Chargement...",

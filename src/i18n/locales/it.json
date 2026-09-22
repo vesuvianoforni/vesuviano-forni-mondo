@@ -824,7 +824,9 @@
     "step3": "Discuteremo insieme la soluzione perfetta per le tue esigenze",
     "phone": "Telefono",
     "email": "Email",
-    "backHome": "Torna alla Home"
+    "backHome": "Torna alla Home",
+    "recommendationTitle": "La nostra raccomandazione per te",
+    "recommendationSubtitle": "In base alle tue risposte, questo è il forno che ti consigliamo:"
   },
   "common": {
     "loading": "Caricamento...",

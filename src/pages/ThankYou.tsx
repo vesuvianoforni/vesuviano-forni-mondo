@@ -1,22 +1,40 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Home, Phone, Mail } from "lucide-react";
+import { CheckCircle, Home, Phone, Mail, Flame } from "lucide-react";
 import SEOHead from '@/components/SEOHead';
 
 interface ThankYouProps {
   lang: string;
 }
 
+interface OvenRecommendation {
+  model_name?: string;
+  diameter?: number;
+  capacity?: string;
+  explanation?: string;
+}
+
 const ThankYou = ({ lang }: ThankYouProps) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const [recommendation, setRecommendation] = useState<OvenRecommendation | null>(null);
 
   useEffect(() => {
     i18n.changeLanguage(lang);
   }, [lang, i18n]);
+
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem("ovenFinderRecommendation");
+      if (saved) {
+        setRecommendation(JSON.parse(saved));
+        sessionStorage.removeItem("ovenFinderRecommendation");
+      }
+    } catch {}
+  }, []);
 
   const handleGoHome = () => {
     navigate(`/${lang}`);
@@ -42,6 +60,33 @@ const ThankYou = ({ lang }: ThankYouProps) => {
           <p className="font-inter text-lg text-gray-600 mb-6">
             {t('thankYou.subtitle')}
           </p>
+
+          {recommendation && (
+            <div className="bg-vesuviano-600 text-white rounded-lg p-6 mb-8 text-left">
+              <div className="flex items-center gap-3 mb-3">
+                <Flame className="flex-shrink-0" size={24} />
+                <div>
+                  <h2 className="font-semibold text-lg">{t('thankYou.recommendationTitle')}</h2>
+                  <p className="text-sm text-vesuviano-100">{t('thankYou.recommendationSubtitle')}</p>
+                </div>
+              </div>
+              {recommendation.model_name && (
+                <p className="font-playfair text-2xl font-bold">
+                  {recommendation.model_name}
+                  {(recommendation.diameter || recommendation.capacity) && (
+                    <span className="ml-2 text-base font-inter font-normal text-vesuviano-100">
+                      {recommendation.diameter && `Ø ${recommendation.diameter} cm`}
+                      {recommendation.diameter && recommendation.capacity && " • "}
+                      {recommendation.capacity}
+                    </span>
+                  )}
+                </p>
+              )}
+              {recommendation.explanation && (
+                <p className="mt-3 text-vesuviano-50">{recommendation.explanation}</p>
+              )}
+            </div>
+          )}
 
           <div className="bg-vesuviano-50 rounded-lg p-6 mb-8 text-left">
             <h2 className="font-semibold text-lg mb-4 text-gray-900">
