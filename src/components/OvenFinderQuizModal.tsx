@@ -8,6 +8,7 @@ import { ChefHat, Home, Flame, Zap, TreePine, ArrowLeft, ArrowRight, Loader2, Sp
 import { supabase } from "@/integrations/supabase/client";
 import { redirectToThankYou } from "@/lib/thankYou";
 import { toast } from "sonner";
+import { getAttribution } from "@/lib/attribution";
 
 interface OvenFinderQuizModalProps {
   open: boolean;
@@ -73,7 +74,7 @@ const OvenFinderQuizModal = ({ open, onOpenChange }: OvenFinderQuizModalProps) =
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("oven-finder-recommend", {
-        body: { ...answers, lang: i18n.language || "en" },
+        body: { ...answers, lang: i18n.language || "en", ...getAttribution() },
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);

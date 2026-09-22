@@ -36,6 +36,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import LanguageSelector from "@/components/LanguageSelector";
 import SEOHead from '@/components/SEOHead';
+import { getAttribution } from "@/lib/attribution";
 
 const BookAppointment = () => {
   const { t, i18n } = useTranslation();
@@ -92,6 +93,7 @@ const BookAppointment = () => {
             time: data.time,
             contactMethod: data.contactMethod,
             phoneNumber: data.phoneNumber,
+            ...getAttribution(),
           },
         },
       });

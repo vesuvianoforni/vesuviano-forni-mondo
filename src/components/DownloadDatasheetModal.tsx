@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { redirectToThankYou } from '@/lib/thankYou';
+import { getAttribution } from "@/lib/attribution";
 
 interface DownloadDatasheetModalProps {
   isOpen: boolean;
@@ -77,7 +78,8 @@ const DownloadDatasheetModal = ({ isOpen, onClose, ovenType, datasheetUrl }: Dow
             email: formData.email,
             phone: formData.phone,
             city: formData.city,
-            ovenType: ovenType
+            ovenType: ovenType,
+            ...getAttribution()
           }
         }
       });

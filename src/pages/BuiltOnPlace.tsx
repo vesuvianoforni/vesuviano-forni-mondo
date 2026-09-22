@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import LazyImage from "@/components/LazyImage";
 import RivestimentiCompact from "@/components/RivestimentiCompact";
 import SEOHead from '@/components/SEOHead';
+import { getAttribution } from "@/lib/attribution";
 
 const WHATSAPP_LINK = "https://wa.me/393509286941?text=Ciao,%20vorrei%20informazioni%20sui%20vostri%20forni%20professionali";
 
@@ -81,6 +82,7 @@ const BuiltOnPlace = () => {
           country: formData.country,
           ovenType: "Built on Place (Meta Campaign)",
           message: formData.message || "Lead from Built on Place landing page",
+          ...getAttribution(),
         },
       });
 

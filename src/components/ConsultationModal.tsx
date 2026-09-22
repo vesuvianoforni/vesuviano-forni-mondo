@@ -8,6 +8,7 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { redirectToThankYou } from "@/lib/thankYou";
+import { getAttribution } from "@/lib/attribution";
 
 interface ConsultationModalProps {
   isOpen: boolean;
@@ -52,7 +53,7 @@ const ConsultationModal = ({ isOpen, onClose }: ConsultationModalProps) => {
       };
 
       const { data, error } = await supabase.functions.invoke('send-consultation-email', {
-        body: fullFormData
+        body: { ...fullFormData, ...getAttribution() }
       });
 
       if (error) throw error;
