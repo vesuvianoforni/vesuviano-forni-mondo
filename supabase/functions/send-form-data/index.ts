@@ -33,6 +33,38 @@ function dataUrlToAttachment(dataUrl: string, filename: string) {
   }
 }
 
+
+// ---- Traffic source attribution -------------------------------------------
+const ATTR_KEYS = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid','page_path','referrer']
+
+function leadSourceOf(d: Record<string, any> = {}): string {
+  if (d.lead_source) return String(d.lead_source)
+  if (d.gclid) return 'Google Ads'
+  if (d.fbclid) return 'Facebook/Meta'
+  if (d.utm_source) return String(d.utm_source)
+  return 'Direct/Organic'
+}
+
+function attributionBlock(d: Record<string, any> = {}): string {
+  const rows = ATTR_KEYS
+    .filter((k) => d[k])
+    .map((k) => `<p style="margin:4px 0;"><strong>${k}:</strong> ${d[k]}</p>`)
+    .join('')
+  return `
+    <div style="background:#eef2ff;border-left:4px solid #4f46e5;padding:15px;margin:0 0 20px 0;border-radius:0 8px 8px 0;">
+      <p style="margin:0;font-size:16px;"><strong>🎯 Lead source:</strong> ${leadSourceOf(d)}</p>
+      ${rows}
+    </div>
+  `
+}
+
+function attributionOf(d: Record<string, any> = {}): Record<string, any> {
+  const out: Record<string, any> = { lead_source: leadSourceOf(d) }
+  for (const k of ATTR_KEYS) out[k] = d[k] || null
+  return out
+}
+// ---------------------------------------------------------------------------
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -254,7 +286,7 @@ ${JSON.stringify(data, null, 2)}
           website: data.website || null,
           oven_type: data.ovenType || null,
           notes: data.notes || data.message || null,
-          metadata: data,
+          metadata: { ...data, ...attributionOf(data) },
           status: 'new'
         })
         .select('id')
@@ -278,6 +310,7 @@ ${JSON.stringify(data, null, 2)}
       const crmPayload = {
         id: savedLeadId,
         source: 'vesuviano_website',
+        ...attributionOf(data),
         form_type: formType,
         first_name: data.firstName || null,
         last_name: data.lastName || null,
@@ -318,6 +351,7 @@ ${JSON.stringify(data, null, 2)}
         id: savedLeadId,
         source: 'vesuviano_website',
         event_type: 'website_lead_created',
+        ...attributionOf(data),
         form_type: formType,
         customer_name: data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : data.firstName || data.lastName || null,
         first_name: data.firstName || null,
@@ -375,6 +409,7 @@ ${JSON.stringify(data, null, 2)}
             </div>
             
             <div class="content">
+              ${attributionBlock(data)}
               ${emailContent}
             </div>
 

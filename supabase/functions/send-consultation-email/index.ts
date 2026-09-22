@@ -43,6 +43,38 @@ interface ConfiguratorInterestData {
   notes: string
 }
 
+
+// ---- Traffic source attribution -------------------------------------------
+const ATTR_KEYS = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid','page_path','referrer']
+
+function leadSourceOf(d: Record<string, any> = {}): string {
+  if (d.lead_source) return String(d.lead_source)
+  if (d.gclid) return 'Google Ads'
+  if (d.fbclid) return 'Facebook/Meta'
+  if (d.utm_source) return String(d.utm_source)
+  return 'Direct/Organic'
+}
+
+function attributionBlock(d: Record<string, any> = {}): string {
+  const rows = ATTR_KEYS
+    .filter((k) => d[k])
+    .map((k) => `<p style="margin:4px 0;"><strong>${k}:</strong> ${d[k]}</p>`)
+    .join('')
+  return `
+    <div style="background:#eef2ff;border-left:4px solid #4f46e5;padding:15px;margin:0 0 20px 0;border-radius:0 8px 8px 0;">
+      <p style="margin:0;font-size:16px;"><strong>🎯 Lead source:</strong> ${leadSourceOf(d)}</p>
+      ${rows}
+    </div>
+  `
+}
+
+function attributionOf(d: Record<string, any> = {}): Record<string, any> {
+  const out: Record<string, any> = { lead_source: leadSourceOf(d) }
+  for (const k of ATTR_KEYS) out[k] = d[k] || null
+  return out
+}
+// ---------------------------------------------------------------------------
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -487,6 +519,8 @@ serve(async (req) => {
               <p>Ricevuta il ${new Date().toLocaleString('it-IT')}</p>
             </div>
             
+            ${attributionBlock(formData as Record<string, any>)}
+
             <div class="priority">
               <strong>⚡ AZIONE RICHIESTA:</strong> Contattare entro 24 ore per consulenza gratuita
             </div>
@@ -612,7 +646,7 @@ serve(async (req) => {
           company: formData.company || null,
           oven_type: formData.ovenType || null,
           notes: formData.message || null,
-          metadata: formData,
+          metadata: { ...formData, ...attributionOf(formData as Record<string, any>) },
           status: 'new'
         })
         .select('id')
@@ -642,6 +676,7 @@ serve(async (req) => {
         source: 'vesuviano_website',
         event_type: 'website_lead_created',
         form_type: 'consultation',
+        ...attributionOf(formData as Record<string, any>),
         customer_name: formData.name || null,
         first_name: firstName,
         last_name: lastName,
