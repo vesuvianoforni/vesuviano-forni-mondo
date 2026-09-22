@@ -847,7 +847,9 @@
     "step3": "We will discuss together the perfect solution for your needs",
     "phone": "Phone",
     "email": "Email",
-    "backHome": "Back to Home"
+    "backHome": "Back to Home",
+    "recommendationTitle": "Our recommendation for you",
+    "recommendationSubtitle": "Based on your answers, this is the oven we recommend:"
   },
   "common": {
     "loading": "Loading...",

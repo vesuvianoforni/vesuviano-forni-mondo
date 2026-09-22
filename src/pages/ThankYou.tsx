@@ -1,22 +1,40 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Home, Phone, Mail } from "lucide-react";
+import { CheckCircle, Home, Phone, Mail, Flame } from "lucide-react";
 import SEOHead from '@/components/SEOHead';
 
 interface ThankYouProps {
   lang: string;
 }
 
+interface OvenRecommendation {
+  model_name?: string;
+  diameter?: number;
+  capacity?: string;
+  explanation?: string;
+}
+
 const ThankYou = ({ lang }: ThankYouProps) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const [recommendation, setRecommendation] = useState<OvenRecommendation | null>(null);
 
   useEffect(() => {
     i18n.changeLanguage(lang);
   }, [lang, i18n]);
+
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem("ovenFinderRecommendation");
+      if (saved) {
+        setRecommendation(JSON.parse(saved));
+        sessionStorage.removeItem("ovenFinderRecommendation");
+      }
+    } catch {}
+  }, []);
 
   const handleGoHome = () => {
     navigate(`/${lang}`);
