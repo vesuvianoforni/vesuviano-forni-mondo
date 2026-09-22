@@ -15,7 +15,7 @@ import { redirectToThankYou } from "@/lib/thankYou";
  */
 const PreFooterSimpleForm = () => {
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
