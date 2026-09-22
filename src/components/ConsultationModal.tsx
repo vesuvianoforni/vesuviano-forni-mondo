@@ -56,16 +56,8 @@ const ConsultationModal = ({ isOpen, onClose }: ConsultationModalProps) => {
 
       if (error) throw error;
 
-      const currentLang = i18n.language || 'it';
-      const thankYouRoutes: Record<string, string> = {
-        'it': '/it/thank-you-it',
-        'en': '/en/thank-you-en',
-        'fr': '/fr/thank-you-fr',
-        'es': '/es/thank-you-es',
-        'de': '/de/thank-you-de'
-      };
-      
-      navigate(thankYouRoutes[currentLang] || '/it/thank-you-it');
+      // Real navigation so GTM's page-based trigger fires.
+      redirectToThankYou(i18n.language);
     } catch (error) {
       console.error("Errore invio consulenza:", error);
       toast({
