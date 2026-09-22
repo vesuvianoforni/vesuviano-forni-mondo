@@ -83,7 +83,8 @@ const BuiltOnPlace = () => {
         },
       });
 
-      navigate("/en/thank-you-en");
+      // Real navigation so GTM's page-based trigger fires.
+      redirectToThankYou(i18n.language);
     } catch (error) {
       console.error("Error:", error);
       toast({
