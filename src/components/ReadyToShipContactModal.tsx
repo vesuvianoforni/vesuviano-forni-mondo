@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Loader2, Shield, Clock, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { redirectToThankYou } from "@/lib/thankYou";
 
 interface ReadyToShipContactModalProps {
   isOpen: boolean;
