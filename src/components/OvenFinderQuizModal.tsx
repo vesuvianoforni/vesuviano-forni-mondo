@@ -78,6 +78,8 @@ const OvenFinderQuizModal = ({ open, onOpenChange }: OvenFinderQuizModalProps) =
       if (data?.error) throw new Error(data.error);
       setRecommendation(data.recommendation);
       setStep(5);
+      // Redirect to thank-you page after successful lead submission (GTM conversion trigger)
+      redirectToThankYou(i18n.language);
     } catch (e: any) {
       console.error(e);
       toast.error(e?.message || t("ovenFinder.error", "Something went wrong, please try again"));
