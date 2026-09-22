@@ -931,7 +931,9 @@
     "step3": "Discutiremos juntos la solución perfecta para tus necesidades",
     "phone": "Teléfono",
     "email": "Email",
-    "backHome": "Volver al Inicio"
+    "backHome": "Volver al Inicio",
+    "recommendationTitle": "Nuestra recomendación para ti",
+    "recommendationSubtitle": "Según tus respuestas, este es el horno que te recomendamos:"
   },
   "common": {
     "loading": "Cargando...",
