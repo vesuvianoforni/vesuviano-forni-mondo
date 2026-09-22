@@ -61,6 +61,33 @@ const ThankYou = ({ lang }: ThankYouProps) => {
             {t('thankYou.subtitle')}
           </p>
 
+          {recommendation && (
+            <div className="bg-vesuviano-600 text-white rounded-lg p-6 mb-8 text-left">
+              <div className="flex items-center gap-3 mb-3">
+                <Flame className="flex-shrink-0" size={24} />
+                <div>
+                  <h2 className="font-semibold text-lg">{t('thankYou.recommendationTitle')}</h2>
+                  <p className="text-sm text-vesuviano-100">{t('thankYou.recommendationSubtitle')}</p>
+                </div>
+              </div>
+              {recommendation.model_name && (
+                <p className="font-playfair text-2xl font-bold">
+                  {recommendation.model_name}
+                  {(recommendation.diameter || recommendation.capacity) && (
+                    <span className="ml-2 text-base font-inter font-normal text-vesuviano-100">
+                      {recommendation.diameter && `Ø ${recommendation.diameter} cm`}
+                      {recommendation.diameter && recommendation.capacity && " • "}
+                      {recommendation.capacity}
+                    </span>
+                  )}
+                </p>
+              )}
+              {recommendation.explanation && (
+                <p className="mt-3 text-vesuviano-50">{recommendation.explanation}</p>
+              )}
+            </div>
+          )}
+
           <div className="bg-vesuviano-50 rounded-lg p-6 mb-8 text-left">
             <h2 className="font-semibold text-lg mb-4 text-gray-900">
               {t('thankYou.nextSteps')}
