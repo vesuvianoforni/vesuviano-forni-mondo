@@ -9,6 +9,7 @@ import heroBgAsset from '@/assets/gallery-hero-bg.jpg.asset.json';
 import realBoscoCutout from '@/assets/real-bosco-cutout.png.asset.json';
 import sebastianCutout from '@/assets/sebastian-cutout.png.asset.json';
 import startProjectBgAsset from '@/assets/start-project-bg.jpg.asset.json';
+import { getAttribution } from "@/lib/attribution";
 const HERO_BG_URL = heroBgAsset.url;
 const START_PROJECT_BG_URL = startProjectBgAsset.url;
 const IMAGE_OVERRIDES: Record<string, string> = {
@@ -147,7 +148,7 @@ const ImmersiveOvenGallery = () => {
     setSubmitting(true);
     try {
       const { error } = await supabase.functions.invoke('send-consultation-email', {
-        body: { ...form, country: '', ovenType: '' },
+        body: { ...form, country: '', ovenType: '', ...getAttribution() },
       });
       if (error) throw error;
       toast({

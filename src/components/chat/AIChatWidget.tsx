@@ -3,6 +3,7 @@ import { MessageCircle, X, Send, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 import { supabase } from "@/integrations/supabase/client";
+import { getAttribution } from "@/lib/attribution";
 
 const SUPABASE_URL = "https://lgueucxznbqgvhpjzurf.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndWV1Y3h6bmJxZ3ZocGp6dXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4MDE5ODEsImV4cCI6MjA2NDM3Nzk4MX0.JH9wcGcoyPKQqWT1ExYLRJyg1Jz_8iXezfmeZ9oyZzE";
@@ -120,6 +121,7 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string, email?
             email: form.email || null,
             phone: form.phone || null,
             notes: "Contatto generato dall'assistente AI del sito.",
+            ...getAttribution(),
           },
         },
       });
@@ -423,6 +425,7 @@ export default function AIChatWidget() {
               phone,
               city,
               notes: "Richiesta di richiamata dall'assistente AI del sito.",
+              ...getAttribution(),
             },
           },
         }).then(() => {});

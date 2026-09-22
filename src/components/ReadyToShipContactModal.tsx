@@ -9,6 +9,7 @@ import { Loader2, Shield, Clock, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { redirectToThankYou } from "@/lib/thankYou";
+import { getAttribution } from "@/lib/attribution";
 
 interface ReadyToShipContactModalProps {
   isOpen: boolean;
@@ -81,6 +82,7 @@ const ReadyToShipContactModal = ({
             city: formData.city,
             readyToShipOvenId: productId,
             language: i18n.language || 'it',
+            ...getAttribution(),
           }
         });
 
@@ -100,7 +102,7 @@ const ReadyToShipContactModal = ({
         };
 
         const { error } = await supabase.functions.invoke('send-consultation-email', {
-          body: fullFormData
+          body: { ...fullFormData, ...getAttribution() }
         });
 
         if (error) throw error;

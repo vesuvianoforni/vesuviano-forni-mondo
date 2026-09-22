@@ -9,6 +9,7 @@ import { Phone, Mail, MapPin, Download, CheckCircle, Loader2, Send } from "lucid
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { redirectToThankYou } from "@/lib/thankYou";
+import { getAttribution } from "@/lib/attribution";
 
 const ConsultationForm = () => {
   const { toast } = useToast();
@@ -39,7 +40,7 @@ const ConsultationForm = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke('send-consultation-email', {
-        body: formData
+        body: { ...formData, ...getAttribution() }
       });
 
       if (error) throw error;

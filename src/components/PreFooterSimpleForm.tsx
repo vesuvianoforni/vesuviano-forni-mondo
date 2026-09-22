@@ -7,6 +7,7 @@ import { Loader2, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { redirectToThankYou } from "@/lib/thankYou";
+import { getAttribution } from "@/lib/attribution";
 
 /**
  * Minimal pre-footer consultation form.
@@ -41,7 +42,7 @@ const PreFooterSimpleForm = () => {
     setIsSubmitting(true);
     try {
       const { error } = await supabase.functions.invoke("send-consultation-email", {
-        body: formData,
+        body: { ...formData, ...getAttribution() },
       });
       if (error) throw error;
 
