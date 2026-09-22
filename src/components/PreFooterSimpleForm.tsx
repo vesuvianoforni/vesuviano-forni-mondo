@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { redirectToThankYou } from "@/lib/thankYou";
 
 /**
  * Minimal pre-footer consultation form.
@@ -14,7 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
  */
 const PreFooterSimpleForm = () => {
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -44,11 +45,8 @@ const PreFooterSimpleForm = () => {
       });
       if (error) throw error;
 
-      toast({
-        title: t("consultation.messages.success"),
-        description: t("consultation.messages.successDescription"),
-      });
-      setFormData({ name: "", email: "", phone: "", country: "", ovenType: "", message: "" });
+      // Success: redirect to the localized thank-you page (GTM conversion trigger).
+      redirectToThankYou(i18n.language);
     } catch (err) {
       console.error("Errore invio consulenza:", err);
       toast({
