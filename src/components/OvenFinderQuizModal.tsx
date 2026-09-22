@@ -78,7 +78,10 @@ const OvenFinderQuizModal = ({ open, onOpenChange }: OvenFinderQuizModalProps) =
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
       setRecommendation(data.recommendation);
-      setStep(5);
+      // Save the recommendation so the thank-you page can display it
+      try {
+        sessionStorage.setItem("ovenFinderRecommendation", JSON.stringify(data.recommendation));
+      } catch {}
       // Redirect to thank-you page after successful lead submission (GTM conversion trigger)
       redirectToThankYou(i18n.language);
     } catch (e: any) {
