@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { ChefHat, Home, Flame, Zap, TreePine, ArrowLeft, ArrowRight, Loader2, Sparkles, CheckCircle2, Phone } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { redirectToThankYou } from "@/lib/thankYou";
 import { toast } from "sonner";
 
 interface OvenFinderQuizModalProps {
