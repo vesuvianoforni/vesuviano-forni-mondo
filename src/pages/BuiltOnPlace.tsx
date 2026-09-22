@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Star, Flame, Shield, Clock, MapPin, Phone, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { redirectToThankYou } from "@/lib/thankYou";
+import { useTranslation } from "react-i18next";
 import LazyImage from "@/components/LazyImage";
 import RivestimentiCompact from "@/components/RivestimentiCompact";
 import SEOHead from '@/components/SEOHead';
@@ -36,7 +37,7 @@ const reviews = [
 
 const BuiltOnPlace = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const { i18n } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
