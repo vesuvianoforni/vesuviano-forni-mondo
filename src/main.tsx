@@ -3,6 +3,10 @@ import { HelmetProvider } from 'react-helmet-async'
 import App from './App.tsx'
 import './index.css'
 import './i18n/config'
+import { captureAttribution } from './lib/attribution'
+
+// Capture traffic source (utm_*, gclid, fbclid) from the landing URL.
+captureAttribution();
 
 const root = document.getElementById("root")!;
 createRoot(root).render(
