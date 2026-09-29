@@ -25,9 +25,6 @@ const FAQSection = lazy(() => import("@/components/FAQSection"));
 const HomeBlogSection = lazy(() => import("@/components/HomeBlogSection"));
 
 
-const AIChatWidget = lazy(() => import("@/components/chat/AIChatWidget"));
-
-const ReadyToShipPopup = lazy(() => import("@/components/ReadyToShipPopup"));
 const CallbackPopup = lazy(() => import("@/components/CallbackPopup"));
 const PreFooterSimpleForm = lazy(() => import("@/components/PreFooterSimpleForm"));
 
@@ -351,11 +348,7 @@ const Index = () => {
       </footer>
 
 
-      {/* AI Chat Widget */}
       <Suspense fallback={null}>
-        <AIChatWidget />
-        
-        <ReadyToShipPopup />
         <CallbackPopup />
       </Suspense>
     </div>

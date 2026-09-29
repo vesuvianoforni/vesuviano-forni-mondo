@@ -5,7 +5,6 @@ import Header from "@/components/Header";
 import SEOHead from "@/components/SEOHead";
 import Rivestimenti from "@/components/Rivestimenti";
 import ConsultationForm from "@/components/ConsultationForm";
-import AIChatWidget from "@/components/chat/AIChatWidget";
 
 interface Props {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
@@ -39,7 +38,6 @@ const LocalizedRivestimenti = ({ lang }: Props) => {
           <ConsultationForm />
         </section>
       </main>
-      <AIChatWidget />
     </div>
   );
 };

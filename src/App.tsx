@@ -49,6 +49,7 @@ const RotatingPizzaOven = lazy(() => import("./pages/RotatingPizzaOven"));
 const ElectricPizzaOven = lazy(() => import("./pages/ElectricPizzaOven"));
 const LocalizedContact = lazy(() => import("./pages/LocalizedContact"));
 import ClarityPageView from "./components/ClarityPageView";
+import PublicEngagement from "./components/PublicEngagement";
 
 
 // ERP - lazy loaded
@@ -398,6 +399,7 @@ const App = () => {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+           <PublicEngagement />
           </ConsultationModalProvider>
         </BrowserRouter>
       </TooltipProvider>

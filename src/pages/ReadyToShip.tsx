@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import Header from '@/components/Header';
-import AIChatWidget from '@/components/chat/AIChatWidget';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -51,7 +50,6 @@ const ReadyToShip = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-50 to-stone-100">
       <Header />
-      <AIChatWidget />
       
       
       <main className="container mx-auto px-4 py-24">

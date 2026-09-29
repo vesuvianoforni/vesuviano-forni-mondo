@@ -5,7 +5,6 @@ import Header from "@/components/Header";
 import SEOHead from "@/components/SEOHead";
 import AboutUs from "@/components/AboutUs";
 import ConsultationForm from "@/components/ConsultationForm";
-import AIChatWidget from "@/components/chat/AIChatWidget";
 import { Link } from 'react-router-dom';
 
 interface LocalizedAboutUsProps {
@@ -54,7 +53,6 @@ const LocalizedAboutUs = ({ lang }: LocalizedAboutUsProps) => {
         </section>
       </main>
 
-      <AIChatWidget />
 
       <footer className="bg-charcoal-900 text-white py-12 border-t border-stone-800">
         <div className="container mx-auto px-6">

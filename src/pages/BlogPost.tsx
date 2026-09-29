@@ -5,7 +5,6 @@ import Header from '@/components/Header';
 import { useBlogPost, getLocalizedField } from '@/hooks/useBlogPosts';
 import BlogSEO from '@/components/blog/BlogSEO';
 import LazyImage from '@/components/LazyImage';
-import AIChatWidget from '@/components/chat/AIChatWidget';
 import NotFound from './NotFound';
 import { sanitizeBlogHtml } from '@/lib/sanitizeBlogHtml';
 
@@ -278,7 +277,6 @@ const BlogPostPage = ({ lang }: BlogPostProps) => {
         </div>
       </article>
 
-      <AIChatWidget />
     </div>
   );
 };
