@@ -84,8 +84,8 @@ const LocalizedContact = ({ lang }: Props) => {
     {
       icon: Phone,
       title: c.call,
-      value: '+39 081 19231684',
-      href: 'tel:+390811923168',
+      value: '+39 350 928 6941',
+      href: 'tel:+393509286941',
     },
     {
       icon: MessageCircle,

@@ -13,7 +13,7 @@ const WhatsAppButton = () => {
     
     // Delay di 300ms prima del redirect per dare tempo a GTM
     setTimeout(() => {
-      const whatsappUrl = 'https://wa.link/a2959l';
+      const whatsappUrl = 'https://wa.me/393509286941';
       window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
     }, 300);
   };
@@ -26,7 +26,7 @@ const WhatsAppButton = () => {
       title="Contattaci su WhatsApp"
       data-gtm-event="click_whatsapp"
       data-gtm-source="desktop_button"
-      data-whatsapp-link="https://wa.link/a2959l"
+      data-whatsapp-link="https://wa.me/393509286941"
     >
       <img 
         src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/whatsapp-logo-inline.png" 

@@ -487,7 +487,7 @@ serve(async (req) => {
               </div>
 
               <p>${t.contactText}</p>
-              <p><strong>📞 ${t.phone}:</strong> 081 19231684<br>
+              <p><strong>📞 ${t.phone}:</strong> +39 350 928 6941<br>
               <strong>✉️ ${t.emailLabel}:</strong> info@vesuvianoforni.com</p>
             </div>
 

@@ -176,7 +176,7 @@ const getEmailTemplate = (name: string, link: string, language: 'it' | 'en' | 'f
               <p><strong>Vesuviano Forni</strong></p>
               <p>Forni Artigianali dal Vesuvio</p>
               <p>Via Sant'Anastasia 123, Napoli, Italia</p>
-              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 081 123 4567</p>
+              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 350 928 6941</p>
               <p style="margin-top: 15px;">🌐 <a href="https://vesuvianoforni.com">vesuvianoforni.com</a></p>
             </div>
           </div>
@@ -341,7 +341,7 @@ const getEmailTemplate = (name: string, link: string, language: 'it' | 'en' | 'f
               <p><strong>Vesuviano Forni</strong></p>
               <p>Artisanal Ovens from Vesuvius</p>
               <p>Via Sant'Anastasia 123, Naples, Italy</p>
-              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 081 123 4567</p>
+              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 350 928 6941</p>
               <p style="margin-top: 15px;">🌐 <a href="https://vesuvianoforni.com">vesuvianoforni.com</a></p>
             </div>
           </div>
@@ -506,7 +506,7 @@ const getEmailTemplate = (name: string, link: string, language: 'it' | 'en' | 'f
               <p><strong>Vesuviano Forni</strong></p>
               <p>Fours Artisanaux du Vésuve</p>
               <p>Via Sant'Anastasia 123, Naples, Italie</p>
-              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 081 123 4567</p>
+              <p>📧 <a href="mailto:info@vesuvianoforni.com">info@vesuvianoforni.com</a> | 📞 +39 350 928 6941</p>
               <p style="margin-top: 15px;">🌐 <a href="https://vesuvianoforni.com">vesuvianoforni.com</a></p>
             </div>
           </div>
