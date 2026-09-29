@@ -1,0 +1,1 @@
+UPDATE public.ai_knowledge_base SET content = 'Telefono: +39 350 928 6941. Email: info@vesuvianoforni.com. WhatsApp disponibile.' WHERE category = 'contatti' AND title = 'Informazioni di contatto' AND content = 'Telefono: 081 19231684. Email: info@vesuvianoforni.com. WhatsApp disponibile.';
