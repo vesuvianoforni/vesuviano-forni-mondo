@@ -167,13 +167,13 @@ const ConsultationForm = () => {
                 <CardContent className="p-5 md:p-6">
                   <h3 className="font-playfair text-lg font-semibold text-foreground mb-4">{t('consultation.contact.title')}</h3>
                   <div className="space-y-4">
-                    <a href="tel:+393773831442" className="flex items-center gap-3 text-muted-foreground hover:text-vesuviano-600 transition-colors group">
+                    <a href="tel:+393509286941" className="flex items-center gap-3 text-muted-foreground hover:text-vesuviano-600 transition-colors group">
                       <div className="w-10 h-10 bg-vesuviano-50 rounded-lg flex items-center justify-center group-hover:bg-vesuviano-100 transition-colors">
                         <Phone className="text-vesuviano-600" size={18} />
                       </div>
                       <div>
                         <p className="text-xs text-muted-foreground">{t('consultation.contact.phone')}</p>
-                        <p className="font-medium text-foreground">+39 377 383 1442</p>
+                        <p className="font-medium text-foreground">+39 350 928 6941</p>
                       </div>
                     </a>
                     <a href="mailto:info@vesuvianoforni.com" className="flex items-center gap-3 text-muted-foreground hover:text-vesuviano-600 transition-colors group">

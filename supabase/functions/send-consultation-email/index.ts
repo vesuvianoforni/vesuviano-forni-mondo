@@ -189,7 +189,7 @@ serve(async (req) => {
                 </div>
 
                 <p>Se hai domande urgenti, non esitare a contattarci:</p>
-                <p><strong>📞 Telefono:</strong> 081 19231684<br>
+                <p><strong>📞 Telefono:</strong> +39 350 928 6941<br>
                 <strong>✉️ Email:</strong> info@vesuvianoforni.com</p>
               </div>
 
@@ -474,7 +474,7 @@ serve(async (req) => {
               <div class="contact-info">
                 <div class="contact-item">
                   <strong>📞 Telefono</strong><br>
-                  081 19231684
+                  +39 350 928 6941
                 </div>
                 <div class="contact-item">
                   <strong>✉️ Email</strong><br>

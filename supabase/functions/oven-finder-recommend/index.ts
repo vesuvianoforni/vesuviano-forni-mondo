@@ -267,7 +267,7 @@ Pick the single best model and explain in 3-4 sentences why it's perfect for thi
             <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;"/>
             <p style="font-size:12px;color:#888;text-align:center;margin:0;">
               Vesuviano Forni · <a href="https://vesuvianoforni.com" style="color:#c2410c;text-decoration:none;">vesuvianoforni.com</a><br/>
-              📞 081 19231684 · ✉️ info@vesuvianoforni.com
+              📞 +39 350 928 6941 · ✉️ info@vesuvianoforni.com
             </p>
           </div>
         </div>`;

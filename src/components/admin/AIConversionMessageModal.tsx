@@ -98,12 +98,7 @@ export const AIConversionMessageModal = ({
               </tr>
               <tr>
                 <td style="padding: 8px 0; text-align: center; color: #666;">
-                  <a href="tel:+390819231684" style="color: #2563eb; text-decoration: none;">📞 081 19231684</a>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; text-align: center; color: #666;">
-                  <a href="tel:08119231684" style="color: #2563eb; text-decoration: none;">☎️ 081 192 31684</a>
+                  <a href="tel:+393509286941" style="color: #2563eb; text-decoration: none;">📞 +39 350 928 6941</a>
                 </td>
               </tr>
               <tr>

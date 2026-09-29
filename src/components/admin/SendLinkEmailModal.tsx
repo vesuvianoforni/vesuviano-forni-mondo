@@ -211,7 +211,7 @@ export const SendLinkEmailModal = ({ isOpen, onClose, session }: SendLinkEmailMo
                     <p className="text-xs">{language === 'it' ? 'Forni Artigianali dal Vesuvio' : language === 'en' ? 'Artisanal Ovens from Vesuvius' : 'Fours Artisanaux du Vésuve'}</p>
                     <p>Via Sant'Anastasia 123, Napoli, Italia</p>
                     <p>
-                      📧 info@vesuvianoforni.com | 📞 +39 081 123 4567
+                      📧 info@vesuvianoforni.com | 📞 +39 350 928 6941
                     </p>
                     <p className="mt-2">
                       🌐 <a href="https://vesuvianoforni.com" className="text-[#CD5C5C] no-underline">vesuvianoforni.com</a>

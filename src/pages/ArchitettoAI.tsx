@@ -120,11 +120,11 @@ const ArchitettoAI = () => {
                 </li>
                 <li>
                   <a 
-                    href="tel:+390819231684" 
+                    href="tel:+393509286941" 
                     className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                   >
                     <span>📞</span>
-                    081 19231684
+                    +39 350 928 6941
                   </a>
                 </li>
                 <li>
