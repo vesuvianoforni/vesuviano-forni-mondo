@@ -102,11 +102,6 @@ export const AIConversionMessageModal = ({
                 </td>
               </tr>
               <tr>
-                <td style="padding: 8px 0; text-align: center; color: #666;">
-                  <a href="tel:+393509286941" style="color: #2563eb; text-decoration: none;">☎️ +39 350 928 6941</a>
-                </td>
-              </tr>
-              <tr>
                 <td style="padding: 12px 0; text-align: center; color: #888; font-size: 14px;">
                   📍 Naples - Italy
                 </td>

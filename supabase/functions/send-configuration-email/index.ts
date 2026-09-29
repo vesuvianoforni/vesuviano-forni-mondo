@@ -124,11 +124,6 @@ const handler = async (req: Request): Promise<Response> => {
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding: 8px 0; text-align: center; color: #666;">
-                    ☎️ +39 350 928 6941
-                  </td>
-                </tr>
-                <tr>
                   <td style="padding: 12px 0; text-align: center; color: #888; font-size: 14px;">
                     📍 Naples - Italy
                   </td>
