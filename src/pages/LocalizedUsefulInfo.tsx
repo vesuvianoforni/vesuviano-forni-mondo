@@ -4,7 +4,6 @@ import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
 import SEOHead from '@/components/SEOHead';
 
-import AIChatWidget from '@/components/chat/AIChatWidget';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface Props {
@@ -371,7 +370,6 @@ const LocalizedUsefulInfo = ({ lang }: Props) => {
         </div>
       </main>
 
-      <AIChatWidget />
     </div>
   );
 };

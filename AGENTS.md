@@ -1,0 +1,1 @@
+Public engagement widgets mount once at the public app shell, not inside individual pages, to prevent duplicate chat icons and promotional popups.

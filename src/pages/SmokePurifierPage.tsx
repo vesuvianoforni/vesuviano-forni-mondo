@@ -4,7 +4,6 @@ import { loadLanguage } from '@/i18n/config';
 import Header from '@/components/Header';
 import ZapperSection from '@/components/ZapperSection';
 import ConsultationForm from '@/components/ConsultationForm';
-import AIChatWidget from '@/components/chat/AIChatWidget';
 import SEOHead from '@/components/SEOHead';
 
 interface SmokePurifierPageProps {
@@ -32,7 +31,6 @@ const SmokePurifierPage = ({ lang }: SmokePurifierPageProps) => {
           <ConsultationForm />
         </section>
       </main>
-      <AIChatWidget />
     </div>
     </>
   );

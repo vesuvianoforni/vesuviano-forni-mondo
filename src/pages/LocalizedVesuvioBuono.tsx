@@ -6,7 +6,6 @@ import SEOHead from "@/components/SEOHead";
 import VesuvioBuono from "@/components/VesuvioBuono";
 import ConsultationForm from "@/components/ConsultationForm";
 import ProductVideoSection from "@/components/ProductVideoSection";
-import AIChatWidget from "@/components/chat/AIChatWidget";
 
 interface LocalizedVesuvioBuonoProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
@@ -47,7 +46,6 @@ const LocalizedVesuvioBuono = ({ lang }: LocalizedVesuvioBuonoProps) => {
           </section>
         </main>
 
-        <AIChatWidget />
 
         {/* Footer */}
         <footer className="bg-charcoal-900 text-white py-12 border-t border-stone-800">

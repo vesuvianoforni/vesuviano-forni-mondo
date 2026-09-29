@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import Header from '@/components/Header';
 import ConsultationForm from '@/components/ConsultationForm';
-import AIChatWidget from '@/components/chat/AIChatWidget';
 
 import { Button } from '@/components/ui/button';
 import CtaButton from '@/components/CtaButton';
@@ -234,7 +233,6 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
         </div>
       </section>
 
-      <AIChatWidget />
       
     </div>
   );
