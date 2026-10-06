@@ -11,7 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { redirectToThankYou } from "@/lib/thankYou";
 import { getAttribution } from "@/lib/attribution";
 
-const ConsultationForm = () => {
+const ConsultationForm = ({ embedded = false }: { embedded?: boolean }) => {
   const { toast } = useToast();
   const { t, i18n } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
