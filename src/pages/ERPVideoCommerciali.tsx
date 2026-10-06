@@ -38,7 +38,18 @@ const ERPVideoCommerciali = () => {
   const [language, setLanguage] = useState('en');
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const pickFile = (f: File | null | undefined) => {
+    if (!f) return;
+    if (!f.type.startsWith('video/')) { toast.error('Seleziona un file video'); return; }
+    setFile(f);
+    if (!title.trim() && f.name) {
+      const guess = f.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim();
+      if (guess) setTitle(guess);
+    }
+  };
 
   const load = async () => {
     setLoading(true);
