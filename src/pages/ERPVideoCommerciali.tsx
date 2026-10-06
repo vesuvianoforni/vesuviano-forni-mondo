@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Copy, Trash2, Upload, Loader2, ExternalLink } from 'lucide-react';
+import { Copy, Trash2, Upload, Loader2, ExternalLink, FileVideo, X } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 
 const LANGS = [
@@ -38,7 +38,18 @@ const ERPVideoCommerciali = () => {
   const [language, setLanguage] = useState('en');
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const pickFile = (f: File | null | undefined) => {
+    if (!f) return;
+    if (!f.type.startsWith('video/')) { toast.error('Seleziona un file video'); return; }
+    setFile(f);
+    if (!title.trim() && f.name) {
+      const guess = f.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim();
+      if (guess) setTitle(guess);
+    }
+  };
 
   const load = async () => {
     setLoading(true);
@@ -101,7 +112,7 @@ const ERPVideoCommerciali = () => {
         </div>
 
         <Card className="bg-[#1a1a1a] border-amber-900/20">
-          <CardContent className="p-5 grid gap-4 md:grid-cols-[2fr_1fr_2fr_auto] items-end">
+          <CardContent className="p-5 grid gap-4 md:grid-cols-[2fr_1fr_3fr_auto] items-end">
             <div>
               <Label className="text-gray-300">Titolo</Label>
               <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Es. Presentazione Real Bosco" />
@@ -115,7 +126,51 @@ const ERPVideoCommerciali = () => {
             </div>
             <div>
               <Label className="text-gray-300">File video</Label>
-              <Input ref={fileRef} type="file" accept="video/*" onChange={e => setFile(e.target.files?.[0] || null)} />
+              <div
+                onDragOver={e => { e.preventDefault(); setDragging(true); }}
+                onDragLeave={e => { e.preventDefault(); setDragging(false); }}
+                onDrop={e => {
+                  e.preventDefault();
+                  setDragging(false);
+                  pickFile(e.dataTransfer.files?.[0]);
+                }}
+                onClick={() => fileRef.current?.click()}
+                role="button"
+                tabIndex={0}
+                onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') fileRef.current?.click(); }}
+                className={`cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
+                  dragging ? 'border-amber-500 bg-amber-950/40' : 'border-amber-900/40 hover:border-amber-700/60 hover:bg-amber-950/20'
+                }`}
+              >
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="video/*"
+                  className="hidden"
+                  onChange={e => pickFile(e.target.files?.[0])}
+                />
+                {file ? (
+                  <div className="flex items-center justify-center gap-2 text-sm">
+                    <FileVideo className="w-5 h-5 text-amber-500 shrink-0" />
+                    <span className="text-amber-100 truncate max-w-[240px] sm:max-w-md">{file.name}</span>
+                    <span className="text-gray-500 shrink-0">{(file.size / 1024 / 1024).toFixed(1)} MB</span>
+                    <button
+                      type="button"
+                      aria-label="Rimuovi file"
+                      className="text-gray-400 hover:text-red-400 shrink-0"
+                      onClick={e => { e.stopPropagation(); setFile(null); if (fileRef.current) fileRef.current.value = ''; }}
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center gap-1.5">
+                    <Upload className="w-6 h-6 text-amber-600" />
+                    <p className="text-sm text-gray-300">Trascina qui il video oppure <span className="text-amber-400 underline">scegli un file</span></p>
+                    <p className="text-xs text-gray-500">MP4, MOV, WebM…</p>
+                  </div>
+                )}
+              </div>
             </div>
             <Button onClick={upload} disabled={uploading} className="bg-amber-600 hover:bg-amber-700">
               {uploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
