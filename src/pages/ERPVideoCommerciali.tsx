@@ -43,8 +43,13 @@ const ERPVideoCommerciali = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [purposeFilter, setPurposeFilter] = useState('all');
   const [title, setTitle] = useState('');
   const [language, setLanguage] = useState('en');
+  const [purpose, setPurpose] = useState('traffico');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editPurpose, setEditPurpose] = useState('traffico');
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [dragging, setDragging] = useState(false);
