@@ -15,6 +15,7 @@ import {
   Brain,
   MessageCircle,
   Store,
+  Video,
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -50,6 +51,7 @@ const catalogItems = [
 
 const contentItems = [
   { title: 'Blog', url: '/erp/blog', icon: BookOpen },
+  { title: 'Video Commerciali', url: '/erp/video-commerciali', icon: Video },
   { title: 'Lead Sito Web', url: '/erp/leads', icon: TrendingUp },
   { title: 'Chat AI Logs', url: '/erp/chat-logs', icon: MessageCircle },
   { title: 'Knowledge Base AI', url: '/erp/knowledge-base', icon: Brain },
