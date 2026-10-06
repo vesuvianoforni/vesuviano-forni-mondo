@@ -89,7 +89,7 @@ const ERPVideoCommerciali = () => {
       const { data: pub } = supabase.storage.from('videos').getPublicUrl(path);
       const { data: u } = await supabase.auth.getUser();
       const { error } = await db.from('commercial_videos').insert({
-        title: title.trim(), language, file_path: path, public_url: pub.publicUrl,
+        title: title.trim(), language, purpose, file_path: path, public_url: pub.publicUrl,
         size_bytes: file.size, created_by: u.user?.id,
       });
       if (error) throw error;
@@ -113,7 +113,26 @@ const ERPVideoCommerciali = () => {
 
   const copy = (url: string) => { navigator.clipboard.writeText(url); toast.success('Link copiato'); };
 
-  const shown = filter === 'all' ? videos : videos.filter(v => v.language === filter);
+  const purposeLabel = (c: string | null) => PURPOSES.find(p => p.code === (c || 'traffico'))?.label || c || '—';
+
+  const startEdit = (v: Video) => {
+    setEditingId(v.id);
+    setEditTitle(v.title);
+    setEditPurpose(v.purpose || 'traffico');
+  };
+
+  const saveEdit = async (v: Video) => {
+    if (!editTitle.trim()) { toast.error('Il titolo non può essere vuoto'); return; }
+    const { error } = await db.from('commercial_videos').update({ title: editTitle.trim(), purpose: editPurpose }).eq('id', v.id);
+    if (error) { toast.error('Errore aggiornamento: ' + error.message); return; }
+    toast.success('Video aggiornato');
+    setEditingId(null);
+    load();
+  };
+
+  const shown = videos
+    .filter(v => filter === 'all' || v.language === filter)
+    .filter(v => purposeFilter === 'all' || (v.purpose || 'traffico') === purposeFilter);
   const langLabel = (c: string) => LANGS.find(l => l.code === c)?.label || c;
 
   return (
