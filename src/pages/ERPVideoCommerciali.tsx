@@ -112,7 +112,7 @@ const ERPVideoCommerciali = () => {
         </div>
 
         <Card className="bg-[#1a1a1a] border-amber-900/20">
-          <CardContent className="p-5 grid gap-4 md:grid-cols-[2fr_1fr_2fr_auto] items-end">
+          <CardContent className="p-5 grid gap-4 md:grid-cols-[2fr_1fr_3fr_auto] items-end">
             <div>
               <Label className="text-gray-300">Titolo</Label>
               <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Es. Presentazione Real Bosco" />
