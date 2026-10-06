@@ -96,8 +96,8 @@ const FAQSection = () => {
           <p className="text-stone-600 mb-6 max-w-2xl mx-auto">
             {t('faq.cta.subtitle')}
           </p>
-          <div className="text-left bg-gradient-to-r from-vesuviano-50 to-stone-50 rounded-2xl p-6 md:p-8 border border-vesuviano-100">
-            <ConsultationForm />
+          <div className="text-left max-w-2xl mx-auto">
+            <ConsultationForm embedded />
           </div>
         </div>
       </div>
