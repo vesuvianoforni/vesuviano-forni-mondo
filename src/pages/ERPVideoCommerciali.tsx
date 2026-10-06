@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Copy, Trash2, Upload, Loader2, ExternalLink, FileVideo, X } from 'lucide-react';
+import { Copy, Trash2, Upload, Loader2, ExternalLink, FileVideo, X, Pencil, Check } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 
 const LANGS = [
@@ -22,6 +22,7 @@ interface Video {
   id: string;
   title: string;
   language: string;
+  purpose: string | null;
   file_path: string;
   public_url: string;
   size_bytes: number | null;
