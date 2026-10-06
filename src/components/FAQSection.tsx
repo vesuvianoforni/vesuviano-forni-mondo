@@ -6,8 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import CtaButton from './CtaButton';
+import ConsultationForm from './ConsultationForm';
 import { MessageCircle, HelpCircle } from "lucide-react";
 
 const FAQSection = () => {
