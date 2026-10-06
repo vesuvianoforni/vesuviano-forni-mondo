@@ -1,0 +1,1 @@
+ALTER TABLE public.commercial_videos ADD COLUMN IF NOT EXISTS purpose text NOT NULL DEFAULT 'traffico';

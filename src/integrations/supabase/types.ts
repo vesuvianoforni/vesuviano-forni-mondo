@@ -280,6 +280,7 @@ export type Database = {
           language: string
           notes: string | null
           public_url: string
+          purpose: string
           size_bytes: number | null
           title: string
         }
@@ -291,6 +292,7 @@ export type Database = {
           language?: string
           notes?: string | null
           public_url: string
+          purpose?: string
           size_bytes?: number | null
           title: string
         }
@@ -302,6 +304,7 @@ export type Database = {
           language?: string
           notes?: string | null
           public_url?: string
+          purpose?: string
           size_bytes?: number | null
           title?: string
         }
