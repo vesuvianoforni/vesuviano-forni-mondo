@@ -271,6 +271,42 @@ export type Database = {
           },
         ]
       }
+      commercial_videos: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          file_path: string
+          id: string
+          language: string
+          notes: string | null
+          public_url: string
+          size_bytes: number | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          file_path: string
+          id?: string
+          language?: string
+          notes?: string | null
+          public_url: string
+          size_bytes?: number | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          file_path?: string
+          id?: string
+          language?: string
+          notes?: string | null
+          public_url?: string
+          size_bytes?: number | null
+          title?: string
+        }
+        Relationships: []
+      }
       configurator_options: {
         Row: {
           created_at: string
