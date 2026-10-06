@@ -59,30 +59,10 @@ const ConsultationForm = ({ embedded = false }: { embedded?: boolean }) => {
     }
   };
 
-  return (
-    <section id="consultation" className="py-16 md:py-20 bg-gradient-to-br from-stone-50 to-vesuviano-50/30">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="max-w-5xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-10 md:mb-14">
-            <Badge className="bg-green-100 text-green-800 px-4 py-2 text-sm md:text-base font-semibold mb-4">
-              <CheckCircle className="mr-2" size={18} />
-              {t('consultation.badge').toUpperCase()}
-            </Badge>
-            <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-3 md:mb-5">
-              {t('consultation.header.title')}
-            </h2>
-            <p className="font-inter text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t('consultation.header.subtitle')}
-            </p>
-          </div>
-
-          <div className="flex flex-col lg:grid lg:grid-cols-5 gap-6 md:gap-8">
-            {/* Form */}
-            <div className="order-1 lg:order-2 lg:col-span-3">
-              <Card className="shadow-lg border-stone-200/60">
-                <CardContent className="p-5 md:p-8">
-                  <form onSubmit={handleSubmit} className="space-y-4">
+  const formCard = (
+    <Card className="shadow-lg border-stone-200/60">
+      <CardContent className="p-4 sm:p-5 md:p-8">
+        <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium mb-1.5 text-foreground">{t('consultation.form.fullName')}</label>
                       <Input
