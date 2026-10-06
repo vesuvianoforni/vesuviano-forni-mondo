@@ -44,43 +44,42 @@ export const AIConversionMessageModal = ({
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
       </head>
-      <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333; margin: 0; padding: 0; background-color: #f5f5f5;">
-        <div style="max-width: 650px; margin: 0 auto; background: white;">
+      <body style="font-family: Arial, Helvetica, sans-serif; line-height: 1.65; color: #262626; margin: 0; padding: 0; background-color: #f3f1ee;">
+        <div style="max-width: 640px; margin: 0 auto; padding: 24px 12px;">
+          <div style="background: #ffffff; border: 1px solid #ded8d2; border-radius: 8px; overflow: hidden;">
           <!-- Header con logo -->
-          <div style="background: linear-gradient(135deg, #8B4513 0%, #CD5C5C 100%); padding: 40px 30px; text-align: center;">
-            <img src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/vesuviano-logo-bianco.png" alt="Vesuviano Forni" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
-            <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600;">Vesuviano Forni</h1>
-            <p style="color: #fef2f2; margin: 10px 0 0 0; font-size: 14px;">L'arte della tradizione napoletana</p>
+          <div style="background: #714b3d; padding: 28px 24px; text-align: center;">
+            <img src="https://www.vesuvianoforni.com/lovable-uploads/vesuviano-logo-bianco.png" width="176" alt="Vesuviano Forni" style="display:block; width:176px; max-width:70%; height:auto; margin:0 auto; border:0;" />
           </div>
 
           <!-- Corpo del messaggio -->
-          <div style="padding: 40px 30px;">
+          <div style="padding: 36px 32px 30px;">
             ${ovenImageUrl ? `
             <div style="text-align: center; margin-bottom: 30px;">
               <img src="${ovenImageUrl}" alt="Il tuo forno Vesuviano" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
             </div>
             ` : ''}
             
-            <div style="color: #333; font-size: 16px; line-height: 1.8;">
+            <div style="color: #262626; font-size: 16px; line-height: 1.65;">
               ${message.replace(/\n/g, '<br/>')}
             </div>
           </div>
 
           <!-- Footer con contatti -->
-          <div style="background: #f8f8f8; padding: 30px; border-top: 3px solid #8B4513;">
+          <div style="background: #f7f5f2; padding: 28px 24px; border-top: 1px solid #ded8d2;">
             <div style="text-align: center; margin-bottom: 20px;">
-              <h3 style="color: #8B4513; margin: 0 0 15px 0; font-size: 18px;">Parliamone insieme</h3>
+              <h3 style="color: #714b3d; margin: 0 0 8px 0; font-size: 18px;">Let’s talk about your project</h3>
             </div>
             
             <table style="width: 100%; max-width: 500px; margin: 0 auto;">
               <tr>
                 <td style="padding: 8px 0; text-align: center;">
-                  <strong style="color: #8B4513;">Bruno Nardello</strong>
+                  <strong style="color: #714b3d;">Bruno Nardello · Vesuviano Forni</strong>
                 </td>
               </tr>
               <tr>
                 <td style="padding: 8px 0; text-align: center;">
-                  <a href="https://vesuvianoforni.com" style="color: #2563eb; text-decoration: none;">vesuvianoforni.com</a>
+                  <a href="https://www.vesuvianoforni.com" style="color: #714b3d; text-decoration: underline;">www.vesuvianoforni.com</a>
                 </td>
               </tr>
               <tr>
@@ -90,15 +89,15 @@ export const AIConversionMessageModal = ({
               </tr>
               <tr>
                 <td style="padding: 12px 0; text-align: center;">
-                  <a href="https://api.whatsapp.com/send?phone=393509286941&text=Ciao%20Vesuviano%20Forni%2C%20" 
-                     style="display: inline-block; background: #25D366; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 15px;">
-                    💬 Scrivimi su WhatsApp
+                  <a href="https://wa.me/393509286941" 
+                     style="display: inline-block; background: #6f8753; color: white; padding: 13px 24px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 15px;">
+                    Message me on WhatsApp
                   </a>
                 </td>
               </tr>
               <tr>
                 <td style="padding: 8px 0; text-align: center; color: #666;">
-                  <a href="tel:+393509286941" style="color: #2563eb; text-decoration: none;">📞 +39 350 928 6941</a>
+                  <a href="tel:+393509286941" style="color: #714b3d; text-decoration: none;">+39 350 928 6941</a>
                 </td>
               </tr>
               <tr>
@@ -110,10 +109,11 @@ export const AIConversionMessageModal = ({
           </div>
 
           <!-- Footer finale -->
-          <div style="background: #333; padding: 20px; text-align: center;">
+          <div style="background: #282624; padding: 18px; text-align: center;">
             <p style="color: #fff; margin: 0; font-size: 12px;">
-              © ${new Date().getFullYear()} Vesuviano Forni - Forni a legna artigianali dal cuore del Vesuvio
+              © ${new Date().getFullYear()} Vesuviano Forni · Handcrafted in Naples, Italy
             </p>
+          </div>
           </div>
         </div>
       </body>
