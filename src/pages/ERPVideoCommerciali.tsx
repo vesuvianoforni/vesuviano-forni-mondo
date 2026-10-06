@@ -18,6 +18,14 @@ const LANGS = [
   { code: 'es', label: 'Spagnolo' },
 ];
 
+export const PURPOSES = [
+  { code: 'traffico', label: 'Traffico' },
+  { code: 'retargeting', label: 'Retargeting' },
+  { code: 'awareness', label: 'Notorietà' },
+  { code: 'conversioni', label: 'Conversioni' },
+  { code: 'altro', label: 'Altro' },
+];
+
 interface Video {
   id: string;
   title: string;
