@@ -6,8 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import CtaButton from './CtaButton';
+import ConsultationForm from './ConsultationForm';
 import { MessageCircle, HelpCircle } from "lucide-react";
 
 const FAQSection = () => {
@@ -88,16 +87,18 @@ const FAQSection = () => {
           ))}
         </Accordion>
 
-        {/* CTA */}
-        <div className="mt-12 text-center bg-gradient-to-r from-vesuviano-50 to-stone-50 rounded-2xl p-8 border border-vesuviano-100">
+        {/* Open form */}
+        <div className="mt-12 text-center">
           <MessageCircle className="w-12 h-12 text-vesuviano-500 mx-auto mb-4" />
           <h3 className="text-2xl font-bold text-stone-900 mb-3">
             {t('faq.cta.title')}
           </h3>
-          <p className="text-stone-600 mb-6">
+          <p className="text-stone-600 mb-6 max-w-2xl mx-auto">
             {t('faq.cta.subtitle')}
           </p>
-          <CtaButton className="px-8 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl" />
+          <div className="text-left bg-gradient-to-r from-vesuviano-50 to-stone-50 rounded-2xl p-6 md:p-8 border border-vesuviano-100">
+            <ConsultationForm />
+          </div>
         </div>
       </div>
     </section>
