@@ -124,7 +124,7 @@ const ERPVideoCommerciali = () => {
                 <SelectContent>{LANGS.map(l => <SelectItem key={l.code} value={l.code}>{l.label}</SelectItem>)}</SelectContent>
               </Select>
             </div>
-            <div className="md:col-span-2">
+            <div>
               <Label className="text-gray-300">File video</Label>
               <div
                 onDragOver={e => { e.preventDefault(); setDragging(true); }}
