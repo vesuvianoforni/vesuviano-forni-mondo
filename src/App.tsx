@@ -398,6 +398,7 @@ const App = () => {
               <Route path="/admin/proforma" element={<Navigate to="/erp/proforma" replace />} />
               <Route path="/admin/create" element={<Navigate to="/erp/create" replace />} />
 
+              <Route path="/catalogo/en" element={<CatalogRedirect />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
