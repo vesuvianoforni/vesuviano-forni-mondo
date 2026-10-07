@@ -411,3 +411,8 @@ const App = () => {
 };
 
 export default App;
+
+function CatalogRedirect() {
+  if (typeof window !== "undefined") window.location.replace("/catalogo/vesuviano-catalogue-en.pdf");
+  return null;
+}
