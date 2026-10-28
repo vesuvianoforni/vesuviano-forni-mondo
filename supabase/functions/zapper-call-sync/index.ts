@@ -38,7 +38,13 @@ Deno.serve(async (req) => {
   for (const c of calls) {
     const id = String(c?.unique_call_id ?? c?.id ?? '').trim();
     if (!id || id.length > 200) { results.push({ id, status: 'invalid' }); continue; }
-    if (!isVesuviano(c.called_number) && !isVesuviano(c.caller_number)) { results.push({ id, status: 'skipped_other_line' }); continue; }
+    // Outbound calls from sales extensions (short internal numbers) carry the extension, not the line:
+    // accept them only when the called number belongs to an existing Vesuviano lead.
+    const ext = digits(c.caller_number);
+    const dir = String(c.direction ?? c.call_direction ?? '').toLowerCase();
+    const fromExtension = !isVesuviano(c.called_number) && ext.length > 0 && ext.length <= 6;
+    const outboundExt = fromExtension || (dir.startsWith('out') && !isVesuviano(c.called_number) && !isVesuviano(c.caller_number) && ext.length <= 6);
+    if (!isVesuviano(c.called_number) && !isVesuviano(c.caller_number) && !outboundExt) { results.push({ id, status: 'skipped_other_line' }); continue; }
 
     const inbound = isVesuviano(c.called_number);
     const customer = inbound ? c.caller_number : c.called_number;
@@ -49,6 +55,7 @@ Deno.serve(async (req) => {
     const { data: matches } = await supabase.from('leads').select('id, phone').ilike('phone', `%${key.slice(-6)}%`).limit(50);
     let lead = (matches ?? []).find((l) => local(l.phone).slice(-9) === key);
     let created = false;
+    if (!lead && outboundExt) { results.push({ id, status: 'skipped_no_vesuviano_lead' }); continue; }
     if (!lead) {
       const { data: nl, error } = await supabase.from('leads').insert({
         contact_name: `Chiamata ${String(customer)}`, phone: String(customer), status: 'pre_qualificato',
@@ -76,7 +83,8 @@ Deno.serve(async (req) => {
       metadata: {
         source: 'zapper', duration_seconds: dur, recording_url: c.recording_url ?? null,
         caller_number: c.caller_number ?? null, called_number: c.called_number ?? null,
-        operator_name: c.operator_name ?? null, ai_actions: c.ai_actions ?? null,
+        operator_name: c.operator_name ?? null,
+        extension: outboundExt ? (c.caller_number ?? null) : null, ai_actions: c.ai_actions ?? null,
       },
     };
 
