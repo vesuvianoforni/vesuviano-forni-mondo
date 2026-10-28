@@ -9,30 +9,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Search, TrendingUp, Mail, Phone, Building2, GripVertical, Trash2, Edit, Calendar, Trophy, XCircle } from "lucide-react";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Plus, Search, TrendingUp, Building2, Calendar, Trophy } from "lucide-react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import { ACTIVE_CRM_STAGES, CRM_STAGES } from "@/lib/crmPipeline";
-
-interface Lead {
-  id: string;
-  company_name?: string;
-  contact_name?: string;
-  email?: string;
-  phone?: string;
-  value?: number;
-  source?: string;
-  status: string;
-  pipeline?: string;
-  notes?: string;
-  assigned_to?: string;
-  next_activity_type?: string;
-  next_activity_date?: string;
-  next_activity_notes?: string;
-  next_activity_assigned_to?: string;
-  created_at: string;
-  updated_at: string;
-}
+import { CRMLeadCard, type CRMLead as Lead } from "@/components/erp/CRMLeadCard";
 
 const leadSources = ["website", "configuratore", "chat", "referral", "social_media", "cold_call", "trade_show", "zapier", "other"];
 const pipelines = ["Vesuviano", "ZAPPER", "ZAPPER Pro"];
@@ -440,7 +420,7 @@ export default function ERPLeads() {
       <DragDropContext onDragEnd={onDragEnd}>
         <div role="region" aria-label="Pipeline clienti" tabIndex={0} className="flex w-full min-w-0 max-w-full gap-4 overflow-x-auto pb-4">
           {kanbanStatuses.map((status) => (
-            <div key={status.id} className="w-72 shrink-0 rounded-lg bg-muted/30 p-4">
+            <div key={status.id} className="w-80 shrink-0 rounded-lg bg-muted/30 p-4">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-sm">{status.title}</h3>
                 <Badge variant="secondary" className={status.color}>
@@ -448,85 +428,22 @@ export default function ERPLeads() {
                 </Badge>
               </div>
               <Droppable droppableId={status.id}>
-                {(provided) => (
-                  <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-3 min-h-[200px]">
+                {(provided, snapshot) => (
+                  <div {...provided.droppableProps} ref={provided.innerRef} className={`space-y-3 min-h-[200px] ${snapshot.isDraggingOver ? "bg-muted/50" : ""}`}>
                     {leadsByStatus[status.id]?.map((lead, index) => (
                       <Draggable key={lead.id} draggableId={lead.id} index={index}>
-                        {(provided) => (
-                          <Card
+                        {(provided, snapshot) => (
+                          <CRMLeadCard
                             ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            className="cursor-pointer hover:shadow-md transition-shadow"
-                          >
-                            <CardContent className="p-4">
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2">
-                                    <div {...provided.dragHandleProps}>
-                                      <GripVertical className="h-4 w-4 text-muted-foreground" />
-                                    </div>
-                                  <h4 className="min-w-0 break-words font-medium text-sm">{lead.company_name || lead.contact_name || "Senza nome"}</h4>
-                                  </div>
-                                  {lead.contact_name && lead.company_name && (
-                                    <p className="text-xs text-muted-foreground mt-1">{lead.contact_name}</p>
-                                  )}
-                                  <div className="flex flex-col gap-1 mt-2">
-                                    {lead.email && (
-                                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                        <Mail className="h-3 w-3" />
-                                        <span className="truncate">{lead.email}</span>
-                                      </div>
-                                    )}
-                                    {lead.phone && (
-                                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                        <Phone className="h-3 w-3" />
-                                        <span>{lead.phone}</span>
-                                      </div>
-                                    )}
-                                  </div>
-                                  {lead.value && (
-                                    <p className="text-sm font-semibold text-green-600 mt-2">€{lead.value.toLocaleString()}</p>
-                                  )}
-                                  {lead.next_activity_date && (
-                                    <div className="flex items-center gap-1 text-xs text-orange-600 mt-2">
-                                      <Calendar className="h-3 w-3" />
-                                      <span>{lead.next_activity_type}: {new Date(lead.next_activity_date).toLocaleDateString("it-IT")}</span>
-                                    </div>
-                                  )}
-                                  <div className="flex gap-1 mt-3">
-                                    <Button size="sm" variant="ghost" onClick={() => handleEditLead(lead)}>
-                                      <Edit className="h-3 w-3" />
-                                    </Button>
-                                    <Button size="sm" variant="ghost" className="text-emerald-600" onClick={() => handleSetStatus(lead, "vinto")}>
-                                      <Trophy className="h-3 w-3" />
-                                    </Button>
-                                    <Button size="sm" variant="ghost" className="text-red-600" onClick={() => handleSetStatus(lead, "perso")}>
-                                      <XCircle className="h-3 w-3" />
-                                    </Button>
-                                    <AlertDialog>
-                                      <AlertDialogTrigger asChild>
-                                        <Button size="sm" variant="ghost">
-                                          <Trash2 className="h-3 w-3" />
-                                        </Button>
-                                      </AlertDialogTrigger>
-                                      <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                          <AlertDialogTitle>Eliminare il lead?</AlertDialogTitle>
-                                          <AlertDialogDescription>
-                                            Questa azione non può essere annullata. Il lead verrà eliminato definitivamente.
-                                          </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                          <AlertDialogCancel>Annulla</AlertDialogCancel>
-                                          <AlertDialogAction onClick={() => handleDeleteLead(lead.id)}>Elimina</AlertDialogAction>
-                                        </AlertDialogFooter>
-                                      </AlertDialogContent>
-                                    </AlertDialog>
-                                  </div>
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
+                            draggableProps={provided.draggableProps}
+                            dragHandleProps={provided.dragHandleProps}
+                            isDragging={snapshot.isDragging}
+                            lead={lead}
+                            activityAssignee={getUserEmail(lead.next_activity_assigned_to)}
+                            onEdit={handleEditLead}
+                            onDelete={handleDeleteLead}
+                            onSetStatus={handleSetStatus}
+                          />
                         )}
                       </Draggable>
                     ))}
@@ -545,24 +462,9 @@ export default function ERPLeads() {
           <h2 className="text-xl font-semibold">Lead Chiusi</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {closedLeads.map((lead) => (
-              <Card key={lead.id} className="opacity-80">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium text-sm">{lead.company_name || lead.contact_name || "Senza nome"}</h4>
-                      {lead.email && <p className="text-xs text-muted-foreground">{lead.email}</p>}
-                    </div>
-                    <Badge className={lead.status === "vinto" ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"}>
-                      {lead.status === "vinto" ? "Vinto" : "Perso"}
-                    </Badge>
-                  </div>
-                  <div className="flex gap-1 mt-3">
-                    <Button size="sm" variant="ghost" onClick={() => handleEditLead(lead)}>
-                      <Edit className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <CRMLeadCard key={lead.id} lead={lead}
+                activityAssignee={getUserEmail(lead.next_activity_assigned_to)}
+                onEdit={handleEditLead} onDelete={handleDeleteLead} onSetStatus={handleSetStatus} />
             ))}
           </div>
         </div>
