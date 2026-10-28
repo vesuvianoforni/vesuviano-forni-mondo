@@ -68,9 +68,26 @@ ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
         method: 'POST',
         headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'google/gemini-2.5-flash',
+          model: 'openai/gpt-6-astra',
+          reasoning_effort: 'low',
           messages: [{ role: 'system', content: system }, { role: 'user', content: userMsg }],
-          response_format: { type: 'json_object' },
+          response_format: {
+            type: 'json_schema',
+            json_schema: {
+              name: 'bruno_suggestion', strict: true,
+              schema: {
+                type: 'object', additionalProperties: false,
+                required: ['channel', 'subject', 'message', 'reasoning', 'suggest_stage'],
+                properties: {
+                  channel: { type: 'string', enum: ['whatsapp_api', 'wasender', 'email'] },
+                  subject: { type: ['string', 'null'] },
+                  message: { type: 'string' },
+                  reasoning: { type: 'string' },
+                  suggest_stage: { type: ['string', 'null'] },
+                },
+              },
+            },
+          },
         }),
       });
       const text = await res.text();
