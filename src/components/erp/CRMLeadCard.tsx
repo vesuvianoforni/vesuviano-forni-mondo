@@ -150,7 +150,7 @@ export const CRMLeadCard = forwardRef<HTMLDivElement, CRMLeadCardProps>(function
                   <TooltipTrigger asChild><Button size="icon" variant="ghost" className="h-7 w-7 shrink-0 hover:bg-muted hover:text-foreground" aria-label={`Pianifica attività ${name}`} onClick={() => onSchedule(lead)}><CalendarPlus /></Button></TooltipTrigger>
                   <TooltipContent>{timing.date ? "Modifica attività" : "Pianifica attività"}</TooltipContent>
                 </Tooltip>
-              </div>}
+              </div>
               <div className="ml-5 space-y-1.5 text-xs">
                 {lead.next_activity_type && <p className="break-words font-medium">{activityLabels[lead.next_activity_type] || lead.next_activity_type}</p>}
                 {timing.date ? <time dateTime={timing.date.toISOString()} title={exactActivityDate(timing.date.toISOString())} className={cn("block font-medium", timingColor)}>{timing.label}</time> :
