@@ -1,6 +1,6 @@
 import { forwardRef, useState } from "react";
 import type { DraggableProvided } from "@hello-pangea/dnd";
-import { Building2, Calendar, CalendarPlus, Clock, Edit, GripVertical, Mail, MoreHorizontal, Phone, Trash2, Trophy, User, XCircle, Zap } from "lucide-react";
+import { MessageSquare, Building2, Calendar, CalendarPlus, Clock, Edit, GripVertical, Mail, MoreHorizontal, Phone, Trash2, Trophy, User, XCircle, Zap } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -47,13 +47,14 @@ interface CRMLeadCardProps {
   interactionState?: "loading" | "ready" | "partial";
   now?: Date;
   onSchedule: (lead: CRMLead) => void;
+  onConverse?: (lead: CRMLead) => void;
   onEdit: (lead: CRMLead) => void;
   onDelete: (id: string) => void;
   onSetStatus: (lead: CRMLead, status: "vinto" | "perso") => void;
 }
 
 export const CRMLeadCard = forwardRef<HTMLDivElement, CRMLeadCardProps>(function CRMLeadCard(
-  { lead, activityAssignee, draggableProps, dragHandleProps, isDragging, lastInteraction, interactionState = "ready", now = new Date(), onSchedule, onEdit, onDelete, onSetStatus }, ref,
+  { lead, activityAssignee, draggableProps, dragHandleProps, isDragging, lastInteraction, interactionState = "ready", now = new Date(), onSchedule, onConverse, onEdit, onDelete, onSetStatus }, ref,
 ) {
   const [confirmation, setConfirmation] = useState<"delete" | "vinto" | "perso" | null>(null);
   const name = lead.company_name || lead.contact_name || "Senza nome";
@@ -72,13 +73,20 @@ export const CRMLeadCard = forwardRef<HTMLDivElement, CRMLeadCardProps>(function
               <div className="flex items-start gap-2">
                 <Building2 aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-primary" />
                 <Button variant="link" className="h-auto min-w-0 justify-start whitespace-normal p-0 text-left text-sm font-semibold leading-5 text-card-foreground"
-                  aria-label={`Apri lead ${name}`} onClick={() => onEdit(lead)}>
+                  aria-label={`Apri lead ${name}`} onClick={() => (onConverse ?? onEdit)(lead)}>
                   <span className="min-w-0 break-words">{name}</span>
                 </Button>
               </div>
               {lead.company_name && lead.contact_name && <p className="ml-6 mt-1 break-words text-xs text-muted-foreground">{lead.contact_name}</p>}
             </div>
             <div className="flex shrink-0 items-center gap-0.5">
+              {onConverse && <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-muted hover:text-foreground"
+                    aria-label={`Comunicazioni con ${name}`} onClick={() => onConverse(lead)}><MessageSquare className="h-3.5 w-3.5" /></Button>
+                </TooltipTrigger>
+                <TooltipContent>Comunicazioni e Bruno</TooltipContent>
+              </Tooltip>}
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-muted hover:text-foreground"

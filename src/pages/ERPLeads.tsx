@@ -13,6 +13,7 @@ import { Plus, Search, TrendingUp, Building2, Calendar, Trophy } from "lucide-re
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import { ACTIVE_CRM_STAGES, CRM_STAGES } from "@/lib/crmPipeline";
 import { CRMLeadCard, type CRMLead as Lead } from "@/components/erp/CRMLeadCard";
+import { BrunoConsole } from "@/components/erp/BrunoConsole";
 import { useCRMInteractions } from "@/hooks/useCRMInteractions";
 import { activityLabels } from "@/lib/crmActivity";
 import { format } from "date-fns";
@@ -52,6 +53,7 @@ export default function ERPLeads() {
   const [isActivityDialogOpen, setIsActivityDialogOpen] = useState(false);
   const [savingActivity, setSavingActivity] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [brunoLead, setBrunoLead] = useState<Lead | null>(null);
   const [form, setForm] = useState({ ...emptyForm });
   const { toast } = useToast();
   const { interactions, state: interactionState } = useCRMInteractions(leads);
@@ -481,6 +483,7 @@ export default function ERPLeads() {
                             interactionState={interactionState}
                             now={now}
                             onSchedule={lead => handleEditLead(lead, true)}
+                            onConverse={setBrunoLead}
                             onEdit={handleEditLead}
                             onDelete={handleDeleteLead}
                             onSetStatus={handleSetStatus}
@@ -507,6 +510,7 @@ export default function ERPLeads() {
                 activityAssignee={getUserEmail(lead.next_activity_assigned_to)}
                 lastInteraction={interactions[lead.id]} interactionState={interactionState} now={now}
                 onSchedule={lead => handleEditLead(lead, true)}
+                            onConverse={setBrunoLead}
                 onEdit={handleEditLead} onDelete={handleDeleteLead} onSetStatus={handleSetStatus} />
             ))}
           </div>
@@ -541,6 +545,7 @@ export default function ERPLeads() {
           {renderForm(handleUpdateLead, "Salva Modifiche")}
         </DialogContent>
       </Dialog>
+      <BrunoConsole lead={brunoLead} open={!!brunoLead} onOpenChange={(o) => !o && setBrunoLead(null)} />
     </div>
   );
 }

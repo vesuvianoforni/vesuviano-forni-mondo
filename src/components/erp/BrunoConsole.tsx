@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useToast } from "@/hooks/use-toast";
 import { BRUNO_OBJECTIVES, CHANNELS, brunoCanContact, isBrunoPaused, type BrunoChannel } from "@/lib/brunoObjectives";
-import { getCRMStage } from "@/lib/crmPipeline";
+import { CRM_STAGES } from "@/lib/crmPipeline";
 import { cn } from "@/lib/utils";
 import type { CRMLead } from "./CRMLeadCard";
 
@@ -110,7 +110,7 @@ export function BrunoConsole({ lead, open, onOpenChange }: { lead: Lead | null; 
       <SheetContent className="flex w-full flex-col gap-0 p-0 sm:max-w-xl">
         <SheetHeader className="border-b p-4 text-left">
           <SheetTitle className="flex items-center gap-2 break-words">{name}
-            <Badge variant="secondary">{getCRMStage(stage)?.title ?? stage}</Badge>
+            <Badge variant="secondary">{CRM_STAGES.find((x) => x.id === stage)?.title ?? stage}</Badge>
           </SheetTitle>
           <SheetDescription className="flex flex-wrap gap-x-3 text-xs">
             {lead.phone && <span>{lead.phone}</span>}{lead.email && <span>{lead.email}</span>}
