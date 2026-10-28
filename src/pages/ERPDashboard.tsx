@@ -8,11 +8,11 @@ const ERPDashboard = () => {
   const navigate = useNavigate();
 
   const cards = [
-    { title: 'CRM Configuratore', desc: 'Gestisci lead e sessioni', icon: Users, color: 'text-blue-400', bg: 'bg-blue-900/20', url: '/erp/crm' },
+    { title: 'CRM', desc: 'Clienti e trattative', icon: Users, color: 'text-blue-400', bg: 'bg-blue-900/20', url: '/erp/crm' },
     { title: 'Pro-Forma', desc: 'Preventivi per clienti', icon: FileText, color: 'text-amber-400', bg: 'bg-amber-900/20', url: '/erp/proforma' },
     { title: 'Forni', desc: 'Catalogo e configurazione', icon: Flame, color: 'text-orange-400', bg: 'bg-orange-900/20', url: '/erp/forni' },
     { title: 'Bruciatori', desc: 'Gestione bruciatori', icon: Package, color: 'text-green-400', bg: 'bg-green-900/20', url: '/erp/bruciatori' },
-    { title: 'Lead Sito Web', desc: 'Richieste dal sito', icon: TrendingUp, color: 'text-purple-400', bg: 'bg-purple-900/20', url: '/erp/leads' },
+    { title: 'Link Configuratore', desc: 'Link e sessioni dei clienti', icon: TrendingUp, color: 'text-purple-400', bg: 'bg-purple-900/20', url: '/erp/sessioni-configuratore' },
     { title: 'Ordini', desc: 'Stato ordini e spedizioni', icon: CreditCard, color: 'text-cyan-400', bg: 'bg-cyan-900/20', url: '/erp/ordini' },
   ];
 

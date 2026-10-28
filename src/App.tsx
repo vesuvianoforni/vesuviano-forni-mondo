@@ -373,7 +373,8 @@ const App = () => {
               <Route path="/erp/create" element={<CreateAdmin />} />
               <Route path="/erp" element={<ERPLayout />}>
                 <Route index element={<ERPDashboard />} />
-                <Route path="crm" element={<SessionsCRM />} />
+                <Route path="crm" element={<ERPLeads />} />
+                <Route path="sessioni-configuratore" element={<SessionsCRM />} />
                 <Route path="proforma" element={<AdminProforma />} />
                 <Route path="configuratore" element={<AdminConfigurator />} />
                 <Route path="blog" element={<AdminBlog />} />
@@ -382,7 +383,7 @@ const App = () => {
                 <Route path="video-commerciali" element={<ERPVideoCommerciali />} />
                 <Route path="listini" element={<ERPListini />} />
                 <Route path="listino-rivenditori" element={<ERPListinoRivenditori />} />
-                <Route path="leads" element={<ERPLeads />} />
+                <Route path="leads" element={<Navigate to="/erp/crm" replace />} />
                 <Route path="ordini" element={<ERPOrdini />} />
                 <Route path="utenti" element={<ERPUtenti />} />
                 <Route path="pronta-consegna" element={<ERPProntaConsegna />} />
@@ -394,7 +395,7 @@ const App = () => {
               {/* Legacy admin redirects */}
               <Route path="/admin/login" element={<Navigate to="/erp/login" replace />} />
               <Route path="/admin/configuratore" element={<Navigate to="/erp/configuratore" replace />} />
-              <Route path="/admin/sessions-crm" element={<Navigate to="/erp/crm" replace />} />
+              <Route path="/admin/sessions-crm" element={<Navigate to="/erp/sessioni-configuratore" replace />} />
               <Route path="/admin/blog" element={<Navigate to="/erp/blog" replace />} />
               <Route path="/admin/proforma" element={<Navigate to="/erp/proforma" replace />} />
               <Route path="/admin/create" element={<Navigate to="/erp/create" replace />} />

@@ -208,8 +208,8 @@ const AdminConfigurator = () => {
                 <FileText className="w-4 h-4 mr-2" />
                 Pro-Forma
               </Button>
-              <Button onClick={() => navigate('/erp/crm')} variant="outline" size="sm">
-                Visualizza CRM Completo
+              <Button onClick={() => navigate('/erp/sessioni-configuratore')} variant="outline" size="sm">
+                Visualizza Sessioni
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>

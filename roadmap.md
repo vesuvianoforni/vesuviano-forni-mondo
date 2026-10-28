@@ -10,4 +10,5 @@
 - [x] Aggiunta Pre-qualificato ai due CRM; catalogo fasi condiviso e test per mappatura e raggruppamento
 
 ## Aperti
+- [ ] Correggere /erp/crm per mostrare i lead importati; mantenere separati i link configuratore e contenere colonne e comandi nello schermo
 - [ ] Replicare pipeline e webhook in Zapper ERP — bloccato: il progetto Zapper è accessibile solo in lettura da qui; va aperto il suo progetto e incollato il codice/payload contract

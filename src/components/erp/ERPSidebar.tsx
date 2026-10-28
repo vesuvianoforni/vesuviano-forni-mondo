@@ -5,7 +5,6 @@ import {
   FileText,
   BookOpen,
   Package,
-  TrendingUp,
   Flame,
   LogOut,
   Truck,
@@ -36,6 +35,7 @@ import { Button } from '@/components/ui/button';
 const mainItems = [
   { title: 'Dashboard', url: '/erp', icon: LayoutDashboard },
   { title: 'CRM', url: '/erp/crm', icon: Users },
+  { title: 'Link Configuratore', url: '/erp/sessioni-configuratore', icon: MessageCircle },
   { title: 'Pro-Forma', url: '/erp/proforma', icon: FileText },
   { title: 'Contratti', url: '/erp/contratti', icon: FileText },
   { title: 'Configuratore', url: '/erp/configuratore', icon: SettingsIcon },
@@ -52,7 +52,6 @@ const catalogItems = [
 const contentItems = [
   { title: 'Blog', url: '/erp/blog', icon: BookOpen },
   { title: 'Video Commerciali', url: '/erp/video-commerciali', icon: Video },
-  { title: 'Lead CRM', url: '/erp/leads', icon: TrendingUp },
   { title: 'Chat AI Logs', url: '/erp/chat-logs', icon: MessageCircle },
   { title: 'Knowledge Base AI', url: '/erp/knowledge-base', icon: Brain },
 ];
