@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Plus, Search, TrendingUp, Mail, Phone, Building2, GripVertical, Trash2, Edit, Calendar, Trophy, XCircle } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
+import { ACTIVE_CRM_STAGES, CRM_STAGES } from "@/lib/crmPipeline";
 
 interface Lead {
   id: string;
@@ -37,17 +38,8 @@ const leadSources = ["website", "configuratore", "chat", "referral", "social_med
 const pipelines = ["Vesuviano", "ZAPPER", "ZAPPER Pro"];
 const activityTypes = ["call", "email", "meeting", "whatsapp", "demo", "follow_up"];
 
-const kanbanStatuses = [
-  { id: "nuovo", title: "Nuovo", color: "bg-blue-100 text-blue-800" },
-  { id: "qualificato", title: "Qualificato", color: "bg-green-100 text-green-800" },
-  { id: "trattativa", title: "Trattativa", color: "bg-orange-100 text-orange-800" },
-];
-
-const allStatuses = [
-  ...kanbanStatuses,
-  { id: "vinto", title: "Vinto", color: "bg-emerald-100 text-emerald-800" },
-  { id: "perso", title: "Perso", color: "bg-red-100 text-red-800" },
-];
+const kanbanStatuses = ACTIVE_CRM_STAGES;
+const allStatuses = CRM_STAGES;
 
 const emptyForm = {
   company_name: "",
@@ -80,12 +72,19 @@ export default function ERPLeads() {
 
   const loadLeads = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from("leads")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      setLeads(data || []);
+      const allLeads: Lead[] = [];
+      for (let from = 0; ; from += 1000) {
+        const { data, error } = await supabase
+          .from("leads")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .order("id")
+          .range(from, from + 999);
+        if (error) throw error;
+        allLeads.push(...(data || []));
+        if (!data || data.length < 1000) break;
+      }
+      setLeads(allLeads);
     } catch (error: any) {
       toast({ title: "Errore", description: "Impossibile caricare i lead: " + error.message, variant: "destructive" });
     } finally {

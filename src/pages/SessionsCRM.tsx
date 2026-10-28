@@ -18,6 +18,7 @@ import { SendLinkEmailModal } from '@/components/admin/SendLinkEmailModal';
 import { AIConversionMessageModal } from '@/components/admin/AIConversionMessageModal';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import SEOHead from '@/components/SEOHead';
+import { CRM_STAGES, groupByCRMStage } from '@/lib/crmPipeline';
 
 interface EmailHistoryItem {
   id: string;
@@ -349,13 +350,9 @@ const SessionsCRM = () => {
            Math.random().toString(36).substring(2, 15);
   };
 
-  const PIPELINE_STAGES = [
-    { key: 'nuovo', label: 'Nuovo', color: '#9ca3af', bg: 'bg-muted/30' },
-    { key: 'qualificato', label: 'Qualificato', color: '#57534e', bg: 'bg-stone-100 dark:bg-stone-900' },
-    { key: 'trattativa', label: 'Trattativa', color: '#ea580c', bg: 'bg-orange-100 dark:bg-orange-950' },
-    { key: 'vinto', label: 'Vinto', color: '#16a34a', bg: 'bg-green-100 dark:bg-green-950' },
-    { key: 'perso', label: 'Perso', color: '#dc2626', bg: 'bg-red-100 dark:bg-red-950' },
-  ] as const;
+  const PIPELINE_STAGES = CRM_STAGES.map(stage => ({
+    key: stage.id, label: stage.title, bg: stage.color, border: stage.border,
+  }));
 
   type PipelineStageKey = typeof PIPELINE_STAGES[number]['key'];
 
@@ -365,7 +362,7 @@ const SessionsCRM = () => {
   const getStageBadge = (session: SessionData) => {
     const stage = getStageConfig(session.pipeline_stage || 'nuovo');
     return (
-      <Badge variant="outline" style={{ borderColor: stage.color, color: stage.color }}>
+      <Badge variant="outline" className={`${stage.bg} ${stage.border}`}>
         {stage.label}
       </Badge>
     );
@@ -630,13 +627,7 @@ const SessionsCRM = () => {
 
   const groupSessionsByStage = (): Record<PipelineStageKey, SessionData[]> => {
     const filteredSessions = filterSessions(sessions);
-    return {
-      nuovo: filteredSessions.filter(s => (s.pipeline_stage || 'nuovo') === 'nuovo'),
-      qualificato: filteredSessions.filter(s => s.pipeline_stage === 'qualificato'),
-      trattativa: filteredSessions.filter(s => s.pipeline_stage === 'trattativa'),
-      vinto: filteredSessions.filter(s => s.pipeline_stage === 'vinto'),
-      perso: filteredSessions.filter(s => s.pipeline_stage === 'perso')
-    };
+    return groupByCRMStage(filteredSessions);
   };
 
   if (loading) {
@@ -658,9 +649,8 @@ const SessionsCRM = () => {
       return (
         <Card 
           key={session.id} 
-          className="hover:shadow-lg transition-all border-l-4 cursor-pointer mb-4" 
-          onClick={() => setSelectedSession(session)}
-          style={{ borderLeftColor: getStageConfig(session.pipeline_stage || 'nuovo').color }}>
+          className={`hover:shadow-lg transition-all border-l-4 cursor-pointer mb-4 ${getStageConfig(session.pipeline_stage || 'nuovo').border}`}
+          onClick={() => setSelectedSession(session)}>
           <CardContent className="p-4">
             <div className="space-y-4">
               {/* Header with status badge and price list */}
@@ -1061,7 +1051,7 @@ const SessionsCRM = () => {
         )}
 
         {viewMode === 'kanban' ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6 gap-4">
             {PIPELINE_STAGES.map(stage => (
               <div key={stage.key} className="space-y-3">
                 <div className={`${stage.bg} rounded-lg p-3`}>
