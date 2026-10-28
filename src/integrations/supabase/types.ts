@@ -728,6 +728,62 @@ export type Database = {
         }
         Relationships: []
       }
+      crm_messages: {
+        Row: {
+          ai_generated: boolean
+          body: string
+          channel: string
+          created_at: string
+          created_by: string | null
+          direction: string
+          error: string | null
+          external_id: string | null
+          id: string
+          lead_id: string
+          sender: string
+          status: string
+          subject: string | null
+        }
+        Insert: {
+          ai_generated?: boolean
+          body: string
+          channel: string
+          created_at?: string
+          created_by?: string | null
+          direction?: string
+          error?: string | null
+          external_id?: string | null
+          id?: string
+          lead_id: string
+          sender?: string
+          status?: string
+          subject?: string | null
+        }
+        Update: {
+          ai_generated?: boolean
+          body?: string
+          channel?: string
+          created_at?: string
+          created_by?: string | null
+          direction?: string
+          error?: string | null
+          external_id?: string | null
+          id?: string
+          lead_id?: string
+          sender?: string
+          status?: string
+          subject?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_messages_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_history: {
         Row: {
           body: string
@@ -776,6 +832,8 @@ export type Database = {
         Row: {
           archived: boolean
           assigned_to: string | null
+          bruno_mode: string
+          bruno_paused_until: string | null
           city: string | null
           company_name: string | null
           contact_name: string | null
@@ -800,6 +858,8 @@ export type Database = {
         Insert: {
           archived?: boolean
           assigned_to?: string | null
+          bruno_mode?: string
+          bruno_paused_until?: string | null
           city?: string | null
           company_name?: string | null
           contact_name?: string | null
@@ -824,6 +884,8 @@ export type Database = {
         Update: {
           archived?: boolean
           assigned_to?: string | null
+          bruno_mode?: string
+          bruno_paused_until?: string | null
           city?: string | null
           company_name?: string | null
           contact_name?: string | null
