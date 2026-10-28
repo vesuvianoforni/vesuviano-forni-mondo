@@ -728,6 +728,27 @@ export type Database = {
         }
         Relationships: []
       }
+      crm_csv_import_staging: {
+        Row: {
+          created_at: string
+          id: string
+          payload: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          payload: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          payload?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       email_history: {
         Row: {
           body: string
@@ -774,9 +795,12 @@ export type Database = {
       }
       leads: {
         Row: {
+          archived: boolean
           assigned_to: string | null
+          city: string | null
           company_name: string | null
           contact_name: string | null
+          country: string | null
           created_at: string
           email: string | null
           id: string
@@ -787,6 +811,7 @@ export type Database = {
           notes: string | null
           phone: string | null
           pipeline: string
+          priority: string | null
           source: string | null
           status: string
           updated_at: string
@@ -794,9 +819,12 @@ export type Database = {
           website_lead_id: string | null
         }
         Insert: {
+          archived?: boolean
           assigned_to?: string | null
+          city?: string | null
           company_name?: string | null
           contact_name?: string | null
+          country?: string | null
           created_at?: string
           email?: string | null
           id?: string
@@ -807,6 +835,7 @@ export type Database = {
           notes?: string | null
           phone?: string | null
           pipeline?: string
+          priority?: string | null
           source?: string | null
           status?: string
           updated_at?: string
@@ -814,9 +843,12 @@ export type Database = {
           website_lead_id?: string | null
         }
         Update: {
+          archived?: boolean
           assigned_to?: string | null
+          city?: string | null
           company_name?: string | null
           contact_name?: string | null
+          country?: string | null
           created_at?: string
           email?: string | null
           id?: string
@@ -827,6 +859,7 @@ export type Database = {
           notes?: string | null
           phone?: string | null
           pipeline?: string
+          priority?: string | null
           source?: string | null
           status?: string
           updated_at?: string
