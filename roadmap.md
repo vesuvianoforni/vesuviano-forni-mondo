@@ -14,3 +14,8 @@
 
 ## Aperti
 - [ ] Replicare pipeline e webhook in Zapper ERP — bloccato: il progetto Zapper è accessibile solo in lettura da qui; va aperto il suo progetto e incollato il codice/payload contract
+- [x] Bruno: console comunicazioni per lead, suggerimenti per fase, invio WA/WaSender/email/nota
+- [ ] Collegare WhatsApp API di Bruno (connettore WhatsApp) — attende collegamento numero
+- [ ] Collegare WaSender di Gennaro (chiave WASENDER_API_KEY) — attende chiave
+- [ ] Integrazione Gmail per invio email — rimandata dall'utente
+- [ ] Ricezione messaggi in entrata e follow-up automatici programmati
