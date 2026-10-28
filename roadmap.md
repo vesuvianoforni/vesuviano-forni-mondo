@@ -6,8 +6,8 @@
 - [x] Webhook sync-to-erp esteso con pipeline_stage ed evento stage_changed
 - [x] CRM Lead stile Zapper replicato in Vesuviano: tabella `leads`, pagina `/erp/leads` con kanban drag & drop, CRUD, prossima attività, vinto/perso
 - [x] Import iniziale: 547 lead dai form del sito (website_leads) copiati nella tabella `leads` con fase "nuovo"
+- [x] Importate 1.161 righe da lead_vesuviano.csv: aggiornati i contatti per email/telefono, preservati note, fasi, paese, città, priorità e archiviazione; 1.285 lead totali dopo import
+- [x] Aggiunta Pre-qualificato ai due CRM; catalogo fasi condiviso e test per mappatura e raggruppamento
 
 ## Aperti
-- [ ] Importare lead_vesuviano.csv preservando fasi Zapper, dati e note, aggiornando i contatti esistenti senza duplicarli
-- [ ] Aggiungere Pre-qualificato (clienti chiamati ancora da identificare) a CRM lead e pipeline configuratore; verificare import e regole
 - [ ] Replicare pipeline e webhook in Zapper ERP — bloccato: il progetto Zapper è accessibile solo in lettura da qui; va aperto il suo progetto e incollato il codice/payload contract
