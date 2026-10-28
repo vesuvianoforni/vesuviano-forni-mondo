@@ -349,7 +349,7 @@ export default function ERPLeads() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="w-full min-w-0 p-4 md:p-6">
         <div className="flex items-center justify-center h-96">
           <div className="text-lg">Caricamento lead...</div>
         </div>
@@ -358,20 +358,19 @@ export default function ERPLeads() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">Lead</h1>
-          <p className="text-muted-foreground">Gestisci i tuoi lead con il kanban board</p>
+    <div className="w-full min-w-0 max-w-full p-4 md:p-6 space-y-6">
+      <div className="flex flex-wrap justify-between items-center gap-4">
+        <div className="min-w-0">
+          <h1 className="text-3xl font-bold">CRM</h1>
         </div>
-        <Button onClick={() => { resetForm(); setIsDialogOpen(true); }}>
+        <Button className="shrink-0" onClick={() => { resetForm(); setIsDialogOpen(true); }}>
           <Plus className="mr-2 h-4 w-4" />
           Nuovo Lead
         </Button>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
@@ -420,7 +419,7 @@ export default function ERPLeads() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-4 items-center">
-        <div className="relative flex-1 min-w-[200px]">
+        <div className="relative flex-1 min-w-0 basis-full sm:basis-[200px]">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Cerca lead..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
         </div>
@@ -439,9 +438,9 @@ export default function ERPLeads() {
 
       {/* Kanban Board */}
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex gap-4 overflow-x-auto pb-4">
+        <div role="region" aria-label="Pipeline clienti" tabIndex={0} className="flex w-full min-w-0 max-w-full gap-4 overflow-x-auto pb-4">
           {kanbanStatuses.map((status) => (
-            <div key={status.id} className="bg-muted/30 rounded-lg p-4 min-w-[300px] flex-1">
+            <div key={status.id} className="w-72 shrink-0 rounded-lg bg-muted/30 p-4">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-sm">{status.title}</h3>
                 <Badge variant="secondary" className={status.color}>
@@ -466,7 +465,7 @@ export default function ERPLeads() {
                                     <div {...provided.dragHandleProps}>
                                       <GripVertical className="h-4 w-4 text-muted-foreground" />
                                     </div>
-                                    <h4 className="font-medium text-sm">{lead.company_name || lead.contact_name || "Senza nome"}</h4>
+                                  <h4 className="min-w-0 break-words font-medium text-sm">{lead.company_name || lead.contact_name || "Senza nome"}</h4>
                                   </div>
                                   {lead.contact_name && lead.company_name && (
                                     <p className="text-xs text-muted-foreground mt-1">{lead.contact_name}</p>
