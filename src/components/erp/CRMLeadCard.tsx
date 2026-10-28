@@ -30,6 +30,8 @@ export interface CRMLead {
   created_at: string;
   updated_at: string;
   website_lead_id?: string | null;
+  city?: string | null;
+  country?: string | null;
 }
 
 const sourceLabels: Record<string, string> = {

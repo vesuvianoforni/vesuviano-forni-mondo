@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Bot, CalendarPlus, Copy, ExternalLink, MessageSquare, MoreHorizontal, Pencil, Phone, Mail, Building2, Trash2, Trophy, XCircle, Zap } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { VisuallyHidden } from "radix-ui";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -87,8 +86,8 @@ export function CRMLeadDetail({ lead, open, defaultTab = "riepilogo", onOpenChan
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="flex w-full flex-col gap-0 p-0 data-[side=right]:sm:max-w-3xl">
-        <VisuallyHidden.Root asChild><SheetTitle>Scheda cliente</SheetTitle></VisuallyHidden.Root>
-        <VisuallyHidden.Root asChild><SheetDescription>Dettaglio del cliente con comunicazioni e configuratore.</SheetDescription></VisuallyHidden.Root>
+        <SheetTitle className="sr-only">Scheda cliente</SheetTitle>
+        <SheetDescription className="sr-only">Dettaglio del cliente con comunicazioni e configuratore.</SheetDescription>
 
         <div className="flex items-start justify-between gap-3 border-b p-4">
           <div className="min-w-0">
