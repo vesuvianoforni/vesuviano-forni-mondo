@@ -728,27 +728,6 @@ export type Database = {
         }
         Relationships: []
       }
-      crm_csv_import_staging: {
-        Row: {
-          created_at: string
-          id: string
-          payload: Json
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id: string
-          payload: Json
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          payload?: Json
-          updated_at?: string
-        }
-        Relationships: []
-      }
       email_history: {
         Row: {
           body: string
@@ -1427,7 +1406,6 @@ export type Database = {
         }
         Returns: boolean
       }
-      stage_zapper_csv_once: { Args: { p_payload: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "user" | "commerciale" | "produzione"
