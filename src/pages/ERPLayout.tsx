@@ -54,14 +54,14 @@ const ERPLayout = () => {
     <>
       <SEOHead title="ERP | Vesuviano" description="Layout principale ERP." lang="it" noIndex />
       <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-[#0f0f0f]">
+      <div className="min-h-screen flex w-full min-w-0 max-w-full">
         <ERPSidebar />
         <div className="flex-1 flex flex-col min-w-0">
           <header className="h-14 flex items-center border-b border-amber-900/20 bg-[#141414] px-4 sticky top-0 z-10">
             <SidebarTrigger className="text-amber-200 hover:text-amber-100" />
             <span className="ml-4 text-sm font-medium text-amber-200/60">Vesuviano ERP</span>
           </header>
-          <main className="flex-1 overflow-auto">
+          <main className="flex-1 min-w-0 w-full overflow-x-hidden bg-background text-foreground">
             <Outlet />
           </main>
         </div>

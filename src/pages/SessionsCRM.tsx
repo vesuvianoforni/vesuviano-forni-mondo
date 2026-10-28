@@ -942,25 +942,25 @@ const SessionsCRM = () => {
 
     <>
       <SEOHead title="Sessioni CRM | Vesuviano" description="Gestione sessioni clienti CRM." lang="it" noIndex />
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen w-full min-w-0 bg-background">
       <div className="border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="w-full px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-4 min-w-0">
             <Button variant="ghost" size="sm" onClick={() => navigate('/erp')}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Torna al Dashboard
             </Button>
             <h1 className="text-2xl font-bold">CRM Configuratore</h1>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="relative">
+          <div className="flex flex-wrap items-center gap-2 min-w-0 max-w-full">
+            <div className="relative w-full sm:w-60">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="text"
                 placeholder="Cerca cliente..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 w-64"
+                className="pl-10 w-full"
               />
             </div>
             <Button
@@ -987,7 +987,7 @@ const SessionsCRM = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="w-full min-w-0 px-4 py-8">
         {showNewLinkForm && (
           <Card className="mb-6">
             <CardHeader>
