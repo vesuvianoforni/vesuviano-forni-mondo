@@ -12,6 +12,7 @@ import {
   DollarSign,
   PackageCheck,
   Brain,
+  Bot,
   MessageCircle,
   Store,
   Video,
@@ -35,6 +36,7 @@ import { Button } from '@/components/ui/button';
 const mainItems = [
   { title: 'Dashboard', url: '/erp', icon: LayoutDashboard },
   { title: 'CRM', url: '/erp/crm', icon: Users },
+  { title: 'Bruno AI', url: '/erp/bruno', icon: Bot },
   { title: 'Link Configuratore', url: '/erp/sessioni-configuratore', icon: MessageCircle },
   { title: 'Pro-Forma', url: '/erp/proforma', icon: FileText },
   { title: 'Contratti', url: '/erp/contratti', icon: FileText },

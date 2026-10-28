@@ -47,6 +47,7 @@ interface CRMLeadCardProps {
   interactionState?: "loading" | "ready" | "partial";
   now?: Date;
   onSchedule: (lead: CRMLead) => void;
+  onOpen?: (lead: CRMLead) => void;
   onConverse?: (lead: CRMLead) => void;
   onEdit: (lead: CRMLead) => void;
   onDelete: (id: string) => void;
@@ -54,7 +55,7 @@ interface CRMLeadCardProps {
 }
 
 export const CRMLeadCard = forwardRef<HTMLDivElement, CRMLeadCardProps>(function CRMLeadCard(
-  { lead, activityAssignee, draggableProps, dragHandleProps, isDragging, lastInteraction, interactionState = "ready", now = new Date(), onSchedule, onConverse, onEdit, onDelete, onSetStatus }, ref,
+  { lead, activityAssignee, draggableProps, dragHandleProps, isDragging, lastInteraction, interactionState = "ready", now = new Date(), onSchedule, onOpen, onConverse, onEdit, onDelete, onSetStatus }, ref,
 ) {
   const [confirmation, setConfirmation] = useState<"delete" | "vinto" | "perso" | null>(null);
   const name = lead.company_name || lead.contact_name || "Senza nome";
@@ -73,7 +74,7 @@ export const CRMLeadCard = forwardRef<HTMLDivElement, CRMLeadCardProps>(function
               <div className="flex items-start gap-2">
                 <Building2 aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-primary" />
                 <Button variant="link" className="h-auto min-w-0 justify-start whitespace-normal p-0 text-left text-sm font-semibold leading-5 text-card-foreground"
-                  aria-label={`Apri lead ${name}`} onClick={() => (onConverse ?? onEdit)(lead)}>
+                  aria-label={`Apri scheda ${name}`} onClick={() => (onOpen ?? onConverse ?? onEdit)(lead)}>
                   <span className="min-w-0 break-words">{name}</span>
                 </Button>
               </div>
