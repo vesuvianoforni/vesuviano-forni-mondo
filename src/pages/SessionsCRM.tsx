@@ -1060,97 +1060,20 @@ const SessionsCRM = () => {
         )}
 
         {viewMode === 'kanban' ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-            {/* Nuovo */}
-            <div className="space-y-3">
-              <div className="bg-muted/30 rounded-lg p-3">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  Nuovo
-                  <Badge variant="outline">{kanbanGroups.nuovo.length}</Badge>
-                </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {PIPELINE_STAGES.map(stage => (
+              <div key={stage.key} className="space-y-3">
+                <div className={`${stage.bg} rounded-lg p-3`}>
+                  <h3 className="font-semibold text-sm flex items-center gap-2">
+                    {stage.label}
+                    <Badge variant="outline">{kanbanGroups[stage.key].length}</Badge>
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  {kanbanGroups[stage.key].map(session => renderSessionCard(session, true))}
+                </div>
               </div>
-              <div className="space-y-3">
-                {kanbanGroups.nuovo.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
-
-            {/* Aperto */}
-            <div className="space-y-3">
-              <div className="bg-stone-100 dark:bg-stone-900 rounded-lg p-3">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  Aperto
-                  <Badge variant="outline">{kanbanGroups.aperto.length}</Badge>
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {kanbanGroups.aperto.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
-
-            {/* Rinnovo Richiesto */}
-            <div className="space-y-3">
-              <div className="bg-amber-100 dark:bg-amber-950 rounded-lg p-3">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  Rinnovo Richiesto
-                  <Badge variant="outline">{kanbanGroups.rinnovoRichiesto.length}</Badge>
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {kanbanGroups.rinnovoRichiesto.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
-
-            {/* Interessato */}
-            <div className="space-y-3">
-              <div className="bg-orange-100 dark:bg-orange-950 rounded-lg p-3">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  Interessato
-                  <Badge variant="outline">{kanbanGroups.interessato.length}</Badge>
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {kanbanGroups.interessato.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
-
-            {/* Pagamento Avviato */}
-            <div className="space-y-3">
-              <div className="bg-blue-100 dark:bg-blue-950 rounded-lg p-3">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  Pagamento Avviato
-                  <Badge variant="outline">{kanbanGroups.pagamento.length}</Badge>
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {kanbanGroups.pagamento.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
-
-            {/* Pagato */}
-            <div className="space-y-3">
-              <div className="bg-green-100 dark:bg-green-950 rounded-lg p-3">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  Pagato
-                  <Badge variant="outline">{kanbanGroups.pagato.length}</Badge>
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {kanbanGroups.pagato.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
-
-            {/* Non Interessato */}
-            <div className="space-y-3">
-              <div className="bg-red-100 dark:bg-red-950 rounded-lg p-3">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  Non Interessato
-                  <Badge variant="outline">{kanbanGroups.nonInteressato.length}</Badge>
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {kanbanGroups.nonInteressato.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
+            ))}
           </div>
         ) : (
           <div className="space-y-4">
