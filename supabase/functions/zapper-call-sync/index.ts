@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
     if (!lead) {
       const { data: nl, error } = await supabase.from('leads').insert({
         contact_name: `Chiamata ${String(customer)}`, phone: String(customer), status: 'pre_qualificato',
-        pipeline: 'vesuviano', source: 'Telefonata',
+        pipeline: 'Vesuviano', source: 'Telefonata',
       }).select('id, phone').single();
       if (error) { results.push({ id, status: 'error', error: error.message }); continue; }
       lead = nl; created = true;
