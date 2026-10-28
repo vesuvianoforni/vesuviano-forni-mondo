@@ -740,6 +740,7 @@ export type Database = {
           external_id: string | null
           id: string
           lead_id: string
+          metadata: Json | null
           sender: string
           status: string
           subject: string | null
@@ -755,6 +756,7 @@ export type Database = {
           external_id?: string | null
           id?: string
           lead_id: string
+          metadata?: Json | null
           sender?: string
           status?: string
           subject?: string | null
@@ -770,6 +772,7 @@ export type Database = {
           external_id?: string | null
           id?: string
           lead_id?: string
+          metadata?: Json | null
           sender?: string
           status?: string
           subject?: string | null
