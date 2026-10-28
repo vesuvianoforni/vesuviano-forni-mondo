@@ -47,6 +47,8 @@ interface SessionData {
   link_sent: boolean;
   sent_via_email: boolean;
   sent_via_whatsapp: boolean;
+  pipeline_stage: string;
+  erp_webhook_url: string | null;
   configurator_quotes?: {
     id: string;
     total_price: number;
@@ -347,6 +349,62 @@ const SessionsCRM = () => {
            Math.random().toString(36).substring(2, 15);
   };
 
+  const PIPELINE_STAGES = [
+    { key: 'nuovo', label: 'Nuovo', color: '#9ca3af', bg: 'bg-muted/30' },
+    { key: 'qualificato', label: 'Qualificato', color: '#57534e', bg: 'bg-stone-100 dark:bg-stone-900' },
+    { key: 'trattativa', label: 'Trattativa', color: '#ea580c', bg: 'bg-orange-100 dark:bg-orange-950' },
+    { key: 'vinto', label: 'Vinto', color: '#16a34a', bg: 'bg-green-100 dark:bg-green-950' },
+    { key: 'perso', label: 'Perso', color: '#dc2626', bg: 'bg-red-100 dark:bg-red-950' },
+  ] as const;
+
+  type PipelineStageKey = typeof PIPELINE_STAGES[number]['key'];
+
+  const getStageConfig = (stage: string) =>
+    PIPELINE_STAGES.find(s => s.key === stage) || PIPELINE_STAGES[0];
+
+  const getStageBadge = (session: SessionData) => {
+    const stage = getStageConfig(session.pipeline_stage || 'nuovo');
+    return (
+      <Badge variant="outline" style={{ borderColor: stage.color, color: stage.color }}>
+        {stage.label}
+      </Badge>
+    );
+  };
+
+  const changePipelineStage = async (session: SessionData, newStage: string) => {
+    if (newStage === (session.pipeline_stage || 'nuovo')) return;
+
+    try {
+      const { error } = await supabase
+        .from('configurator_sessions')
+        .update({ pipeline_stage: newStage })
+        .eq('id', session.id);
+
+      if (error) throw error;
+
+      // Sync stage change to ERP if a webhook is configured for this session
+      if (session.erp_webhook_url) {
+        supabase.functions.invoke('sync-to-erp', {
+          body: {
+            session_id: session.id,
+            event_type: 'stage_changed',
+            event_data: { pipeline_stage: newStage, previous_stage: session.pipeline_stage || 'nuovo' },
+            timestamp: new Date().toISOString()
+          }
+        }).catch(err => console.error('ERP sync error:', err));
+      }
+
+      toast.success(`Fase aggiornata: ${getStageConfig(newStage).label}`);
+      if (selectedSession?.id === session.id) {
+        setSelectedSession({ ...selectedSession, pipeline_stage: newStage });
+      }
+      loadSessions();
+    } catch (error) {
+      console.error('Error updating pipeline stage:', error);
+      toast.error('Errore nell\'aggiornamento della fase');
+    }
+  };
+
   const generateNewLink = async () => {
     if (!customerName || !customerEmail || !customerPhone) {
       toast.error('Compila tutti i campi del cliente');
@@ -570,18 +628,15 @@ const SessionsCRM = () => {
     );
   };
 
-  const groupSessionsByStatus = () => {
+  const groupSessionsByStage = (): Record<PipelineStageKey, SessionData[]> => {
     const filteredSessions = filterSessions(sessions);
-    const groups = {
-      nuovo: filteredSessions.filter(s => !s.is_used && s.status !== 'link_renewal_requested'),
-      aperto: filteredSessions.filter(s => s.is_used && !s.feedback_status && s.status !== 'payment_initiated' && s.status !== 'link_renewal_requested' && !s.configurator_quotes?.payment_completed),
-      rinnovoRichiesto: filteredSessions.filter(s => s.status === 'link_renewal_requested'),
-      interessato: filteredSessions.filter(s => (s.status === 'interested' || s.feedback_status === 'interested') && !s.configurator_quotes?.payment_completed),
-      pagamento: filteredSessions.filter(s => s.status === 'payment_initiated' && !s.configurator_quotes?.payment_completed),
-      pagato: filteredSessions.filter(s => s.configurator_quotes?.payment_completed),
-      nonInteressato: filteredSessions.filter(s => s.feedback_status === 'not_interested')
+    return {
+      nuovo: filteredSessions.filter(s => (s.pipeline_stage || 'nuovo') === 'nuovo'),
+      qualificato: filteredSessions.filter(s => s.pipeline_stage === 'qualificato'),
+      trattativa: filteredSessions.filter(s => s.pipeline_stage === 'trattativa'),
+      vinto: filteredSessions.filter(s => s.pipeline_stage === 'vinto'),
+      perso: filteredSessions.filter(s => s.pipeline_stage === 'perso')
     };
-    return groups;
   };
 
   if (loading) {
@@ -595,7 +650,7 @@ const SessionsCRM = () => {
     );
   }
 
-  const kanbanGroups = groupSessionsByStatus();
+  const kanbanGroups = groupSessionsByStage();
 
   const renderSessionCard = (session: SessionData, compact = false) => {
     if (compact) {
@@ -605,14 +660,7 @@ const SessionsCRM = () => {
           key={session.id} 
           className="hover:shadow-lg transition-all border-l-4 cursor-pointer mb-4" 
           onClick={() => setSelectedSession(session)}
-          style={{
-          borderLeftColor: session.configurator_quotes?.payment_completed ? '#16a34a' : 
-                           session.status === 'payment_initiated' ? '#2563eb' :
-                           session.status === 'link_renewal_requested' ? '#d97706' :
-                           session.status === 'interested' || session.feedback_status === 'interested' ? '#ea580c' :
-                           session.feedback_status === 'not_interested' ? '#dc2626' :
-                           session.is_used ? '#57534e' : '#e5e7eb'
-        }}>
+          style={{ borderLeftColor: getStageConfig(session.pipeline_stage || 'nuovo').color }}>
           <CardContent className="p-4">
             <div className="space-y-4">
               {/* Header with status badge and price list */}
