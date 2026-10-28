@@ -8,5 +8,6 @@
 - [x] Import iniziale: 547 lead dai form del sito (website_leads) copiati nella tabella `leads` con fase "nuovo"
 
 ## Aperti
-- [ ] Importare i lead storici di Zapper ERP — bloccato: da qui non posso leggere il database di Zapper; serve un export CSV dal progetto Zapper caricato in questa chat
+- [ ] Importare lead_vesuviano.csv preservando fasi Zapper, dati e note, aggiornando i contatti esistenti senza duplicarli
+- [ ] Aggiungere Pre-qualificato (clienti chiamati ancora da identificare) a CRM lead e pipeline configuratore; verificare import e regole
 - [ ] Replicare pipeline e webhook in Zapper ERP — bloccato: il progetto Zapper è accessibile solo in lettura da qui; va aperto il suo progetto e incollato il codice/payload contract
