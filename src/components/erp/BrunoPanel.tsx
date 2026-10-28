@@ -46,6 +46,8 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
   const [thinking, setThinking] = useState(false);
   const [mode, setMode] = useState("draft");
   const [pausedUntil, setPausedUntil] = useState<string | null>(null);
+  const [viewFilter, setViewFilter] = useState<"all" | BrunoChannel>("all");
+  const visibleMessages = viewFilter === "all" ? messages : messages.filter((m) => m.channel === viewFilter);
   const endRef = useRef<HTMLDivElement>(null);
 
   const load = async (id: string) => {
@@ -139,10 +141,24 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
         {reasoning && <p className="mt-2 rounded-md bg-background p-2 text-xs text-muted-foreground">💡 {reasoning}</p>}
       </div>
 
+      {/* Channel filter */}
+      <div className="flex flex-wrap gap-1 border-b px-4 py-2" role="tablist" aria-label="Filtra per canale">
+        {([["all", "Tutte"], ["whatsapp_api", "WhatsApp Bruno"], ["wasender", "WhatsApp Gennaro"], ["email", "Email"], ["note", "Note"]] as const).map(([k, label]) => {
+          const count = k === "all" ? messages.length : messages.filter((m) => m.channel === k).length;
+          return (
+            <Button key={k} type="button" role="tab" aria-selected={viewFilter === k} size="sm"
+              variant={viewFilter === k ? "default" : "outline"} className="h-7 px-2 text-xs"
+              onClick={() => setViewFilter(k)}>
+              {label} <span className="ml-1 opacity-70">{count}</span>
+            </Button>
+          );
+        })}
+      </div>
+
       {/* Timeline */}
       <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4" aria-label="Comunicazioni">
-        {messages.length === 0 && <p className="py-10 text-center text-sm text-muted-foreground">Nessuna comunicazione registrata.</p>}
-        {messages.map((m) => {
+        {visibleMessages.length === 0 && <p className="py-10 text-center text-sm text-muted-foreground">Nessuna comunicazione registrata.</p>}
+        {visibleMessages.map((m) => {
           const Icon = channelIcon[m.channel] ?? StickyNote;
           const out = m.direction !== "inbound";
           return (
