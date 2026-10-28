@@ -528,6 +528,7 @@ export type Database = {
           is_used: boolean
           last_opened_at: string | null
           link_sent: boolean
+          pipeline_stage: string
           price_list: string
           quote_id: string | null
           sent_via_email: boolean | null
@@ -552,6 +553,7 @@ export type Database = {
           is_used?: boolean
           last_opened_at?: string | null
           link_sent?: boolean
+          pipeline_stage?: string
           price_list?: string
           quote_id?: string | null
           sent_via_email?: boolean | null
@@ -576,6 +578,7 @@ export type Database = {
           is_used?: boolean
           last_opened_at?: string | null
           link_sent?: boolean
+          pipeline_stage?: string
           price_list?: string
           quote_id?: string | null
           sent_via_email?: boolean | null
