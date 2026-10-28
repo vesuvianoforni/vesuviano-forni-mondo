@@ -7,3 +7,4 @@ The primary ERP CRM route renders the lead board; legacy lead links redirect the
 Render active and closed CRM leads through the shared CRMLeadCard presentation component so contact details, next activity and existing lead actions stay consistent without duplicating persistence logic.
 
 Enrich CRM lead cards with paginated, read-only projections of recorded form, chat, email and customer configurator events; never substitute record updated_at for last interaction. Schedule next activities through the existing leads fields, isolated from changes to other lead data.
+- Bruno (AI sales & back-office agent): all lead communications live in `crm_messages`; sending and AI suggestions go only through the `bruno-agent` edge function so credentials and stage objectives stay server-side. A manual WaSender message pauses Bruno 48h on that lead to avoid overlapping with the human seller.
