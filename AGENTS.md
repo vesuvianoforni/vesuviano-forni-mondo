@@ -5,3 +5,5 @@ CRM pipeline: `configurator_sessions.pipeline_stage` is the single source of tru
 The primary ERP CRM route renders the lead board; legacy lead links redirect there, while configurator session tools retain their own route. Contain horizontal board scrolling within the content pane and allow toolbars to wrap so neither CRM expands the page beyond its viewport.
 
 Render active and closed CRM leads through the shared CRMLeadCard presentation component so contact details, next activity and existing lead actions stay consistent without duplicating persistence logic.
+
+Enrich CRM lead cards with paginated, read-only projections of recorded form, chat, email and customer configurator events; never substitute record updated_at for last interaction. Schedule next activities through the existing leads fields, isolated from changes to other lead data.
