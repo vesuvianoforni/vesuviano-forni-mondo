@@ -12,4 +12,5 @@
 - [x] Card lead allineate alla struttura Zapper: intestazione/azioni, contatti separati, attività con data/ora/note/assegnatario, valore/fonte/trascinamento; presentazione condivisa per lead attivi e chiusi. Verificati layout 1070/390 px, modifica e rilettura, conferma/annullamento eliminazione, spostamento desktop e vinto/chiusi con soli dati di prova (accesso reale non disponibile)
 
 ## Aperti
+- [ ] Rivedere le card secondo pratiche CRM: rimuovere Vinto/Perso in evidenza, mostrare ultima interazione reale e prossima attività con tempi relativi, evidenziare scadenze e consentire pianificazione rapida
 - [ ] Replicare pipeline e webhook in Zapper ERP — bloccato: il progetto Zapper è accessibile solo in lettura da qui; va aperto il suo progetto e incollato il codice/payload contract
