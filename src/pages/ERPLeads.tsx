@@ -431,7 +431,7 @@ export default function ERPLeads() {
                 {(provided, snapshot) => (
                   <div {...provided.droppableProps} ref={provided.innerRef} className={`space-y-3 min-h-[200px] ${snapshot.isDraggingOver ? "bg-muted/50" : ""}`}>
                     {leadsByStatus[status.id]?.map((lead, index) => (
-                      <Draggable key={lead.id} draggableId={lead.id} index={index}>
+                      <Draggable key={lead.id} draggableId={lead.id} index={index} disableInteractiveElementBlocking>
                         {(provided, snapshot) => (
                           <CRMLeadCard
                             ref={provided.innerRef}
