@@ -91,10 +91,10 @@ export function CRMLeadDetail({ lead, open, defaultTab = "riepilogo", onOpenChan
 
         <div className="flex items-start justify-between gap-3 border-b p-4">
           <div className="min-w-0">
-            <p className="flex flex-wrap items-center gap-2 break-words text-lg font-semibold">
+            <div className="flex flex-wrap items-center gap-2 break-words text-lg font-semibold">
               <Building2 aria-hidden="true" className="h-4 w-4 shrink-0 text-primary" />{name}
               {stage && <Badge variant="secondary" className={stage.color}>{stage.title}</Badge>}
-            </p>
+            </div>
             <p className="mt-1 flex flex-wrap gap-x-3 text-xs text-muted-foreground">
               {lead.contact_name && <span>{lead.contact_name}</span>}
               {lead.city && <span>{lead.city}</span>}
@@ -180,10 +180,10 @@ export function CRMLeadDetail({ lead, open, defaultTab = "riepilogo", onOpenChan
                 <Card key={s.id}>
                   <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
                     <div className="min-w-0">
-                      <p className="flex flex-wrap items-center gap-2 text-sm font-medium">
+                      <div className="flex flex-wrap items-center gap-2 text-sm font-medium">
                         <Bot className="h-4 w-4 text-primary" />Listino {s.price_list}
                         <Badge variant="outline">{CRM_STAGES.find((x) => x.id === s.pipeline_stage)?.title ?? s.pipeline_stage}</Badge>
-                      </p>
+                      </div>
                       <p className="text-xs text-muted-foreground">
                         Aperto {s.last_opened_at ? new Date(s.last_opened_at).toLocaleString("it-IT", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "mai"}
                       </p>

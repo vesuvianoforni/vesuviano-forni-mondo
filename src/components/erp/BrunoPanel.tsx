@@ -108,10 +108,10 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
     <div className={cn("flex min-h-0 flex-1 flex-col", className)}>
       {/* Intestazione cliente */}
       <div className="border-b p-4">
-        <p className="flex flex-wrap items-center gap-2 break-words text-base font-semibold">
+        <div className="flex flex-wrap items-center gap-2 break-words text-base font-semibold">
           {name}
           <Badge variant="secondary">{CRM_STAGES.find((x) => x.id === stage)?.title ?? stage}</Badge>
-        </p>
+        </div>
         <span className="flex flex-wrap gap-x-3 text-xs text-muted-foreground">
           {lead.phone && <span>{lead.phone}</span>}{lead.email && <span>{lead.email}</span>}
           {!lead.phone && !lead.email && <span>Nessun contatto salvato</span>}
