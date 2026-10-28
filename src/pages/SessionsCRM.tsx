@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, Mail, Trash2, Search, Send, Sparkles, MessageSquare } from 'lucide-react';
+import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, Mail, Trash2, Search, Send, Sparkles, MessageSquare, Link2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Input } from '@/components/ui/input';
@@ -47,6 +47,8 @@ interface SessionData {
   link_sent: boolean;
   sent_via_email: boolean;
   sent_via_whatsapp: boolean;
+  pipeline_stage: string;
+  erp_webhook_url: string | null;
   configurator_quotes?: {
     id: string;
     total_price: number;
@@ -347,6 +349,62 @@ const SessionsCRM = () => {
            Math.random().toString(36).substring(2, 15);
   };
 
+  const PIPELINE_STAGES = [
+    { key: 'nuovo', label: 'Nuovo', color: '#9ca3af', bg: 'bg-muted/30' },
+    { key: 'qualificato', label: 'Qualificato', color: '#57534e', bg: 'bg-stone-100 dark:bg-stone-900' },
+    { key: 'trattativa', label: 'Trattativa', color: '#ea580c', bg: 'bg-orange-100 dark:bg-orange-950' },
+    { key: 'vinto', label: 'Vinto', color: '#16a34a', bg: 'bg-green-100 dark:bg-green-950' },
+    { key: 'perso', label: 'Perso', color: '#dc2626', bg: 'bg-red-100 dark:bg-red-950' },
+  ] as const;
+
+  type PipelineStageKey = typeof PIPELINE_STAGES[number]['key'];
+
+  const getStageConfig = (stage: string) =>
+    PIPELINE_STAGES.find(s => s.key === stage) || PIPELINE_STAGES[0];
+
+  const getStageBadge = (session: SessionData) => {
+    const stage = getStageConfig(session.pipeline_stage || 'nuovo');
+    return (
+      <Badge variant="outline" style={{ borderColor: stage.color, color: stage.color }}>
+        {stage.label}
+      </Badge>
+    );
+  };
+
+  const changePipelineStage = async (session: SessionData, newStage: string) => {
+    if (newStage === (session.pipeline_stage || 'nuovo')) return;
+
+    try {
+      const { error } = await supabase
+        .from('configurator_sessions')
+        .update({ pipeline_stage: newStage })
+        .eq('id', session.id);
+
+      if (error) throw error;
+
+      // Sync stage change to ERP if a webhook is configured for this session
+      if (session.erp_webhook_url) {
+        supabase.functions.invoke('sync-to-erp', {
+          body: {
+            session_id: session.id,
+            event_type: 'stage_changed',
+            event_data: { pipeline_stage: newStage, previous_stage: session.pipeline_stage || 'nuovo' },
+            timestamp: new Date().toISOString()
+          }
+        }).catch(err => console.error('ERP sync error:', err));
+      }
+
+      toast.success(`Fase aggiornata: ${getStageConfig(newStage).label}`);
+      if (selectedSession?.id === session.id) {
+        setSelectedSession({ ...selectedSession, pipeline_stage: newStage });
+      }
+      loadSessions();
+    } catch (error) {
+      console.error('Error updating pipeline stage:', error);
+      toast.error('Errore nell\'aggiornamento della fase');
+    }
+  };
+
   const generateNewLink = async () => {
     if (!customerName || !customerEmail || !customerPhone) {
       toast.error('Compila tutti i campi del cliente');
@@ -570,18 +628,15 @@ const SessionsCRM = () => {
     );
   };
 
-  const groupSessionsByStatus = () => {
+  const groupSessionsByStage = (): Record<PipelineStageKey, SessionData[]> => {
     const filteredSessions = filterSessions(sessions);
-    const groups = {
-      nuovo: filteredSessions.filter(s => !s.is_used && s.status !== 'link_renewal_requested'),
-      aperto: filteredSessions.filter(s => s.is_used && !s.feedback_status && s.status !== 'payment_initiated' && s.status !== 'link_renewal_requested' && !s.configurator_quotes?.payment_completed),
-      rinnovoRichiesto: filteredSessions.filter(s => s.status === 'link_renewal_requested'),
-      interessato: filteredSessions.filter(s => (s.status === 'interested' || s.feedback_status === 'interested') && !s.configurator_quotes?.payment_completed),
-      pagamento: filteredSessions.filter(s => s.status === 'payment_initiated' && !s.configurator_quotes?.payment_completed),
-      pagato: filteredSessions.filter(s => s.configurator_quotes?.payment_completed),
-      nonInteressato: filteredSessions.filter(s => s.feedback_status === 'not_interested')
+    return {
+      nuovo: filteredSessions.filter(s => (s.pipeline_stage || 'nuovo') === 'nuovo'),
+      qualificato: filteredSessions.filter(s => s.pipeline_stage === 'qualificato'),
+      trattativa: filteredSessions.filter(s => s.pipeline_stage === 'trattativa'),
+      vinto: filteredSessions.filter(s => s.pipeline_stage === 'vinto'),
+      perso: filteredSessions.filter(s => s.pipeline_stage === 'perso')
     };
-    return groups;
   };
 
   if (loading) {
@@ -595,7 +650,7 @@ const SessionsCRM = () => {
     );
   }
 
-  const kanbanGroups = groupSessionsByStatus();
+  const kanbanGroups = groupSessionsByStage();
 
   const renderSessionCard = (session: SessionData, compact = false) => {
     if (compact) {
@@ -605,14 +660,7 @@ const SessionsCRM = () => {
           key={session.id} 
           className="hover:shadow-lg transition-all border-l-4 cursor-pointer mb-4" 
           onClick={() => setSelectedSession(session)}
-          style={{
-          borderLeftColor: session.configurator_quotes?.payment_completed ? '#16a34a' : 
-                           session.status === 'payment_initiated' ? '#2563eb' :
-                           session.status === 'link_renewal_requested' ? '#d97706' :
-                           session.status === 'interested' || session.feedback_status === 'interested' ? '#ea580c' :
-                           session.feedback_status === 'not_interested' ? '#dc2626' :
-                           session.is_used ? '#57534e' : '#e5e7eb'
-        }}>
+          style={{ borderLeftColor: getStageConfig(session.pipeline_stage || 'nuovo').color }}>
           <CardContent className="p-4">
             <div className="space-y-4">
               {/* Header with status badge and price list */}
@@ -777,6 +825,7 @@ const SessionsCRM = () => {
             <div>
               <div className="flex items-center gap-3 mb-2">
                 {getStatusBadge(session)}
+                {getStageBadge(session)}
                 <Badge variant="secondary">Listino {session.price_list}</Badge>
               </div>
               <h3 className="text-lg font-semibold">{session.customer_name || 'Nome non disponibile'}</h3>
@@ -1012,97 +1061,20 @@ const SessionsCRM = () => {
         )}
 
         {viewMode === 'kanban' ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-            {/* Nuovo */}
-            <div className="space-y-3">
-              <div className="bg-muted/30 rounded-lg p-3">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  Nuovo
-                  <Badge variant="outline">{kanbanGroups.nuovo.length}</Badge>
-                </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {PIPELINE_STAGES.map(stage => (
+              <div key={stage.key} className="space-y-3">
+                <div className={`${stage.bg} rounded-lg p-3`}>
+                  <h3 className="font-semibold text-sm flex items-center gap-2">
+                    {stage.label}
+                    <Badge variant="outline">{kanbanGroups[stage.key].length}</Badge>
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  {kanbanGroups[stage.key].map(session => renderSessionCard(session, true))}
+                </div>
               </div>
-              <div className="space-y-3">
-                {kanbanGroups.nuovo.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
-
-            {/* Aperto */}
-            <div className="space-y-3">
-              <div className="bg-stone-100 dark:bg-stone-900 rounded-lg p-3">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  Aperto
-                  <Badge variant="outline">{kanbanGroups.aperto.length}</Badge>
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {kanbanGroups.aperto.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
-
-            {/* Rinnovo Richiesto */}
-            <div className="space-y-3">
-              <div className="bg-amber-100 dark:bg-amber-950 rounded-lg p-3">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  Rinnovo Richiesto
-                  <Badge variant="outline">{kanbanGroups.rinnovoRichiesto.length}</Badge>
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {kanbanGroups.rinnovoRichiesto.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
-
-            {/* Interessato */}
-            <div className="space-y-3">
-              <div className="bg-orange-100 dark:bg-orange-950 rounded-lg p-3">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  Interessato
-                  <Badge variant="outline">{kanbanGroups.interessato.length}</Badge>
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {kanbanGroups.interessato.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
-
-            {/* Pagamento Avviato */}
-            <div className="space-y-3">
-              <div className="bg-blue-100 dark:bg-blue-950 rounded-lg p-3">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  Pagamento Avviato
-                  <Badge variant="outline">{kanbanGroups.pagamento.length}</Badge>
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {kanbanGroups.pagamento.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
-
-            {/* Pagato */}
-            <div className="space-y-3">
-              <div className="bg-green-100 dark:bg-green-950 rounded-lg p-3">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  Pagato
-                  <Badge variant="outline">{kanbanGroups.pagato.length}</Badge>
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {kanbanGroups.pagato.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
-
-            {/* Non Interessato */}
-            <div className="space-y-3">
-              <div className="bg-red-100 dark:bg-red-950 rounded-lg p-3">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  Non Interessato
-                  <Badge variant="outline">{kanbanGroups.nonInteressato.length}</Badge>
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {kanbanGroups.nonInteressato.map(session => renderSessionCard(session, true))}
-              </div>
-            </div>
+            ))}
           </div>
         ) : (
           <div className="space-y-4">
@@ -1127,7 +1099,24 @@ const SessionsCRM = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 {getStatusBadge(selectedSession)}
+                {getStageBadge(selectedSession)}
                 <Badge variant="secondary">Listino {selectedSession.price_list}</Badge>
+              </div>
+              <div>
+                <span className="text-sm font-medium">Fase pipeline:</span>
+                <Select
+                  value={selectedSession.pipeline_stage || 'nuovo'}
+                  onValueChange={(v) => changePipelineStage(selectedSession, v)}
+                >
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PIPELINE_STAGES.map(s => (
+                      <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <h3 className="font-semibold text-lg">{selectedSession.customer_name || 'Nome non disponibile'}</h3>
@@ -1138,14 +1127,41 @@ const SessionsCRM = () => {
               </div>
               <Separator />
               <div className="space-y-3">
-                <div>
-                  <span className="text-sm font-medium">Link configuratore:</span>
-                  <div className="flex items-center gap-2 mt-1">
-                    <code className="text-xs bg-muted px-2 py-1 rounded flex-1 truncate">
+                <div className="bg-muted/30 rounded-lg p-4 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Link2 className="w-4 h-4" />
+                    <span className="text-sm font-medium">Link Configuratore</span>
+                    {selectedSession.is_used && (
+                      <Badge variant="outline" className="ml-auto text-green-600 border-green-600">
+                        <Check className="w-3 h-3 mr-1" /> Aperto dal cliente
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <code className="text-xs bg-background px-2 py-1.5 rounded flex-1 truncate">
                       https://vesuvianoforni.com/configuratore/{selectedSession.token}
                     </code>
                     <Button size="sm" variant="outline" onClick={() => copyLink(selectedSession.token)}>
                       <Copy className="w-3 h-3" />
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button size="sm" variant="outline" onClick={() => sendEmailToCustomer(selectedSession)}>
+                      <Mail className="w-3 h-3 mr-1" /> Invia via Email
+                    </Button>
+                    {selectedSession.customer_phone && (
+                      <Button size="sm" variant="outline" asChild>
+                        <a
+                          href={`https://wa.me/${selectedSession.customer_phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Ecco il link per configurare il tuo forno Vesuviano: https://vesuvianoforni.com/configuratore/${selectedSession.token}`)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <MessageSquare className="w-3 h-3 mr-1" /> Invia via WhatsApp
+                        </a>
+                      </Button>
+                    )}
+                    <Button size="sm" variant="outline" onClick={() => regenerateLink(selectedSession.id)}>
+                      <RefreshCw className="w-3 h-3 mr-1" /> Rigenera
                     </Button>
                   </div>
                 </div>
