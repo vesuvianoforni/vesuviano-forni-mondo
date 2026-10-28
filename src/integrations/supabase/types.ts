@@ -1427,6 +1427,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      stage_zapper_csv_once: { Args: { p_payload: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "user" | "commerciale" | "produzione"
