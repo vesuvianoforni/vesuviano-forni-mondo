@@ -80,6 +80,3 @@ verify_jwt = false
 
 [functions.babylovegrowth-webhook]
 verify_jwt = false
-
-[functions.import-zapper-leads-once]
-verify_jwt = false
