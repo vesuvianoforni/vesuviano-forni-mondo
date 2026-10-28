@@ -1,4 +1,4 @@
-import { differenceInCalendarDays, format, formatDistanceToNowStrict, isSameDay } from "date-fns";
+import { differenceInCalendarDays, format, formatDistanceStrict, isSameDay } from "date-fns";
 import { it } from "date-fns/locale";
 
 export interface LeadIdentity {
@@ -56,7 +56,6 @@ export function interactionRelativeTime(value: string, now = new Date()) {
   return relativeDistance(date, now);
 }
 
-import { formatDistanceStrict } from "date-fns";
 function relativeDistance(date: Date, now: Date) {
   return formatDistanceStrict(date, now, { addSuffix: true, locale: it });
 }
