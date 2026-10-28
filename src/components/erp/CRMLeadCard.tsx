@@ -1,12 +1,14 @@
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import type { DraggableProvided } from "@hello-pangea/dnd";
-import { Building2, Calendar, Clock, Edit, GripVertical, Mail, Phone, Trash2, Trophy, User, XCircle, Zap } from "lucide-react";
+import { Building2, Calendar, CalendarPlus, Clock, Edit, GripVertical, Mail, MoreHorizontal, Phone, Trash2, Trophy, User, XCircle, Zap } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { CRM_STAGES } from "@/lib/crmPipeline";
+import { activityLabels, activityTiming, exactActivityDate, interactionLabels, interactionRelativeTime, type LeadInteraction } from "@/lib/crmActivity";
 import { cn } from "@/lib/utils";
 
 export interface CRMLead {
@@ -27,16 +29,12 @@ export interface CRMLead {
   next_activity_assigned_to?: string;
   created_at: string;
   updated_at: string;
+  website_lead_id?: string | null;
 }
 
 const sourceLabels: Record<string, string> = {
   website: "Web", configuratore: "Configuratore", chat: "Chat", referral: "Referral",
   social_media: "Social", cold_call: "Cold Call", trade_show: "Fiera", zapier: "Zapier", other: "Altro",
-};
-
-const activityLabels: Record<string, string> = {
-  call: "Chiamata", email: "Email", meeting: "Incontro", whatsapp: "WhatsApp",
-  demo: "Demo", follow_up: "Follow-up", quote: "Preventivo",
 };
 
 interface CRMLeadCardProps {
@@ -45,20 +43,24 @@ interface CRMLeadCardProps {
   draggableProps?: DraggableProvided["draggableProps"];
   dragHandleProps?: DraggableProvided["dragHandleProps"];
   isDragging?: boolean;
+  lastInteraction?: LeadInteraction | null;
+  interactionState?: "loading" | "ready" | "partial";
+  now?: Date;
+  onSchedule: (lead: CRMLead) => void;
   onEdit: (lead: CRMLead) => void;
   onDelete: (id: string) => void;
   onSetStatus: (lead: CRMLead, status: "vinto" | "perso") => void;
 }
 
 export const CRMLeadCard = forwardRef<HTMLDivElement, CRMLeadCardProps>(function CRMLeadCard(
-  { lead, activityAssignee, draggableProps, dragHandleProps, isDragging, onEdit, onDelete, onSetStatus }, ref,
+  { lead, activityAssignee, draggableProps, dragHandleProps, isDragging, lastInteraction, interactionState = "ready", now = new Date(), onSchedule, onEdit, onDelete, onSetStatus }, ref,
 ) {
+  const [confirmation, setConfirmation] = useState<"delete" | "vinto" | "perso" | null>(null);
   const name = lead.company_name || lead.contact_name || "Senza nome";
   const closed = lead.status === "vinto" || lead.status === "perso";
   const stage = CRM_STAGES.find(item => item.id === lead.status);
-  const activityDate = lead.next_activity_date ? new Date(lead.next_activity_date) : null;
-  const validActivityDate = activityDate && !Number.isNaN(activityDate.getTime()) ? activityDate : null;
-  const hasActivity = Boolean(lead.next_activity_type || validActivityDate || lead.next_activity_notes || activityAssignee);
+  const timing = activityTiming(lead.next_activity_date, now);
+  const timingColor = timing.state === "overdue" ? "text-destructive" : timing.state === "today" ? "text-primary" : "text-muted-foreground";
 
   return (
     <TooltipProvider delayDuration={200}>
@@ -84,24 +86,37 @@ export const CRMLeadCard = forwardRef<HTMLDivElement, CRMLeadCardProps>(function
                 </TooltipTrigger>
                 <TooltipContent>Modifica lead</TooltipContent>
               </Tooltip>
-              <AlertDialog>
+              <DropdownMenu>
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <AlertDialogTrigger asChild>
-                      <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                        aria-label={`Elimina lead ${name}`}><Trash2 className="h-3.5 w-3.5" /></Button>
-                    </AlertDialogTrigger>
-                  </TooltipTrigger>
-                  <TooltipContent>Elimina lead</TooltipContent>
+                  <TooltipTrigger asChild><DropdownMenuTrigger asChild>
+                    <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-muted hover:text-foreground" aria-label={`Altre azioni ${name}`}><MoreHorizontal /></Button>
+                  </DropdownMenuTrigger></TooltipTrigger>
+                  <TooltipContent>Altre azioni</TooltipContent>
                 </Tooltip>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onSelect={() => onSchedule(lead)}><CalendarPlus className="mr-2 h-4 w-4" />Pianifica attività</DropdownMenuItem>
+                  {!closed && <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onSelect={() => setConfirmation("vinto")}><Trophy className="mr-2 h-4 w-4" />Segna come vinto</DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setConfirmation("perso")}><XCircle className="mr-2 h-4 w-4" />Segna come perso</DropdownMenuItem>
+                  </>}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive" onSelect={() => setConfirmation("delete")}><Trash2 className="mr-2 h-4 w-4" />Elimina lead</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <AlertDialog open={confirmation !== null} onOpenChange={open => { if (!open) setConfirmation(null); }}>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Eliminare il lead?</AlertDialogTitle>
-                    <AlertDialogDescription>Questa azione non può essere annullata. Il lead verrà eliminato definitivamente.</AlertDialogDescription>
+                    <AlertDialogTitle>{confirmation === "delete" ? "Eliminare il lead?" : `Segnare il lead come ${confirmation}?`}</AlertDialogTitle>
+                    <AlertDialogDescription>{confirmation === "delete" ? `${name} verrà eliminato definitivamente. Questa azione non può essere annullata.` : `${name} verrà spostato tra i lead chiusi con esito ${confirmation}.`}</AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Annulla</AlertDialogCancel>
-                    <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => onDelete(lead.id)}>Elimina</AlertDialogAction>
+                    <AlertDialogAction className={confirmation === "delete" ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : ""}
+                      onClick={() => {
+                        if (confirmation === "delete") onDelete(lead.id);
+                        else if (confirmation === "vinto" || confirmation === "perso") onSetStatus(lead, confirmation);
+                      }}>{confirmation === "delete" ? "Elimina" : "Conferma"}</AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
@@ -119,22 +134,32 @@ export const CRMLeadCard = forwardRef<HTMLDivElement, CRMLeadCardProps>(function
             </div>
           )}
 
-          {hasActivity && <div className="border-t pt-3">
-            <div className="mb-2 flex items-center gap-2 text-xs font-medium text-primary">
-              <Calendar aria-hidden="true" className="h-3 w-3 shrink-0" /><span>Prossima attività</span>
+          <div className="space-y-3 border-t pt-3">
+            <div>
+              <div className="mb-1.5 flex items-center gap-2 text-xs text-muted-foreground"><Clock aria-hidden="true" className="h-3 w-3 shrink-0" /><span>Ultima interazione</span></div>
+              {lastInteraction ? <div className="ml-5 space-y-1 text-xs">
+                <time dateTime={lastInteraction.at} title={exactActivityDate(lastInteraction.at)} className="font-medium">{interactionRelativeTime(lastInteraction.at, now)}</time>
+                <p className="text-muted-foreground">{interactionLabels[lastInteraction.kind]}</p>
+                {interactionState === "partial" && <p className="text-muted-foreground">Storico parziale</p>}
+              </div> : <p className="ml-5 text-xs text-muted-foreground">{interactionState === "loading" ? "Caricamento…" : interactionState === "partial" ? "Storico non disponibile" : "Nessuna registrata"}</p>}
             </div>
-            <div className="ml-5 space-y-1.5 text-xs text-muted-foreground">
-              {lead.next_activity_type && <p className="break-words font-medium text-card-foreground">{activityLabels[lead.next_activity_type] || lead.next_activity_type}</p>}
-              {validActivityDate && <div className="flex items-start gap-1.5">
-                <Clock aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0" />
-                <time dateTime={validActivityDate.toISOString()}>{validActivityDate.toLocaleString("it-IT", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}</time>
-              </div>}
-              {lead.next_activity_notes && <p className="line-clamp-2 break-words italic" title={lead.next_activity_notes}>{lead.next_activity_notes}</p>}
-              {activityAssignee && <div className="flex min-w-0 items-start gap-1.5">
-                <User aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0" /><span className="min-w-0 break-all">{activityAssignee}</span>
-              </div>}
+            <div className="border-t pt-3">
+              <div className="mb-1.5 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 text-xs font-medium"><Calendar aria-hidden="true" className="h-3 w-3 shrink-0" /><span>Prossima attività</span></div>
+                <Tooltip>
+                  <TooltipTrigger asChild><Button size="icon" variant="ghost" className="h-7 w-7 shrink-0 hover:bg-muted hover:text-foreground" aria-label={`Pianifica attività ${name}`} onClick={() => onSchedule(lead)}><CalendarPlus /></Button></TooltipTrigger>
+                  <TooltipContent>{timing.date ? "Modifica attività" : "Pianifica attività"}</TooltipContent>
+                </Tooltip>
+              </div>
+              <div className="ml-5 space-y-1.5 text-xs">
+                {lead.next_activity_type && <p className="break-words font-medium">{activityLabels[lead.next_activity_type] || lead.next_activity_type}</p>}
+                {timing.date ? <time dateTime={timing.date.toISOString()} title={exactActivityDate(timing.date.toISOString())} className={cn("block font-medium", timingColor)}>{timing.label}</time> :
+                  <Button variant="link" className="h-auto whitespace-normal p-0 text-xs text-primary" onClick={() => onSchedule(lead)}>Da pianificare</Button>}
+                {lead.next_activity_notes && <p className="line-clamp-2 break-words italic text-muted-foreground" title={lead.next_activity_notes}>{lead.next_activity_notes}</p>}
+                {activityAssignee && <div className="flex min-w-0 items-start gap-1.5 text-muted-foreground"><User aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0" /><span className="min-w-0 break-all">{activityAssignee}</span></div>}
+              </div>
             </div>
-          </div>}
+          </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-3">
             <div className="flex min-w-0 flex-wrap items-center gap-2">
@@ -155,12 +180,6 @@ export const CRMLeadCard = forwardRef<HTMLDivElement, CRMLeadCardProps>(function
             </div>
           </div>
 
-          {!closed && <div className="flex gap-2 border-t pt-3">
-            <Button size="sm" variant="outline" className="min-w-0 flex-1 gap-1.5 border-secondary/30 text-secondary hover:bg-secondary/10 hover:text-secondary"
-              aria-label={`Segna vinto ${name}`} onClick={() => onSetStatus(lead, "vinto")}><Trophy className="h-3.5 w-3.5" />Vinto</Button>
-            <Button size="sm" variant="outline" className="min-w-0 flex-1 gap-1.5 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
-              aria-label={`Segna perso ${name}`} onClick={() => onSetStatus(lead, "perso")}><XCircle className="h-3.5 w-3.5" />Perso</Button>
-          </div>}
         </CardContent>
       </Card>
     </TooltipProvider>

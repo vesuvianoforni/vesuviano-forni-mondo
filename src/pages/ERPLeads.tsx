@@ -13,6 +13,9 @@ import { Plus, Search, TrendingUp, Building2, Calendar, Trophy } from "lucide-re
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import { ACTIVE_CRM_STAGES, CRM_STAGES } from "@/lib/crmPipeline";
 import { CRMLeadCard, type CRMLead as Lead } from "@/components/erp/CRMLeadCard";
+import { useCRMInteractions } from "@/hooks/useCRMInteractions";
+import { activityLabels } from "@/lib/crmActivity";
+import { format } from "date-fns";
 
 const leadSources = ["website", "configuratore", "chat", "referral", "social_media", "cold_call", "trade_show", "zapier", "other"];
 const pipelines = ["Vesuviano", "ZAPPER", "ZAPPER Pro"];
@@ -46,9 +49,18 @@ export default function ERPLeads() {
   const [showClosed, setShowClosed] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isActivityDialogOpen, setIsActivityDialogOpen] = useState(false);
+  const [savingActivity, setSavingActivity] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [form, setForm] = useState({ ...emptyForm });
   const { toast } = useToast();
+  const { interactions, state: interactionState } = useCRMInteractions(leads);
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(new Date()), 60000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const loadLeads = useCallback(async () => {
     try {
@@ -122,7 +134,7 @@ export default function ERPLeads() {
     }
   };
 
-  const handleEditLead = (lead: Lead) => {
+  const handleEditLead = (lead: Lead, activityOnly = false) => {
     setSelectedLead(lead);
     setForm({
       company_name: lead.company_name || "",
@@ -135,11 +147,38 @@ export default function ERPLeads() {
       pipeline: lead.pipeline || "Vesuviano",
       notes: lead.notes || "",
       next_activity_type: lead.next_activity_type || "",
-      next_activity_date: lead.next_activity_date ? new Date(lead.next_activity_date).toISOString().slice(0, 16) : "",
+      next_activity_date: lead.next_activity_date ? format(new Date(lead.next_activity_date), "yyyy-MM-dd'T'HH:mm") : "",
       next_activity_notes: lead.next_activity_notes || "",
       next_activity_assigned_to: lead.next_activity_assigned_to || "",
     });
-    setIsEditDialogOpen(true);
+    if (activityOnly) setIsActivityDialogOpen(true);
+    else setIsEditDialogOpen(true);
+  };
+
+  const handleSaveActivity = async () => {
+    if (!selectedLead || savingActivity) return;
+    if (!form.next_activity_type || !form.next_activity_date) {
+      toast({ title: "Attività incompleta", description: "Seleziona il tipo e la data dell'attività", variant: "destructive" });
+      return;
+    }
+    setSavingActivity(true);
+    try {
+      const payload = buildPayload();
+      const { error } = await supabase.from("leads").update({
+        next_activity_type: payload.next_activity_type,
+        next_activity_date: payload.next_activity_date,
+        next_activity_notes: payload.next_activity_notes,
+        next_activity_assigned_to: payload.next_activity_assigned_to,
+      }).eq("id", selectedLead.id);
+      if (error) throw error;
+      setIsActivityDialogOpen(false);
+      toast({ title: "Attività salvata" });
+      await loadLeads();
+    } catch (error: any) {
+      toast({ title: "Errore", description: "Impossibile salvare l'attività: " + error.message, variant: "destructive" });
+    } finally {
+      setSavingActivity(false);
+    }
   };
 
   const handleUpdateLead = async () => {
@@ -221,6 +260,35 @@ export default function ERPLeads() {
 
   const getUserEmail = (userId?: string) => users.find((u) => u.id === userId)?.email || "";
 
+  const renderActivityFields = () => (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="activity-type">Tipo</Label>
+          <Select value={form.next_activity_type} onValueChange={value => setForm({ ...form, next_activity_type: value })}>
+            <SelectTrigger id="activity-type"><SelectValue placeholder="Seleziona tipo" /></SelectTrigger>
+            <SelectContent>{activityTypes.map(type => <SelectItem key={type} value={type}>{activityLabels[type] || type}</SelectItem>)}</SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label htmlFor="activity-date">Data e ora</Label>
+          <Input id="activity-date" type="datetime-local" value={form.next_activity_date} onChange={event => setForm({ ...form, next_activity_date: event.target.value })} />
+        </div>
+      </div>
+      <div>
+        <Label htmlFor="activity-notes">Note attività</Label>
+        <Textarea id="activity-notes" value={form.next_activity_notes} onChange={event => setForm({ ...form, next_activity_notes: event.target.value })} />
+      </div>
+      <div>
+        <Label htmlFor="activity-assignee">Assegnato a</Label>
+        <Select value={form.next_activity_assigned_to} onValueChange={value => setForm({ ...form, next_activity_assigned_to: value })}>
+          <SelectTrigger id="activity-assignee"><SelectValue placeholder="Seleziona utente" /></SelectTrigger>
+          <SelectContent>{users.map(user => <SelectItem key={user.id} value={user.id}>{user.email}</SelectItem>)}</SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
+
   const renderForm = (onSubmit: () => void, submitLabel: string) => (
     <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
       <div className="grid grid-cols-2 gap-4">
@@ -290,38 +358,7 @@ export default function ERPLeads() {
       </div>
       <div className="border rounded-lg p-4 space-y-4">
         <h4 className="font-medium text-sm">Prossima Attività</h4>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label>Tipo</Label>
-            <Select value={form.next_activity_type} onValueChange={(value) => setForm({ ...form, next_activity_type: value })}>
-              <SelectTrigger><SelectValue placeholder="Seleziona tipo" /></SelectTrigger>
-              <SelectContent>
-                {activityTypes.map((t) => (
-                  <SelectItem key={t} value={t}>{t}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>Data e ora</Label>
-            <Input type="datetime-local" value={form.next_activity_date} onChange={(e) => setForm({ ...form, next_activity_date: e.target.value })} />
-          </div>
-        </div>
-        <div>
-          <Label>Note attività</Label>
-          <Textarea value={form.next_activity_notes} onChange={(e) => setForm({ ...form, next_activity_notes: e.target.value })} />
-        </div>
-        <div>
-          <Label>Assegnato a</Label>
-          <Select value={form.next_activity_assigned_to} onValueChange={(value) => setForm({ ...form, next_activity_assigned_to: value })}>
-            <SelectTrigger><SelectValue placeholder="Seleziona utente" /></SelectTrigger>
-            <SelectContent>
-              {users.map((u) => (
-                <SelectItem key={u.id} value={u.id}>{u.email}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        {renderActivityFields()}
       </div>
       <Button onClick={onSubmit} className="w-full">{submitLabel}</Button>
     </div>
@@ -440,6 +477,10 @@ export default function ERPLeads() {
                             isDragging={snapshot.isDragging}
                             lead={lead}
                             activityAssignee={getUserEmail(lead.next_activity_assigned_to)}
+                            lastInteraction={interactions[lead.id]}
+                            interactionState={interactionState}
+                            now={now}
+                            onSchedule={lead => handleEditLead(lead, true)}
                             onEdit={handleEditLead}
                             onDelete={handleDeleteLead}
                             onSetStatus={handleSetStatus}
@@ -464,11 +505,22 @@ export default function ERPLeads() {
             {closedLeads.map((lead) => (
               <CRMLeadCard key={lead.id} lead={lead}
                 activityAssignee={getUserEmail(lead.next_activity_assigned_to)}
+                lastInteraction={interactions[lead.id]} interactionState={interactionState} now={now}
+                onSchedule={lead => handleEditLead(lead, true)}
                 onEdit={handleEditLead} onDelete={handleDeleteLead} onSetStatus={handleSetStatus} />
             ))}
           </div>
         </div>
       )}
+
+      <Dialog open={isActivityDialogOpen} onOpenChange={setIsActivityDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader><DialogTitle>Pianifica attività</DialogTitle></DialogHeader>
+          <p className="break-words text-sm text-muted-foreground">{selectedLead?.company_name || selectedLead?.contact_name || "Senza nome"}</p>
+          {renderActivityFields()}
+          <Button onClick={handleSaveActivity} disabled={savingActivity}>{savingActivity ? "Salvataggio…" : "Salva attività"}</Button>
+        </DialogContent>
+      </Dialog>
 
       {/* Create Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
