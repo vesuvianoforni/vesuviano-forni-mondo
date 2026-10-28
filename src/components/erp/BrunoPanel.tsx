@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FunctionsHttpError } from "@supabase/supabase-js";
-import { Bot, Mail, MessageCircle, Send, Sparkles, StickyNote, User, PauseCircle, PlayCircle, Loader2, AlertCircle } from "lucide-react";
+import { Bot, Mail, MessageCircle, Phone, Send, Sparkles, StickyNote, User, PauseCircle, PlayCircle, Loader2, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,10 +16,11 @@ import type { CRMLead } from "./CRMLeadCard";
 interface Msg {
   id: string; channel: BrunoChannel; direction: string; sender: string; subject: string | null;
   body: string; status: string; ai_generated: boolean; error: string | null; created_at: string;
+  metadata?: { recording_url?: string | null; duration_seconds?: number } | null;
 }
 export type BrunoLead = CRMLead & { bruno_mode?: string; bruno_paused_until?: string | null };
 
-const channelIcon = { whatsapp_api: Bot, wasender: MessageCircle, email: Mail, note: StickyNote, call: User };
+const channelIcon = { whatsapp_api: Bot, wasender: MessageCircle, email: Mail, note: StickyNote, call: Phone };
 
 async function invoke(body: Record<string, unknown>) {
   const { data, error } = await supabase.functions.invoke("bruno-agent", { body });
@@ -143,7 +144,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
 
       {/* Channel filter */}
       <div className="flex flex-wrap gap-1 border-b px-4 py-2" role="tablist" aria-label="Filtra per canale">
-        {([["all", "Tutte"], ["whatsapp_api", "WhatsApp Bruno"], ["wasender", "WhatsApp Gennaro"], ["email", "Email"], ["note", "Note"]] as const).map(([k, label]) => {
+        {([["all", "Tutte"], ["whatsapp_api", "WhatsApp Bruno"], ["wasender", "WhatsApp Gennaro"], ["email", "Email"], ["call", "Chiamate"], ["note", "Note"]] as const).map(([k, label]) => {
           const count = k === "all" ? messages.length : messages.filter((m) => m.channel === k).length;
           return (
             <Button key={k} type="button" role="tab" aria-selected={viewFilter === k} size="sm"
@@ -172,6 +173,9 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
                 </div>
                 {m.subject && <p className="font-medium">{m.subject}</p>}
                 <p className="whitespace-pre-wrap break-words">{m.body}</p>
+                {m.channel === "call" && m.metadata?.recording_url?.startsWith("http") && (
+                  <audio controls preload="none" src={m.metadata.recording_url} className="mt-2 h-8 w-full" aria-label="Registrazione chiamata" />
+                )}
                 {m.error && <p className="mt-1 flex items-center gap-1 text-[11px] text-destructive"><AlertCircle className="h-3 w-3" />{m.error}</p>}
               </div>
             </div>
