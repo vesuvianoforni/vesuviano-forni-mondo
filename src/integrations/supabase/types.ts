@@ -772,6 +772,69 @@ export type Database = {
           },
         ]
       }
+      leads: {
+        Row: {
+          assigned_to: string | null
+          company_name: string | null
+          contact_name: string | null
+          created_at: string
+          email: string | null
+          id: string
+          next_activity_assigned_to: string | null
+          next_activity_date: string | null
+          next_activity_notes: string | null
+          next_activity_type: string | null
+          notes: string | null
+          phone: string | null
+          pipeline: string
+          source: string | null
+          status: string
+          updated_at: string
+          value: number | null
+          website_lead_id: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          company_name?: string | null
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          next_activity_assigned_to?: string | null
+          next_activity_date?: string | null
+          next_activity_notes?: string | null
+          next_activity_type?: string | null
+          notes?: string | null
+          phone?: string | null
+          pipeline?: string
+          source?: string | null
+          status?: string
+          updated_at?: string
+          value?: number | null
+          website_lead_id?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          company_name?: string | null
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          next_activity_assigned_to?: string | null
+          next_activity_date?: string | null
+          next_activity_notes?: string | null
+          next_activity_type?: string | null
+          notes?: string | null
+          phone?: string | null
+          pipeline?: string
+          source?: string | null
+          status?: string
+          updated_at?: string
+          value?: number | null
+          website_lead_id?: string | null
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           burner_id: string | null
