@@ -11,4 +11,5 @@
 - [x] /erp/crm mostra i lead importati; Link Configuratore conserva le sessioni; verificato contenimento schermata a 1070 e 390 px con soli dati di prova (accesso reale non disponibile)
 
 ## Aperti
+- [ ] Confrontare le card lead Zapper e allineare le card del CRM Vesuviano, preservando funzioni e scorrimento interno
 - [ ] Replicare pipeline e webhook in Zapper ERP — bloccato: il progetto Zapper è accessibile solo in lettura da qui; va aperto il suo progetto e incollato il codice/payload contract
