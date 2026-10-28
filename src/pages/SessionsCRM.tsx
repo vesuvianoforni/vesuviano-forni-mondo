@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, Mail, Trash2, Search, Send, Sparkles, MessageSquare } from 'lucide-react';
+import { Copy, RefreshCw, ArrowLeft, Check, X, Clock, Package, Plus, LayoutList, LayoutGrid, Mail, Trash2, Search, Send, Sparkles, MessageSquare, Link2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Input } from '@/components/ui/input';
@@ -1098,7 +1098,24 @@ const SessionsCRM = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 {getStatusBadge(selectedSession)}
+                {getStageBadge(selectedSession)}
                 <Badge variant="secondary">Listino {selectedSession.price_list}</Badge>
+              </div>
+              <div>
+                <span className="text-sm font-medium">Fase pipeline:</span>
+                <Select
+                  value={selectedSession.pipeline_stage || 'nuovo'}
+                  onValueChange={(v) => changePipelineStage(selectedSession, v)}
+                >
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PIPELINE_STAGES.map(s => (
+                      <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <h3 className="font-semibold text-lg">{selectedSession.customer_name || 'Nome non disponibile'}</h3>
@@ -1109,14 +1126,41 @@ const SessionsCRM = () => {
               </div>
               <Separator />
               <div className="space-y-3">
-                <div>
-                  <span className="text-sm font-medium">Link configuratore:</span>
-                  <div className="flex items-center gap-2 mt-1">
-                    <code className="text-xs bg-muted px-2 py-1 rounded flex-1 truncate">
+                <div className="bg-muted/30 rounded-lg p-4 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Link2 className="w-4 h-4" />
+                    <span className="text-sm font-medium">Link Configuratore</span>
+                    {selectedSession.is_used && (
+                      <Badge variant="outline" className="ml-auto text-green-600 border-green-600">
+                        <Check className="w-3 h-3 mr-1" /> Aperto dal cliente
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <code className="text-xs bg-background px-2 py-1.5 rounded flex-1 truncate">
                       https://vesuvianoforni.com/configuratore/{selectedSession.token}
                     </code>
                     <Button size="sm" variant="outline" onClick={() => copyLink(selectedSession.token)}>
                       <Copy className="w-3 h-3" />
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button size="sm" variant="outline" onClick={() => sendEmailToCustomer(selectedSession)}>
+                      <Mail className="w-3 h-3 mr-1" /> Invia via Email
+                    </Button>
+                    {selectedSession.customer_phone && (
+                      <Button size="sm" variant="outline" asChild>
+                        <a
+                          href={`https://wa.me/${selectedSession.customer_phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Ecco il link per configurare il tuo forno Vesuviano: https://vesuvianoforni.com/configuratore/${selectedSession.token}`)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <MessageSquare className="w-3 h-3 mr-1" /> Invia via WhatsApp
+                        </a>
+                      </Button>
+                    )}
+                    <Button size="sm" variant="outline" onClick={() => regenerateLink(selectedSession.id)}>
+                      <RefreshCw className="w-3 h-3 mr-1" /> Rigenera
                     </Button>
                   </div>
                 </div>
