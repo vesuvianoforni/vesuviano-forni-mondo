@@ -825,6 +825,7 @@ const SessionsCRM = () => {
             <div>
               <div className="flex items-center gap-3 mb-2">
                 {getStatusBadge(session)}
+                {getStageBadge(session)}
                 <Badge variant="secondary">Listino {session.price_list}</Badge>
               </div>
               <h3 className="text-lg font-semibold">{session.customer_name || 'Nome non disponibile'}</h3>

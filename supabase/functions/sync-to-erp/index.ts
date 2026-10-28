@@ -10,7 +10,7 @@ interface SyncEvent {
   session_id: string;
   event_type: 'link_opened' | 'model_selected' | 'fuel_selected' | 'size_selected' | 'coating_selected' | 
                'color_render_generated' | 'architect_ai_used' | 'quote_saved' | 'contact_requested' | 
-               'payment_initiated' | 'payment_completed' | 'feedback_not_interested';
+               'payment_initiated' | 'payment_completed' | 'feedback_not_interested' | 'stage_changed';
   event_data?: any;
   timestamp: string;
 }
@@ -76,6 +76,7 @@ serve(async (req) => {
       customer_phone: session.customer_phone,
       price_list: session.price_list,
       status: session.status,
+      pipeline_stage: session.pipeline_stage || 'nuovo',
       event_type,
       event_data,
       timestamp,
