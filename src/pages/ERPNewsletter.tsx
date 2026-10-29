@@ -50,6 +50,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
   const [preview, setPreview] = useState('');
   const [count, setCount] = useState<number | null>(null);
   const [testEmail, setTestEmail] = useState('');
+  const [previewName, setPreviewName] = useState('');
   const [confirm, setConfirm] = useState(false);
   const [assets, setAssets] = useState<{ url: string; label: string }[]>([]);
   const [askOpen, setAskOpen] = useState(false);
@@ -76,7 +77,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
     const request = ++previewRequest.current;
     if (!c.body) { setPreview(''); return; }
     try {
-      const result = await call({ action: 'preview', campaign_id: c.id, language });
+      const result = await call({ action: 'preview', campaign_id: c.id, language, recipient_name: previewName.trim() || null });
       if (request === previewRequest.current) setPreview(result.html);
     } catch { if (request === previewRequest.current) setPreview(''); }
   };
@@ -90,6 +91,12 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
   }, [sel?.id, sel?.language]);
   useEffect(() => { if (sel) { refreshPreview(sel); refreshCount(sel.audience); } else setPreview(''); }, [sel?.id]);
   useEffect(() => { if (sel) { setViewLanguage(sel.language); refreshPreview(sel); refreshCount(sel.audience); } }, [sel?.language]);
+  useEffect(() => {
+    if (!sel) return;
+    // Preview-only name stays local; the approved audience always uses each lead's recorded name.
+    const timer = setTimeout(() => refreshPreview(sel, viewLanguage), 250);
+    return () => { clearTimeout(timer); previewRequest.current += 1; };
+  }, [previewName, sel?.id, viewLanguage]);
 
   const translate = async (campaign: Campaign) => {
     const { data, error } = await supabase.functions.invoke('newsletter', { body: { action: 'translate', campaign_id: campaign.id } });
@@ -229,7 +236,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
                   <div className="flex flex-wrap gap-2">
                     <Input className="flex-1 min-w-48" value={testEmail} onChange={(e) => setTestEmail(e.target.value)} placeholder="Email per la prova" />
                     <Button variant="outline" disabled={!!busy || !sel.body || !testEmail} onClick={() => run('test', async () => {
-                      await save(); await call({ action: 'test', campaign_id: sel.id, email: testEmail, language: viewLanguage }); toast.success(`Prova ${viewLanguage.toUpperCase()} inviata a ${testEmail}`);
+                      await save(); await call({ action: 'test', campaign_id: sel.id, email: testEmail, language: viewLanguage, recipient_name: previewName.trim() || null }); toast.success(`Prova ${viewLanguage.toUpperCase()} inviata a ${testEmail}`);
                     })}>{busy === 'test' ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <FlaskConical className="h-4 w-4 mr-1" />}Invia prova</Button>
                   </div>
                   <Button className="w-full" disabled={!!busy || !sel.body || !sel.subject || !count || missingLanguages.length > 0} onClick={() => setConfirm(true)}><Send className="h-4 w-4 mr-1" />Approva e invia a {count ?? '…'} contatti</Button>
@@ -241,6 +248,9 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
             </div>
 
             <Card className="min-w-0 xl:sticky xl:top-4 xl:self-start"><CardHeader className="pb-2"><CardTitle className="text-base">Anteprima</CardTitle>
+              <div className="space-y-1 pt-2"><Label htmlFor="newsletter-preview-name">Nome per anteprima e prova</Label>
+                <Input id="newsletter-preview-name" value={previewName} maxLength={160} disabled={!!busy} placeholder="Nome o nome e cognome" onChange={(e) => setPreviewName(e.target.value)} />
+              </div>
               <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                 <span>{(sel.image_url ? 1 : 0) + (sel.extra_images || []).length} foto selezionate</span>
                 {photosUnsaved && <Badge variant="outline">Modifiche non salvate</Badge>}
@@ -273,7 +283,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
 
       <AlertDialog open={confirm} onOpenChange={setConfirm}>
         <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Inviare la newsletter?</AlertDialogTitle>
-          <AlertDialogDescription>Approvi tutte le versioni mostrate. Ogni destinatario riceverà la lingua assegnata: {Object.entries(counts).map(([l, n]) => `${l.toUpperCase()} ${n}`).join(' · ')}. Invio tramite Resend da newsletter@vesuvianoforni.com, risposte a info@vesuvianoforni.com. L'invio non si può annullare.</AlertDialogDescription></AlertDialogHeader>
+          <AlertDialogDescription>Approvi tutte le versioni mostrate. Ogni destinatario riceverà un saluto con il proprio nome registrato, oppure neutro se manca, e la lingua assegnata: {Object.entries(counts).map(([l, n]) => `${l.toUpperCase()} ${n}`).join(' · ')}. Invio tramite Resend da newsletter@vesuvianoforni.com, risposte a info@vesuvianoforni.com. L'invio non si può annullare.</AlertDialogDescription></AlertDialogHeader>
           <AlertDialogFooter><AlertDialogCancel>Annulla</AlertDialogCancel>
             <AlertDialogAction onClick={() => sel && run('send', async () => {
               await save(); const r = await call({ action: 'send', campaign_id: sel.id }); toast.success(`Invio avviato a ${r.recipients} contatti`); await load();
