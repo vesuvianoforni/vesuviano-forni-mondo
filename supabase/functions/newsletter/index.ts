@@ -178,16 +178,30 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const raw = await req.json().catch(() => ({}));
+    const run = RunBody.safeParse(raw);
+    if (run.success) return await robertaRun(admin, run.data.run_id, run.data.token);
+
     const token = (req.headers.get('Authorization') || '').replace('Bearer ', '');
     const { data: u } = await admin.auth.getUser(token);
     if (!u?.user) return json({ error: 'Non autenticato' }, 401);
     const { data: roles } = await admin.from('user_roles').select('role').eq('user_id', u.user.id);
     if (!roles?.some((r) => r.role === 'admin' || r.role === 'commerciale')) return json({ error: 'Accesso negato' }, 403);
 
-    const parsed = Body.safeParse(await req.json());
+    const parsed = Body.safeParse(raw);
     if (!parsed.success) return json({ error: parsed.error.flatten().fieldErrors }, 400);
     const input = parsed.data;
 
+    if (input.action === 'assets') {
+      const { images } = await loadCatalog(admin, input.language);
+      return json({ images });
+    }
+    if (input.action === 'roberta_now') {
+      try {
+        const c = await robertaDraft(admin, `manual-${Date.now()}`);
+        return json({ campaign: c });
+      } catch (e: any) { return json({ error: e.message }, e.status || 500); }
+    }
     if (input.action === 'audience') {
       const r = await resolveAudience(admin, input.audience);
       return json({ count: r.length, sample: r.slice(0, 5).map((x) => x.email) });
