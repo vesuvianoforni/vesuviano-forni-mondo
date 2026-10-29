@@ -2,11 +2,11 @@ export type SubmissionState = 'pending' | 'sending' | 'accepted' | 'rejected' | 
 export const canSubmitSMTP = (state: SubmissionState) => state === 'pending';
 export const canAppendSent = (state: SubmissionState, copy: string) => state === 'accepted' && !['found', 'appended'].includes(copy);
 export const nextExistingUIDs = (uids:number[],cursor:number,size=5) => uids.filter(uid=>uid>cursor).sort((a,b)=>a-b).slice(0,size);
-export type EmailPart = {type:string;part?:string;disposition?:string;childNodes?:EmailPart[]};
-export function textPart<T extends EmailPart>(structure?:T):T | undefined {
+export type EmailPart = {type:string;part?:string;disposition?:string;encoding?:string;parameters?:Record<string,string>;childNodes?:EmailPart[]};
+export function textPart(structure?:EmailPart):EmailPart | undefined {
   if(!structure||structure.disposition?.toLowerCase()==='attachment'||structure.type==='message/rfc822')return;
   const parts=(structure.childNodes||[]).map(s=>textPart(s)).filter((p):p is EmailPart=>!!p);
-  return (parts.find(p=>p.type==='text/plain')||parts[0]||(/^text\/(plain|html)$/i.test(structure.type)?structure:undefined)) as T|undefined;
+  return parts.find(p=>p.type==='text/plain')||parts[0]||(/^text\/(plain|html)$/i.test(structure.type)?structure:undefined);
 }
 
 type Folder = { path: string; specialUse?: string; specialUseSource?: string; flags: Set<string> };
