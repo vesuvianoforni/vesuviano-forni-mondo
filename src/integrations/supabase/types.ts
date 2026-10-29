@@ -1339,6 +1339,30 @@ export type Database = {
           },
         ]
       }
+      newsletter_ai_state: {
+        Row: {
+          created_at: string
+          key: string
+          reason: string
+          status: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          key: string
+          reason: string
+          status: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          key?: string
+          reason?: string
+          status?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       newsletter_campaigns: {
         Row: {
           audience: Json
