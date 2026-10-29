@@ -48,7 +48,7 @@ async function appendCopy(admin: SupabaseClient, row: any, client: ReturnType<ty
   checked(await admin.from('email_outbox').update({ copy_status: 'appended', last_error: null }).eq('id', row.id));
 }
 
-export async function sendMailboxEmail(admin: SupabaseClient, input: { lead_id: string; recipient: string; subject: string; body: string; idempotency_key: string; created_by: string }) {
+export async function sendMailboxEmail(admin: SupabaseClient, input: { lead_id: string; recipient: string; subject: string; body: string; idempotency_key: string; created_by: string|null }) {
   const box = await mailbox(admin);
   if (!box.enabled) throw new Error('MAILBOX_DISABLED');
   let row = checked(await admin.from('email_outbox').select('*').eq('mailbox_id', box.id).eq('idempotency_key', input.idempotency_key).maybeSingle());
