@@ -2,6 +2,7 @@ export type SubmissionState = 'pending' | 'sending' | 'accepted' | 'rejected' | 
 export const canSubmitSMTP = (state: SubmissionState) => state === 'pending';
 export const canAppendSent = (state: SubmissionState, copy: string) => state === 'accepted' && !['found', 'appended'].includes(copy);
 export const nextExistingUIDs = (uids:number[],cursor:number,size=5) => uids.filter(uid=>uid>cursor).sort((a,b)=>a-b).slice(0,size);
+export const recentUIDs = (uids:number[],cursor:number,size=5) => cursor>0 ? nextExistingUIDs(uids,cursor,size) : [...uids].sort((a,b)=>a-b).slice(-size);
 export type EmailPart = {type:string;part?:string;disposition?:string;encoding?:string;parameters?:Record<string,string>;childNodes?:EmailPart[]};
 export function textPart(structure?:EmailPart):EmailPart | undefined {
   if(!structure||structure.disposition?.toLowerCase()==='attachment'||structure.type==='message/rfc822')return;

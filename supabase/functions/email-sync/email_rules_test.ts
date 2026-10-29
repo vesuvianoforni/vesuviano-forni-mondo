@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from 'https://deno.land/std@0.224.0/assert/mod.ts';
-import { canSubmitSMTP, canAppendSent, discoverSent, nextUIDBatch, nextExistingUIDs, chooseLead, safeMailError, textPart } from '../_shared/email-rules.ts';
+import { canSubmitSMTP, canAppendSent, discoverSent, nextUIDBatch, nextExistingUIDs, recentUIDs, chooseLead, safeMailError, textPart } from '../_shared/email-rules.ts';
 
 Deno.test('SMTP accepted emails are never resent',()=>assertEquals(canSubmitSMTP('accepted'),false));
 Deno.test('SMTP unknown acknowledgement is never resent',()=>assertEquals(canSubmitSMTP('unknown'),false));
@@ -18,3 +18,5 @@ Deno.test('Mail errors never reveal provider replies',()=>assertEquals(safeMailE
 Deno.test('Sparse UID space progresses across actual messages',()=>assertEquals(nextExistingUIDs([10000,50,90000,10100,11000,12000],25),[50,10000,10100,11000,12000]));
 Deno.test('Email synchronization does not read attachments',()=>assertEquals(textPart({type:'multipart/mixed',childNodes:[{type:'application/pdf',disposition:'attachment',part:'2'},{type:'text/plain',part:'1'}]})?.part,'1'));
 Deno.test('Plain text is preferred over the HTML alternative',()=>assertEquals(textPart({type:'multipart/alternative',childNodes:[{type:'text/html',part:'1'},{type:'text/plain',part:'2'}]})?.part,'2'));
+Deno.test('Initial sync reads newest messages without waiting for history',()=>assertEquals(recentUIDs([1,2,3,4,5,9000,9001],0),[3,4,5,9000,9001]));
+Deno.test('Recent email backlog advances in order without skipping',()=>assertEquals(recentUIDs([106,105,104,103,102,101],100),[101,102,103,104,105]));
