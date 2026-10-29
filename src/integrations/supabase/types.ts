@@ -1295,9 +1295,54 @@ export type Database = {
         }
         Relationships: []
       }
+      marketing_agent_runs: {
+        Row: {
+          campaign_id: string | null
+          created_at: string
+          error: string | null
+          finished_at: string | null
+          id: string
+          period_key: string
+          started_at: string | null
+          status: string
+          worker_token: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          period_key: string
+          started_at?: string | null
+          status?: string
+          worker_token?: string
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          period_key?: string
+          started_at?: string | null
+          status?: string
+          worker_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketing_agent_runs_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "newsletter_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       newsletter_campaigns: {
         Row: {
           audience: Json
+          author: string
           body: string
           created_at: string
           created_by: string | null
@@ -1309,6 +1354,7 @@ export type Database = {
           image_url: string | null
           language: string
           last_error: string | null
+          period_key: string | null
           preheader: string
           prompt: string | null
           recipients_count: number
@@ -1321,6 +1367,7 @@ export type Database = {
         }
         Insert: {
           audience?: Json
+          author?: string
           body?: string
           created_at?: string
           created_by?: string | null
@@ -1332,6 +1379,7 @@ export type Database = {
           image_url?: string | null
           language?: string
           last_error?: string | null
+          period_key?: string | null
           preheader?: string
           prompt?: string | null
           recipients_count?: number
@@ -1344,6 +1392,7 @@ export type Database = {
         }
         Update: {
           audience?: Json
+          author?: string
           body?: string
           created_at?: string
           created_by?: string | null
@@ -1355,6 +1404,7 @@ export type Database = {
           image_url?: string | null
           language?: string
           last_error?: string | null
+          period_key?: string | null
           preheader?: string
           prompt?: string | null
           recipients_count?: number
@@ -1999,6 +2049,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      queue_roberta_run: { Args: never; Returns: undefined }
       save_email_signature: {
         Args: { _fields: Json; _id: string; _mailbox: string }
         Returns: {

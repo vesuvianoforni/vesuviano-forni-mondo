@@ -22,7 +22,7 @@ const STATUS: Record<string, string> = { draft: 'Bozza', sending: 'In invio', se
 type Campaign = {
   id: string; title: string; prompt: string | null; language: string; subject: string; preheader: string; body: string;
   image_url: string | null; extra_images: string[]; cta_label: string | null; cta_url: string | null; audience: { stages: string[]; countries: string[] };
-  status: string; recipients_count: number; sent_count: number; failed_count: number; created_at: string; sent_at: string | null; last_error: string | null;
+  status: string; recipients_count: number; sent_count: number; failed_count: number; created_at: string; sent_at: string | null; last_error: string | null; author?: string;
 };
 
 async function call(body: Record<string, unknown>) {
@@ -106,8 +106,13 @@ export default function ERPNewsletter() {
       <SEOHead title="Newsletter | ERP" description="Campagne newsletter" />
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div><h1 className="text-2xl font-bold">Newsletter</h1>
-          <p className="text-sm text-muted-foreground">Inviate con Resend · le risposte arrivano a info@vesuvianoforni.com</p></div>
-        <Button onClick={create}><Plus className="h-4 w-4 mr-1" />Nuova campagna</Button>
+          <p className="text-sm text-muted-foreground">Roberta (Marketing Manager) prepara una bozza il 1° e il 16° di ogni mese · nulla parte senza la vostra approvazione</p></div>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" disabled={!!busy} onClick={() => run('roberta', async () => {
+            const { campaign } = await call({ action: 'roberta_now' }); await load(); setSel(campaign); toast.success('Roberta ha preparato una bozza');
+          })}>{busy === 'roberta' ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Sparkles className="h-4 w-4 mr-1" />}Chiedi a Roberta</Button>
+          <Button onClick={create}><Plus className="h-4 w-4 mr-1" />Nuova campagna</Button>
+        </div>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
@@ -116,7 +121,7 @@ export default function ERPNewsletter() {
           {list.map((c) => (
             <button key={c.id} onClick={() => setSel(c)} className={`w-full text-left rounded-md p-3 transition-colors ${sel?.id === c.id ? 'bg-accent' : 'hover:bg-muted'}`}>
               <div className="flex items-center justify-between gap-2"><span className="font-medium truncate">{c.title}</span>
-                <Badge variant={c.status === 'sent' ? 'default' : c.status === 'failed' ? 'destructive' : 'secondary'}>{STATUS[c.status]}</Badge></div>
+                <Badge variant={c.status === 'sent' ? 'default' : c.status === 'failed' ? 'destructive' : 'secondary'}>{c.author === 'roberta' && c.status === 'draft' ? 'Da approvare' : STATUS[c.status]}</Badge></div>
               <p className="text-xs text-muted-foreground mt-1">{new Date(c.sent_at || c.created_at).toLocaleDateString('it-IT')} · {c.language.toUpperCase()}
                 {c.status !== 'draft' && ` · ${c.sent_count}/${c.recipients_count}`}</p>
             </button>))}

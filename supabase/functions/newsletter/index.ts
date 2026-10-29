@@ -2,6 +2,7 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { selectRecipients, unsubscribeToken, encodeEmail, decodeEmail, renderNewsletter, NEWSLETTER_FROM, NEWSLETTER_REPLY_TO, type Audience } from './rules.ts';
+import { loadCatalog } from './catalog.ts';
 
 const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
@@ -10,10 +11,44 @@ const Id = z.string().uuid();
 const Body = z.discriminatedUnion('action', [
   z.object({ action: z.literal('generate'), campaign_id: Id, prompt: z.string().min(3).max(2000), language: z.enum(['it', 'en', 'fr', 'de', 'es']) }),
   z.object({ action: z.literal('audience'), audience: z.object({ stages: z.array(z.string()).max(10), countries: z.array(z.string().max(60)).max(50) }) }),
+  z.object({ action: z.literal('assets'), language: z.enum(['it', 'en', 'fr', 'de', 'es']) }),
+  z.object({ action: z.literal('roberta_now') }),
   z.object({ action: z.literal('preview'), campaign_id: Id }),
   z.object({ action: z.literal('test'), campaign_id: Id, email: z.string().email() }),
   z.object({ action: z.literal('send'), campaign_id: Id }),
 ]);
+const RunBody = z.object({ action: z.literal('roberta_run'), run_id: Id, token: Id });
+
+/** Roberta: picks the fortnight topic herself and saves a draft awaiting human approval. Never sends to customers. */
+async function robertaDraft(admin: SupabaseClient, periodKey: string) {
+  const { data: past } = await admin.from('newsletter_campaigns').select('title,subject,created_at').order('created_at', { ascending: false }).limit(8);
+  const today = new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+  const prompt = `Sei Roberta, Marketing Manager di Vesuviano Forni. Oggi è ${today}: prepara la newsletter dei prossimi 15 giorni.
+Scegli TU l'argomento più efficace per vendere adesso, ragionando su stagionalità e tempi di produzione/consegna, forni in pronta consegna disponibili, modelli, articoli blog e video reali.
+Evita di ripetere gli argomenti delle ultime campagne: ${JSON.stringify((past || []).map((p) => p.subject || p.title))}.`;
+  const out = await generate(admin, prompt, 'it');
+  const { data, error } = await admin.from('newsletter_campaigns').insert({ ...out, title: `Roberta · ${out.title}`, prompt, language: 'it', author: 'roberta', period_key: periodKey }).select().single();
+  if (error) throw error;
+  try {
+    await resendBatch([{ from: NEWSLETTER_FROM, to: [NEWSLETTER_REPLY_TO], subject: `Roberta: newsletter pronta da approvare – ${out.subject}`,
+      html: `<p>Ciao, ho preparato la newsletter dei prossimi 15 giorni.</p><p><strong>${out.subject}</strong><br>${out.preheader}</p><p><a href="https://vesuvianoforni.com/erp/newsletter">Apri l'ERP per vederla, modificarla e approvarla</a></p><p>Nessuna email è stata inviata ai clienti.<br>— Roberta</p>` }]);
+  } catch (e) { console.error('roberta notify', e); }
+  return data;
+}
+
+async function robertaRun(admin: SupabaseClient, runId: string, token: string) {
+  const { data: run } = await admin.from('marketing_agent_runs').update({ status: 'running', started_at: new Date().toISOString() })
+    .eq('id', runId).eq('worker_token', token).eq('status', 'queued').select().maybeSingle();
+  if (!run) return json({ error: 'Run non valido' }, 403);
+  try {
+    const c = await robertaDraft(admin, run.period_key);
+    await admin.from('marketing_agent_runs').update({ status: 'done', campaign_id: c.id, finished_at: new Date().toISOString() }).eq('id', runId);
+    return json({ ok: true });
+  } catch (e: any) {
+    await admin.from('marketing_agent_runs').update({ status: 'failed', error: String(e.message).slice(0, 300), finished_at: new Date().toISOString() }).eq('id', runId);
+    return json({ error: e.message }, 500);
+  }
+}
 
 const functionsBase = () => `${Deno.env.get('SUPABASE_URL')}/functions/v1/newsletter`;
 const unsubSecret = () => Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -143,16 +178,30 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const raw = await req.json().catch(() => ({}));
+    const run = RunBody.safeParse(raw);
+    if (run.success) return await robertaRun(admin, run.data.run_id, run.data.token);
+
     const token = (req.headers.get('Authorization') || '').replace('Bearer ', '');
     const { data: u } = await admin.auth.getUser(token);
     if (!u?.user) return json({ error: 'Non autenticato' }, 401);
     const { data: roles } = await admin.from('user_roles').select('role').eq('user_id', u.user.id);
     if (!roles?.some((r) => r.role === 'admin' || r.role === 'commerciale')) return json({ error: 'Accesso negato' }, 403);
 
-    const parsed = Body.safeParse(await req.json());
+    const parsed = Body.safeParse(raw);
     if (!parsed.success) return json({ error: parsed.error.flatten().fieldErrors }, 400);
     const input = parsed.data;
 
+    if (input.action === 'assets') {
+      const { images } = await loadCatalog(admin, input.language);
+      return json({ images });
+    }
+    if (input.action === 'roberta_now') {
+      try {
+        const c = await robertaDraft(admin, `manual-${Date.now()}`);
+        return json({ campaign: c });
+      } catch (e: any) { return json({ error: e.message }, e.status || 500); }
+    }
     if (input.action === 'audience') {
       const r = await resolveAudience(admin, input.audience);
       return json({ count: r.length, sample: r.slice(0, 5).map((x) => x.email) });
