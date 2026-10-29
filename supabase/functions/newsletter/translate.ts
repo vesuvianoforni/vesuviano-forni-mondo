@@ -24,7 +24,7 @@ export async function translateCampaign(admin: SupabaseClient, campaign: Localiz
   });
   const result = streamText({
     model: provider.responses('openai/gpt-6-astra'), maxRetries: 0, abortSignal: request.signal,
-    system: `Traduci fedelmente la newsletter Vesuviano nelle lingue richieste. Non creare nuove offerte o cambiare prezzi, valuta, numeri, modelli, caratteristiche o condizioni. Traduci oggetto, preheader, testo e pulsante. Conserva paragrafi e tono B2B. Non aggiungere informazioni. Per cta_url scegli l'equivalente nella lingua target tra i link forniti; conserva il link originale se non esiste un equivalente. Non scegliere un'altra sezione del sito. Restituisci esattamente una versione per ogni lingua richiesta.`,
+    system: `Traduci fedelmente la newsletter Vesuviano nelle lingue richieste. Se l'originale non contiene prezzi, non aggiungerli mai, nemmeno se compaiono nei link o nel catalogo. Non creare nuove offerte o cambiare prezzi, valuta, numeri, modelli, caratteristiche o condizioni. Non aggiungere sconti o urgenza per una ricorrenza. Traduci oggetto, preheader, testo e pulsante. Conserva paragrafi e tono B2B. Non aggiungere informazioni. Per cta_url scegli l'equivalente nella lingua target tra i link forniti; conserva il link originale se non esiste un equivalente. Non scegliere un'altra sezione del sito. Restituisci esattamente una versione per ogni lingua richiesta.`,
     prompt: JSON.stringify({ original: campaign, languages: targets, catalogs }),
     output: Output.object({ schema: Schema }),
     providerOptions: { openai: { forceReasoning: true, reasoningEffort: 'low', reasoningSummary: 'auto', store: false, include: ['reasoning.encrypted_content'] } },

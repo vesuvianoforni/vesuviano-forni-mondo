@@ -8,7 +8,7 @@ const pillars = [
   {
     icon: Mail,
     title: 'Email marketing',
-    desc: 'Ogni 15 giorni (1° e 16 del mese, ore 9:00) Roberta prepara una bozza di newsletter scegliendo tema, foto reali dal sito e lingua. Nulla parte senza la vostra approvazione.',
+    desc: 'Proposte il 1° e il 16° del mese, più occasioni stagionali: pizza, primavera, estate, Natale e fine anno. Prezzi solo su richiesta. Ogni invio richiede approvazione.',
     status: 'Attivo',
   },
   {
@@ -37,7 +37,7 @@ export default function ERPRoberta() {
           <p className="text-sm text-muted-foreground">Marketing Manager · email marketing, post social, campagne Meta / Ads</p>
         </div>
         <div className="flex flex-wrap gap-2 text-xs">
-          <Badge variant="secondary" className="gap-1"><CalendarClock className="h-3 w-3" /> Bozza automatica ogni 15 giorni</Badge>
+          <Badge variant="secondary" className="gap-1"><CalendarClock className="h-3 w-3" /> Ogni 15 giorni + occasioni speciali</Badge>
           <Badge variant="secondary" className="gap-1"><ShieldCheck className="h-3 w-3" /> Invio solo dopo approvazione</Badge>
         </div>
       </div>

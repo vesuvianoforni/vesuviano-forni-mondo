@@ -5,6 +5,7 @@ import { selectRecipients, unsubscribeToken, encodeEmail, decodeEmail, renderNew
 import { loadCatalog } from './catalog.ts';
 import { campaignVersion, languageCounts } from './localization.ts';
 import { translateCampaign, translationResponse } from './translate.ts';
+import { newsletterSystemPrompt, requestsPrices, catalogWithoutPrices, enforcePricePolicy, scheduledBrief } from './policy.ts';
 
 const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
@@ -24,34 +25,34 @@ const RunBody = z.object({ action: z.literal('roberta_run'), run_id: Id, token: 
 
 /** Roberta: picks the fortnight topic herself and saves a draft awaiting human approval. Never sends to customers. */
 async function robertaDraft(admin: SupabaseClient, periodKey: string) {
-  const { data: paused } = await admin.from('newsletter_ai_state').select('reason,status').eq('key', 'newsletter').maybeSingle();
+  const { data: paused, error: pauseError } = await admin.from('newsletter_ai_state').select('reason,status').eq('key', 'newsletter').maybeSingle();
+  if (pauseError) throw pauseError;
   if (paused) throw Object.assign(new Error(paused.reason), { status: paused.status });
   const { data: past } = await admin.from('newsletter_campaigns').select('title,subject,created_at').order('created_at', { ascending: false }).limit(8);
-  const today = new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
-  const prompt = `Sei Roberta, Marketing Manager di Vesuviano Forni. Oggi è ${today}: prepara la newsletter dei prossimi 15 giorni.
-Scegli TU l'argomento più efficace per vendere adesso, ragionando su stagionalità e tempi di produzione/consegna, forni in pronta consegna disponibili, modelli, articoli blog e video reali.
-Evita di ripetere gli argomenti delle ultime campagne: ${JSON.stringify((past || []).map((p) => p.subject || p.title))}.`;
-  const out = await generate(admin, prompt, 'it');
+  const today = new Date().toLocaleDateString('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'long', year: 'numeric' });
+  const prompt = scheduledBrief(periodKey, today, (past || []).map((p) => p.subject || p.title));
+  const out = await generate(admin, prompt, 'it', false);
   const { data, error } = await admin.from('newsletter_campaigns').insert({ ...out, title: `Roberta · ${out.title}`, prompt, language: 'it', author: 'roberta', period_key: periodKey }).select().single();
   if (error) throw error;
   try {
     await resendBatch([{ from: NEWSLETTER_FROM, to: [NEWSLETTER_REPLY_TO], subject: `Roberta: newsletter pronta da approvare – ${out.subject}`,
-      html: `<p>Ciao, ho preparato la newsletter dei prossimi 15 giorni.</p><p><strong>${out.subject}</strong><br>${out.preheader}</p><p><a href="https://vesuvianoforni.com/erp/newsletter">Apri l'ERP per vederla, modificarla e approvarla</a></p><p>Nessuna email è stata inviata ai clienti.<br>— Roberta</p>` }]);
+      html: `<p>Ciao, ho preparato una nuova proposta di newsletter${periodKey.startsWith('occasion-') ? ' per un’occasione speciale' : ''}.</p><p><strong>${out.subject}</strong><br>${out.preheader}</p><p><a href="https://vesuvianoforni.com/erp/newsletter">Apri l'ERP per vederla, modificarla e approvarla</a></p><p>Nessuna email è stata inviata ai clienti.<br>— Roberta</p>` }]);
   } catch (e) { console.error('roberta notify', e); }
   return data;
 }
 
 async function robertaRun(admin: SupabaseClient, runId: string, token: string) {
-  const { data: run } = await admin.from('marketing_agent_runs').update({ status: 'running', started_at: new Date().toISOString() })
-    .eq('id', runId).eq('worker_token', token).eq('status', 'queued').select().maybeSingle();
+  const { data: runs, error: claimError } = await admin.rpc('claim_roberta_run', { _id: runId, _token: token });
+  if (claimError) throw claimError;
+  const run = runs?.[0];
   if (!run) return json({ error: 'Run non valido' }, 403);
   try {
     const c = await robertaDraft(admin, run.period_key);
-    await admin.from('marketing_agent_runs').update({ status: 'done', campaign_id: c.id, finished_at: new Date().toISOString() }).eq('id', runId);
+    await admin.from('marketing_agent_runs').update({ status: 'done', campaign_id: c.id, lease_until: null, finished_at: new Date().toISOString() }).eq('id', runId);
     return json({ ok: true });
   } catch (e: any) {
-    await admin.from('marketing_agent_runs').update({ status: 'failed', error: String(e.message).slice(0, 300), finished_at: new Date().toISOString() }).eq('id', runId);
-    return json({ error: e.message }, 500);
+    await admin.from('marketing_agent_runs').update({ status: 'failed', lease_until: null, error: String(e.message).slice(0, 300), finished_at: new Date().toISOString() }).eq('id', runId);
+    return json({ error: e.message }, e.status || 500);
   }
 }
 
@@ -127,18 +128,16 @@ async function processCampaign(admin: SupabaseClient, campaign: any) {
   }
 }
 
-async function generate(admin: SupabaseClient, prompt: string, language: string) {
+async function generate(admin: SupabaseClient, prompt: string, language: string, allowPrices = requestsPrices(prompt)) {
   const { data: paused, error: stateError } = await admin.from('newsletter_ai_state').select('reason,status').eq('key', 'newsletter').maybeSingle();
   if (stateError) throw stateError;
   if (paused) throw Object.assign(new Error(paused.reason), { status: paused.status });
   const apiKey = Deno.env.get('LOVABLE_API_KEY');
   if (!apiKey) throw Object.assign(new Error('LOVABLE_API_KEY non configurata'), { status: 500 });
-  const cat = await loadCatalog(admin, language);
+  const catalog = await loadCatalog(admin, language);
+  const cat = allowPrices ? catalog : catalogWithoutPrices(catalog);
   const { images, links } = cat;
-  const system = `Sei il copywriter di Vesuviano Forni (forni per pizza artigianali napoletani fatti a mano a Sant'Anastasia e Boscoreale con sabbia vulcanica: Anastasia, Ottavio, Real Bosco, Sebastian, VesuvioBuono, Forno Rotante; legna, gas, elettrico, rotante). Pagamento 50% acconto, 50% alla consegna. Usa "Prodotti", mai "Soluzioni".
-Scrivi newsletter B2B per pizzaioli e ristoratori: oggetto breve e concreto (max 60 caratteri, niente maiuscole urlate né parole spam come GRATIS/!!!), preheader max 90 caratteri, corpo in testo semplice con paragrafi separati da riga vuota, 120-220 parole, tono caldo ed esperto, una sola call to action. Scrivi interamente nella lingua: ${language}.
-Usa SOLO il materiale reale fornito: se la richiesta riguarda un forno pronta consegna specifico, usa i suoi dati (prezzi, diametro, rivestimento, consegna) e le SUE foto; per un modello usa le sue foto; per un articolo o un video usa il suo link. Non inventare prezzi, sconti o specifiche.
-image_url = foto principale scelta tra le immagini fornite (o null); extra_images = da 0 a 3 altre foto della stessa offerta/modello; cta_url SOLO tra i link forniti, il più pertinente (pagina della sezione giusta del sito nella lingua del cliente).`;
+  const system = newsletterSystemPrompt(language, allowPrices);
   const res = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
     method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -169,6 +168,7 @@ Link disponibili: ${JSON.stringify(links)}` }],
   const message = JSON.parse(text).choices?.[0]?.message;
   if (message?.refusal || !message?.content) throw Object.assign(new Error(message?.refusal || 'Nessun contenuto generato. Nessuna email è stata inviata.'), { status: 422 });
   const out = JSON.parse(message.content);
+  enforcePricePolicy(out, allowPrices);
   const known = new Set(images.map((i) => i.url));
   if (out.image_url && !known.has(out.image_url)) out.image_url = images[0]?.url || null;
   out.extra_images = (out.extra_images || []).filter((u: string) => known.has(u) && u !== out.image_url).slice(0, 3);
