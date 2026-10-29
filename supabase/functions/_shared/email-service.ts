@@ -1,4 +1,6 @@
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
+import { renderMailboxEmail } from './email-layout.ts';
+import { resolveEmailSignature } from './email-signatures.ts';
 import { emailText, headerReferences } from './email-content.ts';
 import { canSubmitSMTP, canAppendSent, chooseLead, nextUIDBatch, nextExistingUIDs, recentUIDs, safeMailError } from './email-rules.ts';
 import { imapClient, smtpClient, composeEmail, rawMIME, findSent, hasExactMessage, closeIMAP, MAIL_ADDRESS } from './email-transport.ts';
@@ -23,9 +25,9 @@ async function projectOutgoing(admin: SupabaseClient, row: any) {
   const old = checked(await admin.from('crm_messages').select('*').eq('channel','email').eq('external_id', external).maybeSingle());
   if (old) return old;
   const result = await admin.from('crm_messages').insert({ lead_id: row.lead_id, channel: 'email', direction: 'outbound',
-    sender: MAIL_ADDRESS, subject: row.subject, body: row.body, status: 'sent', external_id: external,
+    sender: MAIL_ADDRESS, subject: row.subject, body: row.rendered_text || row.body, status: 'sent', external_id: external,
     created_by: row.created_by, created_at: row.smtp_accepted_at || row.created_at,
-    metadata: { message_id: row.message_id, mailbox_id: row.mailbox_id, sent_copy: row.copy_status } }).select().single();
+    metadata: { message_id: row.message_id, mailbox_id: row.mailbox_id, sent_copy: row.copy_status, signature: row.signature_snapshot || null } }).select().single();
   if (result.error?.code === '23505') return checked(await admin.from('crm_messages').select('*').eq('channel','email').eq('external_id', external).single());
   return checked(result);
 }
@@ -48,17 +50,19 @@ async function appendCopy(admin: SupabaseClient, row: any, client: ReturnType<ty
   checked(await admin.from('email_outbox').update({ copy_status: 'appended', last_error: null }).eq('id', row.id));
 }
 
-export async function sendMailboxEmail(admin: SupabaseClient, input: { lead_id: string; recipient: string; subject: string; body: string; idempotency_key: string; created_by: string|null }) {
+export async function sendMailboxEmail(admin: SupabaseClient, input: { lead_id: string; recipient: string; subject: string; body: string; idempotency_key: string; created_by: string|null; signature_id?: string|null }) {
   const box = await mailbox(admin);
   if (!box.enabled) throw new Error('MAILBOX_DISABLED');
   let row = checked(await admin.from('email_outbox').select('*').eq('mailbox_id', box.id).eq('idempotency_key', input.idempotency_key).maybeSingle());
   if (row && (row.lead_id !== input.lead_id || row.recipient !== input.recipient || row.body !== input.body || row.subject !== input.subject)) throw new Error('MAIL_IDEMPOTENCY_CONFLICT');
   if (!row) {
+    const signature = await resolveEmailSignature(admin, box.id, input.signature_id);
+    const rendered = renderMailboxEmail(input.body, signature);
     const messageId = `<${crypto.randomUUID()}@vesuvianoforni.com>`;
     const date = new Date();
     const previous = checked(await admin.from('email_items').select('message_id').eq('lead_id', input.lead_id).eq('mailbox_id', box.id).order('sent_at', { ascending: false }).limit(1));
-    const mime = await composeEmail(input.recipient, input.subject, input.body, messageId, date, previous?.[0]?.message_id || undefined);
-    const inserted = await admin.from('email_outbox').insert({ ...input, mailbox_id: box.id, message_id: messageId, mime }).select().single();
+    const mime = await composeEmail(input.recipient, input.subject, rendered.text, messageId, date, previous?.[0]?.message_id || undefined, rendered.html);
+    const inserted = await admin.from('email_outbox').insert({ ...input, signature_id: signature?.id || null, signature_snapshot: signature, rendered_text: rendered.text, rendered_html: rendered.html, mailbox_id: box.id, message_id: messageId, mime }).select().single();
     if (inserted.error?.code === '23505') row = checked(await admin.from('email_outbox').select('*').eq('mailbox_id', box.id).eq('idempotency_key', input.idempotency_key).single());
     else row = checked(inserted);
   }
@@ -220,9 +224,9 @@ export async function syncMailbox(admin: SupabaseClient, runId: string) {
             const recipients = [...(envelope?.to || []), ...(envelope?.cc || [])].map(a => a.address?.toLowerCase()).filter(Boolean);
             const sender = envelope?.from?.[0]?.address?.toLowerCase() || '';
             const outbound = sender === MAIL_ADDRESS || folder === sent;
-            const foundOutgoing = folder===sent && sender===MAIL_ADDRESS && messageId ? checked(await admin.from('email_outbox').select('lead_id,crm_message_id,recipient,subject,body').eq('mailbox_id',box.id).eq('message_id',messageId).eq('smtp_status','accepted').maybeSingle()) : null;
+            const foundOutgoing = folder===sent && sender===MAIL_ADDRESS && messageId ? checked(await admin.from('email_outbox').select('lead_id,crm_message_id,recipient,subject,body,rendered_text').eq('mailbox_id',box.id).eq('message_id',messageId).eq('smtp_status','accepted').maybeSingle()) : null;
             const text=await emailText(client,entry);
-            const outgoing=foundOutgoing && recipients.includes(foundOutgoing.recipient.toLowerCase()) && foundOutgoing.subject===(envelope?.subject||'') && foundOutgoing.body.trim()===text.trim() ? foundOutgoing : null;
+            const outgoing=foundOutgoing && recipients.includes(foundOutgoing.recipient.toLowerCase()) && foundOutgoing.subject===(envelope?.subject||'') && (foundOutgoing.rendered_text || foundOutgoing.body).trim()===text.trim() ? foundOutgoing : null;
             item = checked(await admin.from('email_items').upsert({ mailbox_id: box.id, message_key: key, message_id: messageId,
               folder,uid_validity:validity,imap_uid:entry.uid,
               in_reply_to: envelope?.inReplyTo || null, reference_ids: headerReferences(entry.headers),

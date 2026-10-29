@@ -6,8 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { EmailSignatures } from './EmailSignatures';
 
 const errors: Record<string,string> = {
+  MAIL_SIGNATURE_INVALID:'La firma selezionata non è più disponibile. Scegline un’altra.',
   MAIL_AUTH_FAILED:'Il server di posta non accetta le credenziali. Controlla la password e il nome della casella.',
   MAIL_TLS_FAILED:'Il certificato del server di posta non è valido.',
   MAIL_TIMEOUT:'Il server di posta non ha risposto in tempo.',
@@ -59,8 +62,11 @@ export function MailboxSettings() {
   };
   return <Dialog onOpenChange={open=>{if(open)void act('status');}}>
     <DialogTrigger asChild><Button variant="outline" size="sm"><Mail className="mr-2 h-4 w-4"/>Casella email</Button></DialogTrigger>
-    <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
+    <DialogContent className="max-h-[85vh] w-[calc(100%-24px)] max-w-5xl overflow-y-auto">
       <DialogHeader><DialogTitle>info@vesuvianoforni.com</DialogTitle></DialogHeader>
+      <Tabs defaultValue="mailbox">
+      <TabsList><TabsTrigger value="mailbox">Casella e sincronizzazione</TabsTrigger><TabsTrigger value="signatures">Firme email</TabsTrigger></TabsList>
+      <TabsContent value="mailbox" className="space-y-4 pt-3">
       <div className="flex flex-wrap items-center gap-2">
         <Badge variant={state?.mailbox.enabled?'default':'secondary'}>{state?.mailbox.enabled?'Sincronizzazione attiva':'Sincronizzazione disattivata'}</Badge>
         <span className="ml-auto flex items-center gap-1 text-xs text-muted-foreground"><ShieldCheck className="h-4 w-4"/>Credenziali protette</span>
@@ -90,6 +96,9 @@ export function MailboxSettings() {
           {run.error_code&&<span className="basis-full text-destructive">{mailErrorLabel(run.error_code)}</span>}
         </div>)}
       </div>
+      </TabsContent>
+      <TabsContent value="signatures" className="pt-3"><EmailSignatures/></TabsContent>
+      </Tabs>
     </DialogContent>
   </Dialog>;
 }

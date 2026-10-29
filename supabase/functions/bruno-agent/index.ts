@@ -22,6 +22,7 @@ const SendSchema = z.object({
   subject: z.string().max(300).optional(),
   ai_generated: z.boolean().optional(),
   idempotency_key: z.string().uuid().optional(),
+  signature_id: z.string().uuid().nullable().optional(),
 });
 const SuggestSchema = z.object({
   action: z.literal('suggest'),
@@ -115,7 +116,7 @@ ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
       try {
         return json(await sendMailboxEmail(admin, { lead_id:lead.id, recipient:recipient.data,
           subject:input.subject || 'Vesuviano Forni', body:input.body,
-          idempotency_key:input.idempotency_key, created_by:u.user.id }));
+          idempotency_key:input.idempotency_key, created_by:u.user.id, signature_id:input.signature_id }));
       } catch(e) {
         const code = safeMailError(e);
         console.error('Mailbox submission failed',code);

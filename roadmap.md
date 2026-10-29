@@ -13,7 +13,7 @@
 - [x] Card orientate alle attività secondo Pipedrive/HubSpot: ultima interazione da eventi esistenti (mai updated_at), prossima attività relativa e scaduta, pianificazione rapida nei campi esistenti; Vinto/Perso nel menu con conferma. 13 test e flussi UI verificati a 1070/390 px con dati di prova; accesso reale indisponibile. Telefonate non registrate restano sconosciute
 
 ## Aperti
-- [ ] Impaginazione HTML email ERP e gestione firme con anteprima e firma iniziale Gennaro Caglione
+- [x] Impaginazione HTML email ERP e gestione firme in Bruno → Casella email → Firme email; Gennaro Caglione predefinito, scelta firma e anteprima nel composer, snapshot immutabile MIME per invio/copia/CRM. Logo pubblico verificato, 27 test email e 20 CRM superati, flusso firme/anteprima verificato con dati di prova; accesso autenticato reale indisponibile e nessuna nuova email inviata. Indirizzo postale facoltativo da confermare.
 - [ ] Replicare pipeline e webhook in Zapper ERP — bloccato: il progetto Zapper è accessibile solo in lettura da qui; va aperto il suo progetto e incollato il codice/payload contract
 - [x] Bruno: console comunicazioni per lead, suggerimenti per fase, invio WA/WaSender/email/nota
 - [x] Sezione dedicata "Bruno AI" nel menu ERP (`/erp/bruno`): elenco clienti con coda di follow-up per fase, filtri fase/pipeline/ricerca e pannello comunicazioni; click sul lead nel CRM apre ora la scheda cliente (Riepilogo / Comunicazioni / Configuratore). 20 test e flussi UI verificati a 1280 px con soli dati di prova (accesso reale non disponibile)

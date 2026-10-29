@@ -3,6 +3,7 @@ import { MessageCircle, X, Send, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from '@/integrations/supabase/types';
 import { getAttribution } from "@/lib/attribution";
 
 const SUPABASE_URL = "https://lgueucxznbqgvhpjzurf.supabase.co";
@@ -203,7 +204,7 @@ export default function AIChatWidget() {
 
   // Save conversation to DB
   const saveConversation = useCallback(async (msgs: Msg[], contactInfo?: { name?: string; email?: string; phone?: string }) => {
-    const payload: Record<string, unknown> = {
+    const payload: Database['public']['Tables']['chat_conversations']['Insert'] = {
       visitor_id: visitorId,
       messages: msgs,
       lang,

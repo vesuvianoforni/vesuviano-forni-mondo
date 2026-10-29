@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FunctionsHttpError } from "@supabase/supabase-js";
-import { Bot, Mail, MessageCircle, Phone, Send, Sparkles, StickyNote, User, PauseCircle, PlayCircle, Loader2, AlertCircle } from "lucide-react";
+import { Bot, Mail, MessageCircle, Phone, Send, Sparkles, StickyNote, User, PauseCircle, PlayCircle, Loader2, AlertCircle, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,9 @@ import { CRM_STAGES } from "@/lib/crmPipeline";
 import { cn } from "@/lib/utils";
 import type { CRMLead } from "./CRMLeadCard";
 import { mailErrorLabel } from "./MailboxSettings";
+import { EmailSignatureSelector } from './EmailSignatures';
+import { EmailPreview } from './EmailPreview';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 interface Msg {
   id: string; channel: BrunoChannel; direction: string; sender: string; subject: string | null;
@@ -51,7 +54,10 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
   const [viewFilter, setViewFilter] = useState<"all" | BrunoChannel>("all");
   const visibleMessages = viewFilter === "all" ? messages : messages.filter((m) => m.channel === viewFilter);
   const endRef = useRef<HTMLDivElement>(null);
-  const emailOperation = useRef<{ key: string; draft: string } | null>(null);
+  const emailOperation = useRef<{ key: string; draft: string; signatureId?: string | null } | null>(null);
+  const [signature, setSignature] = useState('default');
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const signatureId = signature === 'none' ? null : signature === 'default' ? undefined : signature;
 
   const load = async (id: string) => {
     const { data } = await supabase.from("crm_messages" as never).select("*").eq("lead_id", id).order("created_at");
@@ -60,6 +66,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
 
   useEffect(() => {
     setText(""); setSubject(""); setReasoning(null); setAiDraft(false);
+    setSignature('default'); setPreviewOpen(false);
     emailOperation.current=null;
     try {
       const saved=sessionStorage.getItem(`crm-email-operation:${lead.id}`);
@@ -97,10 +104,10 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
     setSending(true);
     try {
       const draft = JSON.stringify([lead.id, subject || 'Vesuviano Forni', text.trim()]);
-      if (channel === 'email' && emailOperation.current?.draft !== draft) emailOperation.current = { key: crypto.randomUUID(), draft };
+      if (channel === 'email' && emailOperation.current?.draft !== draft) emailOperation.current = { key: crypto.randomUUID(), draft, signatureId };
       if(channel==='email'&&emailOperation.current){try {sessionStorage.setItem(`crm-email-operation:${lead.id}`,JSON.stringify(emailOperation.current));}catch{/* optional storage */}}
       const result = await invoke({ action: "send", lead_id: lead.id, channel, body: text.trim(), subject: channel === "email" ? subject || undefined : undefined, ai_generated: aiDraft,
-        ...(channel === 'email' ? { idempotency_key: emailOperation.current?.key } : {}) });
+        ...(channel === 'email' ? { idempotency_key: emailOperation.current?.key, signature_id: emailOperation.current?.signatureId } : {}) });
       toast({ title: channel === "note" ? "Nota salvata" : "Messaggio inviato",
         description: channel === 'email' && !['found','appended'].includes(result.copy_status) ? 'Email accettata dal server; copia in Posta inviata da verificare. Non verrà reinviata.' : undefined });
       emailOperation.current = null;
@@ -206,7 +213,11 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
             return <ToggleGroupItem key={c} value={c} className="text-xs"><Icon className="mr-1 h-3.5 w-3.5" />{CHANNELS[c].label}</ToggleGroupItem>;
           })}
         </ToggleGroup>
-        {channel === "email" && <Input placeholder="Oggetto" value={subject} onChange={(e) => setSubject(e.target.value)} />}
+        {channel === "email" && <>
+          <Input aria-label="Oggetto email" placeholder="Oggetto" value={subject} maxLength={300} disabled={sending} onChange={(e) => setSubject(e.target.value)} />
+          <div className="flex flex-wrap items-center gap-2"><EmailSignatureSelector value={signature} onChange={setSignature} disabled={sending}/><Button variant="outline" size="sm" disabled={sending} onClick={() => setPreviewOpen(true)}><Eye className="mr-2 h-4 w-4"/>Anteprima</Button></div>
+          <Dialog open={previewOpen} onOpenChange={setPreviewOpen}><DialogContent className="max-h-[90vh] w-[calc(100%-24px)] max-w-2xl overflow-y-auto"><DialogHeader><DialogTitle>{subject || 'Vesuviano Forni'}</DialogTitle></DialogHeader><p className="break-words text-sm text-muted-foreground">A: {lead.email || 'Email cliente non disponibile'}</p><EmailPreview body={text} signatureId={signatureId}/></DialogContent></Dialog>
+        </>}
         <div className="flex gap-2">
           <Textarea rows={3} value={text} onChange={(e) => { setText(e.target.value); }}
             placeholder={channel === "note" ? "Nota interna per il team…" : `Scrivi a ${name}…`} className="resize-none" />
