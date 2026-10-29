@@ -4,11 +4,17 @@ import { z } from 'npm:zod@3';
 import { mailbox, syncMailbox } from '../_shared/email-service.ts';
 import { imapClient, smtpClient, findSent, closeIMAP, mailConfig } from '../_shared/email-transport.ts';
 import { safeMailError } from '../_shared/email-rules.ts';
+import { SignatureSchema, listEmailSignatures, resolveEmailSignature } from '../_shared/email-signatures.ts';
+import { renderMailboxEmail } from '../_shared/email-layout.ts';
 
 const schema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('status') }), z.object({ action: z.literal('test') }),
   z.object({ action: z.literal('sync') }), z.object({ action: z.literal('enable'), enabled: z.boolean() }),
   z.object({ action: z.literal('process'), run_id: z.string().uuid(), worker_token: z.string().uuid() }),
+  z.object({ action: z.literal('signatures') }),
+  z.object({ action: z.literal('save_signature'), signature: SignatureSchema }),
+  z.object({ action: z.literal('delete_signature'), id: z.string().uuid() }),
+  z.object({ action: z.literal('preview'), body: z.string().max(4000), signature_id: z.string().uuid().nullable().optional(), signature: SignatureSchema.optional() }),
 ]);
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
@@ -57,6 +63,22 @@ Deno.serve(async req => {
     const isAdmin = roles?.some(r => r.role === 'admin');
     if (roleError || !roles?.some(r => ['admin','commerciale'].includes(r.role))) return json({ error: 'Accesso negato' },403);
     const box = await mailbox(admin);
+    if (input.action === 'signatures') return json({ signatures: await listEmailSignatures(admin, box.id) });
+    if (input.action === 'save_signature') {
+      const { id, ...fields } = input.signature;
+      const { data, error } = await admin.rpc('save_email_signature', { _mailbox: box.id, _id: id || crypto.randomUUID(), _fields: fields });
+      if (error) throw new Error('MAIL_DB_FAILED');
+      return json({ signature: data });
+    }
+    if (input.action === 'delete_signature') {
+      const { error } = await admin.from('email_signatures').delete().eq('mailbox_id', box.id).eq('id', input.id);
+      if (error) throw new Error('MAIL_DB_FAILED');
+      return json({ deleted: true });
+    }
+    if (input.action === 'preview') {
+      const signature = input.signature ? { ...input.signature, id: input.signature.id || '' } : await resolveEmailSignature(admin, box.id, input.signature_id);
+      return json(renderMailboxEmail(input.body, signature));
+    }
     if (input.action === 'status') {
       const { data: runs, error } = await admin.from('email_sync_runs').select('id,kind,status,processed,linked,error_code,started_at,finished_at,created_at').eq('mailbox_id',box.id).order('created_at',{ascending:false}).limit(15);
       if (error) throw new Error('MAIL_DB_FAILED');
