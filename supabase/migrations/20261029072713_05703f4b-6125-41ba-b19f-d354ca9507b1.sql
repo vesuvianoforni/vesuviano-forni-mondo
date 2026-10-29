@@ -1,0 +1,2 @@
+CREATE POLICY "Backend owns email outbox" ON public.email_outbox FOR ALL TO service_role USING (true) WITH CHECK (true);
+CREATE POLICY "Backend owns email cursors" ON public.email_folder_cursors FOR ALL TO service_role USING (true) WITH CHECK (true);
