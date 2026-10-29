@@ -80,3 +80,9 @@ verify_jwt = false
 
 [functions.babylovegrowth-webhook]
 verify_jwt = false
+
+[functions.email-sync]
+verify_jwt = false
+
+[functions.bruno-agent]
+verify_jwt = false
