@@ -1,0 +1,1 @@
+CREATE POLICY newsletter_ai_state_service_only ON public.newsletter_ai_state FOR ALL TO service_role USING (true) WITH CHECK (true);
