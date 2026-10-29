@@ -24,7 +24,7 @@
 - [ ] Ricezione messaggi in entrata e follow-up automatici programmati
 
 ## Roberta AI (29 ott 2026)
-- [ ] Chiedi a Roberta: inserimento tema prima di generare, versioni tradotte controllabili e invio nella lingua del prefisso telefonico (+44 inglese); verificare flusso e test.
+- [x] Chiedi a Roberta: tema prima di generare, traduzioni IT/EN/FR/DE/ES con anteprima, lingua destinatario stimata da prefisso e fallback paese/bozza; invio bloccato con traduzioni mancanti o superate. 17 test superati, traduzione AI reale verificata senza invii, flusso completo con dati di prova verificato. Accesso autenticato reale resta indisponibile.
 - [x] Pagina dedicata /erp/roberta (menu "Roberta AI") con pilastri marketing e campagne newsletter integrate
 - [x] ERPNewsletter supporta modalità embedded
 - [ ] Verifica autenticata su ERP reale (accesso non disponibile in sandbox)
