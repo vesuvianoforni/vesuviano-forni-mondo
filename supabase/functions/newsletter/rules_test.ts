@@ -31,3 +31,8 @@ Deno.test('render includes unsubscribe link and escapes body', () => {
   const { html } = renderNewsletter({ subject: 's', preheader: 'p', body: '<b>hi</b>', image_url: null, cta_label: 'Go', cta_url: 'https://vesuvianoforni.com', language: 'en' }, 'https://u.test/x');
   assert(html.includes('https://u.test/x') && html.includes('Unsubscribe') && html.includes('&lt;b&gt;'));
 });
+
+Deno.test('render includes extra photos, only https', () => {
+  const { html } = renderNewsletter({ subject: 's', preheader: 'p', body: 'x', image_url: 'https://a/1.jpg', extra_images: ['https://a/2.jpg', 'http://bad/3.jpg'], cta_label: null, cta_url: null, language: 'it' }, 'https://u');
+  assert(html.includes('https://a/2.jpg') && !html.includes('http://bad/3.jpg'));
+});
