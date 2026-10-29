@@ -1,13 +1,7 @@
 import { simpleParser } from 'npm:mailparser@3.9.3';
 import { Buffer } from 'node:buffer';
 import type { MessageStructureObject, ImapFlow, FetchMessageObject } from 'npm:imapflow@2.9.1';
-
-export function textPart(structure?: MessageStructureObject): MessageStructureObject | undefined {
-  if (!structure || structure.disposition?.toLowerCase() === 'attachment' || structure.type === 'message/rfc822') return;
-  const children = structure.childNodes || [];
-  const parts = children.map(textPart).filter((p): p is MessageStructureObject => !!p);
-  return parts.find(p => p.type === 'text/plain') || parts[0] || (/^text\/(plain|html)$/i.test(structure.type) ? structure : undefined);
-}
+import { textPart } from './email-rules.ts';
 export async function emailText(client: ImapFlow, entry: FetchMessageObject) {
   const part = textPart(entry.bodyStructure);
   if (!part) return '';
