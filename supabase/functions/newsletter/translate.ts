@@ -5,6 +5,7 @@ import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { createLovableAiGatewayRunIdFetch, getLovableAiGatewayRunId } from './ai/run-id.ts';
 import { LANGUAGES, contentSource, type LocalizedCampaign, type Version, type Language } from './localization.ts';
 import { loadCatalog } from './catalog.ts';
+import { containsPrices, enforcePricePolicy } from './policy.ts';
 
 const Item = z.object({ language: z.string(), subject: z.string(), preheader: z.string(), body: z.string(), cta_label: z.string().nullable(), cta_url: z.string().nullable() });
 const Schema = z.object({ versions: z.array(Item) });
@@ -40,6 +41,7 @@ export async function translateCampaign(admin: SupabaseClient, campaign: Localiz
     for (const target of targets) {
       const version = output.versions.find((v) => v.language === target);
       if (!version?.subject.trim() || !version.body.trim()) throw new Error(`Traduzione ${target.toUpperCase()} non completata.`);
+      enforcePricePolicy(version, [campaign.subject, campaign.preheader, campaign.body, campaign.cta_label || ''].some(containsPrices));
       const links = catalogs.find((c) => c.language === target)?.links || {};
       const cta = version.cta_url && (Object.values(links).includes(version.cta_url) || version.cta_url === campaign.cta_url) ? version.cta_url : campaign.cta_url;
       translations[target] = { subject: version.subject, preheader: version.preheader, body: version.body, cta_label: version.cta_label, cta_url: cta };
