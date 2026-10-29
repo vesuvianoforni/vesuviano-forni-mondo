@@ -1,6 +1,5 @@
 import { assertEquals, assertThrows } from 'https://deno.land/std@0.224.0/assert/mod.ts';
-import { canSubmitSMTP, canAppendSent, discoverSent, nextUIDBatch, nextExistingUIDs, chooseLead, safeMailError } from '../_shared/email-rules.ts';
-import { textPart } from '../_shared/email-content.ts';
+import { canSubmitSMTP, canAppendSent, discoverSent, nextUIDBatch, nextExistingUIDs, chooseLead, safeMailError, textPart } from '../_shared/email-rules.ts';
 
 Deno.test('SMTP accepted emails are never resent',()=>assertEquals(canSubmitSMTP('accepted'),false));
 Deno.test('SMTP unknown acknowledgement is never resent',()=>assertEquals(canSubmitSMTP('unknown'),false));
