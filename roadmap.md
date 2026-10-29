@@ -24,6 +24,7 @@
 - [ ] Ricezione messaggi in entrata e follow-up automatici programmati
 
 ## Roberta AI (29 ott 2026)
+- [x] Gestione foto newsletter: foto principale e tre aggiuntive visibili senza ritagli, scelta in galleria con ricerca/ingrandimento, sostituzione e rimozione esplicite; anteprima aggiornata senza salvataggi o invii. Flusso verificato con dati di prova a 1280, 1442 e 390 px, senza errori o scorrimento orizzontale; verifica autenticata reale non disponibile per questo progetto esterno.
 - [x] Regole newsletter B2B condivise; prezzi solo su richiesta diretta, dati monetari omessi dal catalogo negli altri casi e output inatteso bloccato. Calendario iniziale di 5 occasioni aggiuntive, un solo controllo quotidiano, coda senza doppioni e lease atomica. 25 test e due generazioni AI reali verificati senza invii; accesso autenticato ERP non disponibile.
 - [x] Chiedi a Roberta: tema prima di generare, traduzioni IT/EN/FR/DE/ES con anteprima, lingua destinatario stimata da prefisso e fallback paese/bozza; invio bloccato con traduzioni mancanti o superate. 17 test superati, traduzione AI reale verificata senza invii, flusso completo con dati di prova verificato. Accesso autenticato reale resta indisponibile.
 - [x] Pagina dedicata /erp/roberta (menu "Roberta AI") con pilastri marketing e campagne newsletter integrate
