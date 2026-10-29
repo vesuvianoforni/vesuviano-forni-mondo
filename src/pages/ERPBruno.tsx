@@ -12,6 +12,7 @@ import { CHANNELS, isBrunoPaused } from "@/lib/brunoObjectives";
 import { brunoQueueReason, type BrunoQueueReason } from "@/lib/brunoQueue";
 import { BrunoPanel, type BrunoLead } from "@/components/erp/BrunoPanel";
 import { cn } from "@/lib/utils";
+import { MailboxSettings } from "@/components/erp/MailboxSettings";
 
 const pipelines = ["Vesuviano", "ZAPPER", "ZAPPER Pro"];
 const PAGE = 1000;
@@ -120,6 +121,7 @@ export default function ERPBruno() {
           <p className="text-xs text-muted-foreground">{queued} clienti da contattare · {pausedCount} in pausa</p>
         </div>
         <div className="ml-auto flex flex-wrap items-center gap-2">
+          <MailboxSettings />
           <div className="relative min-w-0 basis-full sm:basis-56">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input placeholder="Cerca cliente…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />

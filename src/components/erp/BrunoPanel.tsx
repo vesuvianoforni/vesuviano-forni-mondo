@@ -12,6 +12,7 @@ import { BRUNO_OBJECTIVES, CHANNELS, brunoCanContact, isBrunoPaused, type BrunoC
 import { CRM_STAGES } from "@/lib/crmPipeline";
 import { cn } from "@/lib/utils";
 import type { CRMLead } from "./CRMLeadCard";
+import { mailErrorLabel } from "./MailboxSettings";
 
 interface Msg {
   id: string; channel: BrunoChannel; direction: string; sender: string; subject: string | null;
@@ -50,6 +51,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
   const [viewFilter, setViewFilter] = useState<"all" | BrunoChannel>("all");
   const visibleMessages = viewFilter === "all" ? messages : messages.filter((m) => m.channel === viewFilter);
   const endRef = useRef<HTMLDivElement>(null);
+  const emailOperation = useRef<{ key: string; draft: string } | null>(null);
 
   const load = async (id: string) => {
     const { data } = await supabase.from("crm_messages" as never).select("*").eq("lead_id", id).order("created_at");
@@ -89,12 +91,17 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
     if (!text.trim()) return;
     setSending(true);
     try {
-      await invoke({ action: "send", lead_id: lead.id, channel, body: text.trim(), subject: channel === "email" ? subject || undefined : undefined, ai_generated: aiDraft });
-      toast({ title: channel === "note" ? "Nota salvata" : "Messaggio inviato" });
+      const draft = JSON.stringify([lead.id, subject || 'Vesuviano Forni', text.trim()]);
+      if (channel === 'email' && emailOperation.current?.draft !== draft) emailOperation.current = { key: crypto.randomUUID(), draft };
+      const result = await invoke({ action: "send", lead_id: lead.id, channel, body: text.trim(), subject: channel === "email" ? subject || undefined : undefined, ai_generated: aiDraft,
+        ...(channel === 'email' ? { idempotency_key: emailOperation.current?.key } : {}) });
+      toast({ title: channel === "note" ? "Nota salvata" : "Messaggio inviato",
+        description: channel === 'email' && !['found','appended'].includes(result.copy_status) ? 'Email accettata dal server; copia in Posta inviata da verificare. Non verrà reinviata.' : undefined });
+      emailOperation.current = null;
       setText(""); setSubject(""); setReasoning(null); setAiDraft(false);
       if (channel === "wasender" && !aiDraft) setPausedUntil(new Date(Date.now() + 48 * 3600e3).toISOString());
     } catch (e) {
-      toast({ title: "Invio non riuscito", description: (e as Error).message, variant: "destructive" });
+      toast({ title: "Invio non riuscito", description: mailErrorLabel((e as Error).message), variant: "destructive" });
     } finally { setSending(false); load(lead.id); }
   };
 

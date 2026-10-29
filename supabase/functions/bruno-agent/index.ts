@@ -1,6 +1,8 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
+import { sendMailboxEmail } from '../_shared/email-service.ts';
+import { safeMailError } from '../_shared/email-rules.ts';
 
 // Obiettivi di Bruno per fase pipeline (tenere allineato a src/lib/brunoObjectives.ts)
 const OBJECTIVES: Record<string, string> = {
@@ -19,6 +21,7 @@ const SendSchema = z.object({
   body: z.string().min(1).max(4000),
   subject: z.string().max(300).optional(),
   ai_generated: z.boolean().optional(),
+  idempotency_key: z.string().uuid().optional(),
 });
 const SuggestSchema = z.object({
   action: z.literal('suggest'),
@@ -35,8 +38,10 @@ const digits = (p?: string | null) => (p || '').replace(/\D/g, '').replace(/^00/
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   try {
-    const url = Deno.env.get('SUPABASE_URL')!;
-    const admin = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+    const url = Deno.env.get('SUPABASE_URL');
+    const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    if (!url || !serviceKey) return json({ error: 'Servizio non configurato' }, 503);
+    const admin = createClient(url, serviceKey);
     const token = (req.headers.get('Authorization') || '').replace('Bearer ', '');
     const { data: u } = await admin.auth.getUser(token);
     if (!u?.user) return json({ error: 'Non autenticato' }, 401);
@@ -102,7 +107,23 @@ ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
       return json({ suggestion, objective: OBJECTIVES[stage] });
     }
 
-    // SEND
+    // Email is a durable SMTP submission plus an independent IMAP Sent-copy operation.
+    if (input.channel === 'email') {
+      if (!input.idempotency_key) return json({ error: 'Identificativo invio mancante' },400);
+      const recipient = z.string().email().safeParse(lead.email?.trim());
+      if (!recipient.success) return json({ error:'Email cliente mancante o non valida' },400);
+      try {
+        return json(await sendMailboxEmail(admin, { lead_id:lead.id, recipient:recipient.data,
+          subject:input.subject || 'Vesuviano Forni', body:input.body,
+          idempotency_key:input.idempotency_key, created_by:u.user.id }));
+      } catch(e) {
+        const code = safeMailError(e);
+        console.error('Mailbox submission failed',code);
+        return json({error:code},422);
+      }
+    }
+
+    // SEND (other channels remain unchanged)
     let status = 'sent';
     let error: string | null = null;
     let externalId: string | null = null;
@@ -137,10 +158,6 @@ ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
         if (!r.ok) { status = 'failed'; error = `WaSender ${r.status}: ${t.slice(0, 300)}`; }
         else { try { externalId = String(JSON.parse(t).data?.msgId ?? '') || null; } catch { /* ignore */ } }
       }
-    } else if (input.channel === 'email') {
-      // Gmail verrà collegato in seguito: per ora registriamo il messaggio senza inviarlo.
-      status = lead.email ? 'logged' : 'failed';
-      error = lead.email ? 'Gmail non ancora collegato: email registrata ma non inviata' : 'Email mancante';
     } else {
       status = 'logged';
     }
