@@ -19,5 +19,5 @@
 - [ ] Collegare WhatsApp API di Bruno (connettore WhatsApp) — attende collegamento numero
 - [ ] Collegare WaSender di Gennaro (chiave WASENDER_API_KEY) — attende chiave
 - [x] Sincronizzazione IMAP/SMTP info@vesuvianoforni.com: credenziali protette, invio con outbox e copia MIME separata in Inviata, deduplicazione fisica/logica, conversazioni CRM, log e controllo ogni 15 minuti; connessioni e prime importazioni reali verificate
-- [ ] Inviare email di prova autorizzata da info@vesuvianoforni.com a stanislaoelefante@gmail.com e verificare SMTP, copia Inviata e CRM; accesso browser autenticato non disponibile
+- [x] Email di prova autorizzata inviata da info@vesuvianoforni.com a stanislaoelefante@gmail.com: SMTP accepted e copia IMAP appended verificati; conversazione registrata nel CRM. Verifica visiva autenticata non disponibile
 - [ ] Ricezione messaggi in entrata e follow-up automatici programmati

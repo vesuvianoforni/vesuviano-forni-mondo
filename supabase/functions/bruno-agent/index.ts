@@ -42,21 +42,6 @@ Deno.serve(async (req) => {
     const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
     if (!url || !serviceKey) return json({ error: 'Servizio non configurato' }, 503);
     const admin = createClient(url, serviceKey);
-    // Temporary single-recipient smoke test explicitly requested by the owner.
-    // Only a private database-issued run token can authorize this one durable operation.
-    const testInput = await req.clone().json().catch(() => null);
-    if (testInput?.action === 'mailbox-smoke-test') {
-      if (!z.string().uuid().safeParse(testInput.run_id).success || !z.string().uuid().safeParse(testInput.worker_token).success) return json({error:'Non autorizzato'},401);
-      const {data:run}=await admin.from('email_sync_runs').select('id,status,created_at').eq('id',testInput.run_id).eq('worker_token',testInput.worker_token).eq('kind','smtp_test').maybeSingle();
-      if(!run||run.status!=='queued'||Date.now()-new Date(run.created_at).getTime()>300000)return json({error:'Operazione non disponibile'},404);
-      const {data:claimed}=await admin.from('email_sync_runs').update({status:'running',started_at:new Date().toISOString()}).eq('id',run.id).eq('status','queued').select('id').maybeSingle();
-      if(!claimed)return json({error:'Operazione non disponibile'},404);
-      try {
-        const result=await sendMailboxEmail(admin,{lead_id:'9fc37393-c900-4200-88c8-a71a9949f379',recipient:'stanislaoelefante@gmail.com',subject:'Prova email ERP Vesuviano',body:'Ciao Stanislao,\n\nquesta è una email di prova inviata da info@vesuvianoforni.com tramite il CRM Vesuviano per verificare il collegamento della casella e la copia in Posta inviata.\n\nUn saluto,\nVesuviano Forni',idempotency_key:run.id,created_by:null});
-        await admin.from('email_sync_runs').update({status:'success',processed:1,linked:1,finished_at:new Date().toISOString()}).eq('id',run.id);
-        return json({smtp_status:result.smtp_status,copy_status:result.copy_status});
-      } catch(e){const code=safeMailError(e);await admin.from('email_sync_runs').update({status:'failed',error_code:code,finished_at:new Date().toISOString()}).eq('id',run.id);return json({error:code},422);}
-    }
     const token = (req.headers.get('Authorization') || '').replace('Bearer ', '');
     const { data: u } = await admin.auth.getUser(token);
     if (!u?.user) return json({ error: 'Non autenticato' }, 401);
