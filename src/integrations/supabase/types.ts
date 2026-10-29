@@ -1103,6 +1103,7 @@ export type Database = {
           started_at: string | null
           status: string
           updated_at: string
+          worker_token: string
         }
         Insert: {
           created_at?: string
@@ -1116,6 +1117,7 @@ export type Database = {
           started_at?: string | null
           status?: string
           updated_at?: string
+          worker_token?: string
         }
         Update: {
           created_at?: string
@@ -1129,6 +1131,7 @@ export type Database = {
           started_at?: string | null
           status?: string
           updated_at?: string
+          worker_token?: string
         }
         Relationships: [
           {
