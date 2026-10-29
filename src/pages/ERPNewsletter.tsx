@@ -35,7 +35,7 @@ async function call(body: Record<string, unknown>) {
   return data;
 }
 
-export default function ERPNewsletter() {
+export default function ERPNewsletter({ embedded = false }: { embedded?: boolean }) {
   const [list, setList] = useState<Campaign[]>([]);
   const [sel, setSel] = useState<Campaign | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
