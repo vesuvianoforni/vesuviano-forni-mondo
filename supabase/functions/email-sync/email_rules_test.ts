@@ -9,7 +9,7 @@ Deno.test('APPEND not repeated when already found',()=>assertEquals(canAppendSen
 Deno.test('APPEND not repeated when already appended',()=>assertEquals(canAppendSent('accepted','appended'),false));
 Deno.test('APPEND permitted after accepted SMTP without copy',()=>assertEquals(canAppendSent('accepted','pending'),true));
 Deno.test('Sent discovery respects server namespace',()=>assertEquals(discoverSent([{path:'INBOX.Inviata',specialUse:'\\Sent',specialUseSource:'extension',flags:new Set()}]),'INBOX.Inviata'));
-Deno.test('Sent discovery rejects ambiguous folder choices',()=>assertThrows(()=>discoverSent([{path:'Sent',flags:new Set()},{path:'Inviata',flags:new Set()}]),Error,'SENT_FOLDER_AMBIGUOUS'));
+Deno.test('Sent discovery rejects ambiguous folder choices',()=>{ assertThrows(()=>discoverSent([{path:'Sent',flags:new Set()},{path:'Inviata',flags:new Set()}]),Error,'SENT_FOLDER_AMBIGUOUS'); });
 Deno.test('UIDVALIDITY reset starts from first UID',()=>assertEquals(nextUIDBatch(900,'old','new',1000).start,1));
 Deno.test('Empty UID range does not scan older messages',()=>assertEquals(nextUIDBatch(99,'v','v',100),{cursor:99,start:100,end:99}));
 Deno.test('Duplicate email across clients is not arbitrarily linked',()=>assertEquals(chooseLead(['a','b']),null));
