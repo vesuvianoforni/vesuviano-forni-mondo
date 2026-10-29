@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { Loader2, Plus, Sparkles, Send, FlaskConical, Trash2, Users, Mail } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { updateNewsletterPreviewPhotos } from '@/lib/newsletterPreview';
+import NewsletterPhotoPicker from '@/components/NewsletterPhotoPicker';
 
 const db = supabase as any;
 const LANGS = [['it', 'Italiano'], ['en', 'Inglese'], ['fr', 'Francese'], ['de', 'Tedesco'], ['es', 'Spagnolo']];
@@ -51,7 +52,6 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
   const [testEmail, setTestEmail] = useState('');
   const [confirm, setConfirm] = useState(false);
   const [assets, setAssets] = useState<{ url: string; label: string }[]>([]);
-  const [assetFilter, setAssetFilter] = useState('');
   const [askOpen, setAskOpen] = useState(false);
   const [brief, setBrief] = useState('');
   const [briefLanguage, setBriefLanguage] = useState('it');
@@ -88,12 +88,6 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
     if (!sel) return;
     call({ action: 'assets', language: sel.language }).then((r) => setAssets(r.images || [])).catch(() => setAssets([]));
   }, [sel?.id, sel?.language]);
-  const pickImage = (url: string, extra: boolean) => {
-    if (!sel) return;
-    if (!extra) return patch({ image_url: url, extra_images: (sel.extra_images || []).filter((u) => u !== url) });
-    const cur = sel.extra_images || [];
-    patch({ extra_images: cur.includes(url) ? cur.filter((u) => u !== url) : [...cur, url].slice(0, 3) });
-  };
   useEffect(() => { if (sel) { refreshPreview(sel); refreshCount(sel.audience); } else setPreview(''); }, [sel?.id]);
   useEffect(() => { if (sel) { setViewLanguage(sel.language); refreshPreview(sel); refreshCount(sel.audience); } }, [sel?.language]);
 
@@ -138,6 +132,8 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
   };
 
   const editable = sel?.status === 'draft';
+  const savedCampaign = list.find((campaign) => campaign.id === sel?.id);
+  const photosUnsaved = !!sel && !!savedCampaign && (sel.image_url !== savedCampaign.image_url || JSON.stringify(sel.extra_images || []) !== JSON.stringify(savedCampaign.extra_images || []));
   const versionsCurrent = !!sel && sel.translation_source === source(sel);
   const viewVersion = sel && viewLanguage !== sel.language ? sel.translations?.[viewLanguage] : sel;
   const missingLanguages = sel ? Object.keys(counts).filter((l) => l !== sel.language && (!versionsCurrent || !sel.translations?.[l])) : [];
@@ -197,21 +193,8 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
                   <div><Label>Oggetto</Label><Input disabled={!editable} value={sel.subject} onChange={(e) => patch({ subject: e.target.value })} /></div>
                   <div><Label>Anteprima (preheader)</Label><Input disabled={!editable} value={sel.preheader} onChange={(e) => patch({ preheader: e.target.value })} /></div>
                   <div><Label>Testo</Label><Textarea disabled={!editable} rows={9} value={sel.body} onChange={(e) => patch({ body: e.target.value })} /></div>
-                  <div className="space-y-2"><Label>Foto dal sito</Label>
-                    <p className="text-xs text-muted-foreground">Clic = foto principale · clic destro = aggiungi/togli tra le foto aggiuntive (max 3)</p>
-                    <Input value={assetFilter} onChange={(e) => setAssetFilter(e.target.value)} placeholder="Cerca: pronta consegna, Ottavio, rotante…" />
-                    <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-56 overflow-auto">
-                      {assets.filter((a) => a.label.toLowerCase().includes(assetFilter.toLowerCase())).map((a) => {
-                        const main = sel.image_url === a.url; const extra = (sel.extra_images || []).includes(a.url);
-                        return <Button key={a.url} type="button" variant="ghost" disabled={!editable} title={a.label} aria-label={a.label}
-                          onClick={() => pickImage(a.url, false)} onContextMenu={(e) => { e.preventDefault(); pickImage(a.url, true); }}
-                          className={`relative h-auto p-0 aspect-square rounded overflow-hidden border-2 ${main ? 'border-primary' : extra ? 'border-accent-foreground' : 'border-transparent'}`}>
-                          <img src={a.url} alt={a.label} loading="lazy" className="w-full h-full object-cover" />
-                          {(main || extra) && <span className="absolute top-0.5 left-0.5 text-[10px] px-1 rounded bg-background">{main ? 'Principale' : '+'}</span>}
-                        </Button>;
-                      })}
-                    </div>
-                  </div>
+                  <NewsletterPhotoPicker key={sel.id} assets={assets} imageUrl={sel.image_url} extraImages={sel.extra_images || []}
+                    disabled={!editable || !!busy} unsaved={photosUnsaved} onChange={patch} />
                   <div className="grid grid-cols-2 gap-2">
                     <div><Label>Testo pulsante</Label><Input disabled={!editable} value={sel.cta_label || ''} onChange={(e) => patch({ cta_label: e.target.value })} /></div>
                     <div><Label>Link pulsante</Label><Input disabled={!editable} value={sel.cta_url || ''} onChange={(e) => patch({ cta_url: e.target.value })} /></div>
@@ -257,7 +240,11 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
               </CardContent></Card>
             </div>
 
-            <Card className="min-w-0"><CardHeader className="pb-2"><CardTitle className="text-base">Anteprima</CardTitle>
+            <Card className="min-w-0 xl:sticky xl:top-4 xl:self-start"><CardHeader className="pb-2"><CardTitle className="text-base">Anteprima</CardTitle>
+              <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                <span>{(sel.image_url ? 1 : 0) + (sel.extra_images || []).length} foto selezionate</span>
+                {photosUnsaved && <Badge variant="outline">Modifiche non salvate</Badge>}
+              </div>
               <div className="flex flex-wrap gap-1 pt-2">{LANGS.filter(([l]) => l === sel.language || (versionsCurrent && sel.translations?.[l])).map(([l, name]) => (
                 <Button key={l} variant={viewLanguage === l ? 'secondary' : 'ghost'} size="sm" disabled={!!busy} onClick={() => { setViewLanguage(l); refreshPreview(sel, l); }}>{name}</Button>
               ))}</div>
