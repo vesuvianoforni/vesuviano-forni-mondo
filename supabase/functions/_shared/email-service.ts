@@ -1,5 +1,5 @@
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
-import { simpleParser } from 'npm:mailparser@3.9.3';
+import { emailText, headerReferences } from './email-content.ts';
 import { canSubmitSMTP, canAppendSent, chooseLead, nextUIDBatch, safeMailError } from './email-rules.ts';
 import { imapClient, smtpClient, composeEmail, rawMIME, findSent, hasExactMessage, closeIMAP, MAIL_ADDRESS } from './email-transport.ts';
 
@@ -174,28 +174,28 @@ export async function syncMailbox(admin: SupabaseClient, runId: string) {
         if (!mb) throw new Error('MAIL_OPERATION_FAILED');
         const validity = String(mb.uidValidity);
         const saved = checked(await admin.from('email_folder_cursors').select('*').eq('mailbox_id',box.id).eq('folder',folder).maybeSingle());
-        const range = nextUIDBatch(Number(saved?.last_uid || 0), saved?.uid_validity, validity, Number(mb.uidNext));
+        const range = nextUIDBatch(Number(saved?.last_uid || 0), saved?.uid_validity, validity, Number(mb.uidNext), Number(mb.uidNext));
         if (range.start > range.end) continue;
-        // Numeric bounded UID range avoids the IMAP n:* reverse-range trap. PEEK leaves read flags untouched.
-        const entries = await client.fetchAll(`${range.start}:${range.end}`, { uid: true, source: true, envelope: true, internalDate: true, size: true }, { uid: true });
+        const uids = await client.search({ uid: `${range.start}:${range.end}` }, { uid: true });
+        if (!Array.isArray(uids)) throw new Error('MAIL_SEARCH_FAILED');
+        const selected = uids.filter(uid => uid > range.cursor).sort((a,b)=>a-b).slice(0,5);
+        const entries = selected.length ? await client.fetchAll(selected, { uid: true, bodyStructure: true, envelope: true, internalDate: true, headers: ['References'] }, { uid: true }) : [];
         for (const entry of entries) {
-          if (!entry.source || entry.size > 20 * 1024 * 1024) throw new Error('MIME_TOO_LARGE');
-          const parsed = await simpleParser(entry.source, { skipHtmlToText: true, skipTextToHtml: true, skipImageLinks: true });
-          const messageId = parsed.messageId?.trim() || null;
+          const envelope = entry.envelope;
+          const messageId = envelope?.messageId?.trim() || null;
           const key = messageId || `${folder}:${validity}:${entry.uid}`;
           const old = checked(await admin.from('email_items').select('*').eq('mailbox_id',box.id).eq('message_key',key).maybeSingle());
           let item = old;
           if (!item) {
-            const recipientGroups = [parsed.to, parsed.cc].flatMap(g => Array.isArray(g) ? g : g ? [g] : []);
-            const recipients = recipientGroups.flatMap(g => g.value.map(a => a.address?.toLowerCase()).filter(Boolean));
-            const sender = parsed.from?.value[0]?.address?.toLowerCase() || '';
+            const recipients = [...(envelope?.to || []), ...(envelope?.cc || [])].map(a => a.address?.toLowerCase()).filter(Boolean);
+            const sender = envelope?.from?.[0]?.address?.toLowerCase() || '';
             const outbound = sender === MAIL_ADDRESS || folder === sent;
             const outgoing = outbound && messageId ? checked(await admin.from('email_outbox').select('lead_id,crm_message_id').eq('mailbox_id',box.id).eq('message_id',messageId).maybeSingle()) : null;
             item = checked(await admin.from('email_items').upsert({ mailbox_id: box.id, message_key: key, message_id: messageId,
-              in_reply_to: parsed.inReplyTo || null, reference_ids: Array.isArray(parsed.references) ? parsed.references : parsed.references ? [parsed.references] : [],
-              sender, recipients, subject: parsed.subject || '', body: (parsed.text || '').slice(0,100000),
-              direction: outbound ? 'outbound' : 'inbound', sent_at: (parsed.date || entry.internalDate || new Date()).toISOString(),
-              attachment_names: parsed.attachments.map(a => a.filename || 'Allegato'),
+              in_reply_to: envelope?.inReplyTo || null, reference_ids: headerReferences(entry.headers),
+              sender, recipients, subject: envelope?.subject || '', body: await emailText(client,entry),
+              direction: outbound ? 'outbound' : 'inbound', sent_at: new Date(envelope?.date || entry.internalDate || Date.now()).toISOString(),
+              attachment_names: [],
               lead_id: outgoing?.lead_id || null, crm_message_id: outgoing?.crm_message_id || null,
             }, { onConflict: 'mailbox_id,message_key' }).select().single());
           }
@@ -203,7 +203,7 @@ export async function syncMailbox(admin: SupabaseClient, runId: string) {
           processed++;
         }
         // Cursor advances only after every row in this bounded range persisted successfully.
-        checked(await admin.from('email_folder_cursors').upsert({ mailbox_id: box.id, folder, uid_validity: validity, last_uid: range.end }, { onConflict: 'mailbox_id,folder' }));
+        checked(await admin.from('email_folder_cursors').upsert({ mailbox_id: box.id, folder, uid_validity: validity, last_uid: selected.length ? selected[selected.length-1] : range.end }, { onConflict: 'mailbox_id,folder' }));
       } finally { lock.release(); }
     }
     const unlinked = checked(await admin.from('email_items').select('*').eq('mailbox_id',box.id).is('crm_message_id',null).order('created_at', { ascending: false }).limit(25));
