@@ -61,14 +61,14 @@ export function renderNewsletter(c: Campaign, unsubscribeUrl: string) {
   const whatsappLabel = newsletterWhatsAppLabel(c.language);
   const isWhatsAppCta = cta?.split('?')[0].replace(/\/$/, '') === whatsappUrl;
   const extras = (c.extra_images || []).map(safeUrl).filter(Boolean).slice(0, 3) as string[];
-  const extraRow = extras.length ? `<tr><td style="padding:0 28px 24px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${extras.map((u) => `<td width="${Math.floor(100 / extras.length)}%" style="padding:0 4px;"><img src="${escapeEmail(u)}" alt="" style="display:block;width:100%;height:auto;border:0;border-radius:4px;"></td>`).join('')}</tr></table></td></tr>` : '';
+  const extraRow = extras.length ? `<tr data-newsletter-extra-photos><td style="padding:0 28px 24px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${extras.map((u) => `<td width="${Math.floor(100 / extras.length)}%" style="padding:0 4px;"><img src="${escapeEmail(u)}" alt="" style="display:block;width:100%;height:auto;border:0;border-radius:4px;"></td>`).join('')}</tr></table></td></tr>` : '';
   const paragraphs = c.body.replace(/\r\n/g, '\n').split(/\n\n+/).map((p) => `<p style="margin:0 0 18px;line-height:1.7;">${escapeEmail(p).replace(/\n/g, '<br>')}</p>`).join('');
   const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light"></head>
 <body style="margin:0;padding:0;background:${theme.background};font-family:Arial,Helvetica,sans-serif;color:${theme.ink};">
 <div style="display:none;max-height:0;overflow:hidden;">${escapeEmail(c.preheader)}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${theme.background};"><tr><td align="center" style="padding:24px 12px;">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:${theme.paper};">
-<tr><td align="center" bgcolor="${theme.header}" style="padding:20px 28px;background-color:${theme.header};background-image:linear-gradient(${theme.header},${theme.header});border-bottom:3px solid ${theme.brand};">
+<tr data-newsletter-header><td align="center" bgcolor="${theme.header}" style="padding:20px 28px;background-color:${theme.header};background-image:linear-gradient(${theme.header},${theme.header});border-bottom:3px solid ${theme.brand};">
 <table role="presentation" cellpadding="0" cellspacing="0" align="center"><tr><td bgcolor="${theme.header}" style="background-color:${theme.header};background-image:linear-gradient(${theme.header},${theme.header});">
 <a href="${contact.website}" style="text-decoration:none;"><img src="${EMAIL_LOGO.replace('https://vesuvianoforni.com/', 'https://www.vesuvianoforni.com/')}" width="140" height="90" alt="Vesuviano Forni" style="display:block;width:140px;height:90px;border:0;"></a>
 </td></tr></table></td></tr>

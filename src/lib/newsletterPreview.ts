@@ -22,13 +22,15 @@ export function updateNewsletterPreviewPhotos(html: string, imageUrl: string | n
     img.style.cssText = 'display:block;width:100%;max-width:600px;height:auto;border:0;';
     cell.append(img); row.append(cell); rows.firstElementChild?.after(row);
   }
-  // Extra photos are the only image-bearing nested table after the main photo.
+  // Target photo rows explicitly; never remove the image-bearing brand header.
   for (const row of Array.from(rows.children)) {
-    if (row.querySelector('td > table img')) row.remove();
+    if (row.hasAttribute('data-newsletter-header') || row.querySelector('img[alt="Vesuviano Forni"]')) continue;
+    if (row.hasAttribute('data-newsletter-extra-photos') || row.querySelector('td > table img')) row.remove();
   }
   const extras = extraImages.map(safe).filter((url): url is string => !!url && url !== main).slice(0, 3);
   if (extras.length) {
     const row = doc.createElement('tr');
+    row.setAttribute('data-newsletter-extra-photos', '');
     const cell = doc.createElement('td');
     cell.style.cssText = 'padding:0 28px 24px;';
     const grid = doc.createElement('table');
