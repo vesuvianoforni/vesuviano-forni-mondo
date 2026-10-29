@@ -876,9 +876,12 @@ export type Database = {
           created_at: string
           crm_message_id: string | null
           direction: string
+          folder: string | null
           id: string
+          imap_uid: number | null
           in_reply_to: string | null
           lead_id: string | null
+          link_checked_at: string | null
           mailbox_id: string
           message_id: string | null
           message_key: string
@@ -887,6 +890,7 @@ export type Database = {
           sender: string
           sent_at: string
           subject: string
+          uid_validity: string | null
           updated_at: string
         }
         Insert: {
@@ -895,9 +899,12 @@ export type Database = {
           created_at?: string
           crm_message_id?: string | null
           direction: string
+          folder?: string | null
           id?: string
+          imap_uid?: number | null
           in_reply_to?: string | null
           lead_id?: string | null
+          link_checked_at?: string | null
           mailbox_id: string
           message_id?: string | null
           message_key: string
@@ -906,6 +913,7 @@ export type Database = {
           sender: string
           sent_at: string
           subject?: string
+          uid_validity?: string | null
           updated_at?: string
         }
         Update: {
@@ -914,9 +922,12 @@ export type Database = {
           created_at?: string
           crm_message_id?: string | null
           direction?: string
+          folder?: string | null
           id?: string
+          imap_uid?: number | null
           in_reply_to?: string | null
           lead_id?: string | null
+          link_checked_at?: string | null
           mailbox_id?: string
           message_id?: string | null
           message_key?: string
@@ -925,6 +936,7 @@ export type Database = {
           sender?: string
           sent_at?: string
           subject?: string
+          uid_validity?: string | null
           updated_at?: string
         }
         Relationships: [

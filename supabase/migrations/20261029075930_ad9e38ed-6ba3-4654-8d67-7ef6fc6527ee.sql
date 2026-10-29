@@ -1,0 +1,4 @@
+ALTER POLICY "Sales read mailbox messages" ON public.email_items USING (public.has_role(auth.uid(),'admin') OR (lead_id IS NOT NULL AND public.has_role(auth.uid(),'commerciale')));
+ALTER TABLE public.email_items ADD COLUMN folder text, ADD COLUMN uid_validity text, ADD COLUMN imap_uid bigint, ADD COLUMN link_checked_at timestamptz;
+CREATE UNIQUE INDEX email_items_physical_unique ON public.email_items(mailbox_id,folder,uid_validity,imap_uid) WHERE folder IS NOT NULL;
+CREATE INDEX email_outbox_repairs ON public.email_outbox(mailbox_id,copy_next_attempt_at) WHERE smtp_status='accepted' AND copy_status NOT IN ('found','appended');
