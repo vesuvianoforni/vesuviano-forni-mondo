@@ -18,5 +18,6 @@
 - [x] Sezione dedicata "Bruno AI" nel menu ERP (`/erp/bruno`): elenco clienti con coda di follow-up per fase, filtri fase/pipeline/ricerca e pannello comunicazioni; click sul lead nel CRM apre ora la scheda cliente (Riepilogo / Comunicazioni / Configuratore). 20 test e flussi UI verificati a 1280 px con soli dati di prova (accesso reale non disponibile)
 - [ ] Collegare WhatsApp API di Bruno (connettore WhatsApp) — attende collegamento numero
 - [ ] Collegare WaSender di Gennaro (chiave WASENDER_API_KEY) — attende chiave
-- [ ] Sincronizzazione IMAP/SMTP info@vesuvianoforni.com: invio confermato, MIME in Inviata, deduplicazione, conversazioni CRM, log e sincronizzazione periodica — attende credenziali del gestore
+- [x] Sincronizzazione IMAP/SMTP info@vesuvianoforni.com: credenziali protette, invio con outbox e copia MIME separata in Inviata, deduplicazione fisica/logica, conversazioni CRM, log e controllo ogni 15 minuti; connessioni e prime importazioni reali verificate
+- [ ] Verifica invio SMTP + APPEND con messaggio reale dal CRM — attende invio di prova dell'utente: sessione browser autenticata non disponibile su Supabase esterno
 - [ ] Ricezione messaggi in entrata e follow-up automatici programmati

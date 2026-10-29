@@ -1,6 +1,7 @@
 export type SubmissionState = 'pending' | 'sending' | 'accepted' | 'rejected' | 'unknown';
 export const canSubmitSMTP = (state: SubmissionState) => state === 'pending';
 export const canAppendSent = (state: SubmissionState, copy: string) => state === 'accepted' && !['found', 'appended'].includes(copy);
+export const nextExistingUIDs = (uids:number[],cursor:number,size=5) => uids.filter(uid=>uid>cursor).sort((a,b)=>a-b).slice(0,size);
 
 type Folder = { path: string; specialUse?: string; specialUseSource?: string; flags: Set<string> };
 export function discoverSent(folders: Folder[], saved?: string | null): string {
@@ -29,6 +30,6 @@ export function safeMailError(error: unknown): string {
   if (/certificate|cert_|tls/i.test(e?.code || '')) return 'MAIL_TLS_FAILED';
   if (e?.code === 'ETIMEDOUT' || e?.code === 'ETIMEOUT') return 'MAIL_TIMEOUT';
   if (e?.code === 'ECONNREFUSED') return 'MAIL_CONNECTION_REFUSED';
-  const known = ['SENT_FOLDER_AMBIGUOUS','SMTP_PORT_UNSUPPORTED','IMAP_PORT_UNSUPPORTED','MAIL_CONFIG_MISSING','MAILBOX_DISABLED','MAILBOX_BUSY','SMTP_UNKNOWN','SENT_COPY_UNKNOWN','MIME_TOO_LARGE','MAIL_SEARCH_FAILED'];
+  const known = ['SENT_FOLDER_AMBIGUOUS','SMTP_PORT_UNSUPPORTED','IMAP_PORT_UNSUPPORTED','MAIL_CONFIG_MISSING','MAILBOX_DISABLED','MAILBOX_BUSY','SMTP_UNKNOWN','SENT_COPY_UNKNOWN','MIME_TOO_LARGE','MAIL_SEARCH_FAILED','MAIL_IDEMPOTENCY_CONFLICT','MAIL_DB_FAILED'];
   return known.includes(e?.message || '') ? String(e.message) : 'MAIL_OPERATION_FAILED';
 }
