@@ -197,8 +197,7 @@ export async function syncMailbox(admin: SupabaseClient, runId: string) {
         const validity = String(mb.uidValidity);
         const saved = checked(await admin.from('email_folder_cursors').select('*').eq('mailbox_id',box.id).eq('folder',folder).maybeSingle());
         const range = nextUIDBatch(Number(saved?.last_uid || 0), saved?.uid_validity, validity, Number(mb.uidNext), Number(mb.uidNext));
-        if (range.start > range.end) continue;
-        const uids = await client.search({ uid: `${range.start}:${range.end}` }, { uid: true });
+        const uids = range.start>range.end ? [] : await client.search({ uid: `${range.start}:${range.end}` }, { uid: true });
         if (!Array.isArray(uids)) throw new Error('MAIL_SEARCH_FAILED');
         const selected = nextExistingUIDs(uids,range.cursor);
         const recentCursor=saved?.uid_validity===validity ? Number(saved?.latest_uid||0) : 0;
