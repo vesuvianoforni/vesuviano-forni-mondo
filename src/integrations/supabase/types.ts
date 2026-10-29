@@ -1363,6 +1363,8 @@ export type Database = {
           status: string
           subject: string
           title: string
+          translation_source: string | null
+          translations: Json
           updated_at: string
         }
         Insert: {
@@ -1388,6 +1390,8 @@ export type Database = {
           status?: string
           subject?: string
           title?: string
+          translation_source?: string | null
+          translations?: Json
           updated_at?: string
         }
         Update: {
@@ -1413,6 +1417,8 @@ export type Database = {
           status?: string
           subject?: string
           title?: string
+          translation_source?: string | null
+          translations?: Json
           updated_at?: string
         }
         Relationships: []
@@ -1424,6 +1430,7 @@ export type Database = {
           email: string
           error: string | null
           id: string
+          language: string
           lead_id: string | null
           resend_id: string | null
           sent_at: string | null
@@ -1435,6 +1442,7 @@ export type Database = {
           email: string
           error?: string | null
           id?: string
+          language?: string
           lead_id?: string | null
           resend_id?: string | null
           sent_at?: string | null
@@ -1446,6 +1454,7 @@ export type Database = {
           email?: string
           error?: string | null
           id?: string
+          language?: string
           lead_id?: string | null
           resend_id?: string | null
           sent_at?: string | null

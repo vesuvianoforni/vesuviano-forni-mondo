@@ -1,0 +1,2 @@
+ALTER TABLE public.newsletter_campaigns ADD COLUMN IF NOT EXISTS translations jsonb NOT NULL DEFAULT '{}'::jsonb, ADD COLUMN IF NOT EXISTS translation_source text;
+ALTER TABLE public.newsletter_recipients ADD COLUMN IF NOT EXISTS language text NOT NULL DEFAULT 'it';
