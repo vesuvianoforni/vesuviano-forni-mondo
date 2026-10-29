@@ -60,6 +60,11 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
 
   useEffect(() => {
     setText(""); setSubject(""); setReasoning(null); setAiDraft(false);
+    emailOperation.current=null;
+    try {
+      const saved=sessionStorage.getItem(`crm-email-operation:${lead.id}`);
+      if(saved){const operation=JSON.parse(saved);if(typeof operation.key==='string'&&typeof operation.draft==='string')emailOperation.current=operation;}
+    } catch { /* storage is optional; server still owns delivery idempotency */ }
     setMode(lead.bruno_mode || "draft"); setPausedUntil(lead.bruno_paused_until ?? null);
     load(lead.id);
     const ch = supabase.channel(`crm-msg-${lead.id}-${Math.random().toString(36).slice(2)}`)
@@ -93,11 +98,13 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
     try {
       const draft = JSON.stringify([lead.id, subject || 'Vesuviano Forni', text.trim()]);
       if (channel === 'email' && emailOperation.current?.draft !== draft) emailOperation.current = { key: crypto.randomUUID(), draft };
+      if(channel==='email'&&emailOperation.current){try {sessionStorage.setItem(`crm-email-operation:${lead.id}`,JSON.stringify(emailOperation.current));}catch{/* optional storage */}}
       const result = await invoke({ action: "send", lead_id: lead.id, channel, body: text.trim(), subject: channel === "email" ? subject || undefined : undefined, ai_generated: aiDraft,
         ...(channel === 'email' ? { idempotency_key: emailOperation.current?.key } : {}) });
       toast({ title: channel === "note" ? "Nota salvata" : "Messaggio inviato",
         description: channel === 'email' && !['found','appended'].includes(result.copy_status) ? 'Email accettata dal server; copia in Posta inviata da verificare. Non verrà reinviata.' : undefined });
       emailOperation.current = null;
+      if(channel==='email'){try {sessionStorage.removeItem(`crm-email-operation:${lead.id}`);}catch{/* optional storage */}}
       setText(""); setSubject(""); setReasoning(null); setAiDraft(false);
       if (channel === "wasender" && !aiDraft) setPausedUntil(new Date(Date.now() + 48 * 3600e3).toISOString());
     } catch (e) {

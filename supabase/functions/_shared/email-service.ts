@@ -1,6 +1,6 @@
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { emailText, headerReferences } from './email-content.ts';
-import { canSubmitSMTP, canAppendSent, chooseLead, nextUIDBatch, nextExistingUIDs, safeMailError } from './email-rules.ts';
+import { canSubmitSMTP, canAppendSent, chooseLead, nextUIDBatch, nextExistingUIDs, recentUIDs, safeMailError } from './email-rules.ts';
 import { imapClient, smtpClient, composeEmail, rawMIME, findSent, hasExactMessage, closeIMAP, MAIL_ADDRESS } from './email-transport.ts';
 
 const checked = <T>(result: { data: T; error: unknown }): T => { if (result.error) throw new Error('MAIL_DB_FAILED'); return result.data; };
@@ -197,11 +197,19 @@ export async function syncMailbox(admin: SupabaseClient, runId: string) {
         const validity = String(mb.uidValidity);
         const saved = checked(await admin.from('email_folder_cursors').select('*').eq('mailbox_id',box.id).eq('folder',folder).maybeSingle());
         const range = nextUIDBatch(Number(saved?.last_uid || 0), saved?.uid_validity, validity, Number(mb.uidNext), Number(mb.uidNext));
-        if (range.start > range.end) continue;
-        const uids = await client.search({ uid: `${range.start}:${range.end}` }, { uid: true });
+        const uids = range.start>range.end ? [] : await client.search({ uid: `${range.start}:${range.end}` }, { uid: true });
         if (!Array.isArray(uids)) throw new Error('MAIL_SEARCH_FAILED');
         const selected = nextExistingUIDs(uids,range.cursor);
-        const entries = selected.length ? await client.fetchAll(selected, { uid: true, bodyStructure: true, envelope: true, internalDate: true, headers: ['References'] }, { uid: true }) : [];
+        const recentCursor=saved?.uid_validity===validity ? Number(saved?.latest_uid||0) : 0;
+        let freshUIDs=uids;
+        if(recentCursor>0 && recentCursor<Number(mb.uidNext)-1){
+          const fresh=await client.search({uid:`${recentCursor+1}:${Number(mb.uidNext)-1}`},{uid:true});
+          if(!Array.isArray(fresh))throw new Error('MAIL_SEARCH_FAILED');
+          freshUIDs=fresh;
+        }
+        const recent=recentUIDs(freshUIDs,recentCursor);
+        const batch=[...new Set([...recent,...selected])];
+        const entries = batch.length ? await client.fetchAll(batch, { uid: true, bodyStructure: true, envelope: true, internalDate: true, headers: ['References'] }, { uid: true }) : [];
         for (const entry of entries) {
           const envelope = entry.envelope;
           const messageId = envelope?.messageId?.trim() || null;
@@ -228,7 +236,8 @@ export async function syncMailbox(admin: SupabaseClient, runId: string) {
           processed++;
         }
         // Cursor advances only after every row in this bounded range persisted successfully.
-        checked(await admin.from('email_folder_cursors').upsert({ mailbox_id: box.id, folder, uid_validity: validity, last_uid: selected.length ? selected[selected.length-1] : range.end }, { onConflict: 'mailbox_id,folder' }));
+        checked(await admin.from('email_folder_cursors').upsert({ mailbox_id: box.id, folder, uid_validity: validity, last_uid: selected.length ? selected[selected.length-1] : range.end,
+          latest_uid:recent.length ? recent[recent.length-1] : recentCursor }, { onConflict: 'mailbox_id,folder' }));
       } finally { lock.release(); }
     }
     const unlinked = checked(await admin.from('email_items').select('*').eq('mailbox_id',box.id).is('crm_message_id',null).order('link_checked_at', { ascending: true,nullsFirst:true }).limit(25));

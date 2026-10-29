@@ -1,0 +1,1 @@
+ALTER TABLE public.email_folder_cursors ADD COLUMN latest_uid bigint NOT NULL DEFAULT 0;

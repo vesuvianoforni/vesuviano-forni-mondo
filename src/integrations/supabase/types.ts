@@ -793,6 +793,7 @@ export type Database = {
           folder: string
           id: string
           last_uid: number
+          latest_uid: number
           mailbox_id: string
           uid_validity: string
           updated_at: string
@@ -802,6 +803,7 @@ export type Database = {
           folder: string
           id?: string
           last_uid?: number
+          latest_uid?: number
           mailbox_id: string
           uid_validity: string
           updated_at?: string
@@ -811,6 +813,7 @@ export type Database = {
           folder?: string
           id?: string
           last_uid?: number
+          latest_uid?: number
           mailbox_id?: string
           uid_validity?: string
           updated_at?: string
