@@ -41,7 +41,8 @@ async function appendCopy(admin: SupabaseClient, row: any, client: ReturnType<ty
     checked(await admin.from('email_outbox').update({ copy_status: 'unknown', last_error: 'SENT_COPY_UNKNOWN' }).eq('id', row.id));
     return;
   }
-  checked(await admin.from('email_outbox').update({ append_attempted_at: new Date().toISOString(), copy_status: 'unknown' }).eq('id', row.id));
+  const claimed = checked(await admin.from('email_outbox').update({ append_attempted_at: new Date().toISOString(), copy_status: 'unknown' }).eq('id', row.id).is('append_attempted_at',null).eq('smtp_status','accepted').select('id').maybeSingle());
+  if (!claimed) return;
   const appended = await client.append(sentFolder, rawMIME(row.mime), ['\\Seen'], new Date(row.smtp_accepted_at || row.created_at));
   if (!appended) throw new Error('SENT_COPY_UNKNOWN');
   checked(await admin.from('email_outbox').update({ copy_status: 'appended', last_error: null }).eq('id', row.id));
@@ -61,9 +62,9 @@ export async function sendMailboxEmail(admin: SupabaseClient, input: { lead_id: 
     if (inserted.error?.code === '23505') row = checked(await admin.from('email_outbox').select('*').eq('mailbox_id', box.id).eq('idempotency_key', input.idempotency_key).single());
     else row = checked(inserted);
   }
-  const lease = await acquire(admin, box.id);
   const smtp = smtpClient();
   const client = imapClient();
+  const lease = await acquire(admin, box.id);
   let smtpStarted = false;
   try {
     // Re-read after acquiring the lock; stale callers may never submit the same operation twice.
@@ -79,7 +80,8 @@ export async function sendMailboxEmail(admin: SupabaseClient, input: { lead_id: 
       const sent = await findSent(client, box.sent_folder);
       checked(await admin.from('email_mailboxes').update({ sent_folder: sent }).eq('id', box.id));
       await smtp.verify();
-      checked(await admin.from('email_outbox').update({ smtp_status: 'sending' }).eq('id', row.id));
+      const claim = checked(await admin.from('email_outbox').update({ smtp_status: 'sending' }).eq('id', row.id).eq('smtp_status','pending').select('id').maybeSingle());
+      if (!claim) throw new Error('SMTP_UNKNOWN');
       smtpStarted = true;
       const result = await smtp.sendMail({ envelope: { from: MAIL_ADDRESS, to: [row.recipient] }, raw: rawMIME(row.mime) });
       if (!result.accepted?.some((a: string) => String(a).toLowerCase() === row.recipient.toLowerCase()) || result.rejected?.length) throw new Error('SMTP_UNKNOWN');
@@ -130,8 +132,17 @@ async function linkItem(admin: SupabaseClient, item: any) {
     if (relatedIds.length === 1 && ids.includes(String(relatedIds[0]))) threadLead = String(relatedIds[0]);
   }
   const leadId = chooseLead(ids, threadLead);
-  if (!leadId) return false; // no arbitrary client creation or matching ambiguous email addresses
-  const external = `imap:${item.mailbox_id}:${item.message_key}`;
+  if (!leadId) {
+    checked(await admin.from('email_items').update({link_checked_at:new Date().toISOString()}).eq('id',item.id));
+    return false;
+  }
+  // Logical copies are deduplicated only for a matching participant, message id and content.
+  if(item.message_id){
+    const same=checked(await admin.from('email_items').select('crm_message_id,sender,subject,body').eq('mailbox_id',item.mailbox_id).eq('message_id',item.message_id).eq('lead_id',leadId).not('crm_message_id','is',null).limit(10));
+    const duplicate=(same||[]).find((s:any)=>s.sender===item.sender&&s.subject===item.subject&&s.body===item.body);
+    if(duplicate){checked(await admin.from('email_items').update({lead_id:leadId,crm_message_id:duplicate.crm_message_id,link_checked_at:new Date().toISOString()}).eq('id',item.id));return true;}
+  }
+  const external = `imap-item:${item.id}`;
   let msg = checked(await admin.from('crm_messages').select('id').eq('channel', 'email').eq('external_id', external).maybeSingle());
   if (!msg) {
     const inserted = await admin.from('crm_messages').insert({ lead_id: leadId, channel: 'email', direction: item.direction,
@@ -146,10 +157,16 @@ async function linkItem(admin: SupabaseClient, item: any) {
 
 export async function syncMailbox(admin: SupabaseClient, runId: string) {
   const box = await mailbox(admin);
-  if (!box.enabled) return;
-  let lease: string;
-  try { lease = await acquire(admin, box.id); } catch { return; }
+  if (!box.enabled) {
+    await admin.from('email_sync_runs').update({status:'failed',error_code:'MAILBOX_DISABLED',finished_at:new Date().toISOString()}).eq('id',runId).eq('status','queued');
+    return;
+  }
   const client = imapClient();
+  let lease: string;
+  try { lease = await acquire(admin, box.id); } catch {
+    await admin.from('email_sync_runs').update({status:'failed',error_code:'MAILBOX_BUSY',finished_at:new Date().toISOString()}).eq('id',runId).eq('status','queued');
+    client.close(); return;
+  }
   const started = Date.now();
   let processed = 0, linked = 0;
   try {
@@ -159,12 +176,15 @@ export async function syncMailbox(admin: SupabaseClient, runId: string) {
     const sent = await findSent(client, box.sent_folder);
     checked(await admin.from('email_mailboxes').update({ sent_folder: sent }).eq('id',box.id));
     // Repairs are copy-only. Accepted SMTP is never re-run, even if the process previously crashed.
-    const accepted = checked(await admin.from('email_outbox').select('*').eq('mailbox_id',box.id).eq('smtp_status','accepted').order('created_at').limit(100));
-    for (const row of (accepted || []).filter((r: any) => !r.crm_message_id || !['found','appended'].includes(r.copy_status)).slice(0,5)) {
+    const accepted = checked(await admin.from('email_outbox').select('*').eq('mailbox_id',box.id).eq('smtp_status','accepted').not('copy_status','in','(found,appended)').or(`copy_next_attempt_at.is.null,copy_next_attempt_at.lte.${new Date().toISOString()}`).order('updated_at').limit(5));
+    const projections = checked(await admin.from('email_outbox').select('*').eq('mailbox_id',box.id).eq('smtp_status','accepted').is('crm_message_id',null).limit(5));
+    const repairs=[...new Map([...(accepted||[]),...(projections||[])].map((r:any)=>[r.id,r])).values()];
+    for (const row of repairs) {
       const msg = await projectOutgoing(admin, row);
       checked(await admin.from('email_outbox').update({ crm_message_id: msg.id }).eq('id',row.id));
       try { await appendCopy(admin, row, client, sent); }
       catch (e) { checked(await admin.from('email_outbox').update({ last_error: safeMailError(e) }).eq('id',row.id)); }
+      checked(await admin.from('email_outbox').update({copy_next_attempt_at:new Date(Date.now()+15*60000).toISOString()}).eq('id',row.id));
     }
     for (const folder of [...new Set(['INBOX', sent])]) {
       if (Date.now() - started > 75000) break;
@@ -183,17 +203,20 @@ export async function syncMailbox(admin: SupabaseClient, runId: string) {
         for (const entry of entries) {
           const envelope = entry.envelope;
           const messageId = envelope?.messageId?.trim() || null;
-          const key = messageId || `${folder}:${validity}:${entry.uid}`;
+          const key = `${folder}:${validity}:${entry.uid}`;
           const old = checked(await admin.from('email_items').select('*').eq('mailbox_id',box.id).eq('message_key',key).maybeSingle());
           let item = old;
           if (!item) {
             const recipients = [...(envelope?.to || []), ...(envelope?.cc || [])].map(a => a.address?.toLowerCase()).filter(Boolean);
             const sender = envelope?.from?.[0]?.address?.toLowerCase() || '';
             const outbound = sender === MAIL_ADDRESS || folder === sent;
-            const outgoing = outbound && messageId ? checked(await admin.from('email_outbox').select('lead_id,crm_message_id').eq('mailbox_id',box.id).eq('message_id',messageId).maybeSingle()) : null;
+            const foundOutgoing = folder===sent && sender===MAIL_ADDRESS && messageId ? checked(await admin.from('email_outbox').select('lead_id,crm_message_id,recipient,subject,body').eq('mailbox_id',box.id).eq('message_id',messageId).eq('smtp_status','accepted').maybeSingle()) : null;
+            const text=await emailText(client,entry);
+            const outgoing=foundOutgoing && recipients.includes(foundOutgoing.recipient.toLowerCase()) && foundOutgoing.subject===(envelope?.subject||'') && foundOutgoing.body.trim()===text.trim() ? foundOutgoing : null;
             item = checked(await admin.from('email_items').upsert({ mailbox_id: box.id, message_key: key, message_id: messageId,
+              folder,uid_validity:validity,imap_uid:entry.uid,
               in_reply_to: envelope?.inReplyTo || null, reference_ids: headerReferences(entry.headers),
-              sender, recipients, subject: envelope?.subject || '', body: await emailText(client,entry),
+              sender, recipients, subject: envelope?.subject || '', body: text,
               direction: outbound ? 'outbound' : 'inbound', sent_at: new Date(envelope?.date || entry.internalDate || Date.now()).toISOString(),
               attachment_names: [],
               lead_id: outgoing?.lead_id || null, crm_message_id: outgoing?.crm_message_id || null,
@@ -206,7 +229,7 @@ export async function syncMailbox(admin: SupabaseClient, runId: string) {
         checked(await admin.from('email_folder_cursors').upsert({ mailbox_id: box.id, folder, uid_validity: validity, last_uid: selected.length ? selected[selected.length-1] : range.end }, { onConflict: 'mailbox_id,folder' }));
       } finally { lock.release(); }
     }
-    const unlinked = checked(await admin.from('email_items').select('*').eq('mailbox_id',box.id).is('crm_message_id',null).order('created_at', { ascending: false }).limit(25));
+    const unlinked = checked(await admin.from('email_items').select('*').eq('mailbox_id',box.id).is('crm_message_id',null).order('link_checked_at', { ascending: true,nullsFirst:true }).limit(25));
     for (const item of unlinked || []) if (await linkItem(admin,item)) linked++;
     const finished = new Date().toISOString();
     checked(await admin.from('email_mailboxes').update({ last_sync_at: finished, last_error: null }).eq('id',box.id));
