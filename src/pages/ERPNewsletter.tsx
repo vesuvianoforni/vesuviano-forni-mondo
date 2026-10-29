@@ -21,7 +21,7 @@ const STATUS: Record<string, string> = { draft: 'Bozza', sending: 'In invio', se
 
 type Campaign = {
   id: string; title: string; prompt: string | null; language: string; subject: string; preheader: string; body: string;
-  image_url: string | null; cta_label: string | null; cta_url: string | null; audience: { stages: string[]; countries: string[] };
+  image_url: string | null; extra_images: string[]; cta_label: string | null; cta_url: string | null; audience: { stages: string[]; countries: string[] };
   status: string; recipients_count: number; sent_count: number; failed_count: number; created_at: string; sent_at: string | null; last_error: string | null;
 };
 
@@ -43,6 +43,8 @@ export default function ERPNewsletter() {
   const [count, setCount] = useState<number | null>(null);
   const [testEmail, setTestEmail] = useState('');
   const [confirm, setConfirm] = useState(false);
+  const [assets, setAssets] = useState<{ url: string; label: string }[]>([]);
+  const [assetFilter, setAssetFilter] = useState('');
 
   const load = async () => {
     const { data } = await db.from('newsletter_campaigns').select('*').order('created_at', { ascending: false });
@@ -63,6 +65,16 @@ export default function ERPNewsletter() {
     setCount(null);
     try { setCount((await call({ action: 'audience', audience: a })).count); } catch (e: any) { toast.error(e.message); }
   };
+  useEffect(() => {
+    if (!sel) return;
+    call({ action: 'assets', language: sel.language }).then((r) => setAssets(r.images || [])).catch(() => setAssets([]));
+  }, [sel?.id, sel?.language]);
+  const pickImage = (url: string, extra: boolean) => {
+    if (!sel) return;
+    if (!extra) return patch({ image_url: url, extra_images: (sel.extra_images || []).filter((u) => u !== url) });
+    const cur = sel.extra_images || [];
+    patch({ extra_images: cur.includes(url) ? cur.filter((u) => u !== url) : [...cur, url].slice(0, 3) });
+  };
   useEffect(() => { if (sel) { refreshPreview(sel); refreshCount(sel.audience); } else setPreview(''); }, [sel?.id]);
 
   const create = async () => {
@@ -73,8 +85,8 @@ export default function ERPNewsletter() {
   const patch = (p: Partial<Campaign>) => sel && setSel({ ...sel, ...p });
   const save = async (c = sel) => {
     if (!c) return;
-    const { title, subject, preheader, body, image_url, cta_label, cta_url, audience, language, prompt } = c;
-    const { error } = await db.from('newsletter_campaigns').update({ title, subject, preheader, body, image_url, cta_label, cta_url, audience, language, prompt }).eq('id', c.id);
+    const { title, subject, preheader, body, image_url, extra_images, cta_label, cta_url, audience, language, prompt } = c;
+    const { error } = await db.from('newsletter_campaigns').update({ title, subject, preheader, body, image_url, extra_images, cta_label, cta_url, audience, language, prompt }).eq('id', c.id);
     if (error) throw error;
     await load(); await refreshPreview(c);
   };
@@ -134,7 +146,21 @@ export default function ERPNewsletter() {
                   <div><Label>Oggetto</Label><Input disabled={!editable} value={sel.subject} onChange={(e) => patch({ subject: e.target.value })} /></div>
                   <div><Label>Anteprima (preheader)</Label><Input disabled={!editable} value={sel.preheader} onChange={(e) => patch({ preheader: e.target.value })} /></div>
                   <div><Label>Testo</Label><Textarea disabled={!editable} rows={9} value={sel.body} onChange={(e) => patch({ body: e.target.value })} /></div>
-                  <div><Label>Foto (URL)</Label><Input disabled={!editable} value={sel.image_url || ''} onChange={(e) => patch({ image_url: e.target.value || null })} /></div>
+                  <div className="space-y-2"><Label>Foto dal sito</Label>
+                    <p className="text-xs text-muted-foreground">Clic = foto principale · clic destro = aggiungi/togli tra le foto aggiuntive (max 3)</p>
+                    <Input value={assetFilter} onChange={(e) => setAssetFilter(e.target.value)} placeholder="Cerca: pronta consegna, Ottavio, rotante…" />
+                    <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-56 overflow-auto">
+                      {assets.filter((a) => a.label.toLowerCase().includes(assetFilter.toLowerCase())).map((a) => {
+                        const main = sel.image_url === a.url; const extra = (sel.extra_images || []).includes(a.url);
+                        return <button key={a.url} type="button" disabled={!editable} title={a.label}
+                          onClick={() => pickImage(a.url, false)} onContextMenu={(e) => { e.preventDefault(); pickImage(a.url, true); }}
+                          className={`relative aspect-square rounded overflow-hidden border-2 ${main ? 'border-primary' : extra ? 'border-accent-foreground' : 'border-transparent'}`}>
+                          <img src={a.url} alt={a.label} loading="lazy" className="w-full h-full object-cover" />
+                          {(main || extra) && <span className="absolute top-0.5 left-0.5 text-[10px] px-1 rounded bg-background">{main ? 'Principale' : '+'}</span>}
+                        </button>;
+                      })}
+                    </div>
+                  </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div><Label>Testo pulsante</Label><Input disabled={!editable} value={sel.cta_label || ''} onChange={(e) => patch({ cta_label: e.target.value })} /></div>
                     <div><Label>Link pulsante</Label><Input disabled={!editable} value={sel.cta_url || ''} onChange={(e) => patch({ cta_url: e.target.value })} /></div>

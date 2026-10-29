@@ -1,0 +1,1 @@
+ALTER TABLE public.newsletter_campaigns ADD COLUMN IF NOT EXISTS extra_images jsonb NOT NULL DEFAULT '[]'::jsonb;

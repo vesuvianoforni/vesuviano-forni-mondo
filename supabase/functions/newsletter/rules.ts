@@ -44,13 +44,15 @@ const FOOTER: Record<string, { unsub: string; why: string }> = {
   es: { unsub: 'Darse de baja', why: 'Recibes este correo porque contactaste con Vesuviano Forni.' },
 };
 
-export type Campaign = { subject: string; preheader: string; body: string; image_url: string | null; cta_label: string | null; cta_url: string | null; language: string };
+export type Campaign = { subject: string; preheader: string; body: string; image_url: string | null; extra_images?: string[]; cta_label: string | null; cta_url: string | null; language: string };
 
 export function renderNewsletter(c: Campaign, unsubscribeUrl: string) {
   const f = FOOTER[c.language] || FOOTER.it;
   const safeUrl = (u: string | null) => (u && /^https:\/\//.test(u) ? u : null);
   const img = safeUrl(c.image_url);
   const cta = safeUrl(c.cta_url);
+  const extras = (c.extra_images || []).map(safeUrl).filter(Boolean).slice(0, 3) as string[];
+  const extraRow = extras.length ? `<tr><td style="padding:0 28px 24px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${extras.map((u) => `<td width="${Math.floor(100 / extras.length)}%" style="padding:0 4px;"><img src="${escapeEmail(u)}" alt="" style="display:block;width:100%;height:auto;border:0;border-radius:4px;"></td>`).join('')}</tr></table></td></tr>` : '';
   const paragraphs = c.body.replace(/\r\n/g, '\n').split(/\n\n+/).map((p) => `<p style="margin:0 0 18px;line-height:1.7;">${escapeEmail(p).replace(/\n/g, '<br>')}</p>`).join('');
   const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"></head>
 <body style="margin:0;padding:0;background:#f3f4f5;font-family:Arial,Helvetica,sans-serif;color:#242424;">
@@ -62,6 +64,7 @@ ${img ? `<tr><td><img src="${escapeEmail(img)}" width="600" alt="" style="displa
 <tr><td style="padding:30px 28px;font-size:15px;">${paragraphs}
 ${cta ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:8px 0 8px;"><tr><td style="background:#8B4513;border-radius:6px;"><a href="${escapeEmail(cta)}" style="display:inline-block;padding:14px 26px;color:#ffffff;font-weight:bold;text-decoration:none;font-size:15px;">${escapeEmail(c.cta_label || 'Scopri di più')}</a></td></tr></table>` : ''}
 </td></tr>
+${extraRow}
 <tr><td style="padding:20px 28px;background:#faf8f6;font-size:12px;line-height:1.6;color:#686868;">
 <strong style="color:#242424;">Vesuviano Forni</strong> · Tel. +39 081 1923 1684 · WhatsApp +39 350 928 6941 · <a href="mailto:info@vesuvianoforni.com" style="color:#686868;">info@vesuvianoforni.com</a><br>
 ${f.why} <a href="${escapeEmail(unsubscribeUrl)}" style="color:#686868;">${f.unsub}</a></td></tr>
