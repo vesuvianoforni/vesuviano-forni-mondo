@@ -34,7 +34,8 @@ export async function composeEmail(recipient: string, subject: string, text: str
   const built = await composer.sendMail({ from: { name: 'Vesuviano Forni', address: MAIL_ADDRESS }, to: recipient,
     envelope: { from: MAIL_ADDRESS, to: [recipient] }, subject, text, ...(html ? { html } : {}), messageId, date,
     ...(replyId ? { inReplyTo: replyId, references: [replyId] } : {}) });
-  return Buffer.from(built.message).toString('base64');
+  if (!Buffer.isBuffer(built.message)) throw new Error('MAIL_COMPOSE_FAILED');
+  return built.message.toString('base64');
 }
 export const rawMIME = (mime: string) => Buffer.from(mime, 'base64');
 export async function findSent(client: ImapFlow, saved?: string | null) {
