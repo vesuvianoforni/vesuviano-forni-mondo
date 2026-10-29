@@ -86,3 +86,6 @@ verify_jwt = false
 
 [functions.bruno-agent]
 verify_jwt = false
+
+[functions.newsletter]
+verify_jwt = false
