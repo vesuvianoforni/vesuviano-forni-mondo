@@ -51,5 +51,6 @@ export async function hasExactMessage(client: ImapFlow, folder: string, messageI
   } finally { lock.release(); }
 }
 export async function closeIMAP(client: ImapFlow) {
-  try { await client.logout(); } catch { client.close(); }
+  const timeout=setTimeout(()=>client.close(),3000);
+  try { await client.logout(); } catch { client.close(); } finally {clearTimeout(timeout);client.close();}
 }

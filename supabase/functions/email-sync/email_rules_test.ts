@@ -1,5 +1,6 @@
 import { assertEquals, assertThrows } from 'https://deno.land/std@0.224.0/assert/mod.ts';
-import { canSubmitSMTP, canAppendSent, discoverSent, nextUIDBatch, chooseLead, safeMailError } from '../_shared/email-rules.ts';
+import { canSubmitSMTP, canAppendSent, discoverSent, nextUIDBatch, nextExistingUIDs, chooseLead, safeMailError } from '../_shared/email-rules.ts';
+import { textPart } from '../_shared/email-content.ts';
 
 Deno.test('SMTP accepted emails are never resent',()=>assertEquals(canSubmitSMTP('accepted'),false));
 Deno.test('SMTP unknown acknowledgement is never resent',()=>assertEquals(canSubmitSMTP('unknown'),false));
@@ -15,3 +16,6 @@ Deno.test('Empty UID range does not scan older messages',()=>assertEquals(nextUI
 Deno.test('Duplicate email across clients is not arbitrarily linked',()=>assertEquals(chooseLead(['a','b']),null));
 Deno.test('Thread selects a known participant from matching clients',()=>assertEquals(chooseLead(['a','b'],'b'),'b'));
 Deno.test('Mail errors never reveal provider replies',()=>assertEquals(safeMailError({code:'EAUTH',message:'private provider response'}),'MAIL_AUTH_FAILED'));
+Deno.test('Sparse UID space progresses across actual messages',()=>assertEquals(nextExistingUIDs([10000,50,90000,10100,11000,12000],25),[50,10000,10100,11000,12000]));
+Deno.test('Email synchronization does not read attachments',()=>assertEquals(textPart({type:'multipart/mixed',childNodes:[{type:'application/pdf',disposition:'attachment',part:'2'},{type:'text/plain',part:'1'}]})?.part,'1'));
+Deno.test('Plain text is preferred over the HTML alternative',()=>assertEquals(textPart({type:'multipart/alternative',childNodes:[{type:'text/html',part:'1'},{type:'text/plain',part:'2'}]})?.part,'2'));

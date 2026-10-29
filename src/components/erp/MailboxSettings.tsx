@@ -20,6 +20,10 @@ const errors: Record<string,string> = {
   MAILBOX_BUSY:'La casella è già occupata da un invio o una sincronizzazione.',
   SMTP_UNKNOWN:'Esito SMTP non confermato: il messaggio non sarà reinviato automaticamente.',
   SENT_COPY_UNKNOWN:'La copia in Posta inviata non è confermata; l’email non verrà reinviata.',
+  WORKER_INTERRUPTED:'Controllo interrotto; riprenderà dalla prima email non elaborata.',
+  MAIL_OPERATION_FAILED:'Operazione non completata. Aggiorna lo stato della casella e controlla il registro.',
+  MAIL_DB_FAILED:'Salvataggio non confermato. Verifica lo stato prima di effettuare un nuovo invio.',
+  MAIL_IDEMPOTENCY_CONFLICT:'Questo invio è già registrato con un contenuto diverso.',
 };
 export const mailErrorLabel = (code:string) => errors[code] || code;
 type State = {

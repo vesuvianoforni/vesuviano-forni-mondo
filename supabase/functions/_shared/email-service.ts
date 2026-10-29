@@ -1,6 +1,6 @@
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { emailText, headerReferences } from './email-content.ts';
-import { canSubmitSMTP, canAppendSent, chooseLead, nextUIDBatch, safeMailError } from './email-rules.ts';
+import { canSubmitSMTP, canAppendSent, chooseLead, nextUIDBatch, nextExistingUIDs, safeMailError } from './email-rules.ts';
 import { imapClient, smtpClient, composeEmail, rawMIME, findSent, hasExactMessage, closeIMAP, MAIL_ADDRESS } from './email-transport.ts';
 
 const checked = <T>(result: { data: T; error: unknown }): T => { if (result.error) throw new Error('MAIL_DB_FAILED'); return result.data; };
@@ -65,6 +65,7 @@ export async function sendMailboxEmail(admin: SupabaseClient, input: { lead_id: 
   const smtp = smtpClient();
   const client = imapClient();
   const lease = await acquire(admin, box.id);
+  const deadline=setTimeout(()=>{smtp.close();client.close();},90000);
   let smtpStarted = false;
   try {
     // Re-read after acquiring the lock; stale callers may never submit the same operation twice.
@@ -110,7 +111,7 @@ export async function sendMailboxEmail(admin: SupabaseClient, input: { lead_id: 
     }
     throw e;
   } finally {
-    smtp.close(); await closeIMAP(client); await release(admin, box.id, lease);
+    clearTimeout(deadline);smtp.close(); await closeIMAP(client); await release(admin, box.id, lease);
   }
 }
 
@@ -168,6 +169,7 @@ export async function syncMailbox(admin: SupabaseClient, runId: string) {
     client.close(); return;
   }
   const started = Date.now();
+  const deadline=setTimeout(()=>client.close(),90000);
   let processed = 0, linked = 0;
   try {
     const run = checked(await admin.from('email_sync_runs').update({ status: 'running', started_at: new Date().toISOString() }).eq('id', runId).eq('mailbox_id', box.id).eq('status','queued').select('id').maybeSingle());
@@ -198,7 +200,7 @@ export async function syncMailbox(admin: SupabaseClient, runId: string) {
         if (range.start > range.end) continue;
         const uids = await client.search({ uid: `${range.start}:${range.end}` }, { uid: true });
         if (!Array.isArray(uids)) throw new Error('MAIL_SEARCH_FAILED');
-        const selected = uids.filter(uid => uid > range.cursor).sort((a,b)=>a-b).slice(0,5);
+        const selected = nextExistingUIDs(uids,range.cursor);
         const entries = selected.length ? await client.fetchAll(selected, { uid: true, bodyStructure: true, envelope: true, internalDate: true, headers: ['References'] }, { uid: true }) : [];
         for (const entry of entries) {
           const envelope = entry.envelope;
@@ -239,5 +241,5 @@ export async function syncMailbox(admin: SupabaseClient, runId: string) {
     console.error('Email sync failed', code, runId); // no hosts, credentials, MIME, recipients or provider responses
     await admin.from('email_mailboxes').update({ last_error: code }).eq('id',box.id);
     await admin.from('email_sync_runs').update({ status: 'failed', error_code: code, processed, linked, finished_at: new Date().toISOString() }).eq('id',runId);
-  } finally { await closeIMAP(client); await release(admin, box.id, lease); }
+  } finally { clearTimeout(deadline);await closeIMAP(client); await release(admin, box.id, lease); }
 }
