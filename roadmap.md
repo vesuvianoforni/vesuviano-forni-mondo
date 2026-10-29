@@ -24,6 +24,7 @@
 - [ ] Ricezione messaggi in entrata e follow-up automatici programmati
 
 ## Roberta AI (29 ott 2026)
+- [ ] Regole newsletter B2B nel prompt Roberta; prezzi soltanto su richiesta esplicita; proposte per ricorrenze speciali oltre alla cadenza ordinaria, sempre da approvare; test e verifica.
 - [x] Chiedi a Roberta: tema prima di generare, traduzioni IT/EN/FR/DE/ES con anteprima, lingua destinatario stimata da prefisso e fallback paese/bozza; invio bloccato con traduzioni mancanti o superate. 17 test superati, traduzione AI reale verificata senza invii, flusso completo con dati di prova verificato. Accesso autenticato reale resta indisponibile.
 - [x] Pagina dedicata /erp/roberta (menu "Roberta AI") con pilastri marketing e campagne newsletter integrate
 - [x] ERPNewsletter supporta modalità embedded
