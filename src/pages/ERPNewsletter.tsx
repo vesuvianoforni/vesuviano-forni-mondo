@@ -102,18 +102,19 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
   };
 
   return (
-    <div className="p-4 md:p-6 space-y-4">
+    <div className={embedded ? 'space-y-4' : 'p-4 md:p-6 space-y-4'}>
       <SEOHead title="Newsletter | ERP" description="Campagne newsletter" />
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div><h1 className="text-2xl font-bold">Newsletter</h1>
-          <p className="text-sm text-muted-foreground">Roberta (Marketing Manager) prepara una bozza il 1° e il 16° di ogni mese · nulla parte senza la vostra approvazione</p></div>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" disabled={!!busy} onClick={() => run('roberta', async () => {
-            const { campaign } = await call({ action: 'roberta_now' }); await load(); setSel(campaign); toast.success('Roberta ha preparato una bozza');
-          })}>{busy === 'roberta' ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Sparkles className="h-4 w-4 mr-1" />}Chiedi a Roberta</Button>
-          <Button onClick={create}><Plus className="h-4 w-4 mr-1" />Nuova campagna</Button>
-        </div>
-      </div>
+      {!embedded && (
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div><h1 className="text-2xl font-bold">Newsletter</h1>
+            <p className="text-sm text-muted-foreground">Roberta (Marketing Manager) prepara una bozza il 1° e il 16° di ogni mese · nulla parte senza la vostra approvazione</p></div>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" disabled={!!busy} onClick={() => run('roberta', async () => {
+              const { campaign } = await call({ action: 'roberta_now' }); await load(); setSel(campaign); toast.success('Roberta ha preparato una bozza');
+            })}>{busy === 'roberta' ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Sparkles className="h-4 w-4 mr-1" />}Chiedi a Roberta</Button>
+            <Button onClick={create}><Plus className="h-4 w-4 mr-1" />Nuova campagna</Button>
+          </div>
+        </div>)}
 
       <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
         <Card><CardContent className="p-2 space-y-1 max-h-[75vh] overflow-auto">
