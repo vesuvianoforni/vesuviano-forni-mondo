@@ -1022,6 +1022,10 @@ export type Database = {
           message_id: string
           mime: string
           recipient: string
+          rendered_html: string | null
+          rendered_text: string | null
+          signature_id: string | null
+          signature_snapshot: Json | null
           smtp_accepted_at: string | null
           smtp_status: string
           subject: string
@@ -1043,6 +1047,10 @@ export type Database = {
           message_id: string
           mime: string
           recipient: string
+          rendered_html?: string | null
+          rendered_text?: string | null
+          signature_id?: string | null
+          signature_snapshot?: Json | null
           smtp_accepted_at?: string | null
           smtp_status?: string
           subject: string
@@ -1064,6 +1072,10 @@ export type Database = {
           message_id?: string
           mime?: string
           recipient?: string
+          rendered_html?: string | null
+          rendered_text?: string | null
+          signature_id?: string | null
+          signature_snapshot?: Json | null
           smtp_accepted_at?: string | null
           smtp_status?: string
           subject?: string
@@ -1086,6 +1098,62 @@ export type Database = {
           },
           {
             foreignKeyName: "email_outbox_mailbox_id_fkey"
+            columns: ["mailbox_id"]
+            isOneToOne: false
+            referencedRelation: "email_mailboxes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_signatures: {
+        Row: {
+          address: string
+          company: string
+          created_at: string
+          email: string
+          id: string
+          is_default: boolean
+          mailbox_id: string
+          name: string
+          phone: string
+          role: string
+          updated_at: string
+          website: string
+          whatsapp: string
+        }
+        Insert: {
+          address?: string
+          company?: string
+          created_at?: string
+          email?: string
+          id?: string
+          is_default?: boolean
+          mailbox_id: string
+          name: string
+          phone?: string
+          role?: string
+          updated_at?: string
+          website?: string
+          whatsapp?: string
+        }
+        Update: {
+          address?: string
+          company?: string
+          created_at?: string
+          email?: string
+          id?: string
+          is_default?: boolean
+          mailbox_id?: string
+          name?: string
+          phone?: string
+          role?: string
+          updated_at?: string
+          website?: string
+          whatsapp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_signatures_mailbox_id_fkey"
             columns: ["mailbox_id"]
             isOneToOne: false
             referencedRelation: "email_mailboxes"
@@ -1789,6 +1857,30 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      save_email_signature: {
+        Args: { _fields: Json; _id: string; _mailbox: string }
+        Returns: {
+          address: string
+          company: string
+          created_at: string
+          email: string
+          id: string
+          is_default: boolean
+          mailbox_id: string
+          name: string
+          phone: string
+          role: string
+          updated_at: string
+          website: string
+          whatsapp: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "email_signatures"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
     }
     Enums: {
