@@ -128,6 +128,9 @@ async function processCampaign(admin: SupabaseClient, campaign: any) {
 }
 
 async function generate(admin: SupabaseClient, prompt: string, language: string) {
+  const { data: paused, error: stateError } = await admin.from('newsletter_ai_state').select('reason,status').eq('key', 'newsletter').maybeSingle();
+  if (stateError) throw stateError;
+  if (paused) throw Object.assign(new Error(paused.reason), { status: paused.status });
   const apiKey = Deno.env.get('LOVABLE_API_KEY');
   if (!apiKey) throw Object.assign(new Error('LOVABLE_API_KEY non configurata'), { status: 500 });
   const cat = await loadCatalog(admin, language);
@@ -155,11 +158,17 @@ Link disponibili: ${JSON.stringify(links)}` }],
   });
   const text = await res.text();
   if (!res.ok) {
-    console.error('AI gateway', res.status, text);
-    const msg = res.status === 429 ? 'Troppe richieste, riprova tra poco.' : res.status === 402 ? 'Crediti AI esauriti.' : 'Errore AI';
+    let msg = 'Generazione AI non completata.';
+    try { const payload = JSON.parse(text); msg = payload.message || payload.error?.message || msg; } catch { /* do not expose raw provider payload */ }
+    if (res.status === 402 || res.status === 403) {
+      const { error } = await admin.from('newsletter_ai_state').upsert({ key: 'newsletter', status: res.status, reason: msg });
+      if (error) throw error;
+    }
     throw Object.assign(new Error(msg), { status: res.status });
   }
-  const out = JSON.parse(JSON.parse(text).choices?.[0]?.message?.content || '{}');
+  const message = JSON.parse(text).choices?.[0]?.message;
+  if (message?.refusal || !message?.content) throw Object.assign(new Error(message?.refusal || 'Nessun contenuto generato. Nessuna email è stata inviata.'), { status: 422 });
+  const out = JSON.parse(message.content);
   const known = new Set(images.map((i) => i.url));
   if (out.image_url && !known.has(out.image_url)) out.image_url = images[0]?.url || null;
   out.extra_images = (out.extra_images || []).filter((u: string) => known.has(u) && u !== out.image_url).slice(0, 3);

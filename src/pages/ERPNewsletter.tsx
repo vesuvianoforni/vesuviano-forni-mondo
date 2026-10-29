@@ -58,15 +58,15 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
   const [viewLanguage, setViewLanguage] = useState('it');
   const [counts, setCounts] = useState<Record<string, number>>({});
 
-  const load = async () => {
+  const load = async (updateSelected = true) => {
     const { data } = await db.from('newsletter_campaigns').select('*').order('created_at', { ascending: false });
     setList(data || []);
-    if (sel) setSel((data || []).find((c: Campaign) => c.id === sel.id) || null);
+    if (sel && updateSelected) setSel((data || []).find((c: Campaign) => c.id === sel.id) || null);
   };
   useEffect(() => { load(); supabase.auth.getUser().then(({ data }) => setTestEmail(data.user?.email || '')); }, []);
   useEffect(() => {
     if (!list.some((c) => c.status === 'sending')) return;
-    const t = setInterval(load, 4000); return () => clearInterval(t);
+    const t = setInterval(() => load(), 4000); return () => clearInterval(t);
   }, [list]);
 
   const refreshPreview = async (c: Campaign, language = c.language) => {
@@ -103,11 +103,11 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
   };
   const finishGeneration = async (campaign: Campaign) => {
     setSel(campaign); setViewLanguage(campaign.language); setAskOpen(false);
-    await load(); await refreshPreview(campaign);
+    await load(false); await refreshPreview(campaign);
     if (autoTranslate) {
       setBusy('translate');
       const translated = await translate(campaign);
-      setSel(translated); await load(); await refreshPreview(translated);
+      setSel(translated); await load(false); await refreshPreview(translated);
     }
     toast.success(autoTranslate ? 'Bozza e traduzioni pronte da approvare' : 'Bozza pronta da approvare');
   };
@@ -229,7 +229,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
                     <p className="text-xs text-muted-foreground">Stima dal prefisso: +44 inglese, +39 italiano, +33 francese, +49 tedesco, +34 spagnolo. Se manca, viene usato il paese; altrimenti la lingua della bozza.</p>
                     {missingLanguages.length > 0 && <p className="text-sm text-destructive">Traduzioni da preparare: {missingLanguages.map((l) => l.toUpperCase()).join(', ')}</p>}
                     {editable && <Button variant="outline" disabled={!!busy || !sel.body || !sel.subject} onClick={() => run('translate', async () => {
-                      await save(); const c = await translate(sel); setSel(c); await load(); await refreshPreview(c, viewLanguage); toast.success('Traduzioni aggiornate');
+                      await save(); const c = await translate(sel); setSel(c); await load(false); await refreshPreview(c, viewLanguage); toast.success('Traduzioni aggiornate');
                     })}><Sparkles className="h-4 w-4 mr-1" />{versionsCurrent ? 'Aggiorna traduzioni' : 'Prepara traduzioni'}</Button>}
                   </div>
                 </CardContent></Card>
