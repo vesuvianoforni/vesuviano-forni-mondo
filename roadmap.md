@@ -22,3 +22,8 @@
 - [x] Sincronizzazione IMAP/SMTP info@vesuvianoforni.com: credenziali protette, invio con outbox e copia MIME separata in Inviata, deduplicazione fisica/logica, conversazioni CRM, log e controllo ogni 15 minuti; connessioni e prime importazioni reali verificate
 - [x] Email di prova autorizzata inviata da info@vesuvianoforni.com a stanislaoelefante@gmail.com: SMTP accepted e copia IMAP appended verificati; conversazione registrata nel CRM. Verifica visiva autenticata non disponibile
 - [ ] Ricezione messaggi in entrata e follow-up automatici programmati
+
+## Roberta AI (29 ott 2026)
+- [x] Pagina dedicata /erp/roberta (menu "Roberta AI") con pilastri marketing e campagne newsletter integrate
+- [x] ERPNewsletter supporta modalità embedded
+- [ ] Verifica autenticata su ERP reale (accesso non disponibile in sandbox)
