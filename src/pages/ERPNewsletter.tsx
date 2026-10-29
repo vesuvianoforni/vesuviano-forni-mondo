@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { FunctionsHttpError } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Loader2, Plus, Sparkles, Send, FlaskConical, Trash2, Users, Mail } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
+import { updateNewsletterPreviewPhotos } from '@/lib/newsletterPreview';
 
 const db = supabase as any;
 const LANGS = [['it', 'Italiano'], ['en', 'Inglese'], ['fr', 'Francese'], ['de', 'Tedesco'], ['es', 'Spagnolo']];
@@ -57,6 +58,8 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
   const [autoTranslate, setAutoTranslate] = useState(true);
   const [viewLanguage, setViewLanguage] = useState('it');
   const [counts, setCounts] = useState<Record<string, number>>({});
+  const previewRequest = useRef(0);
+  const livePreview = useMemo(() => updateNewsletterPreviewPhotos(preview, sel?.image_url || null, sel?.extra_images || []), [preview, sel?.image_url, sel?.extra_images]);
 
   const load = async (updateSelected = true) => {
     const { data } = await db.from('newsletter_campaigns').select('*').order('created_at', { ascending: false });
@@ -70,8 +73,12 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
   }, [list]);
 
   const refreshPreview = async (c: Campaign, language = c.language) => {
+    const request = ++previewRequest.current;
     if (!c.body) { setPreview(''); return; }
-    try { setPreview((await call({ action: 'preview', campaign_id: c.id, language })).html); } catch { setPreview(''); }
+    try {
+      const result = await call({ action: 'preview', campaign_id: c.id, language });
+      if (request === previewRequest.current) setPreview(result.html);
+    } catch { if (request === previewRequest.current) setPreview(''); }
   };
   const refreshCount = async (a: Campaign['audience']) => {
     setCount(null);
@@ -117,7 +124,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
     if (error) return toast.error(error.message);
     setList([data, ...list]); setSel(data);
   };
-  const patch = (p: Partial<Campaign>) => sel && setSel({ ...sel, ...p });
+  const patch = (p: Partial<Campaign>) => setSel((current) => current ? { ...current, ...p } : null);
   const save = async (c = sel) => {
     if (!c) return;
     const { title, subject, preheader, body, image_url, extra_images, cta_label, cta_url, audience, language, prompt } = c;
@@ -196,12 +203,12 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
                     <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-56 overflow-auto">
                       {assets.filter((a) => a.label.toLowerCase().includes(assetFilter.toLowerCase())).map((a) => {
                         const main = sel.image_url === a.url; const extra = (sel.extra_images || []).includes(a.url);
-                        return <button key={a.url} type="button" disabled={!editable} title={a.label}
+                        return <Button key={a.url} type="button" variant="ghost" disabled={!editable} title={a.label} aria-label={a.label}
                           onClick={() => pickImage(a.url, false)} onContextMenu={(e) => { e.preventDefault(); pickImage(a.url, true); }}
-                          className={`relative aspect-square rounded overflow-hidden border-2 ${main ? 'border-primary' : extra ? 'border-accent-foreground' : 'border-transparent'}`}>
+                          className={`relative h-auto p-0 aspect-square rounded overflow-hidden border-2 ${main ? 'border-primary' : extra ? 'border-accent-foreground' : 'border-transparent'}`}>
                           <img src={a.url} alt={a.label} loading="lazy" className="w-full h-full object-cover" />
                           {(main || extra) && <span className="absolute top-0.5 left-0.5 text-[10px] px-1 rounded bg-background">{main ? 'Principale' : '+'}</span>}
-                        </button>;
+                        </Button>;
                       })}
                     </div>
                   </div>
@@ -255,7 +262,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
                 <Button key={l} variant={viewLanguage === l ? 'secondary' : 'ghost'} size="sm" disabled={!!busy} onClick={() => { setViewLanguage(l); refreshPreview(sel, l); }}>{name}</Button>
               ))}</div>
               {viewVersion?.subject && <p className="text-sm"><strong>{viewVersion.subject}</strong> <span className="text-muted-foreground">— {viewVersion.preheader}</span></p>}</CardHeader>
-              <CardContent>{preview ? <iframe title="Anteprima" sandbox="" srcDoc={preview} className="w-full h-[75vh] rounded border bg-background" />
+              <CardContent>{livePreview ? <iframe title="Anteprima" sandbox="" srcDoc={livePreview} className="w-full h-[75vh] rounded border bg-background" />
                 : <p className="text-sm text-muted-foreground">Genera o scrivi il testo per vedere l'anteprima.</p>}</CardContent></Card>
           </div>)}
       </div>
