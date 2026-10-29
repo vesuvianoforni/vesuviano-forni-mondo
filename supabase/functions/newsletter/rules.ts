@@ -59,7 +59,7 @@ export function renderNewsletter(c: Campaign, unsubscribeUrl: string) {
   const contact = NEWSLETTER_CONTACT;
   const whatsappUrl = newsletterWhatsAppUrl();
   const whatsappLabel = newsletterWhatsAppLabel(c.language);
-  const isWhatsAppCta = cta ? new URL(cta).hostname.toLowerCase() === 'wa.me' && new URL(cta).pathname === new URL(whatsappUrl).pathname : false;
+  const isWhatsAppCta = cta?.split('?')[0].replace(/\/$/, '') === whatsappUrl;
   const extras = (c.extra_images || []).map(safeUrl).filter(Boolean).slice(0, 3) as string[];
   const extraRow = extras.length ? `<tr><td style="padding:0 28px 24px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${extras.map((u) => `<td width="${Math.floor(100 / extras.length)}%" style="padding:0 4px;"><img src="${escapeEmail(u)}" alt="" style="display:block;width:100%;height:auto;border:0;border-radius:4px;"></td>`).join('')}</tr></table></td></tr>` : '';
   const paragraphs = c.body.replace(/\r\n/g, '\n').split(/\n\n+/).map((p) => `<p style="margin:0 0 18px;line-height:1.7;">${escapeEmail(p).replace(/\n/g, '<br>')}</p>`).join('');
@@ -77,7 +77,7 @@ ${img ? `<tr><td><img src="${escapeEmail(img)}" width="600" alt="" style="displa
 ${cta ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:8px 0 8px;"><tr><td style="background:${theme.brand};border-radius:6px;"><a href="${escapeEmail(cta)}" style="display:inline-block;padding:14px 26px;color:${theme.paper};font-weight:bold;text-decoration:none;font-size:15px;">${escapeEmail(c.cta_label || 'Scopri di più')}</a></td></tr></table>` : ''}
 </td></tr>
 ${extraRow}
-<tr><td style="padding:4px 28px 28px;font-size:14px;line-height:1.6;">
+<tr data-newsletter-signature><td style="padding:4px 28px 28px;font-size:14px;line-height:1.6;">
 <div style="border-top:1px solid ${theme.border};padding-top:22px;">
 <p style="margin:0 0 4px;font-size:17px;font-weight:bold;color:${theme.ink};">${contact.name}</p>
 <p style="margin:0 0 4px;font-size:13px;color:${theme.muted};">${escapeEmail(contact.role)}</p>

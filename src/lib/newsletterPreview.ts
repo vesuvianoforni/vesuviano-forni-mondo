@@ -44,7 +44,8 @@ export function updateNewsletterPreviewPhotos(html: string, imageUrl: string | n
       slot.append(img); photos.append(slot);
     }
     grid.append(photos); cell.append(grid); row.append(cell);
-    rows.lastElementChild?.before(row);
+    const signatureRow = Array.from(rows.children).find((child) => child.hasAttribute('data-newsletter-signature'));
+    (signatureRow || rows.lastElementChild)?.before(row);
   }
   return '<!DOCTYPE html>' + doc.documentElement.outerHTML;
 }
