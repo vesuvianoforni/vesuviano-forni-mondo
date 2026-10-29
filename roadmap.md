@@ -18,5 +18,5 @@
 - [x] Sezione dedicata "Bruno AI" nel menu ERP (`/erp/bruno`): elenco clienti con coda di follow-up per fase, filtri fase/pipeline/ricerca e pannello comunicazioni; click sul lead nel CRM apre ora la scheda cliente (Riepilogo / Comunicazioni / Configuratore). 20 test e flussi UI verificati a 1280 px con soli dati di prova (accesso reale non disponibile)
 - [ ] Collegare WhatsApp API di Bruno (connettore WhatsApp) — attende collegamento numero
 - [ ] Collegare WaSender di Gennaro (chiave WASENDER_API_KEY) — attende chiave
-- [ ] Integrazione Gmail per invio email — rimandata dall'utente
+- [ ] Sincronizzazione IMAP/SMTP info@vesuvianoforni.com: invio confermato, MIME in Inviata, deduplicazione, conversazioni CRM, log e sincronizzazione periodica — attende credenziali del gestore
 - [ ] Ricezione messaggi in entrata e follow-up automatici programmati
