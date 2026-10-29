@@ -88,32 +88,27 @@ async function processCampaign(admin: SupabaseClient, campaign: any) {
 async function generate(admin: SupabaseClient, prompt: string, language: string) {
   const apiKey = Deno.env.get('LOVABLE_API_KEY');
   if (!apiKey) throw Object.assign(new Error('LOVABLE_API_KEY non configurata'), { status: 500 });
-  const [{ data: ovens }, { data: rts }] = await Promise.all([
-    admin.from('configurator_ovens').select('model_name,fuel_type,diameter,pizza_capacity,image_url,delivery_time_weeks').eq('is_active', true).limit(40),
-    admin.from('ready_to_ship_ovens').select('model_name,custom_title,diameter,fuel_type,images,sale_price,list_price').eq('is_sold', false).limit(20),
-  ]);
-  const images = [
-    ...(ovens || []).filter((o) => o.image_url?.startsWith('https://')).map((o) => ({ url: o.image_url, label: `${o.model_name} ${o.diameter}cm` })),
-    ...(rts || []).filter((r) => r.images?.[0]?.startsWith('https://')).map((r) => ({ url: r.images[0], label: `Pronta consegna: ${r.custom_title || r.model_name}` })),
-  ];
-  const links = {
-    sito: `https://vesuvianoforni.com/${language}`, pronta_consegna: 'https://vesuvianoforni.com/en/ready-to-ship',
-    forno_legna: 'https://vesuvianoforni.com/en/commercial-wood-fired-pizza-oven', forno_gas: 'https://vesuvianoforni.com/en/commercial-gas-pizza-oven',
-    forno_rotante: 'https://vesuvianoforni.com/en/rotating-pizza-oven', forno_elettrico: 'https://vesuvianoforni.com/en/electric-pizza-oven',
-    catalogo_en: 'https://vesuvianoforni.com/catalogo/en', whatsapp_gennaro: 'https://wa.me/393509286941',
-  };
+  const cat = await loadCatalog(admin, language);
+  const { images, links } = cat;
   const system = `Sei il copywriter di Vesuviano Forni (forni per pizza artigianali napoletani fatti a mano a Sant'Anastasia e Boscoreale con sabbia vulcanica: Anastasia, Ottavio, Real Bosco, Sebastian, VesuvioBuono, Forno Rotante; legna, gas, elettrico, rotante). Pagamento 50% acconto, 50% alla consegna. Usa "Prodotti", mai "Soluzioni".
-Scrivi newsletter B2B per pizzaioli e ristoratori: oggetto breve e concreto (max 60 caratteri, niente maiuscole urlate né parole spam come GRATIS/!!!), preheader max 90 caratteri, corpo in testo semplice con paragrafi separati da riga vuota, 120-220 parole, tono caldo ed esperto, una sola call to action. Non inventare prezzi, sconti o specifiche non presenti nei dati. Scrivi interamente nella lingua: ${language}.
-Scegli image_url SOLO tra le immagini fornite (o null) e cta_url SOLO tra i link forniti.`;
+Scrivi newsletter B2B per pizzaioli e ristoratori: oggetto breve e concreto (max 60 caratteri, niente maiuscole urlate né parole spam come GRATIS/!!!), preheader max 90 caratteri, corpo in testo semplice con paragrafi separati da riga vuota, 120-220 parole, tono caldo ed esperto, una sola call to action. Scrivi interamente nella lingua: ${language}.
+Usa SOLO il materiale reale fornito: se la richiesta riguarda un forno pronta consegna specifico, usa i suoi dati (prezzi, diametro, rivestimento, consegna) e le SUE foto; per un modello usa le sue foto; per un articolo o un video usa il suo link. Non inventare prezzi, sconti o specifiche.
+image_url = foto principale scelta tra le immagini fornite (o null); extra_images = da 0 a 3 altre foto della stessa offerta/modello; cta_url SOLO tra i link forniti, il più pertinente (pagina della sezione giusta del sito nella lingua del cliente).`;
   const res = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
     method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'openai/gpt-6-astra', reasoning_effort: 'low',
-      messages: [{ role: 'system', content: system }, { role: 'user', content: `Richiesta: ${prompt}\nImmagini disponibili: ${JSON.stringify(images)}\nLink disponibili: ${JSON.stringify(links)}\nForni pronta consegna: ${JSON.stringify((rts || []).map((r) => ({ ...r, images: undefined })))}` }],
+      messages: [{ role: 'system', content: system }, { role: 'user', content: `Richiesta: ${prompt}
+Forni pronta consegna disponibili: ${JSON.stringify(cat.pronta)}
+Modelli a catalogo: ${JSON.stringify(cat.modelli)}
+Articoli blog: ${JSON.stringify(cat.articoli)}
+Video commerciali: ${JSON.stringify(cat.video)}
+Immagini disponibili: ${JSON.stringify(images)}
+Link disponibili: ${JSON.stringify(links)}` }],
       response_format: { type: 'json_schema', json_schema: { name: 'newsletter', strict: true, schema: {
-        type: 'object', additionalProperties: false, required: ['title', 'subject', 'preheader', 'body', 'image_url', 'cta_label', 'cta_url'],
+        type: 'object', additionalProperties: false, required: ['title', 'subject', 'preheader', 'body', 'image_url', 'extra_images', 'cta_label', 'cta_url'],
         properties: { title: { type: 'string' }, subject: { type: 'string' }, preheader: { type: 'string' }, body: { type: 'string' },
-          image_url: { type: ['string', 'null'] }, cta_label: { type: 'string' }, cta_url: { type: 'string' } } } } },
+          image_url: { type: ['string', 'null'] }, extra_images: { type: 'array', items: { type: 'string' } }, cta_label: { type: 'string' }, cta_url: { type: 'string' } } } } },
     }),
   });
   const text = await res.text();
@@ -123,8 +118,10 @@ Scegli image_url SOLO tra le immagini fornite (o null) e cta_url SOLO tra i link
     throw Object.assign(new Error(msg), { status: res.status });
   }
   const out = JSON.parse(JSON.parse(text).choices?.[0]?.message?.content || '{}');
-  if (out.image_url && !images.some((i) => i.url === out.image_url)) out.image_url = images[0]?.url || null;
-  if (!Object.values(links).includes(out.cta_url)) out.cta_url = links.sito;
+  const known = new Set(images.map((i) => i.url));
+  if (out.image_url && !known.has(out.image_url)) out.image_url = images[0]?.url || null;
+  out.extra_images = (out.extra_images || []).filter((u: string) => known.has(u) && u !== out.image_url).slice(0, 3);
+  if (!Object.values(links).includes(out.cta_url)) out.cta_url = links.home;
   return out;
 }
 
