@@ -27,8 +27,26 @@ Deno.serve(async req => {
     if (input.action === 'process') {
       // This endpoint can only consume an existing, recent queued run. It cannot create work, send SMTP,
       // select a mailbox, change configuration or read content. The DB scheduler owns run creation.
-      const { data: run, error } = await admin.from('email_sync_runs').select('id,status,created_at').eq('id',input.run_id).maybeSingle();
+      const { data: run, error } = await admin.from('email_sync_runs').select('id,kind,status,mailbox_id,created_at').eq('id',input.run_id).maybeSingle();
       if (error || !run || run.status !== 'queued' || Date.now()-new Date(run.created_at).getTime() > 5*60000) return json({ error: 'Operazione non disponibile' },404);
+      if (run.kind === 'connection_test') {
+        const imap = imapClient(), smtp = smtpClient();
+        try {
+          const { data: claimed } = await admin.from('email_sync_runs').update({status:'running',started_at:new Date().toISOString()}).eq('id',run.id).eq('status','queued').select('id').maybeSingle();
+          if (!claimed) return json({error:'Operazione non disponibile'},404);
+          await imap.connect();
+          const sent=await findSent(imap);
+          await smtp.verify();
+          await admin.from('email_mailboxes').update({sent_folder:sent,last_error:null}).eq('id',run.mailbox_id);
+          await admin.from('email_sync_runs').update({status:'success',finished_at:new Date().toISOString()}).eq('id',run.id);
+          return json({connected:true});
+        } catch(e) {
+          const code=safeMailError(e);
+          await admin.from('email_sync_runs').update({status:'failed',error_code:code,finished_at:new Date().toISOString()}).eq('id',run.id);
+          await admin.from('email_mailboxes').update({last_error:code}).eq('id',run.mailbox_id);
+          return json({error:code},422);
+        } finally { smtp.close();await closeIMAP(imap); }
+      }
       EdgeRuntime.waitUntil(syncMailbox(admin,run.id));
       return json({ queued: true },202);
     }
