@@ -3,6 +3,8 @@ import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { selectRecipients, unsubscribeToken, encodeEmail, decodeEmail, renderNewsletter, NEWSLETTER_FROM, NEWSLETTER_REPLY_TO, type Audience } from './rules.ts';
 import { loadCatalog } from './catalog.ts';
+import { campaignVersion, languageCounts } from './localization.ts';
+import { translateCampaign, translationResponse } from './translate.ts';
 
 const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
@@ -10,17 +12,20 @@ const json = (data: unknown, status = 200) =>
 const Id = z.string().uuid();
 const Body = z.discriminatedUnion('action', [
   z.object({ action: z.literal('generate'), campaign_id: Id, prompt: z.string().min(3).max(2000), language: z.enum(['it', 'en', 'fr', 'de', 'es']) }),
-  z.object({ action: z.literal('audience'), audience: z.object({ stages: z.array(z.string()).max(10), countries: z.array(z.string().max(60)).max(50) }) }),
+  z.object({ action: z.literal('audience'), language: z.enum(['it', 'en', 'fr', 'de', 'es']).optional(), audience: z.object({ stages: z.array(z.string()).max(10), countries: z.array(z.string().max(60)).max(50) }) }),
   z.object({ action: z.literal('assets'), language: z.enum(['it', 'en', 'fr', 'de', 'es']) }),
-  z.object({ action: z.literal('roberta_now') }),
-  z.object({ action: z.literal('preview'), campaign_id: Id }),
-  z.object({ action: z.literal('test'), campaign_id: Id, email: z.string().email() }),
+  z.object({ action: z.literal('roberta_now'), prompt: z.string().trim().min(3).max(2000), language: z.enum(['it', 'en', 'fr', 'de', 'es']) }),
+  z.object({ action: z.literal('translate'), campaign_id: Id }),
+  z.object({ action: z.literal('preview'), campaign_id: Id, language: z.enum(['it', 'en', 'fr', 'de', 'es']).optional() }),
+  z.object({ action: z.literal('test'), campaign_id: Id, email: z.string().email(), language: z.enum(['it', 'en', 'fr', 'de', 'es']).optional() }),
   z.object({ action: z.literal('send'), campaign_id: Id }),
 ]);
 const RunBody = z.object({ action: z.literal('roberta_run'), run_id: Id, token: Id });
 
 /** Roberta: picks the fortnight topic herself and saves a draft awaiting human approval. Never sends to customers. */
 async function robertaDraft(admin: SupabaseClient, periodKey: string) {
+  const { data: paused } = await admin.from('newsletter_ai_state').select('reason,status').eq('key', 'newsletter').maybeSingle();
+  if (paused) throw Object.assign(new Error(paused.reason), { status: paused.status });
   const { data: past } = await admin.from('newsletter_campaigns').select('title,subject,created_at').order('created_at', { ascending: false }).limit(8);
   const today = new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
   const prompt = `Sei Roberta, Marketing Manager di Vesuviano Forni. Oggi è ${today}: prepara la newsletter dei prossimi 15 giorni.
@@ -66,10 +71,10 @@ async function fetchAll<T>(build: (from: number, to: number) => PromiseLike<{ da
   }
 }
 
-async function resolveAudience(admin: SupabaseClient, audience: Audience) {
-  const leads = await fetchAll((a, b) => admin.from('leads').select('id,email,status,country,archived').not('email', 'is', null).range(a, b));
+async function resolveAudience(admin: SupabaseClient, audience: Audience, fallback = 'it') {
+  const leads = await fetchAll((a, b) => admin.from('leads').select('id,email,phone,status,country,archived').not('email', 'is', null).order('id').range(a, b));
   const unsub = await fetchAll((a, b) => admin.from('newsletter_unsubscribes').select('email').range(a, b));
-  return selectRecipients(leads as any, audience, new Set(unsub.map((u: any) => u.email)));
+  return selectRecipients(leads as any, audience, new Set(unsub.map((u: any) => u.email)), fallback);
 }
 
 async function resendBatch(emails: unknown[]) {
@@ -96,16 +101,18 @@ async function buildEmail(c: any, to: string) {
 async function processCampaign(admin: SupabaseClient, campaign: any) {
   try {
     for (;;) {
-      const { data: batch } = await admin.from('newsletter_recipients').select('id,email').eq('campaign_id', campaign.id).eq('status', 'pending').limit(50);
+      const { data: batch } = await admin.from('newsletter_recipients').select('id,email,language').eq('campaign_id', campaign.id).eq('status', 'pending').limit(50);
       if (!batch?.length) break;
       const ids = batch.map((r) => r.id);
       // Claim before calling Resend so a parallel worker or retry can never mail the same address twice.
-      await admin.from('newsletter_recipients').update({ status: 'sending' }).in('id', ids).eq('status', 'pending');
+      const { data: claimed, error: claimError } = await admin.from('newsletter_recipients').update({ status: 'sending' }).in('id', ids).eq('status', 'pending').select('id,email,language');
+      if (claimError) throw claimError;
+      if (!claimed?.length) continue;
       try {
-        const result = await resendBatch(await Promise.all(batch.map((r) => buildEmail(campaign, r.email))));
-        await Promise.all(batch.map((r, i) => admin.from('newsletter_recipients').update({ status: 'sent', resend_id: result[i]?.id || null, sent_at: new Date().toISOString() }).eq('id', r.id)));
+        const result = await resendBatch(await Promise.all(claimed.map((r) => buildEmail(campaignVersion(campaign, r.language), r.email))));
+        await Promise.all(claimed.map((r, i) => admin.from('newsletter_recipients').update({ status: 'sent', resend_id: result[i]?.id || null, sent_at: new Date().toISOString() }).eq('id', r.id)));
       } catch (e) {
-        await admin.from('newsletter_recipients').update({ status: 'failed', error: String((e as Error).message).slice(0, 300) }).in('id', ids);
+        await admin.from('newsletter_recipients').update({ status: 'failed', error: String((e as Error).message).slice(0, 300) }).in('id', claimed.map((r) => r.id));
       }
       const [{ count: sent }, { count: failed }] = await Promise.all([
         admin.from('newsletter_recipients').select('id', { count: 'exact', head: true }).eq('campaign_id', campaign.id).eq('status', 'sent'),
@@ -121,6 +128,9 @@ async function processCampaign(admin: SupabaseClient, campaign: any) {
 }
 
 async function generate(admin: SupabaseClient, prompt: string, language: string) {
+  const { data: paused, error: stateError } = await admin.from('newsletter_ai_state').select('reason,status').eq('key', 'newsletter').maybeSingle();
+  if (stateError) throw stateError;
+  if (paused) throw Object.assign(new Error(paused.reason), { status: paused.status });
   const apiKey = Deno.env.get('LOVABLE_API_KEY');
   if (!apiKey) throw Object.assign(new Error('LOVABLE_API_KEY non configurata'), { status: 500 });
   const cat = await loadCatalog(admin, language);
@@ -148,11 +158,17 @@ Link disponibili: ${JSON.stringify(links)}` }],
   });
   const text = await res.text();
   if (!res.ok) {
-    console.error('AI gateway', res.status, text);
-    const msg = res.status === 429 ? 'Troppe richieste, riprova tra poco.' : res.status === 402 ? 'Crediti AI esauriti.' : 'Errore AI';
+    let msg = 'Generazione AI non completata.';
+    try { const payload = JSON.parse(text); msg = payload.message || payload.error?.message || msg; } catch { /* do not expose raw provider payload */ }
+    if (res.status === 402 || res.status === 403) {
+      const { error } = await admin.from('newsletter_ai_state').upsert({ key: 'newsletter', status: res.status, reason: msg });
+      if (error) throw error;
+    }
     throw Object.assign(new Error(msg), { status: res.status });
   }
-  const out = JSON.parse(JSON.parse(text).choices?.[0]?.message?.content || '{}');
+  const message = JSON.parse(text).choices?.[0]?.message;
+  if (message?.refusal || !message?.content) throw Object.assign(new Error(message?.refusal || 'Nessun contenuto generato. Nessuna email è stata inviata.'), { status: 422 });
+  const out = JSON.parse(message.content);
   const known = new Set(images.map((i) => i.url));
   if (out.image_url && !known.has(out.image_url)) out.image_url = images[0]?.url || null;
   out.extra_images = (out.extra_images || []).filter((u: string) => known.has(u) && u !== out.image_url).slice(0, 3);
@@ -198,40 +214,58 @@ Deno.serve(async (req) => {
     }
     if (input.action === 'roberta_now') {
       try {
-        const c = await robertaDraft(admin, `manual-${Date.now()}`);
-        return json({ campaign: c });
+        const out = await generate(admin, input.prompt, input.language);
+        const { data, error } = await admin.from('newsletter_campaigns').insert({ ...out, prompt: input.prompt, language: input.language, author: 'roberta' }).select().single();
+        if (error) throw error;
+        return json({ campaign: data });
       } catch (e: any) { return json({ error: e.message }, e.status || 500); }
     }
     if (input.action === 'audience') {
-      const r = await resolveAudience(admin, input.audience);
-      return json({ count: r.length, sample: r.slice(0, 5).map((x) => x.email) });
+      const r = await resolveAudience(admin, input.audience, input.language);
+      return json({ count: r.length, languages: languageCounts(r) });
     }
 
     const { data: campaign } = await admin.from('newsletter_campaigns').select('*').eq('id', input.campaign_id).maybeSingle();
     if (!campaign) return json({ error: 'Campagna non trovata' }, 404);
 
+    if (input.action === 'translate') {
+      if (campaign.status !== 'draft') return json({ error: 'La campagna non è modificabile' }, 409);
+      if (!campaign.subject || !campaign.body) return json({ error: 'Genera prima la bozza' }, 400);
+      const response = translationResponse(async () => {
+        const versions = await translateCampaign(admin, campaign, req);
+        const { data, error } = await admin.from('newsletter_campaigns').update(versions).eq('id', campaign.id).eq('status', 'draft').eq('updated_at', campaign.updated_at).select().maybeSingle();
+        if (error) throw error;
+        if (!data) throw Object.assign(new Error('La bozza è cambiata durante la traduzione. Riprova sulla versione aggiornata.'), { status: 409 });
+        return { campaign: data };
+      });
+      return new Response(response.body, { headers: { ...corsHeaders, ...Object.fromEntries(response.headers) } });
+    }
+
     if (input.action === 'generate') {
       if (campaign.status !== 'draft') return json({ error: 'La campagna è già stata inviata' }, 409);
       try {
         const out = await generate(admin, input.prompt, input.language);
-        const { data } = await admin.from('newsletter_campaigns').update({ ...out, prompt: input.prompt, language: input.language }).eq('id', campaign.id).select().single();
+        const { data } = await admin.from('newsletter_campaigns').update({ ...out, prompt: input.prompt, language: input.language, translations: {}, translation_source: null }).eq('id', campaign.id).select().single();
         return json({ campaign: data });
       } catch (e: any) { return json({ error: e.message }, e.status || 500); }
     }
     if (input.action === 'preview') {
-      return json(renderNewsletter(campaign, `${functionsBase()}?u=preview`));
+      return json(renderNewsletter(campaignVersion(campaign, input.language || campaign.language), `${functionsBase()}?u=preview`));
     }
     if (input.action === 'test') {
-      const email = await buildEmail(campaign, input.email);
-      await resendBatch([{ ...email, subject: `[PROVA] ${campaign.subject}` }]);
+      const version = campaignVersion(campaign, input.language || campaign.language);
+      const email = await buildEmail(version, input.email);
+      await resendBatch([{ ...email, subject: `[PROVA] ${version.subject}` }]);
       return json({ ok: true });
     }
     // send
     if (campaign.status !== 'draft') return json({ error: 'Campagna già inviata o in invio' }, 409);
     if (!campaign.subject || !campaign.body) return json({ error: 'Oggetto e testo obbligatori' }, 400);
+    const recipients = await resolveAudience(admin, campaign.audience, campaign.language);
+    if (!recipients.length) return json({ error: 'Nessun destinatario selezionato' }, 400);
+    for (const lang of Object.keys(languageCounts(recipients))) campaignVersion(campaign, lang);
     const { data: claimed } = await admin.from('newsletter_campaigns').update({ status: 'sending' }).eq('id', campaign.id).eq('status', 'draft').select().maybeSingle();
     if (!claimed) return json({ error: 'Campagna già in invio' }, 409);
-    const recipients = await resolveAudience(admin, campaign.audience);
     for (let i = 0; i < recipients.length; i += 500) {
       await admin.from('newsletter_recipients').upsert(recipients.slice(i, i + 500).map((r) => ({ ...r, campaign_id: campaign.id })), { onConflict: 'campaign_id,email', ignoreDuplicates: true });
     }
@@ -241,6 +275,6 @@ Deno.serve(async (req) => {
     return json({ ok: true, recipients: recipients.length });
   } catch (e) {
     console.error('newsletter error', e);
-    return json({ error: (e as Error).message }, 500);
+    return json({ error: (e as Error).message }, (e as any).status || 500);
   }
 });

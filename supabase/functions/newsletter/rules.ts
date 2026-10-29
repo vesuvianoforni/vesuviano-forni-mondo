@@ -1,19 +1,20 @@
 import { escapeEmail, EMAIL_LOGO } from '../_shared/email-layout.ts';
+import { recipientLanguage } from './localization.ts';
 
 export const NEWSLETTER_FROM = 'Vesuviano Forni <newsletter@vesuvianoforni.com>';
 export const NEWSLETTER_REPLY_TO = 'info@vesuvianoforni.com';
 
 export type Audience = { stages: string[]; countries: string[] };
-export type LeadRow = { id: string; email: string | null; status: string; country: string | null; archived?: boolean };
+export type LeadRow = { id: string; email: string | null; status: string; country: string | null; phone?: string | null; archived?: boolean };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const TEST_RE = /(test|example\.com|prova)/i;
 
 /** Picks unique, valid, non-unsubscribed recipients matching the audience. Lost leads are never mailed. */
-export function selectRecipients(leads: LeadRow[], audience: Audience, unsubscribed: Set<string>) {
+export function selectRecipients(leads: LeadRow[], audience: Audience, unsubscribed: Set<string>, fallback = 'it') {
   const countries = audience.countries.map((c) => c.trim().toLowerCase()).filter(Boolean);
   const seen = new Set<string>();
-  const out: { lead_id: string; email: string }[] = [];
+  const out: { lead_id: string; email: string; language: string }[] = [];
   for (const l of leads) {
     const email = (l.email || '').trim().toLowerCase();
     if (!email || !EMAIL_RE.test(email) || TEST_RE.test(email)) continue;
@@ -22,7 +23,7 @@ export function selectRecipients(leads: LeadRow[], audience: Audience, unsubscri
     if (countries.length && !countries.includes((l.country || '').trim().toLowerCase())) continue;
     if (unsubscribed.has(email) || seen.has(email)) continue;
     seen.add(email);
-    out.push({ lead_id: l.id, email });
+    out.push({ lead_id: l.id, email, language: recipientLanguage(l.phone, l.country, fallback) });
   }
   return out;
 }
