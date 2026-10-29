@@ -787,6 +787,44 @@ export type Database = {
           },
         ]
       }
+      email_folder_cursors: {
+        Row: {
+          created_at: string
+          folder: string
+          id: string
+          last_uid: number
+          mailbox_id: string
+          uid_validity: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          folder: string
+          id?: string
+          last_uid?: number
+          mailbox_id: string
+          uid_validity: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          folder?: string
+          id?: string
+          last_uid?: number
+          mailbox_id?: string
+          uid_validity?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_folder_cursors_mailbox_id_fkey"
+            columns: ["mailbox_id"]
+            isOneToOne: false
+            referencedRelation: "email_mailboxes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_history: {
         Row: {
           body: string
@@ -827,6 +865,265 @@ export type Database = {
             columns: ["session_id"]
             isOneToOne: false
             referencedRelation: "configurator_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_items: {
+        Row: {
+          attachment_names: Json
+          body: string
+          created_at: string
+          crm_message_id: string | null
+          direction: string
+          id: string
+          in_reply_to: string | null
+          lead_id: string | null
+          mailbox_id: string
+          message_id: string | null
+          message_key: string
+          recipients: Json
+          reference_ids: Json
+          sender: string
+          sent_at: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          attachment_names?: Json
+          body?: string
+          created_at?: string
+          crm_message_id?: string | null
+          direction: string
+          id?: string
+          in_reply_to?: string | null
+          lead_id?: string | null
+          mailbox_id: string
+          message_id?: string | null
+          message_key: string
+          recipients?: Json
+          reference_ids?: Json
+          sender: string
+          sent_at: string
+          subject?: string
+          updated_at?: string
+        }
+        Update: {
+          attachment_names?: Json
+          body?: string
+          created_at?: string
+          crm_message_id?: string | null
+          direction?: string
+          id?: string
+          in_reply_to?: string | null
+          lead_id?: string | null
+          mailbox_id?: string
+          message_id?: string | null
+          message_key?: string
+          recipients?: Json
+          reference_ids?: Json
+          sender?: string
+          sent_at?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_items_crm_message_id_fkey"
+            columns: ["crm_message_id"]
+            isOneToOne: false
+            referencedRelation: "crm_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_items_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_items_mailbox_id_fkey"
+            columns: ["mailbox_id"]
+            isOneToOne: false
+            referencedRelation: "email_mailboxes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_mailboxes: {
+        Row: {
+          address: string
+          created_at: string
+          enabled: boolean
+          id: string
+          last_error: string | null
+          last_sync_at: string | null
+          lease_token: string | null
+          lease_until: string | null
+          sent_folder: string | null
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          lease_token?: string | null
+          lease_until?: string | null
+          sent_folder?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          lease_token?: string | null
+          lease_until?: string | null
+          sent_folder?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      email_outbox: {
+        Row: {
+          append_attempted_at: string | null
+          body: string
+          copy_next_attempt_at: string | null
+          copy_status: string
+          created_at: string
+          created_by: string | null
+          crm_message_id: string | null
+          id: string
+          idempotency_key: string
+          last_error: string | null
+          lead_id: string
+          mailbox_id: string
+          message_id: string
+          mime: string
+          recipient: string
+          smtp_accepted_at: string | null
+          smtp_status: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          append_attempted_at?: string | null
+          body: string
+          copy_next_attempt_at?: string | null
+          copy_status?: string
+          created_at?: string
+          created_by?: string | null
+          crm_message_id?: string | null
+          id?: string
+          idempotency_key: string
+          last_error?: string | null
+          lead_id: string
+          mailbox_id: string
+          message_id: string
+          mime: string
+          recipient: string
+          smtp_accepted_at?: string | null
+          smtp_status?: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          append_attempted_at?: string | null
+          body?: string
+          copy_next_attempt_at?: string | null
+          copy_status?: string
+          created_at?: string
+          created_by?: string | null
+          crm_message_id?: string | null
+          id?: string
+          idempotency_key?: string
+          last_error?: string | null
+          lead_id?: string
+          mailbox_id?: string
+          message_id?: string
+          mime?: string
+          recipient?: string
+          smtp_accepted_at?: string | null
+          smtp_status?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_outbox_crm_message_id_fkey"
+            columns: ["crm_message_id"]
+            isOneToOne: false
+            referencedRelation: "crm_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_outbox_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_outbox_mailbox_id_fkey"
+            columns: ["mailbox_id"]
+            isOneToOne: false
+            referencedRelation: "email_mailboxes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_sync_runs: {
+        Row: {
+          created_at: string
+          error_code: string | null
+          finished_at: string | null
+          id: string
+          kind: string
+          linked: number
+          mailbox_id: string
+          processed: number
+          started_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          error_code?: string | null
+          finished_at?: string | null
+          id?: string
+          kind?: string
+          linked?: number
+          mailbox_id: string
+          processed?: number
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          error_code?: string | null
+          finished_at?: string | null
+          id?: string
+          kind?: string
+          linked?: number
+          mailbox_id?: string
+          processed?: number
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_sync_runs_mailbox_id_fkey"
+            columns: ["mailbox_id"]
+            isOneToOne: false
+            referencedRelation: "email_mailboxes"
             referencedColumns: ["id"]
           },
         ]
@@ -1457,6 +1754,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      acquire_email_mailbox: {
+        Args: { _id: string; _token: string }
+        Returns: boolean
+      }
       get_user_emails: {
         Args: { user_ids: string[] }
         Returns: {
