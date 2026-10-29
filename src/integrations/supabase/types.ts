@@ -1489,6 +1489,7 @@ export type Database = {
           id: string
           language: string
           lead_id: string | null
+          recipient_name: string | null
           resend_id: string | null
           sent_at: string | null
           status: string
@@ -1501,6 +1502,7 @@ export type Database = {
           id?: string
           language?: string
           lead_id?: string | null
+          recipient_name?: string | null
           resend_id?: string | null
           sent_at?: string | null
           status?: string
@@ -1513,6 +1515,7 @@ export type Database = {
           id?: string
           language?: string
           lead_id?: string | null
+          recipient_name?: string | null
           resend_id?: string | null
           sent_at?: string | null
           status?: string
