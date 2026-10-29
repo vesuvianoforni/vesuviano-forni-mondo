@@ -1302,6 +1302,7 @@ export type Database = {
           error: string | null
           finished_at: string | null
           id: string
+          lease_until: string | null
           period_key: string
           started_at: string | null
           status: string
@@ -1313,6 +1314,7 @@ export type Database = {
           error?: string | null
           finished_at?: string | null
           id?: string
+          lease_until?: string | null
           period_key: string
           started_at?: string | null
           status?: string
@@ -1324,6 +1326,7 @@ export type Database = {
           error?: string | null
           finished_at?: string | null
           id?: string
+          lease_until?: string | null
           period_key?: string
           started_at?: string | null
           status?: string
@@ -1338,6 +1341,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      marketing_occasions: {
+        Row: {
+          code: string
+          created_at: string
+          day: number
+          enabled: boolean
+          month: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          day: number
+          enabled?: boolean
+          month: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          day?: number
+          enabled?: boolean
+          month?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       newsletter_ai_state: {
         Row: {
@@ -2067,6 +2100,27 @@ export type Database = {
       acquire_email_mailbox: {
         Args: { _id: string; _token: string }
         Returns: boolean
+      }
+      claim_roberta_run: {
+        Args: { _id: string; _token: string }
+        Returns: {
+          campaign_id: string | null
+          created_at: string
+          error: string | null
+          finished_at: string | null
+          id: string
+          lease_until: string | null
+          period_key: string
+          started_at: string | null
+          status: string
+          worker_token: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "marketing_agent_runs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       get_user_emails: {
         Args: { user_ids: string[] }
