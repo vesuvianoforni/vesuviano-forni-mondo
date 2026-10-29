@@ -1,0 +1,2 @@
+ALTER TABLE public.newsletter_recipients ADD COLUMN IF NOT EXISTS recipient_name text;
+COMMENT ON COLUMN public.newsletter_recipients.recipient_name IS 'Contact name snapshot captured when a human approves the campaign; null renders a localized neutral greeting.';

@@ -57,7 +57,7 @@ Deno.test('unsupported or ambiguous region keeps draft language', () => {
 });
 Deno.test('selected recipients retain language without exposing phone', () => {
   const r = selectRecipients([{ id: 'uk', email: 'london@pizza.co.uk', phone: '+442079460958', country: null, status: 'nuovo' }], { stages: ['nuovo'], countries: [] }, new Set());
-  assertEquals(r, [{ lead_id: 'uk', email: 'london@pizza.co.uk', language: 'en' }]);
+  assertEquals(r, [{ lead_id: 'uk', email: 'london@pizza.co.uk', language: 'en', recipient_name: null }]);
   assertEquals(languageCounts(r), { en: 1 });
 });
 Deno.test('delivery uses saved English text and original photos', () => {

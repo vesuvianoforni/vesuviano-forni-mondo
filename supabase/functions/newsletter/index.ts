@@ -17,8 +17,8 @@ const Body = z.discriminatedUnion('action', [
   z.object({ action: z.literal('assets'), language: z.enum(['it', 'en', 'fr', 'de', 'es']) }),
   z.object({ action: z.literal('roberta_now'), prompt: z.string().trim().min(3).max(2000), language: z.enum(['it', 'en', 'fr', 'de', 'es']) }),
   z.object({ action: z.literal('translate'), campaign_id: Id }),
-  z.object({ action: z.literal('preview'), campaign_id: Id, language: z.enum(['it', 'en', 'fr', 'de', 'es']).optional() }),
-  z.object({ action: z.literal('test'), campaign_id: Id, email: z.string().email(), language: z.enum(['it', 'en', 'fr', 'de', 'es']).optional() }),
+  z.object({ action: z.literal('preview'), campaign_id: Id, language: z.enum(['it', 'en', 'fr', 'de', 'es']).optional(), recipient_name: z.string().trim().max(160).nullable().optional() }),
+  z.object({ action: z.literal('test'), campaign_id: Id, email: z.string().email(), language: z.enum(['it', 'en', 'fr', 'de', 'es']).optional(), recipient_name: z.string().trim().max(160).nullable().optional() }),
   z.object({ action: z.literal('send'), campaign_id: Id }),
 ]);
 const RunBody = z.object({ action: z.literal('roberta_run'), run_id: Id, token: Id });
@@ -73,7 +73,7 @@ async function fetchAll<T>(build: (from: number, to: number) => PromiseLike<{ da
 }
 
 async function resolveAudience(admin: SupabaseClient, audience: Audience, fallback = 'it') {
-  const leads = await fetchAll((a, b) => admin.from('leads').select('id,email,phone,status,country,archived').not('email', 'is', null).order('id').range(a, b));
+  const leads = await fetchAll((a, b) => admin.from('leads').select('id,email,phone,status,country,archived,contact_name').not('email', 'is', null).order('id').range(a, b));
   const unsub = await fetchAll((a, b) => admin.from('newsletter_unsubscribes').select('email').range(a, b));
   return selectRecipients(leads as any, audience, new Set(unsub.map((u: any) => u.email)), fallback);
 }
@@ -89,9 +89,9 @@ async function resendBatch(emails: unknown[]) {
   return (JSON.parse(text).data || []) as { id: string }[];
 }
 
-async function buildEmail(c: any, to: string) {
+async function buildEmail(c: any, to: string, recipientName?: string | null) {
   const url = await unsubscribeUrl(to);
-  const { html, text } = renderNewsletter(c, url);
+  const { html, text } = renderNewsletter(c, url, recipientName);
   return {
     from: NEWSLETTER_FROM, to: [to], reply_to: NEWSLETTER_REPLY_TO, subject: c.subject, html, text,
     headers: { 'List-Unsubscribe': `<${url}>, <mailto:${NEWSLETTER_REPLY_TO}?subject=unsubscribe>`, 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' },
@@ -102,15 +102,15 @@ async function buildEmail(c: any, to: string) {
 async function processCampaign(admin: SupabaseClient, campaign: any) {
   try {
     for (;;) {
-      const { data: batch } = await admin.from('newsletter_recipients').select('id,email,language').eq('campaign_id', campaign.id).eq('status', 'pending').limit(50);
+      const { data: batch } = await admin.from('newsletter_recipients').select('id,email,language,recipient_name').eq('campaign_id', campaign.id).eq('status', 'pending').limit(50);
       if (!batch?.length) break;
       const ids = batch.map((r) => r.id);
       // Claim before calling Resend so a parallel worker or retry can never mail the same address twice.
-      const { data: claimed, error: claimError } = await admin.from('newsletter_recipients').update({ status: 'sending' }).in('id', ids).eq('status', 'pending').select('id,email,language');
+      const { data: claimed, error: claimError } = await admin.from('newsletter_recipients').update({ status: 'sending' }).in('id', ids).eq('status', 'pending').select('id,email,language,recipient_name');
       if (claimError) throw claimError;
       if (!claimed?.length) continue;
       try {
-        const result = await resendBatch(await Promise.all(claimed.map((r) => buildEmail(campaignVersion(campaign, r.language), r.email))));
+        const result = await resendBatch(await Promise.all(claimed.map((r) => buildEmail(campaignVersion(campaign, r.language), r.email, r.recipient_name))));
         await Promise.all(claimed.map((r, i) => admin.from('newsletter_recipients').update({ status: 'sent', resend_id: result[i]?.id || null, sent_at: new Date().toISOString() }).eq('id', r.id)));
       } catch (e) {
         await admin.from('newsletter_recipients').update({ status: 'failed', error: String((e as Error).message).slice(0, 300) }).in('id', claimed.map((r) => r.id));
@@ -250,11 +250,11 @@ Deno.serve(async (req) => {
       } catch (e: any) { return json({ error: e.message }, e.status || 500); }
     }
     if (input.action === 'preview') {
-      return json(renderNewsletter(campaignVersion(campaign, input.language || campaign.language), `${functionsBase()}?u=preview`));
+      return json(renderNewsletter(campaignVersion(campaign, input.language || campaign.language), `${functionsBase()}?u=preview`, input.recipient_name));
     }
     if (input.action === 'test') {
       const version = campaignVersion(campaign, input.language || campaign.language);
-      const email = await buildEmail(version, input.email);
+      const email = await buildEmail(version, input.email, input.recipient_name);
       await resendBatch([{ ...email, subject: `[PROVA] ${version.subject}` }]);
       return json({ ok: true });
     }
@@ -267,7 +267,8 @@ Deno.serve(async (req) => {
     const { data: claimed } = await admin.from('newsletter_campaigns').update({ status: 'sending' }).eq('id', campaign.id).eq('status', 'draft').select().maybeSingle();
     if (!claimed) return json({ error: 'Campagna già in invio' }, 409);
     for (let i = 0; i < recipients.length; i += 500) {
-      await admin.from('newsletter_recipients').upsert(recipients.slice(i, i + 500).map((r) => ({ ...r, campaign_id: campaign.id })), { onConflict: 'campaign_id,email', ignoreDuplicates: true });
+      const { error } = await admin.from('newsletter_recipients').upsert(recipients.slice(i, i + 500).map((r) => ({ ...r, campaign_id: campaign.id })), { onConflict: 'campaign_id,email', ignoreDuplicates: true });
+      if (error) throw error;
     }
     await admin.from('newsletter_campaigns').update({ recipients_count: recipients.length }).eq('id', campaign.id);
     // @ts-ignore EdgeRuntime is provided by Supabase
