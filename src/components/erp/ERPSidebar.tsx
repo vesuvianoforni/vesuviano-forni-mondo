@@ -38,6 +38,7 @@ const mainItems = [
   { title: 'Dashboard', url: '/erp', icon: LayoutDashboard },
   { title: 'CRM', url: '/erp/crm', icon: Users },
   { title: 'Bruno AI', url: '/erp/bruno', icon: Bot },
+  { title: 'Roberta AI', url: '/erp/roberta', icon: Megaphone },
   { title: 'Link Configuratore', url: '/erp/sessioni-configuratore', icon: MessageCircle },
   { title: 'Pro-Forma', url: '/erp/proforma', icon: FileText },
   { title: 'Contratti', url: '/erp/contratti', icon: FileText },

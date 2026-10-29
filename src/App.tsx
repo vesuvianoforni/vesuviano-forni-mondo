@@ -64,6 +64,7 @@ const ERPForni = lazy(() => import("./pages/ERPForni"));
 const ERPBruciatori = lazy(() => import("./pages/ERPBruciatori"));
 const ERPVideoCommerciali = lazy(() => import("./pages/ERPVideoCommerciali"));
 const ERPNewsletter = lazy(() => import("./pages/ERPNewsletter"));
+const ERPRoberta = lazy(() => import("./pages/ERPRoberta"));
 const ERPLeads = lazy(() => import("./pages/ERPLeads"));
 const ERPBruno = lazy(() => import("./pages/ERPBruno"));
 const ERPListini = lazy(() => import("./pages/ERPListini"));
