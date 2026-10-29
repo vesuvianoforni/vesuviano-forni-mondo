@@ -13,6 +13,7 @@ import {
   PackageCheck,
   Brain,
   Bot,
+  Megaphone,
   MessageCircle,
   Store,
   Video,
