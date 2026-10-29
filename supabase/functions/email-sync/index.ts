@@ -8,7 +8,7 @@ import { safeMailError } from '../_shared/email-rules.ts';
 const schema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('status') }), z.object({ action: z.literal('test') }),
   z.object({ action: z.literal('sync') }), z.object({ action: z.literal('enable'), enabled: z.boolean() }),
-  z.object({ action: z.literal('process'), run_id: z.string().uuid() }),
+  z.object({ action: z.literal('process'), run_id: z.string().uuid(), worker_token: z.string().uuid() }),
 ]);
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
@@ -27,7 +27,7 @@ Deno.serve(async req => {
     if (input.action === 'process') {
       // This endpoint can only consume an existing, recent queued run. It cannot create work, send SMTP,
       // select a mailbox, change configuration or read content. The DB scheduler owns run creation.
-      const { data: run, error } = await admin.from('email_sync_runs').select('id,kind,status,mailbox_id,created_at').eq('id',input.run_id).maybeSingle();
+      const { data: run, error } = await admin.from('email_sync_runs').select('id,kind,status,mailbox_id,created_at').eq('id',input.run_id).eq('worker_token',input.worker_token).maybeSingle();
       if (error || !run || run.status !== 'queued' || Date.now()-new Date(run.created_at).getTime() > 5*60000) return json({ error: 'Operazione non disponibile' },404);
       if (run.kind === 'connection_test') {
         const imap = imapClient(), smtp = smtpClient();
