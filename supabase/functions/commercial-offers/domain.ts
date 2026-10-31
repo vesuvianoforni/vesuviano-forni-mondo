@@ -28,6 +28,7 @@ export interface OfferSettings {
   timeline_produzione: string; timeline_consegna: string; timeline_installazione: string; timeline_collaudo: string;
   signature_name: string; signature_role: string; logo_url: string;
   companies: Record<CompanyEntity, OfferCompany>;
+  exclusion_presets?: { label: string; text: string }[];
 }
 export interface OfferItem {
   id: string; product_id: string | null; product_name: string; description: string;
@@ -58,6 +59,10 @@ export const DEFAULT_OFFER_SETTINGS: OfferSettings = {
   inclusions: '', exclusions: '', timeline_produzione: '', timeline_consegna: '', timeline_installazione: '', timeline_collaudo: '',
   signature_name: 'Gennaro Caglione', signature_role: 'Sales & Export Manager',
   logo_url: 'https://www.vesuvianoforni.com/lovable-uploads/vesuviano-logo-bianco.png',
+  exclusion_presets: [
+    { label: 'Predisposizione impianti', text: "Si richiede al cliente di predisporre prima del ns. arrivo di punti di carico/scarico acqua e una presa elettrica. N.B. qualora in fase di installazione non vi è stata fatta predisposizione, l'allaccio elettrico ha un costo supplementare di 200,00 € e l'allaccio idrico ha un costo supplementare di 200,00 €." },
+    { label: 'Pulizia canna fumaria', text: 'È obbligatoria la pulizia della canna fumaria prima del nostro intervento, a meno che non sia già pulita da massimo 45 giorni.' },
+  ],
   companies: {
     climatel: {
       label: 'CLIMATEL · Intesa Sanpaolo', name: 'CLIMATEL di Elefante Pasquale', vat: 'IT03895390650',

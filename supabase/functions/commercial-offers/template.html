@@ -377,6 +377,9 @@
         .doc-info { overflow-wrap:anywhere; max-width:60%; }
         .doc-number { font-size:18px; }
         th,td { overflow-wrap:anywhere; vertical-align:top; }
+        th,td {padding:8px; font-size:12px;}
+        th:nth-child(n+3),td:nth-child(n+3) {white-space:nowrap; overflow-wrap:normal;}
+        @media screen and (max-width:768px) { th,td {font-size:10px;padding:6px 4px;} }
         .table-wrapper { overflow-x:auto; }
         .firma-line { width:auto; border:0; margin-top:20px; text-align:right; }
         @media screen and (max-width:768px) { .doc-info {max-width:100%;} .doc-number {font-size:17px;} th,td {white-space:normal;} td:nth-child(2) {min-width:0;max-width:none;} .total-label {width:auto; flex:1;text-align:left;} .total-value {width:110px;flex-shrink:0;} .table-wrapper {margin:12px 0;padding:0;} table{min-width:0;} }

@@ -13,6 +13,7 @@ const Configuration = {
 export const SettingsSchema = z.object({ ...Configuration, validity_days: z.number().int().min(1).max(365),
   signature_name: z.string().max(200), signature_role: z.string().max(200), logo_url: z.string().url().max(2048).refine(value => value.startsWith('https://')),
   companies: z.object({ climatel: Company, unita1: Company, wise: Company }),
+  exclusion_presets: z.array(z.object({ label: z.string().max(200), text: Text })).max(20).optional(),
 });
 export const DocumentSchema = z.object({ ...Configuration,
   customer_name: z.string().trim().min(1).max(300), customer_contact: z.string().max(200),
@@ -29,6 +30,7 @@ export const DocumentSchema = z.object({ ...Configuration,
 export const BodySchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('save'), id: z.string().uuid(), lead_id: z.string().uuid().nullable(), document: DocumentSchema, status: z.enum(['richiesta_offerta','offerta_pronta','offerta_inviata','negoziazione','offerta_accettata','offerta_rifiutata']), expected_updated_at: z.string().datetime({ offset: true }).optional() }),
   z.object({ action: z.literal('settings') }),
+  z.object({ action: z.literal('translate'), document: DocumentSchema, source_language: z.enum(OFFER_LANGUAGES), target_language: z.enum(OFFER_LANGUAGES) }),
   z.object({ action: z.literal('save_settings'), settings: SettingsSchema }),
   z.object({ action: z.literal('share'), id: z.string().uuid(), enabled: z.boolean(), expected_updated_at: z.string().datetime({ offset: true }) }),
   z.object({ action: z.literal('archive'), id: z.string().uuid(), archived: z.boolean(), expected_updated_at: z.string().datetime({ offset: true }) }),

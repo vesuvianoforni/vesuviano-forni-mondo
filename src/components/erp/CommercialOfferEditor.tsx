@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ArrowLeft, Copy, Download, Eye, EyeOff, Loader2, Plus, Save, Search, Trash2 } from 'lucide-react';
+import { ArrowLeft, Copy, Download, Eye, EyeOff, Languages, Loader2, Plus, Save, Search, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,6 +25,7 @@ export function CommercialOfferEditor({initial,existing,initialLeadId,leads,cata
   const [leadSearch,setLeadSearch]=useState('');
   const [showPreview,setShowPreview]=useState(true);
   const [dirty,setDirty]=useState(false);
+  const [contentLanguage,setContentLanguage]=useState(initial.language);
   const totals=offerTotals(doc);
   const html=useMemo(()=>renderCommercialOffer(doc,existing?.number ?? 'BOZZA',existing?.created_at),[doc,existing]);
   const change=<K extends keyof OfferDocument>(key:K,value:OfferDocument[K])=>{setDoc(prev=>({...prev,[key]:value}));setDirty(true);};
@@ -47,6 +48,7 @@ export function CommercialOfferEditor({initial,existing,initialLeadId,leads,cata
   const products=catalog(doc.price_list).filter(product=>`${product.name} ${product.description}`.toLowerCase().includes(search.toLowerCase()));
   const updateItem=(index:number,key:string,value:unknown)=>change('items',doc.items.map((item,i)=>i===index?{...item,[key]:value}:item));
   const pdf=async()=>{setBusy(true);try{await downloadCommercialOffer(doc,existing?.number??'BOZZA',existing?.created_at);}catch(error){toast.error(error instanceof Error?error.message:'PDF non disponibile');}finally{setBusy(false);}};
+  const translate=async()=>{setBusy(true);try{const result=await commercialOfferAction<{document:OfferDocument}>({action:'translate',document:doc,source_language:contentLanguage,target_language:doc.language});setDoc({...result.document,settings_snapshot:doc.settings_snapshot});setContentLanguage(doc.language);setDirty(true);toast.success('Testi tradotti: controlla e salva l’offerta');}catch(error){toast.error(error instanceof Error?error.message:'Traduzione non disponibile');}finally{setBusy(false);}};
   return <div className="space-y-5">
     <div className="flex flex-wrap items-center justify-between gap-3"><div className="flex items-center gap-3"><Button variant="outline" size="icon" aria-label="Torna alle offerte" title="Torna alle offerte" onClick={back}><ArrowLeft/></Button><div><h1 className="text-2xl font-semibold">{existing?.number ?? 'Nuova offerta'}</h1><p className="text-sm text-muted-foreground">Vesuviano{dirty?' · Modifiche non salvate':''}</p></div></div><div className="flex flex-wrap gap-2"><Button variant="outline" size="icon" title={showPreview?'Nascondi anteprima':'Mostra anteprima'} aria-label={showPreview?'Nascondi anteprima':'Mostra anteprima'} onClick={()=>setShowPreview(!showPreview)}>{showPreview?<EyeOff/>:<Eye/>}</Button><Button variant="outline" onClick={pdf} disabled={busy}><Download/>PDF</Button><Button onClick={save} disabled={busy}>{busy?<Loader2 className="animate-spin"/>:<Save/>}Salva offerta</Button></div></div>
     <div className={`grid min-w-0 gap-6 ${showPreview?'xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]':''}`}>
@@ -61,6 +63,7 @@ export function CommercialOfferEditor({initial,existing,initialLeadId,leads,cata
             {textField('title','Oggetto offerta *')}<div className="space-y-1.5"><Label htmlFor="offer-description">Descrizione</Label><Textarea id="offer-description" value={doc.description} onChange={e=>change('description',e.target.value)}/></div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">{selectField('language','Lingua documento',Object.fromEntries(OFFER_LANGUAGES.map(v=>[v,{it:'Italiano',en:'English',fr:'Français',de:'Deutsch',es:'Español'}[v]])))}{selectField('currency','Valuta',Object.fromEntries(OFFER_CURRENCIES.map(v=>[v,v])))}{selectField('company_entity','Azienda / Conto',Object.fromEntries(Object.entries(doc.settings_snapshot.companies).map(([key,c])=>[key,c.label])))}{textField('valid_until','Valida fino al','date')}</div>
             <div className="space-y-1.5"><Label>Stato</Label><Select value={status} onValueChange={v=>{setStatus(v as OfferStatus);setDirty(true);}}><SelectTrigger aria-label="Stato offerta"><SelectValue/></SelectTrigger><SelectContent>{Object.entries(OFFER_STATUSES).map(([v,label])=><SelectItem key={v} value={v}>{label}</SelectItem>)}</SelectContent></Select></div>
+            {doc.language!==contentLanguage&&<Button variant="outline" onClick={translate} disabled={busy||!doc.items.length}><Languages/>Traduci testi in {doc.language.toUpperCase()}</Button>}
           </AccordionContent></AccordionItem>
           <AccordionItem value="products"><AccordionTrigger>Prodotti e servizi · {doc.items.length}</AccordionTrigger><AccordionContent className="space-y-4">
             <div className="flex flex-wrap items-end gap-2"><div className="min-w-40 flex-1">{selectField('price_list','Listino di riferimento',{A:'Listino A',B:'Listino B',C:'Listino C',Reseller:'Rivenditori'})}</div><Button variant="outline" onClick={()=>setPicker(true)}><Plus/>Dal catalogo</Button><Button variant="outline" onClick={()=>change('items',[...doc.items,emptyOfferItem()])}><Plus/>Voce libera</Button></div>
