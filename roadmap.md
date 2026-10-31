@@ -1,5 +1,10 @@
 # Roadmap
 
+## Preventivatore Zapper per Vesuviano
+- [ ] Recuperare il preventivatore da Zapper ER Wing e individuare tutte le impostazioni Vesuviano.
+- [ ] Integrare il preventivatore preservando pro-forma e configuratore esistenti; importare le impostazioni disponibili senza accedere al database del progetto sorgente.
+- [ ] Verificare creazione, salvataggio e anteprima preventivo e documentare eventuali dati da esportare da Zapper.
+
 ## Dashboard ERP
 - [x] Dashboard rinnovata: contrasto leggibile, riepiloghi lead/attività scadute/produzione/bozze newsletter, pipeline a sei fasi, agenda che apre la scheda cliente e accessi rapidi inclusi Bruno e Roberta; sola lettura, nessun cambiamento ai flussi. 16 test superati e verifica con dati di prova a 1280, 1493 e 390 px, modalità scura, paginazione oltre 1000 lead, aggiornamento e stati vuoti/errore, nessun errore runtime. Accesso autenticato reale non verificabile per il Supabase esterno.
 
