@@ -17,6 +17,7 @@ import { CRMLeadDetail } from "@/components/erp/CRMLeadDetail";
 import { useCRMInteractions } from "@/hooks/useCRMInteractions";
 import { activityLabels } from "@/lib/crmActivity";
 import { format } from "date-fns";
+import { useSearchParams } from "react-router-dom";
 
 const leadSources = ["website", "configuratore", "chat", "referral", "social_media", "cold_call", "trade_show", "zapier", "other"];
 const pipelines = ["Vesuviano", "ZAPPER", "ZAPPER Pro"];
@@ -42,6 +43,7 @@ const emptyForm = {
 };
 
 export default function ERPLeads() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [users, setUsers] = useState<Array<{ id: string; email: string }>>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,6 +57,12 @@ export default function ERPLeads() {
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [detailId, setDetailId] = useState<string | null>(null);
   const [detailTab, setDetailTab] = useState<"riepilogo" | "comunicazioni" | "configuratore">("riepilogo");
+  const linkedLeadId = searchParams.get("lead");
+  useEffect(() => {
+    if (!linkedLeadId || !leads.some(lead => lead.id === linkedLeadId)) return;
+    setDetailTab("riepilogo");
+    setDetailId(linkedLeadId);
+  }, [linkedLeadId, leads]);
   const detailLead = leads.find((lead) => lead.id === detailId) ?? null;
   const openLead = (lead: Lead, tab: "riepilogo" | "comunicazioni" | "configuratore" = "riepilogo") => { setDetailTab(tab); setDetailId(lead.id); };
   const [form, setForm] = useState({ ...emptyForm });
@@ -551,7 +559,11 @@ export default function ERPLeads() {
         </DialogContent>
       </Dialog>
       <CRMLeadDetail lead={detailLead} open={!!detailLead} defaultTab={detailTab}
-        onOpenChange={(open) => !open && setDetailId(null)}
+        onOpenChange={(open) => {
+          if (open) return;
+          setDetailId(null);
+          if (linkedLeadId) setSearchParams(previous => { const next = new URLSearchParams(previous); next.delete("lead"); return next; }, { replace: true });
+        }}
         onEdit={handleEditLead} onSchedule={lead => handleEditLead(lead, true)}
         onDelete={handleDeleteLead} onSetStatus={handleSetStatus} onUpdated={loadLeads}
         lastInteraction={detailLead ? interactions[detailLead.id] : null}
