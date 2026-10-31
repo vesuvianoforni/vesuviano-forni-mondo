@@ -58,6 +58,8 @@ const ERPDashboard = lazy(() => import("./pages/ERPDashboard"));
 const AdminConfigurator = lazy(() => import("./pages/AdminConfigurator"));
 const SessionsCRM = lazy(() => import("./pages/SessionsCRM"));
 const AdminProforma = lazy(() => import("./pages/AdminProforma"));
+const ERPOfferte = lazy(() => import("./pages/ERPOfferte"));
+const PublicCommercialOffer = lazy(() => import("./pages/PublicCommercialOffer"));
 const AdminBlog = lazy(() => import("./pages/AdminBlog"));
 const ERPPlaceholder = lazy(() => import("./components/erp/ERPPlaceholder"));
 const ERPForni = lazy(() => import("./pages/ERPForni"));
@@ -369,6 +371,7 @@ const App = () => {
               <Route path="/es/contacto" element={<LocalizedContact lang="es" />} />
               <Route path="/de/kontakt" element={<LocalizedContact lang="de" />} />
               <Route path="/proforma/:token" element={<ProformaPage />} />
+              <Route path="/offerta/:code" element={<PublicCommercialOffer />} />
               <Route path="/built-on-place" element={<BuiltOnPlace />} />
 
               {/* ERP */}
@@ -380,6 +383,7 @@ const App = () => {
                 <Route path="bruno" element={<ERPBruno />} />
                 <Route path="sessioni-configuratore" element={<SessionsCRM />} />
                 <Route path="proforma" element={<AdminProforma />} />
+                <Route path="offerte" element={<ERPOfferte />} />
                 <Route path="configuratore" element={<AdminConfigurator />} />
                 <Route path="blog" element={<AdminBlog />} />
                 <Route path="forni" element={<ERPForni />} />

@@ -13,6 +13,7 @@ import { activityLabels } from '@/lib/crmActivity';
 const shortcuts = [
   { title: 'CRM', label: 'Clienti e trattative', icon: Users, tone: 'text-accent bg-accent/10', url: '/erp/crm' },
   { title: 'Pro-Forma', label: 'Preventivi', icon: FileText, tone: 'text-primary bg-primary/10', url: '/erp/proforma' },
+  { title: 'Offerte commerciali', label: 'Preventivatore Vesuviano', icon: FileText, tone: 'text-accent bg-accent/10', url: '/erp/offerte' },
   { title: 'Ordini', label: 'Produzione e spedizioni', icon: Truck, tone: 'text-secondary bg-secondary/10', url: '/erp/ordini' },
   { title: 'Link Configuratore', label: 'Sessioni clienti', icon: TrendingUp, tone: 'text-accent bg-accent/10', url: '/erp/sessioni-configuratore' },
   { title: 'Bruno AI', label: 'Sales & back-office', icon: Bot, tone: 'text-accent bg-accent/10', url: '/erp/bruno' },

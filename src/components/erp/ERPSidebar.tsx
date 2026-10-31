@@ -42,6 +42,7 @@ const mainItems = [
   { title: 'Roberta AI', url: '/erp/roberta', icon: Megaphone },
   { title: 'Link Configuratore', url: '/erp/sessioni-configuratore', icon: MessageCircle },
   { title: 'Pro-Forma', url: '/erp/proforma', icon: FileText },
+  { title: 'Offerte commerciali', url: '/erp/offerte', icon: FileText },
   { title: 'Contratti', url: '/erp/contratti', icon: FileText },
   { title: 'Configuratore', url: '/erp/configuratore', icon: SettingsIcon },
 ];
