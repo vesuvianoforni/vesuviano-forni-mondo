@@ -387,3 +387,57 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Local ERP dashboard theme: keep the public site and other ERP pages unchanged. */
+@layer base {
+  .erp-dashboard {
+    --background: 220 20% 98%;
+    --foreground: 220 12% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 12% 16%;
+    --primary: 34 94% 43%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 155 47% 31%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 9% 43%;
+    --accent: 211 67% 41%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 3 65% 43%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 12% 88%;
+    --input: 220 12% 88%;
+    --ring: 34 94% 43%;
+  }
+
+  .dark .erp-dashboard {
+    --background: 220 6% 11%;
+    --foreground: 220 10% 94%;
+    --card: 220 5% 15%;
+    --card-foreground: 220 10% 94%;
+    --primary: 36 92% 57%;
+    --primary-foreground: 220 6% 11%;
+    --secondary: 155 43% 61%;
+    --secondary-foreground: 220 6% 11%;
+    --muted: 220 5% 20%;
+    --muted-foreground: 220 7% 66%;
+    --accent: 211 77% 67%;
+    --accent-foreground: 220 6% 11%;
+    --destructive: 3 76% 67%;
+    --destructive-foreground: 220 6% 11%;
+    --border: 220 5% 25%;
+    --input: 220 5% 25%;
+  }
+}
+
+.erp-pipeline-progress {
+  appearance: none;
+  height: 6px;
+  border: none;
+  border-radius: 4px;
+  overflow: hidden;
+  background: hsl(var(--muted));
+}
+.erp-pipeline-progress::-webkit-progress-bar { background: hsl(var(--muted)); }
+.erp-pipeline-progress::-webkit-progress-value { background: currentColor; border-radius: 4px; }
+.erp-pipeline-progress::-moz-progress-bar { background: currentColor; border-radius: 4px; }
