@@ -21,7 +21,7 @@ export function renderCommercialOffer(doc: OfferDocument, number = 'BOZZA', crea
   const company = settings.companies[doc.company_entity];
   const symbol = {EUR:'€',GBP:'£',USD:'$',CHF:'CHF'}[doc.currency];
   const rows = doc.items.map((item,index) => `<tr><td><strong>${escapeOfferHtml(item.product_name)}</strong></td><td>${lines(item.description)}${item.notes ? `<br><small>${lines(item.notes)}</small>` : ''}</td><td>${item.quantity}</td><td>${money(item.unit_price)}</td><td>${item.discount_percent}%</td><td>${money(totals.lines[index] ?? 0)}</td></tr>`).join('');
-  const table = `<div class="table-wrapper"><table><thead><tr>${l.slice(14,20).map(label => `<th>${label}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
+  const table = `<div class="table-wrapper"><table><colgroup><col style="width:25%"><col style="width:25%"><col style="width:7%"><col style="width:16%"><col style="width:10%"><col style="width:17%"></colgroup><thead><tr>${l.slice(14,20).map(label => `<th>${label}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
   const timeline = [doc.timeline_produzione,doc.timeline_consegna,doc.timeline_installazione,doc.timeline_collaudo].map((value,index) => value ? `<div class="info-item"><div class="info-label">${l[22+index]}</div><div>${lines(value)}</div></div>` : '').join('');
   const included = [doc.include_certification ? l[26] : '', doc.include_warranty ? `${doc.warranty_years} ${l[27]}` : '', doc.inclusions].filter(Boolean).join('\n');
   const section = (title: string, text: string) => text ? `<div class="section"><div class="section-title">${title}</div><div class="client-info">${lines(text)}</div></div>` : '';
@@ -44,5 +44,5 @@ export function renderCommercialOffer(doc: OfferDocument, number = 'BOZZA', crea
     bank_holder: escapeOfferHtml(company?.bank_holder), bank_name: escapeOfferHtml(company?.bank_name), bank_iban: escapeOfferHtml(company?.bank_iban), bank_extra: escapeOfferHtml(company?.bank_extra),
     firma_commerciale: `${escapeOfferHtml(settings.signature_name)}<br>${escapeOfferHtml(settings.signature_role)}`,
   };
-  return html.replace(/\{\{([^}]+)\}\}/g, (_, key: string) => values[key] ?? '');
+  return html.replace(/\{\{([^}]+)\}\}/g, (_, key: string) => values[key] ?? '').replace('<div> · </div>','');
 }

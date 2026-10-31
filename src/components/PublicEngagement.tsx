@@ -8,7 +8,7 @@ const PublicEngagement = () => {
   const { pathname } = useLocation();
 
   // Keep conversion, administration and checkout screens free from promotional overlays.
-  if (/^\/(erp|admin|configuratore|proforma|contratto)(\/|$)/.test(pathname) ||
+  if (/^\/(erp|admin|configuratore|proforma|contratto|offerta)(\/|$)/.test(pathname) ||
       /^\/(success|appointments)(\/|$)/.test(pathname) ||
       /\/thank-you-(it|en|fr|de|es)$/.test(pathname)) return null;
 

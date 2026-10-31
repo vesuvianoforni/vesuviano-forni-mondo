@@ -1,5 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { CommercialOffer, OfferDocument, OfferItem, PriceList } from '../../supabase/functions/commercial-offers/domain';
+import defaultLogo from '@/assets/vesuviano-logo-bianco.png';
 export * from '../../supabase/functions/commercial-offers/domain';
 export { renderCommercialOffer } from './commercialOfferRenderer';
 export async function commercialOfferAction<T>(body: unknown): Promise<T> {
@@ -48,6 +49,10 @@ export function offerCatalog(ovens: CatalogOven[], burners: CatalogBurner[], lis
   return products;
 }
 export const emptyOfferItem = (): OfferItem => ({id:crypto.randomUUID(),product_id:null,product_name:'',description:'',image_url:'',quantity:1,unit_price:0,discount_percent:0,notes:''});
+export function catalogOfferItem(product:OfferCatalogProduct,currency:OfferDocument['currency']) {
+  if(product.price===null)throw new Error('Prezzo non disponibile: usa una voce libera con prezzo concordato');
+  return {item:{...emptyOfferItem(),product_id:product.key,product_name:product.name,description:product.description,image_url:product.image_url,unit_price:currency==='EUR'?product.price:0},requiresManualPrice:currency!=='EUR'};
+}
 
 export async function downloadCommercialOffer(doc: OfferDocument, number: string, createdAt?: string) {
   const { renderCommercialOffer } = await import('./commercialOfferRenderer');
@@ -58,19 +63,44 @@ export async function downloadCommercialOffer(doc: OfferDocument, number: string
   iframe.style.cssText = 'position:fixed;left:-10000px;top:0;width:800px;height:1200px;border:0';
   document.body.appendChild(iframe);
   try {
-    await new Promise<void>((resolve,reject) => { const timer = window.setTimeout(() => reject(new Error('Anteprima non disponibile')),15000); iframe.onload = () => { clearTimeout(timer); resolve(); }; iframe.srcdoc = renderCommercialOffer(doc,number,createdAt); });
+    let html = renderCommercialOffer(doc,number,createdAt);
+    let embeddedLogo: string | null = null;
+    // Embed the same original white logo in the PDF; the normal preview keeps its requested www URL.
+    if (doc.settings_snapshot.logo_url === 'https://www.vesuvianoforni.com/lovable-uploads/vesuviano-logo-bianco.png') {
+      const response = await fetch(defaultLogo);
+      if (!response.ok) throw new Error('Logo non disponibile');
+      const blob = await response.blob();
+      const logoData = await new Promise<string>((resolve,reject) => { const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(new Error('Logo non disponibile'));reader.readAsDataURL(blob); });
+      embeddedLogo = logoData;
+      html = html.replace(doc.settings_snapshot.logo_url,logoData);
+    }
+    await new Promise<void>((resolve,reject) => { const timer = window.setTimeout(() => reject(new Error('Anteprima non disponibile')),15000); iframe.onload = () => { clearTimeout(timer); resolve(); }; iframe.srcdoc = html; });
     const frameDoc = iframe.contentDocument;
     if (!frameDoc?.body) throw new Error('Anteprima non disponibile');
     await Promise.all([...frameDoc.images].map(image => image.complete ? Promise.resolve() : new Promise<void>(resolve => { image.onload = () => resolve(); image.onerror = () => resolve(); })));
     const canvas = await html2canvas(frameDoc.body,{scale:2,useCORS:true,logging:false,windowWidth:800});
     const pdf = new jsPDF({format:'a4',unit:'mm'});
+    const logoImage = frameDoc.querySelector<HTMLImageElement>('.logo img');
+    const logoRect = logoImage?.getBoundingClientRect();
     const sliceHeight = Math.floor(canvas.width * 277 / 190);
-    for (let y=0; y<canvas.height; y+=sliceHeight) {
+    const protectedBlocks = [...frameDoc.querySelectorAll('tr,.payment-section,.info-item,.firma,.header')].map(el=>{
+      const rect=el.getBoundingClientRect();return {top:Math.floor((rect.top+frameDoc.documentElement.scrollTop)*2),bottom:Math.ceil((rect.bottom+frameDoc.documentElement.scrollTop)*2)};
+    });
+    for (let y=0; y<canvas.height;) {
       if (y>0) pdf.addPage();
-      const slice=document.createElement('canvas');slice.width=canvas.width;slice.height=Math.min(sliceHeight,canvas.height-y);
+      let end=Math.min(y+sliceHeight,canvas.height);
+      const crossing=protectedBlocks.find(block=>block.top>y+100&&block.top<end&&block.bottom>end&&block.bottom-block.top<sliceHeight);
+      if(crossing)end=crossing.top;
+      const slice=document.createElement('canvas');slice.width=canvas.width;slice.height=end-y;
       const ctx=slice.getContext('2d');if (!ctx) throw new Error('PDF non disponibile');
       ctx.drawImage(canvas,0,y,canvas.width,slice.height,0,0,canvas.width,slice.height);
       pdf.addImage(slice.toDataURL('image/jpeg',0.95),'JPEG',10,10,190,slice.height*190/canvas.width);
+      if (y === 0 && embeddedLogo && logoImage?.naturalWidth && logoRect) {
+        const logoCanvas=document.createElement('canvas');logoCanvas.width=Math.min(512,logoImage.naturalWidth);logoCanvas.height=Math.round(logoCanvas.width*logoImage.naturalHeight/logoImage.naturalWidth);
+        const logoCtx=logoCanvas.getContext('2d');
+        if(logoCtx){logoCtx.drawImage(logoImage,0,0,logoCanvas.width,logoCanvas.height);pdf.addImage(logoCanvas.toDataURL('image/png'),'PNG',10+logoRect.left*190/800,10+logoRect.top*190/800,logoRect.width*190/800,logoRect.height*190/800,undefined,'FAST');}
+      }
+      y=end;
     }
     pdf.save(`Offerta_${number.replace(/[^\w-]/g,'_')}.pdf`);
   } finally { iframe.remove(); }
