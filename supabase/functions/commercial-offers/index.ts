@@ -42,7 +42,7 @@ Deno.serve(async req => {
     const parsed = BodySchema.safeParse(raw);
     if (!parsed.success) return json({ error: 'Dati non validi', details: parsed.error.flatten() },400);
     const input = parsed.data;
-    if (input.action === 'translate') return json({document:await translateOffer(input.document,input.source_language,input.target_language)});
+    if (input.action === 'translate') return json({document:await translateOffer(input.document,input.source_language,input.target_language,req)});
     if (input.action === 'save_settings' && !canManageOfferSettings(roles)) return json({ error: 'Solo gli amministratori possono modificare le impostazioni' },403);
     if (input.action === 'save_settings') {
       const { error } = await admin.from('commercial_offer_settings').upsert({ key: 'vesuviano', settings: input.settings, updated_by: auth.user.id });

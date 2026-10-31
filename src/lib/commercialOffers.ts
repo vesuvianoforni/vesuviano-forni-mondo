@@ -92,9 +92,9 @@ export async function downloadCommercialOffer(doc: OfferDocument, number: string
       ctx.drawImage(canvas,0,y,canvas.width,slice.height,0,0,canvas.width,slice.height);
       pdf.addImage(slice.toDataURL('image/jpeg',0.95),'JPEG',10,10,190,slice.height*190/canvas.width);
       if (y === 0 && embeddedLogo && logoImage?.naturalWidth && logoRect) {
-        const logoCanvas=document.createElement('canvas');logoCanvas.width=logoImage.naturalWidth;logoCanvas.height=logoImage.naturalHeight;
+        const logoCanvas=document.createElement('canvas');logoCanvas.width=Math.min(512,logoImage.naturalWidth);logoCanvas.height=Math.round(logoCanvas.width*logoImage.naturalHeight/logoImage.naturalWidth);
         const logoCtx=logoCanvas.getContext('2d');
-        if(logoCtx){logoCtx.drawImage(logoImage,0,0);pdf.addImage(logoCanvas.toDataURL('image/png'),'PNG',10+logoRect.left*190/800,10+logoRect.top*190/800,logoRect.width*190/800,logoRect.height*190/800);}
+        if(logoCtx){logoCtx.drawImage(logoImage,0,0,logoCanvas.width,logoCanvas.height);pdf.addImage(logoCanvas.toDataURL('image/png'),'PNG',10+logoRect.left*190/800,10+logoRect.top*190/800,logoRect.width*190/800,logoRect.height*190/800,undefined,'FAST');}
       }
       y=end;
     }
