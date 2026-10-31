@@ -12,6 +12,7 @@ import { CRM_STAGES } from "@/lib/crmPipeline";
 import { activityLabels, activityTiming, exactActivityDate, interactionLabels, interactionRelativeTime, type LeadInteraction } from "@/lib/crmActivity";
 import { BrunoPanel, type BrunoLead } from "./BrunoPanel";
 import type { CRMLead } from "./CRMLeadCard";
+import { Link } from "react-router-dom";
 
 const SITE = "https://vesuvianoforni.com";
 
@@ -140,6 +141,7 @@ export function CRMLeadDetail({ lead, open, defaultTab = "riepilogo", onOpenChan
                   <Field label="Valore" value={lead.value ? `€${lead.value.toLocaleString("it-IT")}` : "Non stimato"} />
                   <Field label="Fonte" value={lead.source ? sourceLabels[lead.source] || lead.source : undefined} />
                   <Field label="Assegnato a" value={activityAssignee} />
+                  {lead.pipeline === "Vesuviano" && <Button asChild size="sm" variant="outline"><Link to={`/erp/offerte?lead=${encodeURIComponent(lead.id)}`} onClick={() => onOpenChange(false)}><ExternalLink className="mr-1 h-3.5 w-3.5" />Offerte commerciali</Link></Button>}
                 </CardContent>
               </Card>
               <Card className="sm:col-span-2">

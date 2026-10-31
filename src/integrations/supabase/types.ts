@@ -271,6 +271,92 @@ export type Database = {
           },
         ]
       }
+      commercial_offer_settings: {
+        Row: {
+          created_at: string
+          key: string
+          settings: Json
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          key?: string
+          settings: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          key?: string
+          settings?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      commercial_offers: {
+        Row: {
+          amount: number
+          archived: boolean
+          created_at: string
+          created_by: string | null
+          currency: string
+          customer_name: string
+          document: Json
+          id: string
+          lead_id: string | null
+          number: string
+          public_code: string
+          public_enabled: boolean
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          archived?: boolean
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          customer_name: string
+          document: Json
+          id?: string
+          lead_id?: string | null
+          number: string
+          public_code?: string
+          public_enabled?: boolean
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          archived?: boolean
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          customer_name?: string
+          document?: Json
+          id?: string
+          lead_id?: string | null
+          number?: string
+          public_code?: string
+          public_enabled?: boolean
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commercial_offers_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       commercial_videos: {
         Row: {
           created_at: string
