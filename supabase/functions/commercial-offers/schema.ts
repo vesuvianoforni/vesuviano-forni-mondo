@@ -27,9 +27,9 @@ export const DocumentSchema = z.object({ ...Configuration,
   })).min(1).max(100),
 });
 export const BodySchema = z.discriminatedUnion('action', [
-  z.object({ action: z.literal('save'), id: z.string().uuid(), lead_id: z.string().uuid().nullable(), document: DocumentSchema, status: z.enum(['richiesta_offerta','offerta_pronta','offerta_inviata','negoziazione','offerta_accettata','offerta_rifiutata']), expected_updated_at: z.string().datetime().optional() }),
+  z.object({ action: z.literal('save'), id: z.string().uuid(), lead_id: z.string().uuid().nullable(), document: DocumentSchema, status: z.enum(['richiesta_offerta','offerta_pronta','offerta_inviata','negoziazione','offerta_accettata','offerta_rifiutata']), expected_updated_at: z.string().datetime({ offset: true }).optional() }),
   z.object({ action: z.literal('settings') }),
   z.object({ action: z.literal('save_settings'), settings: SettingsSchema }),
-  z.object({ action: z.literal('share'), id: z.string().uuid(), enabled: z.boolean(), expected_updated_at: z.string().datetime() }),
-  z.object({ action: z.literal('archive'), id: z.string().uuid(), archived: z.boolean(), expected_updated_at: z.string().datetime() }),
+  z.object({ action: z.literal('share'), id: z.string().uuid(), enabled: z.boolean(), expected_updated_at: z.string().datetime({ offset: true }) }),
+  z.object({ action: z.literal('archive'), id: z.string().uuid(), archived: z.boolean(), expected_updated_at: z.string().datetime({ offset: true }) }),
 ]);

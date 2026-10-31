@@ -4,7 +4,6 @@ import { BodySchema, SettingsSchema } from './schema.ts';
 import { DEFAULT_OFFER_SETTINGS, canManageOffers, canManageOfferSettings, isPublicOfferAvailable, offerTotals, type OfferDocument, type OfferSettings, type CommercialOffer } from './domain.ts';
 
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
-const failure = (message: string, status: number): never => { throw Object.assign(new Error(message), { status }); };
 
 Deno.serve(async req => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
@@ -82,6 +81,7 @@ Deno.serve(async req => {
       return json({ offer: data });
     }
     if (!existing) return json({ error: 'Offerta non trovata' },404);
+    if (input.action === 'share' && input.enabled && existing.archived) return json({ error: 'Ripristina l’offerta prima di attivare il link' },400);
     const changes = input.action === 'share' ? { public_enabled: input.enabled } : { archived: input.archived, ...(input.archived ? { public_enabled: false } : {}) };
     const { data, error } = await admin.from('commercial_offers').update(changes).eq('id',input.id).eq('updated_at',input.expected_updated_at).select().maybeSingle();
     if (error) throw error;
