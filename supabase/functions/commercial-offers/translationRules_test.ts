@@ -1,0 +1,8 @@
+import { assertEquals, assertThrows } from 'https://deno.land/std@0.224.0/assert/mod.ts';
+import { DEFAULT_OFFER_SETTINGS,newOfferDocument } from './domain.ts';
+import { applyOfferTranslation,OFFER_TEXT_FIELDS,type OfferTranslatedTexts } from './translationRules.ts';
+const doc={...newOfferDocument(DEFAULT_OFFER_SETTINGS),title:'Offerta Real Bosco 100',customer_name:'Cliente',items:[{id:crypto.randomUUID(),product_id:'oven:1',product_name:'Real Bosco 100',description:'Forno 100',image_url:'',quantity:2,unit_price:1350,discount_percent:10,notes:''}]};
+const translated=()=>({...Object.fromEntries(OFFER_TEXT_FIELDS.map(field=>[field,doc[field]])),title:'Real Bosco 100 offer',items:doc.items.map(item=>({id:item.id,description:'Oven 100',notes:''}))} as OfferTranslatedTexts);
+Deno.test('traduzione preserva prezzi, sconti e dati cliente',()=>{const output=applyOfferTranslation(doc,translated(),'en');assertEquals(output.items[0].unit_price,1350);assertEquals(output.items[0].discount_percent,10);assertEquals(output.customer_name,'Cliente');assertEquals(output.language,'en');});
+Deno.test('traduzione rifiuta modifiche a numeri e campi vuoti',()=>{assertThrows(()=>applyOfferTranslation(doc,{...translated(),title:'Real Bosco 120 offer'},'en'));assertThrows(()=>applyOfferTranslation(doc,{...translated(),description:'New promise'},'en'));});
+Deno.test('traduzione rifiuta ID duplicati e articoli mancanti',()=>{const output=translated();assertThrows(()=>applyOfferTranslation(doc,{...output,items:[...output.items,...output.items]},'en'));assertThrows(()=>applyOfferTranslation(doc,{...output,items:[]},'en'));});

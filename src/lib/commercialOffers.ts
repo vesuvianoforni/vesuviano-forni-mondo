@@ -49,6 +49,10 @@ export function offerCatalog(ovens: CatalogOven[], burners: CatalogBurner[], lis
   return products;
 }
 export const emptyOfferItem = (): OfferItem => ({id:crypto.randomUUID(),product_id:null,product_name:'',description:'',image_url:'',quantity:1,unit_price:0,discount_percent:0,notes:''});
+export function catalogOfferItem(product:OfferCatalogProduct,currency:OfferDocument['currency']) {
+  if(product.price===null)throw new Error('Prezzo non disponibile: usa una voce libera con prezzo concordato');
+  return {item:{...emptyOfferItem(),product_id:product.key,product_name:product.name,description:product.description,image_url:product.image_url,unit_price:currency==='EUR'?product.price:0},requiresManualPrice:currency!=='EUR'};
+}
 
 export async function downloadCommercialOffer(doc: OfferDocument, number: string, createdAt?: string) {
   const { renderCommercialOffer } = await import('./commercialOfferRenderer');
