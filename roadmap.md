@@ -3,7 +3,7 @@
 ## Preventivatore Zapper per Vesuviano
 - [x] Recuperare il generatore di offerte commerciali da Zapper ER Wing e trasferire le impostazioni Vesuviano presenti nel codice.
 - [x] Integrare offerte isolate da pro-forma e configuratore: cataloghi A/B/C/Rivenditori in sola lettura, IVA, sconti, tre conti, inclusioni/esclusioni, firma, lingue, anteprima/PDF, link esplicito revocabile e impostazioni admin.
-- [x] Creazione, salvataggio/rilettura, traduzione, anteprima, PDF multipagina, condivisione/revoca e impostazioni verificati con dati di prova; funzione distribuita. Verifica autenticata reale indisponibile per Supabase esterno; personalizzazioni salvate solo nel database Zapper richiedono esportazione.
+- [x] Creazione, salvataggio/rilettura, anteprima, PDF multipagina, condivisione/revoca, esclusioni e prezzi mancanti verificati con dati di prova; 29 test superati e traduzione AI inglese reale verificata senza salvataggi o invii; funzione distribuita. Verifica autenticata reale indisponibile per Supabase esterno; personalizzazioni salvate solo nel database Zapper richiedono esportazione.
 
 ## Dashboard ERP
 - [x] Dashboard rinnovata: contrasto leggibile, riepiloghi lead/attività scadute/produzione/bozze newsletter, pipeline a sei fasi, agenda che apre la scheda cliente e accessi rapidi inclusi Bruno e Roberta; sola lettura, nessun cambiamento ai flussi. 16 test superati e verifica con dati di prova a 1280, 1493 e 390 px, modalità scura, paginazione oltre 1000 lead, aggiornamento e stati vuoti/errore, nessun errore runtime. Accesso autenticato reale non verificabile per il Supabase esterno.
