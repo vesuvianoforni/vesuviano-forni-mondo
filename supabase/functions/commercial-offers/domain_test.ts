@@ -8,6 +8,10 @@ Deno.test('conserva i tre conti aziendali del modello Zapper', () => {
   assertEquals(DEFAULT_OFFER_SETTINGS.companies.unita1.bank_iban, 'IT12P0306976451100000003224');
   assertEquals(DEFAULT_OFFER_SETTINGS.companies.wise.bank_iban, 'GB61 TRWI 6084 6462 5318 58');
 });
+Deno.test('esclusioni impianti e canna fumaria sono opzionali come nel modello sorgente',()=>{
+  assertEquals(newOfferDocument(DEFAULT_OFFER_SETTINGS).exclusions,'');
+  assertEquals(DEFAULT_OFFER_SETTINGS.exclusion_presets?.length,2);
+});
 Deno.test('sconti di riga e IVA standard sono calcolati sul netto', () => assertEquals(offerTotals(doc()), { lines: [1800], subtotal: 1800, vat: 396, total: 2196 }));
 for (const regime of ['reverse_charge','intra_ue','extra_ue','forfetario'] as const) Deno.test(`IVA ${regime} resta zero`, () => assertEquals(offerTotals({ ...doc(), vat_regime: regime }).vat, 0));
 Deno.test('commerciali gestiscono offerte ma solo admin modifica impostazioni', () => {

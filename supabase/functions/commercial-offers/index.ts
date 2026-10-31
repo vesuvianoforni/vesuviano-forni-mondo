@@ -25,7 +25,7 @@ Deno.serve(async req => {
       // Only the selected company's public identity is disclosed, not other company settings or CRM identifiers.
       const doc = data.document as OfferDocument;
       const company = doc.settings_snapshot.companies[doc.company_entity];
-      const document = { ...doc, settings_snapshot: { ...doc.settings_snapshot, companies: { [doc.company_entity]: company } } };
+      const document = { ...doc, settings_snapshot: { logo_url:doc.settings_snapshot.logo_url, signature_name:doc.settings_snapshot.signature_name, signature_role:doc.settings_snapshot.signature_role, companies: { [doc.company_entity]: company } } };
       return json({ offer: { number: data.number, document, created_at: data.created_at } });
     }
     if (req.method !== 'POST') return json({ error: 'Metodo non consentito' },405);
@@ -51,7 +51,7 @@ Deno.serve(async req => {
     }
     const { data: settingRow, error: settingError } = await admin.from('commercial_offer_settings').select('settings').eq('key','vesuviano').maybeSingle();
     if (settingError) throw settingError;
-    const settings: OfferSettings = settingRow ? SettingsSchema.parse(settingRow.settings) : structuredClone(DEFAULT_OFFER_SETTINGS);
+    const settings: OfferSettings = settingRow ? SettingsSchema.parse({ ...DEFAULT_OFFER_SETTINGS, ...settingRow.settings, exclusion_presets:settingRow.settings.exclusion_presets ?? DEFAULT_OFFER_SETTINGS.exclusion_presets }) : structuredClone(DEFAULT_OFFER_SETTINGS);
     if (input.action === 'settings') return json({ settings, can_edit: canManageOfferSettings(roles) });
 
     const { data: existing, error: readError } = await admin.from('commercial_offers').select('*').eq('id', input.id).maybeSingle();

@@ -13,7 +13,7 @@ const Configuration = {
 export const SettingsSchema = z.object({ ...Configuration, validity_days: z.number().int().min(1).max(365),
   signature_name: z.string().max(200), signature_role: z.string().max(200), logo_url: z.string().url().max(2048).refine(value => value.startsWith('https://')),
   companies: z.object({ climatel: Company, unita1: Company, wise: Company }),
-  exclusion_presets: z.array(z.object({ label: z.string().max(200), text: Text })).max(20).optional(),
+  exclusion_presets: z.array(z.object({ label: z.string().trim().min(1).max(200), text: Text.trim().min(1) })).max(20).optional(),
 });
 export const DocumentSchema = z.object({ ...Configuration,
   customer_name: z.string().trim().min(1).max(300), customer_contact: z.string().max(200),
