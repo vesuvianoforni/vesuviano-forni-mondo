@@ -1,5 +1,8 @@
 # Roadmap
 
+## Dashboard ERP
+- [ ] Migliorare leggibilità, riepiloghi dei dati esistenti, attività in agenda e accessi rapidi; verificare navigazione e visualizzazione senza cambiare i flussi operativi.
+
 ## Completati
 - [x] CRM Vesuviano: pipeline a fasi Nuovo, Qualificato, Trattativa, Vinto, Perso (colonna pipeline_stage + trigger auto-avanzamento)
 - [x] Link configuratore come feature della scheda cliente (box dedicato nel dettaglio: copia, email, WhatsApp, rigenera)
