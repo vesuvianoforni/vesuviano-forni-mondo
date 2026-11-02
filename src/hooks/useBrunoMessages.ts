@@ -44,7 +44,7 @@ export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel) {
     try {
       const page = await readPage(null);
       if (!isCurrent()) return;
-      setMessages(page.messages); cursor.current = page.cursor; setHasMore(page.hasMore);
+      setMessages(current => mergeMessagePages(page.messages, current)); cursor.current = page.cursor; setHasMore(page.hasMore);
     } catch { if (isCurrent()) setError("Impossibile caricare le comunicazioni."); }
     finally { if (isCurrent()) setLoading(false); }
   }, [scope, readPage]);
