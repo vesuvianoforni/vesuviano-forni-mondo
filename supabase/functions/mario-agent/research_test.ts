@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from 'https://deno.land/std@0.224.0/assert/mod.ts';
-import { validateResearchScope, researchCanRun, researchOperationAllowed } from '../_shared/mario/research-policy.ts';
+import { validateResearchScope, researchCanRun, researchOperationAllowed, boundedDiscoveryLimit } from '../_shared/mario/research-policy.ts';
 const scope = { objective: 'Pizzerie a Londra', rationale: 'Primo lotto limitato sui siti ufficiali.', criteria: ['Categoria e paese confermati'], exclusions: ['Duplicati e opposizioni'], targets: [{ provider: 'firecrawl', kind: 'pizzeria', country: 'UK', city: 'London', limit: 5 }], verify_limit: 5 };
 Deno.test('research does not run before explicit approval', () => assertEquals(researchCanRun({ status: 'proposed', approved_at: null, approved_by: null }), false));
 Deno.test('chat text alone cannot authorize research', () => assertEquals(researchCanRun({ status: 'queued', approved_at: null, approved_by: null }), false));
@@ -7,9 +7,16 @@ Deno.test('approved queued research can start', () => assertEquals(researchCanRu
 Deno.test('cancelled research cannot start another step', () => assertEquals(researchCanRun({ status: 'cancelled', approved_at: '2026-11-02', approved_by: 'user' }), false));
 Deno.test('research approval never authorizes delivery', () => assertEquals(researchOperationAllowed('send_email'), false));
 Deno.test('research approval never authorizes email drafts', () => assertEquals(researchOperationAllowed('draft'), false));
-Deno.test('plan examines no more than 100 results', () => { assertThrows(() => validateResearchScope({ ...scope, targets: ['London', 'Leeds', 'Bristol'].map(city => ({ ...scope.targets[0], provider: 'apify', city, limit: 50 })) }, ['UK'])); });
+Deno.test('campaign aims for 500 organizations independently of the email quota', () => {
+  const p = validateResearchScope({ ...scope, organization_goal: 500, verify_limit: 500, targets: Array.from({ length: 10 }, (_, i) => ({ ...scope.targets[0], query: `neapolitan pizza London area ${i}`, provider: i % 2 ? 'apify' : 'firecrawl', limit: 100 })) }, ['UK']);
+  assertEquals(p.organization_goal, 500); assertEquals(p.verify_limit, 500); assertEquals(p.targets.reduce((n,t)=>n+t.limit,0),1000);
+});
+Deno.test('discovery has a bounded 1500-result budget, not a promise of 500 valid contacts', () => { assertThrows(() => validateResearchScope({ ...scope, organization_goal: 500, verify_limit: 500, targets: Array.from({length:16},(_,i)=>({...scope.targets[0],query:`London pizzeria area ${i}`,limit:100})) }, ['UK'])); });
 Deno.test('research plan honors enabled markets', () => { assertThrows(() => validateResearchScope(scope, ['FR'])); });
 Deno.test('research can collect Germany manually without delivery', () => assertEquals(validateResearchScope({ ...scope, targets: [{ ...scope.targets[0], country: 'DE', city: 'Berlin' }] }, ['DE']).targets[0].country, 'DE'));
-Deno.test('Firecrawl per step bound is 10', () => { assertThrows(() => validateResearchScope({ ...scope, targets: [{ ...scope.targets[0], limit: 11 }] }, ['UK'])); });
+Deno.test('Firecrawl accepts 100 results per batch, never 101', () => { assertEquals(validateResearchScope({...scope,targets:[{...scope.targets[0],limit:100}]},['UK']).targets[0].limit,100);assertThrows(() => validateResearchScope({ ...scope, targets: [{ ...scope.targets[0], limit: 101 }] }, ['UK'])); });
 Deno.test('duplicate research scope is rejected', () => { assertThrows(() => validateResearchScope({ ...scope, targets: [scope.targets[0], scope.targets[0]] }, ['UK'])); });
 Deno.test('valid approved scope preserves requested organization and city', () => { const p = validateResearchScope(scope, ['UK']); assertEquals(p.targets[0].kind, 'pizzeria'); assertEquals(p.targets[0].city, 'London'); assertEquals(p.targets[0].limit, 5); });
+Deno.test('legacy plan keeps its original verification limit rather than silently expanding',()=>assertEquals(validateResearchScope(scope,['UK']).verify_limit,5));
+Deno.test('new plans cannot pretend ten candidates cover the 500 organization goal',()=>assertThrows(()=>validateResearchScope({...scope,organization_goal:500,verify_limit:500},['UK'])));
+Deno.test('a final batch stops at the goal of 500 stored organizations',()=>{assertEquals(boundedDiscoveryLimit(100,480,500),20);assertEquals(boundedDiscoveryLimit(100,500,500),0);});
