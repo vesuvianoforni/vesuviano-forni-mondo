@@ -2293,6 +2293,7 @@ export type Database = {
       }
       outreach_research_jobs: {
         Row: {
+          callback_claimed: boolean
           created_at: string
           error: string | null
           id: string
@@ -2307,6 +2308,7 @@ export type Database = {
           worker_token: string
         }
         Insert: {
+          callback_claimed?: boolean
           created_at?: string
           error?: string | null
           id?: string
@@ -2321,6 +2323,7 @@ export type Database = {
           worker_token?: string
         }
         Update: {
+          callback_claimed?: boolean
           created_at?: string
           error?: string | null
           id?: string
@@ -3201,9 +3204,34 @@ export type Database = {
         }[]
       }
       cancel_mario_research_plan: { Args: { p_id: string }; Returns: boolean }
+      claim_mario_research_callback: {
+        Args: { p_id: string; p_token: string }
+        Returns: {
+          callback_claimed: boolean
+          created_at: string
+          error: string | null
+          id: string
+          input: Json
+          kind: string
+          lease_until: string | null
+          ordinal: number
+          plan_id: string
+          result: Json | null
+          status: string
+          updated_at: string
+          worker_token: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "outreach_research_jobs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       claim_mario_research_job: {
         Args: { p_id: string; p_token: string }
         Returns: {
+          callback_claimed: boolean
           created_at: string
           error: string | null
           id: string
@@ -3249,6 +3277,10 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      fail_mario_research_job: {
+        Args: { p_error: string; p_id: string; p_token: string }
+        Returns: undefined
+      }
       finish_mario_research_job: {
         Args: { p_id: string; p_result: Json; p_token: string }
         Returns: boolean
@@ -3267,6 +3299,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      mario_crm_organization_summary: { Args: never; Returns: Json }
       mario_due_outbox: {
         Args: never
         Returns: {
@@ -3295,6 +3328,10 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      mario_existing_organization: {
+        Args: { p_domain: string }
+        Returns: boolean
       }
       mario_kpis: { Args: never; Returns: Json }
       mario_prospect_summary: {
