@@ -1,15 +1,17 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Radar, MessageSquarePlus, Trash2, Search, ShieldAlert, Store, Handshake, Workflow, BookOpen } from 'lucide-react';
+import { Radar, MessageSquarePlus, Trash2, Search, ShieldAlert, Store, Workflow, BookOpen, Mail, ChartNoAxesCombined, Settings2, Plus, X, ArrowLeft, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import SEOHead from '@/components/SEOHead';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { BrunoAgentChat, type AgentConfig } from '@/components/erp/BrunoAgentChat';
 import { loadThreads, newThread, saveThreads, type BrunoThread } from '@/lib/brunoThreads';
-import { MarioOperations } from '@/components/erp/MarioOperations';
+import { MarioOperations, marioAction } from '@/components/erp/MarioOperations';
+import { MarioDirectory, MARIO_STATUS, type MarioProspect } from '@/components/erp/MarioDirectory';
+import { MarioDelivery, type MarioSettings } from '@/components/erp/MarioDelivery';
 
 const KEY = 'mario-agent-threads';
 const MARIO: AgentConfig = {
@@ -23,139 +25,36 @@ const MARIO: AgentConfig = {
   ],
 };
 
-interface Prospect { id: string; kind: string; name: string; country: string; city: string | null; email: string | null; website: string | null; status: string; step: number; summary: string | null; replied_at: string | null; created_at: string; qualified: boolean; qualification_reason: string | null }
-interface Settings { paused: boolean; daily_limit: number; send_markets: string[]; sender_email: string | null; pause_reason: string | null }
-const db = supabase as any;
-const STATUS: Record<string, string> = { new: 'Da contattare', sequence: 'In sequenza', replied: 'Ha risposto', unsubscribed: 'Disiscritto', bounced: 'Rimbalzato', manual: 'Contatto manuale', done: 'Sequenza finita' };
-
 export default function ERPMario() {
   const [params, setParams] = useSearchParams();
-  const prospectId = params.get('prospect');
-  const section = params.get('section');
-  const [threads, setThreads] = useState<BrunoThread[]>(() => {
-    const t = loadThreads(KEY); if (t.length) return t;
-    const first = [newThread()]; saveThreads(first, KEY); return first;
-  });
-  const [prospects, setProspects] = useState<Prospect[]>([]);
-  const [settings, setSettings] = useState<Settings | null>(null);
-  const [q, setQ] = useState('');
-  const [kind, setKind] = useState('all');
-  const [country, setCountry] = useState('all');
-
-  const [loadError, setLoadError] = useState('');
-  const refresh = useCallback(async () => {
-    const rows: Prospect[] = [];
-    for (let offset = 0; ; offset += 500) {
-      const { data, error } = await db.from('outreach_prospects').select('id,kind,name,country,city,email,website,status,step,summary,replied_at,created_at,qualified,qualification_reason').order('created_at', { ascending: false }).order('id').range(offset, offset + 499);
-      if (error) { setLoadError('Impossibile caricare i prospect.'); return; }
-      rows.push(...(data ?? [])); if (!data || data.length < 500) break;
-    }
-    setProspects(rows); setLoadError('');
-    db.from('outreach_settings').select('paused,daily_limit,send_markets,sender_email,pause_reason').eq('key', 'default').maybeSingle().then(({ data }: any) => setSettings(data));
-  }, []);
-  useEffect(() => { void refresh(); }, [refresh]);
-
-  const activeThread = threads.find((t) => t.id === params.get('chat')) ?? threads[0];
-  const openThread = (id: string) => setParams(() => new URLSearchParams({ chat: id }));
-  const updateThread = useCallback((t: BrunoThread) => setThreads((prev) => {
-    const next = [t, ...prev.filter((x) => x.id !== t.id)]; saveThreads(next, KEY); return next;
-  }), []);
-  const createThread = () => { const t = newThread(); setThreads((prev) => { const next = [t, ...prev]; saveThreads(next, KEY); return next; }); openThread(t.id); };
-  const deleteThread = (id: string) => setThreads((prev) => { let next = prev.filter((x) => x.id !== id); if (!next.length) next = [newThread()]; saveThreads(next, KEY); return next; });
-
-  const filtered = useMemo(() => prospects.filter((p) =>
-    (kind === 'all' || p.kind === kind) && (country === 'all' || p.country === country) &&
-    (!q || `${p.name} ${p.city ?? ''} ${p.email ?? ''}`.toLowerCase().includes(q.toLowerCase()))), [prospects, q, kind, country]);
-  const selected = prospects.find((p) => p.id === prospectId);
-
-  return (
-    <div className="bruno-workspace flex h-[calc(100dvh-3.5rem)] min-h-0 w-full min-w-0 flex-col overflow-hidden bg-background text-foreground">
-      <SEOHead title="Mario AI | ERP" description="Outbound Partnership & Customers" />
-      <div className={cn('flex shrink-0 flex-wrap items-center justify-between gap-3 border-b px-4 py-3', prospectId && 'hidden md:flex')}>
-        <h1 className="flex items-center gap-2 text-xl font-semibold"><Radar className="h-5 w-5 text-primary" />Mario <span className="text-sm font-normal text-muted-foreground">Outbound Partnership & Customers</span></h1>
-        <div className="flex flex-wrap items-center gap-2 text-xs">
-          {settings && <Badge variant="secondary">{settings.daily_limit} nuovi contatti/giorno · invio {settings.send_markets.join(', ')}</Badge>}
-          <Badge variant="secondary" className="gap-1"><ShieldAlert className="h-3 w-3" />Germania: solo contatto manuale</Badge>
-          <Badge variant="secondary">Ricerca e bozze · invii non attivati</Badge>
-        </div>
-      </div>
-      {settings?.paused && (
-        <p className="shrink-0 border-b bg-muted px-4 py-2 text-xs text-muted-foreground">
-          Invii in pausa{settings.sender_email ? (settings.pause_reason ? `: ${settings.pause_reason}` : '') : ': manca la casella mittente dedicata.'}
-        </p>
-      )}
-      <div className="grid min-h-0 min-w-0 flex-1 overflow-hidden md:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[340px_minmax(0,1fr)]">
-        <div className={cn('flex min-h-0 min-w-0 flex-col overflow-hidden border-r', (prospectId || section) && 'hidden md:flex')}>
-          <div className={cn('m-3 shrink-0 rounded-xl border p-2', !prospectId ? 'border-primary' : 'border-border')}>
-            <p className="flex items-center gap-1.5 px-1 pb-2 text-xs font-semibold uppercase tracking-wide text-primary"><Radar className="h-3.5 w-3.5" />Agente</p>
-            <Button className="w-full" onClick={createThread}><MessageSquarePlus className="mr-2 h-4 w-4" />Nuova chat</Button>
-            <div className="mt-1.5 max-h-40 space-y-1 overflow-y-auto">
-              {threads.map((t) => (
-                <div key={t.id} className={cn('group flex items-center rounded-lg', !prospectId && activeThread?.id === t.id ? 'bg-muted' : 'hover:bg-muted/60')}>
-                  <button type="button" onClick={() => openThread(t.id)} className="min-w-0 flex-1 px-3 py-2 text-left">
-                    <span className="block truncate text-sm">{t.title}</span>
-                    <span className="block text-[11px] text-muted-foreground">{new Date(t.updatedAt).toLocaleString('it-IT', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
-                  </button>
-                  <button type="button" aria-label="Elimina conversazione" onClick={() => deleteThread(t.id)} className="mr-1 rounded p-1.5 text-muted-foreground opacity-0 hover:text-destructive group-hover:opacity-100"><Trash2 className="h-3.5 w-3.5" /></button>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="grid shrink-0 grid-cols-2 gap-2 px-3 pb-3">
-            <Button size="sm" variant="outline" onClick={() => setParams({ section: 'research' })}><Workflow className="mr-1.5 h-4 w-4" />Operazioni</Button>
-            <Button size="sm" variant="outline" onClick={() => setParams({ section: 'knowledge' })}><BookOpen className="mr-1.5 h-4 w-4" />Conoscenze</Button>
-          </div>
-          <div className="shrink-0 space-y-2 px-3 pb-2">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Prospect · {filtered.length}</p>
-            <div className="relative"><Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" /><Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cerca nome, città, email" className="h-8 pl-8 text-sm" /></div>
-            <div className="flex gap-2">
-              <select aria-label="Tipo" value={kind} onChange={(e) => setKind(e.target.value)} className="h-8 flex-1 rounded-md border bg-background px-2 text-xs">
-                <option value="all">Tutti i tipi</option><option value="pizzeria">Pizzerie</option><option value="partner">Partner Horeca</option>
-              </select>
-              <select aria-label="Paese" value={country} onChange={(e) => setCountry(e.target.value)} className="h-8 flex-1 rounded-md border bg-background px-2 text-xs">
-                <option value="all">Tutti i paesi</option><option value="UK">UK</option><option value="FR">Francia</option><option value="DE">Germania</option>
-              </select>
-            </div>
-          </div>
-          <div className="min-h-0 flex-1 overflow-y-auto">
-            {loadError && <p role="alert" className="px-4 py-3 text-xs text-destructive">{loadError}</p>}
-            {filtered.length === 0 && <p className="px-4 py-6 text-center text-xs text-muted-foreground">Nessun prospect trovato.</p>}
-            {filtered.map((p) => (
-              <button key={p.id} type="button" onClick={() => setParams(() => new URLSearchParams({ prospect: p.id }))}
-                className={cn('flex w-full items-start gap-3 border-b border-l-[3px] border-l-transparent px-4 py-2.5 text-left hover:bg-muted', prospectId === p.id && 'border-l-primary bg-accent/60')}>
-                {p.kind === 'partner' ? <Handshake className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> : <Store className="mt-0.5 h-4 w-4 shrink-0 text-primary" />}
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-semibold">{p.name}</span>
-                  <span className="block truncate text-xs text-muted-foreground">{p.city ?? '—'} · {p.country} · {STATUS[p.status] ?? p.status}</span>
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className={cn('flex min-h-0 min-w-0 flex-col overflow-hidden', !prospectId && !section && 'hidden md:flex')}>
-          {section ? <div className="min-h-0 flex-1 overflow-y-auto p-5"><Button variant="ghost" size="sm" onClick={() => setParams({})}>← Torna a Mario</Button><MarioOperations key={section} initialTab={section} onUpdated={() => void refresh()} /></div> : selected ? (
-            <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-5">
-              <Button variant="ghost" size="sm" onClick={() => setParams(() => new URLSearchParams())}>← Torna a Mario</Button>
-              <div>
-                <h2 className="text-lg font-semibold">{selected.name}</h2>
-                <p className="text-sm text-muted-foreground">{selected.kind === 'partner' ? 'Partner Horeca' : 'Pizzeria'} · {selected.city ?? '—'}, {selected.country}</p>
-              </div>
-              <div className="grid gap-2 text-sm sm:grid-cols-2">
-                <p><span className="text-muted-foreground">Email: </span>{selected.email ?? '—'}</p>
-                <p className="truncate"><span className="text-muted-foreground">Sito: </span>{selected.website ? <a href={selected.website} target="_blank" rel="noreferrer" className="text-primary underline">{selected.website}</a> : '—'}</p>
-                <p><span className="text-muted-foreground">Stato: </span>{STATUS[selected.status] ?? selected.status}</p>
-                <p><span className="text-muted-foreground">Email inviate: </span>{selected.step} / 3</p>
-              </div>
-              {selected.summary && <p className="rounded-lg border bg-muted/40 p-3 text-sm">{selected.summary}</p>}
-              <Badge variant="secondary">{selected.qualified ? 'Pertinenza verificata' : 'Da verificare'}</Badge>
-              {selected.qualification_reason && <p className="text-sm text-muted-foreground">{selected.qualification_reason}</p>}
-              <MarioOperations key={selected.id} prospectId={selected.id} onUpdated={() => void refresh()} />
-            </div>
-          ) : activeThread ? (
-            <BrunoAgentChat key={activeThread.id} thread={activeThread} onChange={updateThread} agent={{ ...MARIO, onInstructions: () => setParams({ section: 'instructions' }), onComplete: () => void refresh() }} />
-          ) : null}
-        </div>
-      </div>
+  const [threads, setThreads] = useState<BrunoThread[]>(() => { const t=loadThreads(KEY); if(t.length)return t;const first=[newThread()];saveThreads(first,KEY);return first; });
+  const [revision,setRevision]=useState(0);const [selected,setSelected]=useState<MarioProspect|null>(null);const [settings,setSettings]=useState<MarioSettings|null>(null);const [admin,setAdmin]=useState(false);const [error,setError]=useState('');const [eligibility,setEligibility]=useState('unreviewed');const [note,setNote]=useState('');
+  const section=params.get('section');const prospectId=params.get('prospect');const panel=Boolean(section||prospectId);const [mobile,setMobile]=useState(false);
+  const activeThread=threads.find(t=>t.id===params.get('chat'))??threads[0];
+  const navigate=(next:Record<string,string|null>)=>setParams(prev=>{const p=new URLSearchParams(prev);for(const [k,v] of Object.entries(next)){if(v===null)p.delete(k);else p.set(k,v);}return p;});
+  const updateThread=useCallback((t:BrunoThread)=>setThreads(prev=>{const next=[t,...prev.filter(x=>x.id!==t.id)];saveThreads(next,KEY);return next;}),[]);
+  const refresh=useCallback(()=>setRevision(n=>n+1),[]);
+  useEffect(()=>{let live=true;marioAction({action:'overview'}).then(d=>{if(live){setSettings(d.settings);setAdmin(d.is_admin);}}).catch(e=>{if(live)setError(e.message);});return()=>{live=false;};},[revision]);
+  useEffect(()=>{if(!prospectId){setSelected(null);return;}const controller=new AbortController();supabase.from('outreach_prospects').select('*').eq('id',prospectId).single().abortSignal(controller.signal).then(({data,error})=>{if(controller.signal.aborted)return;if(error)setError('Impossibile caricare il contatto.');else{const p=data as unknown as MarioProspect;setSelected(p);setEligibility(p.recipient_eligibility);setNote(p.eligibility_note??'');}});return()=>controller.abort();},[prospectId,revision]);
+  const createThread=()=>{const t=newThread();setThreads(prev=>{const next=[t,...prev];saveThreads(next,KEY);return next;});navigate({chat:t.id});setMobile(false);};
+  const deleteThread=(id:string)=>setThreads(prev=>{let next=prev.filter(t=>t.id!==id);if(!next.length)next=[newThread()];saveThreads(next,KEY);return next;});
+  const open=(view:string)=>{navigate({section:view,prospect:null});setMobile(true);};
+  const act=async(body:Record<string,unknown>)=>{setError('');try{await marioAction(body);refresh();}catch(e){setError((e as Error).message);}};
+  return <div className="bruno-workspace flex h-[calc(100dvh-3.5rem)] min-h-0 w-full min-w-0 flex-col overflow-hidden bg-background text-foreground">
+    <SEOHead title="Mario AI | ERP" description="Contatti, email e risultati outbound Vesuviano"/>
+    <header className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b px-4 py-3"><h1 className="flex items-center gap-2 text-xl font-semibold"><Radar className="h-5 w-5 text-primary"/>Mario <span className="hidden text-sm font-normal text-muted-foreground sm:inline">Partnership & Customers</span></h1><div className="flex flex-wrap gap-2"><Badge variant="secondary">Invii in pausa</Badge><Badge variant="outline">Max {settings?.daily_limit??100} email/giorno</Badge></div></header>
+    <nav className="flex shrink-0 flex-wrap items-center gap-1 border-b px-3 py-2"><Button size="sm" variant={mobile?'ghost':'secondary'} onClick={()=>{setMobile(false);navigate({section:null,prospect:null});}}><MessageSquarePlus className="mr-1.5 h-4 w-4"/>Chat</Button>{[['contacts','Contatti',Store],['drafts','Sequenze',Workflow],['templates','Email HTML',Mail],['kpi','KPI',ChartNoAxesCombined],['research','Ricerca',Search],['settings','Impostazioni',Settings2]].map(([key,label,Icon])=>{const I=Icon as typeof Store;return <Button key={String(key)} size="sm" variant={section===key?'secondary':'ghost'} onClick={()=>open(String(key))}><I className="mr-1.5 h-4 w-4"/>{String(label)}</Button>;})}</nav>
+    {error&&<p role="alert" className="shrink-0 border-b px-4 py-2 text-xs text-destructive">{error}</p>}
+    <div className={cn('grid min-h-0 flex-1 overflow-hidden lg:grid-cols-[180px_minmax(0,1fr)]',panel&&'xl:grid-cols-[180px_minmax(0,1fr)_minmax(380px,440px)]')}>
+      <aside className="hidden min-h-0 min-w-0 flex-col border-r lg:flex"><Button className="m-3" size="sm" onClick={createThread}><Plus className="mr-1.5 h-4 w-4"/>Nuova chat</Button><div className="min-h-0 flex-1 overflow-y-auto">{threads.map(t=><div key={t.id} className={cn('group flex min-w-0 items-center border-b',activeThread?.id===t.id&&'bg-muted')}><Button variant="ghost" className="h-auto min-w-0 flex-1 justify-start rounded-none px-3 py-3 text-left" onClick={()=>{navigate({chat:t.id});setMobile(false);}}><span className="min-w-0"><span className="block truncate text-xs font-medium">{t.title}</span><span className="mt-1 block text-[11px] text-muted-foreground">{new Date(t.updatedAt).toLocaleDateString('it-IT')}</span></span></Button><Button variant="ghost" size="icon" className="h-7 w-7 shrink-0 text-muted-foreground" title="Elimina chat" aria-label="Elimina chat" onClick={()=>deleteThread(t.id)}><Trash2 className="h-3 w-3"/></Button></div>)}</div><Button variant="ghost" size="sm" className="m-2 justify-start" onClick={()=>open('knowledge')}><BookOpen className="mr-2 h-4 w-4"/>Conoscenze</Button></aside>
+      <main className={cn('min-h-0 min-w-0 overflow-hidden',mobile&&panel?'hidden xl:block':'block',panel&&'lg:col-start-2 lg:row-start-1')}>{activeThread&&<BrunoAgentChat key={activeThread.id} thread={activeThread} onChange={updateThread} agent={{...MARIO,description:'Vesuviano Forni · pizzerie e partner Horeca',onInstructions:()=>open('instructions'),onComplete:refresh}}/>}</main>
+      {panel&&<aside className={cn('min-h-0 min-w-0 overflow-y-auto border-l p-4',mobile?'block':'hidden xl:block','lg:col-start-2 lg:row-start-1 xl:col-start-3')}><div className="mb-3 flex items-center justify-between"><p className="text-xs font-semibold uppercase text-muted-foreground">{prospectId?'Scheda contatto':'Mario · attività'}</p><Button size="icon" variant="ghost" title="Chiudi pannello" aria-label="Chiudi pannello" onClick={()=>{navigate({section:null,prospect:null});setMobile(false);}}><X className="h-4 w-4"/></Button></div>
+        {section==='contacts'?<MarioDirectory revision={revision} onSelect={p=>{setSelected(p);navigate({prospect:p.id,section:null});setMobile(true);}}/>:['kpi','templates','settings'].includes(section??'')?<MarioDelivery key={section} view={section??'settings'} onUpdated={refresh}/>:prospectId?selected?<div className="space-y-4"><Button size="sm" variant="ghost" onClick={()=>open('contacts')}><ArrowLeft className="mr-1 h-4 w-4"/>Archivio</Button><div><h2 className="break-words text-xl font-semibold">{selected.name}</h2><p className="text-sm text-muted-foreground">{selected.kind==='partner'?'Partner Horeca':'Pizzeria'} · {selected.city??'—'} · {selected.country}</p></div><div className="space-y-2 border-y py-3 text-sm"><p className="break-all">{selected.email??'Email da verificare'}</p>{selected.phone&&<p>{selected.phone}</p>}{selected.contact_name&&<p>{selected.contact_name}</p>}{selected.website&&<a href={selected.website} target="_blank" rel="noreferrer" className="flex items-center gap-1 break-all text-primary underline">Sito ufficiale<ExternalLink className="h-3 w-3"/></a>}<p className="text-xs text-muted-foreground">{MARIO_STATUS[selected.status]??selected.status} · {selected.step} email accettate dal server</p></div><Badge variant="secondary">{selected.qualified?'Pertinenza verificata':'Da verificare'}</Badge>{selected.summary&&<p className="text-sm">{selected.summary}</p>}{selected.qualification_reason&&<p className="text-xs text-muted-foreground">{selected.qualification_reason}</p>}
+          <details className="border-b pb-3"><summary className="cursor-pointer text-sm font-medium">Fonti e verifica</summary><pre className="mt-2 whitespace-pre-wrap break-all text-xs text-muted-foreground">{JSON.stringify(selected.evidence,null,2)}</pre></details>
+          <div className="space-y-2 border-b pb-4"><p className="text-sm font-semibold">Idoneità invio</p><p className="text-xs text-muted-foreground">{selected.recipient_eligibility==='eligible'?'Valutazione registrata':'Da valutare · email pubblica ≠ autorizzazione'}</p>{admin&&<><select aria-label="Idoneità destinatario" className="h-9 w-full rounded-md border bg-background px-2 text-sm" value={eligibility} onChange={e=>setEligibility(e.target.value)}><option value="unreviewed">Da valutare</option><option value="eligible">Idoneo · valutazione documentata</option><option value="blocked">Bloccato</option></select><Textarea aria-label="Motivazione idoneità" placeholder="Base e riferimento della valutazione" minLength={10} value={note} onChange={e=>setNote(e.target.value)}/><Button size="sm" variant="outline" disabled={note.trim().length<10} onClick={()=>void act({action:'eligibility',id:selected.id,recipient_eligibility:eligibility,eligibility_note:note})}>Registra valutazione</Button></>}</div>
+          <MarioOperations key={selected.id} prospectId={selected.id} initialTab="drafts" onUpdated={refresh}/><Button variant="ghost" size="sm" className="text-destructive" onClick={()=>void act({action:'suppress',id:selected.id,reason:'Esclusione manuale dal team'})}><ShieldAlert className="mr-1.5 h-4 w-4"/>Escludi dai contatti</Button>
+        </div>:<p className="text-sm text-muted-foreground">Caricamento contatto…</p>:<MarioOperations key={section} initialTab={section??'research'} onUpdated={refresh}/>}
+      </aside>}
     </div>
-  );
+  </div>;
 }
