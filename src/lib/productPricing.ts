@@ -21,3 +21,11 @@ export function marginPercentage(cost: number | null | undefined, costCurrency: 
   if (cost == null || price == null || price <= 0 || costCurrency !== priceCurrency) return null;
   return Math.round(((price - cost) / price) * 1000) / 10;
 }
+
+/** I vecchi codici A/B/C restano nei record come riferimento al paese: A=UK, B=Francia, C=Germania. */
+export const LEGACY_LIST_MARKET: Record<string, Market> = { A: "UK", B: "FR", C: "DE" };
+export function priceListLabel(code: string | null | undefined): string {
+  if (code === "Reseller") return "Rivenditori";
+  const m = code ? LEGACY_LIST_MARKET[code] : undefined;
+  return m ? `Listino ${MARKET_LABELS[m]}` : `Listino ${code ?? ""}`;
+}
