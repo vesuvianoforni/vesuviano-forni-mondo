@@ -7,6 +7,7 @@ import { STARTER_TEMPLATES, renderMarioEmail } from '../_shared/mario/templates.
 import { containsPrices } from '../_shared/marketing-policy.ts';
 import { deliveryLimits } from '../_shared/mario/delivery-policy.ts';
 import { enqueueMario, preflightMario, syncMarioInbox, dispatchMarioOnce } from '../_shared/mario/delivery.ts';
+import { MARIO_COUNTRIES } from '../_shared/mario/markets.ts';
 import { proposeResearch, researchPlans, approveResearch, cancelResearch } from '../_shared/mario/research.ts';
 
 const Body = z.discriminatedUnion('action', [
@@ -26,14 +27,15 @@ const Body = z.discriminatedUnion('action', [
   z.object({ action: z.literal('sync_inbox') }),
   z.object({ action: z.literal('preflight') }),
   z.object({ action: z.literal('dispatch_once') }),
-  z.object({ action: z.literal('save_settings'), daily_limit:z.number().int().min(1).max(100), min_interval_seconds:z.number().int().min(300).max(86400), window_start:z.number().int().min(0).max(23), window_end:z.number().int().min(1).max(24), timezone:z.enum(['Europe/Rome','Europe/London','Europe/Paris']), provider_approval_reference:z.string().max(2000).nullable() }),
+  z.object({ action: z.literal('save_settings'), daily_limit:z.number().int().min(1).max(200), min_interval_seconds:z.number().int().min(180).max(86400), window_start:z.number().int().min(0).max(23), window_end:z.number().int().min(1).max(24), timezone:z.enum(['Europe/Rome','Europe/London','Europe/Paris']), provider_approval_reference:z.string().max(2000).nullable() }),
   z.object({ action:z.literal('eligibility'),id:z.string().uuid(),recipient_eligibility:z.enum(['eligible','blocked','unreviewed']),eligibility_note:z.string().trim().min(10).max(2000) }),
-  z.object({ action:z.literal('prospect_add'),name:z.string().trim().min(2).max(200),kind:z.enum(['pizzeria','partner']),country:z.enum(['UK','FR','DE']),city:z.string().max(80),website:z.string().max(1000),email:z.string().email().nullable(),phone:z.string().max(50).nullable(),contact_name:z.string().max(160).nullable() }),
+  z.object({ action:z.literal('prospect_add'),name:z.string().trim().min(2).max(200),kind:z.enum(['pizzeria','partner']),country:z.enum(MARIO_COUNTRIES),city:z.string().max(80),website:z.string().max(1000),email:z.string().email().nullable(),phone:z.string().max(50).nullable(),contact_name:z.string().max(160).nullable() }),
   z.object({ action:z.literal('suppress'),id:z.string().uuid(),reason:z.string().trim().min(3).max(500) }),
   z.object({ action:z.literal('save_template'),key:z.string().max(80),subject:z.string().trim().min(3).max(100),body:z.string().trim().min(80).max(2500) }),
   z.object({ action: z.literal('instructions'), instructions: z.string().max(4000) }),
   z.object({ action: z.literal('knowledge'), id: z.string().uuid().nullable(), title: z.string().trim().min(2).max(160), content: z.string().trim().min(10).max(8000), source_url: z.string().max(1000).nullable(), active: z.boolean() }),
   z.object({ action: z.literal('pause') }), z.object({ action: z.literal('resume_ai') }),
+  z.object({ action: z.literal('autopilot_save'), enabled: z.boolean(), daily_organization_goal: z.number().int().min(10).max(300) }),
 ]);
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 Deno.serve(async req => {
@@ -51,15 +53,16 @@ Deno.serve(async req => {
     const parsed = Body.safeParse(await req.json()); if (!parsed.success) return json({ error: 'Richiesta non valida' }, 400);
     const b = parsed.data;
     if (b.action === 'overview') {
-      const [config, knowledge, runs, messages, settings, totals, templates, kpis, outbox] = await Promise.all([
+      const [config, knowledge, runs, messages, settings, totals, templates, kpis, outbox, autopilot, effective] = await Promise.all([
         db.from('outreach_agent_config').select('*').eq('key','default').single(), db.from('outreach_knowledge').select('*').order('updated_at', { ascending: false }).limit(60),
         db.from('outreach_runs').select('id,kind,status,found,sent,error,created_at,result').order('created_at', { ascending: false }).limit(20),
         db.from('outreach_messages').select('id,prospect_id,step,subject,body,html,status,approved_at').order('created_at', { ascending: false }).limit(60),
         db.from('outreach_settings').select('paused,sender_email,pause_reason,daily_limit,min_interval_seconds,window_start,window_end,timezone,weekdays,provider_approval_reference,provider_verified_at,preflight').eq('key','default').single(), db.rpc('mario_prospect_summary'),
         db.from('outreach_templates').select('*').eq('active',true),db.rpc('mario_kpis'),db.from('outreach_outbox').select('id,prospect_id,subject,smtp_status,copy_status,attempted_at,accepted_at,last_error').order('created_at',{ascending:false}).limit(30),
+        db.from('outreach_autopilot').select('enabled,countries,territory_cursor,daily_organization_goal,last_planned_on,last_tick_at,last_result').eq('key','default').single(), db.rpc('mario_effective_daily_limit'),
       ]);
       const saved=checked(templates);const library=STARTER_TEMPLATES.map(t=>({...t,...saved.find(s=>s.key===t.key),html:renderMarioEmail(saved.find(s=>s.key===t.key)?.body??t.body,t.language).html}));
-      return json({ config: checked(config), knowledge: checked(knowledge), runs: checked(runs), messages: checked(messages), settings: checked(settings), totals: checked(totals), templates:library,kpis:checked(kpis),outbox:checked(outbox),is_admin: isAdmin, system_prompt: marioSystemPrompt(checked(config).instructions), version: MARIO_VERSION });
+      return json({ config: checked(config), knowledge: checked(knowledge), runs: checked(runs), messages: checked(messages), settings: checked(settings), totals: checked(totals), templates:library,kpis:checked(kpis),outbox:checked(outbox),autopilot:checked(autopilot),effective_daily_limit:effective.data??0,is_admin: isAdmin, system_prompt: marioSystemPrompt(checked(config).instructions), version: MARIO_VERSION });
     }
     if (b.action === 'research_plans') return json(await researchPlans(db, b.thread_id));
     if (b.action === 'propose_research') return json(await proposeResearch(db, req, auth.user.id, b.thread_id, b.request));
@@ -97,6 +100,7 @@ Deno.serve(async req => {
     }
     if (b.action === 'pause') { checked(await db.from('outreach_settings').update({ paused:true,pause_reason:'Pausa manuale' }).eq('key','default')); return json({ paused:true }); }
     if (!isAdmin) return json({ error: 'Solo l’amministratore può modificare le istruzioni e le conoscenze.' }, 403);
+    if(b.action==='autopilot_save'){checked(await db.from('outreach_autopilot').update({enabled:b.enabled,daily_organization_goal:b.daily_organization_goal,owner_id:auth.user.id}).eq('key','default').select('key'));return json({note:b.enabled?'Autopilota attivo: ricerca giornaliera e invii automatici entro i limiti.':'Autopilota disattivato.'});}
     if(b.action==='preflight')return json(await preflightMario(db));
     if(b.action==='dispatch_once')return json(await dispatchMarioOnce(db));
     if(b.action==='save_settings'){
