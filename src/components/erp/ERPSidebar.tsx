@@ -14,6 +14,7 @@ import {
   Brain,
   Bot,
   Megaphone,
+  Radar,
   MessageCircle,
   Store,
   Video,
