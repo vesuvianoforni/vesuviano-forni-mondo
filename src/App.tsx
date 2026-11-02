@@ -69,13 +69,12 @@ const ERPNewsletter = lazy(() => import("./pages/ERPNewsletter"));
 const ERPRoberta = lazy(() => import("./pages/ERPRoberta"));
 const ERPLeads = lazy(() => import("./pages/ERPLeads"));
 const ERPBruno = lazy(() => import("./pages/ERPBruno"));
-const ERPListini = lazy(() => import("./pages/ERPListini"));
+const ERPProdotti = lazy(() => import("./pages/ERPProdotti"));
 const ERPOrdini = lazy(() => import("./pages/ERPOrdini"));
 const ERPUtenti = lazy(() => import("./pages/ERPUtenti"));
 const ERPProntaConsegna = lazy(() => import("./pages/ERPProntaConsegna"));
 const ERPKnowledgeBase = lazy(() => import("./pages/ERPKnowledgeBase"));
 const ERPChatLogs = lazy(() => import("./pages/ERPChatLogs"));
-const ERPListinoRivenditori = lazy(() => import("./pages/ERPListinoRivenditori"));
 const ERPContratti = lazy(() => import("./pages/ERPContratti"));
 const PublicContractSign = lazy(() => import("./pages/PublicContractSign"));
 const PublicContractTerms = lazy(() => import("./pages/PublicContractTerms"));
@@ -391,8 +390,9 @@ const App = () => {
                 <Route path="video-commerciali" element={<ERPVideoCommerciali />} />
                 <Route path="newsletter" element={<ERPNewsletter />} />
                 <Route path="roberta" element={<ERPRoberta />} />
-                <Route path="listini" element={<ERPListini />} />
-                <Route path="listino-rivenditori" element={<ERPListinoRivenditori />} />
+                <Route path="prodotti" element={<ERPProdotti />} />
+                <Route path="listini" element={<Navigate to="/erp/prodotti" replace />} />
+                <Route path="listino-rivenditori" element={<Navigate to="/erp/prodotti" replace />} />
                 <Route path="leads" element={<Navigate to="/erp/crm" replace />} />
                 <Route path="ordini" element={<ERPOrdini />} />
                 <Route path="utenti" element={<ERPUtenti />} />

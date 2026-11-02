@@ -78,9 +78,9 @@ const CURRENCIES = [
 ];
 
 const PRICE_LISTS = [
-  { code: 'A', name: 'Listino A' },
-  { code: 'B', name: 'Listino B' },
-  { code: 'C', name: 'Listino C' },
+  { code: 'A', name: 'Listino UK' },
+  { code: 'B', name: 'Listino Francia' },
+  { code: 'C', name: 'Listino Germania' },
 ];
 
 const getCurrencySymbol = (code: string) => CURRENCIES.find(c => c.code === code)?.symbol || '€';
@@ -590,12 +590,12 @@ const AdminProforma = () => {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <DollarSign className="w-5 h-5" /> Listino Prezzi
+                  <DollarSign className="w-5 h-5" /> Paese listino
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-1 gap-4">
                 <div>
-                  <Label className="text-xs">Listino Prezzi</Label>
+                  <Label className="text-xs">Paese listino</Label>
                   <Select value={priceList} onValueChange={(v) => {
                     setPriceList(v);
                     // Recalculate all oven prices

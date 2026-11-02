@@ -195,7 +195,7 @@ const ERPListini = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -204,26 +204,26 @@ const ERPListini = () => {
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <DollarSign className="w-7 h-7 text-amber-400" />
-          <h1 className="text-2xl font-bold text-amber-100">Gestione Listini</h1>
+          <DollarSign className="w-7 h-7 text-primary" />
+          <h1 className="text-2xl font-bold text-foreground">Gestione Listini</h1>
           <Badge variant="secondary" className="ml-2">{ovens.length} forni</Badge>
         </div>
       </div>
 
       <div className="flex items-center gap-4 mb-6">
         <div className="relative max-w-md flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Cerca modello..."
-            className="pl-10 bg-[#1a1a1a] border-amber-900/20 text-amber-100"
+            className="pl-10 bg-card border-border text-foreground"
           />
         </div>
       </div>
 
       {/* Forni Prices */}
-      <h2 className="text-lg font-semibold text-amber-200 mb-3 flex items-center gap-2">
+      <h2 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
         <Flame className="w-5 h-5" /> Forni
       </h2>
 
@@ -233,23 +233,23 @@ const ERPListini = () => {
           const hasSizes = oven.sizes?.length > 0 && oven.sizes.some((s: any) => s.coatings?.length > 0);
 
           return (
-            <Card key={oven.id} className="bg-[#1a1a1a] border-amber-900/20">
+            <Card key={oven.id} className="bg-card border-border">
               <div
-                className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-amber-900/5 transition-colors"
+                className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-muted/60 transition-colors"
                 onClick={() => setExpandedOven(isExpanded ? null : oven.id)}
               >
                 <div className="flex items-center gap-3">
                   {hasSizes ? (
-                    isExpanded ? <ChevronDown className="w-4 h-4 text-amber-400" /> : <ChevronRight className="w-4 h-4 text-gray-500" />
+                    isExpanded ? <ChevronDown className="w-4 h-4 text-primary" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />
                   ) : <div className="w-4" />}
                   {oven.image_url && (
                     <img src={oven.image_url} alt={oven.model_name} className="w-10 h-10 object-cover rounded-lg" />
                   )}
                   <div>
-                    <span className="font-medium text-amber-100">{oven.model_name}</span>
+                    <span className="font-medium text-foreground">{oven.model_name}</span>
                     <div className="flex gap-1 mt-0.5">
                       {Array.isArray(oven.fuel_type) && oven.fuel_type.filter(Boolean).map((f: string, i: number) => (
-                        <Badge key={i} variant="outline" className="text-[10px] border-amber-700/30 text-amber-300 py-0">{f}</Badge>
+                        <Badge key={i} variant="outline" className="text-[10px] border-border text-primary py-0">{f}</Badge>
                       ))}
                     </div>
                   </div>
@@ -260,7 +260,7 @@ const ERPListini = () => {
                       size="sm"
                       onClick={(e) => { e.stopPropagation(); saveOvenPrices(oven); }}
                       disabled={saving === oven.id}
-                      className="bg-amber-600 hover:bg-amber-700 text-xs"
+                      className="bg-primary hover:bg-primary/90 text-xs"
                     >
                       {saving === oven.id ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <Save className="w-3 h-3 mr-1" />}
                       Salva
@@ -303,7 +303,7 @@ const ERPListini = () => {
 
                     return (
                     <div key={sIdx} className="mb-4 last:mb-0">
-                      <div className="text-amber-300 font-semibold text-sm mb-2 flex items-center gap-2">
+                      <div className="text-primary font-semibold text-sm mb-2 flex items-center gap-2">
                         Ø {size.diameter}cm — {size.pizza_capacity} pizze
                         {size.can_be_built_on_site && <Badge className="bg-blue-700/20 text-blue-300 text-[10px]">Sul posto</Badge>}
                       </div>
@@ -312,20 +312,20 @@ const ERPListini = () => {
                         <div className="overflow-x-auto">
                           <table className="w-full text-sm">
                             <thead>
-                              <tr className="text-gray-400 text-xs border-b border-amber-900/10">
+                              <tr className="text-muted-foreground text-xs border-b border-border">
                                 <th className="text-left py-1.5 pr-3 w-40">Rivestimento</th>
                                 {PRICE_LISTS.map(pl => (
-                                  <th key={pl.code} colSpan={fields.length} className="text-center py-1.5 px-1 border-l border-amber-900/10">
+                                  <th key={pl.code} colSpan={fields.length} className="text-center py-1.5 px-1 border-l border-border">
                                     {pl.name}
                                   </th>
                                 ))}
                               </tr>
-                              <tr className="text-gray-500 text-[10px] uppercase tracking-wider">
+                              <tr className="text-muted-foreground text-[10px] uppercase tracking-wider">
                                 <th></th>
                                 {PRICE_LISTS.map(pl => (
                                   <React.Fragment key={pl.code}>
                                     {fields.map((field, fIdx) => (
-                                      <th key={field} className={`text-center py-1 px-1 ${fIdx === 0 ? 'border-l border-amber-900/10' : ''}`}>
+                                      <th key={field} className={`text-center py-1 px-1 ${fIdx === 0 ? 'border-l border-border' : ''}`}>
                                         {fieldLabels[field]}
                                       </th>
                                     ))}
@@ -335,8 +335,8 @@ const ERPListini = () => {
                             </thead>
                             <tbody>
                               {size.coatings.map((c: any, cIdx: number) => (
-                                <tr key={cIdx} className="border-t border-amber-900/10">
-                                  <td className="py-1.5 pr-3 text-amber-100 flex items-center gap-2">
+                                <tr key={cIdx} className="border-t border-border">
+                                  <td className="py-1.5 pr-3 text-foreground flex items-center gap-2">
                                     <label className="relative cursor-pointer group flex-shrink-0">
                                       <input
                                         type="file"
@@ -351,13 +351,13 @@ const ERPListini = () => {
                                       {c.image_url ? (
                                         <div className="relative w-7 h-7">
                                           <img src={c.image_url} alt={c.name} className="w-7 h-7 rounded object-cover" />
-                                          <div className="absolute inset-0 bg-black/50 rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                            <ImagePlus className="w-3.5 h-3.5 text-white" />
+                                          <div className="absolute inset-0 bg-muted rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                            <ImagePlus className="w-3.5 h-3.5 text-foreground" />
                                           </div>
                                         </div>
                                       ) : (
-                                        <div className="w-7 h-7 rounded border border-dashed border-amber-700/40 flex items-center justify-center hover:border-amber-500 transition-colors">
-                                          <ImagePlus className="w-3.5 h-3.5 text-amber-600" />
+                                        <div className="w-7 h-7 rounded border border-dashed border-border flex items-center justify-center hover:border-primary/50 transition-colors">
+                                          <ImagePlus className="w-3.5 h-3.5 text-primary" />
                                         </div>
                                       )}
                                     </label>
@@ -368,12 +368,12 @@ const ERPListini = () => {
                                     return (
                                       <React.Fragment key={pl.code}>
                                         {fields.map((field, fIdx) => (
-                                          <td key={field} className={`py-1 px-0.5 ${fIdx === 0 ? 'border-l border-amber-900/10' : ''}`}>
+                                          <td key={field} className={`py-1 px-0.5 ${fIdx === 0 ? 'border-l border-border' : ''}`}>
                                             <Input
                                               type="number"
                                               value={getVal(oven.id, sIdx, cIdx, pl.code, field, prices[field])}
                                               onChange={(e) => handlePriceChange(oven.id, sIdx, cIdx, pl.code, field, e.target.value)}
-                                              className="h-7 text-xs text-center bg-[#111] border-amber-900/15 text-amber-100 w-[72px] px-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                              className="h-7 text-xs text-center bg-card border-border text-foreground w-[72px] px-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                               placeholder="—"
                                             />
                                           </td>
@@ -387,7 +387,7 @@ const ERPListini = () => {
                           </table>
                         </div>
                       ) : (
-                        <p className="text-gray-500 text-xs">Nessun rivestimento configurato</p>
+                        <p className="text-muted-foreground text-xs">Nessun rivestimento configurato</p>
                       )}
                     </div>
                     );
@@ -400,7 +400,7 @@ const ERPListini = () => {
         })}
 
         {filtered.length === 0 && (
-          <p className="text-center py-12 text-gray-500">
+          <p className="text-center py-12 text-muted-foreground">
             {searchTerm ? 'Nessun forno trovato' : 'Nessun forno nel catalogo'}
           </p>
         )}
@@ -409,14 +409,14 @@ const ERPListini = () => {
       {/* Bruciatori Prices */}
       {burners.length > 0 && (
         <>
-          <h2 className="text-lg font-semibold text-amber-200 mb-3 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
             <Flame className="w-5 h-5" /> Bruciatori
           </h2>
-           <Card className="bg-[#1a1a1a] border-amber-900/20">
+           <Card className="bg-card border-border">
             <CardContent className="p-4">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-gray-400 text-xs border-b border-amber-900/10">
+                  <tr className="text-muted-foreground text-xs border-b border-border">
                     <th className="text-left py-2">Bruciatore</th>
                     <th className="text-center py-2 w-28">Listino A (€)</th>
                     <th className="text-center py-2 w-28">Listino B (€)</th>
@@ -426,8 +426,8 @@ const ERPListini = () => {
                 </thead>
                 <tbody>
                   {burners.map(b => (
-                    <tr key={b.id} className="border-t border-amber-900/10">
-                      <td className="py-2 text-amber-100 flex items-center gap-2">
+                    <tr key={b.id} className="border-t border-border">
+                      <td className="py-2 text-foreground flex items-center gap-2">
                         {b.image_url && <img src={b.image_url} alt={b.name} className="w-8 h-8 rounded object-cover" />}
                         {b.name}
                       </td>
@@ -445,7 +445,7 @@ const ERPListini = () => {
                               type="number"
                               value={currentVal}
                               onChange={(e) => handleBurnerPriceChange(b.id, list, e.target.value)}
-                              className="h-7 text-xs text-center bg-[#111] border-amber-900/15 text-amber-100 w-24 mx-auto [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                              className="h-7 text-xs text-center bg-card border-border text-foreground w-24 mx-auto [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             />
                           </td>
     </>
@@ -453,7 +453,7 @@ const ERPListini = () => {
                       })}
                       <td className="py-2 text-right">
                         {editedBurnerPrices[b.id] && Object.keys(editedBurnerPrices[b.id]).length > 0 && (
-                          <Button size="sm" onClick={() => saveBurnerPrice(b)} disabled={saving === b.id} className="bg-amber-600 hover:bg-amber-700 text-xs h-7">
+                          <Button size="sm" onClick={() => saveBurnerPrice(b)} disabled={saving === b.id} className="bg-primary hover:bg-primary/90 text-xs h-7">
                             {saving === b.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
                           </Button>
                         )}

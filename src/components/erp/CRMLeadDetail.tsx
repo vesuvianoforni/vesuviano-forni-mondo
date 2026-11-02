@@ -1,3 +1,5 @@
+import { priceListLabel } from "@/lib/productPricing";
+import { CustomerDiscountField } from "./CustomerDiscountField";
 import { useEffect, useState } from "react";
 import { Bot, CalendarPlus, Copy, ExternalLink, MessageSquare, MoreHorizontal, Pencil, Phone, Mail, Building2, Trash2, Trophy, XCircle, Zap } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -141,6 +143,7 @@ export function CRMLeadDetail({ lead, open, defaultTab = "riepilogo", onOpenChan
                   <Field label="Valore" value={lead.value ? `€${lead.value.toLocaleString("it-IT")}` : "Non stimato"} />
                   <Field label="Fonte" value={lead.source ? sourceLabels[lead.source] || lead.source : undefined} />
                   <Field label="Assegnato a" value={activityAssignee} />
+                  <CustomerDiscountField leadId={lead.id} />
                   {lead.pipeline === "Vesuviano" && <Button asChild size="sm" variant="outline"><Link to={`/erp/offerte?lead=${encodeURIComponent(lead.id)}`} onClick={() => onOpenChange(false)}><ExternalLink className="mr-1 h-3.5 w-3.5" />Offerte commerciali</Link></Button>}
                 </CardContent>
               </Card>
@@ -183,7 +186,7 @@ export function CRMLeadDetail({ lead, open, defaultTab = "riepilogo", onOpenChan
                   <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2 text-sm font-medium">
-                        <Bot className="h-4 w-4 text-primary" />Listino {s.price_list}
+                        <Bot className="h-4 w-4 text-primary" />{priceListLabel(s.price_list)}
                         <Badge variant="outline">{CRM_STAGES.find((x) => x.id === s.pipeline_stage)?.title ?? s.pipeline_stage}</Badge>
                       </div>
                       <p className="text-xs text-muted-foreground">

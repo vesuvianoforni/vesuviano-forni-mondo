@@ -1,5 +1,16 @@
 # Roadmap
 
+## Contrasti e colori ERP
+- [x] Revisione palette ERP: colori scritti a mano sostituiti con il tema in tutte le pagine ERP (487 righe), tema chiaro con accento ambra. Non verificato a schermo con login reale.
+
+## Catalogo Prodotti, listino annuale e sconti (2 nov 2026)
+- [x] Menu Catalogo con sola voce Prodotti (Forni, Bruciatori, Altri prodotti, Sconti); costo + valuta, listino UK/FR/DE con valuta, margine.
+- [x] Listino 2027 attivo creato da A→UK, B→FR, C→DE; nuovo listino in bozza per duplicazione, attivazione solo admin, archiviati in sola lettura.
+- [x] Il listino attivo alimenta configuratore, pro-forma e offerte; etichette A/B/C mostrate come UK/Francia/Germania.
+- [x] Tipo cliente e sconto personale nella scheda cliente CRM; sconti base per tipo.
+- [ ] Applicare in automatico lo sconto del cliente in offerte e pro-forma, e prodotti "Altri" nel catalogo offerte (fase 2).
+- [ ] Configuratore e chat del sito letti direttamente dal nuovo listino invece che dai campi A/B/C (fase 3).
+
 ## Caricamento progressivo Bruno
 - [x] Ultimi 50 messaggi e 50 precedenti su richiesta, cursore stabile data/id, filtri server-side, conteggi completi, posizione preservata e nuovi eventi uniti senza riscaricare lo storico.
 - [x] Riepiloghi aggregati al posto dello storico globale all’apertura e letture messaggi duplicate eliminate da Bruno; 18 test superati, build OK e flusso verificato con dati simulati a 1442×936, 390×844 e 1280×1800 (storico completo, filtri, doppioni, riprova e cambio cliente). Indice e due pagine reali da 50 senza sovrapposizioni verificati, permessi invoker/anon negato confermati; accesso ERP autenticato e chiamate RPC reali non verificabili con gli strumenti disponibili. Nessun invio.

@@ -101,7 +101,7 @@ const ERPForni = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -110,29 +110,29 @@ const ERPForni = () => {
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Flame className="w-7 h-7 text-orange-400" />
-          <h1 className="text-2xl font-bold text-amber-100">Gestione Forni</h1>
+          <Flame className="w-7 h-7 text-primary" />
+          <h1 className="text-2xl font-bold text-foreground">Gestione Forni</h1>
           <Badge variant="secondary" className="ml-2">{ovens.length}</Badge>
         </div>
-        <Button onClick={() => setShowAddOven(true)} className="bg-amber-600 hover:bg-amber-700">
+        <Button onClick={() => setShowAddOven(true)} className="bg-primary hover:bg-primary/90">
           <Plus className="w-4 h-4 mr-2" /> Nuovo Forno
         </Button>
       </div>
 
       <div className="flex items-center gap-4 mb-4">
         <div className="relative max-w-md flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Cerca per modello o alimentazione..."
-            className="pl-10 bg-[#1a1a1a] border-amber-900/20 text-amber-100"
+            className="pl-10 bg-card border-border text-foreground"
           />
         </div>
         <div className="flex items-center gap-2">
-          <DollarSign className="w-4 h-4 text-amber-400" />
+          <DollarSign className="w-4 h-4 text-primary" />
           <Select value={selectedPriceList} onValueChange={setSelectedPriceList}>
-            <SelectTrigger className="w-[160px] bg-[#1a1a1a] border-amber-900/20 text-amber-100">
+            <SelectTrigger className="w-[160px] bg-card border-border text-foreground">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -144,19 +144,19 @@ const ERPForni = () => {
         </div>
       </div>
 
-      <Card className="bg-[#1a1a1a] border-amber-900/20">
+      <Card className="bg-card border-border">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow className="border-amber-900/20">
-                <TableHead className="text-amber-400 w-8"></TableHead>
-                <TableHead className="text-amber-400">Immagine</TableHead>
-                <TableHead className="text-amber-400">Modello</TableHead>
-                <TableHead className="text-amber-400">Alimentazione</TableHead>
-                <TableHead className="text-amber-400">Taglie</TableHead>
-                <TableHead className="text-amber-400">Prezzi ({selectedPriceList})</TableHead>
-                <TableHead className="text-amber-400">Stato</TableHead>
-                <TableHead className="text-amber-400">Azioni</TableHead>
+              <TableRow className="border-border">
+                <TableHead className="text-primary w-8"></TableHead>
+                <TableHead className="text-primary">Immagine</TableHead>
+                <TableHead className="text-primary">Modello</TableHead>
+                <TableHead className="text-primary">Alimentazione</TableHead>
+                <TableHead className="text-primary">Taglie</TableHead>
+                <TableHead className="text-primary">Prezzi ({selectedPriceList})</TableHead>
+                <TableHead className="text-primary">Stato</TableHead>
+                <TableHead className="text-primary">Azioni</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -165,10 +165,10 @@ const ERPForni = () => {
                 const priceRange = getPriceRange(oven);
                 return (
                   <React.Fragment key={oven.id}>
-                    <TableRow className="border-amber-900/10 hover:bg-amber-900/5 cursor-pointer" onClick={() => setExpandedOven(isExpanded ? null : oven.id)}>
+                    <TableRow className="border-border hover:bg-muted/60 cursor-pointer" onClick={() => setExpandedOven(isExpanded ? null : oven.id)}>
                       <TableCell className="px-2">
                         {oven.sizes?.length > 0 && oven.sizes.some((s: any) => s.coatings?.length > 0) ? (
-                          isExpanded ? <ChevronDown className="w-4 h-4 text-amber-400" /> : <ChevronRight className="w-4 h-4 text-gray-500" />
+                          isExpanded ? <ChevronDown className="w-4 h-4 text-primary" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />
                         ) : null}
                       </TableCell>
                       <TableCell>
@@ -176,26 +176,26 @@ const ERPForni = () => {
                           <img src={oven.image_url} alt={oven.model_name} className="w-14 h-14 object-cover rounded-lg" />
                         )}
                       </TableCell>
-                      <TableCell className="font-medium text-amber-100">{oven.model_name}</TableCell>
+                      <TableCell className="font-medium text-foreground">{oven.model_name}</TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
                           {Array.isArray(oven.fuel_type) ? oven.fuel_type.filter(Boolean).map((f: string, i: number) => (
-                            <Badge key={i} variant="outline" className="text-xs border-amber-700/30 text-amber-200">{f}</Badge>
-                          )) : <span className="text-gray-500">-</span>}
+                            <Badge key={i} variant="outline" className="text-xs border-border text-foreground">{f}</Badge>
+                          )) : <span className="text-muted-foreground">-</span>}
                         </div>
                       </TableCell>
-                      <TableCell className="text-amber-200">{getSizesInfo(oven)}</TableCell>
-                      <TableCell className="text-amber-200 font-medium">
+                      <TableCell className="text-foreground">{getSizesInfo(oven)}</TableCell>
+                      <TableCell className="text-foreground font-medium">
                         {priceRange || formatPrice(getBasePrice(oven))}
                       </TableCell>
                       <TableCell>
-                        <Badge className={oven.is_active ? 'bg-green-700/30 text-green-300' : 'bg-gray-700/30 text-gray-400'}>
+                        <Badge className={oven.is_active ? 'bg-green-700/30 text-green-300' : 'bg-muted text-muted-foreground'}>
                           {oven.is_active ? 'Attivo' : 'Inattivo'}
                         </Badge>
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1" onClick={e => e.stopPropagation()}>
-                          <Button size="sm" variant="ghost" onClick={() => setEditingOven(oven)} className="text-amber-400 hover:text-amber-200">
+                          <Button size="sm" variant="ghost" onClick={() => setEditingOven(oven)} className="text-primary hover:text-foreground">
                             <Edit className="w-4 h-4" />
                           </Button>
                           <Button size="sm" variant="ghost" onClick={() => handleDelete(oven.id)} className="text-red-400 hover:text-red-300">
@@ -208,13 +208,13 @@ const ERPForni = () => {
                     {/* Expanded price details */}
                     {isExpanded && oven.sizes?.map((size: any, sIdx: number) => (
                       <React.Fragment key={`size-${sIdx}`}>
-                        <TableRow className="bg-amber-900/5 border-amber-900/10">
+                        <TableRow className="bg-primary/10 border-border">
                           <TableCell></TableCell>
                           <TableCell colSpan={7} className="py-2">
-                            <div className="text-amber-300 font-semibold text-sm mb-2">
+                            <div className="text-primary font-semibold text-sm mb-2">
                               Ø {size.diameter}cm — {size.pizza_capacity} pizze
                               {size.can_be_built_on_site && <Badge className="ml-2 bg-blue-700/20 text-blue-300 text-xs">Costruibile sul posto</Badge>}
-                              {size.passage_space_cm && <span className="ml-2 text-gray-400 text-xs font-normal">Passaggio: {size.passage_space_cm}cm</span>}
+                              {size.passage_space_cm && <span className="ml-2 text-muted-foreground text-xs font-normal">Passaggio: {size.passage_space_cm}cm</span>}
                               {(size.datasheet_url || size.datasheet_urls) && (
                                 <span className="ml-2 inline-flex items-center gap-1 text-blue-400 text-xs font-normal">
                                   <FileText className="w-3 h-3" /> 
@@ -234,7 +234,7 @@ const ERPForni = () => {
                               <div className="overflow-x-auto">
                                 <table className="w-full text-sm">
                                   <thead>
-                                    <tr className="text-gray-400 text-xs">
+                                    <tr className="text-muted-foreground text-xs">
                                       <th className="text-left py-1 pr-4">Rivestimento</th>
                                       <th className="text-right py-1 px-2">Base</th>
                                       <th className="text-right py-1 px-2">Gas</th>
@@ -249,15 +249,15 @@ const ERPForni = () => {
 
     <>
       <SEOHead title="ERP Forni | Vesuviano" description="Gestione forni ERP." lang="it" noIndex />
-      <tr key={cIdx} className="border-t border-amber-900/10">
-                                          <td className="py-1.5 pr-4 text-amber-100 flex items-center gap-2">
+      <tr key={cIdx} className="border-t border-border">
+                                          <td className="py-1.5 pr-4 text-foreground flex items-center gap-2">
                                             {c.image_url && <img src={c.image_url} alt={c.name} className="w-8 h-8 rounded object-cover" />}
                                             {c.name}
                                           </td>
-                                          <td className="text-right py-1.5 px-2 text-amber-200 font-medium">{formatPrice(p.base)}</td>
-                                          <td className="text-right py-1.5 px-2 text-amber-200">{formatPrice(p.gas)}</td>
-                                          <td className="text-right py-1.5 px-2 text-amber-200">{formatPrice(p.electric)}</td>
-                                          {size.can_be_built_on_site && <td className="text-right py-1.5 px-2 text-amber-200">{formatPrice(p.onSite)}</td>}
+                                          <td className="text-right py-1.5 px-2 text-foreground font-medium">{formatPrice(p.base)}</td>
+                                          <td className="text-right py-1.5 px-2 text-foreground">{formatPrice(p.gas)}</td>
+                                          <td className="text-right py-1.5 px-2 text-foreground">{formatPrice(p.electric)}</td>
+                                          {size.can_be_built_on_site && <td className="text-right py-1.5 px-2 text-foreground">{formatPrice(p.onSite)}</td>}
                                         </tr>
     </>
   );
@@ -266,7 +266,7 @@ const ERPForni = () => {
                                 </table>
                               </div>
                             ) : (
-                              <p className="text-gray-500 text-xs">Nessun rivestimento configurato</p>
+                              <p className="text-muted-foreground text-xs">Nessun rivestimento configurato</p>
                             )}
                           </TableCell>
                         </TableRow>
@@ -277,7 +277,7 @@ const ERPForni = () => {
               })}
               {filtered.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-12 text-gray-500">
+                  <TableCell colSpan={8} className="text-center py-12 text-muted-foreground">
                     {searchTerm ? 'Nessun forno trovato' : 'Nessun forno nel catalogo'}
                   </TableCell>
                 </TableRow>

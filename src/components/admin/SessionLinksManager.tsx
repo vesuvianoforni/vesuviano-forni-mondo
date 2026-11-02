@@ -1,3 +1,4 @@
+import { priceListLabel } from "@/lib/productPricing";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -185,15 +186,15 @@ export const SessionLinksManager = ({ onGenerateAIMessage }: SessionLinksManager
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Listino Prezzi</label>
+                <label className="text-sm font-medium">Paese listino</label>
                 <select
                   value={priceList}
                   onChange={(e) => setPriceList(e.target.value)}
                   className="w-full mt-1 px-3 py-2 border rounded-md"
                 >
-                  <option value="A">Listino A</option>
-                  <option value="B">Listino B</option>
-                  <option value="C">Listino C</option>
+                  <option value="A">Listino UK</option>
+                  <option value="B">Listino Francia</option>
+                  <option value="C">Listino Germania</option>
                 </select>
               </div>
             </div>
@@ -226,7 +227,7 @@ export const SessionLinksManager = ({ onGenerateAIMessage }: SessionLinksManager
                   <div className="flex items-center gap-2 mb-1">
                     {getStatusBadge(session.status)}
                     <span className="text-xs font-semibold text-primary">
-                      Listino {session.price_list}
+                      {priceListLabel(session.price_list)}
                     </span>
                   </div>
                   <p className="text-sm font-medium">{session.customer_name}</p>

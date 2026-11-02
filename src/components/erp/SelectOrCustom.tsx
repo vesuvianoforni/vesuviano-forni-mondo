@@ -50,15 +50,15 @@ const SelectOrCustom: React.FC<Props> = ({ fieldKey, value, onChange, presets, t
       <div className="flex gap-1">
         {type === 'textarea' ? (
           <Textarea value={value} onChange={e => onChange(e.target.value)} rows={2} placeholder={placeholder}
-            className="bg-[#111] border-amber-900/30 text-sm flex-1" />
+            className="bg-card border-border text-sm flex-1" />
         ) : (
           <Input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
-            className="bg-[#111] border-amber-900/30 flex-1" />
+            className="bg-card border-border flex-1" />
         )}
         <div className="flex flex-col gap-1">
           {presets.length > 0 && (
             <Button type="button" size="icon" variant="ghost" onClick={() => setMode('select')}
-              title="Torna ai preset" className="h-8 w-8 text-amber-400">
+              title="Torna ai preset" className="h-8 w-8 text-primary">
               <ListChecks className="w-3.5 h-3.5" />
             </Button>
           )}
@@ -79,7 +79,7 @@ const SelectOrCustom: React.FC<Props> = ({ fieldKey, value, onChange, presets, t
         if (v === CUSTOM) { setMode('custom'); return; }
         onChange(v);
       }}>
-        <SelectTrigger className="bg-[#111] border-amber-900/30 flex-1">
+        <SelectTrigger className="bg-card border-border flex-1">
           <SelectValue placeholder={placeholder || 'Seleziona…'} />
         </SelectTrigger>
         <SelectContent>
@@ -90,7 +90,7 @@ const SelectOrCustom: React.FC<Props> = ({ fieldKey, value, onChange, presets, t
         </SelectContent>
       </Select>
       <Button type="button" size="icon" variant="ghost" onClick={() => setMode('custom')}
-        title="Inserisci valore personalizzato" className="h-8 w-8 text-amber-400">
+        title="Inserisci valore personalizzato" className="h-8 w-8 text-primary">
         <Pencil className="w-3.5 h-3.5" />
       </Button>
     </div>

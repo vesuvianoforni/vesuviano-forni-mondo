@@ -430,7 +430,7 @@ const ERPContratti = () => {
 
   const statusBadge = (s: string) => {
     const map: Record<string, string> = {
-      draft: 'bg-gray-700/30 text-gray-300',
+      draft: 'bg-muted text-muted-foreground',
       sent: 'bg-blue-700/30 text-blue-300',
       signed: 'bg-green-700/30 text-green-300',
     };
@@ -438,7 +438,7 @@ const ERPContratti = () => {
     return <Badge className={map[s] || map.draft}>{lbl[s] || s}</Badge>;
   };
 
-  if (loading) return <div className="flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-amber-500" /></div>;
+  if (loading) return <div className="flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
 
   return (
     <>
@@ -446,58 +446,58 @@ const ERPContratti = () => {
       <div className="p-6 md:p-8 max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <FileText className="w-7 h-7 text-amber-400" />
-            <h1 className="text-2xl font-bold text-amber-100">Contratti · CGV</h1>
+            <FileText className="w-7 h-7 text-primary" />
+            <h1 className="text-2xl font-bold text-foreground">Contratti · CGV</h1>
             <Badge variant="secondary" className="ml-2">{contracts.length}</Badge>
           </div>
-          <Button onClick={openCreate} className="bg-amber-600 hover:bg-amber-700">
+          <Button onClick={openCreate} className="bg-primary hover:bg-primary/90">
             <Plus className="w-4 h-4 mr-2" /> Nuovo Contratto
           </Button>
         </div>
 
         <div className="mb-4 relative max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cerca per cliente, offerta, email..."
-            className="pl-10 bg-[#1a1a1a] border-amber-900/20 text-amber-100" />
+            className="pl-10 bg-card border-border text-foreground" />
         </div>
 
-        <Card className="bg-[#1a1a1a] border-amber-900/20">
+        <Card className="bg-card border-border">
           <CardContent className="p-0">
             <Table>
               <TableHeader>
-                <TableRow className="border-amber-900/20">
-                  <TableHead className="text-amber-400">Cliente</TableHead>
-                  <TableHead className="text-amber-400">Offerta</TableHead>
-                  <TableHead className="text-amber-400">Importo</TableHead>
-                  <TableHead className="text-amber-400">Garanzia</TableHead>
-                  <TableHead className="text-amber-400">Stato</TableHead>
-                  <TableHead className="text-amber-400">Data</TableHead>
-                  <TableHead className="text-amber-400 text-right">Azioni</TableHead>
+                <TableRow className="border-border">
+                  <TableHead className="text-primary">Cliente</TableHead>
+                  <TableHead className="text-primary">Offerta</TableHead>
+                  <TableHead className="text-primary">Importo</TableHead>
+                  <TableHead className="text-primary">Garanzia</TableHead>
+                  <TableHead className="text-primary">Stato</TableHead>
+                  <TableHead className="text-primary">Data</TableHead>
+                  <TableHead className="text-primary text-right">Azioni</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filtered.map(c => (
-                  <TableRow key={c.id} className="border-amber-900/10 hover:bg-amber-900/5">
-                    <TableCell className="font-medium text-amber-100">
+                  <TableRow key={c.id} className="border-border hover:bg-muted/60">
+                    <TableCell className="font-medium text-foreground">
                       <div className="flex items-center gap-2">
                         <span>{c.client_name}</span>
                         <span className="text-xs">{LANGUAGES.find(l => l.value === (c.language || 'it'))?.flag}</span>
                       </div>
-                      {c.client_email && <div className="text-xs text-gray-500">{c.client_email}</div>}
+                      {c.client_email && <div className="text-xs text-muted-foreground">{c.client_email}</div>}
                     </TableCell>
 
-                    <TableCell className="text-gray-300">{c.offer_number || '—'}</TableCell>
-                    <TableCell className="text-amber-200 font-medium">
+                    <TableCell className="text-muted-foreground">{c.offer_number || '—'}</TableCell>
+                    <TableCell className="text-foreground font-medium">
                       {new Intl.NumberFormat('it-IT', { style: 'currency', currency: c.currency || 'EUR' }).format(c.total_amount || 0)}
                     </TableCell>
-                    <TableCell className="text-gray-300">{c.warranty_years} {c.warranty_years === 1 ? 'anno' : 'anni'}</TableCell>
+                    <TableCell className="text-muted-foreground">{c.warranty_years} {c.warranty_years === 1 ? 'anno' : 'anni'}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         {statusBadge(c.status)}
                         {c.client_signature && <CheckCircle2 className="w-4 h-4 text-green-400" aria-label="Firmato dal cliente" />}
                       </div>
                     </TableCell>
-                    <TableCell className="text-gray-400 text-sm">{new Date(c.created_at).toLocaleDateString('it-IT')}</TableCell>
+                    <TableCell className="text-muted-foreground text-sm">{new Date(c.created_at).toLocaleDateString('it-IT')}</TableCell>
                     <TableCell>
                       <div className="flex justify-end gap-1">
                         <Button size="sm" variant="ghost" onClick={() => copySignLink(c)} className="text-purple-300 hover:text-purple-200" title="Copia link firma cliente">
@@ -506,7 +506,7 @@ const ERPContratti = () => {
                         <Button size="sm" variant="ghost" onClick={() => handleDownloadPdf(c)} className="text-blue-400 hover:text-blue-200" title="Scarica PDF">
                           <Download className="w-4 h-4" />
                         </Button>
-                        <Button size="sm" variant="ghost" onClick={() => openEdit(c)} className="text-amber-400 hover:text-amber-200">
+                        <Button size="sm" variant="ghost" onClick={() => openEdit(c)} className="text-primary hover:text-foreground">
                           <Edit className="w-4 h-4" />
                         </Button>
                         <Button size="sm" variant="ghost" onClick={() => handleDelete(c.id)} className="text-red-400 hover:text-red-300">
@@ -517,7 +517,7 @@ const ERPContratti = () => {
                   </TableRow>
                 ))}
                 {filtered.length === 0 && (
-                  <TableRow><TableCell colSpan={7} className="text-center py-12 text-gray-500">
+                  <TableRow><TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
                     {search ? 'Nessun contratto trovato' : 'Nessun contratto ancora creato'}
                   </TableCell></TableRow>
                 )}
@@ -527,17 +527,17 @@ const ERPContratti = () => {
         </Card>
 
         <Dialog open={showForm} onOpenChange={setShowForm}>
-          <DialogContent className="bg-[#141414] border-[#2a2a2a] text-amber-100 max-w-6xl w-[95vw] h-[88vh] p-0 gap-0 overflow-hidden flex flex-col">
+          <DialogContent className="bg-card border-border text-foreground max-w-6xl w-[95vw] h-[88vh] p-0 gap-0 overflow-hidden flex flex-col">
             {/* Header */}
-            <DialogHeader className="px-6 py-4 border-b border-[#2a2a2a] bg-[#1a1a1a] flex-row items-center justify-between space-y-0">
+            <DialogHeader className="px-6 py-4 border-b border-border bg-card flex-row items-center justify-between space-y-0">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded bg-amber-500/10 flex items-center justify-center">
-                  <FileSignature className="w-4 h-4 text-amber-500" />
+                <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
+                  <FileSignature className="w-4 h-4 text-primary" />
                 </div>
-                <DialogTitle className="text-base font-semibold text-white tracking-tight flex items-center gap-2">
+                <DialogTitle className="text-base font-semibold text-foreground tracking-tight flex items-center gap-2">
                   {editing ? 'Modifica Contratto CGV' : 'Nuovo Contratto CGV'}
                   {(offerNumber || editing?.offer_number) && (
-                    <span className="text-xs font-mono text-zinc-500">#{offerNumber || editing?.offer_number}</span>
+                    <span className="text-xs font-mono text-muted-foreground">#{offerNumber || editing?.offer_number}</span>
                   )}
                   <span className="text-xs ml-1">{LANGUAGES.find(l => l.value === language)?.flag}</span>
                 </DialogTitle>
@@ -547,7 +547,7 @@ const ERPContratti = () => {
             {/* Body: sidebar + content */}
             <div className="flex flex-1 overflow-hidden">
               {/* Sidebar */}
-              <nav className="w-60 border-r border-[#2a2a2a] bg-[#111] overflow-y-auto p-3 shrink-0">
+              <nav className="w-60 border-r border-border bg-card overflow-y-auto p-3 shrink-0">
                 {(() => {
                   const groupCompleted = (title: string) => {
                     const g = FIELD_GROUPS.find(x => x.title === title);
@@ -587,7 +587,7 @@ const ERPContratti = () => {
 
                   return NAV.map((items, gi) => (
                     <div key={gi} className={gi > 0 ? 'pt-4' : ''}>
-                      <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 mb-2">{GROUP_LABELS[gi]}</div>
+                      <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-3 mb-2">{GROUP_LABELS[gi]}</div>
                       <div className="space-y-0.5">
                         {items.map(it => {
                           const active = activeSection === it.section;
@@ -599,11 +599,11 @@ const ERPContratti = () => {
                               onClick={() => setActiveSection(it.section)}
                               className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all text-left ${
                                 active
-                                  ? 'bg-amber-500/10 text-amber-400 font-medium'
-                                  : 'text-zinc-400 hover:bg-white/5 hover:text-white'
+                                  ? 'bg-primary/10 text-primary font-medium'
+                                  : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'
                               }`}
                             >
-                              <span className={`w-1 h-4 rounded-full ${active ? 'bg-amber-500' : 'bg-transparent'}`} />
+                              <span className={`w-1 h-4 rounded-full ${active ? 'bg-primary' : 'bg-transparent'}`} />
                               <Icon className="w-3.5 h-3.5 shrink-0" />
                               <span className="flex-1 truncate">{it.label}</span>
                               {it.done && !active && (
@@ -619,7 +619,7 @@ const ERPContratti = () => {
               </nav>
 
               {/* Main content */}
-              <main className="flex-1 overflow-y-auto bg-[#0d0d0d] p-6 md:p-8">
+              <main className="flex-1 overflow-y-auto bg-card p-6 md:p-8">
                 <div className="max-w-3xl mx-auto space-y-8">
                   {/* AI Assistant compact */}
                   <section className="bg-purple-900/10 border border-purple-500/30 rounded-xl p-4 relative overflow-hidden">
@@ -633,12 +633,12 @@ const ERPContratti = () => {
                         value={aiPrompt}
                         onChange={e => setAiPrompt(e.target.value)}
                         placeholder="Es. Consegna in Francia entro 60 giorni, installazione inclusa, garanzia 24 mesi..."
-                        className="flex-1 bg-black/40 border-purple-500/20 text-purple-100 placeholder:text-purple-400/50 focus-visible:ring-purple-500"
+                        className="flex-1 bg-muted border-purple-500/20 text-purple-100 placeholder:text-purple-400/50 focus-visible:ring-purple-500"
                       />
                       <Button
                         onClick={aiFillFields}
                         disabled={aiLoading}
-                        className="bg-purple-600 hover:bg-purple-500 text-white shrink-0"
+                        className="bg-purple-600 hover:bg-purple-500 text-foreground shrink-0"
                       >
                         {aiLoading ? <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> : <Wand2 className="w-3.5 h-3.5 mr-1.5" />}
                         Applica
@@ -649,25 +649,25 @@ const ERPContratti = () => {
                   {activeSection === 'cliente' && (
                     <section className="space-y-5">
                       <div className="flex items-center gap-4">
-                        <h2 className="text-lg font-bold text-white">Dati Cliente</h2>
+                        <h2 className="text-lg font-bold text-foreground">Dati Cliente</h2>
                         <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                         <div className="space-y-1.5">
-                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Ragione Sociale <span className="text-amber-500">*</span></Label>
-                          <Input value={clientName} onChange={e => setClientName(e.target.value)} className="bg-[#181818] border-[#333]" />
+                          <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">Ragione Sociale <span className="text-primary">*</span></Label>
+                          <Input value={clientName} onChange={e => setClientName(e.target.value)} className="bg-card border-border" />
                         </div>
                         <div className="space-y-1.5">
-                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">P.IVA / C.F.</Label>
-                          <Input value={clientVat} onChange={e => setClientVat(e.target.value)} className="bg-[#181818] border-[#333]" />
+                          <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">P.IVA / C.F.</Label>
+                          <Input value={clientVat} onChange={e => setClientVat(e.target.value)} className="bg-card border-border" />
                         </div>
                         <div className="space-y-1.5">
-                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Email</Label>
-                          <Input type="email" value={clientEmail} onChange={e => setClientEmail(e.target.value)} className="bg-[#181818] border-[#333]" />
+                          <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">Email</Label>
+                          <Input type="email" value={clientEmail} onChange={e => setClientEmail(e.target.value)} className="bg-card border-border" />
                         </div>
                         <div className="space-y-1.5">
-                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Indirizzo</Label>
-                          <Input value={clientAddress} onChange={e => setClientAddress(e.target.value)} className="bg-[#181818] border-[#333]" />
+                          <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">Indirizzo</Label>
+                          <Input value={clientAddress} onChange={e => setClientAddress(e.target.value)} className="bg-card border-border" />
                         </div>
                       </div>
                     </section>
@@ -676,22 +676,22 @@ const ERPContratti = () => {
                   {activeSection === 'economiche' && (
                     <section className="space-y-5">
                       <div className="flex items-center gap-4">
-                        <h2 className="text-lg font-bold text-white">Dati Economici</h2>
+                        <h2 className="text-lg font-bold text-foreground">Dati Economici</h2>
                         <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div className="md:col-span-2 space-y-1.5">
-                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">N° Offerta</Label>
-                          <Input value={offerNumber} onChange={e => setOfferNumber(e.target.value)} placeholder="PF-2026-0001" className="bg-[#181818] border-[#333] font-mono" />
+                          <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">N° Offerta</Label>
+                          <Input value={offerNumber} onChange={e => setOfferNumber(e.target.value)} placeholder="PF-2026-0001" className="bg-card border-border font-mono" />
                         </div>
                         <div className="space-y-1.5">
-                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Importo</Label>
-                          <Input type="number" step="0.01" value={totalAmount} onChange={e => setTotalAmount(e.target.value)} className="bg-[#181818] border-[#333] font-mono" />
+                          <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">Importo</Label>
+                          <Input type="number" step="0.01" value={totalAmount} onChange={e => setTotalAmount(e.target.value)} className="bg-card border-border font-mono" />
                         </div>
                         <div className="space-y-1.5">
-                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Valuta</Label>
+                          <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">Valuta</Label>
                           <Select value={currency} onValueChange={setCurrency}>
-                            <SelectTrigger className="bg-[#181818] border-[#333]"><SelectValue /></SelectTrigger>
+                            <SelectTrigger className="bg-card border-border"><SelectValue /></SelectTrigger>
                             <SelectContent>
                               <SelectItem value="EUR">EUR €</SelectItem>
                               <SelectItem value="GBP">GBP £</SelectItem>
@@ -703,9 +703,9 @@ const ERPContratti = () => {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="space-y-1.5">
-                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Garanzia</Label>
+                          <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">Garanzia</Label>
                           <Select value={String(warrantyYears)} onValueChange={v => setWarrantyYears(parseInt(v))}>
-                            <SelectTrigger className="bg-[#181818] border-[#333]"><SelectValue /></SelectTrigger>
+                            <SelectTrigger className="bg-card border-border"><SelectValue /></SelectTrigger>
                             <SelectContent>
                               <SelectItem value="1">1 anno (standard)</SelectItem>
                               <SelectItem value="2">2 anni (esteso)</SelectItem>
@@ -713,9 +713,9 @@ const ERPContratti = () => {
                           </Select>
                         </div>
                         <div className="space-y-1.5">
-                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Stato</Label>
+                          <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">Stato</Label>
                           <Select value={status} onValueChange={v => setStatus(v as any)}>
-                            <SelectTrigger className="bg-[#181818] border-[#333] text-amber-400 font-semibold"><SelectValue /></SelectTrigger>
+                            <SelectTrigger className="bg-card border-border text-primary font-semibold"><SelectValue /></SelectTrigger>
                             <SelectContent>
                               <SelectItem value="draft">Bozza</SelectItem>
                               <SelectItem value="sent">Inviato</SelectItem>
@@ -724,11 +724,11 @@ const ERPContratti = () => {
                           </Select>
                         </div>
                         <div className="space-y-1.5">
-                          <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight flex items-center gap-1">
+                          <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight flex items-center gap-1">
                             <Languages className="w-3 h-3" /> Lingua PDF
                           </Label>
                           <Select value={language} onValueChange={(v) => setLanguage(v as ContractLanguage)}>
-                            <SelectTrigger className="bg-[#181818] border-[#333]"><SelectValue /></SelectTrigger>
+                            <SelectTrigger className="bg-card border-border"><SelectValue /></SelectTrigger>
                             <SelectContent>
                               {LANGUAGES.map(l => (
                                 <SelectItem key={l.value} value={l.value}>{l.flag} {l.label}</SelectItem>
@@ -764,7 +764,7 @@ const ERPContratti = () => {
                       <section className="space-y-5">
                         <div className="flex items-center gap-4">
                           {group.title.includes('automatico') && <Calculator className="w-4 h-4 text-emerald-400" />}
-                          <h2 className="text-lg font-bold text-white">{group.title}</h2>
+                          <h2 className="text-lg font-bold text-foreground">{group.title}</h2>
                           <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
@@ -786,7 +786,7 @@ const ERPContratti = () => {
                             const fieldPresets = f.presetKey ? (presets[f.presetKey] || []) : [];
                             return (
                               <div key={f.key} className={`space-y-1.5 ${f.type === 'textarea' ? 'md:col-span-2' : ''}`}>
-                                <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">{f.label}</Label>
+                                <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">{f.label}</Label>
                                 {fieldPresets.length > 0 || f.type === 'textarea' ? (
                                   <SelectOrCustom
                                     fieldKey={f.presetKey || f.key}
@@ -801,7 +801,7 @@ const ERPContratti = () => {
                                   />
                                 ) : (
                                   <Input type={f.type || 'text'} value={value} onChange={e => setter(e.target.value)}
-                                    className="bg-[#181818] border-[#333]" />
+                                    className="bg-card border-border" />
                                 )}
                               </div>
                             );
@@ -814,12 +814,12 @@ const ERPContratti = () => {
                   {activeSection === 'note' && (
                     <section className="space-y-5">
                       <div className="flex items-center gap-4">
-                        <h2 className="text-lg font-bold text-white">Note interne</h2>
+                        <h2 className="text-lg font-bold text-foreground">Note interne</h2>
                         <div className="h-px flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
                       </div>
                       <div className="space-y-1.5">
-                        <Label className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Note (non compaiono nel PDF)</Label>
-                        <Textarea value={notes} onChange={e => setNotes(e.target.value)} rows={8} className="bg-[#181818] border-[#333]" />
+                        <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">Note (non compaiono nel PDF)</Label>
+                        <Textarea value={notes} onChange={e => setNotes(e.target.value)} rows={8} className="bg-card border-border" />
                       </div>
                     </section>
                   )}
@@ -828,19 +828,19 @@ const ERPContratti = () => {
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-3.5 border-t border-[#2a2a2a] bg-[#1a1a1a] flex items-center justify-between shrink-0">
+            <div className="px-6 py-3.5 border-t border-border bg-card flex items-center justify-between shrink-0">
               <Button
                 variant="outline"
                 onClick={handlePreviewPdf}
                 disabled={pdfLoading}
-                className="border-[#333] bg-transparent text-zinc-300 hover:bg-white/5 hover:text-white"
+                className="border-border bg-transparent text-muted-foreground hover:bg-muted/60 hover:text-foreground"
               >
                 {pdfLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileText className="w-4 h-4 mr-2" />}
                 Anteprima PDF ({language.toUpperCase()})
               </Button>
               <div className="flex items-center gap-2">
-                <Button variant="ghost" onClick={() => setShowForm(false)} className="text-zinc-400 hover:text-white">Annulla</Button>
-                <Button onClick={handleSave} disabled={saving} className="bg-amber-600 hover:bg-amber-500 text-black font-bold shadow-lg shadow-amber-900/20">
+                <Button variant="ghost" onClick={() => setShowForm(false)} className="text-muted-foreground hover:text-foreground">Annulla</Button>
+                <Button onClick={handleSave} disabled={saving} className="bg-primary hover:bg-primary text-primary-foreground font-bold shadow-lg shadow-amber-900/20">
                   {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                   {editing ? 'Salva modifiche' : 'Crea contratto'}
                 </Button>

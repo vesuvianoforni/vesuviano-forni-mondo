@@ -1,3 +1,4 @@
+import { priceListLabel } from "@/lib/productPricing";
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -463,7 +464,7 @@ const SessionsCRM = () => {
   const getStatusBadge = (session: SessionData, compact = false) => {
     if (session.configurator_quotes?.payment_completed) {
       return (
-        <Badge className="bg-green-600 hover:bg-green-700 text-white">
+        <Badge className="bg-green-600 hover:bg-green-700 text-primary-foreground">
           <Package className="w-3 h-3 mr-1" />
           Pagato
         </Badge>
@@ -471,7 +472,7 @@ const SessionsCRM = () => {
     }
     if (session.status === 'payment_initiated') {
       return (
-        <Badge className="bg-blue-600 hover:bg-blue-700 text-white">
+        <Badge className="bg-blue-600 hover:bg-blue-700 text-primary-foreground">
           <Clock className="w-3 h-3 mr-1" />
           Pagamento Avviato
         </Badge>
@@ -479,7 +480,7 @@ const SessionsCRM = () => {
     }
     if (session.status === 'link_renewal_requested') {
       return (
-        <Badge className="bg-amber-600 hover:bg-amber-700 text-white">
+        <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground">
           <RefreshCw className="w-3 h-3 mr-1" />
           Rinnovo Richiesto
         </Badge>
@@ -487,7 +488,7 @@ const SessionsCRM = () => {
     }
     if (session.status === 'interested' || session.feedback_status === 'interested') {
       return (
-        <Badge className="bg-orange-600 hover:bg-orange-700 text-white">
+        <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground">
           Interessato
         </Badge>
       );
@@ -502,7 +503,7 @@ const SessionsCRM = () => {
     }
     if (session.is_used) {
       return (
-        <Badge className="bg-stone-600 hover:bg-stone-700 text-white">
+        <Badge className="bg-muted-foreground hover:bg-muted text-foreground">
           Aperto
         </Badge>
       );
@@ -658,7 +659,7 @@ const SessionsCRM = () => {
                 <div className="flex flex-col gap-2 min-w-0 flex-1">
                   {getStatusBadge(session, true)}
                   <Badge variant="outline" className="w-fit text-xs">
-                    Listino {session.price_list}
+                    {priceListLabel(session.price_list)}
                   </Badge>
                 </div>
               </div>
@@ -737,7 +738,7 @@ const SessionsCRM = () => {
                     size="sm"
                     variant="default"
                     onClick={() => processRenewalRequest(session)}
-                    className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                   >
                     <Send className="w-4 h-4 mr-2" />
                     Processa Rinnovo
@@ -816,7 +817,7 @@ const SessionsCRM = () => {
               <div className="flex items-center gap-3 mb-2">
                 {getStatusBadge(session)}
                 {getStageBadge(session)}
-                <Badge variant="secondary">Listino {session.price_list}</Badge>
+                <Badge variant="secondary">{priceListLabel(session.price_list)}</Badge>
               </div>
               <h3 className="text-lg font-semibold">{session.customer_name || 'Nome non disponibile'}</h3>
               <div className="text-sm text-muted-foreground space-y-1 mt-1">
@@ -1025,15 +1026,15 @@ const SessionsCRM = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="priceList">Listino Prezzi</Label>
+                  <Label htmlFor="priceList">Paese listino</Label>
                   <Select value={priceList} onValueChange={setPriceList}>
                     <SelectTrigger id="priceList">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="A">Listino A</SelectItem>
-                      <SelectItem value="B">Listino B</SelectItem>
-                      <SelectItem value="C">Listino C</SelectItem>
+                      <SelectItem value="A">Listino UK</SelectItem>
+                      <SelectItem value="B">Listino Francia</SelectItem>
+                      <SelectItem value="C">Listino Germania</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1090,7 +1091,7 @@ const SessionsCRM = () => {
               <div className="flex items-center gap-3">
                 {getStatusBadge(selectedSession)}
                 {getStageBadge(selectedSession)}
-                <Badge variant="secondary">Listino {selectedSession.price_list}</Badge>
+                <Badge variant="secondary">{priceListLabel(selectedSession.price_list)}</Badge>
               </div>
               <div>
                 <span className="text-sm font-medium">Fase pipeline:</span>

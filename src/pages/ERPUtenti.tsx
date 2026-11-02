@@ -22,7 +22,7 @@ type UserRole = {
 const ROLES = [
   { value: 'admin', label: 'Amministratore', description: 'Accesso completo a tutti i moduli', color: 'bg-red-500/20 text-red-300 border-red-500/30' },
   { value: 'commerciale', label: 'Commerciale', description: 'CRM, ordini, pro-forma, lead', color: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
-  { value: 'produzione', label: 'Produzione', description: 'Ordini (solo stato), forni', color: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
+  { value: 'produzione', label: 'Produzione', description: 'Ordini (solo stato), forni', color: 'bg-primary/10 text-primary border-border' },
 ];
 
 const ERPUtenti = () => {
@@ -104,8 +104,8 @@ const ERPUtenti = () => {
       <SEOHead title="ERP Utenti | Vesuviano" description="Gestione utenti ERP." lang="it" noIndex />
       <div className="p-6 md:p-8 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-amber-100">Gestione Utenti</h1>
-        <Button onClick={() => setShowCreateModal(true)} className="bg-amber-600 hover:bg-amber-700 text-white">
+        <h1 className="text-3xl font-bold text-foreground">Gestione Utenti</h1>
+        <Button onClick={() => setShowCreateModal(true)} className="bg-primary hover:bg-primary/90 text-primary-foreground">
           <Plus className="w-4 h-4 mr-2" />Nuovo Utente
         </Button>
       </div>
@@ -113,46 +113,46 @@ const ERPUtenti = () => {
       {/* Role descriptions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {ROLES.map(r => (
-          <Card key={r.value} className="bg-[#1a1a1a] border-amber-900/20">
+          <Card key={r.value} className="bg-card border-border">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Shield className="w-4 h-4 text-amber-500" />
+                <Shield className="w-4 h-4 text-primary" />
                 {getRoleBadge(r.value)}
               </div>
-              <p className="text-amber-200/50 text-sm">{r.description}</p>
+              <p className="text-muted-foreground text-sm">{r.description}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
       {/* Users table */}
-      <Card className="bg-[#1a1a1a] border-amber-900/20">
+      <Card className="bg-card border-border">
         <CardContent className="p-0">
           {loading ? (
-            <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-amber-500" /></div>
+            <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
           ) : roles.length === 0 ? (
-            <div className="text-center py-20 text-amber-200/40">
+            <div className="text-center py-20 text-muted-foreground">
               <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p>Nessun utente con ruoli assegnati</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="border-amber-900/20 hover:bg-transparent">
-                  <TableHead className="text-amber-500/60">Email</TableHead>
-                  <TableHead className="text-amber-500/60">User ID</TableHead>
-                  <TableHead className="text-amber-500/60">Ruolo</TableHead>
-                  <TableHead className="text-amber-500/60">Data Assegnazione</TableHead>
-                  <TableHead className="text-amber-500/60 text-right">Azioni</TableHead>
+                <TableRow className="border-border hover:bg-transparent">
+                  <TableHead className="text-muted-foreground">Email</TableHead>
+                  <TableHead className="text-muted-foreground">User ID</TableHead>
+                  <TableHead className="text-muted-foreground">Ruolo</TableHead>
+                  <TableHead className="text-muted-foreground">Data Assegnazione</TableHead>
+                  <TableHead className="text-muted-foreground text-right">Azioni</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {roles.map(r => (
-                  <TableRow key={r.id} className="border-amber-900/10 hover:bg-amber-900/5">
-                    <TableCell className="text-amber-100 text-sm">{emailMap[r.user_id] || '—'}</TableCell>
-                    <TableCell className="text-amber-200/40 font-mono text-xs">{r.user_id.substring(0, 8)}...</TableCell>
+                  <TableRow key={r.id} className="border-border hover:bg-muted/60">
+                    <TableCell className="text-foreground text-sm">{emailMap[r.user_id] || '—'}</TableCell>
+                    <TableCell className="text-muted-foreground font-mono text-xs">{r.user_id.substring(0, 8)}...</TableCell>
                     <TableCell>{getRoleBadge(r.role)}</TableCell>
-                    <TableCell className="text-amber-200/40 text-sm">{r.created_at ? new Date(r.created_at).toLocaleDateString('it-IT') : '—'}</TableCell>
+                    <TableCell className="text-muted-foreground text-sm">{r.created_at ? new Date(r.created_at).toLocaleDateString('it-IT') : '—'}</TableCell>
                     <TableCell className="text-right">
                       <Button size="sm" variant="ghost" onClick={() => handleDeleteRole(r)} className="text-red-400 hover:text-red-200 hover:bg-red-900/20">
                         <Trash2 className="w-4 h-4" />
@@ -168,18 +168,18 @@ const ERPUtenti = () => {
 
       {/* Create User Modal */}
       <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
-        <DialogContent className="bg-[#141414] border-amber-900/30 text-amber-100">
+        <DialogContent className="bg-card border-border text-foreground">
           <DialogHeader>
-            <DialogTitle className="text-amber-100">Crea Nuovo Utente</DialogTitle>
+            <DialogTitle className="text-foreground">Crea Nuovo Utente</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div><Label className="text-amber-200/80">Email</Label>
-              <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="utente@azienda.com" className="bg-[#1a1a1a] border-amber-900/30 text-amber-100" /></div>
-            <div><Label className="text-amber-200/80">Password</Label>
-              <Input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="Minimo 6 caratteri" className="bg-[#1a1a1a] border-amber-900/30 text-amber-100" /></div>
-            <div><Label className="text-amber-200/80">Ruolo</Label>
+            <div><Label className="text-muted-foreground">Email</Label>
+              <Input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="utente@azienda.com" className="bg-card border-border text-foreground" /></div>
+            <div><Label className="text-muted-foreground">Password</Label>
+              <Input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="Minimo 6 caratteri" className="bg-card border-border text-foreground" /></div>
+            <div><Label className="text-muted-foreground">Ruolo</Label>
               <Select value={newRole} onValueChange={setNewRole}>
-                <SelectTrigger className="bg-[#1a1a1a] border-amber-900/30 text-amber-100"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="bg-card border-border text-foreground"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   {ROLES.map(r => <SelectItem key={r.value} value={r.value}>{r.label} — {r.description}</SelectItem>)}
                 </SelectContent>
@@ -187,8 +187,8 @@ const ERPUtenti = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowCreateModal(false)} className="border-amber-900/30 text-amber-200">Annulla</Button>
-            <Button onClick={handleCreateUser} disabled={saving} className="bg-amber-600 hover:bg-amber-700 text-white">
+            <Button variant="outline" onClick={() => setShowCreateModal(false)} className="border-border text-foreground">Annulla</Button>
+            <Button onClick={handleCreateUser} disabled={saving} className="bg-primary hover:bg-primary/90 text-primary-foreground">
               {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}Crea Utente
             </Button>
           </DialogFooter>
