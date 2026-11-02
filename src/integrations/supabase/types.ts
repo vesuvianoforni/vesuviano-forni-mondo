@@ -2291,6 +2291,119 @@ export type Database = {
           },
         ]
       }
+      outreach_research_jobs: {
+        Row: {
+          created_at: string
+          error: string | null
+          id: string
+          input: Json
+          kind: string
+          lease_until: string | null
+          ordinal: number
+          plan_id: string
+          result: Json | null
+          status: string
+          updated_at: string
+          worker_token: string
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          input: Json
+          kind: string
+          lease_until?: string | null
+          ordinal: number
+          plan_id: string
+          result?: Json | null
+          status?: string
+          updated_at?: string
+          worker_token?: string
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          input?: Json
+          kind?: string
+          lease_until?: string | null
+          ordinal?: number
+          plan_id?: string
+          result?: Json | null
+          status?: string
+          updated_at?: string
+          worker_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outreach_research_jobs_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "outreach_research_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      outreach_research_plans: {
+        Row: {
+          analysis: Json
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          created_by: string
+          discovered: number
+          error: string | null
+          finished_at: string | null
+          id: string
+          proposal: Json
+          request: string
+          skipped: number
+          started_at: string | null
+          status: string
+          thread_id: string
+          updated_at: string
+          verified: number
+        }
+        Insert: {
+          analysis?: Json
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          created_by: string
+          discovered?: number
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          proposal: Json
+          request: string
+          skipped?: number
+          started_at?: string | null
+          status?: string
+          thread_id: string
+          updated_at?: string
+          verified?: number
+        }
+        Update: {
+          analysis?: Json
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          created_by?: string
+          discovered?: number
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          proposal?: Json
+          request?: string
+          skipped?: number
+          started_at?: string | null
+          status?: string
+          thread_id?: string
+          updated_at?: string
+          verified?: number
+        }
+        Relationships: []
+      }
       outreach_runs: {
         Row: {
           actor_run_id: string | null
@@ -3040,6 +3153,10 @@ export type Database = {
       acquire_mario_delivery: { Args: { p_token: string }; Returns: boolean }
       activate_price_list: { Args: { _id: string }; Returns: undefined }
       apply_active_price_list: { Args: never; Returns: undefined }
+      approve_mario_research_plan: {
+        Args: { p_id: string; p_jobs: Json; p_user: string }
+        Returns: boolean
+      }
       bruno_message_page: {
         Args: {
           p_before_at?: string
@@ -3082,6 +3199,29 @@ export type Database = {
           message_count: number
           preview: string
         }[]
+      }
+      claim_mario_research_job: {
+        Args: { p_id: string; p_token: string }
+        Returns: {
+          created_at: string
+          error: string | null
+          id: string
+          input: Json
+          kind: string
+          lease_until: string | null
+          ordinal: number
+          plan_id: string
+          result: Json | null
+          status: string
+          updated_at: string
+          worker_token: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "outreach_research_jobs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       claim_mario_run: {
         Args: { p_input: Json; p_kind: string; p_user: string }
