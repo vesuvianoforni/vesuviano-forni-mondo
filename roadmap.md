@@ -69,3 +69,5 @@
 - [ ] Verifica autenticata su ERP reale (accesso non disponibile in sandbox)
 
 - [x] Import WhatsApp Gennaro (WaSender) da Zapper — ricevitore pronto; attivazione lato Zapper da fare
+
+- [ ] Mario agente outbound: invio cold email tramite Mailrush (in attesa di approvazione piano)
