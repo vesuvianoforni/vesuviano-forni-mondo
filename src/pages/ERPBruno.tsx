@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Bot, PauseCircle, Search, AlertTriangle, Loader2, ChevronLeft, MessageSquare } from "lucide-react";
+import { Bot, PauseCircle, Search, Loader2, ChevronLeft, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,8 @@ import { brunoQueueReason, type BrunoQueueReason } from "@/lib/brunoQueue";
 import { BrunoPanel, type BrunoLead } from "@/components/erp/BrunoPanel";
 import { cn } from "@/lib/utils";
 import { MailboxSettings } from "@/components/erp/MailboxSettings";
+import { Switch } from "@/components/ui/switch";
+import { interactionRelativeTime } from "@/lib/crmActivity";
 
 const pipelines = ["Vesuviano", "ZAPPER", "ZAPPER Pro"];
 const PAGE = 1000;
@@ -114,54 +116,61 @@ export default function ERPBruno() {
   if (loading) return <div className="flex h-[60vh] items-center justify-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;
 
   return (
-    <div className="flex h-[calc(100dvh-3.5rem)] min-h-0 min-w-0 w-full overflow-hidden flex-col">
-      <div className={cn("flex shrink-0 flex-wrap items-center gap-3 border-b p-4", selected && "hidden md:flex")}>
+    <div className="bruno-workspace flex h-[calc(100dvh-3.5rem)] min-h-0 min-w-0 w-full overflow-hidden flex-col bg-background text-foreground">
+      <div className={cn("flex shrink-0 flex-wrap items-center justify-between gap-3 border-b px-4 py-3", selected && "hidden md:flex")}>
         <div className="min-w-0">
-          <h1 className="flex items-center gap-2 text-xl font-bold"><Bot className="h-5 w-5 text-primary" />Bruno</h1>
-          <p className="text-xs text-muted-foreground">{queued} clienti da contattare · {pausedCount} in pausa</p>
+          <h1 className="flex items-center gap-2 text-xl font-semibold"><Bot className="h-5 w-5 text-primary" />Bruno <span className="text-sm font-normal text-muted-foreground">Sales & Back-office</span></h1>
+          <p className="mt-0.5 text-xs text-muted-foreground">{queued} clienti da contattare · {pausedCount} in pausa</p>
         </div>
-        <div className="ml-auto flex min-w-0 max-w-full flex-wrap items-center gap-2">
+        <div className="flex shrink-0 items-center gap-4">
+          <label className="flex items-center gap-2 text-xs font-medium"><Switch checked={onlyQueue} onCheckedChange={setOnlyQueue} aria-label="Solo in coda" />Solo in coda</label>
           <MailboxSettings />
-          <div className="relative min-w-0 basis-full sm:basis-56">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Cerca cliente…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
-          </div>
+        </div>
+      </div>
+
+      <div className="grid min-h-0 min-w-0 flex-1 overflow-hidden md:grid-cols-[320px_minmax(0,1fr)] xl:grid-cols-[340px_minmax(0,1fr)]">
+        <div className={cn("flex min-h-0 min-w-0 flex-col overflow-hidden border-r", selected && "hidden md:flex")}>
+          <div className="shrink-0 space-y-2 border-b p-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input aria-label="Cerca cliente" placeholder="Nome, email o telefono…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
           <Select value={pipeline} onValueChange={setPipeline}>
-            <SelectTrigger className="w-[150px]"><SelectValue /></SelectTrigger>
+            <SelectTrigger aria-label="Pipeline" className="h-9 min-w-0 text-xs"><SelectValue /></SelectTrigger>
             <SelectContent>{pipelines.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
           </Select>
           <Select value={stageFilter} onValueChange={setStageFilter}>
-            <SelectTrigger className="w-[150px]"><SelectValue /></SelectTrigger>
+            <SelectTrigger aria-label="Fase" className="h-9 min-w-0 text-xs"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Tutte le fasi</SelectItem>
               {CRM_STAGES.map((s) => <SelectItem key={s.id} value={s.id}>{s.title}</SelectItem>)}
             </SelectContent>
           </Select>
-          <Button size="sm" variant={onlyQueue ? "default" : "outline"} onClick={() => setOnlyQueue(!onlyQueue)}>
-            <AlertTriangle className="mr-1 h-3.5 w-3.5" />Solo in coda
-          </Button>
-        </div>
-      </div>
-
-      <div className="grid min-h-0 min-w-0 flex-1 overflow-hidden md:grid-cols-[300px_minmax(0,1fr)]">
-        <div aria-label="Elenco clienti" className={cn("min-h-0 min-w-0 overflow-x-hidden overflow-y-auto overscroll-contain border-r", selected && "hidden md:block")}>
+            </div>
+            <p className="text-xs text-muted-foreground">{rows.length} clienti{onlyQueue ? " in coda" : ""}</p>
+          </div>
+          <div aria-label="Elenco clienti" className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain">
           {rows.length === 0 && <p className="p-6 text-center text-sm text-muted-foreground">Nessun cliente in questa vista.</p>}
           {rows.map((row) => (
             <Button key={row.lead.id} type="button" variant="ghost" aria-pressed={selectedId === row.lead.id} onClick={() => setSelectedId(row.lead.id)}
-              className={cn("block h-auto w-full rounded-none border-b p-3 text-left font-normal whitespace-normal transition-colors hover:bg-muted/50", selectedId === row.lead.id && "bg-muted")}>
-              <span className="flex flex-wrap items-center gap-2">
-                <span className="min-w-0 flex-1 break-words text-sm font-medium">{row.lead.company_name || row.lead.contact_name || "Senza nome"}</span>
-                {row.reason && <Badge variant={row.reason.severity === "overdue" ? "destructive" : "secondary"} className="h-5 text-[10px]">{row.reason.label}</Badge>}
-                {row.paused && <Badge variant="outline" className="h-5 text-[10px]"><PauseCircle className="mr-1 h-3 w-3" />Pausa</Badge>}
+              className={cn("block h-auto w-full rounded-none border-b border-l-[3px] border-l-transparent px-3 py-3.5 text-left font-normal whitespace-normal transition-colors hover:bg-muted hover:text-foreground", selectedId === row.lead.id && "border-l-primary bg-accent/60")}>
+              <span className="flex items-start justify-between gap-2">
+                <span className="min-w-0 flex-1 break-words text-sm font-semibold leading-snug">{row.lead.company_name || row.lead.contact_name || "Senza nome"}</span>
+                {row.summary && <span className="shrink-0 text-[10px] text-muted-foreground" title={new Date(row.summary.lastAt).toLocaleString("it-IT")}>{interactionRelativeTime(row.summary.lastAt)}</span>}
               </span>
               <span className="mt-1 flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">
                 {CRM_STAGES.find((s) => s.id === row.lead.status)?.title}
                 {row.summary && <span>· {row.summary.count} messaggi</span>}
-                {row.summary?.channel && <span>· {CHANNELS[row.summary.channel as keyof typeof CHANNELS]?.short}</span>}
               </span>
-              {row.summary && <span className="mt-1 line-clamp-2 block break-words text-xs text-muted-foreground">{row.summary.preview}</span>}
+              {row.summary && <span className="mt-1.5 line-clamp-2 block break-words text-xs leading-relaxed text-muted-foreground">{row.summary?.channel && <span className="font-medium">{CHANNELS[row.summary.channel as keyof typeof CHANNELS]?.short}: </span>}{row.summary.preview}</span>}
+              {(row.reason || row.paused) && <span className="mt-2 flex flex-wrap gap-1.5">
+                {row.reason && <Badge variant="outline" className={cn("h-auto min-h-5 text-[10px] font-normal", row.reason.severity === "overdue" ? "border-destructive/25 bg-destructive/5 text-destructive" : "border-border bg-muted text-muted-foreground")}>{row.reason.label}</Badge>}
+                {row.paused && <Badge variant="outline" className="h-5 text-[10px]"><PauseCircle className="h-3 w-3" />Pausa</Badge>}
+              </span>}
             </Button>
           ))}
+          </div>
         </div>
 
         <div className={cn("flex min-h-0 min-w-0 overflow-hidden flex-col", !selected && "hidden md:flex")}>
@@ -175,7 +184,8 @@ export default function ERPBruno() {
           ) : (
             <div className="flex h-full flex-col items-center justify-center gap-2 p-8 text-center text-sm text-muted-foreground">
               <MessageSquare className="h-6 w-6" />
-              <p>Seleziona un cliente per vedere le comunicazioni e scrivere con Bruno.</p>
+              <p className="text-base font-medium text-foreground">Conversazioni clienti</p>
+              <p>Nessuna conversazione selezionata</p>
             </div>
           )}
         </div>
