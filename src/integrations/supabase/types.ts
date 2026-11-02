@@ -1952,6 +1952,39 @@ export type Database = {
         }
         Relationships: []
       }
+      outreach_chat_threads: {
+        Row: {
+          archived_at: string | null
+          created_at: string
+          id: string
+          messages: Json
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          archived_at?: string | null
+          created_at?: string
+          id: string
+          messages?: Json
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          archived_at?: string | null
+          created_at?: string
+          id?: string
+          messages?: Json
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       outreach_inbox: {
         Row: {
           body: string
