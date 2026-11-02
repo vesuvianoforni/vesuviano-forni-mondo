@@ -17,7 +17,7 @@ const SUGGESTIONS = [
   "Come rispondo a \"il prezzo è troppo alto\"?",
 ];
 
-export interface AgentConfig { fn: string; name: string; description: string; suggestions: string[]; instructionsKey: string; icon: LucideIcon; placeholder?: string }
+export interface AgentConfig { fn: string; name: string; description: string; suggestions: string[]; instructionsKey: string; icon: LucideIcon; placeholder?: string; onInstructions?: () => void; onComplete?: () => void }
 
 const BRUNO: AgentConfig = { fn: "bruno-chat", name: "Bruno", description: "Conosce Vesuviano e il tuo CRM. Chiedi priorità, bozze di email e WhatsApp, risposte alle obiezioni.", suggestions: SUGGESTIONS, instructionsKey: "bruno-agent-instructions", icon: Bot };
 
@@ -69,14 +69,14 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO }: { thread: Br
       if ((e as Error).name !== "AbortError") setError((e as Error).message);
       const last = current.messages[current.messages.length - 1];
       if (!last?.content) onChange({ ...current, messages: history });
-    } finally { setBusy(false); abortRef.current = null; }
+    } finally { setBusy(false); abortRef.current = null; agent.onComplete?.(); }
   };
 
   const empty = thread.messages.length === 0;
   return (
     <div className="flex h-full min-h-0 min-w-0 flex-col">
       <div className="flex shrink-0 justify-end p-3">
-        <Button variant="outline" size="sm" onClick={() => setInstrOpen(true)}><SlidersHorizontal className="mr-2 h-4 w-4" />Istruisci l'agente</Button>
+        <Button variant="outline" size="sm" onClick={() => agent.onInstructions ? agent.onInstructions() : setInstrOpen(true)}><SlidersHorizontal className="mr-2 h-4 w-4" />Istruisci l'agente</Button>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto px-4">
         {empty ? (

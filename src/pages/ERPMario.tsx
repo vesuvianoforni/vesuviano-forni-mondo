@@ -152,7 +152,7 @@ export default function ERPMario() {
               <MarioOperations key={selected.id} prospectId={selected.id} onUpdated={() => void refresh()} />
             </div>
           ) : activeThread ? (
-            <BrunoAgentChat key={activeThread.id} thread={activeThread} onChange={updateThread} agent={MARIO} />
+            <BrunoAgentChat key={activeThread.id} thread={activeThread} onChange={updateThread} agent={{ ...MARIO, onInstructions: () => setParams({ section: 'instructions' }), onComplete: () => void refresh() }} />
           ) : null}
         </div>
       </div>
