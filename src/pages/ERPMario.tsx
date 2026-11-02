@@ -17,7 +17,7 @@ import { MarioResearch } from '@/components/erp/MarioResearch';
 
 const MARIO: AgentConfig = {
   fn: 'mario-chat', name: 'Mario', icon: Radar, instructionsKey: 'mario-agent-instructions',
-  description: 'Outbound Partnership & Customers: trova pizzerie e aziende Horeca in UK, Francia e Germania e gestisce le sequenze email.',
+  description: 'Outbound Partnership & Customers: trova pizzerie e aziende Horeca in tutta Europa (Italia esclusa) e gestisce le sequenze email in autonomia.',
   suggestions: [
     'Proponi una campagna da 500 pizzerie a Londra',
     'Quanti partner hanno risposto questa settimana?',

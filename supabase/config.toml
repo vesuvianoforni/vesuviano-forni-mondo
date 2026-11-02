@@ -92,3 +92,6 @@ verify_jwt = false
 
 [functions.mario-research]
 verify_jwt = false
+
+[functions.mario-autopilot]
+verify_jwt = false
