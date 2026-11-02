@@ -114,13 +114,13 @@ export default function ERPBruno() {
   if (loading) return <div className="flex h-[60vh] items-center justify-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;
 
   return (
-    <div className="flex h-[calc(100vh-3.5rem)] min-h-0 w-full flex-col">
-      <div className="flex flex-wrap items-center gap-3 border-b p-4">
+    <div className="flex h-[calc(100dvh-3.5rem)] min-h-0 min-w-0 w-full overflow-hidden flex-col">
+      <div className="flex shrink-0 flex-wrap items-center gap-3 border-b p-4">
         <div className="min-w-0">
           <h1 className="flex items-center gap-2 text-xl font-bold"><Bot className="h-5 w-5 text-primary" />Bruno</h1>
           <p className="text-xs text-muted-foreground">{queued} clienti da contattare · {pausedCount} in pausa</p>
         </div>
-        <div className="ml-auto flex flex-wrap items-center gap-2">
+        <div className="ml-auto flex min-w-0 max-w-full flex-wrap items-center gap-2">
           <MailboxSettings />
           <div className="relative min-w-0 basis-full sm:basis-56">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -143,12 +143,12 @@ export default function ERPBruno() {
         </div>
       </div>
 
-      <div className="grid min-h-0 flex-1 md:grid-cols-[340px_1fr]">
-        <div className={cn("min-h-0 overflow-y-auto border-r", selected && "hidden md:block")}>
+      <div className="grid min-h-0 min-w-0 flex-1 overflow-hidden md:grid-cols-[300px_minmax(0,1fr)]">
+        <div aria-label="Elenco clienti" className={cn("min-h-0 min-w-0 overflow-x-hidden overflow-y-auto overscroll-contain border-r", selected && "hidden md:block")}>
           {rows.length === 0 && <p className="p-6 text-center text-sm text-muted-foreground">Nessun cliente in questa vista.</p>}
           {rows.map((row) => (
-            <button key={row.lead.id} type="button" onClick={() => setSelectedId(row.lead.id)}
-              className={cn("w-full border-b p-3 text-left transition-colors hover:bg-muted/50", selectedId === row.lead.id && "bg-muted")}>
+            <Button key={row.lead.id} type="button" variant="ghost" aria-pressed={selectedId === row.lead.id} onClick={() => setSelectedId(row.lead.id)}
+              className={cn("block h-auto w-full rounded-none border-b p-3 text-left font-normal whitespace-normal transition-colors hover:bg-muted/50", selectedId === row.lead.id && "bg-muted")}>
               <span className="flex flex-wrap items-center gap-2">
                 <span className="min-w-0 flex-1 break-words text-sm font-medium">{row.lead.company_name || row.lead.contact_name || "Senza nome"}</span>
                 {row.reason && <Badge variant={row.reason.severity === "overdue" ? "destructive" : "secondary"} className="h-5 text-[10px]">{row.reason.label}</Badge>}
@@ -160,11 +160,11 @@ export default function ERPBruno() {
                 {row.summary?.channel && <span>· {CHANNELS[row.summary.channel as keyof typeof CHANNELS]?.short}</span>}
               </span>
               {row.summary && <span className="mt-1 line-clamp-2 block break-words text-xs text-muted-foreground">{row.summary.preview}</span>}
-            </button>
+            </Button>
           ))}
         </div>
 
-        <div className="flex min-h-0 flex-col">
+        <div className={cn("flex min-h-0 min-w-0 overflow-hidden flex-col", !selected && "hidden md:flex")}>
           {selected ? (
             <>
               <Button variant="ghost" size="sm" className="w-fit md:hidden" onClick={() => setSelectedId(null)}>

@@ -1,5 +1,9 @@
 # Roadmap
 
+## UX/UI Bruno (2 nov 2026)
+- [ ] Contenere testi lunghi, elenco clienti e conversazione nella schermata; evitare che lo scorrimento dei messaggi sposti tutta la pagina.
+- [ ] Verificare filtri, cambio cliente e cronologia lunga con dati di prova; accesso autenticato reale non disponibile per Supabase esterno.
+
 ## Preventivatore Zapper per Vesuviano
 - [x] Recuperare il generatore di offerte commerciali da Zapper ER Wing e trasferire le impostazioni Vesuviano presenti nel codice.
 - [x] Integrare offerte isolate da pro-forma e configuratore: cataloghi A/B/C/Rivenditori in sola lettura, IVA, sconti, tre conti, inclusioni/esclusioni, firma, lingue, anteprima/PDF, link esplicito revocabile e impostazioni admin.
