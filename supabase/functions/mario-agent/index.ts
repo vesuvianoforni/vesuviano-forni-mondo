@@ -7,9 +7,14 @@ import { STARTER_TEMPLATES, renderMarioEmail } from '../_shared/mario/templates.
 import { containsPrices } from '../_shared/marketing-policy.ts';
 import { deliveryLimits } from '../_shared/mario/delivery-policy.ts';
 import { enqueueMario, preflightMario, syncMarioInbox, dispatchMarioOnce } from '../_shared/mario/delivery.ts';
+import { proposeResearch, researchPlans, approveResearch, cancelResearch } from '../_shared/mario/research.ts';
 
 const Body = z.discriminatedUnion('action', [
   z.object({ action: z.literal('overview') }),
+  z.object({ action: z.literal('research_plans'), thread_id: z.string().uuid() }),
+  z.object({ action: z.literal('propose_research'), thread_id: z.string().uuid(), request: z.string().trim().min(5).max(4000) }),
+  z.object({ action: z.literal('approve_research'), id: z.string().uuid() }),
+  z.object({ action: z.literal('cancel_research'), id: z.string().uuid() }),
   z.object({ action: z.literal('prospect_messages'), id:z.string().uuid() }),
   z.object({ action: z.literal('search'), provider: z.enum(['firecrawl','apify']), ...SearchInput.shape }),
   z.object({ action: z.literal('collect'), id: z.string().uuid() }),
@@ -56,7 +61,11 @@ Deno.serve(async req => {
       const saved=checked(templates);const library=STARTER_TEMPLATES.map(t=>({...t,...saved.find(s=>s.key===t.key),html:renderMarioEmail(saved.find(s=>s.key===t.key)?.body??t.body,t.language).html}));
       return json({ config: checked(config), knowledge: checked(knowledge), runs: checked(runs), messages: checked(messages), settings: checked(settings), totals: checked(totals), templates:library,kpis:checked(kpis),outbox:checked(outbox),is_admin: isAdmin, system_prompt: marioSystemPrompt(checked(config).instructions), version: MARIO_VERSION });
     }
-    if (b.action === 'search') return json(b.provider === 'firecrawl' ? await searchEngine(db, req, auth.user.id, b) : await startApify(db, req, auth.user.id, b));
+    if (b.action === 'research_plans') return json(await researchPlans(db, b.thread_id));
+    if (b.action === 'propose_research') return json(await proposeResearch(db, req, auth.user.id, b.thread_id, b.request));
+    if (b.action === 'approve_research') return json(await approveResearch(db, b.id, auth.user.id));
+    if (b.action === 'cancel_research') return json(await cancelResearch(db, b.id));
+    if (b.action === 'search') return json({ error: 'Chiedi a Mario un piano di ricerca e approvalo prima dell’avvio.' }, 409);
     if (b.action === 'prospect_messages') return json({ messages: checked(await db.from('outreach_messages').select('id,prospect_id,step,subject,body,html,status,approved_at').eq('prospect_id',b.id).order('step').limit(100)) });
     if (b.action === 'collect') return json(await collectApify(db, req, b.id));
     if (b.action === 'enrich') return json(await enrichEngine(db, req, auth.user.id, b.id));

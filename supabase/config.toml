@@ -89,3 +89,6 @@ verify_jwt = false
 
 [functions.newsletter]
 verify_jwt = false
+
+[functions.mario-research]
+verify_jwt = false

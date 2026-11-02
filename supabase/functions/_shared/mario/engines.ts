@@ -21,7 +21,7 @@ async function run<T>(db: SupabaseClient, kind: string, input: unknown, userId: 
 }
 
 async function importCandidates(db: SupabaseClient, rows: Array<Record<string, unknown>>, args: SearchArgs, source: string) {
-  let imported = 0; let skipped = 0;
+  let imported = 0; let skipped = 0; const prospectIds: string[] = [];
   for (const r of rows.slice(0, args.limit)) {
     const raw = String(source === 'apify' ? r.website ?? '' : r.url ?? '');
     let site: ReturnType<typeof publicWebsite>;
@@ -33,11 +33,11 @@ async function importCandidates(db: SupabaseClient, rows: Array<Record<string, u
     const { data: existing, error: existingError } = await db.from('outreach_prospects').select('id').eq('domain', site.domain).maybeSingle();
     if (existingError) throw new Error('Impossibile verificare i duplicati');
     if (existing) { skipped++; continue; }
-    const result = await db.from('outreach_prospects').insert({ kind: args.kind, country: args.country, city: String(r.city ?? args.city).slice(0, 80), name: String(r.title ?? r.name ?? site.domain).slice(0, 200), website: site.url, domain: site.domain, source, source_url: String(r.url ?? site.url), status: args.country === 'DE' ? 'manual' : 'new', evidence: { discovery: String(r.description ?? '').slice(0, 1000), source_url: String(r.url ?? site.url), retrieved_at: new Date().toISOString(), requested_kind: args.kind, requested_country: args.country }, qualified: false });
+    const result = await db.from('outreach_prospects').insert({ kind: args.kind, country: args.country, city: String(r.city ?? args.city).slice(0, 80), name: String(r.title ?? r.name ?? site.domain).slice(0, 200), website: site.url, domain: site.domain, source, source_url: String(r.url ?? site.url), status: args.country === 'DE' ? 'manual' : 'new', evidence: { discovery: String(r.description ?? '').slice(0, 1000), source_url: String(r.url ?? site.url), retrieved_at: new Date().toISOString(), requested_kind: args.kind, requested_country: args.country }, qualified: false }).select('id').single();
     if (result.error?.code === '23505') { skipped++; continue; }
-    checked(result); imported++;
+    const saved = checked(result); if (saved) prospectIds.push(saved.id); imported++;
   }
-  return { imported, skipped, note: 'Candidati salvati, da verificare sul sito ufficiale. Nessuna email inviata.' };
+  return { imported, skipped, prospect_ids: prospectIds, note: 'Candidati salvati, da verificare sul sito ufficiale. Nessuna email inviata.' };
 }
 
 export async function searchEngine(db: SupabaseClient, request: Request, userId: string, raw: SearchArgs) {

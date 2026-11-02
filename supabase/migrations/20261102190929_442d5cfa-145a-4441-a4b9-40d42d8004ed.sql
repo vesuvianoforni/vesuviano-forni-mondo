@@ -1,0 +1,1 @@
+CREATE POLICY "research jobs internal only" ON public.outreach_research_jobs FOR ALL TO authenticated USING (false) WITH CHECK (false);
