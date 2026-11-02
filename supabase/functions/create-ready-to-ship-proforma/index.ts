@@ -500,12 +500,17 @@ serve(async (req) => {
       </html>
     `
 
-    await resend.emails.send({
+    const customerSend = await resend.emails.send({
       from: 'Vesuviano Forni <noreply@vesuvianoforni.com>',
       to: [email],
       subject: t.subject,
       html: customerEmailHtml,
     })
+    if (customerSend.error) {
+      console.error('Customer proforma email failed:', proforma.proforma_number, JSON.stringify(customerSend.error))
+    } else {
+      console.log('Customer proforma email accepted:', proforma.proforma_number, customerSend.data?.id)
+    }
 
     // 7. Notify the company
     const companyEmailHtml = `
