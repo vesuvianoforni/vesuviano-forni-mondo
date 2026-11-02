@@ -3,13 +3,13 @@ export interface BrunoThread { id: string; title: string; updatedAt: string; mes
 
 const KEY = "bruno-agent-threads";
 
-export function loadThreads(): BrunoThread[] {
+export function loadThreads(key = KEY): BrunoThread[] {
   if (typeof window === "undefined") return [];
-  try { return JSON.parse(localStorage.getItem(KEY) || "[]") as BrunoThread[]; } catch { return []; }
+  try { return JSON.parse(localStorage.getItem(key) || "[]") as BrunoThread[]; } catch { return []; }
 }
 
-export function saveThreads(threads: BrunoThread[]) {
-  localStorage.setItem(KEY, JSON.stringify(threads.slice(0, 50)));
+export function saveThreads(threads: BrunoThread[], key = KEY) {
+  localStorage.setItem(key, JSON.stringify(threads.slice(0, 50)));
 }
 
 export function newThread(): BrunoThread {
