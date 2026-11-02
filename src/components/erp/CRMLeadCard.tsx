@@ -1,6 +1,6 @@
 import { forwardRef, useState } from "react";
 import type { DraggableProvided } from "@hello-pangea/dnd";
-import { MessageSquare, Building2, Calendar, CalendarPlus, Clock, Edit, GripVertical, Mail, MoreHorizontal, Phone, Trash2, Trophy, User, XCircle, Zap } from "lucide-react";
+import { MessageSquare, Calendar, CalendarPlus, Clock, Edit, GripVertical, Mail, MoreHorizontal, Phone, Trash2, Trophy, XCircle, Zap } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -82,14 +82,14 @@ export const CRMLeadCard = forwardRef<HTMLDivElement, CRMLeadCardProps>(function
             <div className="flex shrink-0 items-center gap-0.5">
               {onConverse && <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-muted hover:text-foreground"
+                  <Button size="icon" variant="ghost" className="h-7 w-7 hover:bg-muted hover:text-foreground"
                     aria-label={`Comunicazioni con ${name}`} onClick={() => onConverse(lead)}><MessageSquare className="h-3.5 w-3.5" /></Button>
                 </TooltipTrigger>
                 <TooltipContent>Comunicazioni e Bruno</TooltipContent>
               </Tooltip>}
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-muted hover:text-foreground"
+                  <Button size="icon" variant="ghost" className="h-7 w-7 hover:bg-muted hover:text-foreground"
                     aria-label={`Modifica lead ${name}`} onClick={() => onEdit(lead)}><Edit className="h-3.5 w-3.5" /></Button>
                 </TooltipTrigger>
                 <TooltipContent>Modifica lead</TooltipContent>
@@ -97,7 +97,7 @@ export const CRMLeadCard = forwardRef<HTMLDivElement, CRMLeadCardProps>(function
               <DropdownMenu>
                 <Tooltip>
                   <TooltipTrigger asChild><DropdownMenuTrigger asChild>
-                    <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-muted hover:text-foreground" aria-label={`Altre azioni ${name}`}><MoreHorizontal /></Button>
+                    <Button size="icon" variant="ghost" className="h-7 w-7 hover:bg-muted hover:text-foreground" aria-label={`Altre azioni ${name}`}><MoreHorizontal /></Button>
                   </DropdownMenuTrigger></TooltipTrigger>
                   <TooltipContent>Altre azioni</TooltipContent>
                 </Tooltip>
