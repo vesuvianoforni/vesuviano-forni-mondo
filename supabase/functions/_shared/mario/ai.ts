@@ -7,7 +7,8 @@ import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 export async function marioObject<T extends z.ZodTypeAny>(db: SupabaseClient, request: Request, system: string, prompt: string, schema: T): Promise<z.infer<T>> {
   const key = Deno.env.get('LOVABLE_API_KEY');
   if (!key) throw Object.assign(new Error('AI non configurata'), { status: 503 });
-  const { data: config } = await db.from('outreach_agent_config').select('ai_status,ai_reason').eq('key', 'default').single();
+  const { data: config, error: configError } = await db.from('outreach_agent_config').select('ai_status,ai_reason').eq('key', 'default').single();
+  if (configError || !config) throw Object.assign(new Error('Stato AI non verificabile'), { status: 503 });
   if (config?.ai_status) throw Object.assign(new Error(config.ai_reason ?? 'AI in pausa'), { status: config.ai_status });
   const correlation = createLovableAiGatewayRunIdFetch();
   const provider = createOpenAI({ baseURL: 'https://ai.gateway.lovable.dev/v1', apiKey: key, headers: { 'Lovable-API-Key': key, 'X-Lovable-AIG-SDK': 'vercel-ai-sdk' }, fetch: correlation.fetch });

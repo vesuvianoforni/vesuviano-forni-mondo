@@ -6,6 +6,7 @@ import { MARIO_VERSION, marioSystemPrompt, publicWebsite } from '../_shared/mari
 
 const Body = z.discriminatedUnion('action', [
   z.object({ action: z.literal('overview') }),
+  z.object({ action: z.literal('prospect_messages'), id:z.string().uuid() }),
   z.object({ action: z.literal('search'), provider: z.enum(['firecrawl','apify']), ...SearchInput.shape }),
   z.object({ action: z.literal('collect'), id: z.string().uuid() }),
   z.object({ action: z.literal('enrich'), id: z.string().uuid() }),
@@ -40,6 +41,7 @@ Deno.serve(async req => {
       return json({ config: checked(config), knowledge: checked(knowledge), runs: checked(runs), messages: checked(messages), settings: checked(settings), totals: checked(totals), is_admin: isAdmin, system_prompt: marioSystemPrompt(checked(config).instructions), version: MARIO_VERSION });
     }
     if (b.action === 'search') return json(b.provider === 'firecrawl' ? await searchEngine(db, req, auth.user.id, b) : await startApify(db, req, auth.user.id, b));
+    if (b.action === 'prospect_messages') return json({ messages: checked(await db.from('outreach_messages').select('id,prospect_id,step,subject,body,html,status,approved_at').eq('prospect_id',b.id).order('step').limit(100)) });
     if (b.action === 'collect') return json(await collectApify(db, req, b.id));
     if (b.action === 'enrich') return json(await enrichEngine(db, req, auth.user.id, b.id));
     if (b.action === 'draft') return json(await draftEngine(db, req, auth.user.id, b.id));
