@@ -16,6 +16,13 @@ Deno.serve(async req => {
     if (!url || !key) return json({ error: 'Servizio non configurato' }, 503);
     const db = createClient(url, key);
     const { job_id, token, action } = parsed.data;
+    // A delayed hop carries only this persisted job's capability; it cannot expand the approved queue.
+    const job=checked(await db.from('outreach_research_jobs').select('not_before').eq('id',job_id).eq('worker_token',token).eq('status',action?'running':'queued').maybeSingle());
+    const delay=action?0:Math.min(10000,Math.max(0,Date.parse(job.not_before)-Date.now()));
+    if(delay>0){
+      EdgeRuntime.waitUntil((async()=>{await new Promise(resolve=>setTimeout(resolve,delay));const rows=checked(await db.rpc('claim_mario_research_job',{p_id:job_id,p_token:token}));if(rows.length)await executeResearchJob(db,rows[0]);})());
+      return json({accepted:true},202);
+    }
     const rows = checked(await db.rpc(action ? 'claim_mario_research_callback' : 'claim_mario_research_job', { p_id: job_id, p_token: token }));
     if (!rows?.length) return json({ error: 'Operazione non autorizzata o già acquisita' }, 403);
     EdgeRuntime.waitUntil(executeResearchJob(db, rows[0], Boolean(action)));

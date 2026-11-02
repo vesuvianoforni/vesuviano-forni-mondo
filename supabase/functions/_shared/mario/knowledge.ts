@@ -10,5 +10,6 @@ export async function marioKnowledge(db: SupabaseClient, language = 'en') {
     loadCatalog(db, language),
   ]);
   for (const r of [config, knowledge, product]) if (r.error) throw new Error('Conoscenze Mario non disponibili');
+  if (!config.data) throw new Error('Impostazioni Mario non disponibili');
   return { config: config.data, knowledge: catalogWithoutPrices(knowledge.data ?? []), products: catalogWithoutPrices(product.data ?? []), catalog: catalogWithoutPrices(catalog) };
 }
