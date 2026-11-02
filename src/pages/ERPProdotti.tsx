@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { toast } from "sonner";
 import { Copy, Loader2, Plus, Save, Search, CheckCircle2, Settings2 } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
-import { CURRENCIES, DEFAULT_MARKET_CURRENCY, MARKETS, MARKET_LABELS, Market, marginPercentage } from "@/lib/productPricing";
+import { CURRENCIES, DEFAULT_MARKET_CURRENCY, MARKETS, MARKET_LABELS, Market } from "@/lib/productPricing";
 
 const db = supabase as any;
 type Category = "forno" | "bruciatore" | "altro";
@@ -61,7 +61,7 @@ export default function ERPProdotti() {
     if (!id) return;
     setLoading(true);
     const [p, pr, t] = await Promise.all([
-      db.from("products").select("id,category,name,description,image_url,cost,cost_currency,is_active,sort_order").order("name").range(0, 1999),
+      db.from("products").select("id,category,name,description,image_url,is_active,sort_order").order("name").range(0, 1999),
       db.from("product_prices").select("product_id,market,amount,currency").eq("price_list_id", id).range(0, 5999),
       db.from("discount_tiers").select("code,label,percentage").order("sort_order"),
     ]);
@@ -100,7 +100,7 @@ export default function ERPProdotti() {
 
   const savePrices = async (targets: Row[]) => {
     for (const r of targets) {
-      const { error: e1 } = await db.from("products").update({ name: r.product.name, cost: r.product.cost, cost_currency: r.product.cost_currency }).eq("id", r.product.id);
+      const { error: e1 } = await db.from("products").update({ name: r.product.name }).eq("id", r.product.id);
       const { error: e2 } = await db.from("product_prices").upsert(
         MARKETS.map((m) => ({ price_list_id: listId, product_id: r.product.id, market: m, amount: r.prices[m].amount, currency: r.prices[m].currency })),
         { onConflict: "price_list_id,product_id,market" },
@@ -124,7 +124,7 @@ export default function ERPProdotti() {
     if (!adding?.product.name.trim()) return toast.error("Inserisci il nome");
     setSaving(true);
     const { product } = adding;
-    const { data, error } = await db.from("products").insert({ category: product.category, name: product.name.trim(), description: product.description, image_url: product.image_url, cost: product.cost, cost_currency: product.cost_currency }).select("id").single();
+    const { data, error } = await db.from("products").insert({ category: product.category, name: product.name.trim(), description: product.description, image_url: product.image_url}).select("id").single();
     if (error) { setSaving(false); return toast.error(error.message); }
     try { await savePrices([{ ...adding, product: { ...product, id: data.id } }]); } catch (e: any) { toast.error(e.message); }
     setAdding(null); setSaving(false); toast.success("Prodotto aggiunto");
@@ -158,36 +158,29 @@ export default function ERPProdotti() {
 
   const priceCell = (r: Row, m: Market, onChange: (p: Price) => void) => {
     const p = r.prices[m];
-    const margin = marginPercentage(r.product.cost, r.product.cost_currency, p.amount, p.currency);
     return (
       <div className="flex items-center gap-1">
         <Input className="h-8 w-24 text-right text-sm" inputMode="decimal" disabled={readOnly} value={p.amount ?? ""} placeholder="—" aria-label={`Prezzo ${MARKET_LABELS[m]}`}
           onChange={(e) => onChange({ ...p, amount: num(e.target.value) })} />
         <CurrencySelect value={p.currency} disabled={readOnly} onChange={(c) => onChange({ ...p, currency: c })} />
-        {margin != null && <span className={`w-12 text-right text-[11px] ${margin < 0 ? "text-destructive" : "text-muted-foreground"}`}>{margin}%</span>}
       </div>
     );
   };
 
   const table = (
     <div className="overflow-x-auto rounded-lg border">
-      <table className="w-full min-w-[1100px] text-sm">
+      <table className="w-full min-w-[900px] text-sm">
         <thead className="bg-muted/50 text-xs text-muted-foreground">
-          <tr><th className="p-2 text-left">Prodotto</th><th className="p-2 text-left">Costo</th>{MARKETS.map((m) => <th key={m} className="p-2 text-left">Listino {MARKET_LABELS[m]}</th>)}</tr>
+          <tr><th className="p-2 text-left">Prodotto</th>{MARKETS.map((m) => <th key={m} className="p-2 text-left">Listino {MARKET_LABELS[m]}</th>)}</tr>
         </thead>
         <tbody className="divide-y">
           {visible.map((r) => (
             <tr key={r.product.id} className={dirty.has(r.product.id) ? "bg-accent/30" : ""}>
               <td className="p-2"><div className="flex items-center gap-2">{r.product.image_url && <img src={r.product.image_url} alt="" className="h-9 w-9 shrink-0 rounded object-cover" loading="lazy" />}<span className={r.product.is_active ? "" : "text-muted-foreground"}>{r.product.name}</span></div></td>
-              <td className="p-2"><div className="flex items-center gap-1">
-                <Input className="h-8 w-24 text-right text-sm" inputMode="decimal" value={r.product.cost ?? ""} placeholder="—" aria-label="Costo"
-                  onChange={(e) => update(r.product.id, (x) => ({ ...x, product: { ...x.product, cost: num(e.target.value) } }))} />
-                <CurrencySelect value={r.product.cost_currency} onChange={(c) => update(r.product.id, (x) => ({ ...x, product: { ...x.product, cost_currency: c } }))} />
-              </div></td>
               {MARKETS.map((m) => <td key={m} className="p-2">{priceCell(r, m, (p) => update(r.product.id, (x) => ({ ...x, prices: { ...x.prices, [m]: p } })))}</td>)}
             </tr>
           ))}
-          {!loading && visible.length === 0 && <tr><td colSpan={5} className="p-6 text-center text-muted-foreground">Nessun prodotto.</td></tr>}
+          {!loading && visible.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-muted-foreground">Nessun prodotto.</td></tr>}
         </tbody>
       </table>
     </div>
@@ -199,7 +192,7 @@ export default function ERPProdotti() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Prodotti</h1>
-          <p className="text-sm text-muted-foreground">Costo, listino annuale per UK, Francia e Germania, sconti per clienti e partner.</p>
+          <p className="text-sm text-muted-foreground">Listino annuale per UK, Francia e Germania, sconti per clienti e partner.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Select value={listId} onValueChange={setListId}>
@@ -263,10 +256,6 @@ export default function ERPProdotti() {
               </div>
               <div className="space-y-1"><Label>Descrizione</Label><Textarea rows={2} value={adding.product.description || ""} onChange={(e) => setAdding({ ...adding, product: { ...adding.product, description: e.target.value } })} /></div>
               <div className="space-y-1"><Label>Link foto (facoltativo)</Label><Input value={adding.product.image_url || ""} onChange={(e) => setAdding({ ...adding, product: { ...adding.product, image_url: e.target.value } })} /></div>
-              <div className="space-y-1"><Label>Costo</Label><div className="flex gap-1">
-                <Input className="w-32 text-right" inputMode="decimal" value={adding.product.cost ?? ""} onChange={(e) => setAdding({ ...adding, product: { ...adding.product, cost: num(e.target.value) } })} />
-                <CurrencySelect value={adding.product.cost_currency} onChange={(c) => setAdding({ ...adding, product: { ...adding.product, cost_currency: c } })} />
-              </div></div>
               <div className="grid gap-3 sm:grid-cols-3">
                 {MARKETS.map((m) => <div key={m} className="space-y-1"><Label>Listino {MARKET_LABELS[m]}</Label>{priceCell(adding, m, (p) => setAdding({ ...adding, prices: { ...adding.prices, [m]: p } }))}</div>)}
               </div>
