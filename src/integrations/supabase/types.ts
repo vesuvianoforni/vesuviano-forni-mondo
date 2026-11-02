@@ -1925,6 +1925,229 @@ export type Database = {
           },
         ]
       }
+      outreach_messages: {
+        Row: {
+          body: string | null
+          created_at: string
+          direction: string
+          error: string | null
+          id: string
+          message_id: string | null
+          prospect_id: string
+          sent_at: string | null
+          status: string
+          step: number
+          subject: string | null
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          direction?: string
+          error?: string | null
+          id?: string
+          message_id?: string | null
+          prospect_id: string
+          sent_at?: string | null
+          status?: string
+          step: number
+          subject?: string | null
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          direction?: string
+          error?: string | null
+          id?: string
+          message_id?: string | null
+          prospect_id?: string
+          sent_at?: string | null
+          status?: string
+          step?: number
+          subject?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outreach_messages_prospect_id_fkey"
+            columns: ["prospect_id"]
+            isOneToOne: false
+            referencedRelation: "outreach_prospects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      outreach_prospects: {
+        Row: {
+          city: string | null
+          country: string
+          created_at: string
+          domain: string | null
+          email: string | null
+          error: string | null
+          id: string
+          kind: string
+          last_sent_at: string | null
+          lead_id: string | null
+          name: string
+          next_send_at: string | null
+          personalization: string | null
+          phone: string | null
+          replied_at: string | null
+          source: string
+          source_url: string | null
+          status: string
+          step: number
+          summary: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          city?: string | null
+          country: string
+          created_at?: string
+          domain?: string | null
+          email?: string | null
+          error?: string | null
+          id?: string
+          kind?: string
+          last_sent_at?: string | null
+          lead_id?: string | null
+          name: string
+          next_send_at?: string | null
+          personalization?: string | null
+          phone?: string | null
+          replied_at?: string | null
+          source?: string
+          source_url?: string | null
+          status?: string
+          step?: number
+          summary?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          city?: string | null
+          country?: string
+          created_at?: string
+          domain?: string | null
+          email?: string | null
+          error?: string | null
+          id?: string
+          kind?: string
+          last_sent_at?: string | null
+          lead_id?: string | null
+          name?: string
+          next_send_at?: string | null
+          personalization?: string | null
+          phone?: string | null
+          replied_at?: string | null
+          source?: string
+          source_url?: string | null
+          status?: string
+          step?: number
+          summary?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outreach_prospects_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      outreach_runs: {
+        Row: {
+          created_at: string
+          error: string | null
+          finished_at: string | null
+          found: number
+          id: string
+          kind: string
+          lease_until: string
+          sent: number
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          found?: number
+          id?: string
+          kind: string
+          lease_until?: string
+          sent?: number
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          found?: number
+          id?: string
+          kind?: string
+          lease_until?: string
+          sent?: number
+          status?: string
+        }
+        Relationships: []
+      }
+      outreach_settings: {
+        Row: {
+          cities: Json
+          daily_limit: number
+          key: string
+          markets: string[]
+          pause_reason: string | null
+          paused: boolean
+          send_markets: string[]
+          sender_email: string | null
+          updated_at: string
+        }
+        Insert: {
+          cities?: Json
+          daily_limit?: number
+          key?: string
+          markets?: string[]
+          pause_reason?: string | null
+          paused?: boolean
+          send_markets?: string[]
+          sender_email?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cities?: Json
+          daily_limit?: number
+          key?: string
+          markets?: string[]
+          pause_reason?: string | null
+          paused?: boolean
+          send_markets?: string[]
+          sender_email?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      outreach_suppressions: {
+        Row: {
+          created_at: string
+          reason: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          reason: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          reason?: string
+          value?: string
+        }
+        Relationships: []
+      }
       ovens: {
         Row: {
           category: string
