@@ -29,13 +29,13 @@ export default function ERPMario() {
   const [params, setParams] = useSearchParams();
   const [threads, setThreads] = useState<BrunoThread[]>(() => { const t=loadThreads(KEY); if(t.length)return t;const first=[newThread()];saveThreads(first,KEY);return first; });
   const [revision,setRevision]=useState(0);const [selected,setSelected]=useState<MarioProspect|null>(null);const [settings,setSettings]=useState<MarioSettings|null>(null);const [admin,setAdmin]=useState(false);const [error,setError]=useState('');const [eligibility,setEligibility]=useState('unreviewed');const [note,setNote]=useState('');
-  const section=params.get('section');const prospectId=params.get('prospect');const panel=Boolean(section||prospectId);const [mobile,setMobile]=useState(false);
+  const section=params.get('section');const prospectId=params.get('prospect');const panel=Boolean(section||prospectId);const [mobile,setMobile]=useState(()=>Boolean(params.get('section')||params.get('prospect')));
   const activeThread=threads.find(t=>t.id===params.get('chat'))??threads[0];
   const navigate=(next:Record<string,string|null>)=>setParams(prev=>{const p=new URLSearchParams(prev);for(const [k,v] of Object.entries(next)){if(v===null)p.delete(k);else p.set(k,v);}return p;});
   const updateThread=useCallback((t:BrunoThread)=>setThreads(prev=>{const next=[t,...prev.filter(x=>x.id!==t.id)];saveThreads(next,KEY);return next;}),[]);
   const refresh=useCallback(()=>setRevision(n=>n+1),[]);
   useEffect(()=>{let live=true;marioAction({action:'overview'}).then(d=>{if(live){setSettings(d.settings);setAdmin(d.is_admin);}}).catch(e=>{if(live)setError(e.message);});return()=>{live=false;};},[revision]);
-  useEffect(()=>{if(!prospectId){setSelected(null);return;}const controller=new AbortController();supabase.from('outreach_prospects').select('*').eq('id',prospectId).single().abortSignal(controller.signal).then(({data,error})=>{if(controller.signal.aborted)return;if(error)setError('Impossibile caricare il contatto.');else{const p=data as unknown as MarioProspect;setSelected(p);setEligibility(p.recipient_eligibility);setNote(p.eligibility_note??'');}});return()=>controller.abort();},[prospectId,revision]);
+  useEffect(()=>{if(!prospectId){setSelected(null);return;}const controller=new AbortController();supabase.from('outreach_prospects').select('*').eq('id',prospectId).abortSignal(controller.signal).single().then(({data,error})=>{if(controller.signal.aborted)return;if(error)setError('Impossibile caricare il contatto.');else{const p=data as unknown as MarioProspect;setSelected(p);setEligibility(p.recipient_eligibility);setNote(p.eligibility_note??'');}});return()=>controller.abort();},[prospectId,revision]);
   const createThread=()=>{const t=newThread();setThreads(prev=>{const next=[t,...prev];saveThreads(next,KEY);return next;});navigate({chat:t.id});setMobile(false);};
   const deleteThread=(id:string)=>setThreads(prev=>{let next=prev.filter(t=>t.id!==id);if(!next.length)next=[newThread()];saveThreads(next,KEY);return next;});
   const open=(view:string)=>{navigate({section:view,prospect:null});setMobile(true);};
