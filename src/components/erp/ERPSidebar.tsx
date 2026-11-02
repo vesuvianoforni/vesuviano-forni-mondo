@@ -49,6 +49,7 @@ const mainItems = [
 
 const catalogItems = [
   { title: 'Prodotti', url: '/erp/prodotti', icon: Package },
+  { title: 'Listino', url: '/erp/listino', icon: FileText },
   { title: 'Pronta Consegna', url: '/erp/pronta-consegna', icon: PackageCheck },
 ];
 
