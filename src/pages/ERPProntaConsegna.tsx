@@ -90,10 +90,10 @@ const ERPProntaConsegna = () => {
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <PackageCheck className="w-7 h-7 text-green-400" />
+          <PackageCheck className="w-7 h-7 text-primary" />
           <h1 className="text-2xl font-bold text-foreground">Pronta Consegna</h1>
           <Badge variant="secondary" className="ml-2">{items.length}</Badge>
-          <Badge className="bg-green-700/30 text-green-300 ml-1">{items.filter(i => !i.is_sold).length} disponibili</Badge>
+          <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100 border border-emerald-200 ml-1">{items.filter(i => !i.is_sold).length} disponibili</Badge>
         </div>
         <Button onClick={() => setShowAdd(true)} className="bg-primary hover:bg-primary/90">
           <Plus className="w-4 h-4 mr-2" /> Aggiungi Forno
@@ -115,15 +115,15 @@ const ERPProntaConsegna = () => {
           <Table>
             <TableHeader>
               <TableRow className="border-border">
-                <TableHead className="text-primary">Foto</TableHead>
-                <TableHead className="text-primary">Modello</TableHead>
-                <TableHead className="text-primary">Diametro</TableHead>
-                <TableHead className="text-primary">Rivestimento</TableHead>
-                <TableHead className="text-primary">Alimentazione</TableHead>
-                <TableHead className="text-primary">Prezzo Listino</TableHead>
-                <TableHead className="text-primary">Prezzo Scontato</TableHead>
-                <TableHead className="text-primary">Stato</TableHead>
-                <TableHead className="text-primary">Azioni</TableHead>
+                <TableHead className="text-muted-foreground font-semibold text-xs uppercase tracking-wide">Foto</TableHead>
+                <TableHead className="text-muted-foreground font-semibold text-xs uppercase tracking-wide">Modello</TableHead>
+                <TableHead className="text-muted-foreground font-semibold text-xs uppercase tracking-wide">Diametro</TableHead>
+                <TableHead className="text-muted-foreground font-semibold text-xs uppercase tracking-wide">Rivestimento</TableHead>
+                <TableHead className="text-muted-foreground font-semibold text-xs uppercase tracking-wide">Alimentazione</TableHead>
+                <TableHead className="text-muted-foreground font-semibold text-xs uppercase tracking-wide">Prezzo Listino</TableHead>
+                <TableHead className="text-muted-foreground font-semibold text-xs uppercase tracking-wide">Prezzo Scontato</TableHead>
+                <TableHead className="text-muted-foreground font-semibold text-xs uppercase tracking-wide">Stato</TableHead>
+                <TableHead className="text-muted-foreground font-semibold text-xs uppercase tracking-wide">Azioni</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -146,12 +146,12 @@ const ERPProntaConsegna = () => {
                   <TableCell className="text-foreground">{item.coating || '—'}</TableCell>
                   <TableCell className="text-foreground">{item.fuel_type || '—'}</TableCell>
                   <TableCell className="text-foreground">{formatPrice(item.list_price)}</TableCell>
-                  <TableCell className="text-green-300 font-medium">
+                  <TableCell className="text-emerald-700 font-semibold">
                     {item.sale_price ? formatPrice(item.sale_price) : '—'}
                   </TableCell>
                   <TableCell>
                     <Badge
-                      className={`cursor-pointer ${item.is_sold ? 'bg-red-700/30 text-red-300' : 'bg-green-700/30 text-green-300'}`}
+                      className={`cursor-pointer ${item.is_sold ? 'bg-red-100 text-red-800 border border-red-200 hover:bg-red-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-200 hover:bg-emerald-200'}`}
                       onClick={() => toggleSold(item)}
                     >
                       {item.is_sold ? 'Venduto' : 'Disponibile'}
@@ -159,10 +159,10 @@ const ERPProntaConsegna = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
-                      <Button size="sm" variant="ghost" onClick={() => setEditing(item)} className="text-primary hover:text-foreground">
+                      <Button size="sm" variant="ghost" onClick={() => setEditing(item)} className="text-primary hover:text-primary hover:bg-primary/10">
                         <Edit className="w-4 h-4" />
                       </Button>
-                      <Button size="sm" variant="ghost" onClick={() => handleDelete(item.id)} className="text-red-400 hover:text-red-300">
+                      <Button size="sm" variant="ghost" onClick={() => handleDelete(item.id)} className="text-destructive hover:text-destructive hover:bg-destructive/10">
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
