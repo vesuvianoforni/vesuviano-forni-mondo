@@ -1,8 +1,8 @@
 # Roadmap
 
 ## Leggibilità e composizione Bruno
-- [ ] Riorganizzare elenco clienti, filtri, intestazione, messaggi e scelta del canale d’invio, senza cambiare collegamenti o logiche di invio.
-- [ ] Verificare cambio cliente/canale, conservazione della bozza e contenimento su desktop e telefono; distinguere le prove con dati simulati dall’accesso reale.
+- [x] Elenco clienti più ampio, ricerca e filtri raggruppati, priorità non invasive, intestazione compatta, messaggi con mittente/data e scelta esplicita del canale d’invio separata dai filtri; collegamenti e invii invariati.
+- [x] Verificati con dati simulati a 1297×936, 390×844 e 1280×1800: cambio cliente/canale, bozza conservata al cambio filtro, email/nota, storico e riprova, contenimento e modalità scura; 7 test superati, build OK, nessun invio. Accesso reale non disponibile per Supabase esterno (reindirizzamento al login).
 
 ## Invio WhatsApp Gennaro
 - [x] Collegata WaSender con l'API Access Token della sessione esistente di Gennaro, senza cambiare il webhook Zapper; controllo reale del collegamento HTTP 200, sessione connected.
