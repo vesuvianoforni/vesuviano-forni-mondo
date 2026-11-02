@@ -56,6 +56,7 @@ export default function ERPLeads() {
   const [selectedCountry, setSelectedCountry] = useState<string>("all");
   const [showClosed, setShowClosed] = useState(false);
   const [view, setView] = useState<"board" | "list">(() => (localStorage.getItem("crm-view") === "list" ? "list" : "board"));
+  const [stageFilter, setStageFilter] = useState<string>("all");
   const [sort, setSort] = useState<CRMLeadSort>(() => { const s = localStorage.getItem("crm-sort"); return s && s in crmLeadSortLabels ? (s as CRMLeadSort) : "last_contact"; });
   useEffect(() => { localStorage.setItem("crm-view", view); localStorage.setItem("crm-sort", sort); }, [view, sort]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -264,7 +265,9 @@ export default function ERPLeads() {
 
   const activeLeads = sortCRMLeads(filteredLeads.filter((lead) => kanbanStatuses.some((s) => s.id === lead.status)), sort, interactions);
   const closedLeads = sortCRMLeads(filteredLeads.filter((lead) => lead.status === "vinto" || lead.status === "perso"), sort, interactions);
-  const listLeads = showClosed ? sortCRMLeads(filteredLeads, sort, interactions) : activeLeads;
+  const listBase = stageFilter === "all" ? (showClosed ? sortCRMLeads(filteredLeads, sort, interactions) : activeLeads)
+    : sortCRMLeads(filteredLeads.filter(l => l.status === stageFilter), sort, interactions);
+  const listLeads = listBase;
 
   const leadsByStatus = kanbanStatuses.reduce((acc, status) => {
     acc[status.id] = activeLeads.filter((lead) => lead.status === status.id);
@@ -439,6 +442,15 @@ export default function ERPLeads() {
             <SelectItem value="OTHER">Altri paesi</SelectItem>
           </SelectContent>
         </Select>
+        {view === "list" && (
+          <Select value={stageFilter} onValueChange={setStageFilter}>
+            <SelectTrigger className="h-9 w-[170px]" aria-label="Fase"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tutte le fasi</SelectItem>
+              {CRM_STAGES.map(s => <SelectItem key={s.id} value={s.id}>{s.title}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        )}
         <Select value={sort} onValueChange={v => setSort(v as CRMLeadSort)}>
           <SelectTrigger className="h-9 w-[190px]" aria-label="Ordina per"><ArrowUpDown className="mr-1 h-3.5 w-3.5 shrink-0" /><SelectValue /></SelectTrigger>
           <SelectContent>
