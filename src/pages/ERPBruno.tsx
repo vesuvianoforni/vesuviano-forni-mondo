@@ -115,7 +115,7 @@ export default function ERPBruno() {
 
   return (
     <div className="flex h-[calc(100dvh-3.5rem)] min-h-0 min-w-0 w-full overflow-hidden flex-col">
-      <div className="flex shrink-0 flex-wrap items-center gap-3 border-b p-4">
+      <div className={cn("flex shrink-0 flex-wrap items-center gap-3 border-b p-4", selected && "hidden md:flex")}>
         <div className="min-w-0">
           <h1 className="flex items-center gap-2 text-xl font-bold"><Bot className="h-5 w-5 text-primary" />Bruno</h1>
           <p className="text-xs text-muted-foreground">{queued} clienti da contattare · {pausedCount} in pausa</p>
