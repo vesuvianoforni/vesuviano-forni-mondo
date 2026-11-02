@@ -2190,6 +2190,49 @@ export type Database = {
         Args: { _id: string; _token: string }
         Returns: boolean
       }
+      bruno_message_page: {
+        Args: {
+          p_before_at?: string
+          p_before_id?: string
+          p_channel?: string
+          p_lead_id: string
+          p_limit?: number
+        }
+        Returns: {
+          ai_generated: boolean
+          body: string
+          channel: string
+          created_at: string
+          created_by: string | null
+          direction: string
+          error: string | null
+          external_id: string | null
+          id: string
+          lead_id: string
+          metadata: Json | null
+          sender: string
+          status: string
+          subject: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "crm_messages"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      bruno_message_summaries: {
+        Args: { p_lead_ids: string[] }
+        Returns: {
+          channel_counts: Json
+          last_at: string
+          last_channel: string
+          last_contact_at: string
+          lead_id: string
+          message_count: number
+          preview: string
+        }[]
+      }
       claim_roberta_run: {
         Args: { _id: string; _token: string }
         Returns: {
