@@ -70,4 +70,4 @@
 
 - [x] Import WhatsApp Gennaro (WaSender) da Zapper — ricevitore pronto; attivazione lato Zapper da fare
 
-- [ ] Mario agente outbound: invio cold email tramite Mailrush (in attesa di approvazione piano)
+- [ ] Mario agente outbound: invio cold email da casella SMTP dedicata su sottodominio (in attesa di casella e credenziali)
