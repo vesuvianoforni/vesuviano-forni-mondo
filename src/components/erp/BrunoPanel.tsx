@@ -60,7 +60,12 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
   const signatureId = signature === 'none' ? null : signature === 'default' ? undefined : signature;
 
   const load = async (id: string) => {
-    const { data } = await supabase.from("crm_messages" as never).select("*").eq("lead_id", id).order("created_at");
+    const data: unknown[] = [];
+    for (let from = 0; ; from += 1000) {
+      const { data: batch } = await supabase.from("crm_messages" as never).select("*").eq("lead_id", id).order("created_at").order("id").range(from, from + 999);
+      data.push(...((batch ?? []) as unknown[]));
+      if (!batch || (batch as unknown[]).length < 1000) break;
+    }
     setMessages((data as unknown as Msg[]) || []);
   };
 

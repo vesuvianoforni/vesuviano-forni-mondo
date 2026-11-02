@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { latestInteractions, type LeadIdentity, type LeadInteraction } from "@/lib/crmActivity";
 
-type InteractionTable = "website_leads" | "chat_conversations" | "email_history" | "configurator_sessions";
+type InteractionTable = "website_leads" | "chat_conversations" | "email_history" | "configurator_sessions" | "crm_messages";
 
 async function readAll<T extends InteractionTable>(table: T, columns: string) {
   const rows: Database["public"]["Tables"][T]["Row"][] = [];
@@ -27,9 +27,15 @@ export function useCRMInteractions(leads: LeadIdentity[]) {
         readAll("chat_conversations", "id,lead_id,visitor_email,visitor_phone,last_message_at,message_count"),
         readAll("email_history", "id,sent_to,sent_at,email_type"),
         readAll("configurator_sessions", "id,customer_email,customer_phone,last_opened_at,feedback_date,customer_actions"),
+        readAll("crm_messages", "id,lead_id,channel,created_at"),
       ]);
       const collected: LeadInteraction[] = [];
-      const [forms, chats, emails, sessions] = results;
+      const [forms, chats, emails, sessions, messages] = results;
+      if (messages.status === "fulfilled") for (const row of messages.value) {
+        // Recorded communications (WhatsApp, calls, mailbox email) are real interactions; internal notes are not.
+        const kind = row.channel === "call" ? "call" : row.channel === "email" ? "email" : row.channel === "wasender" || row.channel === "whatsapp_api" ? "whatsapp" : null;
+        if (kind) collected.push({ kind, at: row.created_at, leadId: row.lead_id });
+      }
       if (forms.status === "fulfilled") for (const row of forms.value) {
         collected.push({ kind: "form", at: row.created_at, email: row.email, phone: row.phone, websiteLeadId: row.id });
       }

@@ -21,7 +21,7 @@ interface Summary { count: number; lastAt: string; preview: string; channel: str
 
 async function readAllMessages() {
   const rows: Array<{ lead_id: string; created_at: string; body: string; channel: string; direction: string }> = [];
-  for (let from = 0; from < 10_000; from += PAGE) {
+  for (let from = 0; ; from += PAGE) {
     const { data, error } = await supabase.from("crm_messages").select("lead_id,created_at,body,channel,direction")
       .order("created_at", { ascending: false }).order("id").range(from, from + PAGE - 1);
     if (error) throw error;

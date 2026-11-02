@@ -37,3 +37,11 @@ describe("CRM activity deadlines", () => {
     assert.equal(result.lead, null);
   });
 });
+import { latestInteractions as latestByLead } from "./crmActivity";
+test("recorded WhatsApp messages count as the lead's last interaction", () => {
+  const result = latestByLead([{ id: "L1", email: "a@b.it" }], [
+    { kind: "form", at: "2026-10-01T10:00:00Z", email: "a@b.it" },
+    { kind: "whatsapp", at: "2026-11-02T09:00:00Z", leadId: "L1" },
+  ]);
+  assert.equal(result.L1?.kind, "whatsapp");
+});

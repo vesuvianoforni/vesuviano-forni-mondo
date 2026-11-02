@@ -10,7 +10,8 @@ export interface LeadIdentity {
 
 export interface LeadInteraction {
   at: string;
-  kind: "form" | "chat" | "email" | "configurator" | "feedback";
+  kind: "form" | "chat" | "email" | "configurator" | "feedback" | "whatsapp" | "call";
+  leadId?: string | null;
   email?: string | null;
   phone?: string | null;
   websiteLeadId?: string | null;
@@ -19,6 +20,7 @@ export interface LeadInteraction {
 export const interactionLabels: Record<LeadInteraction["kind"], string> = {
   form: "Richiesta dal sito", chat: "Conversazione chat", email: "Email inviata",
   configurator: "Attività configuratore", feedback: "Feedback cliente",
+  whatsapp: "WhatsApp", call: "Chiamata",
 };
 
 export const activityLabels: Record<string, string> = {
@@ -76,6 +78,7 @@ export function latestInteractions(leads: LeadIdentity[], interactions: LeadInte
   const byEmail = new Map<string, LeadInteraction>();
   const byPhone = new Map<string, LeadInteraction>();
   const byWebsiteLead = new Map<string, LeadInteraction>();
+  const byLead = new Map<string, LeadInteraction>();
   const keepNewest = (map: Map<string, LeadInteraction>, key: string, event: LeadInteraction) => {
     if (!key || !validDate(event.at)) return;
     const previous = map.get(key);
@@ -85,9 +88,10 @@ export function latestInteractions(leads: LeadIdentity[], interactions: LeadInte
     keepNewest(byEmail, emailKey(event.email), event);
     keepNewest(byPhone, phoneKey(event.phone), event);
     keepNewest(byWebsiteLead, event.websiteLeadId || "", event);
+    keepNewest(byLead, event.leadId || "", event);
   }
   return Object.fromEntries(leads.map(lead => {
-    const candidates = [byEmail.get(emailKey(lead.email)), byPhone.get(phoneKey(lead.phone)), byWebsiteLead.get(lead.website_lead_id || "")]
+    const candidates = [byEmail.get(emailKey(lead.email)), byPhone.get(phoneKey(lead.phone)), byWebsiteLead.get(lead.website_lead_id || ""), byLead.get(lead.id)]
       .filter((event): event is LeadInteraction => Boolean(event))
       .sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime());
     return [lead.id, candidates[0] ?? null];
