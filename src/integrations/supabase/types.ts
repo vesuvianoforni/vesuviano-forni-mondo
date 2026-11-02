@@ -2333,6 +2333,7 @@ export type Database = {
           input: Json
           kind: string
           lease_until: string | null
+          not_before: string
           ordinal: number
           plan_id: string
           result: Json | null
@@ -2348,6 +2349,7 @@ export type Database = {
           input: Json
           kind: string
           lease_until?: string | null
+          not_before?: string
           ordinal: number
           plan_id: string
           result?: Json | null
@@ -2363,6 +2365,7 @@ export type Database = {
           input?: Json
           kind?: string
           lease_until?: string | null
+          not_before?: string
           ordinal?: number
           plan_id?: string
           result?: Json | null
@@ -2389,6 +2392,7 @@ export type Database = {
           created_by: string
           discovered: number
           error: string | null
+          examined: number
           finished_at: string | null
           id: string
           proposal: Json
@@ -2398,6 +2402,7 @@ export type Database = {
           status: string
           thread_id: string
           updated_at: string
+          verification_attempts: number
           verified: number
         }
         Insert: {
@@ -2408,6 +2413,7 @@ export type Database = {
           created_by: string
           discovered?: number
           error?: string | null
+          examined?: number
           finished_at?: string | null
           id?: string
           proposal: Json
@@ -2417,6 +2423,7 @@ export type Database = {
           status?: string
           thread_id: string
           updated_at?: string
+          verification_attempts?: number
           verified?: number
         }
         Update: {
@@ -2427,6 +2434,7 @@ export type Database = {
           created_by?: string
           discovered?: number
           error?: string | null
+          examined?: number
           finished_at?: string | null
           id?: string
           proposal?: Json
@@ -2436,6 +2444,7 @@ export type Database = {
           status?: string
           thread_id?: string
           updated_at?: string
+          verification_attempts?: number
           verified?: number
         }
         Relationships: []
@@ -3247,6 +3256,7 @@ export type Database = {
           input: Json
           kind: string
           lease_until: string | null
+          not_before: string
           ordinal: number
           plan_id: string
           result: Json | null
@@ -3271,6 +3281,7 @@ export type Database = {
           input: Json
           kind: string
           lease_until: string | null
+          not_before: string
           ordinal: number
           plan_id: string
           result: Json | null
