@@ -81,7 +81,7 @@ const ERPProntaConsegna = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -91,61 +91,61 @@ const ERPProntaConsegna = () => {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <PackageCheck className="w-7 h-7 text-green-400" />
-          <h1 className="text-2xl font-bold text-amber-100">Pronta Consegna</h1>
+          <h1 className="text-2xl font-bold text-foreground">Pronta Consegna</h1>
           <Badge variant="secondary" className="ml-2">{items.length}</Badge>
           <Badge className="bg-green-700/30 text-green-300 ml-1">{items.filter(i => !i.is_sold).length} disponibili</Badge>
         </div>
-        <Button onClick={() => setShowAdd(true)} className="bg-amber-600 hover:bg-amber-700">
+        <Button onClick={() => setShowAdd(true)} className="bg-primary hover:bg-primary/90">
           <Plus className="w-4 h-4 mr-2" /> Aggiungi Forno
         </Button>
       </div>
 
       <div className="relative max-w-md mb-4">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
           placeholder="Cerca per modello, rivestimento..."
-          className="pl-10 bg-[#1a1a1a] border-amber-900/20 text-amber-100"
+          className="pl-10 bg-card border-border text-foreground"
         />
       </div>
 
-      <Card className="bg-[#1a1a1a] border-amber-900/20">
+      <Card className="bg-card border-border">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow className="border-amber-900/20">
-                <TableHead className="text-amber-400">Foto</TableHead>
-                <TableHead className="text-amber-400">Modello</TableHead>
-                <TableHead className="text-amber-400">Diametro</TableHead>
-                <TableHead className="text-amber-400">Rivestimento</TableHead>
-                <TableHead className="text-amber-400">Alimentazione</TableHead>
-                <TableHead className="text-amber-400">Prezzo Listino</TableHead>
-                <TableHead className="text-amber-400">Prezzo Scontato</TableHead>
-                <TableHead className="text-amber-400">Stato</TableHead>
-                <TableHead className="text-amber-400">Azioni</TableHead>
+              <TableRow className="border-border">
+                <TableHead className="text-primary">Foto</TableHead>
+                <TableHead className="text-primary">Modello</TableHead>
+                <TableHead className="text-primary">Diametro</TableHead>
+                <TableHead className="text-primary">Rivestimento</TableHead>
+                <TableHead className="text-primary">Alimentazione</TableHead>
+                <TableHead className="text-primary">Prezzo Listino</TableHead>
+                <TableHead className="text-primary">Prezzo Scontato</TableHead>
+                <TableHead className="text-primary">Stato</TableHead>
+                <TableHead className="text-primary">Azioni</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filtered.map(item => (
-                <TableRow key={item.id} className="border-amber-900/10 hover:bg-amber-900/5">
+                <TableRow key={item.id} className="border-border hover:bg-muted/60">
                   <TableCell>
                     {item.images?.[0] ? (
                       <img src={item.images[0]} alt={item.model_name} className="w-14 h-14 object-cover rounded-lg" />
                     ) : (
-                      <div className="w-14 h-14 bg-amber-900/10 rounded-lg flex items-center justify-center">
-                        <Image className="w-5 h-5 text-gray-600" />
+                      <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <Image className="w-5 h-5 text-muted-foreground" />
                       </div>
                     )}
                   </TableCell>
-                  <TableCell className="font-medium text-amber-100">
+                  <TableCell className="font-medium text-foreground">
                     {item.custom_title || item.model_name}
-                    {item.custom_title && <span className="block text-xs text-gray-400">{item.model_name}</span>}
+                    {item.custom_title && <span className="block text-xs text-muted-foreground">{item.model_name}</span>}
                   </TableCell>
-                  <TableCell className="text-amber-200">{item.diameter}cm</TableCell>
-                  <TableCell className="text-amber-200">{item.coating || '—'}</TableCell>
-                  <TableCell className="text-amber-200">{item.fuel_type || '—'}</TableCell>
-                  <TableCell className="text-amber-200">{formatPrice(item.list_price)}</TableCell>
+                  <TableCell className="text-foreground">{item.diameter}cm</TableCell>
+                  <TableCell className="text-foreground">{item.coating || '—'}</TableCell>
+                  <TableCell className="text-foreground">{item.fuel_type || '—'}</TableCell>
+                  <TableCell className="text-foreground">{formatPrice(item.list_price)}</TableCell>
                   <TableCell className="text-green-300 font-medium">
                     {item.sale_price ? formatPrice(item.sale_price) : '—'}
                   </TableCell>
@@ -159,7 +159,7 @@ const ERPProntaConsegna = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
-                      <Button size="sm" variant="ghost" onClick={() => setEditing(item)} className="text-amber-400 hover:text-amber-200">
+                      <Button size="sm" variant="ghost" onClick={() => setEditing(item)} className="text-primary hover:text-foreground">
                         <Edit className="w-4 h-4" />
                       </Button>
                       <Button size="sm" variant="ghost" onClick={() => handleDelete(item.id)} className="text-red-400 hover:text-red-300">
@@ -171,7 +171,7 @@ const ERPProntaConsegna = () => {
               ))}
               {filtered.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center py-12 text-gray-500">
+                  <TableCell colSpan={9} className="text-center py-12 text-muted-foreground">
                     {searchTerm ? 'Nessun risultato' : 'Nessun forno pronta consegna'}
                   </TableCell>
                 </TableRow>
@@ -504,7 +504,7 @@ const AddEditModal = ({ open, item, ovens, onClose, onSaved }: AddEditModalProps
           </div>
 
           <div className="flex gap-2 pt-2">
-            <Button onClick={handleSave} className="flex-1 bg-amber-600 hover:bg-amber-700">
+            <Button onClick={handleSave} className="flex-1 bg-primary hover:bg-primary/90">
               {isEditing ? 'Salva Modifiche' : 'Aggiungi'}
             </Button>
             <Button variant="outline" onClick={onClose}>Annulla</Button>

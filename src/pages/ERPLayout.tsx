@@ -61,7 +61,7 @@ const ERPLayout = () => {
             <SidebarTrigger className="text-amber-200 hover:text-amber-100" />
             <span className="ml-4 text-sm font-medium text-amber-200/60">Vesuviano ERP</span>
           </header>
-          <main className="flex-1 min-w-0 w-full overflow-x-hidden bg-background text-foreground">
+          <main className="erp-dashboard flex-1 min-w-0 w-full overflow-x-hidden bg-background text-foreground">
             <Outlet />
           </main>
         </div>

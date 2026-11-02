@@ -140,32 +140,32 @@ const ERPVideoCommerciali = () => {
       <SEOHead title="Video Commerciali | ERP Vesuviano" description="Video commerciali" lang="it" noIndex />
       <div className="p-6 md:p-8 max-w-6xl mx-auto space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-amber-100">Video Commerciali</h1>
-          <p className="text-gray-400 mt-1">Carica i video per lingua e condividi il link pubblico.</p>
+          <h1 className="text-3xl font-bold text-foreground">Video Commerciali</h1>
+          <p className="text-muted-foreground mt-1">Carica i video per lingua e condividi il link pubblico.</p>
         </div>
 
-        <Card className="bg-[#1a1a1a] border-amber-900/20">
+        <Card className="bg-card border-border">
           <CardContent className="p-5 grid gap-4 md:grid-cols-[2fr_1fr_1fr_3fr_auto] items-end">
             <div>
-              <Label className="text-gray-300">Titolo</Label>
+              <Label className="text-muted-foreground">Titolo</Label>
               <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Es. Presentazione Real Bosco" />
             </div>
             <div>
-              <Label className="text-gray-300">Lingua</Label>
+              <Label className="text-muted-foreground">Lingua</Label>
               <Select value={language} onValueChange={setLanguage}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>{LANGS.map(l => <SelectItem key={l.code} value={l.code}>{l.label}</SelectItem>)}</SelectContent>
               </Select>
             </div>
             <div>
-              <Label className="text-gray-300">Uso</Label>
+              <Label className="text-muted-foreground">Uso</Label>
               <Select value={purpose} onValueChange={setPurpose}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>{PURPOSES.map(p => <SelectItem key={p.code} value={p.code}>{p.label}</SelectItem>)}</SelectContent>
               </Select>
             </div>
             <div>
-              <Label className="text-gray-300">File video</Label>
+              <Label className="text-muted-foreground">File video</Label>
               <div
                 onDragOver={e => { e.preventDefault(); setDragging(true); }}
                 onDragLeave={e => { e.preventDefault(); setDragging(false); }}
@@ -179,7 +179,7 @@ const ERPVideoCommerciali = () => {
                 tabIndex={0}
                 onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') fileRef.current?.click(); }}
                 className={`cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
-                  dragging ? 'border-amber-500 bg-amber-950/40' : 'border-amber-900/40 hover:border-amber-700/60 hover:bg-amber-950/20'
+                  dragging ? 'border-border bg-primary/10' : 'border-border hover:border-primary/50 hover:bg-muted/60'
                 }`}
               >
                 <input
@@ -191,13 +191,13 @@ const ERPVideoCommerciali = () => {
                 />
                 {file ? (
                   <div className="flex items-center justify-center gap-2 text-sm">
-                    <FileVideo className="w-5 h-5 text-amber-500 shrink-0" />
-                    <span className="text-amber-100 truncate max-w-[240px] sm:max-w-md">{file.name}</span>
-                    <span className="text-gray-500 shrink-0">{(file.size / 1024 / 1024).toFixed(1)} MB</span>
+                    <FileVideo className="w-5 h-5 text-primary shrink-0" />
+                    <span className="text-foreground truncate max-w-[240px] sm:max-w-md">{file.name}</span>
+                    <span className="text-muted-foreground shrink-0">{(file.size / 1024 / 1024).toFixed(1)} MB</span>
                     <button
                       type="button"
                       aria-label="Rimuovi file"
-                      className="text-gray-400 hover:text-red-400 shrink-0"
+                      className="text-muted-foreground hover:text-red-400 shrink-0"
                       onClick={e => { e.stopPropagation(); setFile(null); if (fileRef.current) fileRef.current.value = ''; }}
                     >
                       <X className="w-4 h-4" />
@@ -205,14 +205,14 @@ const ERPVideoCommerciali = () => {
                   </div>
                 ) : (
                   <div className="flex flex-col items-center gap-1.5">
-                    <Upload className="w-6 h-6 text-amber-600" />
-                    <p className="text-sm text-gray-300">Trascina qui il video oppure <span className="text-amber-400 underline">scegli un file</span></p>
-                    <p className="text-xs text-gray-500">MP4, MOV, WebM…</p>
+                    <Upload className="w-6 h-6 text-primary" />
+                    <p className="text-sm text-muted-foreground">Trascina qui il video oppure <span className="text-primary underline">scegli un file</span></p>
+                    <p className="text-xs text-muted-foreground">MP4, MOV, WebM…</p>
                   </div>
                 )}
               </div>
             </div>
-            <Button onClick={upload} disabled={uploading} className="bg-amber-600 hover:bg-amber-700">
+            <Button onClick={upload} disabled={uploading} className="bg-primary hover:bg-primary/90">
               {uploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
               Carica
             </Button>
@@ -240,13 +240,13 @@ const ERPVideoCommerciali = () => {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-amber-500" /></div>
+          <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
         ) : shown.length === 0 ? (
-          <p className="text-gray-500 text-center py-12">Nessun video caricato.</p>
+          <p className="text-muted-foreground text-center py-12">Nessun video caricato.</p>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {shown.map(v => (
-              <Card key={v.id} className="bg-[#1a1a1a] border-amber-900/20 overflow-hidden">
+              <Card key={v.id} className="bg-card border-border overflow-hidden">
                 <video src={v.public_url} controls preload="metadata" className="w-full aspect-video bg-black" />
                 <CardContent className="p-4 space-y-3">
                   {editingId === v.id ? (
@@ -256,7 +256,7 @@ const ERPVideoCommerciali = () => {
                         <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0 text-green-400" title="Salva" onClick={() => saveEdit(v)}>
                           <Check className="w-3.5 h-3.5" />
                         </Button>
-                        <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0 text-gray-400" title="Annulla" onClick={() => setEditingId(null)}>
+                        <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0 text-muted-foreground" title="Annulla" onClick={() => setEditingId(null)}>
                           <X className="w-3.5 h-3.5" />
                         </Button>
                       </div>
@@ -268,15 +268,15 @@ const ERPVideoCommerciali = () => {
                   ) : (
                     <>
                       <div className="flex items-start justify-between gap-2">
-                        <p className="text-amber-100 font-medium">{v.title}</p>
-                        <Button size="icon" variant="ghost" className="h-7 w-7 shrink-0 text-amber-400" title="Modifica titolo e uso" onClick={() => startEdit(v)}>
+                        <p className="text-foreground font-medium">{v.title}</p>
+                        <Button size="icon" variant="ghost" className="h-7 w-7 shrink-0 text-primary" title="Modifica titolo e uso" onClick={() => startEdit(v)}>
                           <Pencil className="w-3.5 h-3.5" />
                         </Button>
                       </div>
                       <div className="flex items-center gap-2 text-xs">
-                        <span className="text-amber-400 shrink-0">{langLabel(v.language)}</span>
-                        <span className="text-gray-600">·</span>
-                        <span className="text-gray-300">{purposeLabel(v.purpose)}</span>
+                        <span className="text-primary shrink-0">{langLabel(v.language)}</span>
+                        <span className="text-muted-foreground">·</span>
+                        <span className="text-muted-foreground">{purposeLabel(v.purpose)}</span>
                       </div>
                     </>
                   )}

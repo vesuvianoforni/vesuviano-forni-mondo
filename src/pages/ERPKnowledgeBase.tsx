@@ -135,58 +135,58 @@ const ERPKnowledgeBase = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-amber-100 flex items-center gap-2">
-            <Brain className="h-6 w-6 text-amber-500" />
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+            <Brain className="h-6 w-6 text-primary" />
             Knowledge Base AI
           </h1>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-muted-foreground text-sm mt-1">
             Gestisci le informazioni che l'assistente AI utilizza per rispondere ai clienti
           </p>
         </div>
-        <Button onClick={openNew} className="bg-amber-600 hover:bg-amber-700 text-white">
+        <Button onClick={openNew} className="bg-primary hover:bg-primary/90 text-primary-foreground">
           <Plus className="h-4 w-4 mr-2" /> Aggiungi voce
         </Button>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="bg-[#1a1a1a] border-amber-900/20">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
-            <p className="text-xs text-gray-500">Totale voci</p>
-            <p className="text-2xl font-bold text-amber-100">{entries.length}</p>
+            <p className="text-xs text-muted-foreground">Totale voci</p>
+            <p className="text-2xl font-bold text-foreground">{entries.length}</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#1a1a1a] border-amber-900/20">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
-            <p className="text-xs text-gray-500">Attive</p>
+            <p className="text-xs text-muted-foreground">Attive</p>
             <p className="text-2xl font-bold text-green-400">{entries.filter(e => e.is_active).length}</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#1a1a1a] border-amber-900/20">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
-            <p className="text-xs text-gray-500">Disattivate</p>
-            <p className="text-2xl font-bold text-gray-500">{entries.filter(e => !e.is_active).length}</p>
+            <p className="text-xs text-muted-foreground">Disattivate</p>
+            <p className="text-2xl font-bold text-muted-foreground">{entries.filter(e => !e.is_active).length}</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#1a1a1a] border-amber-900/20">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
-            <p className="text-xs text-gray-500">Categorie</p>
-            <p className="text-2xl font-bold text-amber-100">{new Set(entries.map(e => e.category)).size}</p>
+            <p className="text-xs text-muted-foreground">Categorie</p>
+            <p className="text-2xl font-bold text-foreground">{new Set(entries.map(e => e.category)).size}</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Filter */}
       <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-400">Filtra:</span>
+        <span className="text-sm text-muted-foreground">Filtra:</span>
         <Select value={filterCategory} onValueChange={setFilterCategory}>
-          <SelectTrigger className="w-48 bg-[#1a1a1a] border-amber-900/30 text-amber-100">
+          <SelectTrigger className="w-48 bg-card border-border text-foreground">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-[#1a1a1a] border-amber-900/30">
-            <SelectItem value="all" className="text-amber-100">Tutte le categorie</SelectItem>
+          <SelectContent className="bg-card border-border">
+            <SelectItem value="all" className="text-foreground">Tutte le categorie</SelectItem>
             {CATEGORIES.map(cat => (
-              <SelectItem key={cat.value} value={cat.value} className="text-amber-100">{cat.label}</SelectItem>
+              <SelectItem key={cat.value} value={cat.value} className="text-foreground">{cat.label}</SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -194,24 +194,24 @@ const ERPKnowledgeBase = () => {
 
       {/* Entries list */}
       {loading ? (
-        <div className="text-center py-12 text-gray-500">Caricamento...</div>
+        <div className="text-center py-12 text-muted-foreground">Caricamento...</div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">Nessuna voce trovata</div>
+        <div className="text-center py-12 text-muted-foreground">Nessuna voce trovata</div>
       ) : (
         <div className="space-y-3">
           {filtered.map((entry) => (
-            <Card key={entry.id} className={`bg-[#1a1a1a] border-amber-900/20 ${!entry.is_active ? 'opacity-50' : ''}`}>
+            <Card key={entry.id} className={`bg-card border-border ${!entry.is_active ? 'opacity-50' : ''}`}>
               <CardContent className="p-4">
                 <div className="flex items-start gap-4">
-                  <GripVertical className="h-5 w-5 text-gray-600 mt-1 flex-shrink-0" />
+                  <GripVertical className="h-5 w-5 text-muted-foreground mt-1 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-amber-900/30 text-amber-400">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary">
                         {catLabel(entry.category)}
                       </span>
-                      <h3 className="font-semibold text-amber-100">{entry.title}</h3>
+                      <h3 className="font-semibold text-foreground">{entry.title}</h3>
                     </div>
-                    <p className="text-sm text-gray-400 line-clamp-2">{entry.content}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-2">{entry.content}</p>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <Switch
@@ -219,10 +219,10 @@ const ERPKnowledgeBase = () => {
                       onCheckedChange={() => toggleActive(entry)}
                       className="data-[state=checked]:bg-green-600"
                     />
-                    <Button variant="ghost" size="icon" onClick={() => openEdit(entry)} className="text-gray-400 hover:text-amber-200">
+                    <Button variant="ghost" size="icon" onClick={() => openEdit(entry)} className="text-muted-foreground hover:text-foreground">
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleDelete(entry.id)} className="text-gray-400 hover:text-red-400">
+                    <Button variant="ghost" size="icon" onClick={() => handleDelete(entry.id)} className="text-muted-foreground hover:text-red-400">
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -235,46 +235,46 @@ const ERPKnowledgeBase = () => {
 
       {/* Add/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="bg-[#1a1a1a] border-amber-900/30 text-amber-100 max-w-lg">
+        <DialogContent className="bg-card border-border text-foreground max-w-lg">
           <DialogHeader>
-            <DialogTitle className="text-amber-100">
+            <DialogTitle className="text-foreground">
               {editing ? 'Modifica voce' : 'Nuova voce'}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-sm text-gray-400 mb-1 block">Categoria</label>
+              <label className="text-sm text-muted-foreground mb-1 block">Categoria</label>
               <Select value={form.category} onValueChange={(v) => setForm(f => ({ ...f, category: v }))}>
-                <SelectTrigger className="bg-[#0f0f0f] border-amber-900/30 text-amber-100">
+                <SelectTrigger className="bg-card border-border text-foreground">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[#1a1a1a] border-amber-900/30">
+                <SelectContent className="bg-card border-border">
                   {CATEGORIES.map(cat => (
-                    <SelectItem key={cat.value} value={cat.value} className="text-amber-100">{cat.label}</SelectItem>
+                    <SelectItem key={cat.value} value={cat.value} className="text-foreground">{cat.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <label className="text-sm text-gray-400 mb-1 block">Titolo</label>
+              <label className="text-sm text-muted-foreground mb-1 block">Titolo</label>
               <Input
                 value={form.title}
                 onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))}
                 placeholder="es. Tempi di consegna"
-                className="bg-[#0f0f0f] border-amber-900/30 text-amber-100"
+                className="bg-card border-border text-foreground"
                 maxLength={200}
               />
             </div>
             <div>
-              <label className="text-sm text-gray-400 mb-1 block">Contenuto</label>
+              <label className="text-sm text-muted-foreground mb-1 block">Contenuto</label>
               <Textarea
                 value={form.content}
                 onChange={(e) => setForm(f => ({ ...f, content: e.target.value }))}
                 placeholder="Scrivi le informazioni che l'AI deve conoscere..."
-                className="bg-[#0f0f0f] border-amber-900/30 text-amber-100 min-h-[120px]"
+                className="bg-card border-border text-foreground min-h-[120px]"
                 maxLength={2000}
               />
-              <p className="text-xs text-gray-600 mt-1">{form.content.length}/2000</p>
+              <p className="text-xs text-muted-foreground mt-1">{form.content.length}/2000</p>
             </div>
             <div className="flex items-center gap-2">
               <Switch
@@ -282,13 +282,13 @@ const ERPKnowledgeBase = () => {
                 onCheckedChange={(v) => setForm(f => ({ ...f, is_active: v }))}
                 className="data-[state=checked]:bg-green-600"
               />
-              <span className="text-sm text-gray-400">Attiva (visibile all'AI)</span>
+              <span className="text-sm text-muted-foreground">Attiva (visibile all'AI)</span>
             </div>
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="ghost" onClick={() => setDialogOpen(false)} className="text-gray-400">
+              <Button variant="ghost" onClick={() => setDialogOpen(false)} className="text-muted-foreground">
                 Annulla
               </Button>
-              <Button onClick={handleSave} disabled={saving} className="bg-amber-600 hover:bg-amber-700 text-white">
+              <Button onClick={handleSave} disabled={saving} className="bg-primary hover:bg-primary/90 text-primary-foreground">
                 {saving ? 'Salvataggio...' : editing ? 'Salva modifiche' : 'Aggiungi'}
               </Button>
             </div>

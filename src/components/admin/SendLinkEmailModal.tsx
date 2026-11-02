@@ -172,7 +172,7 @@ export const SendLinkEmailModal = ({ isOpen, onClose, session }: SendLinkEmailMo
                   </div>
 
                   <div className="bg-muted p-6 space-y-4">
-                    <div className="bg-white border-l-4 border-[#8B4513] p-3 rounded text-xs text-muted-foreground mb-4">
+                    <div className="bg-white border-l-4 border-border p-3 rounded text-xs text-muted-foreground mb-4">
                       <strong className="text-foreground">📢 {language === 'it' ? 'Perché ricevi questa email?' : language === 'en' ? 'Why are you receiving this?' : 'Pourquoi recevez-vous ceci?'}</strong><br/>
                       {preview.context}
                     </div>
@@ -188,7 +188,7 @@ export const SendLinkEmailModal = ({ isOpen, onClose, session }: SendLinkEmailMo
                     </div>
                     <div className="text-center py-4">
                       <div 
-                        className="inline-block text-white px-8 py-3 rounded-md font-bold text-sm"
+                        className="inline-block text-foreground px-8 py-3 rounded-md font-bold text-sm"
                         style={{ 
                           background: 'linear-gradient(135deg, #8B4513 0%, #CD5C5C 100%)',
                           boxShadow: '0 4px 12px rgba(139, 69, 19, 0.3)'
@@ -197,8 +197,8 @@ export const SendLinkEmailModal = ({ isOpen, onClose, session }: SendLinkEmailMo
                         {preview.cta}
                       </div>
                     </div>
-                    <div className="bg-yellow-50 border border-yellow-200 rounded p-3 text-xs">
-                      <strong className="text-yellow-700">⚠️ {language === 'it' ? 'Importante' : language === 'en' ? 'Important' : 'Important'}:</strong> {preview.validity}
+                    <div className="bg-primary/10 border border-border rounded p-3 text-xs">
+                      <strong className="text-primary">⚠️ {language === 'it' ? 'Importante' : language === 'en' ? 'Important' : 'Important'}:</strong> {preview.validity}
                     </div>
                     <div className="text-sm mt-4">
                       <p>{preview.closing}</p>
@@ -206,15 +206,15 @@ export const SendLinkEmailModal = ({ isOpen, onClose, session }: SendLinkEmailMo
                     </div>
                   </div>
 
-                  <div className="bg-[#2c2c2c] text-gray-400 p-6 rounded-b-lg text-center text-xs space-y-2">
-                    <p className="font-semibold text-white text-sm">Vesuviano Forni</p>
+                  <div className="bg-card text-muted-foreground p-6 rounded-b-lg text-center text-xs space-y-2">
+                    <p className="font-semibold text-foreground text-sm">Vesuviano Forni</p>
                     <p className="text-xs">{language === 'it' ? 'Forni Artigianali dal Vesuvio' : language === 'en' ? 'Artisanal Ovens from Vesuvius' : 'Fours Artisanaux du Vésuve'}</p>
                     <p>Via Sant'Anastasia 123, Napoli, Italia</p>
                     <p>
                       📧 info@vesuvianoforni.com | 📞 +39 350 928 6941
                     </p>
                     <p className="mt-2">
-                      🌐 <a href="https://vesuvianoforni.com" className="text-[#CD5C5C] no-underline">vesuvianoforni.com</a>
+                      🌐 <a href="https://vesuvianoforni.com" className="text-destructive no-underline">vesuvianoforni.com</a>
                     </p>
                   </div>
                 </CardContent>

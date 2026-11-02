@@ -128,7 +128,7 @@ const ERPBruciatori = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -141,55 +141,55 @@ const ERPBruciatori = () => {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <Package className="w-7 h-7 text-green-400" />
-          <h1 className="text-2xl font-bold text-amber-100">Gestione Bruciatori</h1>
+          <h1 className="text-2xl font-bold text-foreground">Gestione Bruciatori</h1>
           <Badge variant="secondary" className="ml-2">{burners.length}</Badge>
         </div>
-        <Button onClick={openCreate} className="bg-amber-600 hover:bg-amber-700">
+        <Button onClick={openCreate} className="bg-primary hover:bg-primary/90">
           <Plus className="w-4 h-4 mr-2" /> Nuovo Bruciatore
         </Button>
       </div>
 
       <div className="mb-4 relative max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
           placeholder="Cerca bruciatore..."
-          className="pl-10 bg-[#1a1a1a] border-amber-900/20 text-amber-100"
+          className="pl-10 bg-card border-border text-foreground"
         />
       </div>
 
-      <Card className="bg-[#1a1a1a] border-amber-900/20">
+      <Card className="bg-card border-border">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow className="border-amber-900/20">
-                <TableHead className="text-amber-400">Immagine</TableHead>
-                <TableHead className="text-amber-400">Nome</TableHead>
-                <TableHead className="text-amber-400">Descrizione</TableHead>
-                <TableHead className="text-amber-400">Prezzo</TableHead>
-                <TableHead className="text-amber-400">Stato</TableHead>
-                <TableHead className="text-amber-400">Azioni</TableHead>
+              <TableRow className="border-border">
+                <TableHead className="text-primary">Immagine</TableHead>
+                <TableHead className="text-primary">Nome</TableHead>
+                <TableHead className="text-primary">Descrizione</TableHead>
+                <TableHead className="text-primary">Prezzo</TableHead>
+                <TableHead className="text-primary">Stato</TableHead>
+                <TableHead className="text-primary">Azioni</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filtered.map(b => (
-                <TableRow key={b.id} className="border-amber-900/10 hover:bg-amber-900/5">
+                <TableRow key={b.id} className="border-border hover:bg-muted/60">
                   <TableCell>
                     {b.image_url ? (
                       <img src={b.image_url} alt={b.name} className="w-14 h-14 object-cover rounded-lg" />
                     ) : (
-                      <div className="w-14 h-14 bg-amber-900/10 rounded-lg flex items-center justify-center">
-                        <Package className="w-6 h-6 text-gray-600" />
+                      <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <Package className="w-6 h-6 text-muted-foreground" />
                       </div>
                     )}
                   </TableCell>
-                  <TableCell className="font-medium text-amber-100">{b.name}</TableCell>
-                  <TableCell className="text-gray-400 max-w-[200px] truncate">{b.description || '-'}</TableCell>
-                  <TableCell className="text-amber-200 font-medium">€{b.price.toLocaleString('it-IT')}</TableCell>
+                  <TableCell className="font-medium text-foreground">{b.name}</TableCell>
+                  <TableCell className="text-muted-foreground max-w-[200px] truncate">{b.description || '-'}</TableCell>
+                  <TableCell className="text-foreground font-medium">€{b.price.toLocaleString('it-IT')}</TableCell>
                   <TableCell>
                     <Badge
-                      className={`cursor-pointer ${b.is_active ? 'bg-green-700/30 text-green-300' : 'bg-gray-700/30 text-gray-400'}`}
+                      className={`cursor-pointer ${b.is_active ? 'bg-green-700/30 text-green-300' : 'bg-muted text-muted-foreground'}`}
                       onClick={() => toggleActive(b)}
                     >
                       {b.is_active ? 'Attivo' : 'Inattivo'}
@@ -197,7 +197,7 @@ const ERPBruciatori = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
-                      <Button size="sm" variant="ghost" onClick={() => openEdit(b)} className="text-amber-400 hover:text-amber-200">
+                      <Button size="sm" variant="ghost" onClick={() => openEdit(b)} className="text-primary hover:text-foreground">
                         <Edit className="w-4 h-4" />
                       </Button>
                       <Button size="sm" variant="ghost" onClick={() => handleDelete(b.id)} className="text-red-400 hover:text-red-300">
@@ -209,7 +209,7 @@ const ERPBruciatori = () => {
               ))}
               {filtered.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-12 text-gray-500">
+                  <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
                     {searchTerm ? 'Nessun bruciatore trovato' : 'Nessun bruciatore nel catalogo'}
                   </TableCell>
                 </TableRow>
@@ -221,33 +221,33 @@ const ERPBruciatori = () => {
 
       {/* Create/Edit Dialog */}
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent className="bg-[#1a1a1a] border-amber-900/20 text-amber-100">
+        <DialogContent className="bg-card border-border text-foreground">
           <DialogHeader>
             <DialogTitle>{editing ? 'Modifica Bruciatore' : 'Nuovo Bruciatore'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label className="text-amber-300">Nome *</Label>
-              <Input value={name} onChange={e => setName(e.target.value)} className="bg-[#111] border-amber-900/30 text-amber-100" />
+              <Label className="text-primary">Nome *</Label>
+              <Input value={name} onChange={e => setName(e.target.value)} className="bg-card border-border text-foreground" />
             </div>
             <div>
-              <Label className="text-amber-300">Descrizione</Label>
-              <Textarea value={description} onChange={e => setDescription(e.target.value)} className="bg-[#111] border-amber-900/30 text-amber-100" />
+              <Label className="text-primary">Descrizione</Label>
+              <Textarea value={description} onChange={e => setDescription(e.target.value)} className="bg-card border-border text-foreground" />
             </div>
             <div>
-              <Label className="text-amber-300">Prezzo (€)</Label>
-              <Input type="number" value={price} onChange={e => setPrice(e.target.value)} className="bg-[#111] border-amber-900/30 text-amber-100" />
+              <Label className="text-primary">Prezzo (€)</Label>
+              <Input type="number" value={price} onChange={e => setPrice(e.target.value)} className="bg-card border-border text-foreground" />
             </div>
             <div>
-              <Label className="text-amber-300">URL Immagine</Label>
-              <Input value={imageUrl} onChange={e => setImageUrl(e.target.value)} placeholder="https://..." className="bg-[#111] border-amber-900/30 text-amber-100" />
+              <Label className="text-primary">URL Immagine</Label>
+              <Input value={imageUrl} onChange={e => setImageUrl(e.target.value)} placeholder="https://..." className="bg-card border-border text-foreground" />
               {imageUrl && <img src={imageUrl} alt="preview" className="w-20 h-20 object-cover rounded mt-2" />}
             </div>
             <div className="flex items-center gap-3">
               <Switch checked={isActive} onCheckedChange={setIsActive} />
-              <Label className="text-amber-300">Attivo</Label>
+              <Label className="text-primary">Attivo</Label>
             </div>
-            <Button onClick={handleSave} disabled={saving} className="w-full bg-amber-600 hover:bg-amber-700">
+            <Button onClick={handleSave} disabled={saving} className="w-full bg-primary hover:bg-primary/90">
               {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               {editing ? 'Salva Modifiche' : 'Crea Bruciatore'}
             </Button>

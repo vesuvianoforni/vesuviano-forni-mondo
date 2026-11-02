@@ -464,7 +464,7 @@ const SessionsCRM = () => {
   const getStatusBadge = (session: SessionData, compact = false) => {
     if (session.configurator_quotes?.payment_completed) {
       return (
-        <Badge className="bg-green-600 hover:bg-green-700 text-white">
+        <Badge className="bg-green-600 hover:bg-green-700 text-primary-foreground">
           <Package className="w-3 h-3 mr-1" />
           Pagato
         </Badge>
@@ -472,7 +472,7 @@ const SessionsCRM = () => {
     }
     if (session.status === 'payment_initiated') {
       return (
-        <Badge className="bg-blue-600 hover:bg-blue-700 text-white">
+        <Badge className="bg-blue-600 hover:bg-blue-700 text-primary-foreground">
           <Clock className="w-3 h-3 mr-1" />
           Pagamento Avviato
         </Badge>
@@ -480,7 +480,7 @@ const SessionsCRM = () => {
     }
     if (session.status === 'link_renewal_requested') {
       return (
-        <Badge className="bg-amber-600 hover:bg-amber-700 text-white">
+        <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground">
           <RefreshCw className="w-3 h-3 mr-1" />
           Rinnovo Richiesto
         </Badge>
@@ -488,7 +488,7 @@ const SessionsCRM = () => {
     }
     if (session.status === 'interested' || session.feedback_status === 'interested') {
       return (
-        <Badge className="bg-orange-600 hover:bg-orange-700 text-white">
+        <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground">
           Interessato
         </Badge>
       );
@@ -503,7 +503,7 @@ const SessionsCRM = () => {
     }
     if (session.is_used) {
       return (
-        <Badge className="bg-stone-600 hover:bg-stone-700 text-white">
+        <Badge className="bg-muted-foreground hover:bg-muted text-foreground">
           Aperto
         </Badge>
       );
@@ -738,7 +738,7 @@ const SessionsCRM = () => {
                     size="sm"
                     variant="default"
                     onClick={() => processRenewalRequest(session)}
-                    className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                   >
                     <Send className="w-4 h-4 mr-2" />
                     Processa Rinnovo

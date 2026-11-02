@@ -323,7 +323,7 @@ const ERPListinoRivenditori = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -332,13 +332,13 @@ const ERPListinoRivenditori = () => {
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <DollarSign className="w-7 h-7 text-orange-400" />
-          <h1 className="text-2xl font-bold text-amber-100">Listino Rivenditori</h1>
-          <Badge variant="secondary" className="ml-2 bg-amber-700/20 text-amber-300">Riservato</Badge>
+          <DollarSign className="w-7 h-7 text-primary" />
+          <h1 className="text-2xl font-bold text-foreground">Listino Rivenditori</h1>
+          <Badge variant="secondary" className="ml-2 bg-primary/10 text-primary">Riservato</Badge>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button disabled={generatingPdf} className="bg-amber-600 hover:bg-amber-700">
+            <Button disabled={generatingPdf} className="bg-primary hover:bg-primary/90">
               {generatingPdf ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
               Scarica PDF
               <Globe className="w-4 h-4 ml-2" />
@@ -355,12 +355,12 @@ const ERPListinoRivenditori = () => {
 
       <div className="flex items-center gap-4 mb-4">
         <div className="relative max-w-md flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Cerca per modello..."
-            className="pl-10 bg-[#1a1a1a] border-amber-900/20 text-amber-100"
+            className="pl-10 bg-card border-border text-foreground"
           />
         </div>
       </div>
@@ -371,26 +371,26 @@ const ERPListinoRivenditori = () => {
           const hasSizes = oven.sizes?.length > 0 && oven.sizes.some((s: any) => s.coatings?.length > 0);
           
           return (
-            <Card key={oven.id} className="bg-[#1a1a1a] border-amber-900/20">
+            <Card key={oven.id} className="bg-card border-border">
               <CardContent className="p-0">
                 {/* Oven header */}
                 <div
-                  className="flex items-center gap-4 p-4 cursor-pointer hover:bg-amber-900/5 transition-colors"
+                  className="flex items-center gap-4 p-4 cursor-pointer hover:bg-muted/60 transition-colors"
                   onClick={() => setExpandedOven(isExpanded ? null : oven.id)}
                 >
                   <div className="flex-shrink-0">
                     {hasSizes ? (
-                      isExpanded ? <ChevronDown className="w-5 h-5 text-amber-400" /> : <ChevronRight className="w-5 h-5 text-gray-500" />
+                      isExpanded ? <ChevronDown className="w-5 h-5 text-primary" /> : <ChevronRight className="w-5 h-5 text-muted-foreground" />
                     ) : <div className="w-5" />}
                   </div>
                   {oven.image_url && (
                     <img src={oven.image_url} alt={oven.model_name} className="w-12 h-12 rounded-lg object-cover" />
                   )}
                   <div className="flex-1">
-                    <h3 className="font-semibold text-amber-100">{oven.model_name}</h3>
+                    <h3 className="font-semibold text-foreground">{oven.model_name}</h3>
                     <div className="flex gap-1 mt-1">
                       {Array.isArray(oven.fuel_type) && oven.fuel_type.filter(Boolean).map((f: string, i: number) => (
-                        <Badge key={i} variant="outline" className="text-xs border-amber-700/30 text-amber-200">{f}</Badge>
+                        <Badge key={i} variant="outline" className="text-xs border-border text-foreground">{f}</Badge>
                       ))}
                     </div>
                   </div>
@@ -399,7 +399,7 @@ const ERPListinoRivenditori = () => {
                       size="sm"
                       onClick={(e) => { e.stopPropagation(); saveOvenPrices(oven); }}
                       disabled={saving === oven.id}
-                      className="bg-green-600 hover:bg-green-700 text-white"
+                      className="bg-green-600 hover:bg-green-700 text-primary-foreground"
                     >
                       {saving === oven.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4 mr-1" />}
                       Salva
@@ -409,8 +409,8 @@ const ERPListinoRivenditori = () => {
 
                 {/* Expanded sizes/coatings prices */}
                 {isExpanded && oven.sizes?.map((size: any, sIdx: number) => (
-                  <div key={sIdx} className="border-t border-amber-900/10 px-4 py-3 bg-amber-900/5">
-                    <div className="text-amber-300 font-semibold text-sm mb-3">
+                  <div key={sIdx} className="border-t border-border px-4 py-3 bg-primary/10">
+                    <div className="text-primary font-semibold text-sm mb-3">
                       Ø {size.diameter}cm — {size.pizza_capacity} pizze
                       {size.can_be_built_on_site && <Badge className="ml-2 bg-blue-700/20 text-blue-300 text-xs">Costruibile sul posto</Badge>}
                     </div>
@@ -418,7 +418,7 @@ const ERPListinoRivenditori = () => {
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                           <thead>
-                            <tr className="text-gray-400 text-xs">
+                            <tr className="text-muted-foreground text-xs">
                               <th className="text-left py-1 pr-4">Rivestimento</th>
                               <th className="text-right py-1 px-2">Listino A (rif.)</th>
                               <th className="text-right py-1 px-2">Base Rivend.</th>
@@ -434,12 +434,12 @@ const ERPListinoRivenditori = () => {
 
     <>
       <SEOHead title="ERP Listino Rivenditori | Vesuviano" description="Listino dedicato ai rivenditori." lang="it" noIndex />
-      <tr key={cIdx} className="border-t border-amber-900/10">
-                                  <td className="py-2 pr-4 text-amber-100 flex items-center gap-2">
+      <tr key={cIdx} className="border-t border-border">
+                                  <td className="py-2 pr-4 text-foreground flex items-center gap-2">
                                     {c.image_url && <img src={c.image_url} alt={c.name} className="w-8 h-8 rounded object-cover" />}
                                     {c.name}
                                   </td>
-                                  <td className="text-right py-2 px-2 text-gray-400 text-xs">
+                                  <td className="text-right py-2 px-2 text-muted-foreground text-xs">
                                     {listAPrice ? `€${listAPrice.toLocaleString('it-IT')}` : '—'}
                                   </td>
                                   <td className="text-right py-2 px-1">
@@ -447,7 +447,7 @@ const ERPListinoRivenditori = () => {
                                       type="number"
                                       value={getResellerPrice(oven, sIdx, cIdx, 'base')}
                                       onChange={e => handlePriceChange(oven.id, sIdx, cIdx, 'base', e.target.value)}
-                                      className="w-24 h-8 text-right bg-[#111] border-amber-900/20 text-amber-100 text-xs ml-auto"
+                                      className="w-24 h-8 text-right bg-card border-border text-foreground text-xs ml-auto"
                                     />
                                   </td>
                                   <td className="text-right py-2 px-1">
@@ -455,7 +455,7 @@ const ERPListinoRivenditori = () => {
                                       type="number"
                                       value={getResellerPrice(oven, sIdx, cIdx, 'gas')}
                                       onChange={e => handlePriceChange(oven.id, sIdx, cIdx, 'gas', e.target.value)}
-                                      className="w-24 h-8 text-right bg-[#111] border-amber-900/20 text-amber-100 text-xs ml-auto"
+                                      className="w-24 h-8 text-right bg-card border-border text-foreground text-xs ml-auto"
                                     />
                                   </td>
                                   <td className="text-right py-2 px-1">
@@ -463,7 +463,7 @@ const ERPListinoRivenditori = () => {
                                       type="number"
                                       value={getResellerPrice(oven, sIdx, cIdx, 'electric')}
                                       onChange={e => handlePriceChange(oven.id, sIdx, cIdx, 'electric', e.target.value)}
-                                      className="w-24 h-8 text-right bg-[#111] border-amber-900/20 text-amber-100 text-xs ml-auto"
+                                      className="w-24 h-8 text-right bg-card border-border text-foreground text-xs ml-auto"
                                     />
                                   </td>
                                   {size.can_be_built_on_site && (
@@ -472,7 +472,7 @@ const ERPListinoRivenditori = () => {
                                         type="number"
                                         value={getResellerPrice(oven, sIdx, cIdx, 'onSite')}
                                         onChange={e => handlePriceChange(oven.id, sIdx, cIdx, 'onSite', e.target.value)}
-                                        className="w-24 h-8 text-right bg-[#111] border-amber-900/20 text-amber-100 text-xs ml-auto"
+                                        className="w-24 h-8 text-right bg-card border-border text-foreground text-xs ml-auto"
                                       />
                                     </td>
                                   )}
@@ -484,7 +484,7 @@ const ERPListinoRivenditori = () => {
                         </table>
                       </div>
                     ) : (
-                      <p className="text-gray-500 text-xs">Nessun rivestimento configurato</p>
+                      <p className="text-muted-foreground text-xs">Nessun rivestimento configurato</p>
                     )}
                   </div>
                 ))}
@@ -493,7 +493,7 @@ const ERPListinoRivenditori = () => {
           );
         })}
         {filtered.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-muted-foreground">
             {searchTerm ? 'Nessun forno trovato' : 'Nessun forno nel catalogo'}
           </div>
         )}

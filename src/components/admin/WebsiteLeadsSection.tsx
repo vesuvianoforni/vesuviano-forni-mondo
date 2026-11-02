@@ -46,7 +46,7 @@ const formTypeLabels: Record<string, string> = {
 
 const statusColors: Record<string, string> = {
   new: 'bg-blue-500',
-  contacted: 'bg-yellow-500',
+  contacted: 'bg-primary',
   qualified: 'bg-green-500',
   not_interested: 'bg-red-500'
 };
@@ -66,10 +66,10 @@ const priorityConfig: Record<Priority, {
     badgeClass: 'bg-red-500/10 text-red-600 border-red-500/30 dark:text-red-400' },
   medium: { label: 'Media', icon: MinusCircle,      rank: 1,
     cardClass: 'border-l-4 border-l-amber-500 hover:shadow-amber-500/20',
-    badgeClass: 'bg-amber-500/10 text-amber-600 border-amber-500/30 dark:text-amber-400' },
+    badgeClass: 'bg-primary/10 text-primary border-border dark:text-primary' },
   low:    { label: 'Bassa', icon: ArrowDownCircle,  rank: 2,
     cardClass: 'border-l-4 border-l-slate-300 hover:shadow-slate-400/20',
-    badgeClass: 'bg-slate-500/10 text-slate-600 border-slate-500/30 dark:text-slate-400' },
+    badgeClass: 'bg-muted text-muted-foreground border-border dark:text-muted-foreground' },
 };
 
 const getPriority = (lead: WebsiteLead): Priority => {
@@ -305,7 +305,7 @@ export const WebsiteLeadsSection = () => {
                       </Select>
                       <Select value={lead.status} onValueChange={(v) => updateLeadStatus(lead.id, v)}>
                         <SelectTrigger className="h-7 px-2 text-xs w-auto gap-1.5">
-                          <div className={`h-2 w-2 rounded-full ${statusColors[lead.status] || 'bg-gray-400'}`} />
+                          <div className={`h-2 w-2 rounded-full ${statusColors[lead.status] || 'bg-muted-foreground'}`} />
                           <span>{statusLabels[lead.status] || lead.status}</span>
                         </SelectTrigger>
                         <SelectContent>
@@ -412,7 +412,7 @@ export const WebsiteLeadsSection = () => {
                 </Select>
                 <Select value={selectedLead.status} onValueChange={(v) => { updateLeadStatus(selectedLead.id, v); setSelectedLead({ ...selectedLead, status: v }); }}>
                   <SelectTrigger className="h-9 w-auto gap-2">
-                    <div className={`h-2 w-2 rounded-full ${statusColors[selectedLead.status] || 'bg-gray-400'}`} />
+                    <div className={`h-2 w-2 rounded-full ${statusColors[selectedLead.status] || 'bg-muted-foreground'}`} />
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
