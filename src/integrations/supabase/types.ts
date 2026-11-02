@@ -3200,6 +3200,7 @@ export type Database = {
           preview: string
         }[]
       }
+      cancel_mario_research_plan: { Args: { p_id: string }; Returns: boolean }
       claim_mario_research_job: {
         Args: { p_id: string; p_token: string }
         Returns: {
@@ -3247,6 +3248,10 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      finish_mario_research_job: {
+        Args: { p_id: string; p_result: Json; p_token: string }
+        Returns: boolean
       }
       get_user_emails: {
         Args: { user_ids: string[] }
