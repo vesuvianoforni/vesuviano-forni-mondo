@@ -1,9 +1,10 @@
 # Roadmap
 
 ## Mario: autopilot della ricerca (2 nov 2026)
-- [ ] Richiesta in chat e piano persistente basato su impostazioni, conoscenze e organizzazioni esistenti; nessuna ricerca prima dell’approvazione.
-- [ ] Approvazione esplicita, esecuzione autonoma limitata, progressi, arresto e risultati in archivio senza autorizzare invii.
-- [ ] Test delle approvazioni e limiti, distribuzione e verifica del flusso disponibile; segnalare separatamente ciò che non è verificabile con accesso reale.
+- [x] Richiesta in chat e piano persistente basato su impostazioni, conoscenze, riepiloghi archivio Mario e CRM; nuova proposta per modifiche, nessuna ricerca prima dell’approvazione.
+- [x] Approvazione atomica staff, un piano attivo, ambito immutabile (max 12 passaggi/100 risultati/20 verifiche come limiti tecnici iniziali), progressi, arresto e risultati in archivio senza autorizzare invii. Worker separato avviato da eventi DB e webhook terminali Apify, senza cron permanente; esiti incerti arrestati senza reinvio. Domini già CRM esclusi quando ricavabili dall’email aziendale; criteri non verificabili richiedono revisione.
+- [x] 63 test superati, incluso 12 nuovi test ricerca; gate SQL eseguiti e annullati senza ricerche. UI simulata richiesta→proposta→annullamento conferma→approvazione→arresto→rilettura verificata a 1280×1800, 1353×936, 390×844, zero overflow/errori; build OK, tre funzioni distribuite. Endpoint senza sessione 401 e callback non autorizzata 403, nessun piano live approvato, nessuna email inviata.
+- [ ] Prova autenticata reale ricerca→webhook Apify→verifica→archivio: Supabase esterno non fornisce sessione gestita in sandbox; la prova UI usa dati simulati e non verifica servizi reali, generazione del piano o callback provider. Restano sette avvisi sicurezza preesistenti, nessuno introdotto dal lavoro.
 
 ## Mario: revisione template orientati all’aiuto (2 nov 2026)
 - [x] Firma visibile info@vesuvianoforni.com, pulsante WhatsApp EN/FR con messaggio localizzato; logo da https://vesuvianoforni.com/lovable-uploads/vesuviano-logo-bianco.png (redirect pubblico verso www verificato), nessuna immagine Lovable. Mittente SMTP dedicato invariato.
