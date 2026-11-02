@@ -1,7 +1,7 @@
 // Existing raw Responses client retained; bounded tools execute server-side.
 import { marioKnowledge } from '../_shared/mario/knowledge.ts';
 import { marioSystemPrompt } from '../_shared/mario/policy.ts';
-import { SearchInput, searchEngine, startApify, collectApify, enrichEngine, draftEngine } from '../_shared/mario/engines.ts';
+import { collectApify, enrichEngine, draftEngine } from '../_shared/mario/engines.ts';
 import { createLovableAiGatewayRunIdFetch, getLovableAiGatewayResponseHeaders } from '../_shared/mario-run-id.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
@@ -98,7 +98,8 @@ Deno.serve(async (req) => {
                 if(tool.name==='propose_research_plan') {
                   const last = messages.filter(m => m.role === 'user').at(-1);
                   if (!last) throw new Error('Richiesta mancante');
-                  result = await proposeResearch(admin,req,u.user.id,thread_id,JSON.stringify(messages.slice(-8)));
+                  const context = messages.slice(-8).map(m => `${m.role}: ${m.content.slice(0, 450)}`).join('\n');
+                  result = await proposeResearch(admin,req,u.user.id,thread_id,`${last.content.slice(0, 3500)}\nContesto precedente (subordinato alla richiesta corrente): ${context.slice(0, 4000)}`);
                 }
                 else if(tool.name==='collect_research') result=await collectApify(admin,req,z.string().uuid().parse(args.run_id));
                 else {

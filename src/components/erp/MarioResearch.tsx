@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Check, Loader2, RefreshCw, Search, Square, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,8 +16,12 @@ export function MarioResearch({ threadId, revision, onUpdated, onPlans, compact 
   const [plans, setPlans] = useState<Plan[]>([]); const [jobs, setJobs] = useState<Job[]>([]);
   const [error, setError] = useState(''); const [busy, setBusy] = useState(false); const [loading, setLoading] = useState(true);
   const [confirm, setConfirm] = useState<Plan | null>(null); const [request, setRequest] = useState('');
+  const generation = useRef(0);
+  useEffect(() => () => { generation.current++; }, []);
   const refresh = useCallback(async () => {
+    const current = ++generation.current;
     const data = await marioAction({ action: 'research_plans', thread_id: threadId });
+    if (current !== generation.current) return;
     setPlans(data.plans); setJobs(data.jobs); setError(''); setLoading(false);
     onPlans?.(data.plans.filter((p: Plan) => p.status === 'proposed').length);
   }, [threadId, onPlans]);
@@ -45,7 +49,7 @@ export function MarioResearch({ threadId, revision, onUpdated, onPlans, compact 
         <p className="break-words text-sm text-muted-foreground">{plan.proposal.rationale}</p>
         <dl className="grid grid-cols-2 gap-2 text-xs"><div><dt className="text-muted-foreground">Risultati da esaminare · massimo</dt><dd className="mt-1 font-semibold">{plan.proposal.targets.reduce((n, t) => n + t.limit, 0)}</dd></div><div><dt className="text-muted-foreground">Siti da verificare · massimo</dt><dd className="mt-1 font-semibold">{plan.proposal.verify_limit}</dd></div></dl>
         <div className="divide-y border-y">{plan.proposal.targets.map((t, i) => <div key={i} className="flex flex-wrap justify-between gap-1 py-2 text-xs"><span>{t.kind === 'partner' ? 'Partner Horeca' : 'Pizzerie'} · {t.city} · {t.country}</span><span className="text-muted-foreground">{t.provider === 'apify' ? 'Apify' : 'Firecrawl'} · max {t.limit}</span></div>)}</div>
-        <details><summary className="cursor-pointer text-xs font-medium">Criteri, esclusioni e analisi</summary><ul className="mt-2 list-disc space-y-1 pl-4 text-xs text-muted-foreground">{plan.proposal.criteria.map(c => <li key={c}>{c}</li>)}{plan.proposal.exclusions.map(c => <li key={c}>Esclusione: {c}</li>)}</ul><p className="mt-2 text-xs text-muted-foreground">Archivio analizzato: {plan.analysis.organizations?.reduce((n, r) => n + Number(r.total), 0) ?? 0} organizzazioni. Duplicati e opposizioni esclusi; pertinenza e contatti verificati sulle fonti ufficiali.</p></details>
+        <details><summary className="cursor-pointer text-xs font-medium">Criteri, esclusioni e analisi</summary><ul className="mt-2 list-disc space-y-1 pl-4 text-xs text-muted-foreground">{plan.proposal.criteria.map(c => <li key={c}>{c}</li>)}{plan.proposal.exclusions.map(c => <li key={c}>Esclusione: {c}</li>)}</ul><p className="mt-2 text-xs text-muted-foreground">Archivio Mario analizzato: {plan.analysis.organizations?.reduce((n, r) => n + Number(r.total), 0) ?? 0} organizzazioni. I risultati saranno confrontati con archivio, domini CRM ed esclusioni. Solo i siti effettivamente verificati avranno un esito di pertinenza; gli altri criteri restano da rivedere.</p></details>
         <p className="text-xs text-muted-foreground">Solo ricerca e verifica · nessuna email autorizzata. Germania: revisione manuale.</p>
         {proposed && <div className="flex flex-wrap gap-2"><Button size="sm" disabled={busy} onClick={() => setConfirm(plan)}><Check className="mr-1.5 h-4 w-4" />Approva e avvia ricerca</Button><Button size="sm" variant="ghost" disabled={busy} onClick={() => void act({ action: 'cancel_research', id: plan.id })}>Scarta piano</Button></div>}
         {!proposed && <><div role="status" className="grid grid-cols-3 gap-2 border-y py-3 text-xs"><div><span className="block text-muted-foreground">Nuove organizzazioni</span><strong>{plan.discovered}</strong></div><div><span className="block text-muted-foreground">Escluse / duplicate</span><strong>{plan.skipped}</strong></div><div><span className="block text-muted-foreground">Pertinenti verificate</span><strong>{plan.verified}</strong></div></div><p className="text-xs text-muted-foreground">{done} / {steps.length} passaggi completati{plan.approved_at && ` · approvato ${new Date(plan.approved_at).toLocaleString('it-IT')}`}</p>{running && <Button size="sm" variant="outline" disabled={busy} onClick={() => void act({ action: 'cancel_research', id: plan.id })}><Square className="mr-1.5 h-3.5 w-3.5" />Arresta ricerca</Button>}</>}
