@@ -17,7 +17,7 @@ const SUGGESTIONS = [
   "Come rispondo a \"il prezzo è troppo alto\"?",
 ];
 
-export interface AgentConfig { fn: string; name: string; description: string; suggestions: string[]; instructionsKey: string; icon: LucideIcon; placeholder?: string; onInstructions?: () => void; onComplete?: () => void }
+export interface AgentConfig { fn: string; name: string; description: string; suggestions: string[]; instructionsKey: string; icon: LucideIcon; placeholder?: string; onInstructions?: () => void; onComplete?: () => void; disabled?: boolean }
 
 const BRUNO: AgentConfig = { fn: "bruno-chat", name: "Bruno", description: "Conosce Vesuviano e il tuo CRM. Chiedi priorità, bozze di email e WhatsApp, risposte alle obiezioni.", suggestions: SUGGESTIONS, instructionsKey: "bruno-agent-instructions", icon: Bot };
 
@@ -38,7 +38,7 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
 
   const send = async (text: string) => {
     const content = text.trim();
-    if (!content || busy) return;
+    if (!content || busy || agent.disabled) return;
     setError(null); setInput(""); setBusy(true);
     const history: BrunoChatMessage[] = [...thread.messages, { role: "user", content }];
     const title = thread.messages.length === 0 ? content.slice(0, 60) : thread.title;
@@ -50,7 +50,7 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
       const res = await fetch(FN_URL, {
         method: "POST", signal: ctrl.signal,
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${session?.access_token ?? ""}` },
-        body: JSON.stringify({ messages: history.slice(-40), instructions: instructions || undefined, ...(agent.fn === 'mario-chat' ? { thread_id: thread.id } : {}) }),
+        body: JSON.stringify({ messages: history.filter(m => m.content.trim()).slice(-40).map(m => ({ ...m, content: m.content.slice(0, 8000) })), instructions: instructions || undefined, ...(agent.fn === 'mario-chat' ? { thread_id: thread.id } : {}) }),
       });
       if (!res.ok || !res.body) {
         const body = await res.json().catch(() => ({}));
@@ -86,7 +86,7 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
             <p className="mt-2 max-w-md text-sm text-muted-foreground">{agent.description}</p>
             <div className="mt-6 grid w-full gap-3 sm:grid-cols-2">
               {agent.suggestions.map((s) => (
-                <Button key={s} type="button" variant="outline" onClick={() => void send(s)} className="h-auto whitespace-normal rounded-lg p-4 text-left text-sm">{s}</Button>
+                <Button key={s} type="button" variant="outline" disabled={agent.disabled} onClick={() => void send(s)} className="h-auto whitespace-normal rounded-lg p-4 text-left text-sm">{s}</Button>
               ))}
             </div>
           </div>
@@ -116,7 +116,7 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
         <div className="flex justify-end border-t p-2">
           {busy
             ? <Button type="button" size="icon" className="h-9 w-9 rounded-full" aria-label="Interrompi" onClick={() => abortRef.current?.abort()}><Square className="h-4 w-4" /></Button>
-            : <Button type="submit" size="icon" className="h-9 w-9 rounded-full" aria-label="Invia" disabled={!input.trim()}><CornerDownLeft className="h-4 w-4" /></Button>}
+            : <Button type="submit" size="icon" className="h-9 w-9 rounded-full" aria-label="Invia" disabled={!input.trim() || agent.disabled}><CornerDownLeft className="h-4 w-4" /></Button>}
         </div>
       </form>
       <Dialog open={instrOpen} onOpenChange={setInstrOpen}>
