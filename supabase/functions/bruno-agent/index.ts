@@ -3,6 +3,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { sendMailboxEmail } from '../_shared/email-service.ts';
 import { safeMailError } from '../_shared/email-rules.ts';
+import { sendGennaroWhatsApp } from './wasender.ts';
 
 // Obiettivi di Bruno per fase pipeline (tenere allineato a src/lib/brunoObjectives.ts)
 const OBJECTIVES: Record<string, string> = {
@@ -146,18 +147,18 @@ ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
         else { try { externalId = JSON.parse(t).messages?.[0]?.id ?? null; } catch { /* ignore */ } }
       }
     } else if (input.channel === 'wasender') {
-      const key = Deno.env.get('WASENDER_API_KEY');
-      if (!key) { status = 'failed'; error = 'WaSender di Gennaro non ancora collegato'; }
+      const key = Deno.env.get('UDC_WASENDER_API_KEY');
+      const lovableKey = Deno.env.get('LOVABLE_API_KEY');
+      if (!key || !lovableKey) { status = 'failed'; error = 'WaSender di Gennaro non ancora collegato'; }
       else if (!phone) { status = 'failed'; error = 'Telefono mancante'; }
       else {
-        const r = await fetch('https://www.wasenderapi.com/api/send-message', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ to: `+${phone}`, text: input.body }),
-        });
-        const t = await r.text();
-        if (!r.ok) { status = 'failed'; error = `WaSender ${r.status}: ${t.slice(0, 300)}`; }
-        else { try { externalId = String(JSON.parse(t).data?.msgId ?? '') || null; } catch { /* ignore */ } }
+        try {
+          externalId = await sendGennaroWhatsApp({ lovableKey, connectionKey: key }, { phone, text: input.body });
+        } catch (e) {
+          status = 'failed';
+          error = e instanceof Error ? e.message : 'WaSender: invio da verificare nella chat prima di riprovare.';
+          console.error('WaSender submission failed', error);
+        }
       }
     } else {
       status = 'logged';
