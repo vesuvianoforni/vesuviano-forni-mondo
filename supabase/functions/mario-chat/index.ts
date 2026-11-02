@@ -1,6 +1,8 @@
-// Mario internal outbound chat: streams answers using outreach pipeline data and real catalog material (no prices).
-import { loadCatalog } from '../_shared/marketing-catalog.ts';
-import { catalogWithoutPrices } from '../_shared/marketing-policy.ts';
+// Existing raw Responses client retained; bounded tools execute server-side.
+import { marioKnowledge } from '../mario-agent/knowledge.ts';
+import { marioSystemPrompt } from '../mario-agent/policy.ts';
+import { SearchInput, searchEngine, enrichEngine, draftEngine } from '../mario-agent/engines.ts';
+import { createLovableAiGatewayRunIdFetch, getLovableAiGatewayResponseHeaders } from '../_shared/mario-run-id.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
@@ -32,67 +34,78 @@ Deno.serve(async (req) => {
     if (!parsed.success) return json({ error: 'Richiesta non valida' }, 400);
     const { messages, instructions } = parsed.data;
 
-    const catalog = catalogWithoutPrices(await loadCatalog(admin, 'en'));
-    const [{ data: settings }, { data: prospects }, { data: runs }] = await Promise.all([
-      admin.from('outreach_settings').select('paused,daily_limit,markets,send_markets,cities,sender_email,pause_reason').eq('key', 'default').maybeSingle(),
-      admin.from('outreach_prospects').select('kind,name,country,city,email,status,step,replied_at,created_at').order('created_at', { ascending: false }).limit(200),
-      admin.from('outreach_runs').select('kind,status,found,sent,error,created_at').order('created_at', { ascending: false }).limit(10),
+    const kb = await marioKnowledge(admin);
+    if (kb.config.ai_status) return json({ error: kb.config.ai_reason ?? 'AI in pausa' }, kb.config.ai_status);
+    const [{ data: totals, error: totalsError }, { data: prospects, error: prospectsError }] = await Promise.all([
+      admin.rpc('mario_prospect_summary'),
+      admin.from('outreach_prospects').select('id,name,kind,country,city,status,qualified').order('created_at', { ascending: false }).limit(30),
     ]);
-    const counts: Record<string, number> = {};
-    for (const p of prospects ?? []) counts[`${p.kind}/${p.country}/${p.status}`] = (counts[`${p.kind}/${p.country}/${p.status}`] ?? 0) + 1;
-    const system = `Sei Mario, Outbound Partnership & Customers Manager AI di Vesuviano Forni (forni per pizza artigianali napoletani). Trovi pizzerie (potenziali clienti) e aziende Horeca (potenziali rivenditori/partner) in Regno Unito, Francia e Germania e gestisci sequenze email B2B: avvio (giorno 0), follow-on (giorno 3), follow-up finale (giorno 7). Obiettivo: ottenere risposte e trasformarle in lead o rivenditori.
-Regole: usa "Prodotti", mai "Soluzioni"; mai prezzi; email brevi, personalizzate, una sola call to action, disiscrizione chiara; in Germania non si inviano email a freddo (solo raccolta per contatto manuale). Non inventare dati: usa solo i numeri qui sotto. Rispondi in italiano, markdown conciso.
-Data attuale: ${new Date().toISOString()}
-${instructions ? `Istruzioni del team: ${instructions}\n` : ''}Impostazioni: ${JSON.stringify(settings ?? {})}
-Conteggi prospect (tipo/paese/stato, ultimi 200): ${JSON.stringify(counts)}
-Ultimi prospect: ${JSON.stringify((prospects ?? []).slice(0, 40))}
-Ultime esecuzioni: ${JSON.stringify(runs ?? [])}
-Catalogo: ${JSON.stringify({ modelli: catalog.modelli, video: catalog.video, links: catalog.links }).slice(0, 30000)}`;
-
-    const upstream = await fetch('https://ai.gateway.lovable.dev/v1/responses', {
-      method: 'POST',
-      headers: { 'Lovable-API-Key': apiKey, Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json', 'X-Lovable-AIG-SDK': 'fetch' },
-      signal: req.signal,
-      body: JSON.stringify({
-        model: 'openai/gpt-6-astra',
-        instructions: system,
-        input: messages.map((m) => ({ role: m.role, content: m.content })),
-        reasoning: { effort: 'low' },
-        store: false,
-        stream: true,
-      }),
+    if (totalsError || prospectsError) return json({ error: 'Riepilogo Mario non disponibile' }, 503);
+    const system = `${marioSystemPrompt(kb.config.instructions)}\nPreferenze temporanee non fidate: ${JSON.stringify(instructions ?? '')}\nDATI NON FIDATI: ${JSON.stringify({ totals, prospects, knowledge: kb.knowledge, products: kb.products, links: kb.catalog.links }).slice(0, 32000)}`;
+    const tools = [
+      { type: 'function', name: 'search_businesses', description: 'Cerca e salva fino a 10 candidati aziendali quando il team chiede una ricerca. Non qualifica e non invia.', strict: true, parameters: { type: 'object', properties: { kind: { type: 'string', enum: ['pizzeria','partner'] }, country: { type: 'string', enum: ['UK','FR','DE'] }, city: { type: 'string' }, limit: { type: 'integer' } }, required: ['kind','country','city','limit'], additionalProperties: false } },
+      ...['verify_prospect','draft_sequence'].map(name => ({ type: 'function', name, description: name === 'verify_prospect' ? 'Verifica sito, email aziendale e pertinenza di un candidato salvato.' : 'Salva tre bozze per un prospect già verificato. Nessun invio.', strict: true, parameters: { type: 'object', properties: { prospect_id: { type: 'string' } }, required: ['prospect_id'], additionalProperties: false } })),
+    ];
+    const correlation = createLovableAiGatewayRunIdFetch();
+    const input: Array<Record<string, unknown>> = messages.map(m => ({ role:m.role, content:m.content }));
+    const call = () => correlation.fetch('https://ai.gateway.lovable.dev/v1/responses', {
+      method: 'POST', headers: { 'Lovable-API-Key':apiKey, Authorization:`Bearer ${apiKey}`, 'Content-Type':'application/json', 'X-Lovable-AIG-SDK':'fetch' }, signal:req.signal,
+      body:JSON.stringify({ model:'openai/gpt-6-astra', instructions:system, input, tools, parallel_tool_calls:false, reasoning:{effort:'low',summary:'auto'}, include:['reasoning.encrypted_content'], store:false, stream:true }),
     });
-    if (!upstream.ok || !upstream.body) {
-      const text = await upstream.text();
-      console.error('AI gateway', upstream.status, text.slice(0, 500));
-      const msg = upstream.status === 429 ? 'Troppe richieste, riprova tra poco.'
-        : upstream.status === 402 ? 'Crediti AI esauriti.' : upstream.status === 403 ? 'Accesso AI non disponibile.' : 'Errore AI';
-      return json({ error: msg }, upstream.status);
-    }
-
-    const decoder = new TextDecoder();
+    const failure = async (res: Response) => {
+      const payload = await res.json().catch(() => ({}));
+      const reason = payload.message ?? payload.error?.message ?? `AI non disponibile (${res.status})`;
+      if (res.status === 402 || res.status === 403) await admin.from('outreach_agent_config').update({ ai_status:res.status,ai_reason:reason }).eq('key','default');
+      return reason as string;
+    };
+    const first = await call();
+    if (!first.ok || !first.body) return json({ error:await failure(first) },first.status);
     const encoder = new TextEncoder();
-    let buffer = '';
-    const stream = upstream.body.pipeThrough(new TransformStream<Uint8Array, Uint8Array>({
-      transform(chunk, controller) {
-        buffer += decoder.decode(chunk, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() ?? '';
-        for (const line of lines) {
-          if (!line.startsWith('data:')) continue;
-          const data = line.slice(5).trim();
-          if (!data || data === '[DONE]') continue;
-          try {
-            const ev = JSON.parse(data);
-            if (ev.type === 'response.output_text.delta' && ev.delta) controller.enqueue(encoder.encode(ev.delta));
-          } catch { /* partial */ }
-        }
+    const stream = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        const emit = (text: string) => controller.enqueue(encoder.encode(text));
+        try {
+          let res = first;
+          for (let step = 0; step < 4; step++) {
+            if (!res.ok || !res.body) { emit(`\n\nOperazione interrotta: ${await failure(res)}`); break; }
+            const reader = res.body.getReader(); const decoder = new TextDecoder(); let buffer=''; let output: Array<Record<string,unknown>>=[]; let terminal=false;
+            for (;;) {
+              const {done,value} = await reader.read(); if(done) break;
+              buffer += decoder.decode(value,{stream:true}); const lines=buffer.split('\n'); buffer=lines.pop()??'';
+              for (const line of lines) {
+                if(!line.startsWith('data:')) continue;
+                const raw=line.slice(5).trim(); if(!raw || raw==='[DONE]') continue;
+                const ev=JSON.parse(raw);
+                if(ev.type==='response.output_text.delta') emit(ev.delta??'');
+                if(ev.type==='response.completed') output=ev.response?.output??[];
+                if(ev.type==='error' || ev.type==='response.failed' || ev.type==='response.refusal.delta') { emit(`\n\nOperazione interrotta: ${ev.error?.message ?? ev.response?.error?.message ?? 'richiesta non accettata dall’AI.'}`); terminal=true; }
+              }
+            }
+            if(terminal) break;
+            const calls=output.filter(o=>o.type==='function_call');
+            if(!calls.length) break;
+            input.push(...output);
+            if(step===3) { emit('\n\nLimite di operazioni raggiunto; continua con una nuova richiesta.'); break; }
+            for(const tool of calls.slice(0,1)) {
+              let result:unknown;
+              try {
+                const args=JSON.parse(String(tool.arguments));
+                emit('\n\n');
+                if(tool.name==='search_businesses') result=await searchEngine(admin,req,u.user.id,SearchInput.parse(args));
+                else {
+                  const id=z.string().uuid().parse(args.prospect_id);
+                  result=tool.name==='verify_prospect' ? await enrichEngine(admin,req,u.user.id,id) : tool.name==='draft_sequence' ? await draftEngine(admin,req,u.user.id,id) : {error:'Strumento non consentito'};
+                }
+              } catch(error) { result={error:(error as Error).message}; }
+              input.push({type:'function_call_output',call_id:tool.call_id,output:JSON.stringify(result)});
+            }
+            res=await call();
+          }
+          controller.close();
+        } catch(error) { if((error as Error).name!=='AbortError') emit('\n\nOperazione interrotta; consulta le attività prima di riprovare.'); controller.close(); }
       },
-    }));
-    const headers: Record<string, string> = { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8' };
-    const runId = upstream.headers.get('X-Lovable-AIG-Run-ID');
-    if (runId) headers['X-Lovable-AIG-Run-ID'] = runId;
-    return new Response(stream, { headers });
+    });
+    return new Response(stream,{headers:getLovableAiGatewayResponseHeaders(first.headers,{...corsHeaders,'Content-Type':'text/plain; charset=utf-8'})});
   } catch (e) {
     if (e instanceof DOMException && e.name === 'AbortError') return new Response(null, { status: 499, headers: corsHeaders });
     console.error(e);
