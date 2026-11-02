@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Bot, PauseCircle, Search, Loader2, ChevronLeft, MessageSquare } from "lucide-react";
+import { Bot, PauseCircle, Search, Loader2, ChevronLeft, MessageSquare, MessageSquarePlus, Trash2 } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
+import { BrunoAgentChat } from "@/components/erp/BrunoAgentChat";
+import { loadThreads, newThread, saveThreads, type BrunoThread } from "@/lib/brunoThreads";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +19,6 @@ import { MailboxSettings } from "@/components/erp/MailboxSettings";
 import { Switch } from "@/components/ui/switch";
 import { interactionRelativeTime } from "@/lib/crmActivity";
 
-const pipelines = ["Vesuviano", "ZAPPER", "ZAPPER Pro"];
 const PAGE = 1000;
 
 interface Summary { count: number; lastAt: string; lastContactAt: string | null; preview: string; channel: string; }
@@ -27,10 +29,18 @@ export default function ERPBruno() {
   const [summaries, setSummaries] = useState<Record<string, Summary>>({});
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [pipeline, setPipeline] = useState("Vesuviano");
+  const pipeline = "Vesuviano";
   const [stageFilter, setStageFilter] = useState("all");
   const [onlyQueue, setOnlyQueue] = useState(true);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [params, setParams] = useSearchParams();
+  const selectedId = params.get("lead");
+  const setSelectedId = (id: string | null) => setParams((p) => { const n = new URLSearchParams(p); if (id) { n.set("lead", id); } else n.delete("lead"); return n; });
+  const [threads, setThreads] = useState<BrunoThread[]>(() => { const t = loadThreads(); if (t.length) return t; const first = [newThread()]; saveThreads(first); return first; });
+  const activeThread = threads.find((t) => t.id === params.get("chat")) ?? threads[0];
+  const openThread = (id: string) => setParams(() => new URLSearchParams({ chat: id }));
+  const updateThread = useCallback((t: BrunoThread) => setThreads((prev) => { const next = [t, ...prev.filter((x) => x.id !== t.id)]; saveThreads(next); return next; }), []);
+  const createThread = () => { const t = newThread(); setThreads((prev) => { const next = [t, ...prev]; saveThreads(next); return next; }); openThread(t.id); };
+  const deleteThread = (id: string) => setThreads((prev) => { let next = prev.filter((x) => x.id !== id); if (!next.length) next = [newThread()]; saveThreads(next); return next; });
   const [now, setNow] = useState(() => new Date());
 
   const load = useCallback(async () => {
@@ -120,16 +130,28 @@ export default function ERPBruno() {
 
       <div className="grid min-h-0 min-w-0 flex-1 overflow-hidden md:grid-cols-[320px_minmax(0,1fr)] xl:grid-cols-[340px_minmax(0,1fr)]">
         <div className={cn("flex min-h-0 min-w-0 flex-col overflow-hidden border-r", selected && "hidden md:flex")}>
-          <div className="shrink-0 space-y-2 border-b p-3">
+          <div className={cn("m-3 shrink-0 rounded-xl border p-2", !selected ? "border-primary" : "border-border")}>
+            <p className="flex items-center gap-1.5 px-1 pb-2 text-xs font-semibold uppercase tracking-wide text-primary"><Bot className="h-3.5 w-3.5" />Agente</p>
+            <Button className="w-full" onClick={createThread}><MessageSquarePlus className="mr-2 h-4 w-4" />Nuova chat</Button>
+            <div className="mt-1.5 max-h-40 space-y-1 overflow-y-auto">
+              {threads.map((t) => (
+                <div key={t.id} className={cn("group flex items-center rounded-lg", !selected && activeThread?.id === t.id ? "bg-muted" : "hover:bg-muted/60")}>
+                  <button type="button" onClick={() => openThread(t.id)} className="min-w-0 flex-1 px-3 py-2 text-left">
+                    <span className="block truncate text-sm">{t.title}</span>
+                    <span className="block text-[11px] text-muted-foreground">{new Date(t.updatedAt).toLocaleString("it-IT", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</span>
+                  </button>
+                  <button type="button" aria-label="Elimina conversazione" onClick={() => deleteThread(t.id)} className="mr-1 rounded p-1.5 text-muted-foreground opacity-0 hover:text-destructive group-hover:opacity-100"><Trash2 className="h-3.5 w-3.5" /></button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <p className="flex items-center gap-1.5 px-4 pb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground"><MessageSquare className="h-3.5 w-3.5" />Chat clienti</p>
+          <div className="shrink-0 space-y-2 border-b p-3 pt-1">
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input aria-label="Cerca cliente" placeholder="Nome, email o telefono…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
             </div>
-            <div className="grid grid-cols-2 gap-2">
-          <Select value={pipeline} onValueChange={setPipeline}>
-            <SelectTrigger aria-label="Pipeline" className="h-9 min-w-0 text-xs"><SelectValue /></SelectTrigger>
-            <SelectContent>{pipelines.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
-          </Select>
+            <div className="grid grid-cols-1 gap-2">
           <Select value={stageFilter} onValueChange={setStageFilter}>
             <SelectTrigger aria-label="Fase" className="h-9 min-w-0 text-xs"><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -171,13 +193,9 @@ export default function ERPBruno() {
               </Button>
               <BrunoPanel key={selected.id} lead={selected} onUpdated={load} />
             </>
-          ) : (
-            <div className="flex h-full flex-col items-center justify-center gap-2 p-8 text-center text-sm text-muted-foreground">
-              <MessageSquare className="h-6 w-6" />
-              <p className="text-base font-medium text-foreground">Conversazioni clienti</p>
-              <p>Nessuna conversazione selezionata</p>
-            </div>
-          )}
+          ) : activeThread ? (
+            <BrunoAgentChat key={activeThread.id} thread={activeThread} onChange={updateThread} />
+          ) : null}
         </div>
       </div>
     </div>
