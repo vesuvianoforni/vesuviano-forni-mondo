@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
     const body = messageBody(m);
     const row = {
       lead_id: lead.id, channel: 'wasender', direction: outbound ? 'outbound' : 'inbound',
-      sender: outbound ? 'gennaro' : 'customer', body, status: outbound ? 'sent' : 'received',
+      sender: outbound ? 'gennaro' : 'customer', body, status: outbound ? 'sent' : 'delivered',
       external_id: ext, created_at: createdAt,
       metadata: {
         source: 'zapper', message_type: m.message_type ?? 'text', media_url: m.media_url ?? null,
