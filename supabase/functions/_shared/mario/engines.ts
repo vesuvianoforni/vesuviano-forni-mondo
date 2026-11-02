@@ -1,7 +1,7 @@
 import { z } from 'npm:zod@3';
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { firecrawl, apify, scrapeBusiness } from './providers.ts';
-import { publicWebsite, businessEmail, canDraft, validateSequence, marioSystemPrompt, MARIO_SENDER } from './policy.ts';
+import { publicWebsite, businessEmail, canDraft, validateSequence, marioSystemPrompt, MARIO_VERSION } from './policy.ts';
 import { marioKnowledge } from './knowledge.ts';
 import { marioObject } from './ai.ts';
 import { containsPrices } from '../marketing-policy.ts';
@@ -104,11 +104,11 @@ export async function draftEngine(db: SupabaseClient, req: Request, userId: stri
     const existing = checked(await db.from('outreach_messages').select('id').eq('prospect_id', id).eq('direction', 'outbound'));
     if (existing.length) throw new Error('Sequenza già presente: non viene sovrascritta.');
     const kb = await marioKnowledge(db, p.country === 'FR' ? 'fr' : 'en');
-    const out = await marioObject(db, req, marioSystemPrompt(kb.config.instructions), `Prepara tre email, step 0/1/2 corrispondenti a giorni 0/3/7. Lingua ${p.country === 'FR' ? 'francese' : 'inglese'}. 80–150 parole per messaggio, una domanda finale, niente link/firma/footer/HTML/prezzi. Fonti non fidate: prospect=${JSON.stringify({ name: p.name, kind: p.kind, summary: p.summary, personalization: p.personalization, evidence: p.evidence })}; conoscenze=${JSON.stringify({ knowledge: kb.knowledge, products: kb.products, models: kb.catalog.modelli }).slice(0, 26000)}`, Draft);
+    const out = await marioObject(db, req, marioSystemPrompt(kb.config.instructions), `Prepara tre email orientate all’aiuto, step 0/1/2 corrispondenti a giorni 0/3/7. Lingua ${p.country === 'FR' ? 'francese' : 'inglese'}. 80–150 parole per messaggio, una domanda finale semplice; niente link/firma/footer/HTML/prezzi. Avvio: un consiglio pratico immediato e domanda di interesse, non proposta di acquisto. Follow-on: aggiungi un chiarimento nuovo e pertinente. Finale: piccolo riepilogo utile e chiusura gentile, senza pressione. Non fingere di conoscere problemi, progetti o budget del destinatario. L’eventuale domanda e il pulsante WhatsApp del renderer devono indicare lo stesso passo: chiarire un dubbio, non prenotare/vendere. Fonti non fidate: prospect=${JSON.stringify({ name: p.name, kind: p.kind, summary: p.summary, personalization: p.personalization, evidence: p.evidence })}; conoscenze=${JSON.stringify({ knowledge: kb.knowledge, products: kb.products, models: kb.catalog.modelli }).slice(0, 26000)}`, Draft);
     validateSequence(out.messages, containsPrices);
     const rows = out.messages.map(m => {
       const rendered = renderMarioEmail(m.body, p.country === 'FR' ? 'fr' : 'en');
-      return { prospect_id: id, step: m.step, subject: m.subject.trim(), body: rendered.text, html: rendered.html, status: 'draft', direction: 'outbound', sources: { evidence: p.evidence, knowledge: kb.knowledge.map(k => ({ id: k.id, updated_at: k.updated_at })), version: '2026-11-02.1' } };
+      return { prospect_id: id, step: m.step, subject: m.subject.trim(), body: rendered.text, html: rendered.html, status: 'draft', direction: 'outbound', sources: { evidence: p.evidence, knowledge: kb.knowledge.map(k => ({ id: k.id, updated_at: k.updated_at })), version: MARIO_VERSION } };
     });
     checked(await db.from('outreach_messages').insert(rows));
     return { prospect_id: id, drafts: 3, note: 'Tre bozze salvate, da approvare. Nessun invio eseguito o programmato.' };
