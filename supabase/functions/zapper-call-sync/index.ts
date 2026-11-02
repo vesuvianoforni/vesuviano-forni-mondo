@@ -57,9 +57,11 @@ Deno.serve(async (req) => {
     let created = false;
     if (!lead && outboundExt) { results.push({ id, status: 'skipped_no_vesuviano_lead' }); continue; }
     if (!lead) {
+      const firstAt = c.call_date ? new Date(`${c.call_date}T${c.call_time ?? '00:00:00'}`) : new Date();
       const { data: nl, error } = await supabase.from('leads').insert({
         contact_name: `Chiamata ${String(customer)}`, phone: String(customer), status: 'pre_qualificato',
         pipeline: 'Vesuviano', source: 'Telefonata',
+        created_at: (isNaN(firstAt.getTime()) || firstAt > new Date() ? new Date() : firstAt).toISOString(),
       }).select('id, phone').single();
       if (error) { results.push({ id, status: 'error', error: error.message }); continue; }
       lead = nl; created = true;
