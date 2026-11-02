@@ -1,5 +1,12 @@
 # Roadmap
 
+## Mario: email HTML, archivio e avvio controllato (2 nov 2026)
+- [ ] Riorganizzare Mario con chat centrale, archivio pizzerie/partner e accessi separati a sequenze, KPI e impostazioni.
+- [ ] Preparare modelli HTML localizzati e sequenze approvabili con anteprima, fonti e stop ai follow-up.
+- [ ] Impostare massimo 100 email totali/giorno, distanziamento, coda idempotente e controlli di idoneità prima dell'attivazione.
+- [ ] Mostrare KPI reali, stato coda e controlli di avvio senza confondere SMTP accettato con consegna o aperture.
+- [ ] Verificare test, interfaccia e prerequisiti; attivazione live solo se tutti i prerequisiti sono verificabili.
+
 ## Contrasti e colori ERP
 - [x] Revisione palette ERP: colori scritti a mano sostituiti con il tema in tutte le pagine ERP (487 righe), tema chiaro con accento ambra. Non verificato a schermo con login reale.
 
