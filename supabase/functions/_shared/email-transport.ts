@@ -29,10 +29,10 @@ export function smtpClient() {
     pool: false, logger: false, debug: false, connectionTimeout: 12000, greetingTimeout: 12000, socketTimeout: 20000,
     disableFileAccess: true, disableUrlAccess: true });
 }
-export async function composeEmail(recipient: string, subject: string, text: string, messageId: string, date: Date, replyId?: string, html?: string) {
+export async function composeEmail(recipient: string, subject: string, text: string, messageId: string, date: Date, replyId?: string, html?: string, sender = MAIL_ADDRESS) {
   const composer = nodemailer.createTransport({ streamTransport: true, buffer: true, newline: 'windows', disableFileAccess: true, disableUrlAccess: true });
-  const built = await composer.sendMail({ from: { name: 'Vesuviano Forni', address: MAIL_ADDRESS }, to: recipient,
-    envelope: { from: MAIL_ADDRESS, to: [recipient] }, subject, text, ...(html ? { html } : {}), messageId, date,
+  const built = await composer.sendMail({ from: { name: 'Vesuviano Forni', address: sender }, to: recipient,
+    envelope: { from: sender, to: [recipient] }, subject, text, ...(html ? { html } : {}), messageId, date,
     ...(replyId ? { inReplyTo: replyId, references: [replyId] } : {}) });
   if (!Buffer.isBuffer(built.message)) throw new Error('MAIL_COMPOSE_FAILED');
   return built.message.toString('base64');
