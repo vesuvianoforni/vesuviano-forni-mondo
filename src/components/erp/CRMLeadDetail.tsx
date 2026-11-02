@@ -1,3 +1,4 @@
+import { priceListLabel } from "@/lib/productPricing";
 import { useEffect, useState } from "react";
 import { Bot, CalendarPlus, Copy, ExternalLink, MessageSquare, MoreHorizontal, Pencil, Phone, Mail, Building2, Trash2, Trophy, XCircle, Zap } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -183,7 +184,7 @@ export function CRMLeadDetail({ lead, open, defaultTab = "riepilogo", onOpenChan
                   <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2 text-sm font-medium">
-                        <Bot className="h-4 w-4 text-primary" />Listino {s.price_list}
+                        <Bot className="h-4 w-4 text-primary" />{priceListLabel(s.price_list)}
                         <Badge variant="outline">{CRM_STAGES.find((x) => x.id === s.pipeline_stage)?.title ?? s.pipeline_stage}</Badge>
                       </div>
                       <p className="text-xs text-muted-foreground">

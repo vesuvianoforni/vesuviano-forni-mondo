@@ -1,3 +1,4 @@
+import { priceListLabel } from "@/lib/productPricing";
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -658,7 +659,7 @@ const SessionsCRM = () => {
                 <div className="flex flex-col gap-2 min-w-0 flex-1">
                   {getStatusBadge(session, true)}
                   <Badge variant="outline" className="w-fit text-xs">
-                    Listino {session.price_list}
+                    {priceListLabel(session.price_list)}
                   </Badge>
                 </div>
               </div>
@@ -816,7 +817,7 @@ const SessionsCRM = () => {
               <div className="flex items-center gap-3 mb-2">
                 {getStatusBadge(session)}
                 {getStageBadge(session)}
-                <Badge variant="secondary">Listino {session.price_list}</Badge>
+                <Badge variant="secondary">{priceListLabel(session.price_list)}</Badge>
               </div>
               <h3 className="text-lg font-semibold">{session.customer_name || 'Nome non disponibile'}</h3>
               <div className="text-sm text-muted-foreground space-y-1 mt-1">
@@ -1025,15 +1026,15 @@ const SessionsCRM = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="priceList">Listino Prezzi</Label>
+                  <Label htmlFor="priceList">Paese listino</Label>
                   <Select value={priceList} onValueChange={setPriceList}>
                     <SelectTrigger id="priceList">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="A">Listino A</SelectItem>
-                      <SelectItem value="B">Listino B</SelectItem>
-                      <SelectItem value="C">Listino C</SelectItem>
+                      <SelectItem value="A">Listino UK</SelectItem>
+                      <SelectItem value="B">Listino Francia</SelectItem>
+                      <SelectItem value="C">Listino Germania</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1090,7 +1091,7 @@ const SessionsCRM = () => {
               <div className="flex items-center gap-3">
                 {getStatusBadge(selectedSession)}
                 {getStageBadge(selectedSession)}
-                <Badge variant="secondary">Listino {selectedSession.price_list}</Badge>
+                <Badge variant="secondary">{priceListLabel(selectedSession.price_list)}</Badge>
               </div>
               <div>
                 <span className="text-sm font-medium">Fase pipeline:</span>
