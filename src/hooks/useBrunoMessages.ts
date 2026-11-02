@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { BrunoMessageData } from "@/components/erp/BrunoMessage";
 import type { BrunoChannel } from "@/lib/brunoObjectives";
-import { BRUNO_MESSAGE_PAGE_SIZE, mergeMessagePages, unpackMessagePage, type MessageKey } from "@/lib/brunoMessagePaging";
+import { BRUNO_MESSAGE_PAGE_SIZE, compareMessageKeys, mergeMessagePages, unpackMessagePage, type MessageKey } from "@/lib/brunoMessagePaging";
 
 export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel) {
   const [messages, setMessages] = useState<BrunoMessageData[]>([]);
@@ -72,15 +72,15 @@ export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel) {
       beforeMerge?.();
       setMessages(current => mergeMessagePages(page.messages, current));
       cursor.current = page.cursor; setHasMore(page.hasMore);
-    } catch { if (isCurrent()) setOlderError("Impossible de charger"); }
+    } catch { if (isCurrent()) setOlderError("Impossibile caricare i messaggi precedenti. Riprova."); }
     finally { if (isCurrent()) { olderBusy.current = false; setLoadingOlder(false); } }
   }, [scope, readPage, hasMore, loading]);
 
   useEffect(() => {
     setMessages([]); setCounts(null); setHasMore(false);
     void reload();
-    const currentGeneration = generation.current;
-    const isCurrent = () => activeScope.current === scope && generation.current === currentGeneration;
+    let active = true;
+    const isCurrent = () => active && activeScope.current === scope;
     void refreshCounts(isCurrent);
     let countTimer: ReturnType<typeof setTimeout> | undefined;
     const subscription = supabase.channel(`bruno-page-${leadId}-${Math.random().toString(36).slice(2)}`)
@@ -97,7 +97,7 @@ export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel) {
               if (!belongs) return current.filter(m => m.id !== message.id);
               // Backfilled older events remain available through the history cursor.
               const alreadyLoaded = current.some(m => m.id === message.id);
-              if (!alreadyLoaded && current[0] && message.created_at < current[0].created_at) return current;
+              if (!alreadyLoaded && current[0] && compareMessageKeys(message, current[0]) < 0) return current;
               return mergeMessagePages(current, [message]);
             });
           }
@@ -105,7 +105,7 @@ export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel) {
         clearTimeout(countTimer);
         countTimer = setTimeout(() => { void refreshCounts(isCurrent); }, 250);
       }).subscribe();
-    return () => { generation.current += 1; clearTimeout(countTimer); void supabase.removeChannel(subscription); };
+    return () => { active = false; generation.current += 1; clearTimeout(countTimer); void supabase.removeChannel(subscription); };
   }, [leadId, filter, scope, reload, refreshCounts]);
 
   return { messages, loading, loadingOlder, hasMore, error, olderError, counts, loadOlder, reload, refresh };

@@ -19,20 +19,7 @@ import { interactionRelativeTime } from "@/lib/crmActivity";
 const pipelines = ["Vesuviano", "ZAPPER", "ZAPPER Pro"];
 const PAGE = 1000;
 
-interface Summary { count: number; lastAt: string; preview: string; channel: string; }
-
-async function readAllMessages() {
-  const rows: Array<{ lead_id: string; created_at: string; body: string; channel: string; direction: string }> = [];
-  for (let from = 0; ; from += PAGE) {
-    const { data, error } = await supabase.from("crm_messages").select("lead_id,created_at,body,channel,direction")
-      .order("created_at", { ascending: false }).order("id").range(from, from + PAGE - 1);
-    if (error) throw error;
-    const batch = data ?? [];
-    rows.push(...batch);
-    if (batch.length < PAGE) break;
-  }
-  return rows;
-}
+interface Summary { count: number; lastAt: string; lastContactAt: string | null; preview: string; channel: string; }
 
 export default function ERPBruno() {
   const { toast } = useToast();
@@ -55,13 +42,16 @@ export default function ERPBruno() {
         all.push(...(data ?? []));
         if (!data || data.length < PAGE) break;
       }
-      setLeads(all);
       const map: Record<string, Summary> = {};
-      for (const m of await readAllMessages()) {
-        const current = map[m.lead_id];
-        if (!current) map[m.lead_id] = { count: 1, lastAt: m.created_at, preview: m.body.slice(0, 90), channel: m.channel };
-        else current.count += 1;
+      for (let from = 0; from < all.length; from += 500) {
+        const { data, error } = await supabase.rpc("bruno_message_summaries", { p_lead_ids: all.slice(from, from + 500).map(lead => lead.id) });
+        if (error) throw error;
+        for (const summary of data ?? []) map[summary.lead_id] = {
+          count: Number(summary.message_count), lastAt: summary.last_at, lastContactAt: summary.last_contact_at,
+          preview: summary.preview, channel: summary.last_channel,
+        };
       }
+      setLeads(all);
       setSummaries(map);
     } catch (error) {
       toast({ title: "Errore", description: (error as Error).message, variant: "destructive" });
@@ -76,14 +66,14 @@ export default function ERPBruno() {
     return () => window.clearInterval(timer);
   }, []);
 
-  const { interactions } = useCRMInteractions(leads);
+  const { interactions } = useCRMInteractions(leads, { includeMessages: false });
 
   const rows = useMemo(() => leads
     .filter((lead) => !pipeline || lead.pipeline === pipeline)
     .map((lead) => {
       const summary = summaries[lead.id];
       const siteAt = interactions[lead.id]?.at ?? null;
-      const lastContactAt = [siteAt, summary?.lastAt].filter(Boolean)
+      const lastContactAt = [siteAt, summary?.lastContactAt].filter(Boolean)
         .sort((a, b) => new Date(b as string).getTime() - new Date(a as string).getTime())[0] ?? null;
       return {
         lead,
