@@ -1,5 +1,8 @@
 # Roadmap
 
+## Contrasti e colori ERP
+- [ ] Revisione palette ERP: testi e card poco leggibili.
+
 ## Catalogo Prodotti, listino annuale e sconti (2 nov 2026)
 - [x] Menu Catalogo con sola voce Prodotti (Forni, Bruciatori, Altri prodotti, Sconti); costo + valuta, listino UK/FR/DE con valuta, margine.
 - [x] Listino 2027 attivo creato da A→UK, B→FR, C→DE; nuovo listino in bozza per duplicazione, attivazione solo admin, archiviati in sola lettura.
