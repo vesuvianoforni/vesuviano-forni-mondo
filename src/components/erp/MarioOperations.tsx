@@ -31,7 +31,7 @@ export function MarioOperations({ prospectId, onUpdated, initialTab = 'research'
   const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [notice, setNotice] = useState('');
   const [tab, setTab] = useState(initialTab); const [city, setCity] = useState('London'); const [country, setCountry] = useState('UK'); const [kind, setKind] = useState('pizzeria'); const [provider, setProvider] = useState('firecrawl'); const [limit, setLimit] = useState(10);
   const [instructions, setInstructions] = useState(''); const [edit, setEdit] = useState<Knowledge | null>(null); const [preview, setPreview] = useState<Draft | null>(null);
-  const refresh = useCallback(async () => { const next = await marioAction({ action: 'overview' }) as Overview; setData(next); setInstructions(next.config.instructions); }, []);
+  const refresh = useCallback(async () => { const next = await marioAction({ action: 'overview' }) as Overview; if (prospectId) { const own = await marioAction({ action: 'prospect_messages', id: prospectId }); next.messages = own.messages; } setData(next); setInstructions(next.config.instructions); }, [prospectId]);
   useEffect(() => { refresh().catch(e => setError(e.message)); }, [refresh]);
   const act = async (body: Record<string, unknown>) => {
     setBusy(true); setError(''); setNotice('');

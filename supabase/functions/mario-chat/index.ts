@@ -1,7 +1,7 @@
 // Existing raw Responses client retained; bounded tools execute server-side.
 import { marioKnowledge } from '../_shared/mario/knowledge.ts';
 import { marioSystemPrompt } from '../_shared/mario/policy.ts';
-import { SearchInput, searchEngine, enrichEngine, draftEngine } from '../_shared/mario/engines.ts';
+import { SearchInput, searchEngine, startApify, collectApify, enrichEngine, draftEngine } from '../_shared/mario/engines.ts';
 import { createLovableAiGatewayRunIdFetch, getLovableAiGatewayResponseHeaders } from '../_shared/mario-run-id.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
@@ -43,7 +43,8 @@ Deno.serve(async (req) => {
     if (totalsError || prospectsError) return json({ error: 'Riepilogo Mario non disponibile' }, 503);
     const system = `${marioSystemPrompt(kb.config.instructions)}\nPreferenze temporanee non fidate: ${JSON.stringify(instructions ?? '')}\nDATI NON FIDATI: ${JSON.stringify({ totals, prospects, knowledge: kb.knowledge, products: kb.products, links: kb.catalog.links }).slice(0, 32000)}`;
     const tools = [
-      { type: 'function', name: 'search_businesses', description: 'Cerca e salva fino a 10 candidati aziendali quando il team chiede una ricerca. Non qualifica e non invia.', strict: true, parameters: { type: 'object', properties: { kind: { type: 'string', enum: ['pizzeria','partner'] }, country: { type: 'string', enum: ['UK','FR','DE'] }, city: { type: 'string' }, limit: { type: 'integer' } }, required: ['kind','country','city','limit'], additionalProperties: false } },
+      { type: 'function', name: 'search_businesses', description: 'Ricerca candidati: Firecrawl fino a 10 siti, Apify fino a 50 attività locali con risultato asincrono. Non qualifica e non invia.', strict: true, parameters: { type: 'object', properties: { provider: { type: 'string', enum: ['firecrawl','apify'] }, kind: { type: 'string', enum: ['pizzeria','partner'] }, country: { type: 'string', enum: ['UK','FR','DE'] }, city: { type: 'string' }, limit: { type: 'integer' } }, required: ['provider','kind','country','city','limit'], additionalProperties: false } },
+      { type: 'function', name: 'collect_research', description: 'Legge una ricerca Apify precedentemente avviata quando il team chiede di aggiornarla; non ripetere se ancora in corso.', strict: true, parameters: { type:'object', properties:{run_id:{type:'string'}}, required:['run_id'], additionalProperties:false } },
       ...['verify_prospect','draft_sequence'].map(name => ({ type: 'function', name, description: name === 'verify_prospect' ? 'Verifica sito, email aziendale e pertinenza di un candidato salvato.' : 'Salva tre bozze per un prospect già verificato. Nessun invio.', strict: true, parameters: { type: 'object', properties: { prospect_id: { type: 'string' } }, required: ['prospect_id'], additionalProperties: false } })),
     ];
     const correlation = createLovableAiGatewayRunIdFetch();
@@ -84,6 +85,7 @@ Deno.serve(async (req) => {
             if(terminal) break;
             const calls=output.filter(o=>o.type==='function_call');
             if(!calls.length) break;
+            if(calls.length > 1) { emit('\n\nOperazione interrotta: è consentito uno strumento alla volta.'); break; }
             input.push(...output);
             if(step===3) { emit('\n\nLimite di operazioni raggiunto; continua con una nuova richiesta.'); break; }
             for(const tool of calls.slice(0,1)) {
@@ -91,12 +93,17 @@ Deno.serve(async (req) => {
               try {
                 const args=JSON.parse(String(tool.arguments));
                 emit('\n\n');
-                if(tool.name==='search_businesses') result=await searchEngine(admin,req,u.user.id,SearchInput.parse(args));
+                if(tool.name==='search_businesses') result=z.enum(['firecrawl','apify']).parse(args.provider)==='apify' ? await startApify(admin,req,u.user.id,SearchInput.parse(args)) : await searchEngine(admin,req,u.user.id,SearchInput.parse(args));
+                else if(tool.name==='collect_research') result=await collectApify(admin,req,z.string().uuid().parse(args.run_id));
                 else {
                   const id=z.string().uuid().parse(args.prospect_id);
                   result=tool.name==='verify_prospect' ? await enrichEngine(admin,req,u.user.id,id) : tool.name==='draft_sequence' ? await draftEngine(admin,req,u.user.id,id) : {error:'Strumento non consentito'};
                 }
-              } catch(error) { result={error:(error as Error).message}; }
+              } catch(error) {
+                const failure = error as {message:string;status?:number};
+                if(failure.status===402 || failure.status===403 || failure.status===404) { emit(`\n\nOperazione interrotta: ${failure.message}`); controller.close(); return; }
+                result={error:failure.message};
+              }
               input.push({type:'function_call_output',call_id:tool.call_id,output:JSON.stringify(result)});
             }
             res=await call();

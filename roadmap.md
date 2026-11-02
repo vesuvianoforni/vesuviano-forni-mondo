@@ -72,8 +72,9 @@
 
 ## Mario: motori agentici e conoscenze
 - [x] Casella dedicata ciao@vesuviano-forni.com configurata e accessi IMAP/SMTP verificati senza invii automatici.
-- [ ] Motori ricerca Firecrawl/Apify, verifica contatti e qualificazione con fonti e deduplicazione.
-- [ ] Istruzioni condivise, system prompt protetto e knowledge base Vesuviano modificabile dall’amministratore.
-- [ ] Sequenze 0/3/7 in bozza con anteprima HTML, controlli prezzi, fonti e stop; nessun invio dal modello.
-- [ ] Test dei motori, verifiche reali senza invii e controllo dell’ERP.
+- [x] Motori ricerca Firecrawl/Apify, verifica contatti e qualificazione con fonti e deduplicazione; connettori verificati, Apify asincrono con aggiornamento esplicito.
+- [x] Istruzioni condivise, system prompt protetto e knowledge base Vesuviano modificabile dall’amministratore; costi esclusi, riepiloghi esatti.
+- [x] Sequenze 0/3/7 in bozza con anteprima HTML, controlli prezzi, fonti e stop; nessun invio dal modello.
+- [x] 30 test superati; generazione strutturata reale di tre bozze e ciclo tool/risposta HTTP 200 verificati senza salvataggi o invii. UI istruzioni/conoscenze/anteprima/approvazione verificata con dati di prova, nessun errore o overflow; build OK.
+- [ ] Verifica autenticata completa di ricerca → verifica → bozza → rilettura: non disponibile per Supabase esterno senza sessione gestita (endpoint protetto 401); prove UI non sostituiscono questo controllo.
 - [ ] Attivazione invii e risposte automatiche: richiede adattamento del motore SMTP durabile alla casella Mario e verifica compatibilità delle condizioni IONOS con i destinatari.
