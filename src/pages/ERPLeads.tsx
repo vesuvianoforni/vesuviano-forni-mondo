@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { leadCountries, leadCountryFromPhone } from "@/lib/leadCountry";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -23,7 +24,7 @@ import { format } from "date-fns";
 import { useSearchParams } from "react-router-dom";
 
 const leadSources = ["website", "configuratore", "chat", "referral", "social_media", "cold_call", "trade_show", "zapier", "other"];
-const pipelines = ["Vesuviano", "ZAPPER", "ZAPPER Pro"];
+const pipelines = ["Vesuviano"];
 const activityTypes = ["call", "email", "meeting", "whatsapp", "demo", "follow_up"];
 
 const kanbanStatuses = ACTIVE_CRM_STAGES;
@@ -51,7 +52,8 @@ export default function ERPLeads() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPipeline, setSelectedPipeline] = useState<string>("Vesuviano");
+  const selectedPipeline = "Vesuviano";
+  const [selectedCountry, setSelectedCountry] = useState<string>("all");
   const [showClosed, setShowClosed] = useState(false);
   const [view, setView] = useState<"board" | "list">(() => (localStorage.getItem("crm-view") === "list" ? "list" : "board"));
   const [sort, setSort] = useState<CRMLeadSort>(() => { const s = localStorage.getItem("crm-sort"); return s && s in crmLeadSortLabels ? (s as CRMLeadSort) : "last_contact"; });
@@ -256,7 +258,8 @@ export default function ERPLeads() {
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesPipeline = !selectedPipeline || lead.pipeline === selectedPipeline;
-    return matchesSearch && matchesPipeline;
+    const matchesCountry = selectedCountry === "all" || leadCountryFromPhone(lead.phone) === selectedCountry;
+    return matchesSearch && matchesPipeline && matchesCountry;
   });
 
   const activeLeads = sortCRMLeads(filteredLeads.filter((lead) => kanbanStatuses.some((s) => s.id === lead.status)), sort, interactions);
@@ -428,12 +431,12 @@ export default function ERPLeads() {
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Cerca lead..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="h-9 pl-10" />
         </div>
-        <Select value={selectedPipeline} onValueChange={setSelectedPipeline}>
-          <SelectTrigger className="h-9 w-[150px]" aria-label="Pipeline"><SelectValue /></SelectTrigger>
+        <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+          <SelectTrigger className="h-9 w-[170px]" aria-label="Paese"><SelectValue /></SelectTrigger>
           <SelectContent>
-            {pipelines.map((p) => (
-              <SelectItem key={p} value={p}>{p}</SelectItem>
-            ))}
+            <SelectItem value="all">Tutti i paesi</SelectItem>
+            {leadCountries.map(c => <SelectItem key={c.code} value={c.code}>{c.code} · {c.label}</SelectItem>)}
+            <SelectItem value="OTHER">Altri paesi</SelectItem>
           </SelectContent>
         </Select>
         <Select value={sort} onValueChange={v => setSort(v as CRMLeadSort)}>
