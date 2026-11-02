@@ -1,5 +1,10 @@
 # Roadmap
 
+## Mario: autopilot della ricerca (2 nov 2026)
+- [ ] Richiesta in chat e piano persistente basato su impostazioni, conoscenze e organizzazioni esistenti; nessuna ricerca prima dell’approvazione.
+- [ ] Approvazione esplicita, esecuzione autonoma limitata, progressi, arresto e risultati in archivio senza autorizzare invii.
+- [ ] Test delle approvazioni e limiti, distribuzione e verifica del flusso disponibile; segnalare separatamente ciò che non è verificabile con accesso reale.
+
 ## Mario: revisione template orientati all’aiuto (2 nov 2026)
 - [x] Firma visibile info@vesuvianoforni.com, pulsante WhatsApp EN/FR con messaggio localizzato; logo da https://vesuvianoforni.com/lovable-uploads/vesuviano-logo-bianco.png (redirect pubblico verso www verificato), nessuna immagine Lovable. Mittente SMTP dedicato invariato.
 - [x] Dodici testi EN/FR riscritti: checklist accessi/energia/brief, follow-up con chiarimento aggiuntivo, chiusura gentile; istruzioni condivise aggiornate senza alterare modello AI, invii o cadenza. Fonti: Mailchimp style guide e Google sender guidelines; nessuna promessa di risultati.
