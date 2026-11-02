@@ -33,6 +33,7 @@ async function importCandidates(db: SupabaseClient, rows: Array<Record<string, u
     const { data: existing, error: existingError } = await db.from('outreach_prospects').select('id').eq('domain', site.domain).maybeSingle();
     if (existingError) throw new Error('Impossibile verificare i duplicati');
     if (existing) { skipped++; continue; }
+    if (checked(await db.rpc('mario_existing_organization', { p_domain: site.domain }))) { skipped++; continue; }
     const result = await db.from('outreach_prospects').insert({ kind: args.kind, country: args.country, city: String(r.city ?? args.city).slice(0, 80), name: String(r.title ?? r.name ?? site.domain).slice(0, 200), website: site.url, domain: site.domain, source, source_url: String(r.url ?? site.url), status: args.country === 'DE' ? 'manual' : 'new', evidence: { discovery: String(r.description ?? '').slice(0, 1000), source_url: String(r.url ?? site.url), retrieved_at: new Date().toISOString(), requested_kind: args.kind, requested_country: args.country }, qualified: false }).select('id').single();
     if (result.error?.code === '23505') { skipped++; continue; }
     const saved = checked(result); if (saved) prospectIds.push(saved.id); imported++;
@@ -51,12 +52,14 @@ export async function searchEngine(db: SupabaseClient, request: Request, userId:
     return out;
   });
 }
-export async function startApify(db: SupabaseClient, request: Request, userId: string, raw: SearchArgs) {
+export async function startApify(db: SupabaseClient, request: Request, userId: string, raw: SearchArgs, callback?: { job_id: string; token: string }) {
   const args = SearchInput.parse(raw);
   const { data: id, error } = await db.rpc('claim_mario_run', { p_kind: 'apify_search', p_input: args, p_user: userId });
   if (error || !id) throw Object.assign(new Error('Ricerca Apify già in corso'), { status: 409 });
   try {
-    const result = await apify('acts/compass~crawler-google-places/runs?timeout=300', { searchStringsArray: [terms[args.kind]], locationQuery: `${args.city}, ${location[args.country]}`, maxCrawledPlacesPerSearch: args.limit, maxReviews: 0, maxImages: 0, scrapeContacts: false }, request.signal);
+    if (callback) checked(await db.from('outreach_research_jobs').update({ result: { run_id: id } }).eq('id', callback.job_id).eq('worker_token', callback.token).eq('status', 'running'));
+    const hook = callback ? encodeURIComponent(btoa(JSON.stringify([{ eventTypes: ['ACTOR.RUN.SUCCEEDED', 'ACTOR.RUN.FAILED', 'ACTOR.RUN.ABORTED', 'ACTOR.RUN.TIMED_OUT'], requestUrl: `${Deno.env.get('SUPABASE_URL')}/functions/v1/mario-research`, payloadTemplate: JSON.stringify({ action: 'apify_complete', job_id: callback.job_id, token: callback.token }) }]))) : null;
+    const result = await apify(`acts/compass~crawler-google-places/runs?timeout=300${hook ? `&webhooks=${hook}` : ''}`, { searchStringsArray: [terms[args.kind]], locationQuery: `${args.city}, ${location[args.country]}`, maxCrawledPlacesPerSearch: args.limit, maxReviews: 0, maxImages: 0, scrapeContacts: false }, request.signal);
     checked(await db.from('outreach_runs').update({ actor_run_id: result.data.id, dataset_id: result.data.defaultDatasetId }).eq('id', id));
     return { run_id: id, status: 'running', note: 'Ricerca avviata: usa Aggiorna nelle attività per importare il risultato; nessun controllo ripetuto automatico.' };
   } catch (e) { await db.from('outreach_runs').update({ status: 'failed', error: (e as Error).message.slice(0, 500), finished_at: new Date().toISOString() }).eq('id', id); throw e; }
