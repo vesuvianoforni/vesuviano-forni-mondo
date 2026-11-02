@@ -1,5 +1,9 @@
 # Roadmap
 
+## Leggibilità e composizione Bruno
+- [ ] Riorganizzare elenco clienti, filtri, intestazione, messaggi e scelta del canale d’invio, senza cambiare collegamenti o logiche di invio.
+- [ ] Verificare cambio cliente/canale, conservazione della bozza e contenimento su desktop e telefono; distinguere le prove con dati simulati dall’accesso reale.
+
 ## Invio WhatsApp Gennaro
 - [x] Collegata WaSender con l'API Access Token della sessione esistente di Gennaro, senza cambiare il webhook Zapper; controllo reale del collegamento HTTP 200, sessione connected.
 - [x] Invio Bruno adeguato alla connessione server-side udc_wasender, errori conservati e nessun reinvio automatico; 4 test superati, funzione distribuita e build OK. Nessun messaggio cliente inviato per prova; il precedente tentativo fallito resta tale.
