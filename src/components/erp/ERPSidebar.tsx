@@ -18,7 +18,9 @@ import {
   Store,
   Video,
   Mail,
+  PieChart,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -72,6 +74,14 @@ export function ERPSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    void supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) return;
+      const { data: ok } = await supabase.rpc('has_role', { _user_id: data.user.id, _role: 'admin' });
+      setIsAdmin(!!ok);
+    });
+  }, []);
 
   const isActive = (path: string) => {
     if (path === '/erp') return currentPath === '/erp';
@@ -134,7 +144,7 @@ export function ERPSidebar() {
         {renderGroup('Principale', mainItems)}
         {renderGroup('Catalogo', catalogItems)}
         {renderGroup('Contenuti', contentItems)}
-        {renderGroup('Operazioni', operationsItems)}
+        {renderGroup('Operazioni', isAdmin ? [{ title: 'Controllo di gestione', url: '/erp/controllo-gestione', icon: PieChart }, ...operationsItems] : operationsItems)}
       </SidebarContent>
 
       <SidebarFooter className="bg-[#141414] border-t border-amber-900/20 p-2">
