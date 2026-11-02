@@ -1,5 +1,10 @@
 # Roadmap
 
+## Mario: revisione template orientati all’aiuto (2 nov 2026)
+- [ ] Firma con info@, pulsante WhatsApp localizzato e immagini sul dominio vesuvianoforni.com.
+- [ ] Rivedere dodici testi EN/FR e istruzioni di scrittura: consigli utili prima della proposta commerciale.
+- [ ] Verificare modelli, immagini, collegamenti e test senza invii; preservare contenuti già approvati.
+
 ## Mario: email HTML, archivio e avvio controllato (2 nov 2026)
 - [x] Chat centrale persistente, archivio pizzerie/partner paginato a 25, scheda con fonti e idoneità; sequenze, email HTML, KPI e impostazioni affiancati; chat accessibile su mobile.
 - [x] Dodici modelli HTML EN/FR, tre passaggi per pizzerie/partner, firma Gennaro e opposizione, modificabili admin; sequenze immutabili con approvazione esplicita e anteprima.
