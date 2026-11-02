@@ -57,7 +57,7 @@ export async function executeResearchJob(db: SupabaseClient, job: Job, apifyComp
   try {
     let result: Record<string, unknown>;
     if (job.kind === 'verify') {
-      result = await enrichEngine(db, req, plan.approved_by, String(job.input.prospect_id));
+      result = await enrichEngine(db, req, plan.approved_by, String(job.input.prospect_id), plan.proposal.criteria);
     } else {
       const args = SearchInput.parse(job.input);
       if (job.input.provider === 'apify') {
@@ -67,7 +67,7 @@ export async function executeResearchJob(db: SupabaseClient, job: Job, apifyComp
         }
         const saved = checked(await db.from('outreach_research_jobs').select('result').eq('id', job.id).single());
         if (!saved.result?.run_id) throw new Error('Ricerca senza identificativo salvato');
-        result = await collectApify(db, req, String(saved.result.run_id));
+        result = await collectApify(db, req, String(saved.result.run_id), true);
         if (result?.status === 'running') throw new Error('Provider non ancora concluso.');
       } else result = await searchEngine(db, req, plan.approved_by, args);
     }
