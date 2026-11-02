@@ -1952,6 +1952,51 @@ export type Database = {
         }
         Relationships: []
       }
+      outreach_autopilot: {
+        Row: {
+          auto_paused_reason: string | null
+          countries: string[]
+          daily_organization_goal: number
+          enabled: boolean
+          key: string
+          last_planned_on: string | null
+          last_result: Json
+          last_tick_at: string | null
+          lease_until: string | null
+          owner_id: string | null
+          territory_cursor: number
+          updated_at: string
+        }
+        Insert: {
+          auto_paused_reason?: string | null
+          countries?: string[]
+          daily_organization_goal?: number
+          enabled?: boolean
+          key?: string
+          last_planned_on?: string | null
+          last_result?: Json
+          last_tick_at?: string | null
+          lease_until?: string | null
+          owner_id?: string | null
+          territory_cursor?: number
+          updated_at?: string
+        }
+        Update: {
+          auto_paused_reason?: string | null
+          countries?: string[]
+          daily_organization_goal?: number
+          enabled?: boolean
+          key?: string
+          last_planned_on?: string | null
+          last_result?: Json
+          last_tick_at?: string | null
+          lease_until?: string | null
+          owner_id?: string | null
+          territory_cursor?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       outreach_chat_threads: {
         Row: {
           archived_at: string | null
@@ -3195,6 +3240,7 @@ export type Database = {
         Args: { _id: string; _token: string }
         Returns: boolean
       }
+      acquire_mario_autopilot: { Args: never; Returns: boolean }
       acquire_mario_delivery: { Args: { p_token: string }; Returns: boolean }
       activate_price_list: { Args: { _id: string }; Returns: undefined }
       apply_active_price_list: { Args: never; Returns: undefined }
@@ -3373,6 +3419,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      mario_effective_daily_limit: { Args: never; Returns: number }
       mario_existing_organization: {
         Args: { p_domain: string }
         Returns: boolean
