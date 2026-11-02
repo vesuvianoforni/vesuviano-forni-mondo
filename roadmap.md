@@ -40,3 +40,5 @@
 - [x] Pagina dedicata /erp/roberta (menu "Roberta AI") con pilastri marketing e campagne newsletter integrate
 - [x] ERPNewsletter supporta modalità embedded
 - [ ] Verifica autenticata su ERP reale (accesso non disponibile in sandbox)
+
+- [x] Import WhatsApp Gennaro (WaSender) da Zapper — ricevitore pronto; attivazione lato Zapper da fare
