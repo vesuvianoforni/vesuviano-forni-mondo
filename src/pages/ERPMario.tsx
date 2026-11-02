@@ -19,7 +19,7 @@ const MARIO: AgentConfig = {
   fn: 'mario-chat', name: 'Mario', icon: Radar, instructionsKey: 'mario-agent-instructions',
   description: 'Outbound Partnership & Customers: trova pizzerie e aziende Horeca in UK, Francia e Germania e gestisce le sequenze email.',
   suggestions: [
-    'Proponi un piano per cercare 5 pizzerie a Londra',
+    'Proponi una campagna da 500 pizzerie a Londra',
     'Quanti partner hanno risposto questa settimana?',
     'Scrivi l’email di avvio per un distributore Horeca francese',
     'Come sta andando la sequenza in UK?',

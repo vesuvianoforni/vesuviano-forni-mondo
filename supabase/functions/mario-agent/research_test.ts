@@ -18,5 +18,5 @@ Deno.test('Firecrawl accepts 100 results per batch, never 101', () => { assertEq
 Deno.test('duplicate research scope is rejected', () => { assertThrows(() => validateResearchScope({ ...scope, targets: [scope.targets[0], scope.targets[0]] }, ['UK'])); });
 Deno.test('valid approved scope preserves requested organization and city', () => { const p = validateResearchScope(scope, ['UK']); assertEquals(p.targets[0].kind, 'pizzeria'); assertEquals(p.targets[0].city, 'London'); assertEquals(p.targets[0].limit, 5); });
 Deno.test('legacy plan keeps its original verification limit rather than silently expanding',()=>assertEquals(validateResearchScope(scope,['UK']).verify_limit,5));
-Deno.test('new plans cannot pretend ten candidates cover the 500 organization goal',()=>assertThrows(()=>validateResearchScope({...scope,organization_goal:500,verify_limit:500},['UK'])));
+Deno.test('new plans cannot pretend ten candidates cover the 500 organization goal',()=>{assertThrows(()=>validateResearchScope({...scope,organization_goal:500,verify_limit:500},['UK']));});
 Deno.test('a final batch stops at the goal of 500 stored organizations',()=>{assertEquals(boundedDiscoveryLimit(100,480,500),20);assertEquals(boundedDiscoveryLimit(100,500,500),0);});

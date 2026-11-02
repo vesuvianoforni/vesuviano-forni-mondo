@@ -6,12 +6,13 @@ import { marioKnowledge } from './knowledge.ts';
 import { marioObject } from './ai.ts';
 import { containsPrices } from '../marketing-policy.ts';
 import { renderMarioEmail } from './templates.ts';
+import { DISCOVERY_BATCH_SIZE } from './research-policy.ts';
 
-export const SearchInput = z.object({ kind: z.enum(['pizzeria', 'partner']), country: z.enum(['UK', 'FR', 'DE']), city: z.string().trim().min(2).max(80), limit: z.number().int().min(1).max(50) });
+export const SearchInput = z.object({ kind: z.enum(['pizzeria', 'partner']), country: z.enum(['UK', 'FR', 'DE']), city: z.string().trim().min(2).max(80), query: z.string().trim().min(3).max(250).optional(), limit: z.number().int().min(1).max(DISCOVERY_BATCH_SIZE) });
 export type SearchArgs = z.infer<typeof SearchInput>;
 const terms = { pizzeria: 'pizzeria pizza restaurant', partner: 'commercial catering equipment distributor horeca' };
 const location = { UK: 'United Kingdom', FR: 'France', DE: 'Germany' };
-export function checked<T>(result: { data: T; error: unknown }) { if (result.error) throw new Error('Operazione non salvata nell’ERP'); return result.data; }
+export function checked<T>(result: { data: T; error: unknown }): NonNullable<T> { if (result.error || result.data === null || result.data === undefined) throw new Error('Operazione non salvata nell’ERP'); return result.data; }
 
 async function run<T>(db: SupabaseClient, kind: string, input: unknown, userId: string, work: (id: string) => Promise<T>) {
   const { data: id, error } = await db.rpc('claim_mario_run', { p_kind: kind, p_input: input, p_user: userId });
@@ -23,7 +24,7 @@ async function run<T>(db: SupabaseClient, kind: string, input: unknown, userId: 
 async function importCandidates(db: SupabaseClient, rows: Array<Record<string, unknown>>, args: SearchArgs, source: string) {
   let imported = 0; let skipped = 0; const prospectIds: string[] = [];
   for (const r of rows.slice(0, args.limit)) {
-    const raw = String(source === 'apify' ? r.website ?? '' : r.url ?? '');
+    const raw = String(source === 'apify' ? r.website ?? '' : r.url ?? '').replace(/^http:\/\//i, 'https://');
     let site: ReturnType<typeof publicWebsite>;
     try { site = publicWebsite(raw); } catch { skipped++; continue; }
     if (/google\.|facebook\.|instagram\.|tripadvisor\.|yelp\./i.test(site.domain)) { skipped++; continue; }
@@ -34,20 +35,19 @@ async function importCandidates(db: SupabaseClient, rows: Array<Record<string, u
     if (existingError) throw new Error('Impossibile verificare i duplicati');
     if (existing) { skipped++; continue; }
     if (checked(await db.rpc('mario_existing_organization', { p_domain: site.domain }))) { skipped++; continue; }
-    const result = await db.from('outreach_prospects').insert({ kind: args.kind, country: args.country, city: String(r.city ?? args.city).slice(0, 80), name: String(r.title ?? r.name ?? site.domain).slice(0, 200), website: site.url, domain: site.domain, source, source_url: String(r.url ?? site.url), status: args.country === 'DE' ? 'manual' : 'new', evidence: { discovery: String(r.description ?? '').slice(0, 1000), source_url: String(r.url ?? site.url), retrieved_at: new Date().toISOString(), requested_kind: args.kind, requested_country: args.country }, qualified: false }).select('id').single();
+    const result = await db.from('outreach_prospects').insert({ kind: args.kind, country: args.country, city: String(r.city ?? args.city).slice(0, 80), name: String(r.title ?? r.name ?? site.domain).slice(0, 200), website: site.url, domain: site.domain, source, source_url: String(r.url ?? site.url), phone: typeof r.phone === 'string' ? r.phone.slice(0,50) : null, status: args.country === 'DE' ? 'manual' : 'new', evidence: { discovery: String(r.description ?? '').slice(0, 1000), source_url: String(r.url ?? site.url), retrieved_at: new Date().toISOString(), requested_kind: args.kind, requested_country: args.country, query: args.query, address: typeof r.address === 'string' ? r.address.slice(0,500) : null }, qualified: false }).select('id').single();
     if (result.error?.code === '23505') { skipped++; continue; }
     const saved = checked(result); if (saved) prospectIds.push(saved.id); imported++;
   }
-  return { imported, skipped, prospect_ids: prospectIds, note: 'Candidati salvati, da verificare sul sito ufficiale. Nessuna email inviata.' };
+  return { imported, skipped, examined: Math.min(rows.length,args.limit), prospect_ids: prospectIds, note: 'Candidati salvati, da verificare sul sito ufficiale. Nessuna email inviata.' };
 }
 
 export async function searchEngine(db: SupabaseClient, request: Request, userId: string, raw: SearchArgs) {
   const args = SearchInput.parse(raw);
   return run(db, 'firecrawl_search', args, userId, async id => {
-    // One bounded request: use Apify for requested volumes above Firecrawl's small batch.
-    const result = await firecrawl('search', { query: `${terms[args.kind]} ${args.city} ${location[args.country]} official website contact`, limit: Math.min(args.limit, 10) }, request.signal);
+    const result = await firecrawl('search', { query: `${args.query ?? terms[args.kind]} ${args.city} ${location[args.country]} official website contact`, limit: args.limit }, request.signal);
     const rows = Array.isArray(result.data) ? result.data : result.data?.web ?? result.web ?? [];
-    const out = await importCandidates(db, rows, { ...args, limit: Math.min(args.limit, 10) }, 'firecrawl');
+    const out = await importCandidates(db, rows, args, 'firecrawl');
     checked(await db.from('outreach_runs').update({ found: out.imported }).eq('id', id));
     return out;
   });
@@ -59,7 +59,7 @@ export async function startApify(db: SupabaseClient, request: Request, userId: s
   try {
     if (callback) checked(await db.from('outreach_research_jobs').update({ result: { run_id: id } }).eq('id', callback.job_id).eq('worker_token', callback.token).eq('status', 'running'));
     const hook = callback ? encodeURIComponent(btoa(JSON.stringify([{ eventTypes: ['ACTOR.RUN.SUCCEEDED', 'ACTOR.RUN.FAILED', 'ACTOR.RUN.ABORTED', 'ACTOR.RUN.TIMED_OUT'], requestUrl: `${Deno.env.get('SUPABASE_URL')}/functions/v1/mario-research`, payloadTemplate: JSON.stringify({ action: 'apify_complete', job_id: callback.job_id, token: callback.token }) }]))) : null;
-    const result = await apify(`acts/compass~crawler-google-places/runs?timeout=300${hook ? `&webhooks=${hook}` : ''}`, { searchStringsArray: [terms[args.kind]], locationQuery: `${args.city}, ${location[args.country]}`, maxCrawledPlacesPerSearch: args.limit, maxReviews: 0, maxImages: 0, scrapeContacts: false }, request.signal);
+    const result = await apify(`acts/compass~crawler-google-places/runs?timeout=300${hook ? `&webhooks=${hook}` : ''}`, { searchStringsArray: [args.query ?? terms[args.kind]], locationQuery: `${args.city}, ${location[args.country]}`, maxCrawledPlacesPerSearch: args.limit, maxReviews: 0, maxImages: 0, scrapeContacts: false }, request.signal);
     checked(await db.from('outreach_runs').update({ actor_run_id: result.data.id, dataset_id: result.data.defaultDatasetId }).eq('id', id));
     return { run_id: id, status: 'running', note: 'Ricerca avviata: usa Aggiorna nelle attività per importare il risultato; nessun controllo ripetuto automatico.' };
   } catch (e) { await db.from('outreach_runs').update({ status: 'failed', error: 'Ricerca Apify interrotta; verifica l’esito senza ripetere la richiesta.', finished_at: new Date().toISOString() }).eq('id', id); throw e; }
