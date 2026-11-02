@@ -135,61 +135,52 @@ export const CRMLeadCard = forwardRef<HTMLDivElement, CRMLeadCardProps>(function
           </div>
 
           {(lead.email || lead.phone) && (
-            <div className="space-y-2 border-t pt-3">
-              {lead.email && <div className="flex min-w-0 items-start gap-2 text-xs text-muted-foreground">
-                <Mail aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0" /><span className="min-w-0 break-all">{lead.email}</span>
+            <div className="space-y-0.5 text-xs text-muted-foreground">
+              {lead.email && <div className="flex min-w-0 items-center gap-1.5" title={lead.email}>
+                <Mail aria-hidden="true" className="h-3 w-3 shrink-0" /><span className="min-w-0 truncate">{lead.email}</span>
               </div>}
-              {lead.phone && <div className="flex min-w-0 items-start gap-2 text-xs text-muted-foreground">
-                <Phone aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0" /><span className="min-w-0 break-words">{lead.phone}</span>
+              {lead.phone && <div className="flex min-w-0 items-center gap-1.5">
+                <Phone aria-hidden="true" className="h-3 w-3 shrink-0" /><span className="min-w-0 truncate">{lead.phone}</span>
               </div>}
             </div>
           )}
 
-          <div className="space-y-3 border-t pt-3">
-            <div>
-              <div className="mb-1.5 flex items-center gap-2 text-xs text-muted-foreground"><Clock aria-hidden="true" className="h-3 w-3 shrink-0" /><span>Ultima interazione</span></div>
-              {lastInteraction ? <div className="ml-5 space-y-1 text-xs">
+          <div className="space-y-1 border-t pt-2 text-xs">
+            <div className="flex min-w-0 items-center gap-1.5">
+              <Clock aria-hidden="true" className="h-3 w-3 shrink-0 text-muted-foreground" />
+              <span className="sr-only">Ultima interazione:</span>
+              {lastInteraction ? <span className="min-w-0 truncate">
                 <time dateTime={lastInteraction.at} title={exactActivityDate(lastInteraction.at)} className="font-medium">{interactionRelativeTime(lastInteraction.at, now)}</time>
-                <p className="text-muted-foreground">{interactionLabels[lastInteraction.kind]}</p>
-                {interactionState === "partial" && <p className="text-muted-foreground">Storico parziale</p>}
-              </div> : <p className="ml-5 text-xs text-muted-foreground">{interactionState === "loading" ? "Caricamento…" : interactionState === "partial" ? "Storico non disponibile" : "Nessuna registrata"}</p>}
+                <span className="text-muted-foreground"> · {interactionLabels[lastInteraction.kind]}{interactionState === "partial" ? " (parziale)" : ""}</span>
+              </span> : <span className="text-muted-foreground">{interactionState === "loading" ? "Caricamento…" : interactionState === "partial" ? "Storico non disponibile" : "Nessun contatto"}</span>}
             </div>
-            <div className="border-t pt-3">
-              <div className="mb-1.5 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 text-xs font-medium"><Calendar aria-hidden="true" className="h-3 w-3 shrink-0" /><span>Prossima attività</span></div>
-                <Tooltip>
-                  <TooltipTrigger asChild><Button size="icon" variant="ghost" className="h-7 w-7 shrink-0 hover:bg-muted hover:text-foreground" aria-label={`Pianifica attività ${name}`} onClick={() => onSchedule(lead)}><CalendarPlus /></Button></TooltipTrigger>
-                  <TooltipContent>{timing.date ? "Modifica attività" : "Pianifica attività"}</TooltipContent>
-                </Tooltip>
-              </div>
-              <div className="ml-5 space-y-1.5 text-xs">
-                {lead.next_activity_type && <p className="break-words font-medium">{activityLabels[lead.next_activity_type] || lead.next_activity_type}</p>}
-                {timing.date ? <time dateTime={timing.date.toISOString()} title={exactActivityDate(timing.date.toISOString())} className={cn("block font-medium", timingColor)}>{timing.label}</time> :
-                  <Button variant="link" className="h-auto whitespace-normal p-0 text-xs text-primary" onClick={() => onSchedule(lead)}>Da pianificare</Button>}
-                {lead.next_activity_notes && <p className="line-clamp-2 break-words italic text-muted-foreground" title={lead.next_activity_notes}>{lead.next_activity_notes}</p>}
-                {activityAssignee && <div className="flex min-w-0 items-start gap-1.5 text-muted-foreground"><User aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0" /><span className="min-w-0 break-all">{activityAssignee}</span></div>}
-              </div>
+            <div className="flex min-w-0 items-center gap-1.5">
+              <Calendar aria-hidden="true" className="h-3 w-3 shrink-0 text-muted-foreground" />
+              <span className="sr-only">Prossima attività:</span>
+              {timing.date ? <button type="button" className="min-w-0 truncate text-left hover:underline" title={[lead.next_activity_notes, activityAssignee].filter(Boolean).join(" · ") || "Modifica attività"} onClick={() => onSchedule(lead)}>
+                {lead.next_activity_type && <span className="font-medium">{activityLabels[lead.next_activity_type] || lead.next_activity_type} · </span>}
+                <time dateTime={timing.date.toISOString()} className={cn("font-medium", timingColor)}>{timing.label}</time>
+              </button> : <Button variant="link" className="h-auto p-0 text-xs text-primary" onClick={() => onSchedule(lead)}>Pianifica attività</Button>}
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-3">
-            <div className="flex min-w-0 flex-wrap items-center gap-2">
-              {lead.value != null && <span className="max-w-full break-all rounded bg-secondary/10 px-2 py-1 text-sm font-semibold text-secondary">€{lead.value.toLocaleString("it-IT")}</span>}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+              {lead.value != null && <span className="rounded bg-secondary/10 px-1.5 py-0.5 text-xs font-semibold text-secondary">€{lead.value.toLocaleString("it-IT")}</span>}
               {closed && stage && <Badge className={stage.color}>{stage.title}</Badge>}
-            </div>
-            <div className="ml-auto flex min-w-0 items-center gap-2">
-              {lead.source && <Badge variant="outline" className="min-w-0 gap-1 whitespace-normal break-words text-xs">
-                {lead.source === "zapier" && <Zap aria-hidden="true" className="h-3 w-3 shrink-0" />}{sourceLabels[lead.source] || lead.source}
+              {lead.source && <Badge variant="outline" className="h-5 min-w-0 gap-1 px-1.5 text-[11px] font-normal">
+                {lead.source === "zapier" && <Zap aria-hidden="true" className="h-3 w-3 shrink-0" />}<span className="truncate">{sourceLabels[lead.source] || lead.source}</span>
               </Badge>}
-              {dragHandleProps && <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button {...dragHandleProps} variant="ghost" size="icon" className="h-8 w-8 shrink-0 cursor-grab hover:bg-muted hover:text-foreground active:cursor-grabbing"
-                    aria-label={`Sposta lead ${name}`}><GripVertical className="h-4 w-4" /></Button>
-                </TooltipTrigger>
-                <TooltipContent>Sposta lead</TooltipContent>
-              </Tooltip>}
             </div>
+            {dragHandleProps && <Tooltip>
+              <TooltipTrigger asChild>
+                <Button {...dragHandleProps} variant="ghost" size="icon" className="h-7 w-7 shrink-0 cursor-grab hover:bg-muted hover:text-foreground active:cursor-grabbing"
+                  aria-label={`Sposta lead ${name}`}><GripVertical className="h-4 w-4" /></Button>
+              </TooltipTrigger>
+              <TooltipContent>Sposta lead</TooltipContent>
+            </Tooltip>}
           </div>
+
 
         </CardContent>
       </Card>
