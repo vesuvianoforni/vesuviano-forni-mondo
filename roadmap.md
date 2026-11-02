@@ -1,11 +1,12 @@
 # Roadmap
 
 ## Mario: email HTML, archivio e avvio controllato (2 nov 2026)
-- [ ] Riorganizzare Mario con chat centrale, archivio pizzerie/partner e accessi separati a sequenze, KPI e impostazioni.
-- [ ] Preparare modelli HTML localizzati e sequenze approvabili con anteprima, fonti e stop ai follow-up.
-- [ ] Impostare massimo 100 email totali/giorno, distanziamento, coda idempotente e controlli di idoneità prima dell'attivazione.
-- [ ] Mostrare KPI reali, stato coda e controlli di avvio senza confondere SMTP accettato con consegna o aperture.
-- [ ] Verificare test, interfaccia e prerequisiti; attivazione live solo se tutti i prerequisiti sono verificabili.
+- [x] Chat centrale persistente, archivio pizzerie/partner paginato a 25, scheda con fonti e idoneità; sequenze, email HTML, KPI e impostazioni affiancati; chat accessibile su mobile.
+- [x] Dodici modelli HTML EN/FR, tre passaggi per pizzerie/partner, firma Gennaro e opposizione, modificabili admin; sequenze immutabili con approvazione esplicita e anteprima.
+- [x] Tetto 100 email complessive/giorno (tentativi e follow-up inclusi), minimo cinque minuti, lun–ven 9–18 Roma come valori iniziali modificabili; prenotazione atomica, snapshot separati da Bruno, stop risposte/opposizioni, recupero accettazioni senza reinvii.
+- [x] KPI esatti dai record, archivio invii e controlli avvio; consegne/aperture/clic dichiarati non misurati, nessuna statistica inventata.
+- [x] 50 test superati, build OK e flussi UI simulati a 1280×1800, 1353×936, 390×844 senza errori/overflow; HTML, approvazione, impostazioni e KPI riletti in UI. SMTP IONOS TLS 465 + IMAP e cartella Posta inviata verificati realmente senza invio. mario-agent distribuita; accesso senza sessione 401.
+- [ ] Attivazione e programmazione automatica: bloccate finché compatibilità IONOS per outreach, idoneità destinatari, autenticazione dominio e prova completa invio/risposta autenticata non siano verificati. Supabase esterno non offre sessione autenticata gestita in sandbox; nessuna email cliente inviata, nessun cron creato.
 
 ## Contrasti e colori ERP
 - [x] Revisione palette ERP: colori scritti a mano sostituiti con il tema in tutte le pagine ERP (487 righe), tema chiaro con accento ambra. Non verificato a schermo con login reale.
@@ -84,4 +85,4 @@
 - [x] Sequenze 0/3/7 in bozza con anteprima HTML, controlli prezzi, fonti e stop; nessun invio dal modello.
 - [x] 30 test superati; generazione strutturata reale di tre bozze e ciclo tool/risposta HTTP 200 verificati senza salvataggi o invii. UI istruzioni/conoscenze/anteprima/approvazione verificata con dati di prova, nessun errore o overflow; build OK.
 - [ ] Verifica autenticata completa di ricerca → verifica → bozza → rilettura: non disponibile per Supabase esterno senza sessione gestita (endpoint protetto 401); prove UI non sostituiscono questo controllo.
-- [ ] Attivazione invii e risposte automatiche: richiede adattamento del motore SMTP durabile alla casella Mario e verifica compatibilità delle condizioni IONOS con i destinatari.
+- [ ] Attivazione invii e risposte automatiche: motore isolato preparato, ma avvio e scheduling bloccati dai prerequisiti elencati nella sezione Mario invio controllato.
