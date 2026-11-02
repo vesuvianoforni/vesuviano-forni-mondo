@@ -31,7 +31,7 @@ export default function ERPBruno() {
   const [search, setSearch] = useState("");
   const pipeline = "Vesuviano";
   const [stageFilter, setStageFilter] = useState("all");
-  const [onlyQueue, setOnlyQueue] = useState(true);
+  const [onlyQueue, setOnlyQueue] = useState(false);
   const [params, setParams] = useSearchParams();
   const selectedId = params.get("lead");
   const setSelectedId = (id: string | null) => setParams((p) => { const n = new URLSearchParams(p); if (id) { n.set("lead", id); } else n.delete("lead"); return n; });
@@ -102,8 +102,7 @@ export default function ERPBruno() {
         .toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
       const rank = (r: BrunoQueueReason | null) => (r ? (r.severity === "overdue" ? 0 : 1) : 2);
-      const delta = rank(a.reason) - rank(b.reason);
-      if (delta !== 0) return delta;
+      if (onlyQueue) { const delta = rank(a.reason) - rank(b.reason); if (delta !== 0) return delta; }
       const left = a.summary?.lastAt || a.lastContactAt || a.lead.created_at;
       const right = b.summary?.lastAt || b.lastContactAt || b.lead.created_at;
       return new Date(right).getTime() - new Date(left).getTime();
