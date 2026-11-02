@@ -1,0 +1,64 @@
+ALTER TABLE public.outreach_settings ADD COLUMN min_interval_seconds integer NOT NULL DEFAULT 300, ADD COLUMN window_start integer NOT NULL DEFAULT 9, ADD COLUMN window_end integer NOT NULL DEFAULT 18, ADD COLUMN timezone text NOT NULL DEFAULT 'Europe/Rome', ADD COLUMN weekdays integer[] NOT NULL DEFAULT ARRAY[1,2,3,4,5], ADD COLUMN provider_approval_reference text, ADD COLUMN provider_verified_at timestamptz, ADD COLUMN preflight jsonb NOT NULL DEFAULT '{}'::jsonb, ADD COLUMN lease_token uuid, ADD COLUMN lease_until timestamptz, ADD COLUMN next_delivery_at timestamptz, ADD COLUMN inbox_cursor bigint NOT NULL DEFAULT 0, ADD COLUMN inbox_validity text;
+UPDATE public.outreach_settings SET daily_limit=100, paused=true WHERE key='default';
+ALTER TABLE public.outreach_prospects ADD COLUMN contact_name text, ADD COLUMN recipient_eligibility text NOT NULL DEFAULT 'unreviewed', ADD COLUMN eligibility_note text, ADD COLUMN eligibility_checked_by uuid, ADD COLUMN eligibility_checked_at timestamptz;
+ALTER TABLE public.outreach_messages ADD COLUMN template_key text, ADD COLUMN scheduled_at timestamptz;
+CREATE TABLE public.outreach_templates (key text PRIMARY KEY, kind text NOT NULL, language text NOT NULL, step integer NOT NULL, title text NOT NULL, subject text NOT NULL, body text NOT NULL, active boolean NOT NULL DEFAULT true, updated_by uuid, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT ON public.outreach_templates TO authenticated;
+GRANT ALL ON public.outreach_templates TO service_role;
+ALTER TABLE public.outreach_templates ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "staff read outreach templates" ON public.outreach_templates FOR SELECT TO authenticated USING (public.has_role(auth.uid(),'admin') OR public.has_role(auth.uid(),'commerciale'));
+CREATE TRIGGER outreach_templates_updated BEFORE UPDATE ON public.outreach_templates FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+CREATE TABLE public.outreach_outbox (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), outreach_message_id uuid NOT NULL UNIQUE REFERENCES public.outreach_messages(id), prospect_id uuid NOT NULL REFERENCES public.outreach_prospects(id), recipient text NOT NULL, subject text NOT NULL, rendered_text text NOT NULL, rendered_html text NOT NULL, mime text, message_id text NOT NULL UNIQUE, smtp_status text NOT NULL DEFAULT 'pending', copy_status text NOT NULL DEFAULT 'pending', attempted_at timestamptz, accepted_at timestamptz, append_attempted_at timestamptz, sent_folder text, last_error text, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT ON public.outreach_outbox TO authenticated;
+GRANT ALL ON public.outreach_outbox TO service_role;
+ALTER TABLE public.outreach_outbox ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "staff read outreach outbox" ON public.outreach_outbox FOR SELECT TO authenticated USING (public.has_role(auth.uid(),'admin') OR public.has_role(auth.uid(),'commerciale'));
+CREATE TRIGGER outreach_outbox_updated BEFORE UPDATE ON public.outreach_outbox FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+CREATE INDEX outreach_outbox_attempted ON public.outreach_outbox(attempted_at);
+CREATE TABLE public.outreach_inbox (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), physical_key text NOT NULL UNIQUE, message_id text, prospect_id uuid REFERENCES public.outreach_prospects(id), sender text NOT NULL, subject text NOT NULL, body text NOT NULL, received_at timestamptz NOT NULL, category text NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT ON public.outreach_inbox TO authenticated;
+GRANT ALL ON public.outreach_inbox TO service_role;
+ALTER TABLE public.outreach_inbox ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "staff read outreach inbox" ON public.outreach_inbox FOR SELECT TO authenticated USING (public.has_role(auth.uid(),'admin') OR public.has_role(auth.uid(),'commerciale'));
+CREATE TRIGGER outreach_inbox_updated BEFORE UPDATE ON public.outreach_inbox FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+CREATE OR REPLACE FUNCTION public.validate_mario_delivery() RETURNS trigger LANGUAGE plpgsql SET search_path=public AS $$ BEGIN
+ IF NEW.daily_limit<1 OR NEW.daily_limit>100 THEN RAISE EXCEPTION 'Limite: da 1 a 100 email complessive al giorno'; END IF;
+ IF NEW.min_interval_seconds<300 OR NEW.min_interval_seconds>86400 THEN RAISE EXCEPTION 'Intervallo minimo: 300 secondi'; END IF;
+ IF NEW.window_start<0 OR NEW.window_end>24 OR NEW.window_start>=NEW.window_end THEN RAISE EXCEPTION 'Finestra oraria non valida'; END IF;
+ IF NEW.timezone NOT IN ('Europe/Rome','Europe/London','Europe/Paris') THEN RAISE EXCEPTION 'Fuso orario non consentito'; END IF;
+ IF NOT NEW.paused AND (NEW.provider_verified_at IS NULL OR COALESCE(NEW.provider_approval_reference,'')='' OR COALESCE(NEW.preflight->>'ready','false')<>'true') THEN RAISE EXCEPTION 'Prerequisiti invio non verificati'; END IF;
+ RETURN NEW; END; $$;
+CREATE TRIGGER validate_mario_delivery BEFORE INSERT OR UPDATE ON public.outreach_settings FOR EACH ROW EXECUTE FUNCTION public.validate_mario_delivery();
+CREATE OR REPLACE FUNCTION public.acquire_mario_delivery(p_token uuid) RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$ BEGIN
+ UPDATE public.outreach_settings SET lease_token=p_token,lease_until=now()+interval '3 minutes' WHERE key='default' AND (lease_until IS NULL OR lease_until<now());
+ RETURN FOUND; END; $$;
+REVOKE ALL ON FUNCTION public.acquire_mario_delivery(uuid) FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.acquire_mario_delivery(uuid) TO service_role;
+CREATE OR REPLACE FUNCTION public.reserve_mario_submission(p_id uuid,p_token uuid) RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+DECLARE s public.outreach_settings; p public.outreach_prospects; m public.outreach_messages; o public.outreach_outbox; local_now timestamp; used integer;
+BEGIN
+ SELECT * INTO s FROM public.outreach_settings WHERE key='default' FOR UPDATE;
+ IF s.paused OR s.lease_token IS DISTINCT FROM p_token OR s.lease_until<now() OR s.provider_verified_at IS NULL OR COALESCE(s.preflight->>'ready','false')<>'true' THEN RETURN false; END IF;
+ local_now:=now() AT TIME ZONE s.timezone;
+ IF NOT extract(isodow FROM local_now)::integer=ANY(s.weekdays) OR extract(hour FROM local_now)<s.window_start OR extract(hour FROM local_now)>=s.window_end OR s.next_delivery_at>now() THEN RETURN false; END IF;
+ SELECT count(*) INTO used FROM public.outreach_outbox WHERE (attempted_at AT TIME ZONE s.timezone)::date=local_now::date;
+ IF used>=s.daily_limit OR used>=100 THEN RETURN false; END IF;
+ SELECT * INTO o FROM public.outreach_outbox WHERE id=p_id FOR UPDATE;
+ IF o.id IS NULL OR o.smtp_status<>'pending' OR o.attempted_at IS NOT NULL THEN RETURN false; END IF;
+ SELECT * INTO p FROM public.outreach_prospects WHERE id=o.prospect_id FOR UPDATE;
+ SELECT * INTO m FROM public.outreach_messages WHERE id=o.outreach_message_id FOR UPDATE;
+ IF p.replied_at IS NOT NULL OR p.status IN ('replied','unsubscribed','bounced','manual','done','suppressed') OR p.country='DE' OR NOT p.country=ANY(s.send_markets) OR NOT p.qualified OR p.recipient_eligibility<>'eligible' OR p.email IS DISTINCT FROM o.recipient OR m.status<>'approved' OR m.approved_at IS NULL OR m.scheduled_at IS NULL OR m.scheduled_at>now() THEN RETURN false; END IF;
+ IF EXISTS(SELECT 1 FROM public.outreach_suppressions WHERE lower(value) IN (lower(p.email),lower(p.domain))) THEN RETURN false; END IF;
+ IF m.step>0 AND NOT EXISTS(SELECT 1 FROM public.outreach_messages WHERE prospect_id=p.id AND step=m.step-1 AND status='sent') THEN RETURN false; END IF;
+ IF EXISTS(SELECT 1 FROM public.outreach_outbox WHERE prospect_id=p.id AND smtp_status IN ('sending','unknown','rejected')) THEN RETURN false; END IF;
+ UPDATE public.outreach_outbox SET smtp_status='sending',attempted_at=now() WHERE id=p_id;
+ UPDATE public.outreach_settings SET next_delivery_at=now()+make_interval(secs=>s.min_interval_seconds) WHERE key='default';
+ RETURN true;
+END; $$;
+REVOKE ALL ON FUNCTION public.reserve_mario_submission(uuid,uuid) FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.reserve_mario_submission(uuid,uuid) TO service_role;
+CREATE OR REPLACE FUNCTION public.mario_kpis() RETURNS jsonb LANGUAGE sql STABLE SECURITY INVOKER SET search_path=public AS $$
+ SELECT jsonb_build_object('prospects',(SELECT count(*) FROM public.outreach_prospects),'pizzerias',(SELECT count(*) FROM public.outreach_prospects WHERE kind='pizzeria'),'partners',(SELECT count(*) FROM public.outreach_prospects WHERE kind='partner'),'verified',(SELECT count(*) FROM public.outreach_prospects WHERE qualified),'eligible',(SELECT count(*) FROM public.outreach_prospects WHERE recipient_eligibility='eligible'),'drafts',(SELECT count(*) FROM public.outreach_messages WHERE direction='outbound' AND status='draft'),'approved',(SELECT count(*) FROM public.outreach_messages WHERE direction='outbound' AND status='approved'),'queued',(SELECT count(*) FROM public.outreach_outbox WHERE smtp_status='pending'),'accepted',(SELECT count(*) FROM public.outreach_outbox WHERE smtp_status='accepted'),'attempted_today',(SELECT count(*) FROM public.outreach_outbox o, public.outreach_settings s WHERE s.key='default' AND (o.attempted_at AT TIME ZONE s.timezone)::date=(now() AT TIME ZONE s.timezone)::date),'accepted_today',(SELECT count(*) FROM public.outreach_outbox o, public.outreach_settings s WHERE s.key='default' AND (o.accepted_at AT TIME ZONE s.timezone)::date=(now() AT TIME ZONE s.timezone)::date),'contacted',(SELECT count(DISTINCT prospect_id) FROM public.outreach_outbox WHERE smtp_status='accepted'),'replies',(SELECT count(*) FROM public.outreach_prospects WHERE status='replied'),'bounced',(SELECT count(*) FROM public.outreach_prospects WHERE status='bounced'),'unsubscribed',(SELECT count(*) FROM public.outreach_prospects WHERE status='unsubscribed'),'uncertain',(SELECT count(*) FROM public.outreach_outbox WHERE smtp_status IN ('sending','unknown')));
+$$;
+REVOKE ALL ON FUNCTION public.mario_kpis() FROM PUBLIC,anon;
+GRANT EXECUTE ON FUNCTION public.mario_kpis() TO authenticated,service_role;

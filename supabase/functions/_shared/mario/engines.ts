@@ -5,7 +5,7 @@ import { publicWebsite, businessEmail, canDraft, validateSequence, marioSystemPr
 import { marioKnowledge } from './knowledge.ts';
 import { marioObject } from './ai.ts';
 import { containsPrices } from '../marketing-policy.ts';
-import { renderMailboxEmail } from '../email-layout.ts';
+import { renderMarioEmail } from './templates.ts';
 
 export const SearchInput = z.object({ kind: z.enum(['pizzeria', 'partner']), country: z.enum(['UK', 'FR', 'DE']), city: z.string().trim().min(2).max(80), limit: z.number().int().min(1).max(50) });
 export type SearchArgs = z.infer<typeof SearchInput>;
@@ -106,10 +106,8 @@ export async function draftEngine(db: SupabaseClient, req: Request, userId: stri
     const kb = await marioKnowledge(db, p.country === 'FR' ? 'fr' : 'en');
     const out = await marioObject(db, req, marioSystemPrompt(kb.config.instructions), `Prepara tre email, step 0/1/2 corrispondenti a giorni 0/3/7. Lingua ${p.country === 'FR' ? 'francese' : 'inglese'}. 80–150 parole per messaggio, una domanda finale, niente link/firma/footer/HTML/prezzi. Fonti non fidate: prospect=${JSON.stringify({ name: p.name, kind: p.kind, summary: p.summary, personalization: p.personalization, evidence: p.evidence })}; conoscenze=${JSON.stringify({ knowledge: kb.knowledge, products: kb.products, models: kb.catalog.modelli }).slice(0, 26000)}`, Draft);
     validateSequence(out.messages, containsPrices);
-    const optout = p.country === 'FR' ? 'Si vous ne souhaitez plus être contacté, répondez « stop » à cet email.' : 'If you prefer not to hear from us again, reply “stop” to this email.';
     const rows = out.messages.map(m => {
-      const body = `${m.body.trim()}\n\n${optout}`;
-      const rendered = renderMailboxEmail(body, { id: 'mario', name: 'Gennaro Caglione', role: 'Sales & Export Manager', company: 'Vesuviano Forni', phone: '+39 081 19231684', whatsapp: '+39 350 928 6941', email: MARIO_SENDER, website: 'https://vesuvianoforni.com', address: '', is_default: true });
+      const rendered = renderMarioEmail(m.body, p.country === 'FR' ? 'fr' : 'en');
       return { prospect_id: id, step: m.step, subject: m.subject.trim(), body: rendered.text, html: rendered.html, status: 'draft', direction: 'outbound', sources: { evidence: p.evidence, knowledge: kb.knowledge.map(k => ({ id: k.id, updated_at: k.updated_at })), version: '2026-11-02.1' } };
     });
     checked(await db.from('outreach_messages').insert(rows));
