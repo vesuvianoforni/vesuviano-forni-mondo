@@ -16,7 +16,7 @@ async function readAll<T extends InteractionTable>(table: T, columns: string) {
   }
 }
 
-export function useCRMInteractions(leads: LeadIdentity[]) {
+export function useCRMInteractions(leads: LeadIdentity[], { includeMessages = true }: { includeMessages?: boolean } = {}) {
   const [events, setEvents] = useState<LeadInteraction[]>([]);
   const [state, setState] = useState<"loading" | "ready" | "partial">("loading");
   useEffect(() => {
@@ -27,7 +27,7 @@ export function useCRMInteractions(leads: LeadIdentity[]) {
         readAll("chat_conversations", "id,lead_id,visitor_email,visitor_phone,last_message_at,message_count"),
         readAll("email_history", "id,sent_to,sent_at,email_type"),
         readAll("configurator_sessions", "id,customer_email,customer_phone,last_opened_at,feedback_date,customer_actions"),
-        readAll("crm_messages", "id,lead_id,channel,created_at"),
+        includeMessages ? readAll("crm_messages", "id,lead_id,channel,created_at") : Promise.resolve([]),
       ]);
       const collected: LeadInteraction[] = [];
       const [forms, chats, emails, sessions, messages] = results;
@@ -66,6 +66,6 @@ export function useCRMInteractions(leads: LeadIdentity[]) {
     }
     void load();
     return () => { active = false; };
-  }, []);
+  }, [includeMessages]);
   return { interactions: useMemo(() => latestInteractions(leads, events), [leads, events]), state };
 }

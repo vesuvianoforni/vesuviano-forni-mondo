@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FunctionsHttpError } from "@supabase/supabase-js";
 import { Bot, Mail, MessageCircle, Phone, Send, Sparkles, StickyNote, PauseCircle, PlayCircle, Loader2, Eye, ArrowDown, UserRound, ChevronDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,9 +18,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { BrunoMessage, type BrunoMessageData } from "./BrunoMessage";
+import { BrunoMessage } from "./BrunoMessage";
+import { useBrunoMessages } from "@/hooks/useBrunoMessages";
 
-type Msg = BrunoMessageData;
 export type BrunoLead = CRMLead & { bruno_mode?: string; bruno_paused_until?: string | null };
 
 const channelIcon = { whatsapp_api: Bot, wasender: MessageCircle, email: Mail, note: StickyNote, call: Phone };
@@ -40,7 +40,6 @@ async function invoke(body: Record<string, unknown>) {
 /** Timeline, suggerimenti e composer di Bruno. Usato nel pannello lead e nella sezione Bruno. */
 export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; className?: string; onUpdated?: () => void }) {
   const { toast } = useToast();
-  const [messages, setMessages] = useState<Msg[]>([]);
   const [channel, setChannel] = useState<BrunoChannel>("whatsapp_api");
   const [text, setText] = useState("");
   const [subject, setSubject] = useState("");
@@ -51,44 +50,20 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
   const [mode, setMode] = useState("draft");
   const [pausedUntil, setPausedUntil] = useState<string | null>(null);
   const [viewFilter, setViewFilter] = useState<"all" | BrunoChannel>("all");
-  const visibleMessages = viewFilter === "all" ? messages : messages.filter((m) => m.channel === viewFilter);
+  const { messages: visibleMessages, loading: messagesLoading, error: messagesError, counts,
+    loadingOlder, hasMore, olderError, loadOlder, reload, refresh } = useBrunoMessages(lead.id, viewFilter);
   const timelineRef = useRef<HTMLDivElement>(null);
   const followLatest = useRef(true);
   const previousView = useRef("");
-  const activeLeadId = useRef(lead.id);
-  const loadRequest = useRef(0);
-  const [messagesLoading, setMessagesLoading] = useState(true);
-  const [messagesError, setMessagesError] = useState<string | null>(null);
+  const pendingAnchor = useRef<{ id: string; offset: number } | null>(null);
   const [awayFromLatest, setAwayFromLatest] = useState(false);
   const emailOperation = useRef<{ key: string; draft: string; signatureId?: string | null } | null>(null);
   const [signature, setSignature] = useState('default');
   const [previewOpen, setPreviewOpen] = useState(false);
   const signatureId = signature === 'none' ? null : signature === 'default' ? undefined : signature;
 
-  const load = async (id: string) => {
-    if (id !== activeLeadId.current) return;
-    const request = ++loadRequest.current;
-    try {
-      const data: Msg[] = [];
-      for (let from = 0; ; from += 1000) {
-        const { data: batch, error } = await supabase.from("crm_messages").select("*").eq("lead_id", id).order("created_at").order("id").range(from, from + 999);
-        if (error) throw error;
-        if (request !== loadRequest.current || id !== activeLeadId.current) return;
-        data.push(...((batch ?? []) as unknown as Msg[]));
-        if (!batch || batch.length < 1000) break;
-      }
-      setMessages(data);
-      setMessagesError(null);
-    } catch {
-      if (request === loadRequest.current && id === activeLeadId.current) setMessagesError("Impossibile caricare le comunicazioni.");
-    } finally {
-      if (request === loadRequest.current && id === activeLeadId.current) setMessagesLoading(false);
-    }
-  };
-
   useEffect(() => {
-    activeLeadId.current = lead.id;
-    setMessages([]); setMessagesLoading(true); setMessagesError(null); setViewFilter("all");
+    setViewFilter("all"); pendingAnchor.current = null;
     followLatest.current = true; setAwayFromLatest(false);
     setText(""); setSubject(""); setReasoning(null); setAiDraft(false);
     setSignature('default'); setPreviewOpen(false);
@@ -98,26 +73,40 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
       if(saved){const operation=JSON.parse(saved);if(typeof operation.key==='string'&&typeof operation.draft==='string')emailOperation.current=operation;}
     } catch { /* storage is optional; server still owns delivery idempotency */ }
     setMode(lead.bruno_mode || "draft"); setPausedUntil(lead.bruno_paused_until ?? null);
-    load(lead.id);
-    const ch = supabase.channel(`crm-msg-${lead.id}-${Math.random().toString(36).slice(2)}`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "crm_messages", filter: `lead_id=eq.${lead.id}` }, () => load(lead.id))
-      .subscribe();
-    return () => { loadRequest.current += 1; supabase.removeChannel(ch); };
   }, [lead.id]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const timeline = timelineRef.current;
     if (!timeline) return;
     const view = `${lead.id}:${viewFilter}`;
     if (view !== previousView.current) {
       followLatest.current = true;
       previousView.current = view;
+      pendingAnchor.current = null;
+    }
+    const anchor = pendingAnchor.current;
+    if (anchor) {
+      const message = Array.from(timeline.querySelectorAll<HTMLElement>("[data-message-id]")).find(element => element.dataset.messageId === anchor.id);
+      if (message) timeline.scrollTop += message.getBoundingClientRect().top - timeline.getBoundingClientRect().top - anchor.offset;
+      pendingAnchor.current = null;
+      return;
     }
     if (followLatest.current) {
       timeline.scrollTop = timeline.scrollHeight;
       setAwayFromLatest(false);
     }
-  }, [messages, viewFilter, lead.id]);
+  }, [visibleMessages, viewFilter, lead.id]);
+
+  const loadPrevious = () => {
+    void loadOlder(() => {
+      const timeline = timelineRef.current;
+      if (!timeline) return;
+      const top = timeline.getBoundingClientRect().top;
+      const element = Array.from(timeline.querySelectorAll<HTMLElement>("[data-message-id]")).find(message => message.getBoundingClientRect().bottom > top);
+      if (element?.dataset.messageId) pendingAnchor.current = { id: element.dataset.messageId, offset: element.getBoundingClientRect().top - top };
+      followLatest.current = false;
+    });
+  };
 
   const scrollToLatest = () => {
     const timeline = timelineRef.current;
@@ -164,7 +153,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
       if (channel === "wasender" && !aiDraft) setPausedUntil(new Date(Date.now() + 48 * 3600e3).toISOString());
     } catch (e) {
       toast({ title: "Invio non riuscito", description: mailErrorLabel((e as Error).message), variant: "destructive" });
-    } finally { setSending(false); load(lead.id); }
+    } finally { setSending(false); void refresh(); }
   };
 
   const togglePause = async () => {
@@ -220,13 +209,13 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
       {/* Channel filter */}
       <div className="flex shrink-0 flex-wrap gap-1 border-b px-3 py-2 sm:px-5" role="tablist" aria-label="Filtra per canale">
         {([["all", "Tutte"], ["whatsapp_api", "WhatsApp Bruno"], ["wasender", "WhatsApp Gennaro"], ["email", "Email"], ["call", "Chiamate"], ["note", "Note"]] as const).map(([k, label]) => {
-          const count = k === "all" ? messages.length : messages.filter((m) => m.channel === k).length;
+          const count = counts?.[k] ?? 0;
           const Icon = k === "all" ? null : channelIcon[k];
           return (
             <Button key={k} type="button" role="tab" aria-selected={viewFilter === k} size="sm"
               variant="ghost" className={cn("h-8 gap-1.5 px-2 text-xs hover:bg-muted hover:text-foreground", viewFilter === k && "bg-accent font-semibold text-accent-foreground")}
               onClick={() => setViewFilter(k)}>
-              {Icon && <Icon className="h-3.5 w-3.5" />}{label} <span className="min-w-4 text-[10px] text-muted-foreground">{messagesLoading ? "…" : count}</span>
+              {Icon && <Icon className="h-3.5 w-3.5" />}{label} <span className="min-w-4 text-[10px] text-muted-foreground">{counts === null ? "…" : count}</span>
             </Button>
           );
         })}
@@ -243,9 +232,13 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
           setAwayFromLatest(!nearBottom);
         }}>
         {messagesLoading && <p role="status" className="flex items-center justify-center gap-2 py-10 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" />Caricamento comunicazioni…</p>}
-        {messagesError && <div role="alert" className="py-6 text-center text-sm text-destructive"><p>{messagesError}</p><Button variant="outline" size="sm" className="mt-2" onClick={() => { setMessagesLoading(true); void load(lead.id); }}>Riprova</Button></div>}
+        {messagesError && <div role="alert" className="py-6 text-center text-sm text-destructive"><p>{messagesError}</p><Button variant="outline" size="sm" className="mt-2" onClick={() => { void reload(); }}>Riprova</Button></div>}
+        {!messagesLoading && hasMore && <div className="flex flex-col items-center gap-2 pt-3">
+          <Button variant="outline" size="sm" disabled={loadingOlder} onClick={loadPrevious}>{loadingOlder ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowDown className="h-4 w-4 rotate-180" />}Carica messaggi precedenti</Button>
+          {olderError && <p role="alert" className="text-xs text-destructive">{olderError}</p>}
+        </div>}
         {!messagesLoading && !messagesError && visibleMessages.length === 0 && <p className="py-10 text-center text-sm text-muted-foreground">Nessuna comunicazione registrata.</p>}
-        {visibleMessages.map((m, index) => <BrunoMessage key={m.id} message={m} customerName={lead.contact_name || name} showDate={index === 0 || new Date(visibleMessages[index - 1].created_at).toDateString() !== new Date(m.created_at).toDateString()} />)}
+        {visibleMessages.map((m, index) => <div key={m.id} data-message-id={m.id}><BrunoMessage message={m} customerName={lead.contact_name || name} showDate={index === 0 || new Date(visibleMessages[index - 1].created_at).toDateString() !== new Date(m.created_at).toDateString()} /></div>)}
       </div>
       {awayFromLatest && !messagesLoading && <Button type="button" size="icon" variant="secondary" className="absolute bottom-3 right-5 h-9 w-9 rounded-full" title="Vai agli ultimi messaggi" aria-label="Vai agli ultimi messaggi" onClick={scrollToLatest}><ArrowDown className="h-4 w-4" /></Button>}
       </div>
