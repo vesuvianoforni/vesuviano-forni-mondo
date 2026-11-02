@@ -1,4 +1,5 @@
 import { z } from 'npm:zod@3';
+import { MARIO_COUNTRIES } from './markets.ts';
 
 export const CAMPAIGN_ORGANIZATION_GOAL = 500;
 export const DISCOVERY_BUDGET = 1500;
@@ -9,7 +10,7 @@ export const ResearchScope = z.object({
   criteria: z.array(z.string().min(3).max(250)).min(1).max(8),
   exclusions: z.array(z.string().min(3).max(250)).max(8),
   organization_goal: z.number().int().min(1).max(CAMPAIGN_ORGANIZATION_GOAL),
-  targets: z.array(z.object({ provider: z.enum(['firecrawl', 'apify']), kind: z.enum(['pizzeria', 'partner']), country: z.enum(['UK', 'FR', 'DE']), city: z.string().trim().min(2).max(80), query: z.string().trim().min(3).max(250), limit: z.number().int().min(1).max(DISCOVERY_BATCH_SIZE) }).strict()).min(1).max(30),
+  targets: z.array(z.object({ provider: z.enum(['firecrawl', 'apify']), kind: z.enum(['pizzeria', 'partner']), country: z.enum(MARIO_COUNTRIES), city: z.string().trim().min(2).max(80), query: z.string().trim().min(3).max(250), limit: z.number().int().min(1).max(DISCOVERY_BATCH_SIZE) }).strict()).min(1).max(30),
   verify_limit: z.number().int().min(0).max(CAMPAIGN_ORGANIZATION_GOAL),
 }).strict();
 export type ResearchScopeType = z.infer<typeof ResearchScope>;

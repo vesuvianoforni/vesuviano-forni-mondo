@@ -7,11 +7,12 @@ import { marioObject } from './ai.ts';
 import { containsPrices } from '../marketing-policy.ts';
 import { renderMarioEmail } from './templates.ts';
 import { DISCOVERY_BATCH_SIZE } from './research-policy.ts';
+import { MARIO_COUNTRIES, COUNTRY_NAME } from './markets.ts';
 
-export const SearchInput = z.object({ kind: z.enum(['pizzeria', 'partner']), country: z.enum(['UK', 'FR', 'DE']), city: z.string().trim().min(2).max(80), query: z.string().trim().min(3).max(250).optional(), limit: z.number().int().min(1).max(DISCOVERY_BATCH_SIZE) });
+export const SearchInput = z.object({ kind: z.enum(['pizzeria', 'partner']), country: z.enum(MARIO_COUNTRIES), city: z.string().trim().min(2).max(80), query: z.string().trim().min(3).max(250).optional(), limit: z.number().int().min(1).max(DISCOVERY_BATCH_SIZE) });
 export type SearchArgs = z.infer<typeof SearchInput>;
 const terms = { pizzeria: 'pizzeria pizza restaurant', partner: 'commercial catering equipment distributor horeca' };
-const location = { UK: 'United Kingdom', FR: 'France', DE: 'Germany' };
+const location = COUNTRY_NAME;
 export function checked<T>(result: { data: T; error: unknown }): NonNullable<T> { if (result.error || result.data === null || result.data === undefined) throw new Error('Operazione non salvata nell’ERP'); return result.data; }
 
 async function run<T>(db: SupabaseClient, kind: string, input: unknown, userId: string, work: (id: string) => Promise<T>) {

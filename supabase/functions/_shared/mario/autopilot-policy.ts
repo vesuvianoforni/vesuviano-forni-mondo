@@ -62,7 +62,7 @@ export function autoEligibility(p: { qualified: boolean; email: string | null; d
   if (p.recipient_eligibility !== 'unreviewed') return null;
   if (!p.qualified || !p.email || !p.domain || p.replied_at) return 'blocked';
   if (MANUAL_ONLY.includes(p.country) || p.country === 'IT') return 'blocked';
-  if (!['new', 'qualified', 'verified'].includes(p.status)) return 'blocked';
+  if (!['new', 'draft'].includes(p.status)) return 'blocked';
   const email = p.email.toLowerCase(); const domain = p.domain.toLowerCase().replace(/^www\./, '');
   if (FREE_MAIL.test(email) || ROLE_BAD.test(email)) return 'blocked';
   const host = email.split('@')[1] ?? '';
