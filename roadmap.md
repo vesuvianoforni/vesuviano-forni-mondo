@@ -1,9 +1,10 @@
 # Roadmap
 
 ## Mario: campagne da 500 organizzazioni (2 nov 2026)
-- [ ] Piani con obiettivo 500 organizzazioni, raccolta multipasso e verifica fino all’obiettivo; fonti dichiarate e deduplicazione, senza confondere ricerca e 100 email/giorno.
-- [ ] Allineare motori, approvazione server e progressi; mantenere immutati i piani già approvati e gli invii in pausa.
-- [ ] Test regole/avanzamento, controlli servizi e prova UI; segnalare verifiche reali non disponibili.
+- [x] Piani con obiettivo scelto di 500 organizzazioni, query/quartieri a lotti max 100, tetto iniziale 1.500 candidati e fino a 500 verifiche; web Firecrawl e Google Maps Apify dichiarati, deduplicazione ed esclusioni invariati, nessuna confusione con 100 email/giorno.
+- [x] Motori/RPC/progressi allineati, stop a obiettivo o ricerche esaurite, conteggi esaminati/verificati separati, pausa dieci secondi tra i passaggi e guard server AI; piani approvati legacy immutati. Piano Londra ancora proposto aggiornato a 15 lotti/1.500 candidati/500 verifiche, senza approvarlo né avviare raccolte; invii in pausa.
+- [x] 37 test superati e Deno check Mario chat/worker OK; tre funzioni distribuite. Generazione AI reale valida (obiettivo/verifiche 500, 1.200 candidati, 24 passaggi, entrambi provider), nessun salvataggio/invio da prova. Input actor Compass pubblico verificato: limite 100 supportato; Firecrawl diretto collegato, 4.709 crediti disponibili. Callback non autorizzato 403. UI simulata proposta→conferma annullata→approvazione→arresto→rilettura progressi, a 1280×1800,1245×936,390×844 senza errori/overflow, build OK.
+- [ ] Ricerca reale autenticata fino all’archivio: Supabase esterno senza sessione gestita; prove UI sono simulate e nessuna raccolta a pagamento avviata. Fonte Tripadvisor dedicata non attiva: schema, idoneità e costi dell’actor/API non verificati; web/Google Maps sono le sole fonti operative. Sette avvisi sicurezza preesistenti invariati.
 
 ## Mario: richieste e chat ritrovabili (2 nov 2026)
 - [x] Richieste salvate prima dei tool e risposte salvate progressivamente/finalmente in outreach_chat_threads, con accesso staff limitato al proprietario; importazione locale senza sovrascrittura. Recuperata richiesta Londra dal piano reale (non il testo originale della risposta), nessuna ricerca/email avviata.
