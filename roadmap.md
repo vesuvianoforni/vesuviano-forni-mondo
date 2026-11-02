@@ -1,9 +1,10 @@
 # Roadmap
 
 ## Mario: richieste e chat ritrovabili (2 nov 2026)
-- [ ] Salvare richieste e risposte sul servizio collegato prima di eseguire Mario; importare lo storico locale e recuperare la richiesta Londra dai piani salvati.
-- [ ] Cronologia riapribile, conversazione selezionata stabile e nessuna perdita silenziosa durante salvataggio o cambio pagina.
-- [ ] Test persistenza/isolamento e verifica rilettura; accesso autenticato reale non disponibile per Supabase esterno.
+- [x] Richieste salvate prima dei tool e risposte salvate progressivamente/finalmente in outreach_chat_threads, con accesso staff limitato al proprietario; importazione locale senza sovrascrittura. Recuperata richiesta Londra dal piano reale (non il testo originale della risposta), nessuna ricerca/email avviata.
+- [x] Cronologia server paginata e accessibile anche su telefono, URL stabile, conversazione mancante esplicita, errore/riprova senza esecuzione duplicata; archiviazione senza eliminare i compiti.
+- [x] 37 test superati; flusso UI simulato recupero→nuova richiesta→rilettura dopo rimozione storico locale→cambio chat→URL mancante→errore/riprova, a 1280×1800, 1245×936 e 390×844, zero errori/overflow. Build OK, mario-chat distribuita, endpoint non autenticato 401; permessi verificati: anon negato, browser non può sovrascrivere messaggi, server può salvare.
+- [ ] Prova completa sul proprio account: Supabase esterno senza sessione gestita, verifica UI basata su dati simulati; sette avvisi sicurezza preesistenti invariati.
 
 ## Mario: proposta e approvazione nella conversazione (2 nov 2026)
 - [x] Piano salvato direttamente sotto la risposta di Mario, con approvazione, conferma e stato condivisi con Ricerca; rimosso il passaggio obbligatorio Rivedi piano. Riutilizzata la presentazione esistente e AI Elements Tool per i dettagli chiusi; trasporto/storico legacy invariati per evitare una migrazione fuori ambito.
