@@ -1952,6 +1952,56 @@ export type Database = {
         }
         Relationships: []
       }
+      outreach_inbox: {
+        Row: {
+          body: string
+          category: string
+          created_at: string
+          id: string
+          message_id: string | null
+          physical_key: string
+          prospect_id: string | null
+          received_at: string
+          sender: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          category: string
+          created_at?: string
+          id?: string
+          message_id?: string | null
+          physical_key: string
+          prospect_id?: string | null
+          received_at: string
+          sender: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          category?: string
+          created_at?: string
+          id?: string
+          message_id?: string | null
+          physical_key?: string
+          prospect_id?: string | null
+          received_at?: string
+          sender?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outreach_inbox_prospect_id_fkey"
+            columns: ["prospect_id"]
+            isOneToOne: false
+            referencedRelation: "outreach_prospects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       outreach_knowledge: {
         Row: {
           active: boolean
@@ -1997,11 +2047,13 @@ export type Database = {
           id: string
           message_id: string | null
           prospect_id: string
+          scheduled_at: string | null
           sent_at: string | null
           sources: Json
           status: string
           step: number
           subject: string | null
+          template_key: string | null
           updated_at: string
         }
         Insert: {
@@ -2015,11 +2067,13 @@ export type Database = {
           id?: string
           message_id?: string | null
           prospect_id: string
+          scheduled_at?: string | null
           sent_at?: string | null
           sources?: Json
           status?: string
           step: number
           subject?: string | null
+          template_key?: string | null
           updated_at?: string
         }
         Update: {
@@ -2033,11 +2087,13 @@ export type Database = {
           id?: string
           message_id?: string | null
           prospect_id?: string
+          scheduled_at?: string | null
           sent_at?: string | null
           sources?: Json
           status?: string
           step?: number
           subject?: string | null
+          template_key?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -2050,12 +2106,94 @@ export type Database = {
           },
         ]
       }
+      outreach_outbox: {
+        Row: {
+          accepted_at: string | null
+          append_attempted_at: string | null
+          attempted_at: string | null
+          copy_status: string
+          created_at: string
+          id: string
+          last_error: string | null
+          message_id: string
+          mime: string | null
+          outreach_message_id: string
+          prospect_id: string
+          recipient: string
+          rendered_html: string
+          rendered_text: string
+          sent_folder: string | null
+          smtp_status: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          append_attempted_at?: string | null
+          attempted_at?: string | null
+          copy_status?: string
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          message_id: string
+          mime?: string | null
+          outreach_message_id: string
+          prospect_id: string
+          recipient: string
+          rendered_html: string
+          rendered_text: string
+          sent_folder?: string | null
+          smtp_status?: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          append_attempted_at?: string | null
+          attempted_at?: string | null
+          copy_status?: string
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          message_id?: string
+          mime?: string | null
+          outreach_message_id?: string
+          prospect_id?: string
+          recipient?: string
+          rendered_html?: string
+          rendered_text?: string
+          sent_folder?: string | null
+          smtp_status?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outreach_outbox_outreach_message_id_fkey"
+            columns: ["outreach_message_id"]
+            isOneToOne: true
+            referencedRelation: "outreach_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "outreach_outbox_prospect_id_fkey"
+            columns: ["prospect_id"]
+            isOneToOne: false
+            referencedRelation: "outreach_prospects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       outreach_prospects: {
         Row: {
           city: string | null
+          contact_name: string | null
           country: string
           created_at: string
           domain: string | null
+          eligibility_checked_at: string | null
+          eligibility_checked_by: string | null
+          eligibility_note: string | null
           email: string | null
           error: string | null
           evidence: Json
@@ -2069,6 +2207,7 @@ export type Database = {
           phone: string | null
           qualification_reason: string | null
           qualified: boolean
+          recipient_eligibility: string
           replied_at: string | null
           source: string
           source_url: string | null
@@ -2080,9 +2219,13 @@ export type Database = {
         }
         Insert: {
           city?: string | null
+          contact_name?: string | null
           country: string
           created_at?: string
           domain?: string | null
+          eligibility_checked_at?: string | null
+          eligibility_checked_by?: string | null
+          eligibility_note?: string | null
           email?: string | null
           error?: string | null
           evidence?: Json
@@ -2096,6 +2239,7 @@ export type Database = {
           phone?: string | null
           qualification_reason?: string | null
           qualified?: boolean
+          recipient_eligibility?: string
           replied_at?: string | null
           source?: string
           source_url?: string | null
@@ -2107,9 +2251,13 @@ export type Database = {
         }
         Update: {
           city?: string | null
+          contact_name?: string | null
           country?: string
           created_at?: string
           domain?: string | null
+          eligibility_checked_at?: string | null
+          eligibility_checked_by?: string | null
+          eligibility_note?: string | null
           email?: string | null
           error?: string | null
           evidence?: Json
@@ -2123,6 +2271,7 @@ export type Database = {
           phone?: string | null
           qualification_reason?: string | null
           qualified?: boolean
+          recipient_eligibility?: string
           replied_at?: string | null
           source?: string
           source_url?: string | null
@@ -2197,35 +2346,74 @@ export type Database = {
         Row: {
           cities: Json
           daily_limit: number
+          inbox_cursor: number
+          inbox_validity: string | null
           key: string
+          lease_token: string | null
+          lease_until: string | null
           markets: string[]
+          min_interval_seconds: number
+          next_delivery_at: string | null
           pause_reason: string | null
           paused: boolean
+          preflight: Json
+          provider_approval_reference: string | null
+          provider_verified_at: string | null
           send_markets: string[]
           sender_email: string | null
+          timezone: string
           updated_at: string
+          weekdays: number[]
+          window_end: number
+          window_start: number
         }
         Insert: {
           cities?: Json
           daily_limit?: number
+          inbox_cursor?: number
+          inbox_validity?: string | null
           key?: string
+          lease_token?: string | null
+          lease_until?: string | null
           markets?: string[]
+          min_interval_seconds?: number
+          next_delivery_at?: string | null
           pause_reason?: string | null
           paused?: boolean
+          preflight?: Json
+          provider_approval_reference?: string | null
+          provider_verified_at?: string | null
           send_markets?: string[]
           sender_email?: string | null
+          timezone?: string
           updated_at?: string
+          weekdays?: number[]
+          window_end?: number
+          window_start?: number
         }
         Update: {
           cities?: Json
           daily_limit?: number
+          inbox_cursor?: number
+          inbox_validity?: string | null
           key?: string
+          lease_token?: string | null
+          lease_until?: string | null
           markets?: string[]
+          min_interval_seconds?: number
+          next_delivery_at?: string | null
           pause_reason?: string | null
           paused?: boolean
+          preflight?: Json
+          provider_approval_reference?: string | null
+          provider_verified_at?: string | null
           send_markets?: string[]
           sender_email?: string | null
+          timezone?: string
           updated_at?: string
+          weekdays?: number[]
+          window_end?: number
+          window_start?: number
         }
         Relationships: []
       }
@@ -2244,6 +2432,48 @@ export type Database = {
           created_at?: string
           reason?: string
           value?: string
+        }
+        Relationships: []
+      }
+      outreach_templates: {
+        Row: {
+          active: boolean
+          body: string
+          created_at: string
+          key: string
+          kind: string
+          language: string
+          step: number
+          subject: string
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          active?: boolean
+          body: string
+          created_at?: string
+          key: string
+          kind: string
+          language: string
+          step: number
+          subject: string
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          active?: boolean
+          body?: string
+          created_at?: string
+          key?: string
+          kind?: string
+          language?: string
+          step?: number
+          subject?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
@@ -2807,6 +3037,7 @@ export type Database = {
         Args: { _id: string; _token: string }
         Returns: boolean
       }
+      acquire_mario_delivery: { Args: { p_token: string }; Returns: boolean }
       activate_price_list: { Args: { _id: string }; Returns: undefined }
       apply_active_price_list: { Args: never; Returns: undefined }
       bruno_message_page: {
@@ -2891,6 +3122,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      mario_kpis: { Args: never; Returns: Json }
       mario_prospect_summary: {
         Args: never
         Returns: {
@@ -2901,6 +3133,10 @@ export type Database = {
         }[]
       }
       queue_roberta_run: { Args: never; Returns: undefined }
+      reserve_mario_submission: {
+        Args: { p_id: string; p_token: string }
+        Returns: boolean
+      }
       save_email_signature: {
         Args: { _fields: Json; _id: string; _mailbox: string }
         Returns: {
