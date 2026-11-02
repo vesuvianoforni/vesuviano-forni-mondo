@@ -4,8 +4,8 @@ import { firecrawl, apify, scrapeBusiness } from './providers.ts';
 import { publicWebsite, businessEmail, canDraft, validateSequence, marioSystemPrompt, MARIO_SENDER } from './policy.ts';
 import { marioKnowledge } from './knowledge.ts';
 import { marioObject } from './ai.ts';
-import { containsPrices } from '../_shared/marketing-policy.ts';
-import { renderMailboxEmail } from '../_shared/email-layout.ts';
+import { containsPrices } from '../marketing-policy.ts';
+import { renderMailboxEmail } from '../email-layout.ts';
 
 export const SearchInput = z.object({ kind: z.enum(['pizzeria', 'partner']), country: z.enum(['UK', 'FR', 'DE']), city: z.string().trim().min(2).max(80), limit: z.number().int().min(1).max(50) });
 export type SearchArgs = z.infer<typeof SearchInput>;

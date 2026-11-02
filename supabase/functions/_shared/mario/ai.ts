@@ -1,7 +1,7 @@
 import { createOpenAI } from 'npm:@ai-sdk/openai@3';
 import { streamText, Output } from 'npm:ai@6';
 import { z } from 'npm:zod@3';
-import { createLovableAiGatewayRunIdFetch } from '../_shared/mario-run-id.ts';
+import { createLovableAiGatewayRunIdFetch } from '../mario-run-id.ts';
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 
 export async function marioObject<T extends z.ZodTypeAny>(db: SupabaseClient, request: Request, system: string, prompt: string, schema: T): Promise<z.infer<T>> {

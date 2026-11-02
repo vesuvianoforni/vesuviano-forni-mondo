@@ -1,7 +1,7 @@
 // Existing raw Responses client retained; bounded tools execute server-side.
-import { marioKnowledge } from '../mario-agent/knowledge.ts';
-import { marioSystemPrompt } from '../mario-agent/policy.ts';
-import { SearchInput, searchEngine, enrichEngine, draftEngine } from '../mario-agent/engines.ts';
+import { marioKnowledge } from '../_shared/mario/knowledge.ts';
+import { marioSystemPrompt } from '../_shared/mario/policy.ts';
+import { SearchInput, searchEngine, enrichEngine, draftEngine } from '../_shared/mario/engines.ts';
 import { createLovableAiGatewayRunIdFetch, getLovableAiGatewayResponseHeaders } from '../_shared/mario-run-id.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';

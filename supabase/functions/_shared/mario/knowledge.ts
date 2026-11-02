@@ -1,6 +1,6 @@
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
-import { loadCatalog } from '../_shared/marketing-catalog.ts';
-import { catalogWithoutPrices } from '../_shared/marketing-policy.ts';
+import { loadCatalog } from '../marketing-catalog.ts';
+import { catalogWithoutPrices } from '../marketing-policy.ts';
 
 export async function marioKnowledge(db: SupabaseClient, language = 'en') {
   const [config, knowledge, product, catalog] = await Promise.all([

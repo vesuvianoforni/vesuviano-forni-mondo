@@ -1,4 +1,4 @@
-import { MARIO_SENDER, SEQUENCE_DAYS, canDraft, publicWebsite, businessEmail, validateSequence } from './policy.ts';
+import { MARIO_SENDER, SEQUENCE_DAYS, canDraft, publicWebsite, businessEmail, validateSequence } from '../_shared/mario/policy.ts';
 function equal(a: unknown, b: unknown) { if (JSON.stringify(a) !== JSON.stringify(b)) throw new Error(`${JSON.stringify(a)} != ${JSON.stringify(b)}`); }
 function throws(f: () => unknown) { let failed=false; try { f(); } catch { failed=true; } if (!failed) throw new Error('Expected rejection'); }
 const candidate = { qualified:true,email:'contact@pizzeria.co.uk',status:'new',country:'UK',replied_at:null };

@@ -1,8 +1,8 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
-import { SearchInput, searchEngine, startApify, collectApify, enrichEngine, draftEngine, checked } from './engines.ts';
-import { MARIO_VERSION, marioSystemPrompt, publicWebsite } from './policy.ts';
+import { SearchInput, searchEngine, startApify, collectApify, enrichEngine, draftEngine, checked } from '../_shared/mario/engines.ts';
+import { MARIO_VERSION, marioSystemPrompt, publicWebsite } from '../_shared/mario/policy.ts';
 
 const Body = z.discriminatedUnion('action', [
   z.object({ action: z.literal('overview') }),
