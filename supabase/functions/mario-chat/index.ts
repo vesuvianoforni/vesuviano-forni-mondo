@@ -57,6 +57,7 @@ Deno.serve(async (req) => {
     };
 
     const kb = await marioKnowledge(admin);
+    if (!kb.config) { await failSaved(); return json({ error: 'Impostazioni Mario non disponibili; richiesta salvata.' }, 503); }
     if (kb.config.ai_status) { await failSaved(); return json({ error: kb.config.ai_reason ?? 'AI in pausa' }, kb.config.ai_status); }
     const [{ data: totals, error: totalsError }, { data: prospects, error: prospectsError }] = await Promise.all([
       admin.rpc('mario_prospect_summary'),
