@@ -1,5 +1,10 @@
 # Roadmap
 
+## Mario: richieste e chat ritrovabili (2 nov 2026)
+- [ ] Salvare richieste e risposte sul servizio collegato prima di eseguire Mario; importare lo storico locale e recuperare la richiesta Londra dai piani salvati.
+- [ ] Cronologia riapribile, conversazione selezionata stabile e nessuna perdita silenziosa durante salvataggio o cambio pagina.
+- [ ] Test persistenza/isolamento e verifica rilettura; accesso autenticato reale non disponibile per Supabase esterno.
+
 ## Mario: proposta e approvazione nella conversazione (2 nov 2026)
 - [x] Piano salvato direttamente sotto la risposta di Mario, con approvazione, conferma e stato condivisi con Ricerca; rimosso il passaggio obbligatorio Rivedi piano. Riutilizzata la presentazione esistente e AI Elements Tool per i dettagli chiusi; trasporto/storico legacy invariati per evitare una migrazione fuori ambito.
 - [x] Flusso simulato proposta→conferma annullata→approvazione→avanzamento→arresto→rilettura e seconda conversazione senza dati dell’altra verificato a 1280×1800, 1353×936 e 390×844, senza overflow/errori. Build OK; controllo qualità globale con 361 errori preesistenti, nessun errore nei file modificati (due avvisi nei nuovi elementi). Nessuna ricerca/email reale avviata; prova autenticata completa resta non disponibile per Supabase esterno.
