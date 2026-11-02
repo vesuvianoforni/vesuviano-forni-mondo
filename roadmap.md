@@ -1,5 +1,9 @@
 # Roadmap
 
+## Mario: proposta e approvazione nella conversazione (2 nov 2026)
+- [ ] Mostrare il piano salvato direttamente sotto la risposta di Mario con approvazione, conferma e stato condivisi con Ricerca; mantenere chat e regole esistenti.
+- [ ] Verificare comparsa del piano, conferma annullata/approvata, rilettura e isolamento tra conversazioni senza avviare servizi reali.
+
 ## Mario: autopilot della ricerca (2 nov 2026)
 - [x] Richiesta in chat e piano persistente basato su impostazioni, conoscenze, riepiloghi archivio Mario e CRM; nuova proposta per modifiche, nessuna ricerca prima dell’approvazione.
 - [x] Approvazione atomica staff, un piano attivo, ambito immutabile (max 12 passaggi/100 risultati/20 verifiche come limiti tecnici iniziali), progressi, arresto e risultati in archivio senza autorizzare invii. Worker separato avviato da eventi DB e webhook terminali Apify, senza cron permanente; esiti incerti arrestati senza reinvio. Domini già CRM esclusi quando ricavabili dall’email aziendale; criteri non verificabili richiedono revisione.
