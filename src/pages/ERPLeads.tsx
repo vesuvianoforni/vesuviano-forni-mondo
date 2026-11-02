@@ -253,8 +253,9 @@ export default function ERPLeads() {
     return matchesSearch && matchesPipeline;
   });
 
-  const activeLeads = filteredLeads.filter((lead) => kanbanStatuses.some((s) => s.id === lead.status));
-  const closedLeads = filteredLeads.filter((lead) => lead.status === "vinto" || lead.status === "perso");
+  const activeLeads = sortCRMLeads(filteredLeads.filter((lead) => kanbanStatuses.some((s) => s.id === lead.status)), sort, interactions);
+  const closedLeads = sortCRMLeads(filteredLeads.filter((lead) => lead.status === "vinto" || lead.status === "perso"), sort, interactions);
+  const listLeads = showClosed ? sortCRMLeads(filteredLeads, sort, interactions) : activeLeads;
 
   const leadsByStatus = kanbanStatuses.reduce((acc, status) => {
     acc[status.id] = activeLeads.filter((lead) => lead.status === status.id);
@@ -400,78 +401,60 @@ export default function ERPLeads() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <TrendingUp className="h-4 w-4 text-blue-600" />
-              <div>
-                <p className="text-sm text-muted-foreground">Lead Totali</p>
-                <p className="text-2xl font-bold">{totalLeads}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Calendar className="h-4 w-4 text-green-600" />
-              <div>
-                <p className="text-sm text-muted-foreground">Questa Settimana</p>
-                <p className="text-2xl font-bold">{recentLeads}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Trophy className="h-4 w-4 text-emerald-600" />
-              <div>
-                <p className="text-sm text-muted-foreground">Tasso Vittoria</p>
-                <p className="text-2xl font-bold">{totalLeads > 0 ? Math.round((wonCount / totalLeads) * 100) : 0}%</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Building2 className="h-4 w-4 text-orange-600" />
-              <div>
-                <p className="text-sm text-muted-foreground">Valore Totale</p>
-                <p className="text-2xl font-bold">€{totalValue.toLocaleString()}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+        {[
+          { icon: TrendingUp, label: "Lead totali", value: totalLeads },
+          { icon: Calendar, label: "Questa settimana", value: recentLeads },
+          { icon: Trophy, label: "Tasso vittoria", value: `${totalLeads > 0 ? Math.round((wonCount / totalLeads) * 100) : 0}%` },
+          { icon: Building2, label: "Valore totale", value: `€${totalValue.toLocaleString("it-IT")}` },
+        ].map(({ icon: Icon, label, value }) => (
+          <div key={label} className="flex min-w-0 items-center gap-2 rounded-lg border bg-card px-3 py-2">
+            <Icon aria-hidden="true" className="h-4 w-4 shrink-0 text-primary" />
+            <span className="truncate text-xs text-muted-foreground">{label}</span>
+            <span className="ml-auto text-base font-bold">{value}</span>
+          </div>
+        ))}
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-4 items-center">
-        <div className="relative flex-1 min-w-0 basis-full sm:basis-[200px]">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Cerca lead..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative min-w-0 flex-1 basis-full sm:basis-[200px]">
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input placeholder="Cerca lead..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="h-9 pl-10" />
         </div>
         <Select value={selectedPipeline} onValueChange={setSelectedPipeline}>
-          <SelectTrigger className="w-[180px]"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="h-9 w-[150px]" aria-label="Pipeline"><SelectValue /></SelectTrigger>
           <SelectContent>
             {pipelines.map((p) => (
               <SelectItem key={p} value={p}>{p}</SelectItem>
             ))}
           </SelectContent>
         </Select>
-        <Button variant={showClosed ? "default" : "outline"} onClick={() => setShowClosed(!showClosed)}>
-          {showClosed ? "Nascondi Chiusi" : `Mostra Chiusi (${closedLeads.length})`}
+        <Select value={sort} onValueChange={v => setSort(v as CRMLeadSort)}>
+          <SelectTrigger className="h-9 w-[190px]" aria-label="Ordina per"><ArrowUpDown className="mr-1 h-3.5 w-3.5 shrink-0" /><SelectValue /></SelectTrigger>
+          <SelectContent>
+            {(Object.keys(crmLeadSortLabels) as CRMLeadSort[]).map(key => <SelectItem key={key} value={key}>{crmLeadSortLabels[key]}</SelectItem>)}
+          </SelectContent>
+        </Select>
+        <Button size="sm" className="h-9" variant={showClosed ? "default" : "outline"} onClick={() => setShowClosed(!showClosed)}>
+          {showClosed ? "Nascondi chiusi" : `Mostra chiusi (${closedLeads.length})`}
         </Button>
+        <ToggleGroup type="single" variant="outline" size="sm" value={view} onValueChange={v => v && setView(v as "board" | "list")} aria-label="Vista">
+          <ToggleGroupItem value="board" aria-label="Vista board" className="h-9 gap-1.5"><LayoutGrid className="h-4 w-4" /><span className="hidden sm:inline">Board</span></ToggleGroupItem>
+          <ToggleGroupItem value="list" aria-label="Vista elenco" className="h-9 gap-1.5"><List className="h-4 w-4" /><span className="hidden sm:inline">Elenco</span></ToggleGroupItem>
+        </ToggleGroup>
       </div>
 
+      {view === "list" ? (
+        <CRMLeadList leads={listLeads} interactions={interactions} interactionState={interactionState} now={now}
+          sort={sort} onSort={setSort} onOpen={openLead} onConverse={lead => openLead(lead, "comunicazioni")} onSchedule={lead => handleEditLead(lead, true)} />
+      ) : <>
       {/* Kanban Board */}
       <DragDropContext onDragEnd={onDragEnd}>
-        <div role="region" aria-label="Pipeline clienti" tabIndex={0} className="flex w-full min-w-0 max-w-full gap-4 overflow-x-auto pb-4">
+        <div role="region" aria-label="Pipeline clienti" tabIndex={0} className="flex w-full min-w-0 max-w-full gap-3 overflow-x-auto pb-4">
           {kanbanStatuses.map((status) => (
-            <div key={status.id} className="w-80 shrink-0 rounded-lg bg-muted/30 p-4">
-              <div className="flex items-center justify-between mb-4">
+            <div key={status.id} className="w-72 shrink-0 rounded-lg bg-muted/30 p-2.5">
+              <div className="mb-2.5 flex items-center justify-between px-1">
                 <h3 className="font-semibold text-sm">{status.title}</h3>
                 <Badge variant="secondary" className={status.color}>
                   {leadsByStatus[status.id]?.length || 0}
