@@ -9,7 +9,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Search, TrendingUp, Building2, Calendar, Trophy } from "lucide-react";
+import { Plus, Search, TrendingUp, Building2, Calendar, Trophy, ArrowUpDown, LayoutGrid, List } from "lucide-react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { CRMLeadList } from "@/components/erp/CRMLeadList";
+import { sortCRMLeads, crmLeadSortLabels, type CRMLeadSort } from "@/lib/crmLeadSort";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import { ACTIVE_CRM_STAGES, CRM_STAGES } from "@/lib/crmPipeline";
 import { CRMLeadCard, type CRMLead as Lead } from "@/components/erp/CRMLeadCard";
@@ -50,6 +53,9 @@ export default function ERPLeads() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPipeline, setSelectedPipeline] = useState<string>("Vesuviano");
   const [showClosed, setShowClosed] = useState(false);
+  const [view, setView] = useState<"board" | "list">(() => (localStorage.getItem("crm-view") === "list" ? "list" : "board"));
+  const [sort, setSort] = useState<CRMLeadSort>(() => { const s = localStorage.getItem("crm-sort"); return s && s in crmLeadSortLabels ? (s as CRMLeadSort) : "last_contact"; });
+  useEffect(() => { localStorage.setItem("crm-view", view); localStorage.setItem("crm-sort", sort); }, [view, sort]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isActivityDialogOpen, setIsActivityDialogOpen] = useState(false);
@@ -462,7 +468,7 @@ export default function ERPLeads() {
               </div>
               <Droppable droppableId={status.id}>
                 {(provided, snapshot) => (
-                  <div {...provided.droppableProps} ref={provided.innerRef} className={`space-y-3 min-h-[200px] ${snapshot.isDraggingOver ? "bg-muted/50" : ""}`}>
+                  <div {...provided.droppableProps} ref={provided.innerRef} className={`space-y-2 min-h-[200px] ${snapshot.isDraggingOver ? "bg-muted/50" : ""}`}>
                     {leadsByStatus[status.id]?.map((lead, index) => (
                       <Draggable key={lead.id} draggableId={lead.id} index={index} disableInteractiveElementBlocking>
                         {(provided, snapshot) => (
@@ -512,6 +518,7 @@ export default function ERPLeads() {
           </div>
         </div>
       )}
+      </>}
 
       <Dialog open={isActivityDialogOpen} onOpenChange={setIsActivityDialogOpen}>
         <DialogContent className="max-w-lg">
