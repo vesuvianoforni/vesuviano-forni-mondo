@@ -71,6 +71,7 @@ const ERPLeads = lazy(() => import("./pages/ERPLeads"));
 const ERPBruno = lazy(() => import("./pages/ERPBruno"));
 const ERPProdotti = lazy(() => import("./pages/ERPProdotti"));
 const ERPListino = lazy(() => import("./pages/ERPListino"));
+const ERPControlloGestione = lazy(() => import("./pages/ERPControlloGestione"));
 const ERPOrdini = lazy(() => import("./pages/ERPOrdini"));
 const ERPUtenti = lazy(() => import("./pages/ERPUtenti"));
 const ERPProntaConsegna = lazy(() => import("./pages/ERPProntaConsegna"));
@@ -393,6 +394,7 @@ const App = () => {
                 <Route path="roberta" element={<ERPRoberta />} />
                 <Route path="prodotti" element={<ERPProdotti />} />
                 <Route path="listino" element={<ERPListino />} />
+                <Route path="controllo-gestione" element={<ERPControlloGestione />} />
                 <Route path="listini" element={<Navigate to="/erp/listino" replace />} />
                 <Route path="listino-rivenditori" element={<Navigate to="/erp/listino" replace />} />
                 <Route path="leads" element={<Navigate to="/erp/crm" replace />} />
