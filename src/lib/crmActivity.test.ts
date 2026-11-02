@@ -43,5 +43,5 @@ test("recorded WhatsApp messages count as the lead's last interaction", () => {
     { kind: "form", at: "2026-10-01T10:00:00Z", email: "a@b.it" },
     { kind: "whatsapp", at: "2026-11-02T09:00:00Z", leadId: "L1" },
   ]);
-  expect(result.L1?.kind).toBe("whatsapp");
+  assert.equal(result.L1?.kind, "whatsapp");
 });
