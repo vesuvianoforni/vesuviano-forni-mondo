@@ -873,6 +873,30 @@ export type Database = {
           },
         ]
       }
+      discount_tiers: {
+        Row: {
+          code: string
+          label: string
+          percentage: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          label: string
+          percentage?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          label?: string
+          percentage?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       email_folder_cursors: {
         Row: {
           created_at: string
@@ -1311,6 +1335,8 @@ export type Database = {
           contact_name: string | null
           country: string | null
           created_at: string
+          customer_type: string
+          discount_override: number | null
           email: string | null
           id: string
           next_activity_assigned_to: string | null
@@ -1337,6 +1363,8 @@ export type Database = {
           contact_name?: string | null
           country?: string | null
           created_at?: string
+          customer_type?: string
+          discount_override?: number | null
           email?: string | null
           id?: string
           next_activity_assigned_to?: string | null
@@ -1363,6 +1391,8 @@ export type Database = {
           contact_name?: string | null
           country?: string | null
           created_at?: string
+          customer_type?: string
+          discount_override?: number | null
           email?: string | null
           id?: string
           next_activity_assigned_to?: string | null
@@ -1857,6 +1887,156 @@ export type Database = {
         }
         Relationships: []
       }
+      price_lists: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          status: string
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          status?: string
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          status?: string
+          updated_at?: string
+          year?: number
+        }
+        Relationships: []
+      }
+      product_prices: {
+        Row: {
+          amount: number | null
+          created_at: string
+          currency: string
+          id: string
+          market: string
+          price_list_id: string
+          product_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string
+          currency?: string
+          id?: string
+          market: string
+          price_list_id: string
+          product_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string
+          currency?: string
+          id?: string
+          market?: string
+          price_list_id?: string
+          product_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_prices_price_list_id_fkey"
+            columns: ["price_list_id"]
+            isOneToOne: false
+            referencedRelation: "price_lists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_prices_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          burner_id: string | null
+          category: string
+          coating: string | null
+          component: string | null
+          cost: number | null
+          cost_currency: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          oven_id: string | null
+          size_label: string | null
+          sort_order: number
+          source_key: string | null
+          updated_at: string
+        }
+        Insert: {
+          burner_id?: string | null
+          category?: string
+          coating?: string | null
+          component?: string | null
+          cost?: number | null
+          cost_currency?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          oven_id?: string | null
+          size_label?: string | null
+          sort_order?: number
+          source_key?: string | null
+          updated_at?: string
+        }
+        Update: {
+          burner_id?: string | null
+          category?: string
+          coating?: string | null
+          component?: string | null
+          cost?: number | null
+          cost_currency?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          oven_id?: string | null
+          size_label?: string | null
+          sort_order?: number
+          source_key?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_burner_id_fkey"
+            columns: ["burner_id"]
+            isOneToOne: false
+            referencedRelation: "burners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_oven_id_fkey"
+            columns: ["oven_id"]
+            isOneToOne: false
+            referencedRelation: "configurator_ovens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       proforma_items: {
         Row: {
           ai_render_url: string | null
@@ -2190,6 +2370,8 @@ export type Database = {
         Args: { _id: string; _token: string }
         Returns: boolean
       }
+      activate_price_list: { Args: { _id: string }; Returns: undefined }
+      apply_active_price_list: { Args: never; Returns: undefined }
       bruno_message_page: {
         Args: {
           p_before_at?: string
