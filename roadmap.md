@@ -1,9 +1,9 @@
 # Roadmap
 
 ## Mario: revisione template orientati all’aiuto (2 nov 2026)
-- [ ] Firma con info@, pulsante WhatsApp localizzato e immagini sul dominio vesuvianoforni.com.
-- [ ] Rivedere dodici testi EN/FR e istruzioni di scrittura: consigli utili prima della proposta commerciale.
-- [ ] Verificare modelli, immagini, collegamenti e test senza invii; preservare contenuti già approvati.
+- [x] Firma visibile info@vesuvianoforni.com, pulsante WhatsApp EN/FR con messaggio localizzato; logo da https://vesuvianoforni.com/lovable-uploads/vesuviano-logo-bianco.png (redirect pubblico verso www verificato), nessuna immagine Lovable. Mittente SMTP dedicato invariato.
+- [x] Dodici testi EN/FR riscritti: checklist accessi/energia/brief, follow-up con chiarimento aggiuntivo, chiusura gentile; istruzioni condivise aggiornate senza alterare modello AI, invii o cadenza. Fonti: Mailchimp style guide e Google sender guidelines; nessuna promessa di risultati.
+- [x] 51 test superati; preview UI simulata verificata con info@, pulsante WhatsApp corretto e logo realmente caricato. Nessuna modifica alle sequenze già approvate. Verifica autenticata reale non disponibile con Supabase esterno. Generazione AI restituita strutturalmente valida ma con richiesta di verifica del prospect, non email utilizzabili: prova interrotta, nessun ulteriore tentativo né invio.
 
 ## Mario: email HTML, archivio e avvio controllato (2 nov 2026)
 - [x] Chat centrale persistente, archivio pizzerie/partner paginato a 25, scheda con fonti e idoneità; sequenze, email HTML, KPI e impostazioni affiancati; chat accessibile su mobile.
