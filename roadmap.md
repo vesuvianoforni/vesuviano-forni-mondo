@@ -1,8 +1,8 @@
 # Roadmap
 
 ## Caricamento progressivo Bruno
-- [ ] Aprire gli ultimi 50 messaggi e caricare 50 precedenti su richiesta, con filtri e conteggi completi, senza salti di lettura né doppioni.
-- [ ] Evitare lo scaricamento dello storico di tutti i clienti all’apertura; verificare paginazione, aggiornamenti e isolamento fra clienti.
+- [x] Ultimi 50 messaggi e 50 precedenti su richiesta, cursore stabile data/id, filtri server-side, conteggi completi, posizione preservata e nuovi eventi uniti senza riscaricare lo storico.
+- [x] Riepiloghi aggregati al posto dello storico globale all’apertura e letture messaggi duplicate eliminate da Bruno; 18 test superati, build OK e flusso verificato con dati simulati a 1442×936, 390×844 e 1280×1800 (storico completo, filtri, doppioni, riprova e cambio cliente). Indice e due pagine reali da 50 senza sovrapposizioni verificati, permessi invoker/anon negato confermati; accesso ERP autenticato e chiamate RPC reali non verificabili con gli strumenti disponibili. Nessun invio.
 
 ## Leggibilità e composizione Bruno
 - [x] Elenco clienti più ampio, ricerca e filtri raggruppati, priorità non invasive, intestazione compatta, messaggi con mittente/data e scelta esplicita del canale d’invio separata dai filtri; collegamenti e invii invariati.
