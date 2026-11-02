@@ -1,6 +1,6 @@
 // Roberta internal marketing chat: streams plain text answers using real catalog material.
-import { loadCatalog } from '../newsletter/catalog.ts';
-import { OCCASIONS, requestsPrices, catalogWithoutPrices } from '../newsletter/policy.ts';
+import { loadCatalog } from '../_shared/marketing-catalog.ts';
+import { OCCASIONS, requestsPrices, catalogWithoutPrices } from '../_shared/marketing-policy.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
