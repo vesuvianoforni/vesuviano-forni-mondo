@@ -1925,45 +1925,114 @@ export type Database = {
           },
         ]
       }
+      outreach_agent_config: {
+        Row: {
+          created_at: string
+          instructions: string
+          key: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          instructions?: string
+          key?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          instructions?: string
+          key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      outreach_knowledge: {
+        Row: {
+          active: boolean
+          content: string
+          created_at: string
+          id: string
+          source_url: string | null
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          active?: boolean
+          content: string
+          created_at?: string
+          id?: string
+          source_url?: string | null
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          active?: boolean
+          content?: string
+          created_at?: string
+          id?: string
+          source_url?: string | null
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       outreach_messages: {
         Row: {
+          approved_at: string | null
+          approved_by: string | null
           body: string | null
           created_at: string
           direction: string
           error: string | null
+          html: string | null
           id: string
           message_id: string | null
           prospect_id: string
           sent_at: string | null
+          sources: Json
           status: string
           step: number
           subject: string | null
+          updated_at: string
         }
         Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
           body?: string | null
           created_at?: string
           direction?: string
           error?: string | null
+          html?: string | null
           id?: string
           message_id?: string | null
           prospect_id: string
           sent_at?: string | null
+          sources?: Json
           status?: string
           step: number
           subject?: string | null
+          updated_at?: string
         }
         Update: {
+          approved_at?: string | null
+          approved_by?: string | null
           body?: string | null
           created_at?: string
           direction?: string
           error?: string | null
+          html?: string | null
           id?: string
           message_id?: string | null
           prospect_id?: string
           sent_at?: string | null
+          sources?: Json
           status?: string
           step?: number
           subject?: string | null
+          updated_at?: string
         }
         Relationships: [
           {
@@ -1983,6 +2052,7 @@ export type Database = {
           domain: string | null
           email: string | null
           error: string | null
+          evidence: Json
           id: string
           kind: string
           last_sent_at: string | null
@@ -1991,6 +2061,8 @@ export type Database = {
           next_send_at: string | null
           personalization: string | null
           phone: string | null
+          qualification_reason: string | null
+          qualified: boolean
           replied_at: string | null
           source: string
           source_url: string | null
@@ -2007,6 +2079,7 @@ export type Database = {
           domain?: string | null
           email?: string | null
           error?: string | null
+          evidence?: Json
           id?: string
           kind?: string
           last_sent_at?: string | null
@@ -2015,6 +2088,8 @@ export type Database = {
           next_send_at?: string | null
           personalization?: string | null
           phone?: string | null
+          qualification_reason?: string | null
+          qualified?: boolean
           replied_at?: string | null
           source?: string
           source_url?: string | null
@@ -2031,6 +2106,7 @@ export type Database = {
           domain?: string | null
           email?: string | null
           error?: string | null
+          evidence?: Json
           id?: string
           kind?: string
           last_sent_at?: string | null
@@ -2039,6 +2115,8 @@ export type Database = {
           next_send_at?: string | null
           personalization?: string | null
           phone?: string | null
+          qualification_reason?: string | null
+          qualified?: boolean
           replied_at?: string | null
           source?: string
           source_url?: string | null
@@ -2060,35 +2138,50 @@ export type Database = {
       }
       outreach_runs: {
         Row: {
+          actor_run_id: string | null
           created_at: string
+          created_by: string | null
+          dataset_id: string | null
           error: string | null
           finished_at: string | null
           found: number
           id: string
+          input: Json
           kind: string
           lease_until: string
+          result: Json
           sent: number
           status: string
         }
         Insert: {
+          actor_run_id?: string | null
           created_at?: string
+          created_by?: string | null
+          dataset_id?: string | null
           error?: string | null
           finished_at?: string | null
           found?: number
           id?: string
+          input?: Json
           kind: string
           lease_until?: string
+          result?: Json
           sent?: number
           status?: string
         }
         Update: {
+          actor_run_id?: string | null
           created_at?: string
+          created_by?: string | null
+          dataset_id?: string | null
           error?: string | null
           finished_at?: string | null
           found?: number
           id?: string
+          input?: Json
           kind?: string
           lease_until?: string
+          result?: Json
           sent?: number
           status?: string
         }
@@ -2753,6 +2846,10 @@ export type Database = {
           preview: string
         }[]
       }
+      claim_mario_run: {
+        Args: { p_input: Json; p_kind: string; p_user: string }
+        Returns: string
+      }
       claim_roberta_run: {
         Args: { _id: string; _token: string }
         Returns: {
@@ -2787,6 +2884,15 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      mario_prospect_summary: {
+        Args: never
+        Returns: {
+          country: string
+          kind: string
+          status: string
+          total: number
+        }[]
       }
       queue_roberta_run: { Args: never; Returns: undefined }
       save_email_signature: {
