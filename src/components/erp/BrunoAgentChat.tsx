@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import type { LucideIcon } from "lucide-react";
 import { Bot, CornerDownLeft, Loader2, SlidersHorizontal, Square } from "lucide-react";
@@ -21,7 +21,7 @@ export interface AgentConfig { fn: string; name: string; description: string; su
 
 const BRUNO: AgentConfig = { fn: "bruno-chat", name: "Bruno", description: "Conosce Vesuviano e il tuo CRM. Chiedi priorità, bozze di email e WhatsApp, risposte alle obiezioni.", suggestions: SUGGESTIONS, instructionsKey: "bruno-agent-instructions", icon: Bot };
 
-export function BrunoAgentChat({ thread, onChange, agent = BRUNO }: { thread: BrunoThread; onChange: (t: BrunoThread) => void; agent?: AgentConfig }) {
+export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTail }: { thread: BrunoThread; onChange: (t: BrunoThread) => void; agent?: AgentConfig; conversationTail?: ReactNode }) {
   const INSTR_KEY = agent.instructionsKey; const FN_URL = FN_BASE + agent.fn; const Icon = agent.icon;
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -103,8 +103,10 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO }: { thread: Br
               </div>
             ))}
             <div ref={endRef} />
+            {conversationTail && <div className={busy ? "hidden" : "min-w-0 border-t pt-4"} aria-label="Proposta di Mario">{conversationTail}</div>}
           </div>
         )}
+        {empty && conversationTail && <div className="mx-auto max-w-3xl py-4" aria-label="Proposta di Mario">{conversationTail}</div>}
       </div>
       {error && <p className="mx-4 mb-2 text-sm text-destructive">{error}</p>}
       <form className="m-4 mt-2 shrink-0 rounded-xl border border-primary/40 bg-card focus-within:border-primary" onSubmit={(e) => { e.preventDefault(); void send(input); }}>
