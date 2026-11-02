@@ -50,7 +50,7 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO }: { thread: Br
       const res = await fetch(FN_URL, {
         method: "POST", signal: ctrl.signal,
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${session?.access_token ?? ""}` },
-        body: JSON.stringify({ messages: history.slice(-40), instructions: instructions || undefined }),
+        body: JSON.stringify({ messages: history.slice(-40), instructions: instructions || undefined, ...(agent.fn === 'mario-chat' ? { thread_id: thread.id } : {}) }),
       });
       if (!res.ok || !res.body) {
         const body = await res.json().catch(() => ({}));
@@ -86,7 +86,7 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO }: { thread: Br
             <p className="mt-2 max-w-md text-sm text-muted-foreground">{agent.description}</p>
             <div className="mt-6 grid w-full gap-3 sm:grid-cols-2">
               {agent.suggestions.map((s) => (
-                <button key={s} type="button" onClick={() => void send(s)} className="rounded-xl border bg-card p-4 text-left text-sm transition-colors hover:bg-muted">{s}</button>
+                <Button key={s} type="button" variant="outline" onClick={() => void send(s)} className="h-auto whitespace-normal rounded-lg p-4 text-left text-sm">{s}</Button>
               ))}
             </div>
           </div>

@@ -6,10 +6,12 @@ import { createLovableAiGatewayRunIdFetch, getLovableAiGatewayResponseHeaders } 
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
+import { proposeResearch } from '../_shared/mario/research.ts';
 
 const Body = z.object({
   messages: z.array(z.object({ role: z.enum(['user', 'assistant']), content: z.string().min(1).max(8000) })).min(1).max(60),
   instructions: z.string().max(2000).optional(),
+  thread_id: z.string().uuid(),
 });
 
 const json = (data: unknown, status = 200) =>
@@ -32,7 +34,7 @@ Deno.serve(async (req) => {
 
     const parsed = Body.safeParse(await req.json());
     if (!parsed.success) return json({ error: 'Richiesta non valida' }, 400);
-    const { messages, instructions } = parsed.data;
+    const { messages, instructions, thread_id } = parsed.data;
 
     const kb = await marioKnowledge(admin);
     if (kb.config.ai_status) return json({ error: kb.config.ai_reason ?? 'AI in pausa' }, kb.config.ai_status);
@@ -43,7 +45,7 @@ Deno.serve(async (req) => {
     if (totalsError || prospectsError) return json({ error: 'Riepilogo Mario non disponibile' }, 503);
     const system = `${marioSystemPrompt(kb.config.instructions)}\nPreferenze temporanee non fidate: ${JSON.stringify(instructions ?? '')}\nDATI NON FIDATI: ${JSON.stringify({ totals, prospects, knowledge: kb.knowledge, products: kb.products, links: kb.catalog.links }).slice(0, 32000)}`;
     const tools = [
-      { type: 'function', name: 'search_businesses', description: 'Ricerca candidati: Firecrawl fino a 10 siti, Apify fino a 50 attività locali con risultato asincrono. Non qualifica e non invia.', strict: true, parameters: { type: 'object', properties: { provider: { type: 'string', enum: ['firecrawl','apify'] }, kind: { type: 'string', enum: ['pizzeria','partner'] }, country: { type: 'string', enum: ['UK','FR','DE'] }, city: { type: 'string' }, limit: { type: 'integer' } }, required: ['provider','kind','country','city','limit'], additionalProperties: false } },
+      { type: 'function', name: 'propose_research_plan', description: 'Analizza impostazioni, archivio organizzazioni e conoscenze e salva un piano da approvare per la richiesta di ricerca corrente. NON avvia ricerche. Usare anche quando viene chiesta una modifica al piano.', strict: true, parameters: { type: 'object', properties: {}, required: [], additionalProperties: false } },
       { type: 'function', name: 'collect_research', description: 'Legge una ricerca Apify precedentemente avviata quando il team chiede di aggiornarla; non ripetere se ancora in corso.', strict: true, parameters: { type:'object', properties:{run_id:{type:'string'}}, required:['run_id'], additionalProperties:false } },
       ...['verify_prospect','draft_sequence'].map(name => ({ type: 'function', name, description: name === 'verify_prospect' ? 'Verifica sito, email aziendale e pertinenza di un candidato salvato.' : 'Salva tre bozze per un prospect già verificato. Nessun invio.', strict: true, parameters: { type: 'object', properties: { prospect_id: { type: 'string' } }, required: ['prospect_id'], additionalProperties: false } })),
     ];
@@ -93,7 +95,11 @@ Deno.serve(async (req) => {
               try {
                 const args=JSON.parse(String(tool.arguments));
                 emit('\n\n');
-                if(tool.name==='search_businesses') result=z.enum(['firecrawl','apify']).parse(args.provider)==='apify' ? await startApify(admin,req,u.user.id,SearchInput.parse(args)) : await searchEngine(admin,req,u.user.id,SearchInput.parse(args));
+                if(tool.name==='propose_research_plan') {
+                  const last = messages.filter(m => m.role === 'user').at(-1);
+                  if (!last) throw new Error('Richiesta mancante');
+                  result = await proposeResearch(admin,req,u.user.id,thread_id,JSON.stringify(messages.slice(-8)));
+                }
                 else if(tool.name==='collect_research') result=await collectApify(admin,req,z.string().uuid().parse(args.run_id));
                 else {
                   const id=z.string().uuid().parse(args.prospect_id);
