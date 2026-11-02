@@ -1,7 +1,7 @@
 # Roadmap
 
 ## Contrasti e colori ERP
-- [ ] Revisione palette ERP: testi e card poco leggibili.
+- [x] Revisione palette ERP: colori scritti a mano sostituiti con il tema in tutte le pagine ERP (487 righe), tema chiaro con accento ambra. Non verificato a schermo con login reale.
 
 ## Catalogo Prodotti, listino annuale e sconti (2 nov 2026)
 - [x] Menu Catalogo con sola voce Prodotti (Forni, Bruciatori, Altri prodotti, Sconti); costo + valuta, listino UK/FR/DE con valuta, margine.
