@@ -1,8 +1,8 @@
 # Roadmap
 
 ## UX/UI Bruno (2 nov 2026)
-- [ ] Contenere testi lunghi, elenco clienti e conversazione nella schermata; evitare che lo scorrimento dei messaggi sposti tutta la pagina.
-- [ ] Verificare filtri, cambio cliente e cronologia lunga con dati di prova; accesso autenticato reale non disponibile per Supabase esterno.
+- [x] Testi lunghi contenuti, elenco e conversazione con larghezze vincolate; scorrimento locale senza spostare la pagina, lettura storico preservata durante aggiornamenti, caricamento/errore/riprova e richieste obsolete isolate per cliente. Su schermi stretti la conversazione mantiene spazio e ritorna all'elenco con il pulsante esistente.
+- [x] Riprodotto lo spostamento orizzontale; filtri, cambio cliente, storico di 271 messaggi, nuovo messaggio, posizione di lettura e riprova verificati con dati di prova a 1273×936, 390×844 e 1280×1800, nessun overflow o errore runtime; 14 test superati e build OK. Accesso autenticato reale non disponibile per Supabase esterno.
 
 ## Preventivatore Zapper per Vesuviano
 - [x] Recuperare il generatore di offerte commerciali da Zapper ER Wing e trasferire le impostazioni Vesuviano presenti nel codice.
