@@ -48,11 +48,8 @@ const mainItems = [
 ];
 
 const catalogItems = [
-  { title: 'Forni', url: '/erp/forni', icon: Flame },
-  { title: 'Bruciatori', url: '/erp/bruciatori', icon: Package },
+  { title: 'Prodotti', url: '/erp/prodotti', icon: Package },
   { title: 'Pronta Consegna', url: '/erp/pronta-consegna', icon: PackageCheck },
-  { title: 'Listini', url: '/erp/listini', icon: DollarSign },
-  { title: 'Listino Rivenditori', url: '/erp/listino-rivenditori', icon: Store },
 ];
 
 const contentItems = [
