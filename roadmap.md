@@ -70,4 +70,10 @@
 
 - [x] Import WhatsApp Gennaro (WaSender) da Zapper — ricevitore pronto; attivazione lato Zapper da fare
 
-- [ ] Mario agente outbound: invio cold email da casella SMTP dedicata su sottodominio (in attesa di casella e credenziali)
+## Mario: motori agentici e conoscenze
+- [x] Casella dedicata ciao@vesuviano-forni.com configurata e accessi IMAP/SMTP verificati senza invii automatici.
+- [ ] Motori ricerca Firecrawl/Apify, verifica contatti e qualificazione con fonti e deduplicazione.
+- [ ] Istruzioni condivise, system prompt protetto e knowledge base Vesuviano modificabile dall’amministratore.
+- [ ] Sequenze 0/3/7 in bozza con anteprima HTML, controlli prezzi, fonti e stop; nessun invio dal modello.
+- [ ] Test dei motori, verifiche reali senza invii e controllo dell’ERP.
+- [ ] Attivazione invii e risposte automatiche: richiede adattamento del motore SMTP durabile alla casella Mario e verifica compatibilità delle condizioni IONOS con i destinatari.
