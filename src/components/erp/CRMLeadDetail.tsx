@@ -1,4 +1,5 @@
 import { priceListLabel } from "@/lib/productPricing";
+import { CustomerDiscountField } from "./CustomerDiscountField";
 import { useEffect, useState } from "react";
 import { Bot, CalendarPlus, Copy, ExternalLink, MessageSquare, MoreHorizontal, Pencil, Phone, Mail, Building2, Trash2, Trophy, XCircle, Zap } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -142,6 +143,7 @@ export function CRMLeadDetail({ lead, open, defaultTab = "riepilogo", onOpenChan
                   <Field label="Valore" value={lead.value ? `€${lead.value.toLocaleString("it-IT")}` : "Non stimato"} />
                   <Field label="Fonte" value={lead.source ? sourceLabels[lead.source] || lead.source : undefined} />
                   <Field label="Assegnato a" value={activityAssignee} />
+                  <CustomerDiscountField leadId={lead.id} />
                   {lead.pipeline === "Vesuviano" && <Button asChild size="sm" variant="outline"><Link to={`/erp/offerte?lead=${encodeURIComponent(lead.id)}`} onClick={() => onOpenChange(false)}><ExternalLink className="mr-1 h-3.5 w-3.5" />Offerte commerciali</Link></Button>}
                 </CardContent>
               </Card>
