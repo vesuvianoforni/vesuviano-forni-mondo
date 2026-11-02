@@ -1,9 +1,11 @@
-import { renderMailboxEmail } from '../email-layout.ts';
+import { renderMailboxEmail, EMAIL_LOGO } from '../email-layout.ts';
 import { MARIO_SENDER } from './policy.ts';
 export const MARIO_SIGNATURE = { id: 'mario', name: 'Gennaro Caglione', role: 'Sales & Export Manager', company: 'Vesuviano Forni', phone: '+39 081 19231684', whatsapp: '+39 350 928 6941', email: MARIO_SENDER, website: 'https://vesuvianoforni.com', address: '', is_default: true };
 export function renderMarioEmail(body: string, language: string) {
   const optout = language === 'fr' ? 'Si vous ne souhaitez plus être contacté, répondez « stop » à cet email.' : 'If you prefer not to hear from us again, reply “stop” to this email.';
-  return renderMailboxEmail(`${body.trim()}\n\n${optout}`, MARIO_SIGNATURE);
+  const rendered=renderMailboxEmail(`${body.trim()}\n\n${optout}`, MARIO_SIGNATURE);
+  // Stable public asset endpoint avoids cross-origin redirect restrictions in sandboxed previews.
+  return {...rendered,html:rendered.html.replace(EMAIL_LOGO,'https://vesuviano-forni-mondo.lovable.app/lovable-uploads/vesuviano-logo-bianco.png')};
 }
 export const STARTER_TEMPLATES = [
   { kind: 'pizzeria', language: 'en', step: 0, subject: 'Pizza ovens for your next project', body: 'Hello,\n\nI am Gennaro from Vesuviano Forni. We build Neapolitan pizza ovens in Italy, with wood, gas and electric models.\n\nI am reaching out to understand whether you are considering a new oven or an upgrade for your pizzeria. We can share the relevant product information before discussing a specific configuration.\n\nAre you the right person to speak with about your oven requirements?' },

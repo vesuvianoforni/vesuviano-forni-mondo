@@ -5,15 +5,15 @@ import { composeEmail, rawMIME, findSent, hasExactMessage, closeIMAP } from '../
 import { emailText } from '../email-content.ts';
 import { safeMailError } from '../email-rules.ts';
 import { MARIO_SENDER } from './policy.ts';
-import { classifyReply, deliveryBlock, DELIVERY_DAYS } from './delivery-policy.ts';
+import { classifyReply, deliveryBlock } from './delivery-policy.ts';
 const checked = <T>(r: {data:T;error:unknown}):T => { if(r.error) throw new Error('MAIL_DB_FAILED'); return r.data; };
 function clients() {
-  const names=['MARIO_MAIL_USER','MARIO_MAIL_PASSWORD','MARIO_IMAP_HOST','MARIO_SMTP_HOST','MARIO_IMAP_PORT','MARIO_SMTP_PORT'];
+  const names=['MARIO_MAIL_USER','MARIO_MAIL_PASSWORD','MARIO_IMAP_HOST','MARIO_SMTP_HOST','MARIO_IMAP_PORT'];
   const v=names.map(n=>Deno.env.get(n));
   if(v.some(x=>!x)) throw new Error('MAIL_CONFIG_MISSING');
   if(v[0]!==MARIO_SENDER) throw new Error('MARIO_SENDER_MISMATCH');
   if(Number(v[4])!==993) throw new Error('IMAP_PORT_UNSUPPORTED');
-  if(Number(v[5])!==465) throw new Error('SMTP_PORT_UNSUPPORTED');
+  // Hosted execution uses verified IONOS implicit TLS on 465; legacy STARTTLS/587 configuration is not used.
   const tls={rejectUnauthorized:true,minVersion:'TLSv1.2'};
   const imap=new ImapFlow({host:String(v[2]),port:993,secure:true,auth:{user:MARIO_SENDER,pass:String(v[1])},tls,logger:false,emitLogs:false,disableAutoIdle:true,connectionTimeout:12000,greetingTimeout:12000,socketTimeout:20000});
   imap.on('error',()=>{});
@@ -24,7 +24,7 @@ const settings = async(db:SupabaseClient)=>checked(await db.from('outreach_setti
 async function lock(db:SupabaseClient) { const token=crypto.randomUUID(); if(!checked(await db.rpc('acquire_mario_delivery',{p_token:token}))) throw new Error('MAILBOX_BUSY'); return token; }
 const unlock=async(db:SupabaseClient,token:string)=>checked(await db.from('outreach_settings').update({lease_token:null,lease_until:null}).eq('key','default').eq('lease_token',token));
 export async function preflightMario(db:SupabaseClient) {
-  const s=await settings(db); let c:ReturnType<typeof clients>|undefined; let timer:ReturnType<typeof setTimeout>|undefined;
+  let c:ReturnType<typeof clients>|undefined; let timer:ReturnType<typeof setTimeout>|undefined;
   try {
     c=clients(); const current=c; timer=setTimeout(()=>{current.imap.close();current.smtp.close();},45000);
     await c.imap.connect(); const folder=await findSent(c.imap); await c.smtp.verify();
@@ -47,7 +47,7 @@ async function importReplies(db:SupabaseClient,imap:ImapFlow) {
     const entries=hits.length?await imap.fetchAll(hits,{uid:true,envelope:true,bodyStructure:true,internalDate:true},{uid:true}):[];
     for(const entry of entries){
       const sender=entry.envelope?.from?.[0]?.address?.toLowerCase()??''; const refs=entry.envelope?.inReplyTo;
-      const match=checked(await db.from('outreach_prospects').select('id,email').eq('email',sender).limit(2));
+      const match=checked(await db.rpc('mario_reply_match',{p_sender:sender}));
       let id=match.length===1?match[0].id:null;
       if(!id&&refs){const out=checked(await db.from('outreach_outbox').select('prospect_id').eq('message_id',refs).maybeSingle());id=out?.prospect_id??null;}
       const body=await emailText(imap,entry);const subject=entry.envelope?.subject??'';const category=classifyReply(subject,body,sender);
@@ -88,9 +88,11 @@ export async function dispatchMarioOnce(db:SupabaseClient) {
     checked(await db.from('outreach_outbox').update({smtp_status:'unknown',last_error:'SMTP_UNKNOWN'}).eq('smtp_status','sending'));
     await c.imap.connect();if(!await importReplies(db,c.imap))return {note:'Controllo posta non ancora completo: nessun invio.'};
     const folder=await findSent(c.imap);await c.smtp.verify();
-    const due=checked(await db.from('outreach_messages').select('id').eq('status','approved').lte('scheduled_at',new Date().toISOString()).order('scheduled_at').limit(20));
-    if(!due.length)return {note:'Nessuna email pronta.'};
-    const rows=checked(await db.from('outreach_outbox').select('*').in('outreach_message_id',due.map(m=>m.id)).eq('smtp_status','pending').order('created_at').limit(20));
+    // Replay accepted projections atomically after crashes; never resubmit the accepted MIME.
+    const repair=checked(await db.from('outreach_outbox').select('id,outreach_messages!inner(status)').eq('smtp_status','accepted').eq('outreach_messages.status','approved').order('accepted_at').limit(10));
+    for(const row of repair)checked(await db.rpc('project_mario_acceptance',{p_id:row.id}));
+    const rows=checked(await db.rpc('mario_due_outbox'));
+    if(!rows.length)return {note:'Nessuna email pronta.'};
     for(const row of rows){
       if(!row.mime){const mime=await composeEmail(row.recipient,row.subject,row.rendered_text,row.message_id,new Date(row.created_at),undefined,row.rendered_html,MARIO_SENDER);checked(await db.from('outreach_outbox').update({mime}).eq('id',row.id).is('mime',null));row.mime=mime;}
       if(!checked(await db.rpc('reserve_mario_submission',{p_id:row.id,p_token:token})))continue;
@@ -98,10 +100,7 @@ export async function dispatchMarioOnce(db:SupabaseClient) {
       const res=await c.smtp.sendMail({envelope:{from:MARIO_SENDER,to:[row.recipient]},raw:rawMIME(row.mime)});
       if(!res.accepted?.some((a:string)=>String(a).toLowerCase()===row.recipient)||res.rejected?.length)throw new Error('SMTP_UNKNOWN');
       const at=new Date().toISOString();checked(await db.from('outreach_outbox').update({smtp_status:'accepted',accepted_at:at,last_error:null,sent_folder:folder}).eq('id',row.id));claimedId=null;
-      checked(await db.from('outreach_messages').update({status:'sent',sent_at:at,message_id:row.message_id}).eq('id',row.outreach_message_id));
-      const m=checked(await db.from('outreach_messages').select('step').eq('id',row.outreach_message_id).single());
-      checked(await db.from('outreach_prospects').update({status:m.step===2?'done':'sequence',step:m.step+1,last_sent_at:at}).eq('id',row.prospect_id).is('replied_at',null));
-      if(m.step===0){for(const step of [1,2])checked(await db.from('outreach_messages').update({scheduled_at:new Date(Date.parse(at)+DELIVERY_DAYS[step]*86400000).toISOString()}).eq('prospect_id',row.prospect_id).eq('step',step));}
+      checked(await db.rpc('project_mario_acceptance',{p_id:row.id}));
       // Exact Message-ID + pre-APPEND claim: an ambiguous copy is never blindly duplicated.
       try{if(await hasExactMessage(c.imap,folder,row.message_id))checked(await db.from('outreach_outbox').update({copy_status:'found'}).eq('id',row.id));else{const claim=checked(await db.from('outreach_outbox').update({append_attempted_at:new Date().toISOString(),copy_status:'unknown'}).eq('id',row.id).is('append_attempted_at',null).select('id').maybeSingle());if(claim){const copy=await c.imap.append(folder,rawMIME(row.mime),['\\Seen'],new Date(at));if(copy)checked(await db.from('outreach_outbox').update({copy_status:'appended'}).eq('id',row.id));}}}catch{checked(await db.from('outreach_outbox').update({copy_status:'unknown',last_error:'SENT_COPY_UNKNOWN'}).eq('id',row.id));}
       return {note:'Una email accettata dal server; la consegna al destinatario non è ancora confermata.'};
