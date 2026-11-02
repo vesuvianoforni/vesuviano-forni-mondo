@@ -7,9 +7,9 @@ Deno.test('approved queued research can start', () => assertEquals(researchCanRu
 Deno.test('cancelled research cannot start another step', () => assertEquals(researchCanRun({ status: 'cancelled', approved_at: '2026-11-02', approved_by: 'user' }), false));
 Deno.test('research approval never authorizes delivery', () => assertEquals(researchOperationAllowed('send_email'), false));
 Deno.test('research approval never authorizes email drafts', () => assertEquals(researchOperationAllowed('draft'), false));
-Deno.test('plan examines no more than 100 results', () => assertThrows(() => validateResearchScope({ ...scope, targets: ['London', 'Leeds', 'Bristol'].map(city => ({ ...scope.targets[0], provider: 'apify', city, limit: 50 })) }, ['UK'])));
-Deno.test('research plan honors enabled markets', () => assertThrows(() => validateResearchScope(scope, ['FR'])));
+Deno.test('plan examines no more than 100 results', () => { assertThrows(() => validateResearchScope({ ...scope, targets: ['London', 'Leeds', 'Bristol'].map(city => ({ ...scope.targets[0], provider: 'apify', city, limit: 50 })) }, ['UK'])); });
+Deno.test('research plan honors enabled markets', () => { assertThrows(() => validateResearchScope(scope, ['FR'])); });
 Deno.test('research can collect Germany manually without delivery', () => assertEquals(validateResearchScope({ ...scope, targets: [{ ...scope.targets[0], country: 'DE', city: 'Berlin' }] }, ['DE']).targets[0].country, 'DE'));
-Deno.test('Firecrawl per step bound is 10', () => assertThrows(() => validateResearchScope({ ...scope, targets: [{ ...scope.targets[0], limit: 11 }] }, ['UK'])));
-Deno.test('duplicate research scope is rejected', () => assertThrows(() => validateResearchScope({ ...scope, targets: [scope.targets[0], scope.targets[0]] }, ['UK'])));
+Deno.test('Firecrawl per step bound is 10', () => { assertThrows(() => validateResearchScope({ ...scope, targets: [{ ...scope.targets[0], limit: 11 }] }, ['UK'])); });
+Deno.test('duplicate research scope is rejected', () => { assertThrows(() => validateResearchScope({ ...scope, targets: [scope.targets[0], scope.targets[0]] }, ['UK'])); });
 Deno.test('valid approved scope preserves requested organization and city', () => { const p = validateResearchScope(scope, ['UK']); assertEquals(p.targets[0].kind, 'pizzeria'); assertEquals(p.targets[0].city, 'London'); assertEquals(p.targets[0].limit, 5); });
