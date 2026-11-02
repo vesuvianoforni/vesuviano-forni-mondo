@@ -1,0 +1,1 @@
+ALTER TABLE public.outreach_agent_config ADD COLUMN ai_status integer, ADD COLUMN ai_reason text;

@@ -1927,18 +1927,24 @@ export type Database = {
       }
       outreach_agent_config: {
         Row: {
+          ai_reason: string | null
+          ai_status: number | null
           created_at: string
           instructions: string
           key: string
           updated_at: string
         }
         Insert: {
+          ai_reason?: string | null
+          ai_status?: number | null
           created_at?: string
           instructions?: string
           key?: string
           updated_at?: string
         }
         Update: {
+          ai_reason?: string | null
+          ai_status?: number | null
           created_at?: string
           instructions?: string
           key?: string
