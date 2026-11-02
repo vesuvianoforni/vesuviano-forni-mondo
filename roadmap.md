@@ -1,5 +1,10 @@
 # Roadmap
 
+## Mario: campagne da 500 organizzazioni (2 nov 2026)
+- [ ] Piani con obiettivo 500 organizzazioni, raccolta multipasso e verifica fino all’obiettivo; fonti dichiarate e deduplicazione, senza confondere ricerca e 100 email/giorno.
+- [ ] Allineare motori, approvazione server e progressi; mantenere immutati i piani già approvati e gli invii in pausa.
+- [ ] Test regole/avanzamento, controlli servizi e prova UI; segnalare verifiche reali non disponibili.
+
 ## Mario: richieste e chat ritrovabili (2 nov 2026)
 - [x] Richieste salvate prima dei tool e risposte salvate progressivamente/finalmente in outreach_chat_threads, con accesso staff limitato al proprietario; importazione locale senza sovrascrittura. Recuperata richiesta Londra dal piano reale (non il testo originale della risposta), nessuna ricerca/email avviata.
 - [x] Cronologia server paginata e accessibile anche su telefono, URL stabile, conversazione mancante esplicita, errore/riprova senza esecuzione duplicata; archiviazione senza eliminare i compiti.
