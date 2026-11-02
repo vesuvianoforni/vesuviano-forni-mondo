@@ -70,17 +70,14 @@ export const CRMLeadCard = forwardRef<HTMLDivElement, CRMLeadCardProps>(function
     <TooltipProvider delayDuration={200}>
       <Card ref={ref} {...draggableProps} aria-label={`Lead ${name}`}
         className={cn("min-w-0 transition-shadow hover:shadow-md motion-reduce:transition-none", isDragging && "shadow-lg")}>
-        <CardContent className="space-y-3 p-4">
-          <div className="flex items-start justify-between gap-2">
+        <CardContent className="space-y-2 p-3">
+          <div className="flex items-start justify-between gap-1">
             <div className="min-w-0 flex-1">
-              <div className="flex items-start gap-2">
-                <Building2 aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-primary" />
-                <Button variant="link" className="h-auto min-w-0 justify-start whitespace-normal p-0 text-left text-sm font-semibold leading-5 text-card-foreground"
-                  aria-label={`Apri scheda ${name}`} onClick={() => (onOpen ?? onConverse ?? onEdit)(lead)}>
-                  <span className="min-w-0 break-words">{name}</span>
-                </Button>
-              </div>
-              {lead.company_name && lead.contact_name && <p className="ml-6 mt-1 break-words text-xs text-muted-foreground">{lead.contact_name}</p>}
+              <Button variant="link" className="h-auto max-w-full min-w-0 justify-start p-0 text-left text-sm font-semibold leading-5 text-card-foreground"
+                aria-label={`Apri scheda ${name}`} title={name} onClick={() => (onOpen ?? onConverse ?? onEdit)(lead)}>
+                <span className="min-w-0 truncate">{name}</span>
+              </Button>
+              {lead.company_name && lead.contact_name && lead.contact_name !== lead.company_name && <p className="truncate text-xs text-muted-foreground">{lead.contact_name}</p>}
             </div>
             <div className="flex shrink-0 items-center gap-0.5">
               {onConverse && <Tooltip>
