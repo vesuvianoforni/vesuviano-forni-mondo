@@ -1,5 +1,9 @@
 # Roadmap
 
+## Caricamento progressivo Bruno
+- [ ] Aprire gli ultimi 50 messaggi e caricare 50 precedenti su richiesta, con filtri e conteggi completi, senza salti di lettura né doppioni.
+- [ ] Evitare lo scaricamento dello storico di tutti i clienti all’apertura; verificare paginazione, aggiornamenti e isolamento fra clienti.
+
 ## Leggibilità e composizione Bruno
 - [x] Elenco clienti più ampio, ricerca e filtri raggruppati, priorità non invasive, intestazione compatta, messaggi con mittente/data e scelta esplicita del canale d’invio separata dai filtri; collegamenti e invii invariati.
 - [x] Verificati con dati simulati a 1297×936, 390×844 e 1280×1800: cambio cliente/canale, bozza conservata al cambio filtro, email/nota, storico e riprova, contenimento e modalità scura; 7 test superati, build OK, nessun invio. Accesso reale non disponibile per Supabase esterno (reindirizzamento al login).
