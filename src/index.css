@@ -441,3 +441,41 @@
 .erp-pipeline-progress::-webkit-progress-bar { background: hsl(var(--muted)); }
 .erp-pipeline-progress::-webkit-progress-value { background: currentColor; border-radius: 4px; }
 .erp-pipeline-progress::-moz-progress-bar { background: currentColor; border-radius: 4px; }
+
+/* Bruno's workspace uses a local communication theme, including the shared CRM pane. */
+@layer base {
+  .bruno-workspace {
+    --background: 0 0% 100%;
+    --foreground: 200 10% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 200 10% 16%;
+    --primary: 160 42% 29%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 14% 94%;
+    --secondary-foreground: 200 10% 24%;
+    --muted: 210 14% 96%;
+    --muted-foreground: 210 8% 43%;
+    --accent: 160 24% 93%;
+    --accent-foreground: 160 42% 23%;
+    --border: 210 12% 88%;
+    --input: 210 12% 86%;
+    --ring: 160 42% 29%;
+  }
+  .dark .bruno-workspace {
+    --background: 200 6% 12%;
+    --foreground: 200 8% 94%;
+    --card: 200 6% 16%;
+    --card-foreground: 200 8% 94%;
+    --primary: 160 38% 62%;
+    --primary-foreground: 200 6% 12%;
+    --secondary: 200 6% 22%;
+    --secondary-foreground: 200 8% 90%;
+    --muted: 200 6% 14%;
+    --muted-foreground: 200 8% 68%;
+    --accent: 160 16% 23%;
+    --accent-foreground: 160 38% 78%;
+    --border: 200 6% 28%;
+    --input: 200 6% 30%;
+    --ring: 160 38% 62%;
+  }
+}
