@@ -3122,6 +3122,35 @@ export type Database = {
         }
         Returns: boolean
       }
+      mario_due_outbox: {
+        Args: never
+        Returns: {
+          accepted_at: string | null
+          append_attempted_at: string | null
+          attempted_at: string | null
+          copy_status: string
+          created_at: string
+          id: string
+          last_error: string | null
+          message_id: string
+          mime: string | null
+          outreach_message_id: string
+          prospect_id: string
+          recipient: string
+          rendered_html: string
+          rendered_text: string
+          sent_folder: string | null
+          smtp_status: string
+          subject: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "outreach_outbox"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       mario_kpis: { Args: never; Returns: Json }
       mario_prospect_summary: {
         Args: never
@@ -3132,6 +3161,14 @@ export type Database = {
           total: number
         }[]
       }
+      mario_reply_match: {
+        Args: { p_sender: string }
+        Returns: {
+          email: string
+          id: string
+        }[]
+      }
+      project_mario_acceptance: { Args: { p_id: string }; Returns: undefined }
       queue_roberta_run: { Args: never; Returns: undefined }
       reserve_mario_submission: {
         Args: { p_id: string; p_token: string }
