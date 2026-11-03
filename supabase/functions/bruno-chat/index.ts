@@ -3,6 +3,7 @@ import { ECONOMIC_RESPONSES_MODEL } from '../_shared/ai-models.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
+import { TOOLS, TOOL_LABELS, runTool } from './tools.ts';
 
 const Body = z.object({
   messages: z.array(z.object({ role: z.enum(['user', 'assistant']), content: z.string().min(1).max(8000) })).min(1).max(60),
@@ -39,7 +40,7 @@ Deno.serve(async (req) => {
       counts[s] = count ?? 0;
     }
     const nowIso = new Date().toISOString();
-    const pick = 'contact_name,company_name,status,country,city,phone,email,source,next_activity_type,next_activity_date,created_at,estimated_value';
+    const pick = 'id,contact_name,company_name,status,country,city,phone,email,source,next_activity_type,next_activity_date,created_at,value';
     const [{ data: due }, { data: recent }, { data: open }] = await Promise.all([
       admin.from('leads').select(pick).eq('pipeline', 'Vesuviano').not('status', 'in', '(vinto,perso)').lte('next_activity_date', nowIso).order('next_activity_date').limit(30),
       admin.from('leads').select(pick).eq('pipeline', 'Vesuviano').order('created_at', { ascending: false }).limit(30),
@@ -47,7 +48,7 @@ Deno.serve(async (req) => {
     ]);
 
     const system = `Sei Bruno, agente AI Sales & Back-office di Vesuviano Forni (forni per pizza artigianali napoletani: Anastasia, Ottavio, Real Bosco, Sebastian, VesuvioBuono, Forno Rotante; legna, gas, elettrico, rotante). Pagamento 50% acconto, 50% alla consegna. Usa sempre "Prodotti", mai "Soluzioni".
-Parli con il team commerciale interno (Gennaro). Aiuti a decidere priorità, scrivere bozze di email e WhatsApp, rispondere alle obiezioni e leggere la pipeline. Non inventare prezzi o sconti. Rispondi in italiano salvo richiesta diversa, in markdown conciso.
+Parli con il team commerciale interno (Gennaro). Hai accesso operativo all'ERP tramite strumenti: cercare e aggiornare clienti (fase, note, prossima attività), creare clienti, inviare email/WhatsApp ai clienti, leggere il listino, creare offerte, inserire e aggiornare ordini. Usa gli strumenti quando l'operatore chiede un'azione; per cercare un cliente usa search_leads e poi l'id. Invia messaggi ai clienti solo se l'operatore lo chiede esplicitamente o conferma il testo. Prezzi solo da get_catalog o dall'operatore, mai inventati; se manca un dato essenziale chiedilo. Dopo le azioni riassumi cosa hai fatto. Rispondi in italiano salvo richiesta diversa, in markdown conciso.
 Data attuale: ${nowIso}.
 ${instructions ? `Istruzioni del team: ${instructions}\n` : ''}Dati CRM (pipeline Vesuviano):
 Lead per fase: ${JSON.stringify(counts)}
@@ -55,50 +56,37 @@ Attività scadute o di oggi: ${JSON.stringify(due ?? [])}
 Lead più recenti: ${JSON.stringify(recent ?? [])}
 In qualificato/trattativa: ${JSON.stringify(open ?? [])}`;
 
-    const upstream = await fetch('https://ai.gateway.lovable.dev/v1/responses', {
-      method: 'POST',
-      headers: { 'Lovable-API-Key': apiKey, Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json', 'X-Lovable-AIG-SDK': 'fetch' },
-      signal: req.signal,
-      body: JSON.stringify({
-        model: ECONOMIC_RESPONSES_MODEL,
-        instructions: system,
-        input: messages.map((m) => ({ role: m.role, content: m.content })),
-        reasoning: { effort: 'low' },
-        store: false,
-        stream: true,
-      }),
-    });
-    if (!upstream.ok || !upstream.body) {
-      const text = await upstream.text();
-      console.error('AI gateway', upstream.status, text.slice(0, 500));
-      const msg = upstream.status === 429 ? 'Troppe richieste, riprova tra poco.'
-        : upstream.status === 402 ? 'Crediti AI esauriti.' : upstream.status === 403 ? 'Accesso AI non disponibile.' : 'Errore AI';
-      return json({ error: msg }, upstream.status);
+    const ctx = { admin, userId: u.user.id, auth: req.headers.get('Authorization') || '', url, anon: Deno.env.get('SUPABASE_ANON_KEY') || '' };
+    const input: unknown[] = messages.map((m) => ({ role: m.role, content: m.content }));
+    const done: string[] = [];
+    let text = '';
+    for (let round = 0; round < 8; round++) {
+      const res = await fetch('https://ai.gateway.lovable.dev/v1/responses', {
+        method: 'POST', signal: req.signal,
+        headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: ECONOMIC_RESPONSES_MODEL, instructions: system, input, tools: TOOLS, reasoning: { effort: 'low' }, store: false }),
+      });
+      if (!res.ok) {
+        console.error('AI gateway', res.status, (await res.text()).slice(0, 500));
+        const msg = res.status === 429 ? 'Troppe richieste, riprova tra poco.' : res.status === 402 ? 'Crediti AI esauriti.' : res.status === 403 ? 'Accesso AI non disponibile.' : 'Errore AI';
+        return json({ error: msg }, res.status);
+      }
+      const out = (await res.json()).output ?? [];
+      const calls = out.filter((o: any) => o.type === 'function_call');
+      text = out.filter((o: any) => o.type === 'message').flatMap((o: any) => o.content ?? []).filter((c: any) => c.type === 'output_text').map((c: any) => c.text).join('');
+      if (!calls.length) break;
+      input.push(...out.filter((o: any) => o.type !== 'reasoning'));
+      for (const c of calls) {
+        let result: any;
+        try {
+          result = await runTool(ctx, c.name, JSON.parse(c.arguments || '{}'));
+          if (TOOL_LABELS[c.name] && !result?.error) done.push(`${TOOL_LABELS[c.name]}${result?._link ? ` ([apri](${result._link}))` : ''}`);
+        } catch (e) { result = { error: e instanceof Error ? e.message : 'Operazione non riuscita' }; console.error('tool', c.name, result.error); }
+        input.push({ type: 'function_call_output', call_id: c.call_id, output: JSON.stringify(result).slice(0, 12000) });
+      }
     }
-
-    const decoder = new TextDecoder();
-    const encoder = new TextEncoder();
-    let buffer = '';
-    const stream = upstream.body.pipeThrough(new TransformStream<Uint8Array, Uint8Array>({
-      transform(chunk, controller) {
-        buffer += decoder.decode(chunk, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() ?? '';
-        for (const line of lines) {
-          if (!line.startsWith('data:')) continue;
-          const data = line.slice(5).trim();
-          if (!data || data === '[DONE]') continue;
-          try {
-            const ev = JSON.parse(data);
-            if (ev.type === 'response.output_text.delta' && ev.delta) controller.enqueue(encoder.encode(ev.delta));
-          } catch { /* partial */ }
-        }
-      },
-    }));
-    const headers: Record<string, string> = { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8' };
-    const runId = upstream.headers.get('X-Lovable-AIG-Run-ID');
-    if (runId) headers['X-Lovable-AIG-Run-ID'] = runId;
-    return new Response(stream, { headers });
+    const final = (text || 'Fatto.') + (done.length ? `\n\n---\n**Azioni eseguite:**\n${done.map((d) => `- ✅ ${d}`).join('\n')}` : '');
+    return new Response(final, { headers: { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8' } });
   } catch (e) {
     if (e instanceof DOMException && e.name === 'AbortError') return new Response(null, { status: 499, headers: corsHeaders });
     console.error(e);
