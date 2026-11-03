@@ -1,5 +1,10 @@
 # Roadmap
 
+## Mario: esiti Enrich (3 nov 2026)
+- [ ] Correggere il falso «0 trovati»: distinguere candidati scoperti, email verificata e pertinenza del contatto, con motivo dell'esito in Live e Ricerca.
+- [ ] Dare priorità alle pagine Contatti rispetto a Chi siamo, mantenendo il massimo di due pagine per verifica e tutti i controlli sull'email.
+- [ ] Verificare test, risultati reali salvati e disponibilità della correzione; nessuna nuova ricerca o email avviata per prova.
+
 ## Mario: campagne da 500 organizzazioni (2 nov 2026)
 - [x] Piani con obiettivo scelto di 500 organizzazioni, query/quartieri a lotti max 100, tetto iniziale 1.500 candidati e fino a 500 verifiche; web Firecrawl e Google Maps Apify dichiarati, deduplicazione ed esclusioni invariati, nessuna confusione con 100 email/giorno.
 - [x] Motori/RPC/progressi allineati, stop a obiettivo o ricerche esaurite, conteggi esaminati/verificati separati, pausa dieci secondi tra i passaggi e guard server AI; piani approvati legacy immutati. Piano Londra ancora proposto aggiornato a 15 lotti/1.500 candidati/500 verifiche, senza approvarlo né avviare raccolte; invii in pausa.
