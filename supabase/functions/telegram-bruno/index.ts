@@ -1,10 +1,10 @@
-// Telegram bot (@Ufficioaibot) for the internal team: linked ERP users chat with Bruno.
+// Telegram bot (@Erp_vesuviano_bot) for the internal team: linked ERP users chat with Bruno.
 // Webhook (Telegram, secret header) + action "link_code" (ERP user, JWT) to pair an account.
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const GATEWAY = 'https://connector-gateway.lovable.dev/telegram';
-const BOT_USERNAME = 'Ufficioaibot';
+const BOT_USERNAME = 'Erp_vesuviano_bot';
 const json = (d: unknown, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
 async function webhookSecret(key: string) {
@@ -67,7 +67,7 @@ Deno.serve(async (req) => {
         if (!row || new Date(row.code_expires_at) < new Date()) return say(chatId, 'Codice non valido o scaduto. Generane uno nuovo dall\'ERP (Bruno → Telegram).');
         await admin.from('telegram_links').update({ chat_id: null }).eq('chat_id', chatId);
         await admin.from('telegram_links').update({ chat_id: chatId, telegram_username: isGroup ? (msg.chat.title ?? 'gruppo') : (msg.from?.username ?? null), link_code: null, code_expires_at: null, linked_at: new Date().toISOString() }).eq('user_id', row.user_id);
-        return say(chatId, 'Collegato ✅ Sono Bruno.' + (isGroup ? ' In questo gruppo chiunque può darmi indicazioni: scrivi @Ufficioaibot seguito dalla richiesta, oppure rispondi a un mio messaggio.' : '') + ' Scrivimi cosa ti serve: clienti, prossime attività, offerte, ordini, messaggi ai clienti.');
+        return say(chatId, 'Collegato ✅ Sono Bruno.' + (isGroup ? ' In questo gruppo chiunque può darmi indicazioni: scrivi @Erp_vesuviano_bot seguito dalla richiesta, oppure rispondi a un mio messaggio.' : '') + ' Scrivimi cosa ti serve: clienti, prossime attività, offerte, ordini, messaggi ai clienti.');
       }
       const { data: link } = await admin.from('telegram_links').select('user_id').eq('chat_id', chatId).maybeSingle();
       if (!link) return isGroup ? undefined : say(chatId, 'Questo account Telegram non è collegato all\'ERP Vesuviano. Apri ERP → Bruno → Telegram e premi «Collega Telegram».');
