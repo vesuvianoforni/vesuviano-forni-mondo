@@ -13,7 +13,7 @@ export const SearchInput = z.object({ kind: z.enum(['pizzeria', 'partner']), cou
 export type SearchArgs = z.infer<typeof SearchInput>;
 const terms = { pizzeria: 'pizzeria pizza restaurant', partner: 'commercial catering equipment distributor horeca' };
 const location = COUNTRY_NAME;
-export function checked<T>(result: { data: T; error: unknown }): NonNullable<T> { if (result.error || result.data === null || result.data === undefined) throw new Error('Operazione non salvata nell’ERP'); return result.data; }
+export function checked<T>(result: { data: T; error: unknown }): NonNullable<T> { if (result.error) throw new Error('Operazione non salvata nell’ERP'); return (result.data ?? null) as NonNullable<T>; }
 
 async function run<T>(db: SupabaseClient, kind: string, input: unknown, userId: string, work: (id: string) => Promise<T>) {
   const { data: id, error } = await db.rpc('claim_mario_run', { p_kind: kind, p_input: input, p_user: userId });
