@@ -85,6 +85,13 @@ export async function executeResearchJob(db: SupabaseClient, job: Job, apifyComp
     if (!finished) return;
   } catch (error) {
     const err = error as { status?: number; name?: string; message?:string };
+    // A single unreadable website must not stop the whole plan: record it and continue.
+    if (job.kind === 'verify' && err.status !== 402 && err.status !== 403 && err.name !== 'AbortError' && err.name !== 'TimeoutError') {
+      const reason = (err.message ?? 'Sito non verificabile').slice(0, 500);
+      await db.from('outreach_prospects').update({ error: reason }).eq('id', String(job.input.prospect_id));
+      const done = await db.rpc('finish_mario_research_job', { p_id: job.id, p_token: job.worker_token, p_result: { prospect_id: job.input.prospect_id, qualified: false, email_verified: false, reason, skipped_site: true } });
+      if (!done.error) return;
+    }
     const message = err.status === 402 || err.status === 403 ? (err.message??'Servizio non disponibile: controlla credito e collegamenti.') : err.name === 'TimeoutError' || err.name === 'AbortError' ? 'Tempo massimo raggiunto. Verifica i risultati prima di proporre una nuova ricerca.' : (err.message??'Passaggio interrotto. Verifica le attività prima di proporre una nuova ricerca; nessuna ripetizione automatica.');
     if(err.status===402||err.status===403)checked(await db.from('outreach_agent_config').update({ai_status:err.status,ai_reason:message.slice(0,1500)}).eq('key','default').select('key'));
     checked(await db.rpc('fail_mario_research_job', { p_id: job.id, p_token: job.worker_token, p_error: message }));
