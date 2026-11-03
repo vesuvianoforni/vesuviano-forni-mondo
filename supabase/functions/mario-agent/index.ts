@@ -105,8 +105,8 @@ Deno.serve(async req => {
     if(b.action==='dispatch_once')return json(await dispatchMarioOnce(db));
     if(b.action==='save_settings'){
       deliveryLimits(b.daily_limit,b.min_interval_seconds);if(b.window_start>=b.window_end)return json({error:'Finestra oraria non valida'},400);
-      checked(await db.from('outreach_settings').update({daily_limit:b.daily_limit,min_interval_seconds:b.min_interval_seconds,window_start:b.window_start,window_end:b.window_end,timezone:b.timezone,paused:true}).eq('key','default'));
-      return json({note:'Impostazioni salvate; il limite include avvio e follow-up. Invii in pausa.'});
+      checked(await db.from('outreach_settings').update({daily_limit:b.daily_limit,min_interval_seconds:b.min_interval_seconds,window_start:b.window_start,window_end:b.window_end,timezone:b.timezone}).eq('key','default'));
+      return json({note:'Impostazioni salvate; il limite include avvio e follow-up. '});
     }
     if(b.action==='eligibility'){
       const p=checked(await db.from('outreach_prospects').select('country,qualified,email').eq('id',b.id).single());if(b.recipient_eligibility==='eligible'&&(!p.qualified||!p.email||p.country==='DE'))return json({error:'Contatto non qualificato o mercato solo manuale.'},409);

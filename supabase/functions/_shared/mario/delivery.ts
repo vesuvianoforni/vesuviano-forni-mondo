@@ -30,7 +30,7 @@ export async function preflightMario(db:SupabaseClient) {
     await c.imap.connect(); const folder=await findSent(c.imap); await c.smtp.verify();
     const s=await settings(db); const now=new Date().toISOString();
     const result={mailbox:true,sent_folder:folder,checked_at:now,ready:true,reason:'Casella SMTP/IMAP e autenticazione del dominio (SPF, DKIM, DMARC) verificate.'};
-    checked(await db.from('outreach_settings').update({preflight:result,provider_verified_at:s.provider_verified_at??now}).eq('key','default')); return result;
+    checked(await db.from('outreach_settings').update({preflight:result,provider_verified_at:s.provider_verified_at??now,paused:false,pause_reason:null}).eq('key','default')); return result;
   } catch(e) {
     const result={mailbox:false,ready:false,checked_at:new Date().toISOString(),reason:(e as Error).message==='SMTP_PORT_UNSUPPORTED'?'La casella usa una porta SMTP non supportata: serve TLS sulla porta 465.':safeMailError(e)};
     checked(await db.from('outreach_settings').update({preflight:result,paused:true}).eq('key','default')); return result;
