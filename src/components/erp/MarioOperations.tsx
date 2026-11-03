@@ -8,11 +8,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { MarioRunSummary, MARIO_RUN_LABELS, MARIO_RUN_STATUS, type MarioRun } from './MarioRunSummary';
 
 type Knowledge = { id: string; title: string; content: string; source_url: string | null; active: boolean };
 type Draft = { id: string; prospect_id: string; step: number; subject: string; body: string; html: string; status: string; approved_at?:string|null };
-type Run = { id: string; kind: string; status: string; found: number; error: string | null; created_at: string };
-interface Overview { config: { instructions: string; ai_status: number | null; ai_reason: string | null }; knowledge: Knowledge[]; runs: Run[]; messages: Draft[]; is_admin: boolean; system_prompt: string; version: string }
+interface Overview { config: { instructions: string; ai_status: number | null; ai_reason: string | null }; knowledge: Knowledge[]; runs: MarioRun[]; messages: Draft[]; is_admin: boolean; system_prompt: string; version: string }
 
 export async function marioAction(body: Record<string, unknown>) {
   const { data, error } = await supabase.functions.invoke('mario-agent', { body });
@@ -65,7 +65,7 @@ export function MarioOperations({ prospectId, onUpdated, initialTab = 'research'
             <label className="space-y-1 text-xs text-muted-foreground">Servizio<select aria-label="Servizio ricerca" className="h-10 w-full rounded-md border bg-background px-3 text-sm text-foreground" value={provider} onChange={e => { setProvider(e.target.value); setLimit(10); }}><option value="firecrawl">Firecrawl · siti web</option><option value="apify">Apify · attività locali</option></select></label>
             <Button className="self-end" type="submit" disabled><Search className="mr-2 h-4 w-4" />Piano richiesto nella chat Mario</Button>
           </form>}
-        <div className="divide-y border-y">{data?.runs.map(r => <div key={r.id} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm"><div className="min-w-0"><p className="font-medium">{({ firecrawl_search: 'Ricerca siti', apify_search: 'Ricerca attività locali', enrich: 'Verifica prospect', draft: 'Bozze email' } as Record<string, string>)[r.kind] ?? r.kind}</p><p className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleString('it-IT')} · {r.found} candidati</p>{r.error && <p className="max-w-xl break-words text-xs text-destructive">{r.error}</p>}</div><div className="flex items-center gap-2"><Badge variant="secondary">{({ running: 'In corso', succeeded: 'Completata', failed: 'Interrotta' } as Record<string, string>)[r.status] ?? r.status}</Badge>{r.kind === 'apify_search' && r.status === 'running' && <Button size="sm" variant="outline" disabled={busy} onClick={() => void act({ action: 'collect', id: r.id })}><RefreshCw className="mr-1 h-3.5 w-3.5" />Aggiorna</Button>}</div></div>)}</div>
+        <div className="divide-y border-y">{data?.runs.map(r => <div key={r.id} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm"><div className="min-w-0 flex-1"><p className="font-medium">{MARIO_RUN_LABELS[r.kind] ?? r.kind}</p><p className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleString('it-IT')}</p><p className="text-xs text-muted-foreground"><MarioRunSummary run={r} /></p>{r.kind === 'enrich' && r.result?.reason && <p className="mt-1 max-w-3xl break-words text-xs text-muted-foreground">{r.result.reason}</p>}{r.error && <p className="max-w-xl break-words text-xs text-destructive">{r.error}</p>}</div><div className="flex items-center gap-2"><Badge variant="secondary">{MARIO_RUN_STATUS[r.status] ?? r.status}</Badge>{r.kind === 'apify_search' && r.status === 'running' && <Button size="sm" variant="outline" disabled={busy} onClick={() => void act({ action: 'collect', id: r.id })}><RefreshCw className="mr-1 h-3.5 w-3.5" />Aggiorna</Button>}</div></div>)}</div>
       </TabsContent>
       <TabsContent value="drafts" className="space-y-3">
         {prospectId && !drafts.length && <div className="flex flex-wrap gap-2"><Button size="sm" disabled={busy} onClick={()=>void act({action:'template_sequence',id:prospectId})}><Plus className="mr-1.5 h-4 w-4"/>Usa modelli HTML</Button><Button size="sm" variant="outline" disabled={busy} onClick={()=>void act({action:'draft',id:prospectId})}>Prepara con Mario</Button></div>}

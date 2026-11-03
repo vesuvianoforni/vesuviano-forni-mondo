@@ -1,5 +1,10 @@
 # Roadmap
 
+## Mario: esiti Enrich (3 nov 2026)
+- [x] Corretto il falso «0 trovati» con presentazione condivisa Live/Ricerca: email verificata e pertinenza separate, motivi consultabili; conteggio lotti completati allineato a done.
+- [x] Pagine Contatti prioritarie rispetto a Chi siamo; link duplicati/esteri/autoreferenti esclusi. Massimo due pagine per verifica e controlli email invariati.
+- [x] 36 test superati, sito senza errori, quattro funzioni distribuite; archivio reale conferma 6 email salvate da 32 verifiche completate. Presentazione isolata verificata a schermo senza errori; endpoint Live senza accesso restituisce 401, verifica autenticata nell'ERP non disponibile con Supabase esterno. Nessuna nuova ricerca o email avviata per prova.
+
 ## Mario: campagne da 500 organizzazioni (2 nov 2026)
 - [x] Piani con obiettivo scelto di 500 organizzazioni, query/quartieri a lotti max 100, tetto iniziale 1.500 candidati e fino a 500 verifiche; web Firecrawl e Google Maps Apify dichiarati, deduplicazione ed esclusioni invariati, nessuna confusione con 100 email/giorno.
 - [x] Motori/RPC/progressi allineati, stop a obiettivo o ricerche esaurite, conteggi esaminati/verificati separati, pausa dieci secondi tra i passaggi e guard server AI; piani approvati legacy immutati. Piano Londra ancora proposto aggiornato a 15 lotti/1.500 candidati/500 verifiche, senza approvarlo né avviare raccolte; invii in pausa.

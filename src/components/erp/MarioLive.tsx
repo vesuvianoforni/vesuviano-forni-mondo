@@ -3,12 +3,13 @@ import { OctagonX, Radio } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { marioAction } from '@/components/erp/MarioOperations';
+import { MarioRunSummary, MARIO_RUN_LABELS, MARIO_RUN_STATUS, type MarioRun } from './MarioRunSummary';
 
 type Live = {
   autopilot: { enabled: boolean; last_planned_on: string | null; last_tick_at: string | null; last_result: Record<string, unknown> | null; auto_paused_reason: string | null };
   settings: { paused: boolean; pause_reason: string | null };
   plans: { id: string; request: string; status: string; created_at: string; outreach_research_jobs: { status: string }[] }[];
-  runs: { id: string; kind: string; status: string; found: number | null; error: string | null; created_at: string }[];
+  runs: MarioRun[];
   prospects: { id: string; name: string; city: string | null; country: string; email: string | null; qualified: boolean; recipient_eligibility: string; created_at: string }[];
   outbox: { id: string; recipient: string; subject: string; smtp_status: string; created_at: string }[];
   at: string;
@@ -46,12 +47,12 @@ export function MarioLive({ onUpdated }: { onUpdated?: () => void }) {
       <section className="space-y-2"><h3 className="text-sm font-semibold">Ricerche</h3>
         {d.plans.length ? d.plans.map(p => { const j = p.outreach_research_jobs ?? []; const n = (s: string) => j.filter(x => x.status === s).length; return (
           <div key={p.id} className="rounded-md border p-3 text-sm"><div className="flex justify-between gap-2"><span className="min-w-0 break-words">{p.request}</span><Badge variant="secondary">{PLAN[p.status] ?? p.status}</Badge></div>
-            <p className="mt-1 text-xs text-muted-foreground">Lotti: {n('succeeded') + n('completed')} completati · {n('running')} in corso · {n('queued')} in coda{n('failed') ? ` · ${n('failed')} con errore` : ''}</p></div>); })
+            <p className="mt-1 text-xs text-muted-foreground">Lotti: {n('done')} completati · {n('running')} in corso · {n('queued')} in coda{n('failed') ? ` · ${n('failed')} con errore` : ''}</p></div>); })
           : <p className="text-sm text-muted-foreground">Nessuna ricerca.</p>}
       </section>
 
       <section className="space-y-1"><h3 className="text-sm font-semibold">Operazioni recenti</h3>
-        {d.runs.length ? d.runs.map(r => <p key={r.id} className="break-words text-xs"><span className="text-muted-foreground">{time(r.created_at)}</span> · {r.kind} · {r.status}{r.found != null ? ` · ${r.found} trovati` : ''}{r.error ? ` · ${r.error}` : ''}</p>) : <p className="text-sm text-muted-foreground">Nessuna operazione.</p>}
+        {d.runs.length ? d.runs.map(r => <div key={r.id} className="break-words border-b py-2 text-xs"><p><span className="text-muted-foreground">{time(r.created_at)}</span> · {MARIO_RUN_LABELS[r.kind] ?? r.kind} · {MARIO_RUN_STATUS[r.status] ?? r.status}</p><p className="mt-1 text-muted-foreground"><MarioRunSummary run={r} /></p>{r.kind === 'enrich' && r.result?.reason && <details className="mt-1 text-muted-foreground"><summary className="cursor-pointer">Motivo dell’esito</summary><p className="mt-1 max-w-3xl">{r.result.reason}</p></details>}{r.error && <p className="mt-1 text-destructive">{r.error}</p>}</div>) : <p className="text-sm text-muted-foreground">Nessuna operazione.</p>}
       </section>
 
       <section className="space-y-1"><h3 className="text-sm font-semibold">Ultimi contatti salvati</h3>
