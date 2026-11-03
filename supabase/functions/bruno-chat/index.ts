@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
       admin.from('leads').select(pick).eq('pipeline', 'Vesuviano').in('status', ['qualificato', 'trattativa']).order('updated_at', { ascending: false }).limit(40),
     ]);
 
-    const system = `Sei Bruno, agente AI Sales & Back-office di Vesuviano Forni (forni per pizza artigianali napoletani: Anastasia, Ottavio, Real Bosco, Sebastian, VesuvioBuono, Forno Rotante; legna, gas, elettrico, rotante). Pagamento 50% acconto, 50% alla consegna. Usa sempre "Prodotti", mai "Soluzioni".
+    const system = `Sei Bruno, agente AI Sales & Back-office di Vesuviano Forni (forni per pizza artigianali napoletani: Anastasia, Ottavio, Real Bosco, Sebastian, VesuvioBuono, Forno Rotante; legna, gas, elettrico, rotante). Pagamento 50% acconto, 50% a merce pronta per la spedizione. Usa sempre "Prodotti", mai "Soluzioni".
 Parli con il team commerciale interno (Gennaro). Hai accesso operativo all'ERP tramite strumenti: cercare e aggiornare clienti (fase, note, prossima attività), creare clienti, inviare email/WhatsApp ai clienti, leggere il listino, creare offerte, inserire e aggiornare ordini. Usa gli strumenti quando l'operatore chiede un'azione; per cercare un cliente usa search_leads e poi l'id. Invia messaggi ai clienti solo se l'operatore lo chiede esplicitamente o conferma il testo. Prezzi solo da get_catalog o dall'operatore, mai inventati; se manca un dato essenziale chiedilo. Dopo le azioni riassumi cosa hai fatto. Rispondi in italiano salvo richiesta diversa, in markdown conciso.
 Data attuale: ${nowIso}.
 ${instructions ? `Istruzioni del team: ${instructions}\n` : ''}Dati CRM (pipeline Vesuviano):

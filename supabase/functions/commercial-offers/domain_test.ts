@@ -2,7 +2,7 @@ import { assertEquals, assert } from 'https://deno.land/std@0.224.0/assert/mod.t
 import { DEFAULT_OFFER_SETTINGS, newOfferDocument, offerTotals, canManageOffers, canManageOfferSettings, isPublicOfferAvailable, commercialOfferUrl } from './domain.ts';
 import { BodySchema } from './schema.ts';
 const doc = () => ({ ...newOfferDocument(DEFAULT_OFFER_SETTINGS), customer_name: 'Cliente', title: 'Forno', items: [{ id: crypto.randomUUID(), product_id: null, product_name: 'Forno', description: '', image_url: '', quantity: 2, unit_price: 1000, discount_percent: 10, notes: '' }] });
-Deno.test('pagamento Vesuviano resta 50% acconto e 50% alla consegna', () => assertEquals(DEFAULT_OFFER_SETTINGS.payment_agreement, '50% acconto - 50% a consegna'));
+Deno.test('pagamento Vesuviano è 50% acconto e 50% a merce pronta per la spedizione', () => assertEquals(DEFAULT_OFFER_SETTINGS.payment_agreement, '50% acconto - 50% a merce pronta per la spedizione'));
 Deno.test('conserva i tre conti aziendali del modello Zapper', () => {
   assertEquals(DEFAULT_OFFER_SETTINGS.companies.climatel.bank_iban, 'IT82 S030 6976 4511 0000 0003 441');
   assertEquals(DEFAULT_OFFER_SETTINGS.companies.unita1.bank_iban, 'IT12P0306976451100000003224');

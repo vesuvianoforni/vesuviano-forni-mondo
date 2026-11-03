@@ -66,7 +66,7 @@ BRUCIATORI AVANZINI (consigliati per RealBosco):
 
 CONDIZIONI DI VENDITA:
 - Acconto 50% per confermare l'ordine
-- Saldo alla consegna
+- Saldo 50% a merce pronta per la spedizione
 - Tutti i prezzi sono IVA esclusa
 - Tempo di produzione: 30 giorni lavorativi
 - Consegna: presso la sede del cliente

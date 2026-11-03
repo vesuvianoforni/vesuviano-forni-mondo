@@ -12,7 +12,7 @@ const PATH = '/it/forno-a-legna-da-esterno';
 const FAQS = [
   {
     q: 'Quanto costa un forno a legna da esterno professionale?',
-    a: 'I nostri forni a legna da esterno partono da circa 4.500€ per il modello Ottavio compatto e arrivano oltre 12.000€ per le grandi cupole Real Bosco. Il prezzo include cottura refrattaria, isolamento, finitura a mosaico o intonaco. Il pagamento è 50% all\'ordine e 50% alla consegna.',
+    a: 'I nostri forni a legna da esterno partono da circa 4.500€ per il modello Ottavio compatto e arrivano oltre 12.000€ per le grandi cupole Real Bosco. Il prezzo include cottura refrattaria, isolamento, finitura a mosaico o intonaco. Il pagamento è 50% all\'ordine e 50% a merce pronta per la spedizione.',
   },
   {
     q: 'Quanto tempo serve per scaldare un forno a legna da esterno?',
