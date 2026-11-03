@@ -62,5 +62,6 @@ export async function generateEconomicImage(prompt: string, references: string[]
   if (!response.ok) throw Object.assign(new Error(payload.message ?? payload.error?.message ?? 'Generazione immagine non completata.'), { status: response.status });
   const image = payload.data?.[0]?.b64_json;
   if (!image) throw Object.assign(new Error('Nessuna immagine restituita.'), { status: 422 });
-  return `data:image/png;base64,${image}`;
+  const mimeType = image.startsWith('/9j/') ? 'image/jpeg' : image.startsWith('UklGR') ? 'image/webp' : 'image/png';
+  return `data:${mimeType};base64,${image}`;
 }

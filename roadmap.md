@@ -1,9 +1,9 @@
 # Roadmap
 
 ## Modelli AI economici (3 nov 2026)
-- [ ] Individuare gli usi di Astra e tutte le chiamate AI; scegliere modelli economici disponibili e compatibili.
-- [ ] Applicare una selezione condivisa a agenti, automazioni, chat pubblica e generazioni senza cambiare regole operative.
-- [ ] Verificare richieste reali, test di regressione e distribuire le funzioni aggiornate.
+- [x] Astra individuato in chat agenti, verifiche/bozze/piani Mario, suggerimenti Bruno, newsletter e traduzioni: catalogo autenticato verificato, preferenza economica salvata.
+- [x] Selezione condivisa server-side: Luna per Responses, Flash Lite per volumi, Flash per editoriale/contratti, Flash Lite Image per tutte le funzioni immagini; nessuna modifica ai limiti email o alle approvazioni.
+- [x] 119 test superati; 21 funzioni distribuite, chat pubblica e contratti HTTP 200, strumenti con continuazione e JSON validi, helper SDK Mario e traduzione offerta con numeri preservati, immagini reali verificate. Log dell’autopilota confermano Luna e salvataggio email verificata in archivio; zero richieste Astra dopo il passaggio. Nessun invio di prova. Accesso autenticato ERP non verificabile con Supabase esterno (401); newsletter e altre operazioni protette non esercitate dal proprio account.
 
 ## Mario: esiti Enrich (3 nov 2026)
 - [x] Corretto il falso «0 trovati» con presentazione condivisa Live/Ricerca: email verificata e pertinenza separate, motivi consultabili; conteggio lotti completati allineato a done.

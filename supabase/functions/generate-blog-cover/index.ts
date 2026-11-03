@@ -118,11 +118,13 @@ serve(async (req) => {
       bytes[i] = binaryString.charCodeAt(i);
     }
 
-    const fileName = `blog-covers/${Date.now()}-${topic.replace(/[^a-z0-9]/gi, "-").substring(0, 40)}.png`;
+    const contentType = imageUrl.slice(5, imageUrl.indexOf(';'));
+    const extension = contentType === 'image/jpeg' ? 'jpg' : contentType === 'image/webp' ? 'webp' : 'png';
+    const fileName = `blog-covers/${Date.now()}-${topic.replace(/[^a-z0-9]/gi, "-").substring(0, 40)}.${extension}`;
 
     const { error: uploadError } = await supabase.storage
       .from("oven-gallery")
-      .upload(fileName, bytes, { contentType: "image/png", upsert: true });
+      .upload(fileName, bytes, { contentType, upsert: true });
 
     if (uploadError) {
       console.error("Upload error:", uploadError);

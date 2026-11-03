@@ -25,4 +25,4 @@ Enrich CRM lead cards with paginated, read-only projections of recorded form, ch
 
 - Mario (outbound agent) rules live in `supabase/functions/_shared/mario/AGENTS.md`; read it before changing Mario code, UI or tables.
 - Mario operation summaries are shared between Live and Research: discovery counts come from `found`, while email verification and relevance come from persisted enrichment `result`, so one-contact checks never display a misleading discovery count.
-- AI model selection is server-owned in `supabase/functions/_shared/ai-models.ts`, separated by compatible API surface and workload; all operational calls import it so premium defaults cannot silently return. Preserve output caps, streaming, tool contracts, approval and delivery guards when changing models.
+- AI models are server-owned in `_shared/ai-models.ts` by API surface/workload; import that catalog to avoid premium defaults. Shared `_shared/economic-images.ts` retains legacy image inputs/final-JSON outputs and ordered references. Model changes preserve caps, streaming, tools and delivery/approval guards.
