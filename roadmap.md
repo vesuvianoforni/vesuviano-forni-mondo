@@ -1,5 +1,10 @@
 # Roadmap
 
+## Modelli AI economici (3 nov 2026)
+- [ ] Individuare gli usi di Astra e tutte le chiamate AI; scegliere modelli economici disponibili e compatibili.
+- [ ] Applicare una selezione condivisa a agenti, automazioni, chat pubblica e generazioni senza cambiare regole operative.
+- [ ] Verificare richieste reali, test di regressione e distribuire le funzioni aggiornate.
+
 ## Mario: esiti Enrich (3 nov 2026)
 - [x] Corretto il falso «0 trovati» con presentazione condivisa Live/Ricerca: email verificata e pertinenza separate, motivi consultabili; conteggio lotti completati allineato a done.
 - [x] Pagine Contatti prioritarie rispetto a Chi siamo; link duplicati/esteri/autoreferenti esclusi. Massimo due pagine per verifica e controlli email invariati.
