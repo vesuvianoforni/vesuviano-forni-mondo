@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { generateEconomicImage } from '../_shared/economic-images.ts';
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -107,61 +108,7 @@ serve(async (req) => {
 
     const prompt = buildEditPrompt(topic, style);
 
-    let messages: any[];
-
-    if (refImages.length > 0) {
-      // Use image editing mode with site photos as reference
-      const content: any[] = [{ type: "text", text: prompt }];
-      for (const imgUrl of refImages) {
-        content.push({
-          type: "image_url",
-          image_url: { url: imgUrl },
-        });
-      }
-      messages = [{ role: "user", content }];
-      console.log("Using reference images:", refImages);
-    } else {
-      // Fallback: generate from scratch
-      console.log("No reference images found, generating from scratch");
-      messages = [{ role: "user", content: prompt }];
-    }
-
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash-image",
-        messages,
-        modalities: ["image", "text"],
-      }),
-    });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error("Image generation error:", response.status, errText);
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded, please try again later." }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Credits exhausted, please add funds." }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      throw new Error(`Image generation failed: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
-
-    if (!imageUrl) {
-      console.error("No image returned:", JSON.stringify(data).substring(0, 500));
-      throw new Error("No image returned from AI");
-    }
+    const imageUrl = await generateEconomicImage(prompt, refImages);
 
     // Upload to Supabase Storage
     const base64Data = imageUrl.split(",")[1];
@@ -194,7 +141,7 @@ serve(async (req) => {
   } catch (e: any) {
     console.error("generate-blog-cover error:", e?.message || e);
     return new Response(JSON.stringify({ error: e?.message || "Unexpected error" }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: e?.status ?? 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });
