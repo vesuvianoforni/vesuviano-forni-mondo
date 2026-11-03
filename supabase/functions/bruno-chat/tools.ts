@@ -3,8 +3,8 @@
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 
 export const STAGES = ['nuovo', 'pre_qualificato', 'qualificato', 'trattativa', 'vinto', 'perso'];
-const ORDER_STATUSES = ['nuovo', 'in_produzione', 'pronto', 'spedito', 'consegnato', 'annullato'];
-const PAYMENT_STATUSES = ['in_attesa', 'acconto_ricevuto', 'pagato'];
+const ORDER_STATUSES = ['nuovo', 'confermato', 'in_produzione', 'pronto_spedizione', 'spedito', 'consegnato', 'annullato'];
+const PAYMENT_STATUSES = ['in_attesa', 'acconto_pagato', 'saldato'];
 
 const obj = (properties: Record<string, unknown>, required: string[] = []) =>
   ({ type: 'object', additionalProperties: false, properties, required });
@@ -134,7 +134,7 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       const total = Number(a.total_amount) || 0, dep = Number(a.deposit_paid) || 0;
       const { data, error } = await admin.from('orders').insert({ ...pick(a, ['customer_name', 'company_name', 'customer_email', 'customer_phone', 'billing_address', 'delivery_address', 'vat_number', 'notes']),
         total_amount: total, deposit_paid: dep, balance_due: total - dep, created_by: ctx.userId,
-        payment_status: dep > 0 ? 'acconto_ricevuto' : 'in_attesa' }).select('id,order_number,total_amount').single();
+        payment_status: dep > 0 ? 'acconto_pagato' : 'in_attesa' }).select('id,order_number,total_amount').single();
       if (error) throw error;
       return { created: true, order: data, _link: '/erp/ordini' };
     }
