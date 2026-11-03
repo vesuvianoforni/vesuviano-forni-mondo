@@ -1,13 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { generateEconomicImage } from '../_shared/economic-images.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
-
-function dataUrlToBase64(dataUrl: string): string {
-  const [, base64] = dataUrl.split(',');
-  return base64;
 }
 
 serve(async (req) => {
@@ -26,17 +22,13 @@ serve(async (req) => {
       )
     }
 
-    const apiKey = Deno.env.get('GEMINI_API_KEY')
+    const apiKey = Deno.env.get('LOVABLE_API_KEY')
     if (!apiKey) {
       return new Response(
         JSON.stringify({ success: false, error: 'API key di Gemini non configurata' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
-
-    // Extract base64 from data URL
-    const base64Image = dataUrlToBase64(spaceImage);
-    const mimeType = spaceImage.startsWith('data:image/png') ? 'image/png' : 'image/jpeg';
 
     // Create prompt in Italian - more explicit about using the provided oven image
     const prompt = ovenImage 
@@ -46,92 +38,7 @@ serve(async (req) => {
     console.log('Generating image with Gemini. Has oven image:', !!ovenImage);
     console.log('Prompt:', prompt);
 
-    // Call Gemini API for image editing (text-and-image-to-image)
-    const contentsParts: any[] = [];
-    
-    // Add space image first
-    contentsParts.push({
-      inlineData: {
-        mimeType: mimeType,
-        data: base64Image,
-      },
-    });
-    
-    // Add oven image if provided (before the text instruction)
-    if (ovenImage) {
-      const ovenB64 = ovenImage.includes(',') ? dataUrlToBase64(ovenImage) : ovenImage;
-      const ovenMime = ovenImage.startsWith('data:image/png') ? 'image/png' : 'image/jpeg';
-      contentsParts.push({
-        inlineData: {
-          mimeType: ovenMime,
-          data: ovenB64,
-        },
-      });
-    }
-    
-    // Add the instruction text
-    contentsParts.push({ text: prompt });
-
-    const response = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent',
-      {
-        method: 'POST',
-        headers: {
-          'x-goog-api-key': apiKey,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          contents: [{ parts: contentsParts }],
-        }),
-      }
-    )
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error('Gemini API error:', response.status, errorText)
-      return new Response(
-        JSON.stringify({ 
-          success: false,
-          error: 'Errore nella generazione dell\'immagine con Gemini', 
-          details: `Status: ${response.status}, Response: ${errorText}` 
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
-
-    const result = await response.json()
-    console.log('Gemini response structure:', JSON.stringify(result, null, 2));
-
-    // Extract generated image from response
-    let generatedImageData = null;
-    
-    if (result.candidates && result.candidates[0] && result.candidates[0].content && result.candidates[0].content.parts) {
-      for (const part of result.candidates[0].content.parts) {
-        if (part.inlineData && part.inlineData.data) {
-          generatedImageData = part.inlineData.data;
-          break;
-        }
-        if (part.inline_data && part.inline_data.data) {
-          generatedImageData = part.inline_data.data;
-          break;
-        }
-      }
-    }
-
-    if (!generatedImageData) {
-      console.error('No image found in Gemini response:', result);
-      return new Response(
-        JSON.stringify({ 
-          success: false,
-          error: 'Nessuna immagine generata nella risposta di Gemini',
-          details: JSON.stringify(result)
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
-
-    // Convert base64 to data URL for frontend display
-    const imageDataUrl = `data:image/png;base64,${generatedImageData}`;
+    const imageDataUrl = await generateEconomicImage(prompt, ovenImage ? [spaceImage, ovenImage] : [spaceImage]);
 
     return new Response(
       JSON.stringify({ 
@@ -139,7 +46,7 @@ serve(async (req) => {
         imageUrl: imageDataUrl,
         prompt: prompt
       }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { status: typeof error === 'object' && error && 'status' in error ? Number(error.status) : 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   } catch (error) {
     console.error('Error in generate-oven-space function:', error)

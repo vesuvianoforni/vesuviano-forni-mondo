@@ -1,4 +1,5 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { ECONOMIC_EDITORIAL_MODEL } from '../_shared/ai-models.ts';
 
 interface Clause {
   title: string;
@@ -93,7 +94,7 @@ Rispondi SEMPRE e SOLO con JSON valido, senza markdown, senza spiegazioni aggiun
         'Lovable-API-Key': apiKey,
       },
       body: JSON.stringify({
-        model: 'google/gemini-3-flash-preview',
+        model: ECONOMIC_EDITORIAL_MODEL,
         messages: [
           { role: 'system', content: overrideSystem || systemPrompt },
           { role: 'user', content: `${userPrompt}\n\nSchema JSON atteso: ${schemaHint}` },

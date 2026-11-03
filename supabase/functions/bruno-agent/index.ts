@@ -1,4 +1,5 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { ECONOMIC_TEXT_MODEL } from '../_shared/ai-models.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { sendMailboxEmail } from '../_shared/email-service.ts';
@@ -75,8 +76,7 @@ ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
         method: 'POST',
         headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'openai/gpt-6-astra',
-          reasoning_effort: 'low',
+          model: ECONOMIC_TEXT_MODEL,
           messages: [{ role: 'system', content: system }, { role: 'user', content: userMsg }],
           response_format: {
             type: 'json_schema',

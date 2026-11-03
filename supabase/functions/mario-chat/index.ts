@@ -1,4 +1,5 @@
 // Existing raw Responses client retained; bounded tools execute server-side.
+import { ECONOMIC_RESPONSES_MODEL } from '../_shared/ai-models.ts';
 import { marioKnowledge } from '../_shared/mario/knowledge.ts';
 import { marioSystemPrompt } from '../_shared/mario/policy.ts';
 import { collectApify, enrichEngine, draftEngine } from '../_shared/mario/engines.ts';
@@ -74,7 +75,7 @@ Deno.serve(async (req) => {
     const input: Array<Record<string, unknown>> = messages.slice(-40).map(m => ({ role:m.role, content:m.content.slice(0, 8000) }));
     const call = () => correlation.fetch('https://ai.gateway.lovable.dev/v1/responses', {
       method: 'POST', headers: { 'Lovable-API-Key':apiKey, Authorization:`Bearer ${apiKey}`, 'Content-Type':'application/json', 'X-Lovable-AIG-SDK':'fetch' }, signal:req.signal,
-      body:JSON.stringify({ model:'openai/gpt-6-astra', instructions:system, input, tools, parallel_tool_calls:false, reasoning:{effort:'low',summary:'auto'}, include:['reasoning.encrypted_content'], store:false, stream:true }),
+      body:JSON.stringify({ model:ECONOMIC_RESPONSES_MODEL, instructions:system, input, tools, parallel_tool_calls:false, reasoning:{effort:'low',summary:'auto'}, include:['reasoning.encrypted_content'], store:false, stream:true }),
     });
     const failure = async (res: Response) => {
       const payload = await res.json().catch(() => ({}));

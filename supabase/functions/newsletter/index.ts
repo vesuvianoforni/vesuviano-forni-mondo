@@ -1,4 +1,5 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { ECONOMIC_TEXT_MODEL } from '../_shared/ai-models.ts';
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { selectRecipients, unsubscribeToken, encodeEmail, decodeEmail, renderNewsletter, NEWSLETTER_FROM, NEWSLETTER_REPLY_TO, type Audience } from './rules.ts';
@@ -141,7 +142,7 @@ async function generate(admin: SupabaseClient, prompt: string, language: string,
   const res = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
     method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'openai/gpt-6-astra', reasoning_effort: 'low',
+      model: ECONOMIC_TEXT_MODEL,
       messages: [{ role: 'system', content: system }, { role: 'user', content: `Richiesta: ${prompt}
 Forni pronta consegna disponibili: ${JSON.stringify(cat.pronta)}
 Modelli a catalogo: ${JSON.stringify(cat.modelli)}

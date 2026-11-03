@@ -1,4 +1,5 @@
 // Roberta internal marketing chat: streams plain text answers using real catalog material.
+import { ECONOMIC_RESPONSES_MODEL } from '../_shared/ai-models.ts';
 import { loadCatalog } from '../_shared/marketing-catalog.ts';
 import { OCCASIONS, requestsPrices, catalogWithoutPrices } from '../_shared/marketing-policy.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
@@ -50,7 +51,7 @@ Catalogo: ${JSON.stringify({ modelli: safeCatalog.modelli, pronta_consegna: safe
       headers: { 'Lovable-API-Key': apiKey, Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json', 'X-Lovable-AIG-SDK': 'fetch' },
       signal: req.signal,
       body: JSON.stringify({
-        model: 'openai/gpt-6-astra',
+        model: ECONOMIC_RESPONSES_MODEL,
         instructions: system,
         input: messages.map((m) => ({ role: m.role, content: m.content })),
         reasoning: { effort: 'low' },

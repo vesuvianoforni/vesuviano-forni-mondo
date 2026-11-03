@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { ECONOMIC_TEXT_MODEL } from '../_shared/ai-models.ts';
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.8";
 
 const corsHeaders = {
@@ -62,7 +63,7 @@ Respond ONLY with a valid JSON object (no markdown, no code blocks):
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: ECONOMIC_TEXT_MODEL,
         max_tokens: 16000,
         messages: [{ role: "user", content: prompt }],
       }),

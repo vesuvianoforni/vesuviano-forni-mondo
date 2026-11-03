@@ -1,4 +1,5 @@
 import { createOpenAI } from 'npm:@ai-sdk/openai@3';
+import { ECONOMIC_RESPONSES_MODEL } from '../_shared/ai-models.ts';
 import { streamText, Output, NoObjectGeneratedError } from 'npm:ai@6';
 import { z } from 'npm:zod@3';
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
@@ -24,7 +25,7 @@ export async function translateCampaign(admin: SupabaseClient, campaign: Localiz
     headers: { 'Lovable-API-Key': key, 'X-Lovable-AIG-SDK': 'vercel-ai-sdk' }, fetch: correlation.fetch,
   });
   const result = streamText({
-    model: provider.responses('openai/gpt-6-astra'), maxRetries: 0, abortSignal: request.signal,
+    model: provider.responses(ECONOMIC_RESPONSES_MODEL), maxRetries: 0, abortSignal: request.signal,
     system: `Traduci fedelmente la newsletter Vesuviano nelle lingue richieste. Se l'originale non contiene prezzi, non aggiungerli mai, nemmeno se compaiono nei link o nel catalogo. Non creare nuove offerte o cambiare prezzi, valuta, numeri, modelli, caratteristiche o condizioni. Non aggiungere sconti o urgenza per una ricorrenza. Traduci oggetto, preheader, testo e pulsante. Conserva paragrafi e tono B2B. Non aggiungere informazioni. Per cta_url scegli l'equivalente nella lingua target tra i link forniti; conserva il link originale se non esiste un equivalente. Non scegliere un'altra sezione del sito. Restituisci esattamente una versione per ogni lingua richiesta.`,
     prompt: JSON.stringify({ original: campaign, languages: targets, catalogs }),
     output: Output.object({ schema: Schema }),
