@@ -44,30 +44,33 @@ Deno.serve(async (req) => {
     const code = Array.from(crypto.getRandomValues(new Uint8Array(6)), (b) => (b % 36).toString(36)).join('').toUpperCase();
     const { data: existing } = await admin.from('telegram_links').select('chat_id').eq('user_id', u.user.id).maybeSingle();
     await admin.from('telegram_links').upsert({ user_id: u.user.id, link_code: code, code_expires_at: new Date(Date.now() + 15 * 60_000).toISOString(), ...(existing ? {} : { chat_id: null }) });
-    return json({ code, link: `https://t.me/${BOT_USERNAME}?start=${code}`, linked: !!existing?.chat_id });
+    return json({ code, link: `https://t.me/${BOT_USERNAME}?start=${code}`, group_link: `https://t.me/${BOT_USERNAME}?startgroup=${code}`, linked: !!existing?.chat_id });
   }
 
   if (!safeEqual(req.headers.get('X-Telegram-Bot-Api-Secret-Token'), await webhookSecret(key))) return new Response('Unauthorized', { status: 401 });
   const update = await req.json();
   const msg = update.message;
-  if (typeof update.update_id !== 'number' || !msg?.chat?.id || msg.chat.type !== 'private' || typeof msg.text !== 'string') return json({ ok: true });
+  if (typeof update.update_id !== 'number' || !msg?.chat?.id || !['private','group','supergroup'].includes(msg.chat.type) || typeof msg.text !== 'string') return json({ ok: true });
   const { error: dup } = await admin.from('telegram_updates').insert({ update_id: update.update_id });
   if (dup) return json({ ok: true, duplicate: true });
   const chatId: number = msg.chat.id;
-  const text = msg.text.trim().slice(0, 4000);
+  const isGroup = msg.chat.type !== 'private';
+  const raw = msg.text.replace(new RegExp(`@${BOT_USERNAME}`, 'gi'), '').trim();
+  const who = [msg.from?.first_name, msg.from?.last_name].filter(Boolean).join(' ') || msg.from?.username || 'utente';
+  const text = raw.slice(0, 4000);
 
   const work = (async () => {
     try {
-      const start = text.match(/^\/start\s+([A-Z0-9]{6})$/i);
+      const start = text.match(/^\/(?:start|collega)\s+([A-Z0-9]{6})$/i);
       if (start) {
         const { data: row } = await admin.from('telegram_links').select('user_id,code_expires_at').eq('link_code', start[1].toUpperCase()).maybeSingle();
         if (!row || new Date(row.code_expires_at) < new Date()) return say(chatId, 'Codice non valido o scaduto. Generane uno nuovo dall\'ERP (Bruno → Telegram).');
         await admin.from('telegram_links').update({ chat_id: null }).eq('chat_id', chatId);
-        await admin.from('telegram_links').update({ chat_id: chatId, telegram_username: msg.from?.username ?? null, link_code: null, code_expires_at: null, linked_at: new Date().toISOString() }).eq('user_id', row.user_id);
-        return say(chatId, 'Collegato ✅ Sono Bruno. Scrivimi cosa ti serve: clienti, prossime attività, offerte, ordini, messaggi ai clienti.');
+        await admin.from('telegram_links').update({ chat_id: chatId, telegram_username: isGroup ? (msg.chat.title ?? 'gruppo') : (msg.from?.username ?? null), link_code: null, code_expires_at: null, linked_at: new Date().toISOString() }).eq('user_id', row.user_id);
+        return say(chatId, 'Collegato ✅ Sono Bruno.' + (isGroup ? ' In questo gruppo chiunque può darmi indicazioni: scrivi @Ufficioaibot seguito dalla richiesta, oppure rispondi a un mio messaggio.' : '') + ' Scrivimi cosa ti serve: clienti, prossime attività, offerte, ordini, messaggi ai clienti.');
       }
       const { data: link } = await admin.from('telegram_links').select('user_id').eq('chat_id', chatId).maybeSingle();
-      if (!link) return say(chatId, 'Questo account Telegram non è collegato all\'ERP Vesuviano. Apri ERP → Bruno → Telegram e premi «Collega Telegram».');
+      if (!link) return isGroup ? undefined : say(chatId, 'Questo account Telegram non è collegato all\'ERP Vesuviano. Apri ERP → Bruno → Telegram e premi «Collega Telegram».');
       const { data: roles } = await admin.from('user_roles').select('role').eq('user_id', link.user_id);
       if (!roles?.some((r) => r.role === 'admin' || r.role === 'commerciale')) return say(chatId, 'Accesso non più autorizzato.');
       if (text === '/reset') { await admin.from('telegram_bruno_messages').delete().eq('chat_id', chatId); return say(chatId, 'Conversazione azzerata.'); }
@@ -80,13 +83,13 @@ Deno.serve(async (req) => {
       if (se || !s.session) throw se ?? new Error('session');
 
       await tg('sendChatAction', { chat_id: chatId, action: 'typing' });
-      await admin.from('telegram_bruno_messages').insert({ chat_id: chatId, role: 'user', content: text });
+      await admin.from('telegram_bruno_messages').insert({ chat_id: chatId, role: 'user', content: isGroup ? `[${who}] ${text}` : text });
       const { data: hist } = await admin.from('telegram_bruno_messages').select('role,content').eq('chat_id', chatId).order('id', { ascending: false }).limit(20);
       const messages = (hist ?? []).reverse();
       const res = await fetch(`${url}/functions/v1/bruno-chat`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${s.session.access_token}`, apikey: anon, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages, instructions: 'Stai rispondendo su Telegram: testo breve, niente tabelle markdown.' }),
+        body: JSON.stringify({ messages, instructions: isGroup ? 'Stai rispondendo in un gruppo Telegram del team: ogni messaggio utente inizia con [Nome] di chi scrive; rivolgiti a quella persona. Testo breve, niente tabelle markdown.' : 'Stai rispondendo su Telegram: testo breve, niente tabelle markdown.' }),
       });
       const answer = res.ok ? await res.text() : `Errore: ${(await res.json().catch(() => ({}))).error ?? res.status}`;
       if (res.ok) await admin.from('telegram_bruno_messages').insert({ chat_id: chatId, role: 'assistant', content: answer.slice(0, 8000) });
