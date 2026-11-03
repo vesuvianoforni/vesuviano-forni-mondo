@@ -1,9 +1,9 @@
 # Roadmap
 
 ## Mario: esiti Enrich (3 nov 2026)
-- [ ] Correggere il falso «0 trovati»: distinguere candidati scoperti, email verificata e pertinenza del contatto, con motivo dell'esito in Live e Ricerca.
-- [ ] Dare priorità alle pagine Contatti rispetto a Chi siamo, mantenendo il massimo di due pagine per verifica e tutti i controlli sull'email.
-- [ ] Verificare test, risultati reali salvati e disponibilità della correzione; nessuna nuova ricerca o email avviata per prova.
+- [x] Corretto il falso «0 trovati» con presentazione condivisa Live/Ricerca: email verificata e pertinenza separate, motivi consultabili; conteggio lotti completati allineato a done.
+- [x] Pagine Contatti prioritarie rispetto a Chi siamo; link duplicati/esteri/autoreferenti esclusi. Massimo due pagine per verifica e controlli email invariati.
+- [x] 36 test superati, sito senza errori, quattro funzioni distribuite; archivio reale conferma 6 email salvate da 32 verifiche completate. Presentazione isolata verificata a schermo senza errori; endpoint Live senza accesso restituisce 401, verifica autenticata nell'ERP non disponibile con Supabase esterno. Nessuna nuova ricerca o email avviata per prova.
 
 ## Mario: campagne da 500 organizzazioni (2 nov 2026)
 - [x] Piani con obiettivo scelto di 500 organizzazioni, query/quartieri a lotti max 100, tetto iniziale 1.500 candidati e fino a 500 verifiche; web Firecrawl e Google Maps Apify dichiarati, deduplicazione ed esclusioni invariati, nessuna confusione con 100 email/giorno.
