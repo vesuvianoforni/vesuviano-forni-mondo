@@ -27,7 +27,7 @@ const Body = z.discriminatedUnion('action', [
   z.object({ action: z.literal('sync_inbox') }),
   z.object({ action: z.literal('preflight') }),
   z.object({ action: z.literal('dispatch_once') }),
-  z.object({ action: z.literal('save_settings'), daily_limit:z.number().int().min(1).max(200), min_interval_seconds:z.number().int().min(180).max(86400), window_start:z.number().int().min(0).max(23), window_end:z.number().int().min(1).max(24), timezone:z.enum(['Europe/Rome','Europe/London','Europe/Paris']), provider_approval_reference:z.string().max(2000).nullable() }),
+  z.object({ action: z.literal('save_settings'), daily_limit:z.number().int().min(1).max(200), min_interval_seconds:z.number().int().min(180).max(86400), window_start:z.number().int().min(0).max(23), window_end:z.number().int().min(1).max(24), timezone:z.enum(['Europe/Rome','Europe/London','Europe/Paris']) }),
   z.object({ action:z.literal('eligibility'),id:z.string().uuid(),recipient_eligibility:z.enum(['eligible','blocked','unreviewed']),eligibility_note:z.string().trim().min(10).max(2000) }),
   z.object({ action:z.literal('prospect_add'),name:z.string().trim().min(2).max(200),kind:z.enum(['pizzeria','partner']),country:z.enum(MARIO_COUNTRIES),city:z.string().max(80),website:z.string().max(1000),email:z.string().email().nullable(),phone:z.string().max(50).nullable(),contact_name:z.string().max(160).nullable() }),
   z.object({ action:z.literal('suppress'),id:z.string().uuid(),reason:z.string().trim().min(3).max(500) }),
@@ -105,7 +105,7 @@ Deno.serve(async req => {
     if(b.action==='dispatch_once')return json(await dispatchMarioOnce(db));
     if(b.action==='save_settings'){
       deliveryLimits(b.daily_limit,b.min_interval_seconds);if(b.window_start>=b.window_end)return json({error:'Finestra oraria non valida'},400);
-      checked(await db.from('outreach_settings').update({daily_limit:b.daily_limit,min_interval_seconds:b.min_interval_seconds,window_start:b.window_start,window_end:b.window_end,timezone:b.timezone,provider_approval_reference:b.provider_approval_reference,paused:true}).eq('key','default'));
+      checked(await db.from('outreach_settings').update({daily_limit:b.daily_limit,min_interval_seconds:b.min_interval_seconds,window_start:b.window_start,window_end:b.window_end,timezone:b.timezone,paused:true}).eq('key','default'));
       return json({note:'Impostazioni salvate; il limite include avvio e follow-up. Invii in pausa.'});
     }
     if(b.action==='eligibility'){
