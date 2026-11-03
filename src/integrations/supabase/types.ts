@@ -3159,6 +3159,75 @@ export type Database = {
           },
         ]
       }
+      telegram_bruno_messages: {
+        Row: {
+          chat_id: number
+          content: string
+          created_at: string
+          id: number
+          role: string
+        }
+        Insert: {
+          chat_id: number
+          content: string
+          created_at?: string
+          id?: number
+          role: string
+        }
+        Update: {
+          chat_id?: number
+          content?: string
+          created_at?: string
+          id?: number
+          role?: string
+        }
+        Relationships: []
+      }
+      telegram_links: {
+        Row: {
+          chat_id: number | null
+          code_expires_at: string | null
+          created_at: string
+          link_code: string | null
+          linked_at: string | null
+          telegram_username: string | null
+          user_id: string
+        }
+        Insert: {
+          chat_id?: number | null
+          code_expires_at?: string | null
+          created_at?: string
+          link_code?: string | null
+          linked_at?: string | null
+          telegram_username?: string | null
+          user_id: string
+        }
+        Update: {
+          chat_id?: number | null
+          code_expires_at?: string | null
+          created_at?: string
+          link_code?: string | null
+          linked_at?: string | null
+          telegram_username?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      telegram_updates: {
+        Row: {
+          created_at: string
+          update_id: number
+        }
+        Insert: {
+          created_at?: string
+          update_id: number
+        }
+        Update: {
+          created_at?: string
+          update_id?: number
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
