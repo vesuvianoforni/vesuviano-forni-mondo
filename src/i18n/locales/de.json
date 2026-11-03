@@ -1213,7 +1213,7 @@
         "deposit": "50% deposit",
         "depositDescription": "upon order confirmation",
         "balance": "50% balance",
-        "balanceDescription": "upon oven completion (ready for delivery)"
+        "balanceDescription": "bei Versandbereitschaft der Ware"
       }
     },
     "benefits": {

@@ -1014,7 +1014,7 @@
         "deposit": "50% deposit",
         "depositDescription": "upon order confirmation",
         "balance": "50% balance",
-        "balanceDescription": "upon oven completion (ready for delivery)"
+        "balanceDescription": "when the goods are ready for shipment"
       }
     },
     "benefits": {
