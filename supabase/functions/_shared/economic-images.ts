@@ -18,6 +18,7 @@ export function economicImageBody(prompt: string, images: InlineImage[]) {
 }
 
 async function referenceImage(source: string): Promise<InlineImage> {
+  if (source.startsWith('/') && !source.startsWith('//')) source = `https://vesuvianoforni.com${source}`;
   if (!source.startsWith('https://')) return inlineImage(source);
   const allowed = new Set(['vesuvianoforni.com', 'www.vesuvianoforni.com', 'vesuviano-forni-mondo.lovable.app']);
   const supabase = Deno.env.get('SUPABASE_URL');
