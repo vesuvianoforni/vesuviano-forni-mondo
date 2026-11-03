@@ -24,3 +24,4 @@ Enrich CRM lead cards with paginated, read-only projections of recorded form, ch
 - Costs and management data (`product_costs`, `order_cost_entries`, `operating_expenses`) are admin-only via RLS and live outside the catalog; a trigger nulls `products.cost` so sales users can never read costs. The Controllo di gestione page derives margins and P&L in a pure helper module with tests.
 
 - Mario (outbound agent) rules live in `supabase/functions/_shared/mario/AGENTS.md`; read it before changing Mario code, UI or tables.
+- Mario operation summaries are shared between Live and Research: discovery counts come from `found`, while email verification and relevance come from persisted enrichment `result`, so one-contact checks never display a misleading discovery count.

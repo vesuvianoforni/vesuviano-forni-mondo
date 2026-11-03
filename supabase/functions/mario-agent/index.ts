@@ -69,7 +69,7 @@ Deno.serve(async req => {
         db.from('outreach_autopilot').select('enabled,last_planned_on,last_tick_at,last_result,auto_paused_reason').eq('key','default').single(),
         db.from('outreach_settings').select('paused,pause_reason').eq('key','default').single(),
         db.from('outreach_research_plans').select('id,request,status,created_at,outreach_research_jobs(status)').order('created_at',{ascending:false}).limit(3),
-        db.from('outreach_runs').select('id,kind,status,found,error,created_at,finished_at').order('created_at',{ascending:false}).limit(15),
+        db.from('outreach_runs').select('id,kind,status,found,error,created_at,finished_at,result').order('created_at',{ascending:false}).limit(15),
         db.from('outreach_prospects').select('id,name,city,country,email,qualified,recipient_eligibility,created_at').order('created_at',{ascending:false}).limit(15),
         db.from('outreach_outbox').select('id,recipient,subject,smtp_status,accepted_at,created_at').order('created_at',{ascending:false}).limit(10),
       ]);
