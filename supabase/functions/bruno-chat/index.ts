@@ -8,6 +8,8 @@ import { TOOLS, TOOL_LABELS, runTool } from './tools.ts';
 const Body = z.object({
   messages: z.array(z.object({ role: z.enum(['user', 'assistant']), content: z.string().min(1).max(8000) })).min(1).max(60),
   instructions: z.string().max(2000).optional(),
+  propose_writes: z.boolean().optional(),
+  execute: z.array(z.object({ name: z.string(), args: z.record(z.any()) })).max(10).optional(),
 });
 
 const json = (data: unknown, status = 200) =>
@@ -31,7 +33,7 @@ Deno.serve(async (req) => {
 
     const parsed = Body.safeParse(await req.json());
     if (!parsed.success) return json({ error: 'Richiesta non valida' }, 400);
-    const { messages, instructions } = parsed.data;
+    const { messages, instructions, propose_writes, execute } = parsed.data;
 
     // Compact CRM snapshot (Vesuviano pipeline only).
     const counts: Record<string, number> = {};
@@ -57,6 +59,19 @@ Lead più recenti: ${JSON.stringify(recent ?? [])}
 In qualificato/trattativa: ${JSON.stringify(open ?? [])}`;
 
     const ctx = { admin, userId: u.user.id, auth: req.headers.get('Authorization') || '', url, anon: Deno.env.get('SUPABASE_ANON_KEY') || '' };
+    // Approved proposals: run exactly the stored actions, no AI involved.
+    if (execute?.length) {
+      const lines: string[] = [];
+      for (const a of execute) {
+        if (!TOOL_LABELS[a.name]) { lines.push(`- ❌ ${a.name}: azione non ammessa`); continue; }
+        try {
+          const r: any = await runTool(ctx, a.name, a.args);
+          lines.push(r?.error ? `- ❌ ${TOOL_LABELS[a.name]}: ${r.error}` : `- ✅ ${TOOL_LABELS[a.name]}`);
+        } catch (e) { lines.push(`- ❌ ${TOOL_LABELS[a.name]}: ${e instanceof Error ? e.message : 'errore'}`); }
+      }
+      return json({ text: lines.join('\n') });
+    }
+    const proposals: { name: string; args: Record<string, unknown> }[] = [];
     const input: unknown[] = messages.map((m) => ({ role: m.role, content: m.content }));
     const done: string[] = [];
     let text = '';
@@ -79,12 +94,20 @@ In qualificato/trattativa: ${JSON.stringify(open ?? [])}`;
       for (const c of calls) {
         let result: any;
         try {
-          result = await runTool(ctx, c.name, JSON.parse(c.arguments || '{}'));
+          const args = JSON.parse(c.arguments || '{}');
+          if (propose_writes && TOOL_LABELS[c.name]) {
+            proposals.push({ name: c.name, args });
+            result = { status: 'proposta registrata, in attesa di approvazione del team: NON è stata eseguita' };
+            input.push({ type: 'function_call_output', call_id: c.call_id, output: JSON.stringify(result) });
+            continue;
+          }
+          result = await runTool(ctx, c.name, args);
           if (TOOL_LABELS[c.name] && !result?.error) done.push(`${TOOL_LABELS[c.name]}${result?._link ? ` ([apri](${result._link}))` : ''}`);
         } catch (e) { result = { error: e instanceof Error ? e.message : 'Operazione non riuscita' }; console.error('tool', c.name, result.error); }
         input.push({ type: 'function_call_output', call_id: c.call_id, output: JSON.stringify(result).slice(0, 12000) });
       }
     }
+    if (propose_writes) return json({ text: text || 'Ecco la proposta.', proposals });
     const final = (text || 'Fatto.') + (done.length ? `\n\n---\n**Azioni eseguite:**\n${done.map((d) => `- ✅ ${d}`).join('\n')}` : '');
     return new Response(final, { headers: { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8' } });
   } catch (e) {
