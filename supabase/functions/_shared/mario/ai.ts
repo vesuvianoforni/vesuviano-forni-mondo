@@ -1,4 +1,5 @@
 import { createOpenAI } from 'npm:@ai-sdk/openai@3';
+import { ECONOMIC_RESPONSES_MODEL } from '../ai-models.ts';
 import { streamText, Output } from 'npm:ai@6';
 import { z } from 'npm:zod@3';
 import { createLovableAiGatewayRunIdFetch } from '../mario-run-id.ts';
@@ -13,7 +14,7 @@ export async function marioObject<T extends z.ZodTypeAny>(db: SupabaseClient, re
   const correlation = createLovableAiGatewayRunIdFetch();
   const provider = createOpenAI({ baseURL: 'https://ai.gateway.lovable.dev/v1', apiKey: key, headers: { 'Lovable-API-Key': key, 'X-Lovable-AIG-SDK': 'vercel-ai-sdk' }, fetch: correlation.fetch });
   try {
-    const result = streamText({ model: provider.responses('openai/gpt-6-astra'), system, prompt, output: Output.object({ schema }), maxRetries: 0, abortSignal: request.signal,
+    const result = streamText({ model: provider.responses(ECONOMIC_RESPONSES_MODEL), system, prompt, output: Output.object({ schema }), maxRetries: 0, abortSignal: request.signal,
       providerOptions: { openai: { forceReasoning: true, reasoningEffort: 'low', reasoningSummary: 'auto', store: false, include: ['reasoning.encrypted_content'] } } });
     return await result.output;
   } catch (error) {

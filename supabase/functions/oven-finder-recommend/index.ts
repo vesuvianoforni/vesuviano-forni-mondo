@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { ECONOMIC_TEXT_MODEL } from '../_shared/ai-models.ts';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -129,7 +130,7 @@ Pick the single best model and explain in 3-4 sentences why it's perfect for thi
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
+          model: ECONOMIC_TEXT_MODEL,
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: userPrompt },

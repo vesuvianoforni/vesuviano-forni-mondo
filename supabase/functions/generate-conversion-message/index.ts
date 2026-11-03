@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { ECONOMIC_TEXT_MODEL } from '../_shared/ai-models.ts';
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.8";
 
 const corsHeaders = {
@@ -241,7 +242,7 @@ Email max 120 mots qui:
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: ECONOMIC_TEXT_MODEL,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }

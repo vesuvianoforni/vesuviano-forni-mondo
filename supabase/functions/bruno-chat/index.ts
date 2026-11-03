@@ -1,4 +1,5 @@
 // Bruno internal assistant chat: streams plain text answers about the Vesuviano CRM.
+import { ECONOMIC_RESPONSES_MODEL } from '../_shared/ai-models.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
@@ -59,7 +60,7 @@ In qualificato/trattativa: ${JSON.stringify(open ?? [])}`;
       headers: { 'Lovable-API-Key': apiKey, Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json', 'X-Lovable-AIG-SDK': 'fetch' },
       signal: req.signal,
       body: JSON.stringify({
-        model: 'openai/gpt-6-astra',
+        model: ECONOMIC_RESPONSES_MODEL,
         instructions: system,
         input: messages.map((m) => ({ role: m.role, content: m.content })),
         reasoning: { effort: 'low' },

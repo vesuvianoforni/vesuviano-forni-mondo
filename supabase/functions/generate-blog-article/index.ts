@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { ECONOMIC_EDITORIAL_MODEL } from '../_shared/ai-models.ts';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -86,7 +87,7 @@ Respond ONLY with a valid JSON object (no markdown, no code blocks) with this ex
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: ECONOMIC_EDITORIAL_MODEL,
         max_tokens: 40000,
         messages: [
           { role: "system", content: systemPrompt },
