@@ -34,7 +34,7 @@ const Body = z.discriminatedUnion('action', [
   z.object({ action:z.literal('save_template'),key:z.string().max(80),subject:z.string().trim().min(3).max(100),body:z.string().trim().min(80).max(2500) }),
   z.object({ action: z.literal('instructions'), instructions: z.string().max(4000) }),
   z.object({ action: z.literal('knowledge'), id: z.string().uuid().nullable(), title: z.string().trim().min(2).max(160), content: z.string().trim().min(10).max(8000), source_url: z.string().max(1000).nullable(), active: z.boolean() }),
-  z.object({ action: z.literal('pause') }), z.object({ action: z.literal('resume_ai') }),
+  z.object({ action: z.literal('pause') }), z.object({ action: z.literal('live') }), z.object({ action: z.literal('autopilot_stop') }), z.object({ action: z.literal('resume_ai') }),
   z.object({ action: z.literal('autopilot_save'), enabled: z.boolean(), daily_organization_goal: z.number().int().min(10).max(300) }),
 ]);
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
@@ -63,6 +63,24 @@ Deno.serve(async req => {
       ]);
       const saved=checked(templates);const library=STARTER_TEMPLATES.map(t=>({...t,...saved.find(s=>s.key===t.key),html:renderMarioEmail(saved.find(s=>s.key===t.key)?.body??t.body,t.language).html}));
       return json({ config: checked(config), knowledge: checked(knowledge), runs: checked(runs), messages: checked(messages), settings: checked(settings), totals: checked(totals), templates:library,kpis:checked(kpis),outbox:checked(outbox),autopilot:checked(autopilot),effective_daily_limit:effective.data??0,is_admin: isAdmin, system_prompt: marioSystemPrompt(checked(config).instructions), version: MARIO_VERSION });
+    }
+    if (b.action === 'live') {
+      const [pilot, settings, plans, runs, prospects, outbox] = await Promise.all([
+        db.from('outreach_autopilot').select('enabled,last_planned_on,last_tick_at,last_result,auto_paused_reason').eq('key','default').single(),
+        db.from('outreach_settings').select('paused,pause_reason').eq('key','default').single(),
+        db.from('outreach_research_plans').select('id,request,status,created_at,outreach_research_jobs(status)').order('created_at',{ascending:false}).limit(3),
+        db.from('outreach_runs').select('id,kind,status,found,error,created_at,finished_at').order('created_at',{ascending:false}).limit(15),
+        db.from('outreach_prospects').select('id,name,city,country,email,qualified,recipient_eligibility,created_at').order('created_at',{ascending:false}).limit(15),
+        db.from('outreach_outbox').select('id,recipient,subject,smtp_status,accepted_at,created_at').order('created_at',{ascending:false}).limit(10),
+      ]);
+      return json({ autopilot: checked(pilot), settings: checked(settings), plans: plans.data ?? [], runs: checked(runs), prospects: checked(prospects), outbox: checked(outbox), at: new Date().toISOString() });
+    }
+    if (b.action === 'autopilot_stop') {
+      checked(await db.from('outreach_autopilot').update({ enabled:false }).eq('key','default').select('key'));
+      checked(await db.from('outreach_settings').update({ paused:true, pause_reason:'Autopilota fermato manualmente' }).eq('key','default').select('key'));
+      const active = checked(await db.from('outreach_research_plans').select('id').in('status',['approved','queued','running']));
+      for (const p of active) await db.rpc('cancel_mario_research_plan', { p_id: p.id });
+      return json({ note: `Autopilota fermato: invii in pausa e ${active.length} ricerche annullate.` });
     }
     if (b.action === 'research_plans') return json(await researchPlans(db, b.thread_id));
     if (b.action === 'propose_research') return json(await proposeResearch(db, req, auth.user.id, b.thread_id, b.request));
