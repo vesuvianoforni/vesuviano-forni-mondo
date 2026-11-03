@@ -1,9 +1,9 @@
 import { publicWebsite } from './policy.ts';
 
-const CONTACT_PATH = /contact|contatt|kontakt|contacto/i;
+const CONTACT_PATH = /contact|contatt|kontakt|contacto|impressum|mentions|legal|book|reserv|prenot/i;
 const ABOUT_PATH = /about|propos/i;
 
-// Return candidates in contact-first order; enrichment still makes one extra scrape.
+// Return candidates in contact-first order; enrichment scrapes up to two of them.
 export function businessContactLinks(website: string, values: unknown): string[] {
   const site = publicWebsite(website);
   const normalize = (value: string) => {
