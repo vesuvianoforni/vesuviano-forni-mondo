@@ -13,7 +13,7 @@ const PATH = '/fr/four-a-pizza-bois';
 const FAQS = [
   {
     q: 'Combien coûte un four à pizza bois professionnel ?',
-    a: 'Nos fours à pizza bois commencent à environ 4 500 € pour le modèle Ottavio compact et atteignent plus de 12 000 € pour les grandes coupoles Real Bosco. Le prix inclut la sole réfractaire, l\'isolation et la finition mosaïque ou enduit. Paiement 50% à la commande et 50% à la livraison.',
+    a: 'Nos fours à pizza bois commencent à environ 4 500 € pour le modèle Ottavio compact et atteignent plus de 12 000 € pour les grandes coupoles Real Bosco. Le prix inclut la sole réfractaire, l\'isolation et la finition mosaïque ou enduit. Paiement 50% à la commande et 50% lorsque la marchandise est prête à être expédiée.',
   },
   {
     q: 'Combien de temps faut-il pour chauffer un four à pizza bois ?',

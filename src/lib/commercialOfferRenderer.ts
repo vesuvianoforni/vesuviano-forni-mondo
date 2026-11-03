@@ -30,7 +30,7 @@ export function renderCommercialOffer(doc: OfferDocument, number = 'BOZZA', crea
   const original = labels.it;
   const staticMap = [[0,'OFFERTA N.'],[1,'Data:'],[2,'Spett.le Cliente'],[3,'Oggetto'],[4,'Dettaglio Prodotti/Servizi'],[5,'Totale Imponibile:'],[6,'IVA:'],[7,'Totale Offerta:'],[8,'Validità Offerta'],[9,'Condizioni di Pagamento'],[10,'Metodi di Pagamento'],[11,'Coordinate Bancarie'],[12,'Intestatario:'],[13,'Banca:']] as const;
   if (doc.language !== 'it') for (const [index,text] of staticMap) html = html.replace(text, (l[index] ?? original[index]) + (text.endsWith(':') ? ':' : ''));
-  const terms = doc.payment_agreement === '50% acconto - 50% a consegna' ? ({it:doc.payment_agreement,en:'50% deposit - 50% on delivery',fr:'50% d’acompte - 50% à la livraison',de:'50% Anzahlung - 50% bei Lieferung',es:'50% de anticipo - 50% a la entrega'}[doc.language]) : doc.payment_agreement;
+  const terms = ['50% acconto - 50% a consegna','50% acconto - 50% a merce pronta per la spedizione'].includes(doc.payment_agreement) ? ({it:'50% acconto - 50% a merce pronta per la spedizione',en:'50% deposit - 50% when goods are ready for shipment',fr:'50% d’acompte - 50% à marchandise prête pour l’expédition',de:'50% Anzahlung - 50% bei Versandbereitschaft',es:'50% de anticipo - 50% con mercancía lista para el envío'}[doc.language]) : doc.payment_agreement;
   const values: Record<string,string> = {
     language: doc.language, logo_url: escapeOfferHtml(settings.logo_url), currency_symbol: symbol,
     numero_offerta: escapeOfferHtml(number), data_offerta: date(createdAt), brand_ownership_text: escapeOfferHtml(company?.ownership ?? ''),

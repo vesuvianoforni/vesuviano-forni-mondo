@@ -994,7 +994,7 @@
         "deposit": "50% acconto",
         "depositDescription": "alla conferma dell'ordine",
         "balance": "50% saldo",
-        "balanceDescription": "al completamento del forno (pronto per la consegna)"
+        "balanceDescription": "a merce pronta per la spedizione"
       }
     },
     "benefits": {

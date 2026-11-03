@@ -54,7 +54,7 @@ export interface CommercialOffer {
 // Transferred from Zapper's PublicOfferPage and CreateOfferDialog; company data is not AI generated.
 export const DEFAULT_OFFER_SETTINGS: OfferSettings = {
   company_entity: 'climatel', language: 'it', currency: 'EUR', price_list: 'A', vat_regime: 'standard', validity_days: 30,
-  payment_method: 'bonifico', payment_agreement: '50% acconto - 50% a consegna',
+  payment_method: 'bonifico', payment_agreement: '50% acconto - 50% a merce pronta per la spedizione',
   include_certification: true, include_warranty: true, warranty_years: 1,
   inclusions: '', exclusions: '', timeline_produzione: '', timeline_consegna: '', timeline_installazione: '', timeline_collaudo: '',
   signature_name: 'Gennaro Caglione', signature_role: 'Sales & Export Manager',
