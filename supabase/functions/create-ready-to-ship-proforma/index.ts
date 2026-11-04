@@ -1,7 +1,7 @@
 import { Resend } from "npm:resend@2.0.0"
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { BOOKING_URL, followupDueAt, isWorkingTime } from '../_shared/ready-to-ship-followup.ts'
-import { DEFAULT_OFFER_SETTINGS, offerTotals, type OfferDocument, type OfferSettings } from '../commercial-offers/domain.ts'
+import { DEFAULT_OFFER_SETTINGS, offerTotals, type OfferDocument, type OfferSettings } from '../_shared/commercial-offer-domain.ts'
 
 // Ready-to-ship request: builds a commercial offer with the shared offer tool (company/IBAN snapshot,
 // catalog description, public link + PDF from the same renderer), emails it with photos and one CTA (book a call).
