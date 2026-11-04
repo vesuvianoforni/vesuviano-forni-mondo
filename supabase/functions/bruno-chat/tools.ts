@@ -29,7 +29,7 @@ export const TOOLS = [
   { type: 'function', name: 'create_offer', description: 'Crea una bozza di offerta commerciale (stato offerta_pronta). I prezzi devono venire da get_catalog o dall\'operatore.',
     parameters: obj({ lead_id: str(), title: str(), language: { type: 'string', enum: ['it', 'en', 'fr', 'de', 'es'] },
       currency: { type: 'string', enum: ['EUR', 'GBP', 'USD', 'CHF'] }, description: str(),
-      items: { type: 'array', items: obj({ product_name: str(), description: str(), quantity: num, unit_price: num, discount_percent: num }, ['product_name', 'quantity', 'unit_price']) } },
+      items: { type: 'array', items: obj({ product_name: str(), description: str(), quantity: num, unit_price: num, discount_percent: num }, ['product_name', 'quantity', 'unit_price']) },
       send_via: { type: 'string', enum: ['wasender', 'email'], description: 'opzionale: invia subito l\'offerta al cliente (default wasender se l\'operatore chiede di inviarla)' },
       message: str('testo di accompagnamento opzionale, nella lingua del cliente') },
       ['lead_id', 'title', 'items']) },
