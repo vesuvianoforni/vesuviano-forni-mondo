@@ -18,6 +18,9 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL')!
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
 const SITE = 'https://vesuvianoforni.com'
+const WWW = 'https://www.vesuvianoforni.com'
+const MEDIA = `${WWW}/media`
+const LOGO = `${WWW}/lovable-uploads/vesuviano-logo-bianco.png`
 
 const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
 
@@ -44,7 +47,7 @@ Deno.serve(async (req) => {
     const model = rts.custom_title || rts.model_name
     const fuel = rts.fuel_type || 'Legna'
     const price = Number(rts.sale_price || rts.list_price || 0)
-    const images: string[] = (rts.images || []).map((i: string) => i.startsWith('http') ? i : SITE + i)
+    const images: string[] = (rts.images || []).map((i: string) => i.startsWith("http") ? i : WWW + (i.startsWith("/") ? i : "/" + i))
 
     // Reference model description from the product catalog (fallback: ready-to-ship description)
     let catalogDesc = ''
@@ -92,31 +95,43 @@ Deno.serve(async (req) => {
     })
 
     const priceTxt = `€ ${price.toLocaleString('it-IT', { minimumFractionDigits: 2 })}`
-    const gallery = images.slice(0, 7).map((u, i) => `<img src="${esc(u)}" alt="${esc(model)}" style="${i === 0 ? 'width:100%;margin:0 0 8px' : 'width:48%;margin:1%'};border-radius:6px">`).join('')
-    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(t.subject(model))}</title></head>
-<body style="margin:0;background:#f5f2ee;font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#2b2b2b;line-height:1.6">
-<div style="max-width:600px;margin:0 auto;background:#fff">
-  <div style="background:linear-gradient(135deg,#d97706,#ea580c);color:#fff;padding:32px;text-align:center">
-    <img src="${SITE}/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano" style="width:150px;margin-bottom:12px">
-    <h1 style="margin:0;font-size:24px">${t.title}</h1>
-  </div>
-  <div style="padding:32px">
-    <p>${esc(t.greet(customerName))}</p><p>${t.intro}</p>
-    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin:20px 0">
-      <h3 style="margin:0 0 8px">${esc(model)}</h3>
-      <p style="margin:0">${esc(specs)}</p>
-      <p style="margin:10px 0 0;font-size:18px"><strong>${t.price}: ${priceTxt}</strong> · ${t.shipping}</p>
-      <p style="margin:10px 0 0;font-size:14px">📄 <a href="${offerUrl}" style="color:#b45309">${t.view}</a> &nbsp;·&nbsp; 📎 <a href="${pdfUrl}" style="color:#b45309">${t.pdf}</a> (${esc(offer.number)})</p>
-    </div>
-    ${gallery ? `<p style="font-weight:600;margin:10px 0 6px">${t.gallery}</p><div>${gallery}</div>` : ''}
-    <div style="text-align:center;margin:30px 0 10px">
-      <p style="margin:0 0 14px">${t.ctaText}</p>
-      <a href="${BOOKING_URL}" style="display:inline-block;background:#d97706;color:#fff;padding:16px 40px;text-decoration:none;border-radius:8px;font-size:18px;font-weight:700">📞 ${t.cta}</a>
-    </div>
-    <p style="font-size:14px;color:#555">${t.contact} info@vesuvianoforni.com · +39 081 19231684</p>
-  </div>
-  <div style="background:#1f2937;color:#fff;padding:20px;text-align:center;font-size:13px">© ${new Date().getFullYear()} Vesuviano Forni</div>
-</div></body></html>`
+    // Mail clients only reliably load images from our own domain: serve storage through vesuvianoforni.com/media
+    const onDomain = (u: string) => u.replace(/^https:\/\/[a-z0-9]+\.supabase\.co\/storage\/v1\/object\/public\//, `${MEDIA}/`).replace(/^https:\/\/vesuvianoforni\.com\//, `${WWW}/`)
+    const pics = images.slice(0, 5).map(onDomain)
+    const C = { bg: '#f3f4f5', paper: '#ffffff', ink: '#242424', muted: '#686868', border: '#dedede', brand: '#8B4513', header: '#272321', soft: '#faf6f2' }
+    const hero = pics[0] ? `<tr><td style="padding:0"><img src="${esc(pics[0])}" width="600" alt="${esc(model)}" style="display:block;width:100%;max-width:600px;height:auto;border:0"></td></tr>` : ''
+    const thumbs = pics.slice(1, 5).map((u) => `<td width="25%" style="padding:3px"><img src="${esc(u)}" width="138" alt="${esc(model)}" style="display:block;width:100%;height:auto;border:0;border-radius:3px"></td>`).join('')
+    const btn = (href: string, label: string, bg: string, color = C.paper) => `<table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto"><tr><td bgcolor="${bg}" style="background:${bg};border-radius:4px"><a href="${esc(href)}" style="display:inline-block;padding:15px 34px;color:${color};font-size:16px;font-weight:bold;text-decoration:none">${label}</a></td></tr></table>`
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>${esc(t.subject(model))}</title></head>
+<body style="margin:0;padding:0;background:${C.bg};font-family:Arial,Helvetica,sans-serif;color:${C.ink}">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.bg}"><tr><td align="center" style="padding:24px 12px">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:${C.paper}">
+  <tr><td style="padding:22px 28px;background:${C.header};border-bottom:3px solid ${C.brand}"><a href="${WWW}" style="text-decoration:none"><img src="${LOGO}" width="120" height="77" alt="Vesuviano Forni" style="display:block;width:120px;height:77px;border:0"></a></td></tr>
+  ${hero}
+  <tr><td style="padding:30px 28px 10px;font-size:15px;line-height:1.75">
+    <p style="margin:0 0 6px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:${C.brand};font-weight:bold">${t.title}</p>
+    <h1 style="margin:0 0 18px;font-size:24px;line-height:1.3;color:${C.ink}">${esc(model)}</h1>
+    <p style="margin:0 0 14px">${esc(t.greet(customerName))}</p><p style="margin:0 0 18px">${t.intro}</p>
+  </td></tr>
+  ${thumbs ? `<tr><td style="padding:0 25px 10px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${thumbs}</tr></table></td></tr>` : ''}
+  <tr><td style="padding:10px 28px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.soft};border-left:3px solid ${C.brand}"><tr><td style="padding:18px 20px;font-size:14px;line-height:1.7">
+      <p style="margin:0 0 6px;color:${C.muted}">${esc(specs)}</p>
+      <p style="margin:0 0 4px;font-size:20px;font-weight:bold;color:${C.ink}">${t.price}: ${priceTxt}</p>
+      <p style="margin:0 0 12px;color:${C.muted}">${t.shipping} · ${esc(offer.number)}</p>
+      <p style="margin:0"><a href="${offerUrl}" style="color:${C.brand};font-weight:bold">${t.view} &rarr;</a> &nbsp;&nbsp; <a href="${pdfUrl}" style="color:${C.brand};font-weight:bold">${t.pdf} &rarr;</a></p>
+    </td></tr></table>
+  </td></tr>
+  <tr><td style="padding:26px 28px 8px;text-align:center;font-size:15px;line-height:1.7"><p style="margin:0 0 16px">${t.ctaText}</p>${btn(BOOKING_URL, t.cta, C.brand)}</td></tr>
+  <tr><td style="padding:24px 28px 28px;font-size:13px;line-height:1.7;color:${C.muted}">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid ${C.border}"><tr><td style="padding-top:18px">
+      <p style="margin:0 0 4px;font-size:16px;font-weight:bold;color:${C.ink}">Gennaro Caglione</p>
+      <p style="margin:0 0 10px">Sales &amp; Export Manager · <span style="color:${C.brand};font-weight:bold">Vesuviano Forni</span></p>
+      <p style="margin:0">${t.contact} <a href="mailto:info@vesuvianoforni.com" style="color:${C.ink}">info@vesuvianoforni.com</a> · <a href="tel:+3908119231684" style="color:${C.ink}">+39 081 19231684</a> · <a href="${WWW}" style="color:${C.ink}">vesuvianoforni.com</a></p>
+    </td></tr></table>
+  </td></tr>
+  <tr><td style="padding:16px 28px;background:${C.header};color:#bdb6b0;font-size:12px;text-align:center">© ${new Date().getFullYear()} Vesuviano Forni · Made in Naples</td></tr>
+</table></td></tr></table></body></html>`
 
     const sent = await resend.emails.send({ from: 'Vesuviano Forni <noreply@vesuvianoforni.com>', to: [email], reply_to: 'info@vesuvianoforni.com', subject: t.subject(model), html })
     if (sent.error) console.error('Ready-to-ship offer email failed:', offer.number, JSON.stringify(sent.error))
