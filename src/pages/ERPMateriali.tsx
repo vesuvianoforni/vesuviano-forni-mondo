@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { FileText, Loader2, Search, Trash2, Upload } from "lucide-react";
+import { ExternalLink, FileText, Loader2, Pencil, Search, Trash2, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
@@ -59,11 +61,19 @@ export default function ERPMateriali() {
     if (a.storage_path) await supabase.storage.from(BUCKET).remove([a.storage_path]);
     await db.from("product_assets").delete().eq("id", a.id); load();
   };
-  const setLanguage = async (a: Asset, v: string) => {
-    const language = v === "all" ? null : v;
-    const { error } = await db.from("product_assets").update({ language }).eq("id", a.id);
+  const [edit, setEdit] = useState<{ id: string; url: string; title: string; kind: string; language: string; product: string; tags: string } | null>(null);
+  const openEdit = (a: Asset) => setEdit({ id: a.id, url: a.url, title: a.title, kind: a.kind, language: a.language ?? "all", product: a.product_id ?? GENERAL, tags: (a.tags || []).join(", ") });
+  const saveEdit = async () => {
+    if (!edit) return;
+    setBusy(true);
+    const { error } = await db.from("product_assets").update({
+      title: edit.title.trim(), kind: edit.kind, language: edit.language === "all" ? null : edit.language,
+      product_id: edit.product === GENERAL ? null : edit.product,
+      tags: edit.tags.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean),
+    }).eq("id", edit.id);
+    setBusy(false);
     if (error) return toast.error(error.message);
-    setRows((r) => r.map((x) => (x.id === a.id ? { ...x, language } : x))); toast.success("Lingua aggiornata");
+    setEdit(null); load(); toast.success("Materiale aggiornato");
   };
 
   const visible = useMemo(() => {
@@ -136,21 +146,18 @@ export default function ERPMateriali() {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {visible.map((a) => (
               <div key={a.id} className="overflow-hidden rounded-lg border bg-card">
-                <a href={a.url} target="_blank" rel="noreferrer" className="flex aspect-video items-center justify-center bg-muted">
+                <button type="button" onClick={() => openEdit(a)} aria-label={`Modifica ${a.title}`} className="flex aspect-video w-full items-center justify-center bg-muted">
                   {a.kind === "foto" ? <img src={a.url} alt={a.title} className="h-full w-full object-cover" loading="lazy" />
                     : a.kind === "video" ? <video src={a.url} className="h-full w-full object-cover" muted preload="metadata" />
                     : <FileText className="h-10 w-10 text-muted-foreground" />}
-                </a>
+                </button>
                 <div className="space-y-1 p-3">
                   <div className="flex items-start gap-2">
-                    <p className="min-w-0 flex-1 break-words text-sm font-medium">{a.title}</p>
+                    <button type="button" onClick={() => openEdit(a)} className="min-w-0 flex-1 break-words text-left text-sm font-medium hover:underline">{a.title}</button>
+                    <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Modifica" onClick={() => openEdit(a)}><Pencil className="h-4 w-4" /></Button>
                     <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Elimina" onClick={() => remove(a)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <p className="min-w-0 flex-1 text-xs text-muted-foreground">{a.products?.name ?? "Materiale aziendale"} · {KINDS.find(([k]) => k === a.kind)?.[1] ?? a.kind}</p>
-                    <Select value={a.language ?? "all"} onValueChange={(v) => setLanguage(a, v)}><SelectTrigger className="h-7 w-28 text-xs" aria-label="Lingua"><SelectValue /></SelectTrigger>
-                      <SelectContent>{LANGS.map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}</SelectContent></Select>
-                  </div>
+                  <p className="text-xs text-muted-foreground">{a.products?.name ?? "Materiale aziendale"} · {KINDS.find(([k]) => k === a.kind)?.[1] ?? a.kind} · {LANGS.find(([k]) => k === (a.language ?? "all"))?.[1]}</p>
                   {!!a.tags?.length && <div className="flex flex-wrap gap-1">{a.tags.map((t) => <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>)}</div>}
                 </div>
               </div>
@@ -159,6 +166,37 @@ export default function ERPMateriali() {
           </div>
         )}
       </section>
+
+      <Dialog open={!!edit} onOpenChange={(o) => !o && setEdit(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader><DialogTitle>Modifica materiale</DialogTitle></DialogHeader>
+          {edit && (
+            <div className="space-y-3">
+              <div className="flex aspect-video items-center justify-center overflow-hidden rounded-md bg-muted">
+                {edit.kind === "foto" ? <img src={edit.url} alt={edit.title} className="h-full w-full object-contain" />
+                  : edit.kind === "video" ? <video src={edit.url} className="h-full w-full object-contain" controls preload="metadata" />
+                  : <FileText className="h-12 w-12 text-muted-foreground" />}
+              </div>
+              <a href={edit.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm text-primary hover:underline"><ExternalLink className="h-4 w-4" />Apri file</a>
+              <div className="space-y-1"><Label>Titolo</Label><Input value={edit.title} onChange={(e) => setEdit({ ...edit, title: e.target.value })} /></div>
+              <div className="space-y-1"><Label>Prodotto collegato</Label>{productSelect(edit.product, (v) => setEdit({ ...edit, product: v }))}</div>
+              <div className="flex flex-wrap gap-3">
+                <div className="space-y-1"><Label>Tipo</Label>
+                  <Select value={edit.kind} onValueChange={(v) => setEdit({ ...edit, kind: v })}><SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
+                    <SelectContent>{KINDS.map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}</SelectContent></Select></div>
+                <div className="space-y-1"><Label>Lingua</Label>
+                  <Select value={edit.language} onValueChange={(v) => setEdit({ ...edit, language: v })}><SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
+                    <SelectContent>{LANGS.map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}</SelectContent></Select></div>
+              </div>
+              <div className="space-y-1"><Label>Tag (separati da virgola)</Label><Input value={edit.tags} onChange={(e) => setEdit({ ...edit, tags: e.target.value })} /></div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEdit(null)}>Annulla</Button>
+            <Button onClick={saveEdit} disabled={busy || !edit?.title.trim()}>{busy && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}Salva</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
