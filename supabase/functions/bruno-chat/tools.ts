@@ -30,7 +30,11 @@ export const TOOLS = [
     parameters: obj({ lead_id: str(), title: str(), language: { type: 'string', enum: ['it', 'en', 'fr', 'de', 'es'] },
       currency: { type: 'string', enum: ['EUR', 'GBP', 'USD', 'CHF'] }, description: str(),
       items: { type: 'array', items: obj({ product_name: str(), description: str(), quantity: num, unit_price: num, discount_percent: num }, ['product_name', 'quantity', 'unit_price']) } },
+      send_via: { type: 'string', enum: ['wasender', 'email'], description: 'opzionale: invia subito l\'offerta al cliente (default wasender se l\'operatore chiede di inviarla)' },
+      message: str('testo di accompagnamento opzionale, nella lingua del cliente') },
       ['lead_id', 'title', 'items']) },
+  { type: 'function', name: 'send_offer', description: 'Invia al cliente un\'offerta esistente con link e PDF (wasender = WhatsApp di Gennaro, default; oppure email).',
+    parameters: obj({ offer_number: str('es. OF-2026-0001'), channel: { type: 'string', enum: ['wasender', 'email'] }, message: str('testo di accompagnamento opzionale') }, ['offer_number']) },
   { type: 'function', name: 'list_orders', description: 'Elenca ordini, filtrabili per cliente o stato.',
     parameters: obj({ query: str(), status: str() }) },
   { type: 'function', name: 'create_order', description: 'Inserisce un nuovo ordine.',
@@ -53,6 +57,34 @@ async function callFn(ctx: Ctx, name: string, body: unknown) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(typeof data.error === 'string' ? data.error : `Errore ${res.status}`);
   return data;
+}
+
+const OFFER_TEXT: Record<string, (n: string, name: string) => string> = {
+  it: (n, name) => `Buongiorno ${name}, come promesso le inviamo la nostra offerta ${n}.`,
+  en: (n, name) => `Hello ${name}, as promised here is our offer ${n}.`,
+  fr: (n, name) => `Bonjour ${name}, comme convenu voici notre offre ${n}.`,
+  de: (n, name) => `Guten Tag ${name}, wie besprochen erhalten Sie unser Angebot ${n}.`,
+  es: (n, name) => `Hola ${name}, como acordamos le enviamos nuestra oferta ${n}.`,
+};
+const OFFER_LABELS: Record<string, [string, string]> = { it: ['Vedi offerta', 'Scarica PDF'], en: ['View offer', 'Download PDF'], fr: ["Voir l'offre", 'Télécharger le PDF'], de: ['Angebot ansehen', 'PDF herunterladen'], es: ['Ver oferta', 'Descargar PDF'] };
+export function offerUrls(offer: { public_code: string }) {
+  const base = `https://vesuvianoforni.com/offerta/${encodeURIComponent(offer.public_code)}`;
+  return { public_url: base, pdf_url: `${base}?pdf=1` };
+}
+async function shareOffer(ctx: Ctx, offer: any) {
+  if (offer.public_enabled) return offer;
+  const r = await callFn(ctx, 'commercial-offers', { action: 'share', id: offer.id, enabled: true, expected_updated_at: offer.updated_at });
+  return r.offer;
+}
+async function deliverOffer(ctx: Ctx, offer: any, lead: any, channel: 'wasender' | 'email', message?: string) {
+  const lang = OFFER_LABELS[offer.document?.language] ? offer.document.language : 'it';
+  const { public_url, pdf_url } = offerUrls(offer);
+  const intro = (message || '').trim() || OFFER_TEXT[lang](offer.number, lead.contact_name || '');
+  const body = `${intro}\n\n${OFFER_LABELS[lang][0]}: ${public_url}\n${OFFER_LABELS[lang][1]}: ${pdf_url}`;
+  const r = await callFn(ctx, 'bruno-agent', { action: 'send', lead_id: lead.id, channel, body,
+    subject: `Vesuviano Forni · ${offer.number}`, ai_generated: true, idempotency_key: crypto.randomUUID() });
+  if (offer.status === 'offerta_pronta') await ctx.admin.from('commercial_offers').update({ status: 'offerta_inviata' }).eq('id', offer.id);
+  return { sent_via: channel === 'wasender' ? 'WhatsApp Gennaro' : 'email', result: r?.status ?? r?.message?.status ?? 'ok' };
 }
 
 export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): Promise<unknown> {
@@ -122,7 +154,20 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
         items: (a.items || []).map((i: any) => ({ id: crypto.randomUUID(), product_id: null, product_name: i.product_name, description: i.description || '',
           image_url: '', quantity: Number(i.quantity) || 1, unit_price: Number(i.unit_price), discount_percent: Number(i.discount_percent) || 0, notes: '' })) };
       const { offer } = await callFn(ctx, 'commercial-offers', { action: 'save', id: crypto.randomUUID(), lead_id: lead.id, document, status: 'offerta_pronta' });
-      return { created: true, number: offer.number, amount: offer.amount, currency: offer.currency, _link: `/erp/offerte` };
+      const shared = await shareOffer(ctx, offer);
+      const out: Record<string, unknown> = { created: true, number: offer.number, amount: offer.amount, currency: offer.currency, ...offerUrls(shared), _link: `/erp/offerte` };
+      if (a.send_via) Object.assign(out, await deliverOffer(ctx, shared, lead, a.send_via, a.message));
+      return out;
+    }
+    case 'send_offer': {
+      const { data: offer } = await admin.from('commercial_offers').select('*').eq('number', String(a.offer_number || '').trim()).maybeSingle();
+      if (!offer) return { error: 'Offerta non trovata' };
+      if (offer.archived) return { error: 'Offerta archiviata' };
+      if (!offer.lead_id) return { error: 'Offerta senza cliente collegato' };
+      const { data: lead } = await admin.from('leads').select('*').eq('id', offer.lead_id).maybeSingle();
+      if (!lead) return { error: 'Lead non trovato' };
+      const shared = await shareOffer(ctx, offer);
+      return { number: offer.number, ...offerUrls(shared), ...(await deliverOffer(ctx, shared, lead, a.channel || 'wasender', a.message)) };
     }
     case 'list_orders': {
       let q = admin.from('orders').select('id,order_number,customer_name,company_name,customer_email,status,payment_status,total_amount,deposit_paid,balance_due,estimated_delivery,created_at').order('created_at', { ascending: false }).limit(15);
@@ -156,5 +201,5 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
 
 export const TOOL_LABELS: Record<string, string> = {
   update_lead: 'CRM aggiornato', create_lead: 'Cliente creato', send_message: 'Messaggio inviato',
-  create_offer: 'Offerta creata', create_order: 'Ordine inserito', update_order: 'Ordine aggiornato',
+  create_offer: 'Offerta creata', send_offer: 'Offerta inviata', create_order: 'Ordine inserito', update_order: 'Ordine aggiornato',
 };
