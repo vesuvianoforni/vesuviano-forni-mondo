@@ -85,7 +85,17 @@ export default function ERPMateriali() {
         <p className="text-sm text-muted-foreground">Foto, video, schede e documenti. Bruno li trova per modello, titolo o tag e li invia su WhatsApp Gennaro (allegato) o per email (link).</p>
       </div>
 
-      <section className="space-y-3 rounded-lg border bg-card p-4">
+      <section
+        className={`relative space-y-3 rounded-lg border bg-card p-4 transition-colors ${dragging ? "border-primary bg-primary/5" : ""}`}
+        onDragOver={(e) => { e.preventDefault(); if (!busy) setDragging(true); }}
+        onDragLeave={(e) => { e.preventDefault(); if (e.currentTarget.contains(e.relatedTarget as Node)) return; setDragging(false); }}
+        onDrop={(e) => {
+          e.preventDefault(); setDragging(false);
+          const files = Array.from(e.dataTransfer.files).filter((f) => /^(image\/|video\/|application\/pdf)/.test(f.type));
+          if (files.length < e.dataTransfer.files.length) toast.info("Sono ammessi solo foto, video e PDF; gli altri file sono stati ignorati");
+          if (files.length) upload(files);
+        }}
+      >
         <h2 className="font-medium">Carica nuovo materiale</h2>
         <div className="flex flex-wrap items-center gap-2">
           {productSelect(form.product, (v) => setForm({ ...form, product: v }))}
@@ -98,7 +108,10 @@ export default function ERPMateriali() {
           <Input className="min-w-56 flex-1" placeholder="Titolo (es. Scheda tecnica Ottavio 120 EN)" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
           <Input className="min-w-56 flex-1" placeholder="Tag separati da virgola (es. imballo, laboratorio)" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
           <Button asChild disabled={busy}><label className="cursor-pointer">{busy ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Upload className="mr-1 h-4 w-4" />}Scegli file
-            <input type="file" multiple className="hidden" accept="image/*,video/*,application/pdf" onChange={(e) => { if (e.target.files?.length) upload(e.target.files); e.target.value = ""; }} /></label></Button>
+            <input type="file" multiple className="hidden" accept="image/*,video/*,application/pdf" onChange={(e) => { if (e.target.files?.length) upload(Array.from(e.target.files)); e.target.value = ""; }} /></label></Button>
+        </div>
+        <div className={`flex items-center justify-center gap-2 rounded-md border border-dashed p-3 text-center text-sm text-muted-foreground ${dragging ? "border-primary text-primary" : ""}`}>
+          <Upload className="h-4 w-4" />{dragging ? "Rilascia qui i file per caricarli" : "Trascina qui foto, video o PDF"}
         </div>
       </section>
 
