@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ExternalLink, FileText, Loader2, Pencil, Search, Trash2, Upload } from "lucide-react";
+import { Check, ChevronsUpDown, ExternalLink, FileText, Loader2, Pencil, Search, Trash2, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
 
@@ -17,6 +19,40 @@ const LANGS = [["all", "Universale"], ["it", "Italiano"], ["en", "Inglese"], ["f
 const GENERAL = "general";
 interface Asset { id: string; kind: string; title: string; url: string; storage_path: string | null; language: string | null; tags: string[]; product_id: string | null; products?: { name: string } | null }
 interface Product { id: string; name: string }
+
+/** Product picker with an inline search box, so many models stay easy to reach. */
+function ProductPicker({ products, value, onChange, withAny = false }: { products: Product[]; value: string; onChange: (v: string) => void; withAny?: boolean }) {
+  const [open, setOpen] = useState(false);
+  const label = value === "any" ? "Tutti" : value === GENERAL ? "Materiale aziendale" : products.find((p) => p.id === value)?.name ?? "Seleziona prodotto";
+  const pick = (v: string) => { onChange(v); setOpen(false); };
+  return (
+    <Popover open={open} onOpenChange={setOpen} modal>
+      <PopoverTrigger asChild>
+        <Button variant="outline" role="combobox" aria-expanded={open} className="w-52 justify-between font-normal">
+          <span className="truncate">{label}</span>
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-64 p-0" align="start">
+        <Command>
+          <CommandInput placeholder="Cerca prodotto..." />
+          <CommandList>
+            <CommandEmpty>Nessun prodotto trovato</CommandEmpty>
+            {withAny && <CommandItem value="tutti" onSelect={() => pick("any")}>Tutti</CommandItem>}
+            <CommandItem value="materiale aziendale" onSelect={() => pick(GENERAL)}>
+              <Check className={`mr-1 h-4 w-4 ${value === GENERAL ? "opacity-100" : "opacity-0"}`} />Materiale aziendale
+            </CommandItem>
+            {products.map((p) => (
+              <CommandItem key={p.id} value={p.name} onSelect={() => pick(p.id)}>
+                <Check className={`mr-1 h-4 w-4 ${value === p.id ? "opacity-100" : "opacity-0"}`} />{p.name}
+              </CommandItem>
+            ))}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 /** Media library Bruno uses: files linked to a product or general company material. */
 export default function ERPMateriali() {
@@ -86,12 +122,7 @@ export default function ERPMateriali() {
   }, [rows, filter]);
 
   const productSelect = (value: string, onChange: (v: string) => void, withAny = false) => (
-    <Select value={value} onValueChange={onChange}><SelectTrigger className="w-52"><SelectValue /></SelectTrigger>
-      <SelectContent>
-        {withAny && <SelectItem value="any">Tutti</SelectItem>}
-        <SelectItem value={GENERAL}>Materiale aziendale</SelectItem>
-        {products.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
-      </SelectContent></Select>
+    <ProductPicker products={products} value={value} onChange={onChange} withAny={withAny} />
   );
 
   return (
