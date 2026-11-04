@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { FileText, Loader2, Paperclip, Trash2, Upload } from "lucide-react";
+import { Loader2, Paperclip, Trash2, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import MaterialPreview from "@/components/erp/MaterialPreview";
+import { materialUploadKind } from "@/lib/materialFiles";
 
 const db = supabase as any;
 const BUCKET = "oven-gallery";
@@ -32,7 +34,7 @@ export function ProductAssets({ productId, productName }: { productId: string; p
     const { error } = await supabase.storage.from(BUCKET).upload(path, file, { contentType: file.type });
     if (error) { setBusy(false); return toast.error(error.message); }
     const url = supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
-    const { error: e2 } = await db.from("product_assets").insert({ product_id: productId, kind, title: title.trim() || `${productName} · ${file.name}`, url, storage_path: path });
+    const { error: e2 } = await db.from("product_assets").insert({ product_id: productId, kind: materialUploadKind(file.name, file.type, kind), title: title.trim() || `${productName} · ${file.name}`, url, storage_path: path });
     setBusy(false);
     if (e2) return toast.error(e2.message);
     setTitle(""); load(); toast.success("File caricato");
@@ -58,7 +60,7 @@ export function ProductAssets({ productId, productName }: { productId: string; p
         <div className="grid gap-2 sm:grid-cols-2">
           {rows.map((a) => (
             <div key={a.id} className="flex items-center gap-2 rounded-lg border p-2">
-              {a.kind === "foto" ? <img src={a.url} alt="" className="h-12 w-12 rounded object-cover" loading="lazy" /> : a.kind === "video" ? <video src={a.url} className="h-12 w-12 rounded object-cover" muted /> : <FileText className="h-8 w-8 text-muted-foreground" />}
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded bg-muted"><MaterialPreview url={a.url} title={a.title} /></div>
               <a href={a.url} target="_blank" rel="noreferrer" className="min-w-0 flex-1 truncate text-sm hover:underline">{a.title}<span className="block text-xs text-muted-foreground">{a.kind}</span></a>
               <Button size="icon" variant="ghost" aria-label="Elimina" onClick={() => remove(a)}><Trash2 className="h-4 w-4" /></Button>
             </div>

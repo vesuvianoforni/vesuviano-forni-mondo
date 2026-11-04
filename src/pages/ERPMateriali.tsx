@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Check, ChevronsUpDown, ExternalLink, FileText, Loader2, Pencil, Search, Trash2, Upload } from "lucide-react";
+import { Check, ChevronsUpDown, ExternalLink, Loader2, Pencil, Search, Trash2, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
+import MaterialPreview from "@/components/erp/MaterialPreview";
+import { materialUploadKind } from "@/lib/materialFiles";
 
 const db = supabase as any;
 const BUCKET = "oven-gallery";
@@ -85,7 +87,7 @@ export default function ERPMateriali() {
       const tags = form.tags.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean);
       const title = form.title.trim() ? (files.length > 1 ? `${form.title.trim()} · ${file.name}` : form.title.trim()) : file.name.replace(/\.[^.]+$/, "");
       const { error: e2 } = await db.from("product_assets").insert({
-        product_id: form.product === GENERAL ? null : form.product, kind: form.kind, title, url, storage_path: path,
+        product_id: form.product === GENERAL ? null : form.product, kind: materialUploadKind(file.name, file.type, form.kind), title, url, storage_path: path,
         language: form.language === "all" ? null : form.language, tags,
       });
       if (e2) toast.error(e2.message);
@@ -177,11 +179,9 @@ export default function ERPMateriali() {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {visible.map((a) => (
               <div key={a.id} className="overflow-hidden rounded-lg border bg-card">
-                <button type="button" onClick={() => openEdit(a)} aria-label={`Modifica ${a.title}`} className="flex aspect-video w-full items-center justify-center bg-muted">
-                  {a.kind === "foto" ? <img src={a.url} alt={a.title} className="h-full w-full object-cover" loading="lazy" />
-                    : a.kind === "video" ? <video src={a.url} className="h-full w-full object-cover" muted preload="metadata" />
-                    : <FileText className="h-10 w-10 text-muted-foreground" />}
-                </button>
+                <Button type="button" variant="ghost" onClick={() => openEdit(a)} aria-label={`Modifica ${a.title}`} className="flex aspect-video h-auto w-full items-center justify-center overflow-hidden rounded-none bg-muted p-0">
+                  <MaterialPreview url={a.url} title={a.title} />
+                </Button>
                 <div className="space-y-1 p-3">
                   <div className="flex items-start gap-2">
                     <button type="button" onClick={() => openEdit(a)} className="min-w-0 flex-1 break-words text-left text-sm font-medium hover:underline">{a.title}</button>
@@ -203,10 +203,8 @@ export default function ERPMateriali() {
           <DialogHeader><DialogTitle>Modifica materiale</DialogTitle></DialogHeader>
           {edit && (
             <div className="space-y-3">
-              <div className="flex aspect-video items-center justify-center overflow-hidden rounded-md bg-muted">
-                {edit.kind === "foto" ? <img src={edit.url} alt={edit.title} className="h-full w-full object-contain" />
-                  : edit.kind === "video" ? <video src={edit.url} className="h-full w-full object-contain" controls preload="metadata" />
-                  : <FileText className="h-12 w-12 text-muted-foreground" />}
+              <div className="flex h-64 items-center justify-center overflow-hidden rounded-md bg-muted">
+                <MaterialPreview url={edit.url} title={edit.title} expanded />
               </div>
               <a href={edit.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm text-primary hover:underline"><ExternalLink className="h-4 w-4" />Apri file</a>
               <div className="space-y-1"><Label>Titolo</Label><Input value={edit.title} onChange={(e) => setEdit({ ...edit, title: e.target.value })} /></div>
