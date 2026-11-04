@@ -1,6 +1,6 @@
 // Ready-to-ship WhatsApp follow-up rules: working hours (Rome, Mon–Sat 9–19) and localized text.
 export const BOOKING_URL = 'https://vesuvianoforni.com/book-a-slot-call';
-export const FOLLOWUP_DELAY_MIN = 10;
+export const FOLLOWUP_DELAY_MIN = 2;
 const OPEN_HOUR = 9;
 const CLOSE_HOUR = 19;
 

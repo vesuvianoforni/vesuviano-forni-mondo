@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "npm:resend@2.0.0"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8'
 import { buildQuotePdf } from './pdf.ts'
-import { followupDueAt } from '../_shared/ready-to-ship-followup.ts'
+import { FOLLOWUP_DELAY_MIN, followupDueAt, isWorkingTime } from '../_shared/ready-to-ship-followup.ts'
 
 const PDF_LABELS = {
   it: { title: 'Preventivo Pronta Consegna', customer: 'Cliente', diameter: 'Diametro', coating: 'Rivestimento', fuel: 'Combustibile', price: 'Prezzo', shipping: 'Spedizione inclusa', payment: 'Riserva', link: 'Preventivo online', photos: 'Foto del forno', pdfBtn: 'Scarica il preventivo PDF', galleryTitle: 'Le foto del tuo forno' },
@@ -561,6 +561,14 @@ serve(async (req) => {
         language: lang, model_name: rtsOven.model_name, due_at: followupDueAt(new Date()).toISOString(),
       })
       if (fuErr) console.error('Follow-up queue failed:', fuErr.message)
+      // In working hours: wake the sender right after the delay; otherwise the hourly run picks it up at 9:00
+      else if (isWorkingTime(new Date())) {
+        const wake = new Promise((r) => setTimeout(r, FOLLOWUP_DELAY_MIN * 60000 + 5000)).then(() =>
+          fetch(`${supabaseUrl}/functions/v1/ready-to-ship-followup`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${supabaseServiceKey}` }, body: '{}' })
+        ).catch((e) => console.error('Follow-up wake failed:', e))
+        // deno-lint-ignore no-explicit-any
+        ;(globalThis as any).EdgeRuntime?.waitUntil?.(wake)
+      }
     }
 
     // 7. Notify the company
