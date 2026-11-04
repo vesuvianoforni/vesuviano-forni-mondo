@@ -88,12 +88,7 @@ export default function ERPMateriali() {
   }, [rows, filter]);
 
   const productSelect = (value: string, onChange: (v: string) => void, withAny = false) => (
-    <Select value={value} onValueChange={onChange}><SelectTrigger className="w-52"><SelectValue /></SelectTrigger>
-      <SelectContent>
-        {withAny && <SelectItem value="any">Tutti</SelectItem>}
-        <SelectItem value={GENERAL}>Materiale aziendale</SelectItem>
-        {products.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
-      </SelectContent></Select>
+    <ProductPicker products={products} value={value} onChange={onChange} withAny={withAny} />
   );
 
   return (
