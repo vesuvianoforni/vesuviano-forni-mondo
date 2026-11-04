@@ -37,9 +37,9 @@ export const TOOLS = [
     parameters: obj({ offer_number: str('es. OF-2026-0001'), channel: { type: 'string', enum: ['wasender', 'email'] }, message: str('testo di accompagnamento opzionale') }, ['offer_number']) },
   { type: 'function', name: 'search_knowledge_base', description: 'Knowledge base ufficiale di Bruno: condizioni, tempi, consegna, pagamento, misure, obiezioni, casi. Usala per ogni domanda tecnica o commerciale prima di rispondere.',
     parameters: obj({ query: str('parole chiave, vuoto per tutto'), stage: str('fase del cliente per filtrare le regole') }) },
-  { type: 'function', name: 'get_product_assets', description: 'Foto, video, schede tecniche e cataloghi caricati per i prodotti (con url pubblico). Usalo per sapere cosa puoi inviare.',
-    parameters: obj({ query: str('nome prodotto/modello'), kind: { type: 'string', enum: ['foto', 'video', 'scheda', 'catalogo', 'documento'] } }) },
-  { type: 'function', name: 'send_attachment', description: 'Invia DAVVERO al cliente un file prodotto (asset_id da get_product_assets) con una riga di introduzione nella lingua del cliente. wasender = WhatsApp Gennaro (default) con file allegato; email = link al file.',
+  { type: 'function', name: 'get_product_assets', description: 'Libreria materiali: foto, video, schede tecniche, cataloghi, certificazioni e documenti, sia collegati ai prodotti sia aziendali generali (laboratorio, imballo, spedizioni...). Cerca per modello, titolo o tag. Usalo per sapere cosa puoi inviare.',
+    parameters: obj({ query: str('modello, argomento o tag (es. Ottavio, imballo, laboratorio)'), kind: { type: 'string', enum: ['foto', 'video', 'scheda', 'catalogo', 'certificazione', 'documento'] }, language: str('it/en/fr/de/es: preferisci la lingua del cliente') }) },
+  { type: 'function', name: 'send_attachment', description: 'Invia DAVVERO al cliente un file della libreria materiali (asset_id da get_product_assets) con una riga di introduzione nella lingua del cliente. wasender = WhatsApp Gennaro (default) con file allegato; email = link al file.',
     parameters: obj({ lead_id: str(), asset_id: str(), channel: { type: 'string', enum: ['wasender', 'email'] }, caption: str('riga di introduzione'), subject: str() }, ['lead_id', 'asset_id', 'caption']) },
   { type: 'function', name: 'update_qualification', description: `Salva i dati di qualificazione del cliente appena emersi (chiavi: uso, volume_pizze, misura, alimentazione, finitura, paese, citta, cap, accesso, tempi, modello_consigliato, note). Unisce ai dati già presenti.`,
     parameters: obj({ lead_id: str(), uso: str(), volume_pizze: str(), misura: str(), alimentazione: str(), finitura: str(), paese: str(), citta: str(), cap: str(), accesso: str(), tempi: str(), modello_consigliato: str(), note: str() }, ['lead_id']) },
@@ -188,11 +188,19 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       return rows.length ? rows : { empty: true, hint: 'Nessuna voce: non inventare, rispondi che verifichi e segnala al team.' };
     }
     case 'get_product_assets': {
-      let q = admin.from('product_assets').select('id,kind,title,url,language,products!inner(name,category)').eq('is_active', true).order('sort_order').limit(40);
+      let q = admin.from('product_assets').select('id,kind,title,url,language,tags,description,products(name,category)').eq('is_active', true).order('sort_order').order('created_at', { ascending: false }).limit(200);
       if (a.kind) q = q.eq('kind', a.kind);
-      const t = clean(a.query); if (t) q = q.or(`title.ilike.%${t}%`).or(`name.ilike.%${t}%`, { referencedTable: 'products' });
       const { data, error } = await q; if (error) throw error;
-      return (data ?? []).map((x: any) => ({ id: x.id, kind: x.kind, title: x.title, url: x.url, language: x.language, product: x.products?.name }));
+      const t = clean(a.query)?.toLowerCase();
+      const words = t ? t.split(/\s+/).filter(Boolean) : [];
+      const rows = (data ?? []).filter((x: any) => {
+        if (a.language && x.language && x.language !== a.language) return false;
+        if (!words.length) return true;
+        const hay = [x.title, x.description, x.products?.name, x.products?.category, ...(x.tags || [])].join(' ').toLowerCase();
+        return words.some((w: string) => hay.includes(w));
+      }).slice(0, 40);
+      if (!rows.length) return { empty: true, hint: 'Nessun materiale trovato: dillo all\'operatore, non inventare link.' };
+      return rows.map((x: any) => ({ id: x.id, kind: x.kind, title: x.title, url: x.url, language: x.language, tags: x.tags, product: x.products?.name ?? 'Materiale aziendale' }));
     }
     case 'send_attachment': {
       const { data: asset } = await admin.from('product_assets').select('id,title,url,kind').eq('id', a.asset_id).maybeSingle();

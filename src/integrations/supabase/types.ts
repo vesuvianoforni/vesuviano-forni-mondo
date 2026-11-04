@@ -2791,37 +2791,43 @@ export type Database = {
       product_assets: {
         Row: {
           created_at: string
+          description: string | null
           id: string
           is_active: boolean
           kind: string
           language: string | null
-          product_id: string
+          product_id: string | null
           sort_order: number
           storage_path: string | null
+          tags: string[]
           title: string
           url: string
         }
         Insert: {
           created_at?: string
+          description?: string | null
           id?: string
           is_active?: boolean
           kind?: string
           language?: string | null
-          product_id: string
+          product_id?: string | null
           sort_order?: number
           storage_path?: string | null
+          tags?: string[]
           title: string
           url: string
         }
         Update: {
           created_at?: string
+          description?: string | null
           id?: string
           is_active?: boolean
           kind?: string
           language?: string | null
-          product_id?: string
+          product_id?: string | null
           sort_order?: number
           storage_path?: string | null
+          tags?: string[]
           title?: string
           url?: string
         }

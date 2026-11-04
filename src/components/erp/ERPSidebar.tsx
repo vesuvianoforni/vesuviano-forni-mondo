@@ -1,4 +1,4 @@
-import {
+import { Images,
   LayoutDashboard,
   Users,
   Settings as SettingsIcon,
@@ -53,6 +53,7 @@ const mainItems = [
 
 const catalogItems = [
   { title: 'Prodotti', url: '/erp/prodotti', icon: Package },
+  { title: 'Materiali', url: '/erp/materiali', icon: Images },
   { title: 'Listino', url: '/erp/listino', icon: FileText },
   { title: 'Pronta Consegna', url: '/erp/pronta-consegna', icon: PackageCheck },
 ];
