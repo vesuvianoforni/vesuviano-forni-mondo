@@ -20,3 +20,7 @@ export function customerPersona(channel: 'whatsapp' | 'email' | 'any' = 'any') {
   const mod = channel === 'email' ? BRUNO_EMAIL : channel === 'whatsapp' ? BRUNO_WHATSAPP : `[WHATSAPP]\n${BRUNO_WHATSAPP}\n\n[EMAIL]\n${BRUNO_EMAIL}`;
   return `${BRUNO_BASE}\n\n# MODULO CANALE\n${mod}`;
 }
+
+/** Map the persona's generic tool names to the ERP tools actually available. */
+export const TOOL_MAP = `# STRUMENTI ERP REALI
+search_price_list/search_products = get_catalog (+ get_product_assets per foto, video, schede, cataloghi); search_knowledge_base = search_knowledge_base; update_qualification = update_qualification; propose_create_offer_draft = create_offer; send_attachment = send_attachment; notify_appointment/propose_update_lead = update_lead (prossima attività / dati). Le scritture vengono sempre proposte all'operatore prima dell'esecuzione.`;
