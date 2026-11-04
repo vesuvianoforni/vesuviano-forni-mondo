@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
     const model = rts.custom_title || rts.model_name
     const fuel = rts.fuel_type || 'Legna'
     const price = Number(rts.sale_price || rts.list_price || 0)
-    const images: string[] = (rts.images || []).map((i: string) => i.startsWith('http') ? i : SITE + i)
+    const images: string[] = (rts.images || []).map((i: string) => i.startsWith("http") ? i : WWW + (i.startsWith("/") ? i : "/" + i))
 
     // Reference model description from the product catalog (fallback: ready-to-ship description)
     let catalogDesc = ''
