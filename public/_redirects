@@ -15,4 +15,7 @@
 /catalogo/en  /catalogo/vesuviano-catalogue-en.pdf  200!
 /catalogo/en/  /catalogo/vesuviano-catalogue-en.pdf  200!
 
+# Email-safe media on our domain (Supabase public storage)
+/media/*  https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/:splat  200!
+
 /*    /index.html   200
