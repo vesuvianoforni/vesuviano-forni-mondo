@@ -1,0 +1,1 @@
+SELECT cron.alter_job(jobid, schedule := '0 6-19 * * 1-5') FROM cron.job WHERE jobname = 'telegram-bruno-tick';
