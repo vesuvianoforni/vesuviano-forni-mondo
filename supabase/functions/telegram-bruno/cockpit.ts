@@ -69,7 +69,7 @@ export function romeClock(d = new Date()) {
 export function dueSummary(d = new Date()): 'mattina' | 'sera' | null {
   const c = romeClock(d);
   if (c.weekday === 'Sat' || c.weekday === 'Sun') return null;
-  return c.hour === 9 ? 'mattina' : c.hour === 18 ? 'sera' : null;
+  return c.hour === 8 ? 'mattina' : c.hour === 20 ? 'sera' : null;
 }
 
 export const COMMANDS = [
