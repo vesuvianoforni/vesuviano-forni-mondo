@@ -11,7 +11,7 @@ import SEOHead from "@/components/SEOHead";
 const db = supabase as any;
 const BUCKET = "oven-gallery";
 const KINDS = [["foto", "Foto"], ["video", "Video"], ["scheda", "Scheda tecnica"], ["catalogo", "Catalogo"], ["certificazione", "Certificazione"], ["documento", "Documento"]] as const;
-const LANGS = [["all", "Tutte le lingue"], ["it", "IT"], ["en", "EN"], ["fr", "FR"], ["de", "DE"], ["es", "ES"]] as const;
+const LANGS = [["all", "Universale"], ["it", "Italiano"], ["en", "Inglese"], ["fr", "Francese"], ["de", "Tedesco"], ["es", "Spagnolo"]] as const;
 const GENERAL = "general";
 interface Asset { id: string; kind: string; title: string; url: string; storage_path: string | null; language: string | null; tags: string[]; product_id: string | null; products?: { name: string } | null }
 interface Product { id: string; name: string }
@@ -24,7 +24,7 @@ export default function ERPMateriali() {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({ product: GENERAL, kind: "foto", language: "all", title: "", tags: "" });
-  const [filter, setFilter] = useState({ q: "", product: "any", kind: "any" });
+  const [filter, setFilter] = useState({ q: "", product: "any", kind: "any", lang: "any" });
 
   const load = async () => {
     const { data } = await db.from("product_assets").select("id,kind,title,url,storage_path,language,tags,product_id,products(name)").order("created_at", { ascending: false }).limit(1000);
@@ -59,11 +59,18 @@ export default function ERPMateriali() {
     if (a.storage_path) await supabase.storage.from(BUCKET).remove([a.storage_path]);
     await db.from("product_assets").delete().eq("id", a.id); load();
   };
+  const setLanguage = async (a: Asset, v: string) => {
+    const language = v === "all" ? null : v;
+    const { error } = await db.from("product_assets").update({ language }).eq("id", a.id);
+    if (error) return toast.error(error.message);
+    setRows((r) => r.map((x) => (x.id === a.id ? { ...x, language } : x))); toast.success("Lingua aggiornata");
+  };
 
   const visible = useMemo(() => {
     const q = filter.q.trim().toLowerCase();
     return rows.filter((a) =>
       (filter.kind === "any" || a.kind === filter.kind) &&
+      (filter.lang === "any" || (filter.lang === "all" ? !a.language : a.language === filter.lang)) &&
       (filter.product === "any" || (filter.product === GENERAL ? !a.product_id : a.product_id === filter.product)) &&
       (!q || [a.title, a.products?.name, ...(a.tags || [])].join(" ").toLowerCase().includes(q)));
   }, [rows, filter]);
@@ -122,6 +129,8 @@ export default function ERPMateriali() {
           {productSelect(filter.product, (v) => setFilter({ ...filter, product: v }), true)}
           <Select value={filter.kind} onValueChange={(v) => setFilter({ ...filter, kind: v })}><SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
             <SelectContent><SelectItem value="any">Tutti i tipi</SelectItem>{KINDS.map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}</SelectContent></Select>
+          <Select value={filter.lang} onValueChange={(v) => setFilter({ ...filter, lang: v })}><SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+            <SelectContent><SelectItem value="any">Qualsiasi lingua</SelectItem>{LANGS.map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}</SelectContent></Select>
         </div>
         {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -137,7 +146,11 @@ export default function ERPMateriali() {
                     <p className="min-w-0 flex-1 break-words text-sm font-medium">{a.title}</p>
                     <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Elimina" onClick={() => remove(a)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
-                  <p className="text-xs text-muted-foreground">{a.products?.name ?? "Materiale aziendale"} · {KINDS.find(([k]) => k === a.kind)?.[1] ?? a.kind}{a.language ? ` · ${a.language.toUpperCase()}` : ""}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="min-w-0 flex-1 text-xs text-muted-foreground">{a.products?.name ?? "Materiale aziendale"} · {KINDS.find(([k]) => k === a.kind)?.[1] ?? a.kind}</p>
+                    <Select value={a.language ?? "all"} onValueChange={(v) => setLanguage(a, v)}><SelectTrigger className="h-7 w-28 text-xs" aria-label="Lingua"><SelectValue /></SelectTrigger>
+                      <SelectContent>{LANGS.map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}</SelectContent></Select>
+                  </div>
                   {!!a.tags?.length && <div className="flex flex-wrap gap-1">{a.tags.map((t) => <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>)}</div>}
                 </div>
               </div>
