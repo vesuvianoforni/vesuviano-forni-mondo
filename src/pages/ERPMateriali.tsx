@@ -35,9 +35,10 @@ export default function ERPMateriali() {
     db.from("products").select("id,name").order("name").then(({ data }: any) => setProducts(data ?? []));
   }, []);
 
-  const upload = async (files: FileList) => {
+  const upload = async (files: File[]) => {
+    if (!files.length) return;
     setBusy(true);
-    for (const file of Array.from(files)) {
+    for (const file of files) {
       const folder = form.product === GENERAL ? "general" : form.product;
       const path = `product-assets/${folder}/${Date.now()}-${file.name.replace(/[^\w.-]+/g, "_")}`;
       const { error } = await supabase.storage.from(BUCKET).upload(path, file, { contentType: file.type });
