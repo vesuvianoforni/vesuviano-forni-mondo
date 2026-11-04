@@ -22,7 +22,7 @@ export const TOOLS = [
       next_activity_notes: str(), email: str(), phone: str(), city: str(), country: str(), company_name: str(), contact_name: str(), value: num }, ['lead_id']) },
   { type: 'function', name: 'create_lead', description: 'Crea un nuovo cliente nella pipeline Vesuviano.',
     parameters: obj({ contact_name: str(), company_name: str(), email: str(), phone: str(), city: str(), country: str(), notes: str(), source: str() }, ['contact_name']) },
-  { type: 'function', name: 'send_message', description: 'Invia DAVVERO un messaggio al cliente (email da info@, wasender = WhatsApp di Gennaro, whatsapp_api = linea Bruno) o salva una nota interna (note). Usalo solo se l\'operatore ha chiesto di inviare.',
+  { type: 'function', name: 'send_message', description: 'Invia DAVVERO un messaggio al cliente (email da info@, wasender = WhatsApp di Gennaro, whatsapp_api = linea Bruno) o salva una nota interna (note). Usalo solo se l\'operatore ha chiesto di inviare. body e subject vanno SEMPRE scritti nella lingua del cliente (customer_language da get_lead), anche se l\'istruzione è in italiano; le note interne restano in italiano.',
     parameters: obj({ lead_id: str(), channel: { type: 'string', enum: ['email', 'wasender', 'whatsapp_api', 'note'] }, subject: str(), body: str() }, ['lead_id', 'channel', 'body']) },
   { type: 'function', name: 'get_catalog', description: 'Prezzi di listino attivo per mercato (UK, FR, DE) e sconti per tipo cliente. Unica fonte di prezzi ammessa.',
     parameters: obj({ query: str('filtro nome prodotto'), market: { type: 'string', enum: ['UK', 'FR', 'DE'] } }) },
@@ -48,6 +48,7 @@ export const TOOLS = [
 type Ctx = { admin: SupabaseClient; userId: string; auth: string; url: string; anon: string };
 const pick = (a: Record<string, unknown>, keys: string[]) =>
   Object.fromEntries(keys.filter((k) => a[k] !== undefined && a[k] !== null && a[k] !== '').map((k) => [k, a[k]]));
+import { customerLanguage } from './language.ts';
 const LEAD = 'id,contact_name,company_name,email,phone,city,country,status,customer_type,next_activity_type,next_activity_date,next_activity_notes,value,notes';
 const clean = (q: unknown) => String(q ?? '').replace(/[%,()*]/g, ' ').trim().slice(0, 80);
 
@@ -96,7 +97,7 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       if (t) q = q.or(['contact_name', 'company_name', 'email', 'phone', 'city'].map((c) => `${c}.ilike.%${t}%`).join(','));
       if (a.stage) q = q.eq('status', a.stage);
       const { data, error } = await q; if (error) throw error;
-      return (data ?? []).map((l) => ({ ...l, notes: (l.notes || '').slice(0, 200) }));
+      return (data ?? []).map((l) => ({ ...l, customer_language: customerLanguage(l), notes: (l.notes || '').slice(0, 200) }));
     }
     case 'get_lead': {
       const [{ data: lead }, { data: msgs }, { data: offers }] = await Promise.all([
@@ -106,7 +107,7 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       ]);
       if (!lead) return { error: 'Lead non trovato' };
       const { data: orders } = lead.email ? await admin.from('orders').select('id,order_number,status,payment_status,total_amount,created_at').eq('customer_email', lead.email).limit(5) : { data: [] };
-      return { lead: { ...lead, notes: (lead.notes || '').slice(0, 1500) }, messages: (msgs ?? []).map((m) => ({ ...m, body: m.body.slice(0, 400) })), offers, orders };
+      return { lead: { ...lead, customer_language: customerLanguage(lead), notes: (lead.notes || '').slice(0, 1500) }, messages: (msgs ?? []).map((m) => ({ ...m, body: m.body.slice(0, 400) })), offers, orders };
     }
     case 'update_lead': {
       if (a.status && !STAGES.includes(a.status)) return { error: 'Fase non valida' };
