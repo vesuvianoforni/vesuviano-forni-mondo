@@ -5,7 +5,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { sendMailboxEmail } from '../_shared/email-service.ts';
 import { safeMailError } from '../_shared/email-rules.ts';
-import { sendGennaroWhatsApp } from './wasender.ts';
+import { mediaField, sendGennaroWhatsApp } from './wasender.ts';
 import { customerPersona, stageRule, TOOL_MAP } from '../_shared/bruno/persona.ts';
 
 // Obiettivi di Bruno per fase pipeline (tenere allineato a src/lib/brunoObjectives.ts)
@@ -179,6 +179,7 @@ ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
       sender: input.channel === 'whatsapp_api' ? 'bruno' : input.channel === 'wasender' ? 'gennaro' : 'operator',
       subject: input.subject ?? null, body: input.body, status, error, external_id: externalId,
       ai_generated: input.ai_generated ?? false, created_by: u.user.id,
+      ...(input.media_url ? { metadata: { media_url: input.media_url, message_type: Object.keys(mediaField(input.media_url))[0]?.replace('Url', '') || 'document', file_name: input.media_url.split('/').pop()?.split('?')[0] } } : {}),
     }).select().single();
     if (dbErr) return json({ error: dbErr.message }, 500);
 

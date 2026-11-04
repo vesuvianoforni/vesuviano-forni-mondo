@@ -35,6 +35,14 @@ export const TOOLS = [
       ['lead_id', 'title', 'items']) },
   { type: 'function', name: 'send_offer', description: 'Invia al cliente un\'offerta esistente con link e PDF (wasender = WhatsApp di Gennaro, default; oppure email).',
     parameters: obj({ offer_number: str('es. OF-2026-0001'), channel: { type: 'string', enum: ['wasender', 'email'] }, message: str('testo di accompagnamento opzionale') }, ['offer_number']) },
+  { type: 'function', name: 'search_knowledge_base', description: 'Knowledge base ufficiale di Bruno: condizioni, tempi, consegna, pagamento, misure, obiezioni, casi. Usala per ogni domanda tecnica o commerciale prima di rispondere.',
+    parameters: obj({ query: str('parole chiave, vuoto per tutto'), stage: str('fase del cliente per filtrare le regole') }) },
+  { type: 'function', name: 'get_product_assets', description: 'Foto, video, schede tecniche e cataloghi caricati per i prodotti (con url pubblico). Usalo per sapere cosa puoi inviare.',
+    parameters: obj({ query: str('nome prodotto/modello'), kind: { type: 'string', enum: ['foto', 'video', 'scheda', 'catalogo', 'documento'] } }) },
+  { type: 'function', name: 'send_attachment', description: 'Invia DAVVERO al cliente un file prodotto (asset_id da get_product_assets) con una riga di introduzione nella lingua del cliente. wasender = WhatsApp Gennaro (default) con file allegato; email = link al file.',
+    parameters: obj({ lead_id: str(), asset_id: str(), channel: { type: 'string', enum: ['wasender', 'email'] }, caption: str('riga di introduzione'), subject: str() }, ['lead_id', 'asset_id', 'caption']) },
+  { type: 'function', name: 'update_qualification', description: `Salva i dati di qualificazione del cliente appena emersi (chiavi: uso, volume_pizze, misura, alimentazione, finitura, paese, citta, cap, accesso, tempi, modello_consigliato, note). Unisce ai dati già presenti.`,
+    parameters: obj({ lead_id: str(), uso: str(), volume_pizze: str(), misura: str(), alimentazione: str(), finitura: str(), paese: str(), citta: str(), cap: str(), accesso: str(), tempi: str(), modello_consigliato: str(), note: str() }, ['lead_id']) },
   { type: 'function', name: 'list_orders', description: 'Elenca ordini, filtrabili per cliente o stato.',
     parameters: obj({ query: str(), status: str() }) },
   { type: 'function', name: 'create_order', description: 'Inserisce un nuovo ordine.',
@@ -49,7 +57,9 @@ type Ctx = { admin: SupabaseClient; userId: string; auth: string; url: string; a
 const pick = (a: Record<string, unknown>, keys: string[]) =>
   Object.fromEntries(keys.filter((k) => a[k] !== undefined && a[k] !== null && a[k] !== '').map((k) => [k, a[k]]));
 import { customerLanguage } from './language.ts';
-const LEAD = 'id,contact_name,company_name,email,phone,city,country,status,customer_type,next_activity_type,next_activity_date,next_activity_notes,value,notes';
+import { stageRule } from '../_shared/bruno/persona.ts';
+const QUAL_KEYS = ['uso', 'volume_pizze', 'misura', 'alimentazione', 'finitura', 'paese', 'citta', 'cap', 'accesso', 'tempi', 'modello_consigliato', 'note'];
+const LEAD = 'id,qualification,contact_name,company_name,email,phone,city,country,status,customer_type,next_activity_type,next_activity_date,next_activity_notes,value,notes';
 const clean = (q: unknown) => String(q ?? '').replace(/[%,()*]/g, ' ').trim().slice(0, 80);
 
 async function callFn(ctx: Ctx, name: string, body: unknown) {
@@ -107,7 +117,7 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       ]);
       if (!lead) return { error: 'Lead non trovato' };
       const { data: orders } = lead.email ? await admin.from('orders').select('id,order_number,status,payment_status,total_amount,created_at').eq('customer_email', lead.email).limit(5) : { data: [] };
-      return { lead: { ...lead, customer_language: customerLanguage(lead), notes: (lead.notes || '').slice(0, 1500) }, messages: (msgs ?? []).map((m) => ({ ...m, body: m.body.slice(0, 400) })), offers, orders };
+      return { stage_rule: stageRule(lead.status), lead: { ...lead, customer_language: customerLanguage(lead), notes: (lead.notes || '').slice(0, 1500) }, messages: (msgs ?? []).map((m) => ({ ...m, body: m.body.slice(0, 400) })), offers, orders };
     }
     case 'update_lead': {
       if (a.status && !STAGES.includes(a.status)) return { error: 'Fase non valida' };
@@ -169,6 +179,36 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       if (!lead) return { error: 'Lead non trovato' };
       const shared = await shareOffer(ctx, offer);
       return { number: offer.number, ...offerUrls(shared), ...(await deliverOffer(ctx, shared, lead, a.channel || 'wasender', a.message)) };
+    }
+    case 'search_knowledge_base': {
+      let q = admin.from('bruno_knowledge').select('category,title,content,stages').eq('is_active', true).order('sort_order').limit(40);
+      const t = clean(a.query); if (t) q = q.or(`title.ilike.%${t}%,content.ilike.%${t}%,category.ilike.%${t}%`);
+      const { data, error } = await q; if (error) throw error;
+      const rows = (data ?? []).filter((k: any) => !a.stage || !k.stages?.length || k.stages.includes(a.stage));
+      return rows.length ? rows : { empty: true, hint: 'Nessuna voce: non inventare, rispondi che verifichi e segnala al team.' };
+    }
+    case 'get_product_assets': {
+      let q = admin.from('product_assets').select('id,kind,title,url,language,products!inner(name,category)').eq('is_active', true).order('sort_order').limit(40);
+      if (a.kind) q = q.eq('kind', a.kind);
+      const t = clean(a.query); if (t) q = q.or(`title.ilike.%${t}%`).or(`name.ilike.%${t}%`, { referencedTable: 'products' });
+      const { data, error } = await q; if (error) throw error;
+      return (data ?? []).map((x: any) => ({ id: x.id, kind: x.kind, title: x.title, url: x.url, language: x.language, product: x.products?.name }));
+    }
+    case 'send_attachment': {
+      const { data: asset } = await admin.from('product_assets').select('id,title,url,kind').eq('id', a.asset_id).maybeSingle();
+      if (!asset) return { error: 'File non trovato' };
+      const channel = a.channel === 'email' ? 'email' : 'wasender';
+      const body = channel === 'email' ? `${a.caption}\n\n${asset.title}: ${asset.url}` : a.caption;
+      const r = await callFn(ctx, 'bruno-agent', { action: 'send', lead_id: a.lead_id, channel, body, subject: a.subject,
+        ...(channel === 'wasender' ? { media_url: asset.url } : {}), ai_generated: true, idempotency_key: crypto.randomUUID() });
+      return { sent: true, channel, file: asset.title, result: r?.status ?? r?.message?.status ?? 'ok' };
+    }
+    case 'update_qualification': {
+      const { data: lead } = await admin.from('leads').select('id,qualification').eq('id', a.lead_id).maybeSingle();
+      if (!lead) return { error: 'Lead non trovato' };
+      const qualification = { ...(lead.qualification || {}), ...pick(a, QUAL_KEYS) };
+      const { error } = await admin.from('leads').update({ qualification }).eq('id', a.lead_id); if (error) throw error;
+      return { updated: true, qualification };
     }
     case 'list_orders': {
       let q = admin.from('orders').select('id,order_number,customer_name,company_name,customer_email,status,payment_status,total_amount,deposit_paid,balance_due,estimated_delivery,created_at').order('created_at', { ascending: false }).limit(15);
