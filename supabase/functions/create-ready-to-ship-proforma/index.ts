@@ -1,678 +1,162 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "npm:resend@2.0.0"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8'
-import { buildQuotePdf } from './pdf.ts'
-import { followupDueAt, isWorkingTime } from '../_shared/ready-to-ship-followup.ts'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { BOOKING_URL, followupDueAt, isWorkingTime } from '../_shared/ready-to-ship-followup.ts'
+import { DEFAULT_OFFER_SETTINGS, offerTotals, type OfferDocument, type OfferSettings } from '../commercial-offers/domain.ts'
 
-const PDF_LABELS = {
-  it: { title: 'Preventivo Pronta Consegna', customer: 'Cliente', diameter: 'Diametro', coating: 'Rivestimento', fuel: 'Combustibile', price: 'Prezzo', shipping: 'Spedizione inclusa', payment: 'Riserva', link: 'Preventivo online', photos: 'Foto del forno', pdfBtn: 'Scarica il preventivo PDF', galleryTitle: 'Le foto del tuo forno' },
-  en: { title: 'Ready-to-Ship Quote', customer: 'Customer', diameter: 'Diameter', coating: 'Coating', fuel: 'Fuel', price: 'Price', shipping: 'Shipping included', payment: 'Reservation', link: 'Online quote', photos: 'Oven photos', pdfBtn: 'Download the PDF quote', galleryTitle: 'Photos of your oven' },
-  fr: { title: 'Devis Prêt à Expédier', customer: 'Client', diameter: 'Diamètre', coating: 'Revêtement', fuel: 'Combustible', price: 'Prix', shipping: 'Livraison incluse', payment: 'Réservation', link: 'Devis en ligne', photos: 'Photos du four', pdfBtn: 'Télécharger le devis PDF', galleryTitle: 'Les photos de votre four' },
-  de: { title: 'Angebot Sofort Lieferbar', customer: 'Kunde', diameter: 'Durchmesser', coating: 'Beschichtung', fuel: 'Brennstoff', price: 'Preis', shipping: 'Versand inklusive', payment: 'Reservierung', link: 'Online-Angebot', photos: 'Fotos des Ofens', pdfBtn: 'PDF-Angebot herunterladen', galleryTitle: 'Fotos Ihres Ofens' },
-  es: { title: 'Presupuesto Listo para Envío', customer: 'Cliente', diameter: 'Diámetro', coating: 'Revestimiento', fuel: 'Combustible', price: 'Precio', shipping: 'Envío incluido', payment: 'Reserva', link: 'Presupuesto online', photos: 'Fotos del horno', pdfBtn: 'Descargar el presupuesto PDF', galleryTitle: 'Las fotos de tu horno' },
-}
+// Ready-to-ship request: builds a commercial offer with the shared offer tool (company/IBAN snapshot,
+// catalog description, public link + PDF from the same renderer), emails it with photos and one CTA (book a call).
+// No proforma and no deposit.
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
+const json = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'))
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
+const SITE = 'https://vesuvianoforni.com'
 
-serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders })
-  }
+const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
 
+const T = {
+  it: { subject: (m: string) => `La tua offerta Pronta Consegna — ${m}`, title: 'Il tuo forno è pronto', greet: (n: string) => `Gentile ${n},`, intro: 'grazie per il tuo interesse. Ti inviamo la nostra offerta per il forno che hai scelto dalla collezione <strong>Pronta Consegna</strong>.', diameter: 'Diametro', coating: 'Rivestimento', fuel: 'Combustibile', price: 'Prezzo', shipping: 'Spedizione inclusa', gallery: 'Le foto del tuo forno', view: 'Vedi l’offerta online', pdf: 'Scarica l’offerta in PDF', ctaText: 'Vuoi parlarne con il nostro Export Manager Gennaro Caglione?', cta: 'Prenota una chiamata', contact: 'Per qualsiasi domanda:', inclusion: 'Spedizione inclusa', offerTitle: (m: string) => `Pronta consegna · ${m}` },
+  en: { subject: (m: string) => `Your Ready-to-Ship offer — ${m}`, title: 'Your oven is ready', greet: (n: string) => `Dear ${n},`, intro: 'thank you for your interest. Here is our offer for the oven you selected from our <strong>Ready to Ship</strong> collection.', diameter: 'Diameter', coating: 'Coating', fuel: 'Fuel', price: 'Price', shipping: 'Shipping included', gallery: 'Photos of your oven', view: 'View the offer online', pdf: 'Download the offer as PDF', ctaText: 'Would you like to talk it through with our Export Manager Gennaro Caglione?', cta: 'Book a call', contact: 'For any question:', inclusion: 'Shipping included', offerTitle: (m: string) => `Ready to ship · ${m}` },
+  fr: { subject: (m: string) => `Votre offre Prêt à Expédier — ${m}`, title: 'Votre four est prêt', greet: (n: string) => `Bonjour ${n},`, intro: 'merci pour votre intérêt. Voici notre offre pour le four choisi dans notre collection <strong>Prêt à Expédier</strong>.', diameter: 'Diamètre', coating: 'Revêtement', fuel: 'Combustible', price: 'Prix', shipping: 'Livraison incluse', gallery: 'Les photos de votre four', view: 'Voir l’offre en ligne', pdf: 'Télécharger l’offre en PDF', ctaText: 'Souhaitez-vous en parler avec notre Export Manager Gennaro Caglione ?', cta: 'Réserver un appel', contact: 'Pour toute question :', inclusion: 'Livraison incluse', offerTitle: (m: string) => `Prêt à expédier · ${m}` },
+  de: { subject: (m: string) => `Ihr Angebot Sofort Lieferbar — ${m}`, title: 'Ihr Ofen ist bereit', greet: (n: string) => `Guten Tag ${n},`, intro: 'vielen Dank für Ihr Interesse. Hier ist unser Angebot für den Ofen aus unserer Kollektion <strong>Sofort Lieferbar</strong>.', diameter: 'Durchmesser', coating: 'Beschichtung', fuel: 'Brennstoff', price: 'Preis', shipping: 'Versand inklusive', gallery: 'Fotos Ihres Ofens', view: 'Angebot online ansehen', pdf: 'Angebot als PDF herunterladen', ctaText: 'Möchten Sie mit unserem Export Manager Gennaro Caglione sprechen?', cta: 'Gespräch buchen', contact: 'Bei Fragen:', inclusion: 'Versand inklusive', offerTitle: (m: string) => `Sofort lieferbar · ${m}` },
+  es: { subject: (m: string) => `Tu oferta Listo para Envío — ${m}`, title: 'Tu horno está listo', greet: (n: string) => `Hola ${n},`, intro: 'gracias por tu interés. Te enviamos nuestra oferta para el horno que elegiste de la colección <strong>Listo para Envío</strong>.', diameter: 'Diámetro', coating: 'Revestimiento', fuel: 'Combustible', price: 'Precio', shipping: 'Envío incluido', gallery: 'Las fotos de tu horno', view: 'Ver la oferta online', pdf: 'Descargar la oferta en PDF', ctaText: '¿Quieres hablarlo con nuestro Export Manager Gennaro Caglione?', cta: 'Reservar una llamada', contact: 'Para cualquier pregunta:', inclusion: 'Envío incluido', offerTitle: (m: string) => `Listo para envío · ${m}` },
+}
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders })
   try {
-    const {
-      firstName,
-      lastName,
-      email,
-      phone,
-      city,
-      readyToShipOvenId,
-      language = 'it',
-    } = await req.json()
+    const { firstName, lastName, email, phone, city, readyToShipOvenId, language = 'it' } = await req.json()
+    if (!firstName || !lastName || !email || !phone || !readyToShipOvenId) return json({ error: 'Missing required fields' }, 400)
 
-    if (!firstName || !lastName || !email || !phone || !readyToShipOvenId) {
-      return new Response(
-        JSON.stringify({ error: 'Missing required fields' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+    const { data: rts } = await supabase.from('ready_to_ship_ovens').select('*').eq('id', readyToShipOvenId).maybeSingle()
+    if (!rts) return json({ error: 'Oven not found' }, 404)
+
+    const lang = (String(language).slice(0, 2).toLowerCase() in T ? String(language).slice(0, 2).toLowerCase() : 'it') as keyof typeof T
+    const t = T[lang]
+    const customerName = `${firstName} ${lastName}`.trim()
+    const model = rts.custom_title || rts.model_name
+    const fuel = rts.fuel_type || 'Legna'
+    const price = Number(rts.sale_price || rts.list_price || 0)
+    const images: string[] = (rts.images || []).map((i: string) => i.startsWith('http') ? i : SITE + i)
+
+    // Reference model description from the product catalog (fallback: ready-to-ship description)
+    let catalogDesc = ''
+    if (rts.oven_id) {
+      const { data: prods } = await supabase.from('products').select('description,size_label').eq('oven_id', rts.oven_id).eq('is_active', true)
+      const match = (prods ?? []).find((p) => String(p.size_label ?? '').includes(String(rts.diameter))) ?? (prods ?? [])[0]
+      catalogDesc = match?.description ?? ''
     }
+    const specs = `${t.diameter}: ${rts.diameter} cm · ${t.coating}: ${rts.coating || 'Standard'} · ${t.fuel}: ${fuel}`
+    const description = [specs, catalogDesc || rts.description || ''].filter(Boolean).join('\n\n')
 
-    // 1. Fetch the ready-to-ship oven
-    const { data: rtsOven, error: rtsError } = await supabase
-      .from('ready_to_ship_ovens')
-      .select('*')
-      .eq('id', readyToShipOvenId)
-      .single()
-
-    if (rtsError || !rtsOven) {
-      return new Response(
-        JSON.stringify({ error: 'Oven not found' }),
-        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+    // Offer settings (company identity, IBAN, conditions) from the shared offer tool
+    const { data: row } = await supabase.from('commercial_offer_settings').select('settings').eq('key', 'vesuviano').maybeSingle()
+    const settings: OfferSettings = { ...structuredClone(DEFAULT_OFFER_SETTINGS), ...(row?.settings ?? {}) }
+    const { data: lead } = await supabase.from('leads').select('id').eq('pipeline', 'Vesuviano').ilike('email', email).limit(1).maybeSingle()
+    const valid = new Date(Date.now() + (settings.validity_days || 30) * 86400000).toISOString().slice(0, 10)
+    const document: OfferDocument = {
+      customer_name: customerName, customer_contact: customerName, customer_email: email, customer_phone: phone,
+      customer_address: city || '', customer_vat: '', title: t.offerTitle(model), description: '',
+      language: lang, currency: 'EUR', price_list: settings.price_list,
+      company_entity: lang === 'en' ? 'wise' : settings.company_entity, vat_regime: settings.vat_regime, valid_until: valid,
+      payment_method: settings.payment_method, payment_agreement: settings.payment_agreement,
+      include_certification: settings.include_certification, include_warranty: settings.include_warranty, warranty_years: settings.warranty_years,
+      inclusions: [settings.inclusions, t.inclusion].filter(Boolean).join('\n'), exclusions: settings.exclusions,
+      timeline_produzione: settings.timeline_produzione, timeline_consegna: settings.timeline_consegna,
+      timeline_installazione: settings.timeline_installazione, timeline_collaudo: settings.timeline_collaudo,
+      items: [{ id: crypto.randomUUID(), product_id: null, product_name: model, description, image_url: images[0] || '', quantity: 1, unit_price: price, discount_percent: 0, notes: '' }],
+      settings_snapshot: settings,
     }
+    const id = crypto.randomUUID()
+    const initials = customerName.split(/\s+/).map((w) => w.charAt(0).toUpperCase()).join('').replace(/[^A-Z0-9]/g, '').slice(0, 4) || 'CLI'
+    const number = `OFF-${initials}-${new Date().getFullYear()}-${id.slice(0, 8).toUpperCase()}`
+    const { data: offer, error: offerErr } = await supabase.from('commercial_offers').insert({
+      id, number, lead_id: lead?.id ?? null, customer_name: customerName, title: document.title, status: 'offerta_inviata',
+      document, amount: offerTotals(document).subtotal, currency: 'EUR', public_enabled: true,
+    }).select('id,number,public_code').single()
+    if (offerErr) throw offerErr
+    const offerUrl = `${SITE}/offerta/${offer.public_code}`
+    const pdfUrl = `${offerUrl}?pdf=1`
 
-    // Fetch datasheet URL from configurator_ovens if linked
-    let datasheetUrl: string | null = null
-    if (rtsOven.oven_id) {
-      const { data: configOven } = await supabase
-        .from('configurator_ovens')
-        .select('sizes, model_name')
-        .eq('id', rtsOven.oven_id)
-        .single()
-
-      if (configOven?.sizes) {
-        // Find matching size by diameter
-        const matchingSize = (configOven.sizes as any[]).find(
-          (s: any) => s.diameter === rtsOven.diameter
-        )
-        if (matchingSize?.datasheet_urls) {
-          datasheetUrl = matchingSize.datasheet_urls
-        } else if (matchingSize?.datasheet_url) {
-          datasheetUrl = { it: matchingSize.datasheet_url }
-        }
-      }
-    }
-
-    // If no linked oven, try to find by model name
-    if (!datasheetUrl) {
-      const { data: configOvens } = await supabase
-        .from('configurator_ovens')
-        .select('sizes, model_name')
-        .eq('is_active', true)
-
-      if (configOvens) {
-        for (const oven of configOvens) {
-          if (rtsOven.model_name.toLowerCase().includes(oven.model_name.toLowerCase())) {
-            const matchingSize = (oven.sizes as any[] || []).find(
-              (s: any) => s.diameter === rtsOven.diameter
-            )
-            if (matchingSize?.datasheet_urls) {
-              datasheetUrl = matchingSize.datasheet_urls
-              break
-            } else if (matchingSize?.datasheet_url) {
-              datasheetUrl = { it: matchingSize.datasheet_url }
-              break
-            }
-          }
-        }
-      }
-    }
-
-    // Resolve datasheet URL by language
-    let resolvedDatasheetUrl: string | null = null
-    if (datasheetUrl && typeof datasheetUrl === 'object') {
-      resolvedDatasheetUrl = datasheetUrl[language] || datasheetUrl['en'] || datasheetUrl['it'] || null
-    } else if (typeof datasheetUrl === 'string') {
-      resolvedDatasheetUrl = datasheetUrl
-    }
-
-    // If still no datasheet, use universal catalog as fallback
-    if (!resolvedDatasheetUrl) {
-      resolvedDatasheetUrl = 'https://www.vesuvianoforni.com/lovable-uploads/vesuviobuono-scheda-tecnica.pdf'
-    }
-
-    console.log('Datasheet URL resolved:', resolvedDatasheetUrl, 'for language:', language)
-
-    // Determine the actual fuel type display
-    const actualFuelType = rtsOven.fuel_type || 'Legna'
-    const isGasConfigurable = actualFuelType.toLowerCase() === 'legna' || actualFuelType.toLowerCase() === 'wood'
-
-    // Use sale_price if available, otherwise list_price
-    const ovenPrice = rtsOven.sale_price || rtsOven.list_price || 0
-    const customerName = `${firstName} ${lastName}`
-    const depositPercentage = 5
-    const depositAmount = ovenPrice * (depositPercentage / 100)
-
-    // 2. Create the proforma
-    const { data: proforma, error: proformaError } = await supabase
-      .from('proformas')
-      .insert({
-        customer_name: customerName,
-        customer_email: email,
-        customer_phone: phone,
-        notes: city ? `Città: ${city}` : null,
-        total_price: ovenPrice,
-        deposit_percentage: depositPercentage,
-        deposit_amount: depositAmount,
-        payment_option: 'deposit_5',
-        language,
-        currency: 'EUR',
-        price_list: 'A',
-        bank_account: language === 'en' ? 'wise_uk' : 'intesa',
-        status: 'sent',
-        valid_until: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-      })
-      .select()
-      .single()
-
-    if (proformaError) throw proformaError
-
-    // 3. Create the oven item
-    const ovenItem = {
-      proforma_id: proforma.id,
-      item_type: 'oven',
-      oven_id: rtsOven.oven_id || null,
-      model_name: rtsOven.model_name,
-      fuel_type: rtsOven.fuel_type || 'Legna',
-      diameter: rtsOven.diameter,
-      coating: rtsOven.coating || null,
-      image_url: rtsOven.images?.[0] || null,
-      unit_price: ovenPrice,
-      quantity: 1,
-      line_total: ovenPrice,
-      sort_order: 0,
-    }
-
-    const { error: itemError } = await supabase
-      .from('proforma_items')
-      .insert(ovenItem)
-
-    if (itemError) throw itemError
-
-    // 4. Save as website lead
     await supabase.from('website_leads').insert({
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      phone,
-      city: city || null,
-      oven_type: `${rtsOven.model_name} (${rtsOven.diameter}cm - ${rtsOven.coating || 'N/A'})`,
-      form_type: 'ready_to_ship',
-      notes: `Pro-forma auto-generata: ${proforma.proforma_number || proforma.id}`,
-      metadata: { ready_to_ship_oven_id: readyToShipOvenId, proforma_id: proforma.id },
+      first_name: firstName, last_name: lastName, email, phone, city: city || null,
+      oven_type: `${rts.model_name} (${rts.diameter}cm - ${rts.coating || 'N/A'})`, form_type: 'ready_to_ship',
+      notes: `Offerta auto-generata: ${offer.number}`, metadata: { ready_to_ship_oven_id: readyToShipOvenId, offer_id: offer.id, offer_number: offer.number },
     })
 
-    // 5. Build proforma URL
-    const siteUrl = 'https://www.vesuvianoforni.com'
-    const proformaUrl = `${siteUrl}/proforma/${proforma.token}`
+    const priceTxt = `€ ${price.toLocaleString('it-IT', { minimumFractionDigits: 2 })}`
+    const gallery = images.slice(0, 7).map((u, i) => `<img src="${esc(u)}" alt="${esc(model)}" style="${i === 0 ? 'width:100%;margin:0 0 8px' : 'width:48%;margin:1%'};border-radius:6px">`).join('')
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(t.subject(model))}</title></head>
+<body style="margin:0;background:#f5f2ee;font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#2b2b2b;line-height:1.6">
+<div style="max-width:600px;margin:0 auto;background:#fff">
+  <div style="background:linear-gradient(135deg,#d97706,#ea580c);color:#fff;padding:32px;text-align:center">
+    <img src="${SITE}/lovable-uploads/vesuviano-logo-bianco.png" alt="Vesuviano" style="width:150px;margin-bottom:12px">
+    <h1 style="margin:0;font-size:24px">${t.title}</h1>
+  </div>
+  <div style="padding:32px">
+    <p>${esc(t.greet(customerName))}</p><p>${t.intro}</p>
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin:20px 0">
+      <h3 style="margin:0 0 8px">${esc(model)}</h3>
+      <p style="margin:0">${esc(specs)}</p>
+      <p style="margin:10px 0 0;font-size:18px"><strong>${t.price}: ${priceTxt}</strong> · ${t.shipping}</p>
+      <p style="margin:10px 0 0;font-size:14px">📄 <a href="${offerUrl}" style="color:#b45309">${t.view}</a> &nbsp;·&nbsp; 📎 <a href="${pdfUrl}" style="color:#b45309">${t.pdf}</a> (${esc(offer.number)})</p>
+    </div>
+    ${gallery ? `<p style="font-weight:600;margin:10px 0 6px">${t.gallery}</p><div>${gallery}</div>` : ''}
+    <div style="text-align:center;margin:30px 0 10px">
+      <p style="margin:0 0 14px">${t.ctaText}</p>
+      <a href="${BOOKING_URL}" style="display:inline-block;background:#d97706;color:#fff;padding:16px 40px;text-decoration:none;border-radius:8px;font-size:18px;font-weight:700">📞 ${t.cta}</a>
+    </div>
+    <p style="font-size:14px;color:#555">${t.contact} info@vesuvianoforni.com · +39 081 19231684</p>
+  </div>
+  <div style="background:#1f2937;color:#fff;padding:20px;text-align:center;font-size:13px">© ${new Date().getFullYear()} Vesuviano Forni</div>
+</div></body></html>`
 
-    // 6. Send email to customer
-    const priceFormatted = ovenPrice.toLocaleString('it-IT', { minimumFractionDigits: 2 })
-    const depositFormatted = depositAmount.toLocaleString('it-IT', { minimumFractionDigits: 2 })
-    const listPriceFormatted = rtsOven.list_price?.toLocaleString('it-IT', { minimumFractionDigits: 2 })
+    const sent = await resend.emails.send({ from: 'Vesuviano Forni <noreply@vesuvianoforni.com>', to: [email], reply_to: 'info@vesuvianoforni.com', subject: t.subject(model), html })
+    if (sent.error) console.error('Ready-to-ship offer email failed:', offer.number, JSON.stringify(sent.error))
 
-    // Multilingual translations
-    const translations: Record<string, Record<string, string>> = {
-      it: {
-        subject: `🔥 La tua Pro-Forma Pronta Consegna — ${rtsOven.model_name}`,
-        headerTitle: 'Il tuo forno è pronto!',
-        headerSubtitle: `Pro-forma personalizzata per ${customerName}`,
-        greeting: `Gentile <strong>${customerName}</strong>,`,
-        intro: `Grazie per il tuo interesse! Abbiamo preparato una pro-forma personalizzata per il forno che hai scelto dalla nostra collezione <strong>Pronta Consegna</strong>.`,
-        diameter: 'Diametro',
-        coating: 'Rivestimento',
-        fuel: 'Combustibile',
-        woodFired: 'Legna (configurazione base)',
-        datasheetTitle: '📄 Scheda Tecnica',
-        datasheetDesc: 'Scarica la scheda tecnica completa del tuo forno',
-        datasheetBtn: '⬇️ Scarica Scheda Tecnica PDF',
-        priceLabel: 'Prezzo forno Pronta Consegna',
-        shippingIncluded: '🚚 Spedizione inclusa',
-        depositTitle: '🔒 Riserva il tuo forno con solo il 5%',
-        depositLabel: 'Deposito',
-        depositRefund: 'Il deposito è <strong>100% rimborsabile</strong> e riserva il forno per 7 giorni.',
-        ctaBtn: '📋 Visualizza la tua Pro-Forma',
-        guaranteeTitle: '✅ Garanzia totale',
-        guarantee1: 'Deposito 100% rimborsabile entro 7 giorni',
-        guarantee2: 'Il deposito riserva il forno — nessun altro potrà acquistarlo',
-        guarantee3: 'Entro 24 ore sarai ricontattato dal nostro Export Manager',
-        guarantee4: 'Dopo 7 giorni, se non finalizzi l\'acquisto, rimborso automatico',
-        howTitle: 'Come funziona:',
-        step1Title: 'Apri la pro-forma',
-        step1Desc: 'Clicca il pulsante qui sopra per visualizzare il riepilogo completo.',
-        step2Title: 'Versa il deposito del 5%',
-        step2Desc: 'Il deposito riserva il forno per 7 giorni. È 100% rimborsabile.',
-        step3Title: 'Sarai ricontattato',
-        step3Desc: 'Entro 24 ore, il nostro Export Manager ti contatterà per discutere dettagli di spedizione, pagamento e consegna.',
-        contactText: 'Per qualsiasi domanda, non esitare a contattarci:',
-        phone: 'Telefono',
-        emailLabel: 'Email',
-        footerCompany: `© ${new Date().getFullYear()} Vesuviano - Forni Professionali Artigianali`,
-        footerTagline: 'Tradizione, qualità e innovazione dal cuore di Napoli',
-        gasNote: '🔥 <strong>Configurazione base a legna.</strong> Questo forno può essere configurato anche a gas — insieme al nostro esperto sceglierete il bruciatore più adatto alle vostre esigenze.',
-      },
-      en: {
-        subject: `🔥 Your Ready-to-Ship Pro-Forma — ${rtsOven.model_name}`,
-        headerTitle: 'Your oven is ready!',
-        headerSubtitle: `Custom pro-forma for ${customerName}`,
-        greeting: `Dear <strong>${customerName}</strong>,`,
-        intro: `Thank you for your interest! We have prepared a custom pro-forma for the oven you selected from our <strong>Ready to Ship</strong> collection.`,
-        diameter: 'Diameter',
-        coating: 'Coating',
-        fuel: 'Fuel',
-        woodFired: 'Wood-fired (base configuration)',
-        datasheetTitle: '📄 Technical Datasheet',
-        datasheetDesc: 'Download the complete technical datasheet for your oven',
-        datasheetBtn: '⬇️ Download Datasheet PDF',
-        priceLabel: 'Ready-to-Ship oven price',
-        shippingIncluded: '🚚 Shipping included',
-        depositTitle: '🔒 Reserve your oven with just 5%',
-        depositLabel: 'Deposit',
-        depositRefund: 'The deposit is <strong>100% refundable</strong> and reserves the oven for 7 days.',
-        ctaBtn: '📋 View your Pro-Forma',
-        guaranteeTitle: '✅ Full guarantee',
-        guarantee1: '100% refundable deposit within 7 days',
-        guarantee2: 'The deposit reserves the oven — no one else can purchase it',
-        guarantee3: 'Within 24 hours you will be contacted by our Export Manager',
-        guarantee4: 'After 7 days, if you don\'t finalize the purchase, automatic refund',
-        howTitle: 'How it works:',
-        step1Title: 'Open the pro-forma',
-        step1Desc: 'Click the button above to view the complete summary.',
-        step2Title: 'Pay the 5% deposit',
-        step2Desc: 'The deposit reserves the oven for 7 days. It is 100% refundable.',
-        step3Title: 'We\'ll contact you',
-        step3Desc: 'Within 24 hours, our Export Manager will contact you to discuss shipping, payment and delivery details.',
-        contactText: 'For any questions, don\'t hesitate to contact us:',
-        phone: 'Phone',
-        emailLabel: 'Email',
-        footerCompany: `© ${new Date().getFullYear()} Vesuviano - Professional Artisan Ovens`,
-        footerTagline: 'Tradition, quality and innovation from the heart of Naples',
-        gasNote: '🔥 <strong>Wood-fired base configuration.</strong> This oven can also be configured for gas — together with our expert you will choose the most suitable burner for your needs.',
-      },
-      fr: {
-        subject: `🔥 Votre Pro-Forma Prêt à Expédier — ${rtsOven.model_name}`,
-        headerTitle: 'Votre four est prêt !',
-        headerSubtitle: `Pro-forma personnalisée pour ${customerName}`,
-        greeting: `Cher/Chère <strong>${customerName}</strong>,`,
-        intro: `Merci pour votre intérêt ! Nous avons préparé un pro-forma personnalisé pour le four que vous avez choisi dans notre collection <strong>Prêt à Expédier</strong>.`,
-        diameter: 'Diamètre',
-        coating: 'Revêtement',
-        fuel: 'Combustible',
-        woodFired: 'Bois (configuration de base)',
-        datasheetTitle: '📄 Fiche Technique',
-        datasheetDesc: 'Téléchargez la fiche technique complète de votre four',
-        datasheetBtn: '⬇️ Télécharger la Fiche Technique PDF',
-        priceLabel: 'Prix du four Prêt à Expédier',
-        shippingIncluded: '🚚 Livraison incluse',
-        depositTitle: '🔒 Réservez votre four avec seulement 5%',
-        depositLabel: 'Acompte',
-        depositRefund: 'L\'acompte est <strong>100% remboursable</strong> et réserve le four pendant 7 jours.',
-        ctaBtn: '📋 Voir votre Pro-Forma',
-        guaranteeTitle: '✅ Garantie totale',
-        guarantee1: 'Acompte 100% remboursable sous 7 jours',
-        guarantee2: 'L\'acompte réserve le four — personne d\'autre ne pourra l\'acheter',
-        guarantee3: 'Sous 24 heures vous serez contacté par notre Export Manager',
-        guarantee4: 'Après 7 jours, si vous ne finalisez pas l\'achat, remboursement automatique',
-        howTitle: 'Comment ça fonctionne :',
-        step1Title: 'Ouvrez le pro-forma',
-        step1Desc: 'Cliquez sur le bouton ci-dessus pour voir le récapitulatif complet.',
-        step2Title: 'Versez l\'acompte de 5%',
-        step2Desc: 'L\'acompte réserve le four pendant 7 jours. Il est 100% remboursable.',
-        step3Title: 'Nous vous recontacterons',
-        step3Desc: 'Sous 24 heures, notre Export Manager vous contactera pour discuter des détails d\'expédition, de paiement et de livraison.',
-        contactText: 'Pour toute question, n\'hésitez pas à nous contacter :',
-        phone: 'Téléphone',
-        emailLabel: 'Email',
-        footerCompany: `© ${new Date().getFullYear()} Vesuviano - Fours Professionnels Artisanaux`,
-        footerTagline: 'Tradition, qualité et innovation au cœur de Naples',
-        gasNote: '🔥 <strong>Configuration de base au bois.</strong> Ce four peut également être configuré au gaz — avec notre expert, vous choisirez le brûleur le plus adapté à vos besoins.',
-      },
-      de: {
-        subject: `🔥 Ihr Sofort-Lieferbar Pro-Forma — ${rtsOven.model_name}`,
-        headerTitle: 'Ihr Ofen ist bereit!',
-        headerSubtitle: `Individuelle Pro-Forma für ${customerName}`,
-        greeting: `Sehr geehrte/r <strong>${customerName}</strong>,`,
-        intro: `Vielen Dank für Ihr Interesse! Wir haben ein individuelles Pro-Forma für den Ofen erstellt, den Sie aus unserer <strong>Sofort Lieferbar</strong>-Kollektion ausgewählt haben.`,
-        diameter: 'Durchmesser',
-        coating: 'Beschichtung',
-        fuel: 'Brennstoff',
-        woodFired: 'Holz (Basiskonfiguration)',
-        datasheetTitle: '📄 Technisches Datenblatt',
-        datasheetDesc: 'Laden Sie das vollständige technische Datenblatt Ihres Ofens herunter',
-        datasheetBtn: '⬇️ Datenblatt PDF herunterladen',
-        priceLabel: 'Preis Sofort Lieferbar Ofen',
-        shippingIncluded: '🚚 Versand inklusive',
-        depositTitle: '🔒 Reservieren Sie Ihren Ofen mit nur 5%',
-        depositLabel: 'Anzahlung',
-        depositRefund: 'Die Anzahlung ist <strong>100% erstattbar</strong> und reserviert den Ofen für 7 Tage.',
-        ctaBtn: '📋 Ihr Pro-Forma ansehen',
-        guaranteeTitle: '✅ Volle Garantie',
-        guarantee1: '100% erstattbare Anzahlung innerhalb von 7 Tagen',
-        guarantee2: 'Die Anzahlung reserviert den Ofen — niemand anders kann ihn kaufen',
-        guarantee3: 'Innerhalb von 24 Stunden werden Sie von unserem Export Manager kontaktiert',
-        guarantee4: 'Nach 7 Tagen, wenn Sie den Kauf nicht abschließen, automatische Rückerstattung',
-        howTitle: 'So funktioniert es:',
-        step1Title: 'Öffnen Sie das Pro-Forma',
-        step1Desc: 'Klicken Sie auf den Button oben, um die vollständige Zusammenfassung anzuzeigen.',
-        step2Title: 'Zahlen Sie die 5% Anzahlung',
-        step2Desc: 'Die Anzahlung reserviert den Ofen für 7 Tage. Sie ist 100% erstattbar.',
-        step3Title: 'Wir kontaktieren Sie',
-        step3Desc: 'Innerhalb von 24 Stunden wird sich unser Export Manager mit Ihnen in Verbindung setzen, um Versand-, Zahlungs- und Lieferdetails zu besprechen.',
-        contactText: 'Bei Fragen zögern Sie nicht, uns zu kontaktieren:',
-        phone: 'Telefon',
-        emailLabel: 'E-Mail',
-        footerCompany: `© ${new Date().getFullYear()} Vesuviano - Professionelle Handwerksöfen`,
-        footerTagline: 'Tradition, Qualität und Innovation aus dem Herzen Neapels',
-        gasNote: '🔥 <strong>Holzbefeuerte Basiskonfiguration.</strong> Dieser Ofen kann auch für Gas konfiguriert werden — gemeinsam mit unserem Experten wählen Sie den am besten geeigneten Brenner für Ihre Bedürfnisse.',
-      },
-      es: {
-        subject: `🔥 Tu Pro-Forma Listo para Envío — ${rtsOven.model_name}`,
-        headerTitle: '¡Tu horno está listo!',
-        headerSubtitle: `Pro-forma personalizada para ${customerName}`,
-        greeting: `Estimado/a <strong>${customerName}</strong>,`,
-        intro: `¡Gracias por tu interés! Hemos preparado una pro-forma personalizada para el horno que elegiste de nuestra colección <strong>Listo para Envío</strong>.`,
-        diameter: 'Diámetro',
-        coating: 'Revestimiento',
-        fuel: 'Combustible',
-        woodFired: 'Leña (configuración base)',
-        datasheetTitle: '📄 Ficha Técnica',
-        datasheetDesc: 'Descarga la ficha técnica completa de tu horno',
-        datasheetBtn: '⬇️ Descargar Ficha Técnica PDF',
-        priceLabel: 'Precio horno Listo para Envío',
-        shippingIncluded: '🚚 Envío incluido',
-        depositTitle: '🔒 Reserva tu horno con solo el 5%',
-        depositLabel: 'Depósito',
-        depositRefund: 'El depósito es <strong>100% reembolsable</strong> y reserva el horno por 7 días.',
-        ctaBtn: '📋 Ver tu Pro-Forma',
-        guaranteeTitle: '✅ Garantía total',
-        guarantee1: 'Depósito 100% reembolsable en 7 días',
-        guarantee2: 'El depósito reserva el horno — nadie más podrá comprarlo',
-        guarantee3: 'En 24 horas serás contactado por nuestro Export Manager',
-        guarantee4: 'Después de 7 días, si no finalizas la compra, reembolso automático',
-        howTitle: 'Cómo funciona:',
-        step1Title: 'Abre la pro-forma',
-        step1Desc: 'Haz clic en el botón de arriba para ver el resumen completo.',
-        step2Title: 'Paga el depósito del 5%',
-        step2Desc: 'El depósito reserva el horno por 7 días. Es 100% reembolsable.',
-        step3Title: 'Te contactaremos',
-        step3Desc: 'En 24 horas, nuestro Export Manager te contactará para discutir los detalles de envío, pago y entrega.',
-        contactText: 'Para cualquier pregunta, no dudes en contactarnos:',
-        phone: 'Teléfono',
-        emailLabel: 'Email',
-        footerCompany: `© ${new Date().getFullYear()} Vesuviano - Hornos Profesionales Artesanales`,
-        footerTagline: 'Tradición, calidad e innovación desde el corazón de Nápoles',
-        gasNote: '🔥 <strong>Configuración base a leña.</strong> Este horno también puede configurarse a gas — junto con nuestro experto elegirán el quemador más adecuado para sus necesidades.',
-      },
-    }
-
-    const t = translations[language] || translations['it']
-    const lang = (translations[language] ? language : 'it') as keyof typeof PDF_LABELS
-    const pl = PDF_LABELS[lang] || PDF_LABELS.it
-    const imageUrls: string[] = (rtsOven.images || []).map((i: string) => i.startsWith('http') ? i : siteUrl + i)
-
-    // PDF quote with photos, stored next to the oven gallery and attached to the email
-    let pdfUrl: string | null = null
-    let pdfBase64: string | null = null
-    const pdfName = `Vesuviano-${(proforma.proforma_number || 'preventivo').replace(/[^\w-]/g, '')}.pdf`
-    try {
-      const bytes = await buildQuotePdf({
-        labels: pl, number: proforma.proforma_number || '', customerName, model: rtsOven.model_name,
-        diameter: rtsOven.diameter, coating: rtsOven.coating || 'Standard', fuel: actualFuelType,
-        price: `€ ${priceFormatted}`, paymentTerms: `${t.depositLabel} 5%: € ${depositFormatted}`, url: proformaUrl, images: imageUrls,
-      })
-      const path = `rts-quotes/${proforma.token}/${pdfName}`
-      const { error: upErr } = await supabase.storage.from('oven-gallery').upload(path, bytes, { contentType: 'application/pdf', upsert: true })
-      if (upErr) throw upErr
-      pdfUrl = supabase.storage.from('oven-gallery').getPublicUrl(path).data.publicUrl
-      let bin = ''; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000))
-      pdfBase64 = btoa(bin)
-    } catch (e) {
-      console.error('Ready-to-ship PDF failed:', proforma.proforma_number, e instanceof Error ? e.message : e)
-    }
-    const gallery = imageUrls.slice(1, 7).map((u) => `<img src="${u}" alt="${rtsOven.model_name}" style="width: 48%; border-radius: 6px; margin: 1%;">`).join('')
-
-    const customerEmailHtml = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>${t.subject}</title>
-          <style>
-            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f8f9fa; }
-            .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-            .header { background: linear-gradient(135deg, #d97706 0%, #ea580c 100%); color: white; padding: 40px 30px; text-align: center; }
-            .logo { width: 150px; height: auto; margin-bottom: 15px; }
-            .content { padding: 40px 30px; }
-            .oven-card { background: #f8fafc; border-radius: 12px; padding: 25px; margin: 20px 0; border: 1px solid #e2e8f0; }
-            .price-box { background: linear-gradient(135deg, #059669, #10b981); color: white; padding: 20px; border-radius: 10px; text-align: center; margin: 20px 0; }
-            .price-amount { font-size: 32px; font-weight: bold; }
-            .deposit-box { background: #fef3c7; border: 2px solid #f59e0b; padding: 20px; border-radius: 10px; margin: 20px 0; }
-            .cta-btn { display: inline-block; background: #d97706; color: white !important; padding: 16px 40px; text-decoration: none; border-radius: 8px; font-size: 18px; font-weight: 700; margin: 20px 0; }
-            .guarantee { background: #ecfdf5; border-left: 4px solid #10b981; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0; }
-            .steps { margin: 25px 0; }
-            .step { display: flex; align-items: flex-start; margin: 15px 0; }
-            .step-num { background: #d97706; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px; flex-shrink: 0; }
-            .footer { background: #1f2937; color: white; padding: 30px; text-align: center; }
-            .gas-note { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px; padding: 18px; margin: 20px 0; font-size: 14px; color: #9a3412; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <img src="https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/vesuviano-logo-bianco.png" alt="Vesuviano Logo" class="logo">
-              <h1 style="margin: 0; font-size: 26px;">${t.headerTitle}</h1>
-              <p style="margin: 8px 0 0 0; font-size: 16px; opacity: 0.9;">${t.headerSubtitle}</p>
-            </div>
-            
-            <div class="content">
-              <p>${t.greeting}</p>
-              <p>${t.intro}</p>
-              
-              <div class="oven-card">
-                ${rtsOven.images?.[0] ? `<img src="${rtsOven.images[0].startsWith('http') ? rtsOven.images[0] : siteUrl + rtsOven.images[0]}" alt="${rtsOven.model_name}" style="width: 100%; border-radius: 8px; margin-bottom: 15px;">` : ''}
-                <h3 style="margin: 0 0 10px 0; color: #1f2937;">${rtsOven.model_name}</h3>
-                <p style="margin: 5px 0;"><strong>${t.diameter}:</strong> ${rtsOven.diameter} cm</p>
-                <p style="margin: 5px 0;"><strong>${t.coating}:</strong> ${rtsOven.coating || 'Standard'}</p>
-                <p style="margin: 5px 0;"><strong>${t.fuel}:</strong> ${actualFuelType}</p>
-              </div>
-
-              ${gallery ? `<p style="font-weight: 600; margin: 10px 0 6px;">${pl.galleryTitle}</p><div>${gallery}</div>` : ''}
-
-              ${pdfUrl ? `<div style="text-align: center; margin: 20px 0;"><a href="${pdfUrl}" style="display: inline-block; background: #1f2937; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">📎 ${pl.pdfBtn}</a></div>` : ''}
-
-              ${isGasConfigurable ? `<div class="gas-note">
-                ${t.gasNote}
-              </div>` : ''}
-
-              ${resolvedDatasheetUrl ? `
-              <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 20px; margin: 20px 0; text-align: center;">
-                <p style="margin: 0 0 12px 0; font-size: 15px; color: #1e40af; font-weight: 600;">${t.datasheetTitle}</p>
-                <p style="margin: 0 0 15px 0; font-size: 13px; color: #3b82f6;">${t.datasheetDesc}</p>
-                <a href="${resolvedDatasheetUrl}" style="display: inline-block; background: #2563eb; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">${t.datasheetBtn}</a>
-              </div>
-              ` : ''}
-
-              <div class="price-box">
-                <p style="margin: 0 0 5px 0; font-size: 14px; opacity: 0.9;">${t.priceLabel}</p>
-                <div class="price-amount">€${priceFormatted}</div>
-                ${rtsOven.sale_price && rtsOven.list_price > rtsOven.sale_price ? `<p style="margin: 8px 0 0 0; font-size: 14px; text-decoration: line-through; opacity: 0.7;">€${listPriceFormatted}</p>` : ''}
-                <p style="margin: 8px 0 0 0; font-size: 13px; opacity: 0.9;">${t.shippingIncluded}</p>
-              </div>
-
-              <div class="deposit-box">
-                <h3 style="margin: 0 0 10px 0; color: #92400e;">${t.depositTitle}</h3>
-                <p style="margin: 0; font-size: 18px; font-weight: bold; color: #92400e;">${t.depositLabel}: €${depositFormatted}</p>
-                <p style="margin: 10px 0 0 0; font-size: 14px; color: #78350f;">${t.depositRefund}</p>
-              </div>
-
-              <div style="text-align: center; margin: 30px 0;">
-                <a href="${proformaUrl}" class="cta-btn">${t.ctaBtn}</a>
-              </div>
-
-              <div class="guarantee">
-                <h4 style="margin: 0 0 10px 0; color: #065f46;">${t.guaranteeTitle}</h4>
-                <ul style="margin: 0; padding-left: 20px; color: #047857;">
-                  <li>${t.guarantee1}</li>
-                  <li>${t.guarantee2}</li>
-                  <li>${t.guarantee3}</li>
-                  <li>${t.guarantee4}</li>
-                </ul>
-              </div>
-
-              <div class="steps">
-                <h3 style="color: #1f2937;">${t.howTitle}</h3>
-                <div class="step">
-                  <span class="step-num">1</span>
-                  <div><strong>${t.step1Title}</strong> — ${t.step1Desc}</div>
-                </div>
-                <div class="step">
-                  <span class="step-num">2</span>
-                  <div><strong>${t.step2Title}</strong> — ${t.step2Desc}</div>
-                </div>
-                <div class="step">
-                  <span class="step-num">3</span>
-                  <div><strong>${t.step3Title}</strong> — ${t.step3Desc}</div>
-                </div>
-              </div>
-
-              <p>${t.contactText}</p>
-              <p><strong>📞 ${t.phone}:</strong> +39 350 928 6941<br>
-              <strong>✉️ ${t.emailLabel}:</strong> info@vesuvianoforni.com</p>
-            </div>
-
-            <div class="footer">
-              <p style="margin: 0; opacity: 0.8;">${t.footerCompany}</p>
-              <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.7;">${t.footerTagline}</p>
-            </div>
-          </div>
-        </body>
-      </html>
-    `
-
-    const customerSend = await resend.emails.send({
-      from: 'Vesuviano Forni <noreply@vesuvianoforni.com>',
-      to: [email],
-      reply_to: 'info@vesuvianoforni.com',
-      subject: t.subject,
-      html: customerEmailHtml,
-      ...(pdfBase64 ? { attachments: [{ filename: pdfName, content: pdfBase64 }] } : {}),
-    })
-    if (customerSend.error) {
-      console.error('Customer proforma email failed:', proforma.proforma_number, JSON.stringify(customerSend.error))
-    } else {
-      console.log('Customer proforma email accepted:', proforma.proforma_number, customerSend.data?.id)
-    }
-
-    // 6b. Queue Gennaro's WhatsApp follow-up (WaSender) only when the email was accepted
-    if (!customerSend.error && String(phone).replace(/\D/g, '').length >= 7) {
-      const { data: wl } = await supabase.from('website_leads').select('id').eq('email', email)
-        .eq('form_type', 'ready_to_ship').order('created_at', { ascending: false }).limit(1).maybeSingle()
+    // Gennaro's WhatsApp follow-up (WaSender), only after the email was accepted
+    if (!sent.error && String(phone).replace(/\D/g, '').length >= 7) {
+      const { data: wl } = await supabase.from('website_leads').select('id').eq('email', email).eq('form_type', 'ready_to_ship').order('created_at', { ascending: false }).limit(1).maybeSingle()
       const { error: fuErr } = await supabase.from('ready_to_ship_followups').insert({
-        proforma_id: proforma.id, website_lead_id: wl?.id ?? null, customer_name: firstName, phone, email,
-        language: lang, model_name: rtsOven.model_name, due_at: followupDueAt(new Date()).toISOString(),
+        website_lead_id: wl?.id ?? null, customer_name: firstName, phone, email, language: lang, model_name: model, due_at: followupDueAt(new Date()).toISOString(),
       })
       if (fuErr) console.error('Follow-up queue failed:', fuErr.message)
-      // In working hours send right after the email is accepted; otherwise the hourly run sends it from 9:00
       else if (isWorkingTime(new Date())) {
-        try {
-          await fetch(`${supabaseUrl}/functions/v1/ready-to-ship-followup`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${supabaseServiceKey}` }, body: '{}', signal: AbortSignal.timeout(20000) })
-        } catch (e) { console.error('Follow-up wake failed:', e instanceof Error ? e.message : e) }
+        try { await fetch(`${supabaseUrl}/functions/v1/ready-to-ship-followup`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${supabaseServiceKey}` }, body: '{}', signal: AbortSignal.timeout(20000) }) }
+        catch (e) { console.error('Follow-up wake failed:', e instanceof Error ? e.message : e) }
       }
     }
-
-    // 7. Notify the company
-    const companyEmailHtml = `
-      <!DOCTYPE html>
-      <html>
-        <head><meta charset="utf-8"><title>Nuova Richiesta Pronta Consegna</title>
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #d97706; color: white; padding: 20px; border-radius: 8px; }
-            .content { background: #f8f9fa; padding: 25px; border-radius: 8px; margin: 20px 0; }
-            .field { margin: 12px 0; padding: 10px; background: white; border-radius: 4px; }
-            .label { font-weight: bold; color: #d97706; }
-            .priority { background: #fef3c7; border: 2px solid #f59e0b; padding: 15px; border-radius: 8px; margin: 20px 0; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h2 style="margin: 0;">🏷️ Nuova Richiesta Pronta Consegna</h2>
-              <p style="margin: 5px 0 0 0;">${new Date().toLocaleString('it-IT')}</p>
-            </div>
-            <div class="priority">
-              <strong>⚡ Pro-forma generata automaticamente</strong> — Il cliente riceverà il link per il deposito del 5%.
-            </div>
-            <div class="content">
-              <h3>Cliente:</h3>
-              <div class="field"><div class="label">Nome:</div> ${customerName}</div>
-              <div class="field"><div class="label">Email:</div> <a href="mailto:${email}">${email}</a></div>
-              <div class="field"><div class="label">Telefono:</div> ${phone}</div>
-              ${city ? `<div class="field"><div class="label">Città:</div> ${city}</div>` : ''}
-              <h3>Forno:</h3>
-              <div class="field"><div class="label">Modello:</div> ${rtsOven.model_name}</div>
-              <div class="field"><div class="label">Diametro:</div> ${rtsOven.diameter}cm</div>
-              <div class="field"><div class="label">Rivestimento:</div> ${rtsOven.coating || 'N/A'}</div>
-              <div class="field"><div class="label">Prezzo:</div> €${priceFormatted}</div>
-              <div class="field"><div class="label">Pro-forma:</div> <a href="${proformaUrl}">${proforma.proforma_number || proforma.id}</a></div>
-            </div>
-          </div>
-        </body>
-      </html>
-    `
 
     await resend.emails.send({
-      from: 'Sistema Pronta Consegna <system@vesuvianoforni.com>',
-      to: ['info@vesuvianoforni.com', 'commerciale@vesuviano.it'],
-      subject: `🏷️ Nuova Richiesta Pronta Consegna: ${customerName} - ${rtsOven.model_name}`,
-      html: companyEmailHtml,
+      from: 'Sistema Pronta Consegna <system@vesuvianoforni.com>', to: ['info@vesuvianoforni.com', 'commerciale@vesuviano.it'],
+      subject: `🏷️ Nuova Richiesta Pronta Consegna: ${customerName} - ${model}`,
+      html: `<h2>Nuova richiesta Pronta Consegna</h2><p>Offerta inviata automaticamente: <a href="${offerUrl}">${esc(offer.number)}</a></p>
+<p><b>Nome:</b> ${esc(customerName)}<br><b>Email:</b> ${esc(email)}<br><b>Telefono:</b> ${esc(phone)}<br>${city ? `<b>Città:</b> ${esc(city)}<br>` : ''}
+<b>Forno:</b> ${esc(model)} Ø${esc(rts.diameter)}cm · ${esc(rts.coating || 'N/A')}<br><b>Prezzo:</b> ${priceTxt}</p>`,
     })
 
-    console.log('Ready-to-ship proforma created:', proforma.id)
-
-    // Sync lead to external ERP via webhook
     const erpWebhookUrl = Deno.env.get('ERP_WEBHOOK_URL')
     if (erpWebhookUrl) {
-      const erpPayload = {
-        source: 'vesuviano_website',
-        event_type: 'website_lead_created',
-        form_type: 'ready_to_ship',
-        customer_name: customerName,
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        phone,
-        city: city || null,
-        oven_type: `${rtsOven.model_name} - Ø${rtsOven.diameter}cm`,
-        notes: `Pronta consegna - ${rtsOven.coating || 'N/A'} - Pro-forma: ${proforma.proforma_number || proforma.id}`,
-        metadata: {
-          ready_to_ship_oven_id: readyToShipOvenId,
-          proforma_id: proforma.id,
-          proforma_number: proforma.proforma_number,
-          model_name: rtsOven.model_name,
-          diameter: rtsOven.diameter,
-          coating: rtsOven.coating,
-          price: ovenPrice,
-        },
-        timestamp: new Date().toISOString()
-      }
-
       try {
-        const erpRes = await fetch(erpWebhookUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(erpPayload)
-        })
-        console.log('ERP webhook response:', erpRes.status)
-      } catch (err) {
-        console.error('ERP webhook error:', err.message || err)
-      }
+        await fetch(erpWebhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+          source: 'vesuviano_website', event_type: 'website_lead_created', form_type: 'ready_to_ship', customer_name: customerName,
+          first_name: firstName, last_name: lastName, email, phone, city: city || null, oven_type: `${rts.model_name} - Ø${rts.diameter}cm`,
+          notes: `Pronta consegna - ${rts.coating || 'N/A'} - Offerta: ${offer.number}`,
+          metadata: { ready_to_ship_oven_id: readyToShipOvenId, offer_id: offer.id, offer_number: offer.number, model_name: rts.model_name, diameter: rts.diameter, coating: rts.coating, price },
+          timestamp: new Date().toISOString() }) })
+      } catch (err) { console.error('ERP webhook error:', err instanceof Error ? err.message : err) }
     }
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        proformaId: proforma.id,
-        proformaToken: proforma.token,
-        proformaUrl,
-      }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
-    )
+    return json({ success: true, offerId: offer.id, offerNumber: offer.number, offerUrl })
   } catch (error) {
-    console.error('Error creating ready-to-ship proforma:', error)
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    )
+    console.error('Error creating ready-to-ship offer:', error instanceof Error ? error.message : error)
+    return json({ error: 'Impossibile completare la richiesta' }, 500)
   }
 })
