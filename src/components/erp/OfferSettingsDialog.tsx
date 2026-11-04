@@ -15,7 +15,7 @@ import { commercialOfferAction, VAT_REGIMES, OFFER_LANGUAGES, OFFER_CURRENCIES, 
 export function OfferSettingsDialog({ open, onOpenChange, settings, canEdit, onSaved }: { open:boolean; onOpenChange:(open:boolean)=>void; settings:OfferSettings; canEdit:boolean; onSaved:(settings:OfferSettings)=>void }) {
   const [draft,setDraft]=useState(settings);
   const [saving,setSaving]=useState(false);
-  const [entity,setEntity]=useState<CompanyEntity>('climatel');
+  const [entity,setEntity]=useState<CompanyEntity>('unita1');
   useEffect(()=>{if(open)setDraft(structuredClone(settings));},[open,settings]);
   const change = <K extends keyof OfferSettings>(key:K,value:OfferSettings[K])=>setDraft(prev=>({...prev,[key]:value}));
   const save = async()=>{
