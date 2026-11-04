@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 const db = supabase as any;
 const BUCKET = "oven-gallery";
-const KINDS = [["foto", "Foto"], ["video", "Video"], ["scheda", "Scheda tecnica"], ["catalogo", "Catalogo"], ["documento", "Documento"]] as const;
+const KINDS = [["foto", "Foto"], ["video", "Video"], ["scheda", "Scheda tecnica"], ["catalogo", "Catalogo"], ["certificazione", "Certificazione"], ["documento", "Documento"]] as const;
 interface Asset { id: string; kind: string; title: string; url: string; storage_path: string | null }
 
 /** Photos, videos and documents of one product that Bruno can send to customers. */

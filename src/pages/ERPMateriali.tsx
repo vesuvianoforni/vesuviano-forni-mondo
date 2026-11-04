@@ -1,0 +1,136 @@
+import { useEffect, useMemo, useState } from "react";
+import { FileText, Loader2, Search, Trash2, Upload } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
+import SEOHead from "@/components/SEOHead";
+
+const db = supabase as any;
+const BUCKET = "oven-gallery";
+const KINDS = [["foto", "Foto"], ["video", "Video"], ["scheda", "Scheda tecnica"], ["catalogo", "Catalogo"], ["certificazione", "Certificazione"], ["documento", "Documento"]] as const;
+const LANGS = [["all", "Tutte le lingue"], ["it", "IT"], ["en", "EN"], ["fr", "FR"], ["de", "DE"], ["es", "ES"]] as const;
+const GENERAL = "general";
+interface Asset { id: string; kind: string; title: string; url: string; storage_path: string | null; language: string | null; tags: string[]; product_id: string | null; products?: { name: string } | null }
+interface Product { id: string; name: string }
+
+/** Media library Bruno uses: files linked to a product or general company material. */
+export default function ERPMateriali() {
+  const [rows, setRows] = useState<Asset[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState(false);
+  const [form, setForm] = useState({ product: GENERAL, kind: "foto", language: "all", title: "", tags: "" });
+  const [filter, setFilter] = useState({ q: "", product: "any", kind: "any" });
+
+  const load = async () => {
+    const { data } = await db.from("product_assets").select("id,kind,title,url,storage_path,language,tags,product_id,products(name)").order("created_at", { ascending: false }).limit(1000);
+    setRows(data ?? []); setLoading(false);
+  };
+  useEffect(() => {
+    load();
+    db.from("products").select("id,name").order("name").then(({ data }: any) => setProducts(data ?? []));
+  }, []);
+
+  const upload = async (files: FileList) => {
+    setBusy(true);
+    for (const file of Array.from(files)) {
+      const folder = form.product === GENERAL ? "general" : form.product;
+      const path = `product-assets/${folder}/${Date.now()}-${file.name.replace(/[^\w.-]+/g, "_")}`;
+      const { error } = await supabase.storage.from(BUCKET).upload(path, file, { contentType: file.type });
+      if (error) { toast.error(`${file.name}: ${error.message}`); continue; }
+      const url = supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+      const tags = form.tags.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean);
+      const title = form.title.trim() ? (files.length > 1 ? `${form.title.trim()} · ${file.name}` : form.title.trim()) : file.name.replace(/\.[^.]+$/, "");
+      const { error: e2 } = await db.from("product_assets").insert({
+        product_id: form.product === GENERAL ? null : form.product, kind: form.kind, title, url, storage_path: path,
+        language: form.language === "all" ? null : form.language, tags,
+      });
+      if (e2) toast.error(e2.message);
+    }
+    setBusy(false); setForm((f) => ({ ...f, title: "" })); load(); toast.success("Materiale caricato");
+  };
+  const remove = async (a: Asset) => {
+    if (!confirm(`Eliminare "${a.title}"?`)) return;
+    if (a.storage_path) await supabase.storage.from(BUCKET).remove([a.storage_path]);
+    await db.from("product_assets").delete().eq("id", a.id); load();
+  };
+
+  const visible = useMemo(() => {
+    const q = filter.q.trim().toLowerCase();
+    return rows.filter((a) =>
+      (filter.kind === "any" || a.kind === filter.kind) &&
+      (filter.product === "any" || (filter.product === GENERAL ? !a.product_id : a.product_id === filter.product)) &&
+      (!q || [a.title, a.products?.name, ...(a.tags || [])].join(" ").toLowerCase().includes(q)));
+  }, [rows, filter]);
+
+  const productSelect = (value: string, onChange: (v: string) => void, withAny = false) => (
+    <Select value={value} onValueChange={onChange}><SelectTrigger className="w-52"><SelectValue /></SelectTrigger>
+      <SelectContent>
+        {withAny && <SelectItem value="any">Tutti</SelectItem>}
+        <SelectItem value={GENERAL}>Materiale aziendale</SelectItem>
+        {products.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+      </SelectContent></Select>
+  );
+
+  return (
+    <div className="space-y-6 p-4 md:p-6">
+      <SEOHead title="Materiali | ERP Vesuviano" description="Libreria foto, video e documenti per Bruno" />
+      <div>
+        <h1 className="text-2xl font-semibold">Materiali</h1>
+        <p className="text-sm text-muted-foreground">Foto, video, schede e documenti. Bruno li trova per modello, titolo o tag e li invia su WhatsApp Gennaro (allegato) o per email (link).</p>
+      </div>
+
+      <section className="space-y-3 rounded-lg border bg-card p-4">
+        <h2 className="font-medium">Carica nuovo materiale</h2>
+        <div className="flex flex-wrap items-center gap-2">
+          {productSelect(form.product, (v) => setForm({ ...form, product: v }))}
+          <Select value={form.kind} onValueChange={(v) => setForm({ ...form, kind: v })}><SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+            <SelectContent>{KINDS.map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}</SelectContent></Select>
+          <Select value={form.language} onValueChange={(v) => setForm({ ...form, language: v })}><SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
+            <SelectContent>{LANGS.map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}</SelectContent></Select>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Input className="min-w-56 flex-1" placeholder="Titolo (es. Scheda tecnica Ottavio 120 EN)" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+          <Input className="min-w-56 flex-1" placeholder="Tag separati da virgola (es. imballo, laboratorio)" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
+          <Button asChild disabled={busy}><label className="cursor-pointer">{busy ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Upload className="mr-1 h-4 w-4" />}Scegli file
+            <input type="file" multiple className="hidden" accept="image/*,video/*,application/pdf" onChange={(e) => { if (e.target.files?.length) upload(e.target.files); e.target.value = ""; }} /></label></Button>
+        </div>
+      </section>
+
+      <section className="space-y-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative min-w-56 flex-1"><Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input className="pl-8" placeholder="Cerca per titolo, modello o tag" value={filter.q} onChange={(e) => setFilter({ ...filter, q: e.target.value })} /></div>
+          {productSelect(filter.product, (v) => setFilter({ ...filter, product: v }), true)}
+          <Select value={filter.kind} onValueChange={(v) => setFilter({ ...filter, kind: v })}><SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+            <SelectContent><SelectItem value="any">Tutti i tipi</SelectItem>{KINDS.map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}</SelectContent></Select>
+        </div>
+        {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {visible.map((a) => (
+              <div key={a.id} className="overflow-hidden rounded-lg border bg-card">
+                <a href={a.url} target="_blank" rel="noreferrer" className="flex aspect-video items-center justify-center bg-muted">
+                  {a.kind === "foto" ? <img src={a.url} alt={a.title} className="h-full w-full object-cover" loading="lazy" />
+                    : a.kind === "video" ? <video src={a.url} className="h-full w-full object-cover" muted preload="metadata" />
+                    : <FileText className="h-10 w-10 text-muted-foreground" />}
+                </a>
+                <div className="space-y-1 p-3">
+                  <div className="flex items-start gap-2">
+                    <p className="min-w-0 flex-1 break-words text-sm font-medium">{a.title}</p>
+                    <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Elimina" onClick={() => remove(a)}><Trash2 className="h-4 w-4" /></Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{a.products?.name ?? "Materiale aziendale"} · {KINDS.find(([k]) => k === a.kind)?.[1] ?? a.kind}{a.language ? ` · ${a.language.toUpperCase()}` : ""}</p>
+                  {!!a.tags?.length && <div className="flex flex-wrap gap-1">{a.tags.map((t) => <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>)}</div>}
+                </div>
+              </div>
+            ))}
+            {!visible.length && <p className="text-sm text-muted-foreground">Nessun materiale.</p>}
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}
