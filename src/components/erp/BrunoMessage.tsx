@@ -11,7 +11,7 @@ export interface BrunoMessageData {
 
 const icons = { whatsapp_api: Bot, wasender: MessageCircle, email: Mail, note: StickyNote, call: Phone };
 
-const PLACEHOLDER = /^\[(immagine|image|video|audio|documento|document|sticker|file)[^\]]*\]$/i;
+const PLACEHOLDER = /^(📷 Immagine|🎬 Video|🎵 Audio|📄 Documento|🎨 Sticker)( · .*)?$/u;
 
 function MessageMedia({ meta }: { meta: NonNullable<BrunoMessageData["metadata"]> }) {
   const url = meta.media_url?.startsWith("https://") ? meta.media_url : null;
