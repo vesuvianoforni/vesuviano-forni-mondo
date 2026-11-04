@@ -20,6 +20,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenu
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { BrunoMessage } from "./BrunoMessage";
 import { useBrunoMessages } from "@/hooks/useBrunoMessages";
+import { WaTemplatePicker, type WaTemplateChoice } from "./WaTemplatePicker";
 
 export type BrunoLead = CRMLead & { bruno_mode?: string; bruno_paused_until?: string | null };
 
@@ -42,6 +43,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
   const { toast } = useToast();
   const [channel, setChannel] = useState<BrunoChannel>("whatsapp_api");
   const [text, setText] = useState("");
+  const [waTemplate, setWaTemplate] = useState<WaTemplateChoice>(null);
   const [subject, setSubject] = useState("");
   const [aiDraft, setAiDraft] = useState(false);
   const [reasoning, setReasoning] = useState<string | null>(null);
@@ -65,7 +67,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
   useEffect(() => {
     setViewFilter("all"); pendingAnchor.current = null;
     followLatest.current = true; setAwayFromLatest(false);
-    setText(""); setSubject(""); setReasoning(null); setAiDraft(false);
+    setText(""); setWaTemplate(null); setSubject(""); setReasoning(null); setAiDraft(false);
     setSignature('default'); setPreviewOpen(false);
     emailOperation.current=null;
     try {
@@ -135,14 +137,18 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
     } finally { setThinking(false); }
   };
 
+  const useTemplate = channel === "whatsapp_api" && waTemplate;
   const send = async () => {
-    if (!text.trim()) return;
+    if (useTemplate) {
+      if (waTemplate.params.some((p) => !p.trim())) { toast({ title: "Compila tutte le variabili del modello", variant: "destructive" }); return; }
+    } else if (!text.trim()) return;
     setSending(true);
     try {
       const draft = JSON.stringify([lead.id, subject || 'Vesuviano Forni', text.trim()]);
       if (channel === 'email' && emailOperation.current?.draft !== draft) emailOperation.current = { key: crypto.randomUUID(), draft, signatureId };
       if(channel==='email'&&emailOperation.current){try {sessionStorage.setItem(`crm-email-operation:${lead.id}`,JSON.stringify(emailOperation.current));}catch{/* optional storage */}}
-      const result = await invoke({ action: "send", lead_id: lead.id, channel, body: text.trim(), subject: channel === "email" ? subject || undefined : undefined, ai_generated: aiDraft,
+      const result = await invoke({ action: "send", lead_id: lead.id, channel, body: useTemplate ? waTemplate.preview : text.trim(),
+        ...(useTemplate ? { template: { name: waTemplate.name, language: waTemplate.language, params: waTemplate.params.map((p) => p.trim()) } } : {}), subject: channel === "email" ? subject || undefined : undefined, ai_generated: aiDraft,
         ...(channel === 'email' ? { idempotency_key: emailOperation.current?.key, signature_id: emailOperation.current?.signatureId } : {}) });
       toast({ title: channel === "note" ? "Nota salvata" : "Messaggio inviato",
         description: channel === 'email' && !['found','appended'].includes(result.copy_status) ? 'Email accettata dal server; copia in Posta inviata da verificare. Non verrà reinviata.' : undefined });
@@ -255,15 +261,16 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
           <span className="min-w-0 break-words text-xs text-muted-foreground [overflow-wrap:anywhere]">{destination}</span>
           {aiDraft && <Badge variant="outline" className="text-[10px]">Bozza di Bruno</Badge>}
         </div>
+        {channel === "whatsapp_api" && <WaTemplatePicker firstName={(lead.contact_name || "").split(" ")[0] || name} value={waTemplate} onChange={setWaTemplate} disabled={sending} />}
         {channel === "email" && <>
           <Input aria-label="Oggetto email" placeholder="Oggetto" value={subject} maxLength={300} disabled={sending} onChange={(e) => setSubject(e.target.value)} />
           <div className="flex flex-wrap items-center gap-2"><EmailSignatureSelector value={signature} onChange={setSignature} disabled={sending}/><Button variant="outline" size="sm" disabled={sending} onClick={() => setPreviewOpen(true)}><Eye className="mr-2 h-4 w-4"/>Anteprima</Button></div>
           <Dialog open={previewOpen} onOpenChange={setPreviewOpen}><DialogContent className="max-h-[90vh] w-[calc(100%-24px)] max-w-2xl overflow-y-auto"><DialogHeader><DialogTitle>{subject || 'Vesuviano Forni'}</DialogTitle></DialogHeader><p className="break-words text-sm text-muted-foreground">A: {lead.email || 'Email cliente non disponibile'}</p><EmailPreview body={text} signatureId={signatureId}/></DialogContent></Dialog>
         </>}
         <div className="flex min-w-0 gap-2">
-          <Textarea aria-label="Messaggio" rows={2} value={text} disabled={sending} onChange={(e) => { setText(e.target.value); }}
+          <Textarea aria-label="Messaggio" rows={2} value={useTemplate ? waTemplate.preview : text} readOnly={!!useTemplate} disabled={sending} onChange={(e) => { setText(e.target.value); }}
             placeholder={channel === "note" ? "Nota interna per il team…" : `Scrivi a ${name}…`} className="min-h-[76px] min-w-0 resize-none text-sm" />
-          <Tooltip><TooltipTrigger asChild><Button size="icon" onClick={send} disabled={sending || !text.trim()} className="h-10 w-10 shrink-0 self-end" aria-label={channel === "note" ? "Salva nota" : "Invia"}>
+          <Tooltip><TooltipTrigger asChild><Button size="icon" onClick={send} disabled={sending || (!useTemplate && !text.trim())} className="h-10 w-10 shrink-0 self-end" aria-label={channel === "note" ? "Salva nota" : "Invia"}>
             {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : channel === "note" ? <StickyNote className="h-4 w-4" /> : <Send className="h-4 w-4" />}
           </Button></TooltipTrigger><TooltipContent>{channel === "note" ? "Salva nota interna" : `Invia tramite ${CHANNELS[channel].label}`}</TooltipContent></Tooltip>
         </div>
