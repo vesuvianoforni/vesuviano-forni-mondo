@@ -20,6 +20,40 @@ const GENERAL = "general";
 interface Asset { id: string; kind: string; title: string; url: string; storage_path: string | null; language: string | null; tags: string[]; product_id: string | null; products?: { name: string } | null }
 interface Product { id: string; name: string }
 
+/** Product picker with an inline search box, so many models stay easy to reach. */
+function ProductPicker({ products, value, onChange, withAny = false }: { products: Product[]; value: string; onChange: (v: string) => void; withAny?: boolean }) {
+  const [open, setOpen] = useState(false);
+  const label = value === "any" ? "Tutti" : value === GENERAL ? "Materiale aziendale" : products.find((p) => p.id === value)?.name ?? "Seleziona prodotto";
+  const pick = (v: string) => { onChange(v); setOpen(false); };
+  return (
+    <Popover open={open} onOpenChange={setOpen} modal>
+      <PopoverTrigger asChild>
+        <Button variant="outline" role="combobox" aria-expanded={open} className="w-52 justify-between font-normal">
+          <span className="truncate">{label}</span>
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-64 p-0" align="start">
+        <Command>
+          <CommandInput placeholder="Cerca prodotto..." />
+          <CommandList>
+            <CommandEmpty>Nessun prodotto trovato</CommandEmpty>
+            {withAny && <CommandItem value="tutti" onSelect={() => pick("any")}>Tutti</CommandItem>}
+            <CommandItem value="materiale aziendale" onSelect={() => pick(GENERAL)}>
+              <Check className={`mr-1 h-4 w-4 ${value === GENERAL ? "opacity-100" : "opacity-0"}`} />Materiale aziendale
+            </CommandItem>
+            {products.map((p) => (
+              <CommandItem key={p.id} value={p.name} onSelect={() => pick(p.id)}>
+                <Check className={`mr-1 h-4 w-4 ${value === p.id ? "opacity-100" : "opacity-0"}`} />{p.name}
+              </CommandItem>
+            ))}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 /** Media library Bruno uses: files linked to a product or general company material. */
 export default function ERPMateriali() {
   const [dragging, setDragging] = useState(false);
