@@ -2,7 +2,7 @@
 // Each row is claimed once (pending -> sending) and never retried automatically, so no duplicate WhatsApp.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
-import { sendGennaroWhatsApp } from '../bruno-agent/wasender.ts';
+import { sendGennaroWhatsApp } from '../_shared/wasender.ts';
 import { followupText, isWorkingTime } from '../_shared/ready-to-ship-followup.ts';
 
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
