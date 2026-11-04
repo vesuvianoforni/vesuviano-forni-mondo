@@ -5,7 +5,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { sendMailboxEmail } from '../_shared/email-service.ts';
 import { safeMailError } from '../_shared/email-rules.ts';
-import { sendGennaroWhatsApp } from './wasender.ts';
+import { mediaField, sendGennaroWhatsApp } from './wasender.ts';
+import { customerPersona, stageRule, TOOL_MAP } from '../_shared/bruno/persona.ts';
 
 // Obiettivi di Bruno per fase pipeline (tenere allineato a src/lib/brunoObjectives.ts)
 const OBJECTIVES: Record<string, string> = {
@@ -26,6 +27,7 @@ const SendSchema = z.object({
   ai_generated: z.boolean().optional(),
   idempotency_key: z.string().uuid().optional(),
   signature_id: z.string().uuid().nullable().optional(),
+  media_url: z.string().url().max(1000).optional(),
   template: z.object({ name: z.string().min(1).max(200), language: z.string().min(2).max(10), params: z.array(z.string().min(1).max(1000)).max(10) }).optional(),
 });
 const TemplatesSchema = z.object({ action: z.literal('wa_templates') });
@@ -71,12 +73,21 @@ Deno.serve(async (req) => {
       const { data: history } = await admin.from('crm_messages').select('channel,direction,sender,body,created_at')
         .eq('lead_id', lead.id).order('created_at', { ascending: false }).limit(20);
       const stage = lead.status || 'nuovo';
-      const system = `Sei Bruno, agente AI Sales & Back-office di Vesuviano Forni (forni per pizza artigianali napoletani: Anastasia, Ottavio, Real Bosco, Sebastian, VesuvioBuono, Forno Rotante; legna, gas, elettrico, rotante). Pagamento 50% acconto, 50% a merce pronta per la spedizione. Usa sempre "Prodotti", mai "Soluzioni".
-Canali: whatsapp_api (linea di Bruno, messaggi rapidi), wasender (WhatsApp personale di Gennaro, il commerciale: tono caldo, follow-up e negoziazione), email (offerte, documenti, comunicazioni formali).
-Regole: messaggi brevi, umani, una sola domanda per volta, nessuna promessa di prezzo o sconto non presente nei dati, scrivi nella lingua del cliente (deducila da paese/storico, default italiano). Se il cliente ha detto di non essere interessato, proponi di chiudere come perso e non scrivere.
+      const { data: kb } = await admin.from('bruno_knowledge').select('title,content,stages').eq('is_active', true).order('sort_order').limit(80);
+      const kbText = (kb || []).filter((k) => !k.stages?.length || k.stages.includes(stage)).map((k) => `- ${k.title}: ${k.content}`).join('\n');
+      const system = `${customerPersona('any')}
+${TOOL_MAP}
+
+# FASE ATTUALE
+${stageRule(stage)}
+
+# KNOWLEDGE BASE (fonte ufficiale)
+${kbText}
+
+Canali: whatsapp_api (linea ufficiale di Bruno), wasender (WhatsApp di Gennaro, default per relazione e trattativa), email (offerte, documenti). Applica il modulo WhatsApp o Email in base al canale scelto. Se il cliente ha detto di non essere interessato, proponi di chiudere come perso e non scrivere.
 Rispondi SOLO con JSON: {"channel":"whatsapp_api|wasender|email","subject":"solo se email","message":"testo","reasoning":"perché questa mossa, max 2 frasi","suggest_stage":"fase consigliata o null"}`;
       const userMsg = `Fase attuale: ${stage}. Obiettivo: ${OBJECTIVES[stage] || OBJECTIVES.nuovo}
-Lead: ${JSON.stringify({ nome: lead.contact_name, azienda: lead.company_name, paese: lead.country, citta: lead.city, fonte: lead.source, note: (lead.notes || '').slice(0, 1500), prossima_attivita: lead.next_activity_type, data_attivita: lead.next_activity_date, ha_email: !!lead.email, ha_telefono: !!lead.phone })}
+Lead: ${JSON.stringify({ nome: lead.contact_name, azienda: lead.company_name, paese: lead.country, citta: lead.city, fonte: lead.source, note: (lead.notes || '').slice(0, 1500), qualificazione: lead.qualification, prossima_attivita: lead.next_activity_type, data_attivita: lead.next_activity_date, ha_email: !!lead.email, ha_telefono: !!lead.phone })}
 Storico (più recente prima): ${JSON.stringify((history || []).map((m) => ({ ...m, body: m.body.slice(0, 500) })))}
 ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
       const res = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -151,7 +162,7 @@ ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
       else if (!phone) { status = 'failed'; error = 'Telefono mancante'; }
       else {
         try {
-          externalId = await sendGennaroWhatsApp({ lovableKey, connectionKey: key }, { phone, text: input.body });
+          externalId = await sendGennaroWhatsApp({ lovableKey, connectionKey: key }, { phone, text: input.body, mediaUrl: input.media_url });
         } catch (e) {
           status = 'failed';
           error = e instanceof Error ? e.message : 'WaSender: invio da verificare nella chat prima di riprovare.';
@@ -168,6 +179,7 @@ ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
       sender: input.channel === 'whatsapp_api' ? 'bruno' : input.channel === 'wasender' ? 'gennaro' : 'operator',
       subject: input.subject ?? null, body: input.body, status, error, external_id: externalId,
       ai_generated: input.ai_generated ?? false, created_by: u.user.id,
+      ...(input.media_url ? { metadata: { media_url: input.media_url, message_type: Object.keys(mediaField(input.media_url))[0]?.replace('Url', '') || 'document', file_name: input.media_url.split('/').pop()?.split('?')[0] } } : {}),
     }).select().single();
     if (dbErr) return json({ error: dbErr.message }, 500);
 

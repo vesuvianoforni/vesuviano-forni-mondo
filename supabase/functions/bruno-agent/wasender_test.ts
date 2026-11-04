@@ -42,3 +42,9 @@ Deno.test('chiave mancante o telefono non valido non contattano WaSender', async
   await assertRejects(() => sendGennaroWhatsApp(credentials, { ...input, phone: '' }, request), Error, 'Telefono cliente non valido');
   assertEquals(calls, 0);
 });
+import { mediaField } from './wasender.ts';
+Deno.test('mediaField picks the WaSender field from the file type', () => {
+  if (mediaField('https://x.co/a/foto.JPG').imageUrl !== 'https://x.co/a/foto.JPG') throw new Error('image');
+  if (!mediaField('https://x.co/v.mp4?t=1').videoUrl) throw new Error('video');
+  if (!mediaField('https://x.co/scheda.pdf').documentUrl) throw new Error('doc');
+});

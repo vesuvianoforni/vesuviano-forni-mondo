@@ -173,6 +173,42 @@ export type Database = {
         }
         Relationships: []
       }
+      bruno_knowledge: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          id: string
+          is_active: boolean
+          sort_order: number
+          stages: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          content: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          stages?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          stages?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       burners: {
         Row: {
           created_at: string
@@ -1347,6 +1383,7 @@ export type Database = {
           phone: string | null
           pipeline: string
           priority: string | null
+          qualification: Json
           source: string | null
           status: string
           updated_at: string
@@ -1375,6 +1412,7 @@ export type Database = {
           phone?: string | null
           pipeline?: string
           priority?: string | null
+          qualification?: Json
           source?: string | null
           status?: string
           updated_at?: string
@@ -1403,6 +1441,7 @@ export type Database = {
           phone?: string | null
           pipeline?: string
           priority?: string | null
+          qualification?: Json
           source?: string | null
           status?: string
           updated_at?: string
@@ -2748,6 +2787,53 @@ export type Database = {
           year?: number
         }
         Relationships: []
+      }
+      product_assets: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          kind: string
+          language: string | null
+          product_id: string
+          sort_order: number
+          storage_path: string | null
+          title: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          kind?: string
+          language?: string | null
+          product_id: string
+          sort_order?: number
+          storage_path?: string | null
+          title: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          kind?: string
+          language?: string | null
+          product_id?: string
+          sort_order?: number
+          storage_path?: string | null
+          title?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_assets_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_costs: {
         Row: {

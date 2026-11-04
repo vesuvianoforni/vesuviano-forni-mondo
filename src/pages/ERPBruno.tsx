@@ -17,6 +17,7 @@ import { BrunoPanel, type BrunoLead } from "@/components/erp/BrunoPanel";
 import { cn } from "@/lib/utils";
 import { MailboxSettings } from "@/components/erp/MailboxSettings";
 import { TelegramLink } from "@/components/erp/TelegramLink";
+import { BrunoKnowledge } from "@/components/erp/BrunoKnowledge";
 import { Switch } from "@/components/ui/switch";
 import { interactionRelativeTime } from "@/lib/crmActivity";
 
@@ -124,6 +125,7 @@ export default function ERPBruno() {
         </div>
         <div className="flex shrink-0 items-center gap-4">
           <label className="flex items-center gap-2 text-xs font-medium"><Switch checked={onlyQueue} onCheckedChange={setOnlyQueue} aria-label="Solo in coda" />Solo in coda</label>
+          <BrunoKnowledge />
           <TelegramLink />
           <MailboxSettings />
         </div>
