@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { toast } from "sonner";
 import { Copy, Loader2, Plus, Save, Search, CheckCircle2, Settings2 } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
+import { ProductAssets } from "@/components/erp/ProductAssets";
 import { CURRENCIES, DEFAULT_MARKET_CURRENCY, MARKETS, MARKET_LABELS, Market } from "@/lib/productPricing";
 
 const db = supabase as any;
@@ -176,7 +177,7 @@ export default function ERPProdotti() {
         <tbody className="divide-y">
           {visible.map((r) => (
             <tr key={r.product.id} className={dirty.has(r.product.id) ? "bg-accent/30" : ""}>
-              <td className="p-2"><div className="flex items-center gap-2">{r.product.image_url && <img src={r.product.image_url} alt="" className="h-9 w-9 shrink-0 rounded object-cover" loading="lazy" />}<span className={r.product.is_active ? "" : "text-muted-foreground"}>{r.product.name}</span></div></td>
+              <td className="p-2"><div className="flex items-center gap-2">{r.product.image_url && <img src={r.product.image_url} alt="" className="h-9 w-9 shrink-0 rounded object-cover" loading="lazy" />}<span className={r.product.is_active ? "" : "text-muted-foreground"}>{r.product.name}</span><ProductAssets productId={r.product.id} productName={r.product.name} /></div></td>
               {MARKETS.map((m) => <td key={m} className="p-2">{priceCell(r, m, (p) => update(r.product.id, (x) => ({ ...x, prices: { ...x.prices, [m]: p } })))}</td>)}
             </tr>
           ))}
