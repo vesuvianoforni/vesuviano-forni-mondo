@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
   const { error: dup } = await admin.from('telegram_updates').insert({ update_id: update.update_id });
   if (dup) return json({ ok: true, duplicate: true });
 
-  const LABEL: Record<string, string> = { update_lead: 'Aggiornare CRM', create_lead: 'Creare cliente', send_message: 'Inviare messaggio', create_offer: 'Creare offerta', send_offer: 'Inviare offerta', create_order: 'Inserire ordine', update_order: 'Aggiornare ordine' };
+  const LABEL: Record<string, string> = { update_lead: 'Aggiornare CRM', create_lead: 'Creare cliente', send_message: 'Inviare messaggio', create_offer: 'Creare offerta', send_offer: 'Inviare offerta', create_order: 'Inserire ordine', update_order: 'Aggiornare ordine', send_attachment: 'Inviare file' };
   const describe = (a: { name: string; args: Record<string, any> }) => {
     const x = a.args;
     const bits = [x.contact_name, x.customer_name, x.title, x.channel, x.status, x.next_activity_type, x.next_activity_date, x.total_amount && `${x.total_amount}`, x.subject, x.body && `«${String(x.body).slice(0, 500)}»`, x.notes_append || x.notes, Array.isArray(x.items) && x.items.map((i: any) => `${i.quantity}× ${i.product_name} ${i.unit_price}`).join(', ')].filter(Boolean);

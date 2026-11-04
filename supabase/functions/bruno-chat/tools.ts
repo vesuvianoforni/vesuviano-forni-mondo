@@ -243,4 +243,5 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
 export const TOOL_LABELS: Record<string, string> = {
   update_lead: 'CRM aggiornato', create_lead: 'Cliente creato', send_message: 'Messaggio inviato',
   create_offer: 'Offerta creata', send_offer: 'Offerta inviata', create_order: 'Ordine inserito', update_order: 'Ordine aggiornato',
+  send_attachment: 'File inviato',
 };
