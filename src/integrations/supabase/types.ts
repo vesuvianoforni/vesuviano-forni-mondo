@@ -3213,6 +3213,36 @@ export type Database = {
         }
         Relationships: []
       }
+      telegram_notifications: {
+        Row: {
+          created_at: string
+          id: number
+          kind: string
+          lead_id: string | null
+          message_id: string | null
+          sent_at: string | null
+          token: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          kind: string
+          lead_id?: string | null
+          message_id?: string | null
+          sent_at?: string | null
+          token?: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          kind?: string
+          lead_id?: string | null
+          message_id?: string | null
+          sent_at?: string | null
+          token?: string
+        }
+        Relationships: []
+      }
       telegram_pending: {
         Row: {
           actions: Json
