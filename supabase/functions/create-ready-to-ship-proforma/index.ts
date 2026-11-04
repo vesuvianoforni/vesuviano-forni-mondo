@@ -563,7 +563,7 @@ serve(async (req) => {
       if (fuErr) console.error('Follow-up queue failed:', fuErr.message)
       // In working hours: wake the sender right after the delay; otherwise the hourly run picks it up at 9:00
       else if (isWorkingTime(new Date())) {
-        const wake = new Promise((r) => setTimeout(r, FOLLOWUP_DELAY_MIN * 60000 + 5000)).then(() =>
+        const wake = new Promise((r) => setTimeout(r, FOLLOWUP_DELAY_MIN * 60000 + 3000)).then(() =>
           fetch(`${supabaseUrl}/functions/v1/ready-to-ship-followup`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${supabaseServiceKey}` }, body: '{}' })
         ).catch((e) => console.error('Follow-up wake failed:', e))
         // deno-lint-ignore no-explicit-any
