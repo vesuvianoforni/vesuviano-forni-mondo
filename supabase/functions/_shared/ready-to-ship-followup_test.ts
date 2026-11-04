@@ -1,9 +1,9 @@
 import { assertEquals, assert } from 'https://deno.land/std@0.224.0/assert/mod.ts';
 import { followupDueAt, followupText, isWorkingTime, nextWorkingSlot } from './ready-to-ship-followup.ts';
 
-Deno.test('lun-sab 9-19 Roma: dentro orario parte dopo 2 minuti', () => {
+Deno.test('lun-sab 9-19 Roma: dentro orario parte subito', () => {
   // Wed 4 Nov 2026 15:15 UTC = 16:15 Rome
-  assertEquals(followupDueAt(new Date('2026-11-04T15:15:00Z')).toISOString(), '2026-11-04T15:17:00.000Z');
+  assertEquals(followupDueAt(new Date('2026-11-04T15:15:00Z')).toISOString(), '2026-11-04T15:15:00.000Z');
 });
 
 Deno.test('dopo le 19 slitta alle 9 del giorno dopo', () => {
