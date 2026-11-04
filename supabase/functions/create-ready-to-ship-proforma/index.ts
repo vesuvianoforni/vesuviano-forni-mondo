@@ -1,6 +1,16 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "npm:resend@2.0.0"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8'
+import { buildQuotePdf } from './pdf.ts'
+import { followupDueAt } from '../_shared/ready-to-ship-followup.ts'
+
+const PDF_LABELS = {
+  it: { title: 'Preventivo Pronta Consegna', customer: 'Cliente', diameter: 'Diametro', coating: 'Rivestimento', fuel: 'Combustibile', price: 'Prezzo', shipping: 'Spedizione inclusa', payment: 'Riserva', link: 'Preventivo online', photos: 'Foto del forno', pdfBtn: 'Scarica il preventivo PDF', galleryTitle: 'Le foto del tuo forno' },
+  en: { title: 'Ready-to-Ship Quote', customer: 'Customer', diameter: 'Diameter', coating: 'Coating', fuel: 'Fuel', price: 'Price', shipping: 'Shipping included', payment: 'Reservation', link: 'Online quote', photos: 'Oven photos', pdfBtn: 'Download the PDF quote', galleryTitle: 'Photos of your oven' },
+  fr: { title: 'Devis Prêt à Expédier', customer: 'Client', diameter: 'Diamètre', coating: 'Revêtement', fuel: 'Combustible', price: 'Prix', shipping: 'Livraison incluse', payment: 'Réservation', link: 'Devis en ligne', photos: 'Photos du four', pdfBtn: 'Télécharger le devis PDF', galleryTitle: 'Les photos de votre four' },
+  de: { title: 'Angebot Sofort Lieferbar', customer: 'Kunde', diameter: 'Durchmesser', coating: 'Beschichtung', fuel: 'Brennstoff', price: 'Preis', shipping: 'Versand inklusive', payment: 'Reservierung', link: 'Online-Angebot', photos: 'Fotos des Ofens', pdfBtn: 'PDF-Angebot herunterladen', galleryTitle: 'Fotos Ihres Ofens' },
+  es: { title: 'Presupuesto Listo para Envío', customer: 'Cliente', diameter: 'Diámetro', coating: 'Revestimiento', fuel: 'Combustible', price: 'Precio', shipping: 'Envío incluido', payment: 'Reserva', link: 'Presupuesto online', photos: 'Fotos del horno', pdfBtn: 'Descargar el presupuesto PDF', galleryTitle: 'Las fotos de tu horno' },
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -455,6 +465,10 @@ serve(async (req) => {
                 <p style="margin: 5px 0;"><strong>${t.fuel}:</strong> ${actualFuelType}</p>
               </div>
 
+              ${gallery ? `<p style="font-weight: 600; margin: 10px 0 6px;">${pl.galleryTitle}</p><div>${gallery}</div>` : ''}
+
+              ${pdfUrl ? `<div style="text-align: center; margin: 20px 0;"><a href="${pdfUrl}" style="display: inline-block; background: #1f2937; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">📎 ${pl.pdfBtn}</a></div>` : ''}
+
               ${isGasConfigurable ? `<div class="gas-note">
                 ${t.gasNote}
               </div>` : ''}
@@ -527,13 +541,26 @@ serve(async (req) => {
     const customerSend = await resend.emails.send({
       from: 'Vesuviano Forni <noreply@vesuvianoforni.com>',
       to: [email],
+      reply_to: 'info@vesuvianoforni.com',
       subject: t.subject,
       html: customerEmailHtml,
+      ...(pdfBase64 ? { attachments: [{ filename: pdfName, content: pdfBase64 }] } : {}),
     })
     if (customerSend.error) {
       console.error('Customer proforma email failed:', proforma.proforma_number, JSON.stringify(customerSend.error))
     } else {
       console.log('Customer proforma email accepted:', proforma.proforma_number, customerSend.data?.id)
+    }
+
+    // 6b. Queue Gennaro's WhatsApp follow-up (WaSender) only when the email was accepted
+    if (!customerSend.error && String(phone).replace(/\D/g, '').length >= 7) {
+      const { data: wl } = await supabase.from('website_leads').select('id').eq('email', email)
+        .eq('form_type', 'ready_to_ship').order('created_at', { ascending: false }).limit(1).maybeSingle()
+      const { error: fuErr } = await supabase.from('ready_to_ship_followups').insert({
+        proforma_id: proforma.id, website_lead_id: wl?.id ?? null, customer_name: firstName, phone, email,
+        language: lang, model_name: rtsOven.model_name, due_at: followupDueAt(new Date()).toISOString(),
+      })
+      if (fuErr) console.error('Follow-up queue failed:', fuErr.message)
     }
 
     // 7. Notify the company
