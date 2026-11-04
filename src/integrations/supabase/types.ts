@@ -3183,6 +3183,60 @@ export type Database = {
         }
         Relationships: []
       }
+      ready_to_ship_followups: {
+        Row: {
+          created_at: string
+          customer_name: string
+          due_at: string
+          email: string
+          error: string | null
+          external_id: string | null
+          id: string
+          language: string
+          model_name: string
+          phone: string
+          proforma_id: string | null
+          sent_at: string | null
+          status: string
+          updated_at: string
+          website_lead_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          customer_name: string
+          due_at: string
+          email: string
+          error?: string | null
+          external_id?: string | null
+          id?: string
+          language?: string
+          model_name: string
+          phone: string
+          proforma_id?: string | null
+          sent_at?: string | null
+          status?: string
+          updated_at?: string
+          website_lead_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string
+          due_at?: string
+          email?: string
+          error?: string | null
+          external_id?: string | null
+          id?: string
+          language?: string
+          model_name?: string
+          phone?: string
+          proforma_id?: string | null
+          sent_at?: string | null
+          status?: string
+          updated_at?: string
+          website_lead_id?: string | null
+        }
+        Relationships: []
+      }
       ready_to_ship_ovens: {
         Row: {
           coating: string | null

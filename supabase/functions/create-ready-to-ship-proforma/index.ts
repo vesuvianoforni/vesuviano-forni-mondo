@@ -1,6 +1,16 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "npm:resend@2.0.0"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8'
+import { buildQuotePdf } from './pdf.ts'
+import { followupDueAt } from '../_shared/ready-to-ship-followup.ts'
+
+const PDF_LABELS = {
+  it: { title: 'Preventivo Pronta Consegna', customer: 'Cliente', diameter: 'Diametro', coating: 'Rivestimento', fuel: 'Combustibile', price: 'Prezzo', shipping: 'Spedizione inclusa', payment: 'Riserva', link: 'Preventivo online', photos: 'Foto del forno', pdfBtn: 'Scarica il preventivo PDF', galleryTitle: 'Le foto del tuo forno' },
+  en: { title: 'Ready-to-Ship Quote', customer: 'Customer', diameter: 'Diameter', coating: 'Coating', fuel: 'Fuel', price: 'Price', shipping: 'Shipping included', payment: 'Reservation', link: 'Online quote', photos: 'Oven photos', pdfBtn: 'Download the PDF quote', galleryTitle: 'Photos of your oven' },
+  fr: { title: 'Devis Prêt à Expédier', customer: 'Client', diameter: 'Diamètre', coating: 'Revêtement', fuel: 'Combustible', price: 'Prix', shipping: 'Livraison incluse', payment: 'Réservation', link: 'Devis en ligne', photos: 'Photos du four', pdfBtn: 'Télécharger le devis PDF', galleryTitle: 'Les photos de votre four' },
+  de: { title: 'Angebot Sofort Lieferbar', customer: 'Kunde', diameter: 'Durchmesser', coating: 'Beschichtung', fuel: 'Brennstoff', price: 'Preis', shipping: 'Versand inklusive', payment: 'Reservierung', link: 'Online-Angebot', photos: 'Fotos des Ofens', pdfBtn: 'PDF-Angebot herunterladen', galleryTitle: 'Fotos Ihres Ofens' },
+  es: { title: 'Presupuesto Listo para Envío', customer: 'Cliente', diameter: 'Diámetro', coating: 'Revestimiento', fuel: 'Combustible', price: 'Precio', shipping: 'Envío incluido', payment: 'Reserva', link: 'Presupuesto online', photos: 'Fotos del horno', pdfBtn: 'Descargar el presupuesto PDF', galleryTitle: 'Las fotos de tu horno' },
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -384,6 +394,30 @@ serve(async (req) => {
     }
 
     const t = translations[language] || translations['it']
+    const lang = (translations[language] ? language : 'it') as keyof typeof PDF_LABELS
+    const pl = PDF_LABELS[lang] || PDF_LABELS.it
+    const imageUrls: string[] = (rtsOven.images || []).map((i: string) => i.startsWith('http') ? i : siteUrl + i)
+
+    // PDF quote with photos, stored next to the oven gallery and attached to the email
+    let pdfUrl: string | null = null
+    let pdfBase64: string | null = null
+    const pdfName = `Vesuviano-${(proforma.proforma_number || 'preventivo').replace(/[^\w-]/g, '')}.pdf`
+    try {
+      const bytes = await buildQuotePdf({
+        labels: pl, number: proforma.proforma_number || '', customerName, model: rtsOven.model_name,
+        diameter: rtsOven.diameter, coating: rtsOven.coating || 'Standard', fuel: actualFuelType,
+        price: `€ ${priceFormatted}`, paymentTerms: `${t.depositLabel} 5%: € ${depositFormatted}`, url: proformaUrl, images: imageUrls,
+      })
+      const path = `rts-quotes/${proforma.token}/${pdfName}`
+      const { error: upErr } = await supabase.storage.from('oven-gallery').upload(path, bytes, { contentType: 'application/pdf', upsert: true })
+      if (upErr) throw upErr
+      pdfUrl = supabase.storage.from('oven-gallery').getPublicUrl(path).data.publicUrl
+      let bin = ''; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000))
+      pdfBase64 = btoa(bin)
+    } catch (e) {
+      console.error('Ready-to-ship PDF failed:', proforma.proforma_number, e instanceof Error ? e.message : e)
+    }
+    const gallery = imageUrls.slice(1, 7).map((u) => `<img src="${u}" alt="${rtsOven.model_name}" style="width: 48%; border-radius: 6px; margin: 1%;">`).join('')
 
     const customerEmailHtml = `
       <!DOCTYPE html>
@@ -430,6 +464,10 @@ serve(async (req) => {
                 <p style="margin: 5px 0;"><strong>${t.coating}:</strong> ${rtsOven.coating || 'Standard'}</p>
                 <p style="margin: 5px 0;"><strong>${t.fuel}:</strong> ${actualFuelType}</p>
               </div>
+
+              ${gallery ? `<p style="font-weight: 600; margin: 10px 0 6px;">${pl.galleryTitle}</p><div>${gallery}</div>` : ''}
+
+              ${pdfUrl ? `<div style="text-align: center; margin: 20px 0;"><a href="${pdfUrl}" style="display: inline-block; background: #1f2937; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">📎 ${pl.pdfBtn}</a></div>` : ''}
 
               ${isGasConfigurable ? `<div class="gas-note">
                 ${t.gasNote}
@@ -503,13 +541,26 @@ serve(async (req) => {
     const customerSend = await resend.emails.send({
       from: 'Vesuviano Forni <noreply@vesuvianoforni.com>',
       to: [email],
+      reply_to: 'info@vesuvianoforni.com',
       subject: t.subject,
       html: customerEmailHtml,
+      ...(pdfBase64 ? { attachments: [{ filename: pdfName, content: pdfBase64 }] } : {}),
     })
     if (customerSend.error) {
       console.error('Customer proforma email failed:', proforma.proforma_number, JSON.stringify(customerSend.error))
     } else {
       console.log('Customer proforma email accepted:', proforma.proforma_number, customerSend.data?.id)
+    }
+
+    // 6b. Queue Gennaro's WhatsApp follow-up (WaSender) only when the email was accepted
+    if (!customerSend.error && String(phone).replace(/\D/g, '').length >= 7) {
+      const { data: wl } = await supabase.from('website_leads').select('id').eq('email', email)
+        .eq('form_type', 'ready_to_ship').order('created_at', { ascending: false }).limit(1).maybeSingle()
+      const { error: fuErr } = await supabase.from('ready_to_ship_followups').insert({
+        proforma_id: proforma.id, website_lead_id: wl?.id ?? null, customer_name: firstName, phone, email,
+        language: lang, model_name: rtsOven.model_name, due_at: followupDueAt(new Date()).toISOString(),
+      })
+      if (fuErr) console.error('Follow-up queue failed:', fuErr.message)
     }
 
     // 7. Notify the company
