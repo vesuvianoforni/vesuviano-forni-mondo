@@ -17,6 +17,7 @@ const resend = new Resend(Deno.env.get('RESEND_API_KEY'))
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
+import { convertEur, currencyForPhone, ecbRate } from '../_shared/ready-to-ship-currency.ts'
 const SITE = 'https://vesuvianoforni.com'
 const WWW = 'https://www.vesuvianoforni.com'
 const MEDIA = `${WWW}/media`
@@ -25,11 +26,11 @@ const LOGO = `${WWW}/lovable-uploads/vesuviano-logo-bianco.png`
 const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
 
 const T = {
-  it: { subject: (m: string) => `La tua offerta Pronta Consegna — ${m}`, title: 'Il tuo forno è pronto', greet: (n: string) => `Gentile ${n},`, intro: 'grazie per il tuo interesse. Ti inviamo la nostra offerta per il forno che hai scelto dalla collezione <strong>Pronta Consegna</strong>.', diameter: 'Diametro', coating: 'Rivestimento', fuel: 'Combustibile', price: 'Prezzo', shipping: 'Spedizione inclusa', gallery: 'Le foto del tuo forno', view: 'Vedi l’offerta online', pdf: 'Scarica l’offerta in PDF', ctaText: 'Vuoi parlarne con il nostro Export Manager Gennaro Caglione?', cta: 'Prenota una chiamata', contact: 'Per qualsiasi domanda:', inclusion: 'Spedizione inclusa', offerTitle: (m: string) => `Pronta consegna · ${m}` },
-  en: { subject: (m: string) => `Your Ready-to-Ship offer — ${m}`, title: 'Your oven is ready', greet: (n: string) => `Dear ${n},`, intro: 'thank you for your interest. Here is our offer for the oven you selected from our <strong>Ready to Ship</strong> collection.', diameter: 'Diameter', coating: 'Coating', fuel: 'Fuel', price: 'Price', shipping: 'Shipping included', gallery: 'Photos of your oven', view: 'View the offer online', pdf: 'Download the offer as PDF', ctaText: 'Would you like to talk it through with our Export Manager Gennaro Caglione?', cta: 'Book a call', contact: 'For any question:', inclusion: 'Shipping included', offerTitle: (m: string) => `Ready to ship · ${m}` },
-  fr: { subject: (m: string) => `Votre offre Prêt à Expédier — ${m}`, title: 'Votre four est prêt', greet: (n: string) => `Bonjour ${n},`, intro: 'merci pour votre intérêt. Voici notre offre pour le four choisi dans notre collection <strong>Prêt à Expédier</strong>.', diameter: 'Diamètre', coating: 'Revêtement', fuel: 'Combustible', price: 'Prix', shipping: 'Livraison incluse', gallery: 'Les photos de votre four', view: 'Voir l’offre en ligne', pdf: 'Télécharger l’offre en PDF', ctaText: 'Souhaitez-vous en parler avec notre Export Manager Gennaro Caglione ?', cta: 'Réserver un appel', contact: 'Pour toute question :', inclusion: 'Livraison incluse', offerTitle: (m: string) => `Prêt à expédier · ${m}` },
-  de: { subject: (m: string) => `Ihr Angebot Sofort Lieferbar — ${m}`, title: 'Ihr Ofen ist bereit', greet: (n: string) => `Guten Tag ${n},`, intro: 'vielen Dank für Ihr Interesse. Hier ist unser Angebot für den Ofen aus unserer Kollektion <strong>Sofort Lieferbar</strong>.', diameter: 'Durchmesser', coating: 'Beschichtung', fuel: 'Brennstoff', price: 'Preis', shipping: 'Versand inklusive', gallery: 'Fotos Ihres Ofens', view: 'Angebot online ansehen', pdf: 'Angebot als PDF herunterladen', ctaText: 'Möchten Sie mit unserem Export Manager Gennaro Caglione sprechen?', cta: 'Gespräch buchen', contact: 'Bei Fragen:', inclusion: 'Versand inklusive', offerTitle: (m: string) => `Sofort lieferbar · ${m}` },
-  es: { subject: (m: string) => `Tu oferta Listo para Envío — ${m}`, title: 'Tu horno está listo', greet: (n: string) => `Hola ${n},`, intro: 'gracias por tu interés. Te enviamos nuestra oferta para el horno que elegiste de la colección <strong>Listo para Envío</strong>.', diameter: 'Diámetro', coating: 'Revestimiento', fuel: 'Combustible', price: 'Precio', shipping: 'Envío incluido', gallery: 'Las fotos de tu horno', view: 'Ver la oferta online', pdf: 'Descargar la oferta en PDF', ctaText: '¿Quieres hablarlo con nuestro Export Manager Gennaro Caglione?', cta: 'Reservar una llamada', contact: 'Para cualquier pregunta:', inclusion: 'Envío incluido', offerTitle: (m: string) => `Listo para envío · ${m}` },
+  it: { subject: (m: string) => `La tua offerta Pronta Consegna — ${m}`, title: 'Il tuo forno è pronto', greet: (n: string) => `Gentile ${n},`, intro: 'grazie per il tuo interesse. Ti inviamo la nostra offerta per il forno che hai scelto dalla collezione <strong>Pronta Consegna</strong>.', diameter: 'Diametro', coating: 'Rivestimento', fuel: 'Combustibile', price: 'Prezzo', shipping: 'Spedizione esclusa, quotata a parte', gallery: 'Le foto del tuo forno', view: 'Vedi l’offerta online', pdf: 'Scarica l’offerta in PDF', ctaText: 'Vuoi parlarne con il nostro Export Manager Gennaro Caglione?', cta: 'Prenota una chiamata', contact: 'Per qualsiasi domanda:', inclusion: '', exclusion: 'Spedizione esclusa: quotata a parte in base alla destinazione', fx: 'Importo convertito al cambio BCE del', offerTitle: (m: string) => `Pronta consegna · ${m}` },
+  en: { subject: (m: string) => `Your Ready-to-Ship offer — ${m}`, title: 'Your oven is ready', greet: (n: string) => `Dear ${n},`, intro: 'thank you for your interest. Here is our offer for the oven you selected from our <strong>Ready to Ship</strong> collection.', diameter: 'Diameter', coating: 'Coating', fuel: 'Fuel', price: 'Price', shipping: 'Shipping excluded, quoted separately', gallery: 'Photos of your oven', view: 'View the offer online', pdf: 'Download the offer as PDF', ctaText: 'Would you like to talk it through with our Export Manager Gennaro Caglione?', cta: 'Book a call', contact: 'For any question:', inclusion: '', exclusion: 'Shipping excluded: quoted separately based on destination', fx: 'Amount converted at the ECB rate of', offerTitle: (m: string) => `Ready to ship · ${m}` },
+  fr: { subject: (m: string) => `Votre offre Prêt à Expédier — ${m}`, title: 'Votre four est prêt', greet: (n: string) => `Bonjour ${n},`, intro: 'merci pour votre intérêt. Voici notre offre pour le four choisi dans notre collection <strong>Prêt à Expédier</strong>.', diameter: 'Diamètre', coating: 'Revêtement', fuel: 'Combustible', price: 'Prix', shipping: 'Livraison non incluse, devis séparé', gallery: 'Les photos de votre four', view: 'Voir l’offre en ligne', pdf: 'Télécharger l’offre en PDF', ctaText: 'Souhaitez-vous en parler avec notre Export Manager Gennaro Caglione ?', cta: 'Réserver un appel', contact: 'Pour toute question :', inclusion: '', exclusion: 'Livraison non incluse : devis séparé selon la destination', fx: 'Montant converti au taux BCE du', offerTitle: (m: string) => `Prêt à expédier · ${m}` },
+  de: { subject: (m: string) => `Ihr Angebot Sofort Lieferbar — ${m}`, title: 'Ihr Ofen ist bereit', greet: (n: string) => `Guten Tag ${n},`, intro: 'vielen Dank für Ihr Interesse. Hier ist unser Angebot für den Ofen aus unserer Kollektion <strong>Sofort Lieferbar</strong>.', diameter: 'Durchmesser', coating: 'Beschichtung', fuel: 'Brennstoff', price: 'Preis', shipping: 'Versand exklusive, separates Angebot', gallery: 'Fotos Ihres Ofens', view: 'Angebot online ansehen', pdf: 'Angebot als PDF herunterladen', ctaText: 'Möchten Sie mit unserem Export Manager Gennaro Caglione sprechen?', cta: 'Gespräch buchen', contact: 'Bei Fragen:', inclusion: '', exclusion: 'Versand exklusive: separates Angebot je nach Zielort', fx: 'Betrag umgerechnet zum EZB-Kurs vom', offerTitle: (m: string) => `Sofort lieferbar · ${m}` },
+  es: { subject: (m: string) => `Tu oferta Listo para Envío — ${m}`, title: 'Tu horno está listo', greet: (n: string) => `Hola ${n},`, intro: 'gracias por tu interés. Te enviamos nuestra oferta para el horno que elegiste de la colección <strong>Listo para Envío</strong>.', diameter: 'Diámetro', coating: 'Revestimiento', fuel: 'Combustible', price: 'Precio', shipping: 'Envío no incluido, presupuesto aparte', gallery: 'Las fotos de tu horno', view: 'Ver la oferta online', pdf: 'Descargar la oferta en PDF', ctaText: '¿Quieres hablarlo con nuestro Export Manager Gennaro Caglione?', cta: 'Reservar una llamada', contact: 'Para cualquier pregunta:', inclusion: '', exclusion: 'Envío no incluido: presupuesto aparte según el destino', fx: 'Importe convertido al cambio BCE del', offerTitle: (m: string) => `Listo para envío · ${m}` },
 }
 
 Deno.serve(async (req) => {
@@ -46,7 +47,12 @@ Deno.serve(async (req) => {
     const customerName = `${firstName} ${lastName}`.trim()
     const model = rts.custom_title || rts.model_name
     const fuel = rts.fuel_type || 'Legna'
-    const price = Number(rts.sale_price || rts.list_price || 0)
+    const priceEur = Number(rts.sale_price || rts.list_price || 0)
+    // Local currency from the phone prefix, daily ECB rate; fall back to EUR if the rate is unavailable
+    let currency = currencyForPhone(phone)
+    const fx = await ecbRate(currency)
+    if (!fx) currency = 'EUR'
+    const price = currency === 'EUR' ? priceEur : convertEur(priceEur, fx!.rate)
     const images: string[] = (rts.images || []).map((i: string) => i.startsWith("http") ? i : WWW + (i.startsWith("/") ? i : "/" + i))
 
     // Reference model description from the product catalog (fallback: ready-to-ship description)
@@ -67,11 +73,11 @@ Deno.serve(async (req) => {
     const document: OfferDocument = {
       customer_name: customerName, customer_contact: customerName, customer_email: email, customer_phone: phone,
       customer_address: city || '', customer_vat: '', title: t.offerTitle(model), description: '',
-      language: lang, currency: 'EUR', price_list: settings.price_list,
+      language: lang, currency, price_list: settings.price_list,
       company_entity: lang === 'en' ? 'wise' : settings.company_entity, vat_regime: settings.vat_regime, valid_until: valid,
       payment_method: settings.payment_method, payment_agreement: settings.payment_agreement,
       include_certification: settings.include_certification, include_warranty: settings.include_warranty, warranty_years: settings.warranty_years,
-      inclusions: [settings.inclusions, t.inclusion].filter(Boolean).join('\n'), exclusions: settings.exclusions,
+      inclusions: settings.inclusions, exclusions: [t.exclusion, settings.exclusions].filter(Boolean).join('\n'),
       timeline_produzione: settings.timeline_produzione, timeline_consegna: settings.timeline_consegna,
       timeline_installazione: settings.timeline_installazione, timeline_collaudo: settings.timeline_collaudo,
       items: [{ id: crypto.randomUUID(), product_id: null, product_name: model, description, image_url: images[0] || '', quantity: 1, unit_price: price, discount_percent: 0, notes: '' }],
@@ -82,7 +88,7 @@ Deno.serve(async (req) => {
     const number = `OFF-${initials}-${new Date().getFullYear()}-${id.slice(0, 8).toUpperCase()}`
     const { data: offer, error: offerErr } = await supabase.from('commercial_offers').insert({
       id, number, lead_id: lead?.id ?? null, customer_name: customerName, title: document.title, status: 'offerta_inviata',
-      document, amount: offerTotals(document).subtotal, currency: 'EUR', public_enabled: true,
+      document, amount: offerTotals(document).subtotal, currency, public_enabled: true,
     }).select('id,number,public_code').single()
     if (offerErr) throw offerErr
     const offerUrl = `${SITE}/offerta/${offer.public_code}`
@@ -94,7 +100,8 @@ Deno.serve(async (req) => {
       notes: `Offerta auto-generata: ${offer.number}`, metadata: { ready_to_ship_oven_id: readyToShipOvenId, offer_id: offer.id, offer_number: offer.number },
     })
 
-    const priceTxt = `€ ${price.toLocaleString('it-IT', { minimumFractionDigits: 2 })}`
+    const priceTxt = new Intl.NumberFormat(lang === 'en' ? 'en-GB' : `${lang}-${lang.toUpperCase()}`, { style: 'currency', currency, minimumFractionDigits: 2 }).format(price)
+    const fxNote = currency !== 'EUR' && fx ? `${t.fx} ${fx.date} (1 EUR = ${fx.rate} ${currency})` : ''
     // Mail clients only reliably load images from our own domain: serve storage through vesuvianoforni.com/media
     const onDomain = (u: string) => u.replace(/^https:\/\/[a-z0-9]+\.supabase\.co\/storage\/v1\/object\/public\//, `${MEDIA}/`).replace(/^https:\/\/vesuvianoforni\.com\//, `${WWW}/`)
     const pics = images.slice(0, 5).map(onDomain)
@@ -118,7 +125,7 @@ Deno.serve(async (req) => {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.soft};border-left:3px solid ${C.brand}"><tr><td style="padding:18px 20px;font-size:14px;line-height:1.7">
       <p style="margin:0 0 6px;color:${C.muted}">${esc(specs)}</p>
       <p style="margin:0 0 4px;font-size:20px;font-weight:bold;color:${C.ink}">${t.price}: ${priceTxt}</p>
-      <p style="margin:0 0 12px;color:${C.muted}">${t.shipping} · ${esc(offer.number)}</p>
+      <p style="margin:0 0 12px;color:${C.muted}">${t.shipping} · ${esc(offer.number)}${fxNote ? `<br><span style="font-size:12px">${esc(fxNote)}</span>` : ''}</p>
       <p style="margin:0"><a href="${offerUrl}" style="color:${C.brand};font-weight:bold">${t.view} &rarr;</a> &nbsp;&nbsp; <a href="${pdfUrl}" style="color:${C.brand};font-weight:bold">${t.pdf} &rarr;</a></p>
     </td></tr></table>
   </td></tr>
@@ -154,7 +161,7 @@ Deno.serve(async (req) => {
       subject: `🏷️ Nuova Richiesta Pronta Consegna: ${customerName} - ${model}`,
       html: `<h2>Nuova richiesta Pronta Consegna</h2><p>Offerta inviata automaticamente: <a href="${offerUrl}">${esc(offer.number)}</a></p>
 <p><b>Nome:</b> ${esc(customerName)}<br><b>Email:</b> ${esc(email)}<br><b>Telefono:</b> ${esc(phone)}<br>${city ? `<b>Città:</b> ${esc(city)}<br>` : ''}
-<b>Forno:</b> ${esc(model)} Ø${esc(rts.diameter)}cm · ${esc(rts.coating || 'N/A')}<br><b>Prezzo:</b> ${priceTxt}</p>`,
+<b>Forno:</b> ${esc(model)} Ø${esc(rts.diameter)}cm · ${esc(rts.coating || 'N/A')}<br><b>Prezzo:</b> ${priceTxt}${currency !== 'EUR' ? ` (da € ${priceEur})` : ''} · spedizione esclusa</p>`,
     })
 
     const erpWebhookUrl = Deno.env.get('ERP_WEBHOOK_URL')
