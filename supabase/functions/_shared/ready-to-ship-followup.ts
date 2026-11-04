@@ -17,6 +17,7 @@ export function isWorkingTime(d: Date): boolean {
 
 /** First working moment (Rome, Mon–Sat 9–19) at or after `from`, scanned in 5-minute steps. */
 export function nextWorkingSlot(from: Date): Date {
+  if (isWorkingTime(from)) return from;
   let t = new Date(Math.ceil(from.getTime() / 60000) * 60000);
   for (let i = 0; i < 3000 && !isWorkingTime(t); i++) {
     const { hour, minute } = romeParts(t);
