@@ -193,14 +193,21 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       const { data, error } = await q; if (error) throw error;
       const t = clean(a.query)?.toLowerCase();
       const words = t ? t.split(/\s+/).filter(Boolean) : [];
-      const rows = (data ?? []).filter((x: any) => {
-        if (a.language && x.language && x.language !== a.language) return false;
+      const matched = (data ?? []).filter((x: any) => {
         if (!words.length) return true;
         const hay = [x.title, x.description, x.products?.name, x.products?.category, ...(x.tags || [])].join(' ').toLowerCase();
         return words.some((w: string) => hay.includes(w));
-      }).slice(0, 40);
+      });
+      // Lingua: prima quella del cliente, poi materiali universali, poi inglese; le altre lingue solo se non c'è altro.
+      const want = a.language;
+      const rank = (x: any) => !want ? 0 : x.language === want ? 0 : !x.language ? 1 : x.language === 'en' ? 2 : 3;
+      const best = matched.length ? Math.min(...matched.map(rank)) : 0;
+      const rows = matched.filter((x: any) => rank(x) <= Math.max(best, 1)).sort((p: any, q: any) => rank(p) - rank(q)).slice(0, 40);
       if (!rows.length) return { empty: true, hint: 'Nessun materiale trovato: dillo all\'operatore, non inventare link.' };
-      return rows.map((x: any) => ({ id: x.id, kind: x.kind, title: x.title, url: x.url, language: x.language, tags: x.tags, product: x.products?.name ?? 'Materiale aziendale' }));
+      const out = rows.map((x: any) => ({ id: x.id, kind: x.kind, title: x.title, url: x.url, language: x.language ?? 'universale', tags: x.tags, product: x.products?.name ?? 'Materiale aziendale' }));
+      return want && best > 1
+        ? { items: out, language_note: `Nessun materiale in ${want.toUpperCase()}: questi sono in altra lingua. Avvisa l'operatore prima di inviarli al cliente.` }
+        : out;
     }
     case 'send_attachment': {
       const { data: asset } = await admin.from('product_assets').select('id,title,url,kind').eq('id', a.asset_id).maybeSingle();
