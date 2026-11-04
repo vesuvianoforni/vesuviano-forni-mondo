@@ -55,8 +55,8 @@ export function BrunoKnowledge() {
             <Textarea rows={6} placeholder="Cosa deve sapere Bruno" value={edit.content} onChange={(e) => setEdit({ ...edit, content: e.target.value })} />
             <div>
               <p className="mb-1 text-xs text-muted-foreground">Vale nelle fasi (nessuna = sempre)</p>
-              <div className="flex flex-wrap gap-1.5">{CRM_STAGES.map((s: any) => (
-                <Badge key={s.key} variant={edit.stages.includes(s.key) ? "default" : "outline"} className="cursor-pointer" onClick={() => toggleStage(s.key)}>{s.label}</Badge>
+              <div className="flex flex-wrap gap-1.5">{CRM_STAGES.map((s) => (
+                <Badge key={s.id} variant={edit.stages.includes(s.id) ? "default" : "outline"} className="cursor-pointer" onClick={() => toggleStage(s.id)}>{s.title}</Badge>
               ))}</div>
             </div>
             <div className="flex justify-end gap-2"><Button variant="outline" onClick={() => setEdit(null)}>Annulla</Button><Button onClick={save} disabled={busy}>{busy && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}Salva</Button></div>
