@@ -22,7 +22,7 @@ function PdfPreview({ url, title, expanded }: { url: string; title: string; expa
     import("pdfjs-dist").then((pdfjs) => {
       if (cancelled) return;
       pdfjs.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
-      task = pdfjs.getDocument(url);
+      task = pdfjs.getDocument({ url });
       return task.promise;
     }).then((pdf) => {
       if (!cancelled && pdf) setDocument(pdf);
