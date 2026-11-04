@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Download, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -28,6 +28,9 @@ export default function PublicCommercialOffer() {
     void load();return()=>{active=false;};
   },[code]);
   const pdf=async()=>{if(!offer)return;setBusy(true);try{await downloadCommercialOffer(offer.document,offer.number,offer.created_at);}catch{toast.error('PDF non disponibile');}finally{setBusy(false);}};
+  // Links sent to customers with ?pdf=1 download the PDF produced by the same renderer as the preview.
+  const [params]=useSearchParams();const autoPdf=useRef(false);
+  useEffect(()=>{if(offer&&params.get('pdf')==='1'&&!autoPdf.current){autoPdf.current=true;void pdf();}},[offer,params]);
   return <div className="min-h-dvh bg-background text-foreground"><SEOHead title={offer?`Offerta ${offer.number} | Vesuviano`:'Offerta | Vesuviano'} description="Offerta commerciale personalizzata Vesuviano Forni." lang={offer?.document.language??'it'} noIndex/>
     {loading?<div className="flex min-h-dvh items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary"/></div>:error?<div className="flex min-h-dvh items-center justify-center p-6"><p role="alert" className="text-muted-foreground">{error}</p></div>:offer&&<><div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 border-b px-4 py-3"><span className="text-sm font-semibold">Vesuviano · {offer.number}</span><Button onClick={pdf} disabled={busy}>{busy?<Loader2 className="animate-spin"/>:<Download/>}PDF</Button></div><iframe title="Offerta Vesuviano" sandbox="" className="min-h-[calc(100dvh-70px)] w-full border-0" srcDoc={renderCommercialOffer(offer.document,offer.number,offer.created_at)}/></>}
   </div>;

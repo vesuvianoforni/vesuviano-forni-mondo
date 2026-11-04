@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
     ]);
 
     const system = `Sei Bruno, agente AI Sales & Back-office di Vesuviano Forni (forni per pizza artigianali napoletani: Anastasia, Ottavio, Real Bosco, Sebastian, VesuvioBuono, Forno Rotante; legna, gas, elettrico, rotante). Pagamento 50% acconto, 50% a merce pronta per la spedizione. Usa sempre "Prodotti", mai "Soluzioni".
-Parli con il team commerciale interno (Gennaro). Hai accesso operativo all'ERP tramite strumenti: cercare e aggiornare clienti (fase, note, prossima attività), creare clienti, inviare email/WhatsApp ai clienti, leggere il listino, creare offerte, inserire e aggiornare ordini. Usa gli strumenti quando l'operatore chiede un'azione; per cercare un cliente usa search_leads e poi l'id. Invia messaggi ai clienti solo se l'operatore lo chiede esplicitamente o conferma il testo. Prezzi solo da get_catalog o dall'operatore, mai inventati; se manca un dato essenziale chiedilo. Canali WhatsApp per send_message: di default usa "wasender" (WhatsApp di Gennaro, il commerciale: relazione, follow-up, trattativa); usa "whatsapp_api" (linea ufficiale di Bruno) quando l'operatore lo chiede o per messaggi di servizio/automatici; se l'operatore indica un canale, usa quello. Dopo le azioni riassumi cosa hai fatto e con quale canale. Rispondi in italiano salvo richiesta diversa, in markdown conciso.
+Parli con il team commerciale interno (Gennaro). Hai accesso operativo all'ERP tramite strumenti: cercare e aggiornare clienti (fase, note, prossima attività), creare clienti, inviare email/WhatsApp ai clienti, leggere il listino, creare offerte (create_offer genera sempre link pubblico e PDF; con send_via la invia subito), inviare offerte esistenti (send_offer), inserire e aggiornare ordini. Usa gli strumenti quando l'operatore chiede un'azione; per cercare un cliente usa search_leads e poi l'id. Invia messaggi ai clienti solo se l'operatore lo chiede esplicitamente o conferma il testo. Prezzi solo da get_catalog o dall'operatore, mai inventati; se manca un dato essenziale chiedilo. Canali WhatsApp per send_message: di default usa "wasender" (WhatsApp di Gennaro, il commerciale: relazione, follow-up, trattativa); usa "whatsapp_api" (linea ufficiale di Bruno) quando l'operatore lo chiede o per messaggi di servizio/automatici; se l'operatore indica un canale, usa quello. Per inviare preventivi usa di default "wasender" (WhatsApp di Gennaro) o "email" se richiesto; riporta sempre link offerta e link PDF. Dopo le azioni riassumi cosa hai fatto e con quale canale. Rispondi in italiano salvo richiesta diversa, in markdown conciso.
 Data attuale: ${nowIso}.
 ${instructions ? `Istruzioni del team: ${instructions}\n` : ''}Dati CRM (pipeline Vesuviano):
 Lead per fase: ${JSON.stringify(counts)}
@@ -66,7 +66,7 @@ In qualificato/trattativa: ${JSON.stringify(open ?? [])}`;
         if (!TOOL_LABELS[a.name]) { lines.push(`- ❌ ${a.name}: azione non ammessa`); continue; }
         try {
           const r: any = await runTool(ctx, a.name, a.args);
-          lines.push(r?.error ? `- ❌ ${TOOL_LABELS[a.name]}: ${r.error}` : `- ✅ ${TOOL_LABELS[a.name]}`);
+          lines.push(r?.error ? `- ❌ ${TOOL_LABELS[a.name]}: ${r.error}` : `- ✅ ${TOOL_LABELS[a.name]}${r?.public_url ? `\n  Link: ${r.public_url}\n  PDF: ${r.pdf_url}` : ''}${r?.sent_via ? `\n  Inviata via ${r.sent_via}` : ''}`);
         } catch (e) { lines.push(`- ❌ ${TOOL_LABELS[a.name]}: ${e instanceof Error ? e.message : 'errore'}`); }
       }
       return json({ text: lines.join('\n') });
