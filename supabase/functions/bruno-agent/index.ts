@@ -1,3 +1,4 @@
+import { listTemplates, sendWhatsApp } from './meta-whatsapp.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { ECONOMIC_TEXT_MODEL } from '../_shared/ai-models.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2';
@@ -25,13 +26,15 @@ const SendSchema = z.object({
   ai_generated: z.boolean().optional(),
   idempotency_key: z.string().uuid().optional(),
   signature_id: z.string().uuid().nullable().optional(),
+  template: z.object({ name: z.string().min(1).max(200), language: z.string().min(2).max(10), params: z.array(z.string().min(1).max(1000)).max(10) }).optional(),
 });
+const TemplatesSchema = z.object({ action: z.literal('wa_templates') });
 const SuggestSchema = z.object({
   action: z.literal('suggest'),
   lead_id: z.string().uuid(),
   instruction: z.string().max(1000).optional(),
 });
-const Body = z.discriminatedUnion('action', [SendSchema, SuggestSchema]);
+const Body = z.discriminatedUnion('action', [SendSchema, SuggestSchema, TemplatesSchema]);
 
 const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
@@ -54,6 +57,10 @@ Deno.serve(async (req) => {
     const parsed = Body.safeParse(await req.json());
     if (!parsed.success) return json({ error: parsed.error.flatten().fieldErrors }, 400);
     const input = parsed.data;
+    if (input.action === 'wa_templates') {
+      try { return json({ templates: await listTemplates() }); }
+      catch (e) { return json({ error: e instanceof Error ? e.message : 'Errore Meta' }, 502); }
+    }
 
     const { data: lead } = await admin.from('leads').select('*').eq('id', input.lead_id).maybeSingle();
     if (!lead) return json({ error: 'Lead non trovato' }, 404);
@@ -132,19 +139,10 @@ ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
     const phone = digits(lead.phone);
 
     if (input.channel === 'whatsapp_api') {
-      const lk = Deno.env.get('LOVABLE_API_KEY');
-      const wk = Deno.env.get('WHATSAPP_API_KEY');
-      if (!wk || !lk) { status = 'failed'; error = 'WhatsApp API di Bruno non ancora collegato'; }
-      else if (!phone) { status = 'failed'; error = 'Telefono mancante'; }
+      if (!phone) { status = 'failed'; error = 'Telefono mancante'; }
       else {
-        const r = await fetch('https://connector-gateway.lovable.dev/whatsapp/messages', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${lk}`, 'X-Connection-Api-Key': wk, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messaging_product: 'whatsapp', to: phone, type: 'text', text: { body: input.body } }),
-        });
-        const t = await r.text();
-        if (!r.ok) { status = 'failed'; error = `WhatsApp ${r.status}: ${t.slice(0, 300)}`; }
-        else { try { externalId = JSON.parse(t).messages?.[0]?.id ?? null; } catch { /* ignore */ } }
+        try { externalId = await sendWhatsApp(phone, input.template ? { template: input.template } : { text: input.body }); }
+        catch (e) { status = 'failed'; error = e instanceof Error ? e.message : 'Errore WhatsApp'; }
       }
     } else if (input.channel === 'wasender') {
       const key = Deno.env.get('UDC_WASENDER_API_KEY');
