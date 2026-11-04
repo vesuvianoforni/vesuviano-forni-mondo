@@ -61,11 +61,19 @@ export default function ERPMateriali() {
     if (a.storage_path) await supabase.storage.from(BUCKET).remove([a.storage_path]);
     await db.from("product_assets").delete().eq("id", a.id); load();
   };
-  const setLanguage = async (a: Asset, v: string) => {
-    const language = v === "all" ? null : v;
-    const { error } = await db.from("product_assets").update({ language }).eq("id", a.id);
+  const [edit, setEdit] = useState<{ id: string; url: string; title: string; kind: string; language: string; product: string; tags: string } | null>(null);
+  const openEdit = (a: Asset) => setEdit({ id: a.id, url: a.url, title: a.title, kind: a.kind, language: a.language ?? "all", product: a.product_id ?? GENERAL, tags: (a.tags || []).join(", ") });
+  const saveEdit = async () => {
+    if (!edit) return;
+    setBusy(true);
+    const { error } = await db.from("product_assets").update({
+      title: edit.title.trim(), kind: edit.kind, language: edit.language === "all" ? null : edit.language,
+      product_id: edit.product === GENERAL ? null : edit.product,
+      tags: edit.tags.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean),
+    }).eq("id", edit.id);
+    setBusy(false);
     if (error) return toast.error(error.message);
-    setRows((r) => r.map((x) => (x.id === a.id ? { ...x, language } : x))); toast.success("Lingua aggiornata");
+    setEdit(null); load(); toast.success("Materiale aggiornato");
   };
 
   const visible = useMemo(() => {
