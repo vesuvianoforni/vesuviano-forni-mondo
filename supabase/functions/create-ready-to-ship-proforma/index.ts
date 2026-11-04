@@ -384,6 +384,30 @@ serve(async (req) => {
     }
 
     const t = translations[language] || translations['it']
+    const lang = (translations[language] ? language : 'it') as keyof typeof PDF_LABELS
+    const pl = PDF_LABELS[lang] || PDF_LABELS.it
+    const imageUrls: string[] = (rtsOven.images || []).map((i: string) => i.startsWith('http') ? i : siteUrl + i)
+
+    // PDF quote with photos, stored next to the oven gallery and attached to the email
+    let pdfUrl: string | null = null
+    let pdfBase64: string | null = null
+    const pdfName = `Vesuviano-${(proforma.proforma_number || 'preventivo').replace(/[^\w-]/g, '')}.pdf`
+    try {
+      const bytes = await buildQuotePdf({
+        labels: pl, number: proforma.proforma_number || '', customerName, model: rtsOven.model_name,
+        diameter: rtsOven.diameter, coating: rtsOven.coating || 'Standard', fuel: actualFuelType,
+        price: `€ ${priceFormatted}`, paymentTerms: `${t.depositLabel} 5%: € ${depositFormatted}`, url: proformaUrl, images: imageUrls,
+      })
+      const path = `rts-quotes/${proforma.token}/${pdfName}`
+      const { error: upErr } = await supabase.storage.from('oven-gallery').upload(path, bytes, { contentType: 'application/pdf', upsert: true })
+      if (upErr) throw upErr
+      pdfUrl = supabase.storage.from('oven-gallery').getPublicUrl(path).data.publicUrl
+      let bin = ''; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000))
+      pdfBase64 = btoa(bin)
+    } catch (e) {
+      console.error('Ready-to-ship PDF failed:', proforma.proforma_number, e instanceof Error ? e.message : e)
+    }
+    const gallery = imageUrls.slice(1, 7).map((u) => `<img src="${u}" alt="${rtsOven.model_name}" style="width: 48%; border-radius: 6px; margin: 1%;">`).join('')
 
     const customerEmailHtml = `
       <!DOCTYPE html>
