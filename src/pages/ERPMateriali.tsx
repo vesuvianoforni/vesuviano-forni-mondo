@@ -18,6 +18,7 @@ interface Product { id: string; name: string }
 
 /** Media library Bruno uses: files linked to a product or general company material. */
 export default function ERPMateriali() {
+  const [dragging, setDragging] = useState(false);
   const [rows, setRows] = useState<Asset[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
