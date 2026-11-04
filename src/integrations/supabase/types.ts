@@ -3301,30 +3301,48 @@ export type Database = {
       }
       telegram_notifications: {
         Row: {
+          body: string | null
           created_at: string
+          handled_at: string | null
+          handled_by: string | null
           id: number
           kind: string
           lead_id: string | null
           message_id: string | null
+          reminded_at: string | null
           sent_at: string | null
+          snoozed_until: string | null
+          tg_messages: Json
           token: string
         }
         Insert: {
+          body?: string | null
           created_at?: string
+          handled_at?: string | null
+          handled_by?: string | null
           id?: number
           kind: string
           lead_id?: string | null
           message_id?: string | null
+          reminded_at?: string | null
           sent_at?: string | null
+          snoozed_until?: string | null
+          tg_messages?: Json
           token?: string
         }
         Update: {
+          body?: string | null
           created_at?: string
+          handled_at?: string | null
+          handled_by?: string | null
           id?: number
           kind?: string
           lead_id?: string | null
           message_id?: string | null
+          reminded_at?: string | null
           sent_at?: string | null
+          snoozed_until?: string | null
+          tg_messages?: Json
           token?: string
         }
         Relationships: []
@@ -3334,6 +3352,8 @@ export type Database = {
           actions: Json
           chat_id: number
           created_at: string
+          decided_at: string | null
+          decided_by: string | null
           id: string
           status: string
           summary: string | null
@@ -3342,6 +3362,8 @@ export type Database = {
           actions: Json
           chat_id: number
           created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
           id?: string
           status?: string
           summary?: string | null
@@ -3350,6 +3372,8 @@ export type Database = {
           actions?: Json
           chat_id?: number
           created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
           id?: string
           status?: string
           summary?: string | null
@@ -3683,6 +3707,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      telegram_cron_kick: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "user" | "commerciale" | "produzione"
