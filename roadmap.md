@@ -1,9 +1,10 @@
 # Roadmap
 
 ## Bruno: chiamate Telnyx in inglese (5 nov 2026)
-- [ ] Configurare assistente vocale sul numero +447457416033 con qualificazione e conoscenze Vesuviano.
-- [ ] Collegare chiamate approvate ERP/Telegram, conoscenze e dati cliente senza accesso a costi o invii autonomi.
-- [ ] Verificare configurazione reale, strumenti, sicurezza e test; prova telefonica solo su richiesta approvata.
+- [x] Assistente Telnyx creato con voce maschile inglese, knowledge base e catalogo live, dati di qualificazione e chiusura; numero UK di origine +447457416033, nessun cambio al SIP inbound. Audio e storico Telnyx non conservati.
+- [x] Proposte immutabili e avvio approvato ERP/Telegram; pannello Chiamate con conferma/annullamento/esiti. Merge atomico qualificazione nel cliente, firme Ed25519, nessun costo interno o invio/ordine/offerta dal motore vocale; registrazioni e trascrizioni Zapper restano separate.
+- [x] 13 test superati, tre funzioni distribuite, assistente/4 strumenti riletti su Telnyx, percorso credenziali app HTTP 200; tool test Telnyx firmato supera la firma e blocca chiamata inesistente 403, richieste non firmate 401. UI conferma/annullamento verificata con dati simulati a 1280 e 390 px senza errori/overflow, build OK. Nessuna telefonata avviata.
+- [ ] Prova telefonica end-to-end con voce, knowledge e salvataggio: richiede richiesta/approvazione della prova sul contatto di test; sessione ERP autenticata non disponibile in sandbox per Supabase esterno. I test del pannello sono simulati e non verificano una conversazione reale. Dieci avvisi sicurezza preesistenti invariati.
 
 ## Modelli AI economici (3 nov 2026)
 - [x] Astra individuato in chat agenti, verifiche/bozze/piani Mario, suggerimenti Bruno, newsletter e traduzioni: catalogo autenticato verificato, preferenza economica salvata.
