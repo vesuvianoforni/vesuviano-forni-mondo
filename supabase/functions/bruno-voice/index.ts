@@ -130,7 +130,7 @@ Deno.serve(async req => {
     if (!parsed.success) return json({ error: 'Richiesta non valida', details: parsed.error.flatten().fieldErrors }, 400);
     const input = parsed.data;
     if (input.action === 'status') {
-      let query = admin.from('bruno_voice_calls').select('id,lead_id,destination,language,objective,status,summary,error_code,created_at,started_at,ended_at,expires_at,duration_seconds,recording_status,transcript_status,summary_status,leads(contact_name,company_name)').order('created_at', { ascending: false }).order('id',{ascending:false}).limit(31);
+      let query = admin.from('bruno_voice_calls').select('id,lead_id,destination,language,call_type,objective,status,summary,error_code,created_at,started_at,ended_at,expires_at,duration_seconds,recording_status,transcript_status,summary_status,leads(contact_name,company_name)').order('created_at', { ascending: false }).order('id',{ascending:false}).limit(31);
       if (input.view === 'planned') query = query.in('status',['proposed','starting','dialing','active']);
       if (input.view === 'executed') query = query.in('status',['completed','failed','unknown','cancelled']);
       if (input.before_at && input.before_id) query = query.or(`created_at.lt.${input.before_at},and(created_at.eq.${input.before_at},id.lt.${input.before_id})`);
@@ -138,7 +138,7 @@ Deno.serve(async req => {
       return json({ configured: Boolean(settings.assistant_id && settings.application_id && settings.public_key), from_number: FROM_NUMBER, language: 'en', calls: calls.slice(0,30), has_more: calls.length > 30 });
     }
     if (input.action === 'detail') {
-      const call = checked(await admin.from('bruno_voice_calls').select('id,lead_id,destination,objective,status,summary,transcript,created_at,started_at,ended_at,expires_at,duration_seconds,recording_path,recording_status,transcript_status,summary_status,leads(contact_name,company_name)').eq('id',input.call_id).single());
+      const call = checked(await admin.from('bruno_voice_calls').select('id,lead_id,destination,call_type,objective,instructions,status,summary,transcript,created_at,started_at,ended_at,expires_at,duration_seconds,recording_path,recording_status,transcript_status,summary_status,leads(contact_name,company_name)').eq('id',input.call_id).single());
       if (!call) return json({error:'Chiamata non trovata'},404);
       const recording = call.recording_path ? checked(await admin.storage.from('bruno-call-recordings').createSignedUrl(call.recording_path,3600)) : null;
       const {recording_path: _path, ...safeCall} = call;
@@ -207,7 +207,7 @@ Deno.serve(async req => {
       const callback = `${url}/functions/v1/bruno-voice?callback=1&call_id=${call.id}`;
       const result = await telnyx(`/texml/ai_calls/${settings.application_id}`, 'POST', {
         From: FROM_NUMBER, To: call.destination, AIAssistantId: settings.assistant_id,
-        AIAssistantDynamicVariables: { vesuviano_call_id: call.id, call_objective: call.objective, customer_context: JSON.stringify({ ...lead, messages: recent.map(m => ({ ...m, body: m.body.slice(0, 800) })) }) },
+        AIAssistantDynamicVariables: { vesuviano_call_id: call.id, call_objective: call.objective, call_type: call.call_type, call_instructions: call.instructions || 'none', customer_context: JSON.stringify({ ...lead, messages: recent.map(m => ({ ...m, body: m.body.slice(0, 800) })) }) },
         StatusCallback: callback, StatusCallbackMethod: 'POST', StatusCallbackEvent: 'initiated ringing answered completed no-answer busy canceled failed analyzed',
         Record: true, RecordingChannels: 'dual', RecordingTrack: 'both', SendRecordingUrl: true,
         RecordingStatusCallback: `${url}/functions/v1/bruno-voice?recording=1&call_id=${call.id}`, RecordingStatusCallbackMethod: 'POST', RecordingStatusCallbackEvent: 'completed absent',

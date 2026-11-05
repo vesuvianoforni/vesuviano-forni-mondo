@@ -73,7 +73,7 @@ Deno.serve(async (req) => {
   // deno-lint-ignore no-explicit-any
   const describe = (a: { name: string; args: Record<string, any> }) => {
     const x = a.args;
-    if (a.name === 'propose_call') return `• Telefonata Bruno in inglese da +447457416033 · ${x.objective ?? ''} · ${x.customer_timezone ?? ''} · Base consenso: ${x.consent_basis ?? ''}. Questa approvazione salva la proposta; l’avvio richiede una conferma separata.`;
+    if (a.name === 'propose_call') return `• Telefonata Bruno in inglese da +447457416033 · ${x.call_type === 'trattativa' ? 'Trattativa' : 'Qualifica'} · ${x.objective ?? ''}${x.instructions ? ` · Istruzioni: ${x.instructions}` : ''} · ${x.customer_timezone ?? ''}. Questa approvazione salva la proposta; l’avvio richiede una conferma separata.`;
     if (a.name === 'approve_call') return `• Avviare ora la telefonata in inglese da +447457416033 · Proposta ${x.call_id ?? ''}`;
     // deno-lint-ignore no-explicit-any
     const bits = [x.contact_name, x.customer_name, x.title, x.channel && (CHANNEL[x.channel] ?? x.channel), x.send_via && (CHANNEL[x.send_via] ?? x.send_via), x.status && (STAGE[x.status] ?? x.status), x.next_activity_type, x.next_activity_date && fmtDate(x.next_activity_date), x.total_amount && `${x.total_amount}`, x.subject, x.body && `«${cut(String(x.body), 500)}»`, x.notes_append || x.notes, Array.isArray(x.items) && x.items.map((i: any) => `${i.quantity}× ${i.product_name} ${i.unit_price ?? ''}`).join(', ')].filter(Boolean);
