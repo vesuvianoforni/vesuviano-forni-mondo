@@ -1,0 +1,1 @@
+REVOKE ALL ON public.bruno_voice_result_jobs FROM anon, authenticated; GRANT ALL ON public.bruno_voice_result_jobs TO service_role;

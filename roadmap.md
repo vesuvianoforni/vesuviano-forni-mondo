@@ -1,10 +1,11 @@
 # Roadmap
 
 ## Bruno: registrazioni e storico telefonico (5 nov 2026)
-- [ ] Abilitare audio e trascrizioni Telnyx con avviso al cliente, raccolta firmata e associazione univoca alla chiamata, senza cambiare il flusso Zapper.
-- [ ] Salvare transcript e riepilogo nel CRM con audio protetto e aggiornamenti senza duplicati.
-- [ ] Sezione Chiamate previste/eseguite, dettaglio conversazione, audio ed esito; paginazione e aggiornamento.
-- [ ] Test mirati, configurazione provider verificata e controlli visivi; prova telefonica reale solo su richiesta/approvazione.
+- [x] Audio per-call TeXML dual/both, transcript retention Telnyx e avviso iniziale verificati, callback recording/analyzed firmati con binding chiamata/assistente; Zapper e SIP invariati.
+- [x] Transcript parlato (senza tool/costi), riepilogo italiano economico e audio privato; unica proiezione CRM alla data originale, URL audio firmati staff-only. Risultati recuperati da coda protetta con tentativi limitati e controllo ogni 5 min solo finché pendente, nessun cron attivo a coda vuota.
+- [x] Pannello Chiamate In programma/Eseguite, cliente/esito/durata, conferma con avviso, paginazione e dettaglio audio/riepilogo/trascrizione riusato nel CRM.
+- [x] 21 test superati e controllo Deno isolato (export cors non disponibile nel resolver locale); funzione distribuita. Telnyx retention/greeting/instructions riletti HTTP 200, percorso credenziali app HTTP 200, endpoint senza sessione o firma rifiutati 401, permessi coda/storage verificati. UI con dati simulati a 1280/1442/390 px, audio riprodotto e transcript/riepilogo leggibili, zero errori/overflow, build OK.
+- [ ] Telefonata reale completa e successiva rilettura autenticata CRM: richiedono richiesta/approvazione della prova; Supabase esterno senza sessione gestita. Nessuna chiamata avviata (0 record); non verificati audio/transcript reali o callback in produzione. Dieci avvisi sicurezza preesistenti invariati.
 
 ## Bruno: chiamate Telnyx in inglese (5 nov 2026)
 - [x] Assistente Telnyx creato con voce maschile inglese, knowledge base e catalogo live, dati di qualificazione e chiusura; numero UK di origine +447457416033, nessun cambio al SIP inbound. Audio e storico Telnyx non conservati.
