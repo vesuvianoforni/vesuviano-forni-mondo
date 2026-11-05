@@ -101,8 +101,8 @@ export function assistantConfig(toolIds: string[]) {
     instructions: VOICE_INSTRUCTIONS,
     greeting: GREETING,
     enabled_features: ['telephony'], voice_settings: { voice: VOICE, background_audio: { type: 'predefined_media', value: 'office' } }, tool_ids: toolIds,
-    telephony_settings: { time_limit_secs: 600, user_idle_timeout_secs: 30, user_idle_reply_secs: 10, recording_settings: { enabled: false }, send_message_history_updates: false, conversation_ended_full_history: true, voicemail_detection: { on_voicemail_detected: { action: 'continue_assistant' } } },
-    // Answering-machine detection misclassified live answers as machines and cut calls; voicemail is handled by instructions and idle timeout.
+    telephony_settings: { time_limit_secs: 600, user_idle_timeout_secs: 30, user_idle_reply_secs: 10, recording_settings: { enabled: false }, send_message_history_updates: false, conversation_ended_full_history: true, voicemail_detection: { on_voicemail_detected: { action: 'stop_assistant' } } },
+    // Calls no longer request answering-machine detection: it misclassified live answers and cut calls. Voicemail is handled by instructions and idle timeout.
     // Full call-leg recording is enabled once on the per-call TeXML request, not twice on the assistant.
     privacy_settings: { data_retention: true }, post_conversation_settings: { enabled: true },
   };
