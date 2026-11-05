@@ -15,6 +15,7 @@ import { activityLabels, activityTiming, exactActivityDate, interactionLabels, i
 import { BrunoPanel, type BrunoLead } from "./BrunoPanel";
 import type { CRMLead } from "./CRMLeadCard";
 import { Link } from "react-router-dom";
+import { LeadQualificationCard } from "./LeadQualificationCard";
 
 const SITE = "https://vesuvianoforni.com";
 
@@ -163,6 +164,7 @@ export function CRMLeadDetail({ lead, open, defaultTab = "riepilogo", onOpenChan
                   {lead.next_activity_notes && <p className="whitespace-pre-wrap break-words text-sm">{lead.next_activity_notes}</p>}
                 </CardContent>
               </Card>
+              <LeadQualificationCard leadId={lead.id} />
               {lead.notes && (
                 <Card className="sm:col-span-2">
                   <CardContent className="p-4">
