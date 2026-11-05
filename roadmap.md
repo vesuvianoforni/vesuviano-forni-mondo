@@ -1,5 +1,11 @@
 # Roadmap
 
+## Bruno: registrazioni e storico telefonico (5 nov 2026)
+- [ ] Abilitare audio e trascrizioni Telnyx con avviso al cliente, raccolta firmata e associazione univoca alla chiamata, senza cambiare il flusso Zapper.
+- [ ] Salvare transcript e riepilogo nel CRM con audio protetto e aggiornamenti senza duplicati.
+- [ ] Sezione Chiamate previste/eseguite, dettaglio conversazione, audio ed esito; paginazione e aggiornamento.
+- [ ] Test mirati, configurazione provider verificata e controlli visivi; prova telefonica reale solo su richiesta/approvazione.
+
 ## Bruno: chiamate Telnyx in inglese (5 nov 2026)
 - [x] Assistente Telnyx creato con voce maschile inglese, knowledge base e catalogo live, dati di qualificazione e chiusura; numero UK di origine +447457416033, nessun cambio al SIP inbound. Audio e storico Telnyx non conservati.
 - [x] Proposte immutabili e avvio approvato ERP/Telegram; pannello Chiamate con conferma/annullamento/esiti. Merge atomico qualificazione nel cliente, firme Ed25519, nessun costo interno o invio/ordine/offerta dal motore vocale; registrazioni e trascrizioni Zapper restano separate.
