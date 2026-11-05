@@ -214,9 +214,11 @@ export type Database = {
           approved_at: string | null
           approved_by: string | null
           consent_basis: string
+          conversation_id: string | null
           created_at: string
           customer_timezone: string
           destination: string
+          duration_seconds: number | null
           ended_at: string | null
           error_code: string | null
           expires_at: string
@@ -227,19 +229,26 @@ export type Database = {
           objective: string
           provider_call_id: string | null
           qualification: Json
+          recording_path: string | null
+          recording_status: string
           requested_by: string
           started_at: string | null
           status: string
           summary: string | null
+          summary_status: string
+          transcript: Json
+          transcript_status: string
           updated_at: string
         }
         Insert: {
           approved_at?: string | null
           approved_by?: string | null
           consent_basis: string
+          conversation_id?: string | null
           created_at?: string
           customer_timezone: string
           destination: string
+          duration_seconds?: number | null
           ended_at?: string | null
           error_code?: string | null
           expires_at?: string
@@ -250,19 +259,26 @@ export type Database = {
           objective: string
           provider_call_id?: string | null
           qualification?: Json
+          recording_path?: string | null
+          recording_status?: string
           requested_by: string
           started_at?: string | null
           status?: string
           summary?: string | null
+          summary_status?: string
+          transcript?: Json
+          transcript_status?: string
           updated_at?: string
         }
         Update: {
           approved_at?: string | null
           approved_by?: string | null
           consent_basis?: string
+          conversation_id?: string | null
           created_at?: string
           customer_timezone?: string
           destination?: string
+          duration_seconds?: number | null
           ended_at?: string | null
           error_code?: string | null
           expires_at?: string
@@ -273,10 +289,15 @@ export type Database = {
           objective?: string
           provider_call_id?: string | null
           qualification?: Json
+          recording_path?: string | null
+          recording_status?: string
           requested_by?: string
           started_at?: string | null
           status?: string
           summary?: string | null
+          summary_status?: string
+          transcript?: Json
+          transcript_status?: string
           updated_at?: string
         }
         Relationships: [
@@ -285,6 +306,53 @@ export type Database = {
             columns: ["lead_id"]
             isOneToOne: false
             referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bruno_voice_result_jobs: {
+        Row: {
+          attempts: number
+          call_id: string
+          created_at: string
+          error_code: string | null
+          lease_until: string | null
+          next_attempt_at: string
+          recording_url: string | null
+          status: string
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          call_id: string
+          created_at?: string
+          error_code?: string | null
+          lease_until?: string | null
+          next_attempt_at?: string
+          recording_url?: string | null
+          status?: string
+          token?: string
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          call_id?: string
+          created_at?: string
+          error_code?: string | null
+          lease_until?: string | null
+          next_attempt_at?: string
+          recording_url?: string | null
+          status?: string
+          token?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bruno_voice_result_jobs_call_id_fkey"
+            columns: ["call_id"]
+            isOneToOne: true
+            referencedRelation: "bruno_voice_calls"
             referencedColumns: ["id"]
           },
         ]
@@ -3704,6 +3772,27 @@ export type Database = {
         }[]
       }
       cancel_mario_research_plan: { Args: { p_id: string }; Returns: boolean }
+      claim_bruno_voice_result: {
+        Args: { p_call: string; p_token: string }
+        Returns: {
+          attempts: number
+          call_id: string
+          created_at: string
+          error_code: string | null
+          lease_until: string | null
+          next_attempt_at: string
+          recording_url: string | null
+          status: string
+          token: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "bruno_voice_result_jobs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       claim_mario_research_callback: {
         Args: { p_id: string; p_token: string }
         Returns: {
@@ -3801,6 +3890,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      kick_bruno_voice_results: { Args: never; Returns: undefined }
       mario_crm_organization_summary: { Args: never; Returns: Json }
       mario_due_outbox: {
         Args: never
