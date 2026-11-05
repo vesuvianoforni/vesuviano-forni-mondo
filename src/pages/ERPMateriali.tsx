@@ -69,7 +69,7 @@ export default function ERPMateriali() {
   const [filter, setFilter] = useState({ q: "", product: "any", kind: "any", lang: "any" });
 
   const load = async () => {
-    const { data, error } = await db.from("product_assets").select("id,kind,title,url,storage_path,language,tags,product_id,products(name),product_asset_links(product_id,products(id,name))").order("created_at", { ascending: false }).limit(1000);
+    const { data, error } = await db.from("product_assets").select("id,kind,title,url,storage_path,language,tags,product_id,products!product_assets_product_id_fkey(name),product_asset_links!product_asset_links_asset_id_fkey(product_id,products!product_asset_links_product_id_fkey(id,name))").order("created_at", { ascending: false }).limit(1000);
     if (error) toast.error("Impossibile caricare i materiali");
     else setRows(data ?? []);
     setLoading(false);
