@@ -1,7 +1,7 @@
 # Roadmap
 
 ## Bruno: panoramica e cabina operativa (5 nov 2026)
-- [ ] Chiamate con istruzioni e tipologie Qualifica/Trattativa; eliminare il campo obbligatorio consenso documentato mantenendo avviso registrazione, approvazioni e tutele applicabili.
+- [x] Chiamate con istruzioni e tipologie Qualifica/Trattativa; eliminato il campo obbligatorio consenso documentato, mantenuti avviso registrazione, approvazioni e tutele applicabili. Migrazione applicata (tipo chiamata + istruzioni operative), prompt vocale e strumenti aggiornati, 29 test superati, tre funzioni distribuite.
 - [ ] Registro condiviso azioni/proposte/esiti, approvazioni ERP/Telegram e KPI esatti senza attribuire gli import Zapper a Bruno.
 - [ ] Panoramica iniziale, Agente Piano/Storico/Chat/Chiamate, Comunicazioni e Impostazioni separate.
 - [ ] Test delle regole, verifica flussi e schermi, distribuzione e controllo permessi.
