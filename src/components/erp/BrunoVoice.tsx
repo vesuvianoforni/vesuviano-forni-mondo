@@ -36,12 +36,14 @@ export function BrunoVoice({embedded=false}: {embedded?:boolean}) {
     return () => { window.clearInterval(timer); generation.current++; };
   },[open,view]);
   const act = async (action: string, call?: VoiceCall) => {
+    const version=++generation.current;
     setBusy(true); setError(null); setConfirmation(null);
     try {
       await voiceRequest({ action, ...(call ? { call_id: call.id } : {}) });
+      if(version!==generation.current)return;
       toast({ title: action === 'approve' ? 'Richiesta di chiamata inoltrata' : action === 'cancel' ? 'Proposta annullata' : 'Assistente aggiornato' });
-      await refresh();
-    } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
+      await refreshRef.current();
+    } catch (e) { if(version===generation.current)setError((e as Error).message); } finally { if(version===generation.current)setBusy(false); }
   };
   const content=<>
     <h2 className="text-xl font-semibold">Chiamate di Bruno</h2>

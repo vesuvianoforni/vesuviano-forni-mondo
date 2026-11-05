@@ -16,6 +16,7 @@ const Body = z.object({
   execute: z.array(z.object({ name: z.string(), args: z.record(z.any()), action_id: z.string().uuid().optional() })).max(10).optional(),
   source: z.enum(['erp','telegram']).optional(),
   requested_label: z.string().max(150).optional(),
+  pending_id: z.string().uuid().optional(),
 });
 
 const json = (data: unknown, status = 200) =>
@@ -48,7 +49,17 @@ Deno.serve(async (req) => {
     }
     const parsed = Body.safeParse(payload);
     if (!parsed.success) return json({ error: 'Richiesta non valida' }, 400);
-    const { messages, instructions, execute } = parsed.data;
+    const { messages, instructions } = parsed.data;
+    let execute = parsed.data.execute;
+    if(parsed.data.pending_id){
+      const pending=await admin.from('telegram_pending').select('chat_id,status,actions').eq('id',parsed.data.pending_id).single();
+      if(pending.error||pending.data?.status!=='approved')return json({error:'Proposta Telegram non approvata'},409);
+      const link=await admin.from('telegram_links').select('user_id').eq('chat_id',pending.data.chat_id).eq('user_id',u.user.id).maybeSingle();
+      if(link.error||!link.data)return json({error:'Proposta Telegram non associata a questo utente'},403);
+      const approved=Body.shape.execute.safeParse(pending.data.actions);
+      if(!approved.success||!approved.data?.length)return json({error:'Proposta non valida: preparane una nuova'},400);
+      execute=approved.data;
+    }
     const propose_writes=true;
 
     // Compact CRM snapshot (Vesuviano pipeline only).
@@ -86,8 +97,13 @@ In qualificato/trattativa: ${JSON.stringify(open ?? [])}`;
         if (!TOOL_LABELS[a.name]) { lines.push(`- ❌ ${a.name}: azione non ammessa`); continue; }
         try {
           if(!a.action_id) { lines.push('- Proposta non collegata al piano: prepara una nuova proposta prima di eseguire.'); continue; }
+          const stored=await admin.from('bruno_actions').select('tool_name').eq('id',a.action_id).single();
+          if(stored.error||stored.data?.tool_name!==a.name){lines.push('- Proposta non coerente: nessuna azione eseguita.');continue;}
           const r: any = await executeAction(ctx,a.action_id,executeTool);
-          lines.push(r?.error ? `- ❌ ${TOOL_LABELS[a.name]}: ${r.error}` : `- ✅ ${TOOL_LABELS[a.name]}${r?.public_url ? `\n  Link: ${r.public_url}\n  PDF: ${r.pdf_url}` : ''}${r?.sent_via ? `\n  Inviata via ${r.sent_via}` : ''}${r?.proposal?.id ? `\n  Proposta chiamata: ${r.proposal.id}\n  Destinatario: ${r.proposal.destination}\n  Lingua: inglese. Nessuna chiamata ancora avviata. Conferma l'avvio o apri Bruno → Chiamate.` : ''}${a.name === 'approve_call' ? `\n  Stato: ${r?.status === 'dialing' ? 'squillo avviato' : 'esito da verificare; non ripetere la chiamata'}` : ''}`);
+          const state=r?.action_status;
+          const icon=state==='completed'?'✅':state==='running'?'⏳':'⚠️';
+          const description=state==='completed'?'conclusa':state==='running'?'in corso':state==='failed'?'non riuscita':state==='cancelled'?'annullata':'esito da verificare; non ripetere';
+          lines.push(r?.error ? `- ⚠️ ${TOOL_LABELS[a.name]}: ${r.error}` : `- ${icon} ${TOOL_LABELS[a.name]} · ${description}${r?.public_url ? `\n  Link: ${r.public_url}\n  PDF: ${r.pdf_url}` : ''}${r?.sent_via ? `\n  Canale: ${r.sent_via}` : ''}${r?.proposal?.id ? `\n  Proposta chiamata: ${r.proposal.id}\n  Destinatario: ${r.proposal.destination}\n  Lingua: inglese. Nessuna chiamata ancora avviata. Conferma l'avvio o apri Bruno → Chiamate.` : ''}${a.name === 'approve_call' && state==='running' ? '\n  Squillo avviato, conversazione non ancora conclusa.' : ''}`);
         } catch (e) { lines.push(`- ❌ ${TOOL_LABELS[a.name]}: ${e instanceof Error ? e.message : 'errore'}`); }
       }
       return json({ text: lines.join('\n') });
@@ -120,7 +136,7 @@ In qualificato/trattativa: ${JSON.stringify(open ?? [])}`;
             result = { error: 'La chiamata richiede approvazione esplicita dalla sezione Chiamate o dai pulsanti Telegram; nessuna chiamata eseguita.' };
             if (propose_writes) {
               const row=await saveAction(ctx,c.name,args);
-              proposals.push({ name: c.name, args, action_id:row.id });
+              proposals.push({ name: row.tool_name, args:row.args, action_id:row.id });
               result = { status: 'Avvio chiamata proposto: in attesa di approvazione del team, NON eseguito' };
             }
             input.push({ type: 'function_call_output', call_id: c.call_id, output: JSON.stringify(result) });
@@ -128,7 +144,7 @@ In qualificato/trattativa: ${JSON.stringify(open ?? [])}`;
           }
           if (propose_writes && WRITE_TOOLS.includes(c.name)) {
             const row=await saveAction(ctx,c.name,args);
-            proposals.push({ name: c.name, args, action_id:row.id });
+            proposals.push({ name: row.tool_name, args:row.args, action_id:row.id });
             result = { status: 'proposta registrata, in attesa di approvazione del team: NON è stata eseguita' };
             input.push({ type: 'function_call_output', call_id: c.call_id, output: JSON.stringify(result) });
             continue;

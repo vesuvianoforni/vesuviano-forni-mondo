@@ -1,4 +1,4 @@
-import { useCallback,useEffect,useState } from 'react';
+import { useCallback,useEffect,useRef,useState } from 'react';
 import { ArrowRight,CalendarClock,CheckCheck,MessageSquare,Phone,ClipboardCheck,RefreshCw,AlertCircle,Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,8 +9,20 @@ import { BrunoActionDetail } from './BrunoActionDetail';
 function ActionRow({action,onOpen}:{action:BrunoAction;onOpen:(id:string)=>void}){return <Button variant="ghost" onClick={()=>onOpen(action.id)} className="h-auto w-full justify-start rounded-none border-b px-0 py-4 text-left font-normal whitespace-normal"><span className="flex w-full min-w-0 items-start justify-between gap-3"><span className="min-w-0"><span className="block font-medium">{action.leads?.company_name||action.leads?.contact_name||actionNames[action.tool_name]}</span><span className="mt-1 block text-xs text-muted-foreground">{actionNames[action.tool_name]} · {action.source==='telegram'?'Telegram':'ERP'}{action.channel&&` · ${action.channel==='wasender'?'WhatsApp Gennaro':action.channel}`}</span><span className="mt-1 block text-xs text-muted-foreground">{new Date(action.scheduled_at||action.created_at).toLocaleString('it-IT')}</span></span><Badge variant="outline" className="shrink-0">{action.status==='proposed'&&new Date(action.expires_at)<new Date()?'Scaduta':actionStates[action.status]}</Badge></span></Button>}
 export function BrunoOperations({view,onNavigate}:{view:'overview'|'plan'|'history';onNavigate:(view:string)=>void}){
  const [data,setData]=useState<WorkspaceData|null>(null),[actions,setActions]=useState<BrunoAction[]>([]),[more,setMore]=useState(false),[days,setDays]=useState(7),[busy,setBusy]=useState(false),[error,setError]=useState<string|null>(null),[selected,setSelected]=useState<string|null>(null);
- const load=useCallback(async(append=false)=>{setBusy(true);setError(null);try{if(view==='overview'){setData(await brunoRequest<WorkspaceData>({action:'workspace',days}));}else{const last=append?actions.at(-1):null;const r=await brunoRequest<{actions:BrunoAction[];has_more:boolean}>({action:'actions',view,...(last?{before_at:last.created_at,before_id:last.id}:{})});setActions(p=>append?[...p,...r.actions.filter(a=>!p.some(x=>x.id===a.id))]:r.actions);setMore(r.has_more);if(view==='plan')setData(await brunoRequest<WorkspaceData>({action:'workspace',days}));}}catch(e){setError((e as Error).message)}finally{setBusy(false)}},[view,days,actions]);
- useEffect(()=>{void load()},[view,days]);
+ const generation=useRef(0);
+ const load=useCallback(async(append=false)=>{
+  const version=++generation.current;setBusy(true);setError(null);
+  try{
+   if(view==='overview'){const result=await brunoRequest<WorkspaceData>({action:'workspace',days});if(version===generation.current)setData(result);}
+   else{
+    const last=append?actions.at(-1):null;
+    const [result,summary]=await Promise.all([brunoRequest<{actions:BrunoAction[];has_more:boolean}>({action:'actions',view,...(last?{before_at:last.created_at,before_id:last.id}:{})}),view==='plan'?brunoRequest<WorkspaceData>({action:'workspace',days}):Promise.resolve(null)]);
+    if(version!==generation.current)return;
+    setActions(previous=>append?[...previous,...result.actions.filter(a=>!previous.some(x=>x.id===a.id))]:result.actions);setMore(result.has_more);if(summary)setData(summary);
+   }
+  }catch(e){if(version===generation.current)setError((e as Error).message)}finally{if(version===generation.current)setBusy(false)}
+ },[view,days,actions]);
+ useEffect(()=>{setData(null);void load();return()=>{generation.current++;}},[view,days]);
  const metrics=[{key:'pending',label:'Da approvare',icon:ClipboardCheck,target:'plan'},{key:'today',label:'Attività di oggi',icon:CalendarClock,target:'plan'},{key:'completed',label:'Azioni concluse',icon:CheckCheck,target:'history'},{key:'messages',label:'Messaggi Bruno',icon:MessageSquare,target:'history'},{key:'calls',label:'Chiamate concluse',icon:Phone,target:'calls'}] as const;
  return <div className="min-w-0 space-y-7 p-4 md:p-6"><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-xl font-semibold">{view==='overview'?'Panoramica':view==='plan'?'Piano operativo':'Storico delle azioni'}</h2><div className="flex items-center gap-2">{view==='overview'&&<Select value={String(days)} onValueChange={v=>setDays(Number(v))}><SelectTrigger className="w-36" aria-label="Periodo KPI"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="1">Oggi</SelectItem><SelectItem value="7">Ultimi 7 giorni</SelectItem><SelectItem value="30">Ultimi 30 giorni</SelectItem></SelectContent></Select>}<Button variant="ghost" size="icon" aria-label="Aggiorna attività" disabled={busy} onClick={()=>void load()}>{busy?<Loader2 className="h-4 w-4 animate-spin"/>:<RefreshCw className="h-4 w-4"/>}</Button></div></div>
  {error&&<p role="alert" className="text-sm text-destructive">{error}</p>}
