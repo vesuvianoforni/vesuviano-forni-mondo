@@ -3072,6 +3072,42 @@ export type Database = {
         }
         Relationships: []
       }
+      product_asset_links: {
+        Row: {
+          asset_id: string
+          created_at: string
+          product_id: string
+          updated_at: string
+        }
+        Insert: {
+          asset_id: string
+          created_at?: string
+          product_id: string
+          updated_at?: string
+        }
+        Update: {
+          asset_id?: string
+          created_at?: string
+          product_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_asset_links_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "product_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_asset_links_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_assets: {
         Row: {
           created_at: string
@@ -4114,6 +4150,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      save_product_material: {
+        Args: { _fields: Json; _id: string; _product_ids: string[] }
+        Returns: string
       }
       telegram_cron_kick: { Args: never; Returns: undefined }
     }
