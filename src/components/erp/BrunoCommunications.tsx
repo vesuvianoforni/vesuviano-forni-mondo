@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Bot, PauseCircle, Search, Loader2, ChevronLeft, MessageSquare, MessageSquarePlus, Trash2 } from "lucide-react";
+import { PauseCircle, Search, Loader2, ChevronLeft, MessageSquare } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
-import { BrunoAgentChat } from "@/components/erp/BrunoAgentChat";
-import { loadThreads, newThread, saveThreads, type BrunoThread } from "@/lib/brunoThreads";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,10 +13,6 @@ import { CHANNELS, isBrunoPaused } from "@/lib/brunoObjectives";
 import { brunoQueueReason, type BrunoQueueReason } from "@/lib/brunoQueue";
 import { BrunoPanel, type BrunoLead } from "@/components/erp/BrunoPanel";
 import { cn } from "@/lib/utils";
-import { MailboxSettings } from "@/components/erp/MailboxSettings";
-import { TelegramLink } from "@/components/erp/TelegramLink";
-import { BrunoKnowledge } from "@/components/erp/BrunoKnowledge";
-import { BrunoVoice } from "@/components/erp/BrunoVoice";
 import { Switch } from "@/components/ui/switch";
 import { interactionRelativeTime } from "@/lib/crmActivity";
 
@@ -38,12 +32,6 @@ export function BrunoCommunications() {
   const [params, setParams] = useSearchParams();
   const selectedId = params.get("lead");
   const setSelectedId = (id: string | null) => setParams((p) => { const n = new URLSearchParams(p); if (id) { n.set("lead", id); } else n.delete("lead"); return n; });
-  const [threads, setThreads] = useState<BrunoThread[]>(() => { const t = loadThreads(); if (t.length) return t; const first = [newThread()]; saveThreads(first); return first; });
-  const activeThread = threads.find((t) => t.id === params.get("chat")) ?? threads[0];
-  const openThread = (id: string) => setParams(() => new URLSearchParams({ view: "chat", chat: id }));
-  const updateThread = useCallback((t: BrunoThread) => setThreads((prev) => { const next = [t, ...prev.filter((x) => x.id !== t.id)]; saveThreads(next); return next; }), []);
-  const createThread = () => { const t = newThread(); setThreads((prev) => { const next = [t, ...prev]; saveThreads(next); return next; }); openThread(t.id); };
-  const deleteThread = (id: string) => setThreads((prev) => { let next = prev.filter((x) => x.id !== id); if (!next.length) next = [newThread()]; saveThreads(next); return next; });
   const [now, setNow] = useState(() => new Date());
 
   const load = useCallback(async () => {
