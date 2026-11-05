@@ -23,7 +23,7 @@ function safeEqual(a: string | null, b: string) {
 async function tg(method: string, body: unknown): Promise<any> {
   const res = await fetch(`${GATEWAY}/${method}`, {
     method: 'POST',
-    headers: { Authorization: `Bearer ${Deno.env.get('LOVABLE_API_KEY')}`, 'X-Connection-Api-Key': Deno.env.get('TELEGRAM_API_KEY')!, 'Content-Type': 'application/json' },
+    headers: { Authorization: `Bearer ${Deno.env.get('LOVABLE_API_KEY')}`, 'X-Connection-Api-Key': Deno.env.get('TELEGRAM_API_KEY') || '', 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
   const out = await res.json().catch(() => ({}));
@@ -96,9 +96,10 @@ Deno.serve(async (req) => {
       await admin.from('telegram_bruno_messages').insert({ chat_id: chatId, role: 'assistant', content: String(out.text).slice(0, 8000) });
       const proposals = Array.isArray(out.proposals) ? out.proposals : [];
       if (!proposals.length) return say(chatId, out.text);
-      const { data: p } = await admin.from('telegram_pending').insert({ chat_id: chatId, actions: proposals, summary: out.text }).select('id').single();
+      const { data: p,error:saveError } = await admin.from('telegram_pending').insert({ chat_id: chatId, actions: proposals, summary: out.text }).select('id').single();
+      if(saveError||!p)return html(chatId,card({icon:'⚠️',type:'Proposta salvata nel piano',body:['Apri Bruno → Piano nell’ERP per verificarla e approvarla.']}));
       return html(chatId, card({ icon: '📋', type: 'Proposta di azione', body: [esc(out.text)], context: [...proposals.map((a: never) => esc(describe(a))), `Richiesta da ${esc(who)} · scade tra 24h`] }), {
-        inline_keyboard: [[{ text: '✅ Approva', callback_data: `ok:${p!.id}` }, { text: '✏️ Modifica', callback_data: `ed:${p!.id}` }, { text: '❌ Annulla', callback_data: `no:${p!.id}` }]],
+        inline_keyboard: [[{ text: '✅ Approva', callback_data: `ok:${p.id}` }, { text: '✏️ Modifica', callback_data: `ed:${p.id}` }, { text: '❌ Annulla', callback_data: `no:${p.id}` }]],
       });
     } finally { await signOut(token); }
   }
@@ -346,7 +347,7 @@ Deno.serve(async (req) => {
           }
           const token = await session(userId);
           try {
-            const res = await bruno(token, { messages: [{ role: 'user', content: 'esegui' }], execute: p.actions });
+            const res = await bruno(token, { messages: [{ role: 'user', content: 'esegui' }], pending_id:pm[2],source:'telegram',requested_label:who });
             const out = await res.json().catch(() => ({}));
             const text = res.ok ? card({ icon: '✅', type: 'Esito azione', body: [esc(out.text)], context: [`Approvata da ${esc(who)} alle ${at}`] }) : card({ icon: '⚠️', type: 'Errore', body: [esc(out.error ?? res.status), 'Controlla nell\'ERP prima di riprovare.'] });
             await admin.from('telegram_bruno_messages').insert({ chat_id: chatId, role: 'assistant', content: res.ok ? String(out.text) : `Errore: ${out.error ?? res.status}` });

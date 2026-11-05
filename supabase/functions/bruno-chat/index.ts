@@ -16,6 +16,7 @@ const Body = z.object({
   execute: z.array(z.object({ name: z.string(), args: z.record(z.any()), action_id: z.string().uuid().optional() })).max(10).optional(),
   source: z.enum(['erp','telegram']).optional(),
   requested_label: z.string().max(150).optional(),
+  pending_id: z.string().uuid().optional(),
 });
 
 const json = (data: unknown, status = 200) =>
@@ -48,7 +49,17 @@ Deno.serve(async (req) => {
     }
     const parsed = Body.safeParse(payload);
     if (!parsed.success) return json({ error: 'Richiesta non valida' }, 400);
-    const { messages, instructions, execute } = parsed.data;
+    const { messages, instructions } = parsed.data;
+    let execute = parsed.data.execute;
+    if(parsed.data.pending_id){
+      const pending=await admin.from('telegram_pending').select('chat_id,status,actions').eq('id',parsed.data.pending_id).single();
+      if(pending.error||pending.data?.status!=='approved')return json({error:'Proposta Telegram non approvata'},409);
+      const link=await admin.from('telegram_links').select('user_id').eq('chat_id',pending.data.chat_id).eq('user_id',u.user.id).maybeSingle();
+      if(link.error||!link.data)return json({error:'Proposta Telegram non associata a questo utente'},403);
+      const approved=Body.shape.execute.safeParse(pending.data.actions);
+      if(!approved.success||!approved.data?.length)return json({error:'Proposta non valida: preparane una nuova'},400);
+      execute=approved.data;
+    }
     const propose_writes=true;
 
     // Compact CRM snapshot (Vesuviano pipeline only).
@@ -86,6 +97,8 @@ In qualificato/trattativa: ${JSON.stringify(open ?? [])}`;
         if (!TOOL_LABELS[a.name]) { lines.push(`- ❌ ${a.name}: azione non ammessa`); continue; }
         try {
           if(!a.action_id) { lines.push('- Proposta non collegata al piano: prepara una nuova proposta prima di eseguire.'); continue; }
+          const stored=await admin.from('bruno_actions').select('tool_name').eq('id',a.action_id).single();
+          if(stored.error||stored.data?.tool_name!==a.name){lines.push('- Proposta non coerente: nessuna azione eseguita.');continue;}
           const r: any = await executeAction(ctx,a.action_id,executeTool);
           const state=r?.action_status;
           const icon=state==='completed'?'✅':state==='running'?'⏳':'⚠️';
