@@ -209,6 +209,122 @@ export type Database = {
         }
         Relationships: []
       }
+      bruno_voice_calls: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          consent_basis: string
+          created_at: string
+          customer_timezone: string
+          destination: string
+          ended_at: string | null
+          error_code: string | null
+          expires_at: string
+          from_number: string
+          id: string
+          language: string
+          lead_id: string
+          objective: string
+          provider_call_id: string | null
+          qualification: Json
+          requested_by: string
+          started_at: string | null
+          status: string
+          summary: string | null
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          consent_basis: string
+          created_at?: string
+          customer_timezone: string
+          destination: string
+          ended_at?: string | null
+          error_code?: string | null
+          expires_at?: string
+          from_number?: string
+          id?: string
+          language?: string
+          lead_id: string
+          objective: string
+          provider_call_id?: string | null
+          qualification?: Json
+          requested_by: string
+          started_at?: string | null
+          status?: string
+          summary?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          consent_basis?: string
+          created_at?: string
+          customer_timezone?: string
+          destination?: string
+          ended_at?: string | null
+          error_code?: string | null
+          expires_at?: string
+          from_number?: string
+          id?: string
+          language?: string
+          lead_id?: string
+          objective?: string
+          provider_call_id?: string | null
+          qualification?: Json
+          requested_by?: string
+          started_at?: string | null
+          status?: string
+          summary?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bruno_voice_calls_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bruno_voice_settings: {
+        Row: {
+          application_id: string | null
+          assistant_id: string | null
+          configured_at: string | null
+          created_at: string
+          from_number: string
+          key: string
+          language: string
+          public_key: string | null
+          updated_at: string
+        }
+        Insert: {
+          application_id?: string | null
+          assistant_id?: string | null
+          configured_at?: string | null
+          created_at?: string
+          from_number?: string
+          key?: string
+          language?: string
+          public_key?: string | null
+          updated_at?: string
+        }
+        Update: {
+          application_id?: string | null
+          assistant_id?: string | null
+          configured_at?: string | null
+          created_at?: string
+          from_number?: string
+          key?: string
+          language?: string
+          public_key?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       burners: {
         Row: {
           created_at: string
