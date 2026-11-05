@@ -18,6 +18,7 @@ export function BrunoVoice() {
   const generation = useRef(0);
   const { toast } = useToast();
   const refresh = useCallback(async (append = false, silent = false) => {
+    if (silent && (state?.calls.length ?? 0) > 30) return;
     const version = ++generation.current;
     if (!silent) setBusy(true); setError(null);
     const last = append ? state?.calls.at(-1) : null;

@@ -7,7 +7,7 @@ import { processResults, queueResults } from './results.ts';
 
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 const Request = z.discriminatedUnion('action', [
-  z.object({ action: z.literal('status'), view: z.enum(['planned','executed']).optional(), before_at: z.string().datetime().optional(), before_id: z.string().uuid().optional() }).strict(),
+  z.object({ action: z.literal('status'), view: z.enum(['planned','executed']).optional(), before_at: z.string().datetime({offset:true}).optional(), before_id: z.string().uuid().optional() }).strict(),
   z.object({ action: z.literal('detail'), call_id: z.string().uuid() }).strict(),
   z.object({ action: z.literal('configure') }).strict(),
   Proposal.extend({ action: z.literal('propose') }).strict(),
@@ -87,7 +87,7 @@ Deno.serve(async req => {
         if (!call?.approved_at || (call.provider_call_id && call.provider_call_id !== parsed.data.CallSid)) return json({ error: 'Chiamata non riconosciuta' }, 403);
         const status = nextCallStatus(call.status, parsed.data.CallStatus);
         checked(await admin.from('bruno_voice_calls').update({ status, provider_call_id: parsed.data.CallSid,
-          ...(['completed','failed','cancelled'].includes(status) ? { ended_at: new Date().toISOString() } : {}),
+          ...(['completed','failed','cancelled'].includes(status) && !call.ended_at ? { ended_at: new Date().toISOString() } : {}),
         }).eq('id', call.id).eq('status', call.status));
         if (['completed','failed','cancelled'].includes(status)) await queueResults(admin,call.id);
         return json({ ok: true });
