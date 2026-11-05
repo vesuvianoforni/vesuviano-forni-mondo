@@ -16,8 +16,8 @@ export const TOOLS = [
     parameters: obj({ query: str('testo libero, vuoto per tutti'), stage: str('fase opzionale') }) },
   { type: 'function', name: 'get_lead', description: 'Dettaglio cliente con ultime comunicazioni, offerte e ordini.',
     parameters: obj({ lead_id: str() }, ['lead_id']) },
-  { type: 'function', name: 'propose_call', description: 'Prepara una telefonata di Bruno in INGLESE dal numero UK +447457416033 per qualificare il cliente usando la knowledge base. NON telefona: crea una proposta da approvare in Bruno → Chiamate. Serve una base di consenso documentata e il fuso del cliente, mai inventati.',
-    parameters: obj({ lead_id: str(), objective: str('obiettivo concreto, qualificazione o risposta sui prodotti'), consent_basis: str('richiesta/consenso documentato alla chiamata AI'), customer_timezone: str('fuso IANA confermato, es. Europe/London') }, ['lead_id','objective','consent_basis','customer_timezone']) },
+  { type: 'function', name: 'propose_call', description: 'Prepara una telefonata di Bruno in INGLESE dal numero UK +447457416033. NON telefona: crea una proposta da approvare in Bruno → Chiamate. call_type: "qualifica" (scoprire esigenze, capacità, alimentazione, consegna e tempi del progetto) oppure "trattativa" (feedback sull\'offerta ricevuta, obiezioni, prossimo passo; mai nuovi sconti). Usa "instructions" per le indicazioni operative del team, anche in italiano. Serve il fuso del cliente, mai inventato.',
+    parameters: obj({ lead_id: str(), objective: str('obiettivo concreto della chiamata'), call_type: str('tipologia: qualifica oppure trattativa'), instructions: str('istruzioni operative del team per questa chiamata, anche in italiano'), customer_timezone: str('fuso IANA confermato, es. Europe/London') }, ['lead_id','objective','call_type','customer_timezone']) },
   { type: 'function', name: 'approve_call', description: 'Avvia DAVVERO una proposta di chiamata esistente. Solo dopo che l’operatore ha approvato esplicitamente quella proposta. Non usare per un semplice invito a preparare una telefonata.',
     parameters: obj({ call_id: str('id della proposta di chiamata già salvata') }, ['call_id']) },
   { type: 'function', name: 'update_lead', description: `Aggiorna fase (${STAGES.join(', ')}), note, prossima attività o dati contatto di un lead.`,
@@ -110,7 +110,7 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
   const { admin } = ctx;
   switch (name) {
     case 'propose_call': {
-      const r = await callFn(ctx, 'bruno-voice', { action: 'propose', lead_id: a.lead_id, objective: a.objective, consent_basis: a.consent_basis, customer_timezone: a.customer_timezone });
+      const r = await callFn(ctx, 'bruno-voice', { action: 'propose', lead_id: a.lead_id, objective: a.objective, call_type: a.call_type, instructions: a.instructions, customer_timezone: a.customer_timezone });
       return { ...r, _link: '/erp/bruno', instruction: 'Proposta salvata, NON è partita alcuna chiamata. Mostra call_id e invita ad approvare in Bruno → Chiamate o a confermare su Telegram.' };
     }
     case 'approve_call': return await callFn(ctx, 'bruno-voice', { action: 'approve', call_id: a.call_id });
