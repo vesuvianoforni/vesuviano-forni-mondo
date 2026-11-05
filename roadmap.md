@@ -1,5 +1,9 @@
 # Roadmap
 
+## Materiali: errore di caricamento (5 nov 2026)
+- [ ] Correggere il collegamento ambiguo ai prodotti nella libreria e nella ricerca materiali di Bruno, mantenendo le associazioni multiple e i permessi esistenti.
+- [ ] Ripetere le richieste reali, eseguire i test materiali e verificare la pagina; distinguere la prova autenticata se non disponibile.
+
 ## Materiali: collegamento a più prodotti (5 nov 2026)
 - [x] Selezione multipla con ricerca in caricamento e modifica; conservati 149 materiali e tutti i 149 collegamenti precedenti, senza ricaricare file.
 - [x] Associazioni in product_asset_links e salvataggio atomico save_product_material; filtri libreria, scheda prodotto e ricerca Bruno su tutti i prodotti aggiornati; bruno-chat distribuita. Nessun accesso anon alle associazioni o al salvataggio.
