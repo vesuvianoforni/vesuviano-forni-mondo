@@ -173,6 +173,103 @@ export type Database = {
         }
         Relationships: []
       }
+      bruno_actions: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          args: Json
+          channel: string | null
+          created_at: string
+          error_code: string | null
+          expires_at: string
+          finished_at: string | null
+          id: string
+          lead_id: string | null
+          message_id: string | null
+          request_text: string
+          requested_by: string
+          requested_label: string | null
+          result: Json
+          scheduled_at: string | null
+          source: string
+          started_at: string | null
+          status: string
+          tool_name: string
+          updated_at: string
+          voice_call_id: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          args?: Json
+          channel?: string | null
+          created_at?: string
+          error_code?: string | null
+          expires_at?: string
+          finished_at?: string | null
+          id?: string
+          lead_id?: string | null
+          message_id?: string | null
+          request_text?: string
+          requested_by: string
+          requested_label?: string | null
+          result?: Json
+          scheduled_at?: string | null
+          source?: string
+          started_at?: string | null
+          status?: string
+          tool_name: string
+          updated_at?: string
+          voice_call_id?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          args?: Json
+          channel?: string | null
+          created_at?: string
+          error_code?: string | null
+          expires_at?: string
+          finished_at?: string | null
+          id?: string
+          lead_id?: string | null
+          message_id?: string | null
+          request_text?: string
+          requested_by?: string
+          requested_label?: string | null
+          result?: Json
+          scheduled_at?: string | null
+          source?: string
+          started_at?: string | null
+          status?: string
+          tool_name?: string
+          updated_at?: string
+          voice_call_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bruno_actions_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bruno_actions_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "crm_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bruno_actions_voice_call_id_fkey"
+            columns: ["voice_call_id"]
+            isOneToOne: false
+            referencedRelation: "bruno_voice_calls"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bruno_knowledge: {
         Row: {
           category: string
@@ -3771,7 +3868,41 @@ export type Database = {
           preview: string
         }[]
       }
+      bruno_workspace_summary: { Args: { p_days?: number }; Returns: Json }
       cancel_mario_research_plan: { Args: { p_id: string }; Returns: boolean }
+      claim_bruno_action: {
+        Args: { p_id: string; p_user: string }
+        Returns: {
+          approved_at: string | null
+          approved_by: string | null
+          args: Json
+          channel: string | null
+          created_at: string
+          error_code: string | null
+          expires_at: string
+          finished_at: string | null
+          id: string
+          lead_id: string | null
+          message_id: string | null
+          request_text: string
+          requested_by: string
+          requested_label: string | null
+          result: Json
+          scheduled_at: string | null
+          source: string
+          started_at: string | null
+          status: string
+          tool_name: string
+          updated_at: string
+          voice_call_id: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "bruno_actions"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       claim_bruno_voice_result: {
         Args: { p_call: string; p_token: string }
         Returns: {
