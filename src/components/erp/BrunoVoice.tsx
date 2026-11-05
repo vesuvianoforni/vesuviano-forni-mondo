@@ -11,6 +11,7 @@ import { callLabels, voiceRequest, type VoiceCall, type VoiceView } from '@/lib/
 
 type State = { configured: boolean; from_number: string; language: string; calls: VoiceCall[]; has_more: boolean };
 
+const outcomeLabels: Record<string,string> = { no_answer: 'Nessuna risposta', busy: 'Occupato', unreachable: 'Non raggiungibile', no_conversation: 'Riagganciata subito' };
 export function BrunoVoice({embedded=false}: {embedded?:boolean}) {
   const [open, setOpen] = useState(embedded), [state, setState] = useState<State | null>(null);
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null);
@@ -61,20 +62,20 @@ export function BrunoVoice({embedded=false}: {embedded?:boolean}) {
           <Badge variant="outline">{confirmation.call_type === 'trattativa' ? 'Trattativa' : 'Qualifica'}</Badge>
           <p className="text-sm break-words">{confirmation.objective}</p>
           {confirmation.instructions && <p className="text-sm text-muted-foreground break-words">Istruzioni: {confirmation.instructions}</p>}
-          <p className="text-sm text-muted-foreground">La chiamata sarà registrata e trascritta; Bruno si presenta come assistente AI e avvisa della registrazione all'inizio della conversazione.</p>
+          <p className="text-sm text-muted-foreground">La chiamata sarà registrata e trascritta; Bruno si presenta come Bruno di Vesuviano Forni e avvisa della registrazione all'inizio della conversazione.</p>
           <div className="flex flex-wrap gap-2"><Button disabled={busy} onClick={() => void act('approve', confirmation)}><Phone className="mr-2 h-4 w-4" />Conferma chiamata</Button><Button variant="outline" onClick={() => setConfirmation(null)}>Indietro</Button></div>
         </div>}
         {state?.calls.filter(c => ['dialing','active'].includes(c.status)).map(c => <BrunoLiveCall key={c.id} call={c} onEnded={() => void refreshRef.current(false,true)} />)}
         {!busy && state?.calls.length === 0 && <p className="py-6 text-sm text-muted-foreground">{view === 'planned' ? 'Nessuna chiamata in programma.' : 'Nessuna chiamata eseguita.'}</p>}
         <div className="divide-y">
           {state?.calls.map(call => <div key={call.id} className="py-4 space-y-2">
-            <div className="flex flex-wrap items-center justify-between gap-2"><a className="text-sm font-medium text-primary underline break-words" href={`/erp/crm?lead=${call.lead_id}`}>{call.leads?.contact_name || call.leads?.company_name || call.destination}</a><span className="flex flex-wrap items-center gap-1"><Badge variant="outline">{call.call_type === 'trattativa' ? 'Trattativa' : 'Qualifica'}</Badge><Badge variant="outline">{call.status === 'proposed' && new Date(call.expires_at) < new Date() ? 'Proposta scaduta' : callLabels[call.status] || call.status}</Badge></span></div>
+            <div className="flex flex-wrap items-center justify-between gap-2"><a className="text-sm font-medium text-primary underline break-words" href={`/erp/crm?lead=${call.lead_id}`}>{call.leads?.contact_name || call.leads?.company_name || call.destination}</a><span className="flex flex-wrap items-center gap-1"><Badge variant="outline">{call.call_type === 'trattativa' ? 'Trattativa' : 'Qualifica'}</Badge><Badge variant="outline">{call.status === 'proposed' && new Date(call.expires_at) < new Date() ? 'Proposta scaduta' : (call.error_code && outcomeLabels[call.error_code]) || callLabels[call.status] || call.status}</Badge></span></div>
             <p className="text-xs text-muted-foreground">{call.destination}</p>
             <p className="text-sm break-words">{call.objective}</p>
             <p className="text-xs text-muted-foreground">{call.started_at ? 'Chiamata' : 'Proposta'} · {new Date(call.started_at || call.created_at).toLocaleString('it-IT')}{call.duration_seconds != null && ` · ${Math.floor(call.duration_seconds/60)} min ${call.duration_seconds%60} sec`}</p>
             {call.summary && <p className="text-sm whitespace-pre-wrap break-words line-clamp-3">{call.summary}</p>}
             {call.started_at && <Button variant="outline" size="sm" onClick={()=>setDetail(call.id)}><FileText className="mr-2 h-4 w-4" />Audio e conversazione</Button>}
-            {call.error_code && <p className="text-xs text-destructive">Esito da verificare prima di una nuova chiamata.</p>}
+            {call.error_code && <p className="text-xs text-destructive">{outcomeLabels[call.error_code] ? 'Nessuna conversazione con il cliente: puoi riproporre la chiamata più tardi.' : 'Esito da verificare prima di una nuova chiamata.'}</p>}
             {call.status === 'proposed' && <div className="flex flex-wrap gap-2"><Button size="sm" disabled={busy || new Date(call.expires_at) < new Date()} onClick={() => setConfirmation(call)}><Check className="mr-1 h-4 w-4" />Approva</Button><Button size="sm" variant="outline" disabled={busy} onClick={() => void act('cancel', call)}><X className="mr-1 h-4 w-4" />Annulla</Button></div>}
           </div>)}
         </div>
