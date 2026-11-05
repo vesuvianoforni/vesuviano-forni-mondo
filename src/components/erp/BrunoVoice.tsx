@@ -51,6 +51,7 @@ export function BrunoVoice({embedded=false}: {embedded?:boolean}) {
     <p className="text-sm text-muted-foreground">{state?.from_number || '+44 7457 416033'} · Inglese · Qualifica / Trattativa</p>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <Badge variant="outline">{state?.configured ? 'Assistente configurato' : 'Configurazione da verificare'}</Badge>
+          <Button variant="outline" size="sm" className="ml-auto" disabled={busy} onClick={() => void act('configure')}>Aggiorna voce</Button>
           <Button variant="ghost" size="icon" disabled={busy} onClick={() => void refresh()} aria-label="Aggiorna chiamate">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}</Button>
         </div>
         <Tabs value={view} onValueChange={v=>setView(v as VoiceView)}><TabsList className="grid w-full grid-cols-2"><TabsTrigger value="planned">In programma</TabsTrigger><TabsTrigger value="executed">Eseguite / Esiti</TabsTrigger></TabsList></Tabs>
