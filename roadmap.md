@@ -1,5 +1,10 @@
 # Roadmap
 
+## Materiali: collegamento a più prodotti (5 nov 2026)
+- [ ] Selezione multipla con ricerca in caricamento e modifica; conservazione dei collegamenti esistenti.
+- [ ] Salvataggio atomico delle associazioni, filtri e ricerca materiali di Bruno aggiornati.
+- [ ] Test delle associazioni e verifica della libreria; accesso ERP reale non disponibile con Supabase esterno.
+
 ## Bruno: panoramica e cabina operativa (5 nov 2026)
 - [x] Chiamate con istruzioni e tipologie Qualifica/Trattativa; eliminato il campo obbligatorio consenso documentato, mantenuti avviso registrazione, approvazioni e tutele applicabili. Migrazione applicata (tipo chiamata + istruzioni operative), prompt vocale e strumenti aggiornati, 29 test superati, tre funzioni distribuite.
 - [ ] Registro condiviso azioni/proposte/esiti, approvazioni ERP/Telegram e KPI esatti senza attribuire gli import Zapper a Bruno.
