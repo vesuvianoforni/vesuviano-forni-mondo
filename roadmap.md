@@ -1,5 +1,9 @@
 # Roadmap
 
+## Bruno: pausa autonomia e incarichi del team (5 nov 2026)
+- [ ] Consentire proposte e chiamate esplicitamente richieste dal team durante la pausa, senza riattivare l'autonomia; conservare ruoli, approvazioni, opposizioni e orari.
+- [ ] Informare Bruno della distinzione, verificare gli altri canali, aggiungere test e distribuire la correzione; distinguere le verifiche reali da quelle isolate.
+
 ## Materiali: errore di caricamento (5 nov 2026)
 - [x] Riprodotto PGRST201 / HTTP 300: collegamento diretto products ambiguo dopo aggiunta product_asset_links. Foreign key esplicite nella libreria e in Bruno; bruno-chat distribuita, nessuna modifica a dati o permessi.
 - [x] Tre richieste reali ora HTTP 200 con accesso anon ancora negato; 149 materiali e 149 collegamenti intatti, zero collegamenti legacy mancanti. 10 test frontend e 16 test Bruno superati; UI isolata a 1280/1125/390 px con selezione multipla, salvataggio, riapertura e filtro verificati senza errori; build OK.
