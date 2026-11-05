@@ -126,13 +126,14 @@ Deno.serve(async req => {
       const ids: string[] = [];
       for (const definition of voiceTools(url)) {
         const existing = library.find((t: { display_name: string; id: string }) => t.display_name === definition.display_name);
-        const result = existing ?? (await telnyx('/ai/tools', 'POST', definition)).data;
+        const created = existing ? null : await telnyx('/ai/tools', 'POST', definition);
+        const result = existing ?? created?.data ?? created;
         if (!result?.id) throw new Error('Strumento Telnyx non creato');
         ids.push(result.id);
       }
       const config = assistantConfig(ids);
       const assistant = settings.assistant_id ? await telnyx(`/ai/assistants/${settings.assistant_id}`, 'POST', config) : await telnyx('/ai/assistants', 'POST', config);
-      const assistantId = assistant.data?.id;
+      const assistantId = assistant.data?.id ?? assistant.id;
       if (!assistantId) throw new Error('Assistente Telnyx non creato');
       checked(await admin.from('bruno_voice_settings').update({ assistant_id: assistantId, configured_at: new Date().toISOString() }).eq('key', 'default'));
       // Outbound From is owned; retain existing inbound SIP routing unless explicitly requested.
