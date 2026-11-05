@@ -198,6 +198,11 @@ Deno.serve(async req => {
         if (!result?.id) throw new Error('Strumento Telnyx non creato');
         ids.push(result.id);
       }
+      // Keep tools added directly in the Telnyx portal (e.g. knowledge-base retrieval buckets).
+      if (settings.assistant_id) {
+        const current = await telnyx(`/ai/assistants/${settings.assistant_id}`);
+        for (const t of (current.data ?? current)?.tools ?? []) if (t.tool_id && t.type !== 'webhook' && t.type !== 'hangup' && !ids.includes(t.tool_id)) ids.push(t.tool_id);
+      }
       const config = assistantConfig(ids);
       const assistant = settings.assistant_id ? await telnyx(`/ai/assistants/${settings.assistant_id}`, 'POST', config) : await telnyx('/ai/assistants', 'POST', config);
       const assistantId = assistant.data?.id ?? assistant.id;
@@ -246,7 +251,7 @@ Deno.serve(async req => {
         StatusCallback: callback, StatusCallbackMethod: 'POST', StatusCallbackEvent: 'initiated ringing answered completed no-answer busy canceled failed analyzed',
         Record: true, RecordingChannels: 'dual', RecordingTrack: 'both', SendRecordingUrl: true,
         RecordingStatusCallback: `${url}/functions/v1/bruno-voice?recording=1&call_id=${call.id}`, RecordingStatusCallbackMethod: 'POST', RecordingStatusCallbackEvent: 'completed absent',
-        TimeLimit: 600, Timeout: 30, MachineDetection: 'Enable', AsyncAmd: true,
+        TimeLimit: 600, Timeout: 30,
       });
       const providerId = result.call_sid ?? result.data?.call_sid;
       checked(await admin.from('bruno_voice_calls').update({ status: providerId ? 'dialing' : 'unknown', provider_call_id: providerId ?? null }).eq('id', call.id).eq('status', 'starting'));
