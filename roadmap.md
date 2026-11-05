@@ -1,8 +1,9 @@
 # Roadmap
 
 ## Materiali: errore di caricamento (5 nov 2026)
-- [ ] Correggere il collegamento ambiguo ai prodotti nella libreria e nella ricerca materiali di Bruno, mantenendo le associazioni multiple e i permessi esistenti.
-- [ ] Ripetere le richieste reali, eseguire i test materiali e verificare la pagina; distinguere la prova autenticata se non disponibile.
+- [x] Riprodotto PGRST201 / HTTP 300: collegamento diretto products ambiguo dopo aggiunta product_asset_links. Foreign key esplicite nella libreria e in Bruno; bruno-chat distribuita, nessuna modifica a dati o permessi.
+- [x] Tre richieste reali ora HTTP 200 con accesso anon ancora negato; 149 materiali e 149 collegamenti intatti, zero collegamenti legacy mancanti. 10 test frontend e 16 test Bruno superati; UI isolata a 1280/1125/390 px con selezione multipla, salvataggio, riapertura e filtro verificati senza errori; build OK.
+- [ ] Visualizzazione autenticata reale: Supabase esterno senza sessione gestita; le prove UI sono isolate e non dimostrano il caricamento dei materiali nel proprio account.
 
 ## Materiali: collegamento a più prodotti (5 nov 2026)
 - [x] Selezione multipla con ricerca in caricamento e modifica; conservati 149 materiali e tutti i 149 collegamenti precedenti, senza ricaricare file.
