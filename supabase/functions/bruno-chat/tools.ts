@@ -208,7 +208,7 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       return rows.length ? rows : { empty: true, hint: 'Nessuna voce: non inventare, rispondi che verifichi e segnala al team.' };
     }
     case 'get_product_assets': {
-      let q = admin.from('product_assets').select('id,kind,title,url,language,tags,description,products(name,category),product_asset_links(products(name,category))').eq('is_active', true).order('sort_order').order('created_at', { ascending: false }).limit(200);
+      let q = admin.from('product_assets').select('id,kind,title,url,language,tags,description,products!product_assets_product_id_fkey(name,category),product_asset_links!product_asset_links_asset_id_fkey(products!product_asset_links_product_id_fkey(name,category))').eq('is_active', true).order('sort_order').order('created_at', { ascending: false }).limit(200);
       if (a.kind) q = q.eq('kind', a.kind);
       const { data, error } = await q; if (error) throw error;
       const t = clean(a.query)?.toLowerCase();
