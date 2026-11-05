@@ -1,5 +1,10 @@
 # Roadmap
 
+## Bruno: chiamate Telnyx in inglese (5 nov 2026)
+- [ ] Configurare assistente vocale sul numero +447457416033 con qualificazione e conoscenze Vesuviano.
+- [ ] Collegare chiamate approvate ERP/Telegram, conoscenze e dati cliente senza accesso a costi o invii autonomi.
+- [ ] Verificare configurazione reale, strumenti, sicurezza e test; prova telefonica solo su richiesta approvata.
+
 ## Modelli AI economici (3 nov 2026)
 - [x] Astra individuato in chat agenti, verifiche/bozze/piani Mario, suggerimenti Bruno, newsletter e traduzioni: catalogo autenticato verificato, preferenza economica salvata.
 - [x] Selezione condivisa server-side: Luna per Responses, Flash Lite per volumi, Flash per editoriale/contratti, Flash Lite Image per tutte le funzioni immagini; nessuna modifica ai limiti email o alle approvazioni.
