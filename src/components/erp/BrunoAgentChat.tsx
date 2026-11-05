@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
+import { BrunoInlineCard } from "./BrunoInlineCard";
 import type { LucideIcon } from "lucide-react";
 import { Bot, CornerDownLeft, Loader2, SlidersHorizontal, Square } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -37,7 +38,8 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
 
   useEffect(() => { inputRef.current?.focus(); }, [thread.id, busy]);
   useEffect(() => { const timeline=timelineRef.current;if(timeline&&followingRef.current)timeline.scrollTop=timeline.scrollHeight; }, [thread.messages]);
-  useEffect(() => {mountedRef.current=true;return()=>{mountedRef.current=false;abortRef.current?.abort()}}, []);
+  // Leaving the chat view must not kill a running request: the reply is still saved into the thread.
+  useEffect(() => {mountedRef.current=true;return()=>{mountedRef.current=false}}, []);
 
   const send = async (text: string) => {
     const content = text.trim();
@@ -50,7 +52,7 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
     const ctrl = new AbortController(); abortRef.current = ctrl;
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if(!mountedRef.current||ctrl.signal.aborted)return;
+      if(ctrl.signal.aborted)return;
       const res = await fetch(FN_URL, {
         method: "POST", signal: ctrl.signal,
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${session?.access_token ?? ""}` },
@@ -62,14 +64,14 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
       }
       if(agent.fn==='bruno-chat'&&res.headers.get('content-type')?.includes('application/json')){
         const out=await res.json();
-        if(!mountedRef.current||ctrl.signal.aborted)return;
-        const suffix=out.proposals?.length?'\n\n[Apri il piano per approvare le azioni](/erp/bruno?view=plan)':'';
-        current={...current,messages:[...history,{role:'assistant',content:(out.text||'Proposta salvata nel piano.')+suffix}]};onChange(current);return;
+        if(ctrl.signal.aborted)return;
+        const cards=[...(out.calls??[]).map((id:string)=>({kind:'call' as const,id})),...(out.proposals??[]).map((p:{action_id:string})=>({kind:'action' as const,id:p.action_id}))];
+        current={...current,messages:[...history,{role:'assistant',content:out.text||'Ecco la proposta.',...(cards.length?{cards}:{})}]};onChange(current);return;
       }
       const reader = res.body.getReader(); const dec = new TextDecoder(); let acc = "";
       for (;;) {
         const { done, value } = await reader.read();
-        if(!mountedRef.current||ctrl.signal.aborted)return;
+        if(ctrl.signal.aborted)return;
         if (done) break;
         acc += dec.decode(value, { stream: true });
         current = { ...current, messages: [...history, { role: "assistant", content: acc }] };
@@ -77,10 +79,10 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
       }
       if (!acc) throw new Error("Nessuna risposta dall'agente");
     } catch (e) {
-      if(!mountedRef.current)return;
-      if ((e as Error).name !== "AbortError") setError((e as Error).message);
       const last = current.messages[current.messages.length - 1];
       if (!last?.content) onChange({ ...current, messages: history });
+      if(!mountedRef.current)return;
+      if ((e as Error).name !== "AbortError") setError((e as Error).message);
     } finally { if(mountedRef.current){setBusy(false);abortRef.current=null;if(!ctrl.signal.aborted)agent.onComplete?.();} }
   };
 
@@ -110,7 +112,8 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
               <div key={i} className="flex gap-3">
                 <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Icon className="h-4 w-4" /></div>
                 <div className="prose prose-sm min-w-0 max-w-none break-words text-foreground dark:prose-invert">
-                  {m.content ? <ReactMarkdown>{m.content}</ReactMarkdown> : <Loader2 className="mt-1 h-4 w-4 animate-spin text-muted-foreground" />}
+                  {m.content ? <ReactMarkdown>{m.content}</ReactMarkdown> : busy && i === thread.messages.length - 1 ? <Loader2 className="mt-1 h-4 w-4 animate-spin text-muted-foreground" /> : <p className="text-muted-foreground">Risposta interrotta: riscrivi la richiesta.</p>}
+                  {m.cards?.map(c => <BrunoInlineCard key={c.kind + c.id} kind={c.kind} id={c.id} />)}
                 </div>
               </div>
             ))}

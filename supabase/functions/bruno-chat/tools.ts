@@ -16,7 +16,7 @@ export const TOOLS = [
     parameters: obj({ query: str('testo libero, vuoto per tutti'), stage: str('fase opzionale') }) },
   { type: 'function', name: 'get_lead', description: 'Dettaglio cliente con ultime comunicazioni, offerte e ordini.',
     parameters: obj({ lead_id: str() }, ['lead_id']) },
-  { type: 'function', name: 'propose_call', description: 'Prepara una telefonata di Bruno in INGLESE dal numero UK +447457416033. NON telefona: crea una proposta da approvare in Bruno → Chiamate. call_type: "qualifica" (scoprire esigenze, capacità, alimentazione, consegna e tempi del progetto) oppure "trattativa" (feedback sull\'offerta ricevuta, obiezioni, prossimo passo; mai nuovi sconti). Usa "instructions" per le indicazioni operative del team, anche in italiano. Il fuso orario del cliente è ricavato automaticamente dal prefisso del numero (+39 Italia, +44 UK, ecc.): non chiederlo mai all\'operatore.',
+  { type: 'function', name: 'propose_call', description: 'Prepara una telefonata di Bruno in INGLESE dal numero UK +447457416033. NON telefona: crea una proposta con pulsante di avvio mostrato direttamente in chat. call_type: "qualifica" (scoprire esigenze, capacità, alimentazione, consegna e tempi del progetto) oppure "trattativa" (feedback sull\'offerta ricevuta, obiezioni, prossimo passo; mai nuovi sconti). Usa "instructions" per le indicazioni operative del team, anche in italiano. Il fuso orario del cliente è ricavato automaticamente dal prefisso del numero (+39 Italia, +44 UK, ecc.): non chiederlo mai all\'operatore.',
     parameters: obj({ lead_id: str(), objective: str('obiettivo concreto della chiamata'), call_type: str('tipologia: qualifica oppure trattativa'), instructions: str('istruzioni operative del team per questa chiamata, anche in italiano'), customer_timezone: str('solo se il prefisso non è riconosciuto, es. Europe/London') }, ['lead_id','objective','call_type']) },
   { type: 'function', name: 'approve_call', description: 'Avvia DAVVERO una proposta di chiamata esistente. Solo dopo che l’operatore ha approvato esplicitamente quella proposta. Non usare per un semplice invito a preparare una telefonata.',
     parameters: obj({ call_id: str('id della proposta di chiamata già salvata') }, ['call_id']) },
@@ -111,7 +111,7 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
   switch (name) {
     case 'propose_call': {
       const r = await callFn(ctx, 'bruno-voice', { action: 'propose', lead_id: a.lead_id, objective: a.objective, call_type: a.call_type, instructions: a.instructions, customer_timezone: a.customer_timezone });
-      return { ...r, _link: '/erp/bruno', instruction: 'Proposta salvata, NON è partita alcuna chiamata. Mostra call_id e invita ad approvare in Bruno → Chiamate o a confermare su Telegram.' };
+      return { ...r, _link: '/erp/bruno', instruction: 'Proposta salvata, NON è partita alcuna chiamata. Il pulsante Chiama ora compare direttamente sotto la tua risposta in chat: riassumi in 2 righe obiettivo e destinatario, non mostrare ID.' };
     }
     case 'approve_call': return await callFn(ctx, 'bruno-voice', { action: 'approve', call_id: a.call_id });
     case 'search_leads': {

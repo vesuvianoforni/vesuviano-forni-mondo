@@ -1,4 +1,4 @@
-export interface BrunoChatMessage { role: "user" | "assistant"; content: string }
+export interface BrunoChatMessage { role: "user" | "assistant"; content: string; cards?: { kind: "call" | "action"; id: string }[] }
 export interface BrunoThread { id: string; title: string; updatedAt: string; messages: BrunoChatMessage[] }
 
 const KEY = "bruno-agent-threads";
