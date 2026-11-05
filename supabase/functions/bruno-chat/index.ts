@@ -109,7 +109,7 @@ In qualificato/trattativa: ${JSON.stringify(open ?? [])}`;
       return json({ text: lines.join('\n') });
     }
     const proposals: { name: string; args: Record<string, unknown>; action_id:string }[] = [];
-    const calls: string[] = [];
+    const proposedCalls: string[] = [];
     const input: unknown[] = messages.map((m) => ({ role: m.role, content: m.content }));
     const done: string[] = [];
     let text = '';
@@ -151,13 +151,13 @@ In qualificato/trattativa: ${JSON.stringify(open ?? [])}`;
             continue;
           }
           result = await runTool(ctx, c.name, args);
-          if (c.name === 'propose_call' && result?.proposal?.id) calls.push(result.proposal.id);
+          if (c.name === 'propose_call' && result?.proposal?.id) proposedCalls.push(result.proposal.id);
           if (TOOL_LABELS[c.name] && !result?.error) done.push(`${TOOL_LABELS[c.name]}${result?._link ? ` ([apri](${result._link}))` : ''}`);
         } catch (e) { result = { error: e instanceof Error ? e.message : 'Operazione non riuscita' }; console.error('tool', c.name, result.error); }
         input.push({ type: 'function_call_output', call_id: c.call_id, output: JSON.stringify(result).slice(0, 12000) });
       }
     }
-    if (propose_writes) return json({ text: text || 'Ecco la proposta.', proposals, calls });
+    if (propose_writes) return json({ text: text || 'Ecco la proposta.', proposals, calls: proposedCalls });
     const final = (text || 'Fatto.') + (done.length ? `\n\n---\n**Azioni eseguite:**\n${done.map((d) => `- ✅ ${d}`).join('\n')}` : '');
     return new Response(final, { headers: { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8' } });
   } catch (e) {

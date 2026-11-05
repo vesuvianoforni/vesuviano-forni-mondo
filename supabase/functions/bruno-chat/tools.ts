@@ -17,7 +17,7 @@ export const TOOLS = [
   { type: 'function', name: 'get_lead', description: 'Dettaglio cliente con ultime comunicazioni, offerte e ordini.',
     parameters: obj({ lead_id: str() }, ['lead_id']) },
   { type: 'function', name: 'propose_call', description: 'Prepara una telefonata di Bruno in INGLESE dal numero UK +447457416033. NON telefona: crea una proposta con pulsante di avvio mostrato direttamente in chat. call_type: "qualifica" (scoprire esigenze, capacità, alimentazione, consegna e tempi del progetto) oppure "trattativa" (feedback sull\'offerta ricevuta, obiezioni, prossimo passo; mai nuovi sconti). Usa "instructions" per le indicazioni operative del team, anche in italiano. Il fuso orario del cliente è ricavato automaticamente dal prefisso del numero (+39 Italia, +44 UK, ecc.): non chiederlo mai all\'operatore.',
-    parameters: obj({ lead_id: str(), objective: str('obiettivo concreto della chiamata'), call_type: str('tipologia: qualifica oppure trattativa'), instructions: str('istruzioni operative del team per questa chiamata, anche in italiano'), customer_timezone: str('solo se il prefisso non è riconosciuto, es. Europe/London') }, ['lead_id','objective','call_type']) },
+    parameters: obj({ lead_id: str(), objective: str('obiettivo concreto della chiamata'), call_type: { type: 'string', enum: ['qualifica', 'trattativa'], description: 'tipologia della chiamata' }, instructions: str('istruzioni operative del team per questa chiamata, anche in italiano'), customer_timezone: str('solo se il prefisso non è riconosciuto, es. Europe/London') }, ['lead_id','objective','call_type']) },
   { type: 'function', name: 'approve_call', description: 'Avvia DAVVERO una proposta di chiamata esistente. Solo dopo che l’operatore ha approvato esplicitamente quella proposta. Non usare per un semplice invito a preparare una telefonata.',
     parameters: obj({ call_id: str('id della proposta di chiamata già salvata') }, ['call_id']) },
   { type: 'function', name: 'update_lead', description: `Aggiorna fase (${STAGES.join(', ')}), note, prossima attività o dati contatto di un lead.`,
@@ -71,7 +71,10 @@ async function callFn(ctx: Ctx, name: string, body: unknown) {
     headers: { Authorization: ctx.auth, apikey: ctx.anon, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   const data = await res.json().catch(() => ({}));
   if(name==='bruno-agent'&&res.status===422&&data.message?.id)return data;
-  if (!res.ok) throw new Error(typeof data.error === 'string' ? data.error : `Errore ${res.status}`);
+  if (!res.ok) {
+    const fields = data.details && typeof data.details === 'object' ? Object.keys(data.details).join(', ') : '';
+    throw new Error(`${typeof data.error === 'string' ? data.error : `Errore ${res.status}`}${fields ? ` (campi: ${fields})` : ''}`);
+  }
   return data;
 }
 
@@ -110,7 +113,10 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
   const { admin } = ctx;
   switch (name) {
     case 'propose_call': {
-      const r = await callFn(ctx, 'bruno-voice', { action: 'propose', lead_id: a.lead_id, objective: a.objective, call_type: a.call_type, instructions: a.instructions, customer_timezone: a.customer_timezone });
+      const opt = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : undefined);
+      const type = String(a.call_type || '').trim().toLowerCase().startsWith('tratt') ? 'trattativa' : 'qualifica';
+      const objective = opt(a.objective) && opt(a.objective)!.length >= 10 ? opt(a.objective) : `${type === 'trattativa' ? 'Trattativa' : 'Qualifica'} del cliente: ${opt(a.objective) || 'esigenze, progetto e tempi'}`;
+      const r = await callFn(ctx, 'bruno-voice', { action: 'propose', lead_id: String(a.lead_id || '').trim(), objective, call_type: type, instructions: opt(a.instructions), customer_timezone: opt(a.customer_timezone) });
       return { ...r, _link: '/erp/bruno', instruction: 'Proposta salvata, NON è partita alcuna chiamata. Il pulsante Chiama ora compare direttamente sotto la tua risposta in chat: riassumi in 2 righe obiettivo e destinatario, non mostrare ID.' };
     }
     case 'approve_call': return await callFn(ctx, 'bruno-voice', { action: 'approve', call_id: a.call_id });
