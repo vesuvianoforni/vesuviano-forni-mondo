@@ -1,4 +1,4 @@
-import { useEffect,useState } from 'react';
+import { useEffect,useRef,useState } from 'react';
 import { Check, X, ExternalLink, Loader2, Phone, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog,DialogContent,DialogHeader,DialogTitle,DialogDescription } from '@/components/ui/dialog';
@@ -8,8 +8,9 @@ import { BrunoCallDetail } from './BrunoCallDetail';
 
 export function BrunoActionDetail({id,onClose,onChanged}:{id:string|null;onClose:()=>void;onChanged:()=>void}){
  const [action,setAction]=useState<BrunoAction|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState<string|null>(null),[call,setCall]=useState<string|null>(null),[confirm,setConfirm]=useState(false);
+ const currentId=useRef(id);currentId.current=id;
  useEffect(()=>{let current=true;setAction(null);setError(null);setConfirm(false);if(id){setBusy(true);brunoRequest<{action:BrunoAction}>({action:'action_detail',id}).then(r=>{if(current)setAction(r.action)}).catch(e=>{if(current)setError(e.message)}).finally(()=>{if(current)setBusy(false)})}return()=>{current=false}},[id]);
- const act=async(command:string)=>{if(!id)return;setBusy(true);setError(null);try{await brunoRequest({action:command,id});const r=await brunoRequest<{action:BrunoAction}>({action:'action_detail',id});setAction(r.action);setConfirm(false);onChanged()}catch(e){setError((e as Error).message);onChanged()}finally{setBusy(false)}};
+ const act=async(command:string)=>{if(!id)return;const selectedId=id;setBusy(true);setError(null);try{await brunoRequest({action:command,id:selectedId});if(currentId.current!==selectedId)return;const r=await brunoRequest<{action:BrunoAction}>({action:'action_detail',id:selectedId});if(currentId.current!==selectedId)return;setAction(r.action);setConfirm(false);onChanged()}catch(e){if(currentId.current===selectedId){setError((e as Error).message);onChanged()}}finally{if(currentId.current===selectedId)setBusy(false)}};
  const urls=action?['public_url','pdf_url'].map(k=>action.result?.[k]).filter((u):u is string=>typeof u==='string'&&u.startsWith('https://')):[];
  return <><Dialog open={Boolean(id)} onOpenChange={open=>{if(!open)onClose()}}><DialogContent className="max-w-2xl max-h-[90dvh] overflow-y-auto [overflow-wrap:anywhere]"><DialogHeader><DialogTitle>{actionNames[action?.tool_name || ''] || 'Dettaglio azione'}</DialogTitle><DialogDescription>{action?.leads?.contact_name || action?.leads?.company_name || 'Bruno'} · {action?.source==='telegram'?'Telegram':'ERP'}</DialogDescription></DialogHeader>
  {busy&&<Loader2 className="h-5 w-5 animate-spin"/>}{error&&<p role="alert" className="text-sm text-destructive">{error}</p>}

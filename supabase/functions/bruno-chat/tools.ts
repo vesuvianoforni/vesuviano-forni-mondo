@@ -70,6 +70,7 @@ async function callFn(ctx: Ctx, name: string, body: unknown) {
   const res = await fetch(`${ctx.url}/functions/v1/${name}`, { method: 'POST',
     headers: { Authorization: ctx.auth, apikey: ctx.anon, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   const data = await res.json().catch(() => ({}));
+  if(name==='bruno-agent'&&res.status===422&&data.message?.id)return data;
   if (!res.ok) throw new Error(typeof data.error === 'string' ? data.error : `Errore ${res.status}`);
   return data;
 }
