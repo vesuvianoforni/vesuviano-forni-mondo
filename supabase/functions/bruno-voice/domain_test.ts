@@ -42,3 +42,11 @@ Deno.test('Telnyx signature binds raw payload and expires after five minutes', a
   assertEquals(await verifyTelnyx(raw + ' ', sig, time, pub, Number(time) * 1000), false);
   assertEquals(await verifyTelnyx(raw, sig, time, pub, Number(time) * 1000 + 301000), false);
 });
+import { timezoneFromPhone } from './domain.ts';
+Deno.test('fuso orario dal prefisso del numero', () => {
+  if (timezoneFromPhone('+39 338 315 6161') !== 'Europe/Rome') throw new Error('+39');
+  if (timezoneFromPhone('0044 7457 416033') !== 'Europe/London') throw new Error('+44');
+  if (timezoneFromPhone('+353 87 123 4567') !== 'Europe/Dublin') throw new Error('+353');
+  if (timezoneFromPhone('+33 6 12 34 56 78') !== 'Europe/Paris') throw new Error('+33');
+  if (timezoneFromPhone('+999123') !== null) throw new Error('unknown');
+});
