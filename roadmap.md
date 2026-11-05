@@ -1,9 +1,10 @@
 # Roadmap
 
 ## Materiali: collegamento a più prodotti (5 nov 2026)
-- [ ] Selezione multipla con ricerca in caricamento e modifica; conservazione dei collegamenti esistenti.
-- [ ] Salvataggio atomico delle associazioni, filtri e ricerca materiali di Bruno aggiornati.
-- [ ] Test delle associazioni e verifica della libreria; accesso ERP reale non disponibile con Supabase esterno.
+- [x] Selezione multipla con ricerca in caricamento e modifica; conservati 149 materiali e tutti i 149 collegamenti precedenti, senza ricaricare file.
+- [x] Associazioni in product_asset_links e salvataggio atomico save_product_material; filtri libreria, scheda prodotto e ricerca Bruno su tutti i prodotti aggiornati; bruno-chat distribuita. Nessun accesso anon alle associazioni o al salvataggio.
+- [x] 25 test superati; verifica SQL reale con due prodotti, deduplicazione, rimozione singola, materiale aziendale, rollback errore e accesso anon negato (dati di prova annullati). UI isolata selezione → salvataggio → riapertura → rimozione → filtro a 1280/1125/390 px, zero errori/overflow; build OK. Dieci avvisi sicurezza preesistenti invariati.
+- [ ] Verifica autenticata completa nel proprio ERP: bloccata dalla sessione non disponibile per Supabase esterno; la prova visiva usa dati isolati.
 
 ## Bruno: panoramica e cabina operativa (5 nov 2026)
 - [x] Chiamate con istruzioni e tipologie Qualifica/Trattativa; eliminato il campo obbligatorio consenso documentato, mantenuti avviso registrazione, approvazioni e tutele applicabili. Migrazione applicata (tipo chiamata + istruzioni operative), prompt vocale e strumenti aggiornati, 29 test superati, tre funzioni distribuite.
