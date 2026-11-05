@@ -2,6 +2,11 @@ import {assertEquals} from 'https://deno.land/std@0.224.0/assert/mod.ts';
 import {actionOutcome} from './action-domain.ts';
 Deno.test('Dialing is ongoing, never a completed call',()=>assertEquals(actionOutcome('approve_call',{status:'dialing'}),'running'));
 Deno.test('Uncertain calls remain uncertain',()=>assertEquals(actionOutcome('approve_call',{status:'unknown'}),'unknown'));
+Deno.test('Active call phases stay in progress',()=>{
+ assertEquals(actionOutcome('approve_call',{status:'starting'}),'running');
+ assertEquals(actionOutcome('approve_call',{status:'active'}),'running');
+});
+Deno.test('Terminal telephone failure is never success',()=>assertEquals(actionOutcome('approve_call',{status:'failed'}),'failed'));
 Deno.test('Messages require actual provider evidence, not invented sent true',()=>{
  assertEquals(actionOutcome('send_message',{sent:true,result:'ok'}),'unknown');
  assertEquals(actionOutcome('send_message',{message:{status:'failed'}}),'failed');

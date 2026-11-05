@@ -31,7 +31,8 @@ export async function executeAction(ctx:ActionContext,id:string,execute:(name:st
     const status=actionOutcome(action.tool_name,result);
     const messageId=result?.message?.id || result?.message_id;
     const callId=action.tool_name==='approve_call' ? result?.call_id || action.args.call_id : result?.proposal?.id;
-    check(await ctx.admin.from('bruno_actions').update({status,result,finished_at:['completed','failed'].includes(status) ? new Date().toISOString() : null, ...(uuid.safeParse(messageId).success?{message_id:messageId}:{}),...(uuid.safeParse(callId).success?{voice_call_id:callId}:{}),...(uuid.safeParse(result?.lead?.id).success?{lead_id:result.lead.id}:{}),error_code:status==='unknown'?'outcome_uncertain':status==='failed'?'operation_failed':null}).eq('id',id).eq('status','running'));
+    check(await ctx.admin.from('bruno_actions').update({result,...(uuid.safeParse(messageId).success?{message_id:messageId}:{}),...(uuid.safeParse(callId).success?{voice_call_id:callId}:{}),...(uuid.safeParse(result?.lead?.id).success?{lead_id:result.lead.id}:{})}).eq('id',id));
+    check(await ctx.admin.from('bruno_actions').update({status,finished_at:['completed','failed','cancelled'].includes(status) ? new Date().toISOString() : null,error_code:status==='unknown'?'outcome_uncertain':status==='failed'?'operation_failed':null}).eq('id',id).eq('status','running'));
     // Read asynchronous results back, including a callback which raced with the tool response.
     if (uuid.safeParse(messageId).success) {
       const m=check(await ctx.admin.from('crm_messages').select('status').eq('id',messageId).maybeSingle());
