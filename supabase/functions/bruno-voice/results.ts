@@ -10,7 +10,7 @@ export async function queueResults(db: SupabaseClient, callId: string, recording
   if (existing) {
     // Don't reset a live lease or exhausted attempts when duplicate callbacks arrive.
     if (recordingUrl) check(await db.from('bruno_voice_result_jobs').update({ recording_url: recordingUrl }).eq('call_id', callId));
-    if (existing.status === 'done' && recordingUrl) check(await db.from('bruno_voice_result_jobs').update({ status: 'queued', next_attempt_at: new Date().toISOString(), lease_until: null }).eq('call_id', callId).eq('status','done'));
+    if (existing.status === 'failed' && recordingUrl) check(await db.from('bruno_voice_result_jobs').update({ status: 'queued', attempts: 0, next_attempt_at: new Date().toISOString(), lease_until: null }).eq('call_id', callId).eq('status','failed'));
     return;
   }
   check(await db.from('bruno_voice_result_jobs').upsert({ call_id: callId, ...(recordingUrl ? { recording_url: recordingUrl } : {}) }, { onConflict: 'call_id', ignoreDuplicates: true }));
@@ -48,6 +48,13 @@ export async function processResults(db: SupabaseClient, callId: string, token: 
   try {
     let call = check(await db.from('bruno_voice_calls').select('*').eq('id',callId).single());
     if (!call.approved_at || !call.provider_call_id) throw new Error('call_not_bound');
+    // Short-lived download URLs must be captured even when transcripts/AI are not ready.
+    if (!call.recording_path && job.recording_url) {
+      try {
+        const path = await storeAudio(db,callId,job.recording_url);
+        check(await db.from('bruno_voice_calls').update({ recording_path: path, recording_status: 'ready' }).eq('id',callId)); call.recording_status = 'ready'; call.recording_path = path;
+      } catch { /* Retry audio independently; persist any available transcript below. */ }
+    }
     if (!call.conversation_id) {
       const query = new URLSearchParams({ 'metadata->call_control_id': `eq.${call.provider_call_id}`, 'metadata->assistant_id': `eq.${assistantId}`, limit: '2' });
       const found = await provider(`/ai/conversations?${query}`);
@@ -70,11 +77,6 @@ export async function processResults(db: SupabaseClient, callId: string, token: 
       const summary = await summarize(call.transcript);
       check(await db.from('bruno_voice_calls').update({ summary, summary_status: 'ready' }).eq('id',callId)); call.summary_status = 'ready';
     }
-    // Audio failure must not block transcript and summary persistence.
-    if (!call.recording_path && job.recording_url) {
-      const path = await storeAudio(db,callId,job.recording_url);
-      check(await db.from('bruno_voice_calls').update({ recording_path: path, recording_status: 'ready' }).eq('id',callId)); call.recording_status = 'ready';
-    }
     const done = call.transcript_status === 'ready' && call.summary_status === 'ready' && ['ready','unavailable'].includes(call.recording_status);
     if (!done && job.attempts >= 24) {
       check(await db.from('bruno_voice_calls').update({ ...(call.transcript_status !== 'ready' ? { transcript_status: 'unavailable' } : {}), ...(call.summary_status !== 'ready' ? { summary_status: 'unavailable' } : {}), ...(call.recording_status !== 'ready' ? { recording_status: 'unavailable' } : {}) }).eq('id',callId));
@@ -83,7 +85,10 @@ export async function processResults(db: SupabaseClient, callId: string, token: 
     return { processed: true, ready: done };
   } catch {
     check(await db.from('bruno_voice_result_jobs').update({ status: job.attempts >= 24 ? 'failed' : 'queued', lease_until: null, next_attempt_at: new Date(Date.now()+5*60000).toISOString(), error_code: 'result_retrieval_failed' }).eq('call_id',callId).eq('token',token));
-    if (job.attempts >= 24) check(await db.from('bruno_voice_calls').update({ transcript_status: 'unavailable', summary_status: 'unavailable', recording_status: 'unavailable' }).eq('id',callId).neq('transcript_status','ready'));
+    if (job.attempts >= 24) {
+      const call = check(await db.from('bruno_voice_calls').select('transcript_status,summary_status,recording_status').eq('id',callId).single());
+      check(await db.from('bruno_voice_calls').update({ ...(call.transcript_status !== 'ready' ? {transcript_status:'unavailable'} : {}), ...(call.summary_status !== 'ready' ? {summary_status:'unavailable'} : {}), ...(call.recording_status !== 'ready' ? {recording_status:'unavailable'} : {}) }).eq('id',callId));
+    }
     return { processed: true, ready: false };
   }
 }
