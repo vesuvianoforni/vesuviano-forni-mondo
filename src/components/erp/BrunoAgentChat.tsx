@@ -56,6 +56,11 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error || `Errore ${res.status}`);
       }
+      if(agent.fn==='bruno-chat'&&res.headers.get('content-type')?.includes('application/json')){
+        const out=await res.json();
+        const suffix=out.proposals?.length?'\n\n[Apri il piano per approvare le azioni](/erp/bruno?view=plan)':'';
+        current={...current,messages:[...history,{role:'assistant',content:(out.text||'Proposta salvata nel piano.')+suffix}]};onChange(current);return;
+      }
       const reader = res.body.getReader(); const dec = new TextDecoder(); let acc = "";
       for (;;) {
         const { done, value } = await reader.read();

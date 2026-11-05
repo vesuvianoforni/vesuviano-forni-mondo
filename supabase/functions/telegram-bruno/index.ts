@@ -88,7 +88,7 @@ Deno.serve(async (req) => {
       await admin.from('telegram_bruno_messages').insert({ chat_id: chatId, role: 'user', content: isGroup ? `[${who}] ${text}` : text });
       const { data: hist } = await admin.from('telegram_bruno_messages').select('role,content').eq('chat_id', chatId).order('id', { ascending: false }).limit(20);
       const res = await bruno(token, {
-        messages: (hist ?? []).reverse(), propose_writes: true,
+        messages: (hist ?? []).reverse(), propose_writes: true, source:'telegram', requested_label:who,
         instructions: `Stai rispondendo su Telegram, la cabina di comando del team${isGroup ? ': ogni messaggio utente inizia con [Nome] di chi scrive; rivolgiti a quella persona' : ''}. Le azioni che modificano dati o scrivono ai clienti non vengono eseguite subito: chiama comunque lo strumento, poi spiega la proposta in massimo 3 righe in italiano; per i messaggi al cliente il testo esatto è nella proposta, aggiungi sotto una breve traduzione italiana se è in un'altra lingua. Non dire mai che un'azione è già fatta. Niente tabelle o markdown.`,
       });
       const out = await res.json().catch(() => ({}));
@@ -335,6 +335,10 @@ Deno.serve(async (req) => {
           await answer('Ricevuto');
           const stamp = pm[1] === 'ok' ? `✅ Approvata da ${who} alle ${at}` : pm[1] === 'ed' ? `✏️ In modifica da ${who} alle ${at}` : `❌ Annullata da ${who} alle ${at}`;
           await tg('editMessageText', { chat_id: chatId, message_id: cb.message.message_id, text: `${cb.message.text ?? ''}\n\n${stamp}`.slice(0, 4000), disable_web_page_preview: true });
+          if (pm[1] === 'no' || pm[1] === 'ed') {
+            const ids=(p.actions as {action_id?:string}[]).map(a=>a.action_id).filter((id):id is string=>Boolean(id));
+            if(ids.length)await admin.from('bruno_actions').update({status:'cancelled',finished_at:new Date().toISOString()}).in('id',ids).eq('status','proposed');
+          }
           if (pm[1] === 'no') { await admin.from('telegram_bruno_messages').insert({ chat_id: chatId, role: 'user', content: `[${who}] Proposta annullata.` }); return; }
           if (pm[1] === 'ed') {
             await admin.from('telegram_bruno_messages').insert({ chat_id: chatId, role: 'user', content: `[${who}] Voglio modificare la proposta precedente, ti scrivo le modifiche.` });

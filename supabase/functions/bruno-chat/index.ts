@@ -5,12 +5,17 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { TOOLS, TOOL_LABELS, runTool } from './tools.ts';
 import { customerPersona, TOOL_MAP } from '../_shared/bruno/persona.ts';
+import { saveAction, executeAction } from './actions.ts';
+import { WorkspaceRequest, workspace } from './workspace.ts';
+import { WRITE_TOOLS } from './action-domain.ts';
 
 const Body = z.object({
   messages: z.array(z.object({ role: z.enum(['user', 'assistant']), content: z.string().min(1).max(8000) })).min(1).max(60),
   instructions: z.string().max(2000).optional(),
   propose_writes: z.boolean().optional(),
-  execute: z.array(z.object({ name: z.string(), args: z.record(z.any()) })).max(10).optional(),
+  execute: z.array(z.object({ name: z.string(), args: z.record(z.any()), action_id: z.string().uuid().optional() })).max(10).optional(),
+  source: z.enum(['erp','telegram']).optional(),
+  requested_label: z.string().max(150).optional(),
 });
 
 const json = (data: unknown, status = 200) =>
@@ -32,9 +37,19 @@ Deno.serve(async (req) => {
     const { data: roles } = await admin.from('user_roles').select('role').eq('user_id', u.user.id);
     if (!roles?.some((r) => r.role === 'admin' || r.role === 'commerciale')) return json({ error: 'Accesso negato' }, 403);
 
-    const parsed = Body.safeParse(await req.json());
+    const payload=await req.json();
+    const auth=req.headers.get('Authorization') || '';
+    const ctx = { admin, userId: u.user.id, auth, url, anon: Deno.env.get('SUPABASE_ANON_KEY') || '', source: payload.source || 'erp', requestText: payload.messages?.filter((m:any)=>m.role==='user').at(-1)?.content || '', requestedLabel:payload.requested_label };
+    const executeTool=(name:string,args:Record<string,unknown>,id:string)=>runTool({...ctx,actionId:id},name,args);
+    const operational=WorkspaceRequest.safeParse(payload);
+    if(operational.success) {
+      const reader=createClient(url,ctx.anon,{global:{headers:{Authorization:auth}}});
+      return json(await workspace(ctx,reader,operational.data,executeTool));
+    }
+    const parsed = Body.safeParse(payload);
     if (!parsed.success) return json({ error: 'Richiesta non valida' }, 400);
-    const { messages, instructions, propose_writes, execute } = parsed.data;
+    const { messages, instructions, execute } = parsed.data;
+    const propose_writes=true;
 
     // Compact CRM snapshot (Vesuviano pipeline only).
     const counts: Record<string, number> = {};
@@ -64,20 +79,20 @@ Attività scadute o di oggi: ${JSON.stringify(due ?? [])}
 Lead più recenti: ${JSON.stringify(recent ?? [])}
 In qualificato/trattativa: ${JSON.stringify(open ?? [])}`;
 
-    const ctx = { admin, userId: u.user.id, auth: req.headers.get('Authorization') || '', url, anon: Deno.env.get('SUPABASE_ANON_KEY') || '' };
     // Approved proposals: run exactly the stored actions, no AI involved.
     if (execute?.length) {
       const lines: string[] = [];
       for (const a of execute) {
         if (!TOOL_LABELS[a.name]) { lines.push(`- ❌ ${a.name}: azione non ammessa`); continue; }
         try {
-          const r: any = await runTool(ctx, a.name, a.args);
+          if(!a.action_id) { lines.push('- Proposta non collegata al piano: prepara una nuova proposta prima di eseguire.'); continue; }
+          const r: any = await executeAction(ctx,a.action_id,executeTool);
           lines.push(r?.error ? `- ❌ ${TOOL_LABELS[a.name]}: ${r.error}` : `- ✅ ${TOOL_LABELS[a.name]}${r?.public_url ? `\n  Link: ${r.public_url}\n  PDF: ${r.pdf_url}` : ''}${r?.sent_via ? `\n  Inviata via ${r.sent_via}` : ''}${r?.proposal?.id ? `\n  Proposta chiamata: ${r.proposal.id}\n  Destinatario: ${r.proposal.destination}\n  Lingua: inglese. Nessuna chiamata ancora avviata. Conferma l'avvio o apri Bruno → Chiamate.` : ''}${a.name === 'approve_call' ? `\n  Stato: ${r?.status === 'dialing' ? 'squillo avviato' : 'esito da verificare; non ripetere la chiamata'}` : ''}`);
         } catch (e) { lines.push(`- ❌ ${TOOL_LABELS[a.name]}: ${e instanceof Error ? e.message : 'errore'}`); }
       }
       return json({ text: lines.join('\n') });
     }
-    const proposals: { name: string; args: Record<string, unknown> }[] = [];
+    const proposals: { name: string; args: Record<string, unknown>; action_id:string }[] = [];
     const input: unknown[] = messages.map((m) => ({ role: m.role, content: m.content }));
     const done: string[] = [];
     let text = '';
@@ -104,14 +119,16 @@ In qualificato/trattativa: ${JSON.stringify(open ?? [])}`;
           if (c.name === 'approve_call') {
             result = { error: 'La chiamata richiede approvazione esplicita dalla sezione Chiamate o dai pulsanti Telegram; nessuna chiamata eseguita.' };
             if (propose_writes) {
-              proposals.push({ name: c.name, args });
+              const row=await saveAction(ctx,c.name,args);
+              proposals.push({ name: c.name, args, action_id:row.id });
               result = { status: 'Avvio chiamata proposto: in attesa di approvazione del team, NON eseguito' };
             }
             input.push({ type: 'function_call_output', call_id: c.call_id, output: JSON.stringify(result) });
             continue;
           }
-          if (propose_writes && TOOL_LABELS[c.name]) {
-            proposals.push({ name: c.name, args });
+          if (propose_writes && WRITE_TOOLS.includes(c.name)) {
+            const row=await saveAction(ctx,c.name,args);
+            proposals.push({ name: c.name, args, action_id:row.id });
             result = { status: 'proposta registrata, in attesa di approvazione del team: NON è stata eseguita' };
             input.push({ type: 'function_call_output', call_id: c.call_id, output: JSON.stringify(result) });
             continue;

@@ -57,7 +57,7 @@ export const TOOLS = [
       estimated_delivery: str('YYYY-MM-DD'), notes: str() }, ['order_id']) },
 ];
 
-type Ctx = { admin: SupabaseClient; userId: string; auth: string; url: string; anon: string };
+type Ctx = { admin: SupabaseClient; userId: string; auth: string; url: string; anon: string; actionId?: string };
 const pick = (a: Record<string, unknown>, keys: string[]) =>
   Object.fromEntries(keys.filter((k) => a[k] !== undefined && a[k] !== null && a[k] !== '').map((k) => [k, a[k]]));
 import { customerLanguage } from './language.ts';
@@ -97,9 +97,12 @@ async function deliverOffer(ctx: Ctx, offer: any, lead: any, channel: 'wasender'
   const intro = (message || '').trim() || OFFER_TEXT[lang](offer.number, lead.contact_name || '');
   const body = `${intro}\n\n${OFFER_LABELS[lang][0]}: ${public_url}\n${OFFER_LABELS[lang][1]}: ${pdf_url}`;
   const r = await callFn(ctx, 'bruno-agent', { action: 'send', lead_id: lead.id, channel, body,
-    subject: `Vesuviano Forni · ${offer.number}`, ai_generated: true, idempotency_key: crypto.randomUUID() });
-  if (offer.status === 'offerta_pronta') await ctx.admin.from('commercial_offers').update({ status: 'offerta_inviata' }).eq('id', offer.id);
-  return { sent_via: channel === 'wasender' ? 'WhatsApp Gennaro' : 'email', result: r?.status ?? r?.message?.status ?? 'ok' };
+    subject: `Vesuviano Forni · ${offer.number}`, ai_generated: true, idempotency_key: ctx.actionId || crypto.randomUUID() });
+  const status = r?.message?.status ?? r?.smtp_status ?? r?.status ?? 'unknown';
+  if (['sent','delivered','read','accepted'].includes(status) && offer.status === 'offerta_pronta') {
+    const {error} = await ctx.admin.from('commercial_offers').update({ status: 'offerta_inviata' }).eq('id', offer.id); if(error)throw error;
+  }
+  return { ...r, sent_via: channel === 'wasender' ? 'WhatsApp Gennaro' : 'email', result: status };
 }
 
 export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): Promise<unknown> {
@@ -146,8 +149,8 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
     }
     case 'send_message': {
       const r = await callFn(ctx, 'bruno-agent', { action: 'send', lead_id: a.lead_id, channel: a.channel, body: a.body,
-        subject: a.subject, ai_generated: true, idempotency_key: crypto.randomUUID() });
-      return { sent: true, channel: a.channel, result: r?.status ?? r?.message?.status ?? 'ok' };
+        subject: a.subject, ai_generated: true, idempotency_key: ctx.actionId || crypto.randomUUID() });
+      return { ...r, channel: a.channel, result: r?.message?.status ?? r?.smtp_status ?? r?.status ?? 'unknown' };
     }
     case 'get_catalog': {
       const { data: pl } = await admin.from('price_lists').select('id').eq('status', 'active').maybeSingle();
@@ -175,7 +178,7 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
           image_url: '', quantity: Number(i.quantity) || 1, unit_price: Number(i.unit_price), discount_percent: Number(i.discount_percent) || 0, notes: '' })) };
       const { offer } = await callFn(ctx, 'commercial-offers', { action: 'save', id: crypto.randomUUID(), lead_id: lead.id, document, status: 'offerta_pronta' });
       const shared = await shareOffer(ctx, offer);
-      const out: Record<string, unknown> = { created: true, number: offer.number, amount: offer.amount, currency: offer.currency, ...offerUrls(shared), _link: `/erp/offerte` };
+      const out: Record<string, unknown> = { created: true, offer_id: offer.id, number: offer.number, amount: offer.amount, currency: offer.currency, ...offerUrls(shared), _link: `/erp/offerte` };
       if (a.send_via) Object.assign(out, await deliverOffer(ctx, shared, lead, a.send_via, a.message));
       return out;
     }
@@ -224,8 +227,8 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       const channel = a.channel === 'email' ? 'email' : 'wasender';
       const body = channel === 'email' ? `${a.caption}\n\n${asset.title}: ${asset.url}` : a.caption;
       const r = await callFn(ctx, 'bruno-agent', { action: 'send', lead_id: a.lead_id, channel, body, subject: a.subject,
-        ...(channel === 'wasender' ? { media_url: asset.url } : {}), ai_generated: true, idempotency_key: crypto.randomUUID() });
-      return { sent: true, channel, file: asset.title, result: r?.status ?? r?.message?.status ?? 'ok' };
+        ...(channel === 'wasender' ? { media_url: asset.url } : {}), ai_generated: true, idempotency_key: ctx.actionId || crypto.randomUUID() });
+      return { ...r, channel, file: asset.title, result: r?.message?.status ?? r?.smtp_status ?? r?.status ?? 'unknown' };
     }
     case 'update_qualification': {
       const { data: lead } = await admin.from('leads').select('id,qualification').eq('id', a.lead_id).maybeSingle();

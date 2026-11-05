@@ -10,8 +10,8 @@ import { callLabels, voiceRequest, type VoiceCall, type VoiceView } from '@/lib/
 
 type State = { configured: boolean; from_number: string; language: string; calls: VoiceCall[]; has_more: boolean };
 
-export function BrunoVoice() {
-  const [open, setOpen] = useState(false), [state, setState] = useState<State | null>(null);
+export function BrunoVoice({embedded=false}: {embedded?:boolean}) {
+  const [open, setOpen] = useState(embedded), [state, setState] = useState<State | null>(null);
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null);
   const [confirmation, setConfirmation] = useState<VoiceCall | null>(null);
   const [view,setView] = useState<VoiceView>('planned'), [detail,setDetail] = useState<string | null>(null);
@@ -43,11 +43,9 @@ export function BrunoVoice() {
       await refresh();
     } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
   };
-  return <>
-    <Button variant="outline" size="sm" onClick={() => setOpen(true)}><Phone className="mr-2 h-4 w-4" />Chiamate</Button>
-    <Dialog open={open} onOpenChange={value => { setOpen(value); if (!value) setConfirmation(null); }}>
-      <DialogContent className="max-w-4xl max-h-[85dvh] overflow-y-auto">
-        <DialogHeader><DialogTitle>Chiamate di Bruno</DialogTitle><DialogDescription>{state?.from_number || '+44 7457 416033'} · Inglese · Qualificazione cliente</DialogDescription></DialogHeader>
+  const content=<>
+    <h2 className="text-xl font-semibold">Chiamate di Bruno</h2>
+    <p className="text-sm text-muted-foreground">{state?.from_number || '+44 7457 416033'} · Inglese · Qualificazione cliente</p>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <Badge variant="outline">{state?.configured ? 'Assistente configurato' : 'Configurazione da verificare'}</Badge>
           <Button variant="ghost" size="icon" disabled={busy} onClick={() => void refresh()} aria-label="Aggiorna chiamate">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}</Button>
@@ -74,8 +72,9 @@ export function BrunoVoice() {
           </div>)}
         </div>
         {state?.has_more && <Button variant="outline" disabled={busy} onClick={()=>void refresh(true)}>Carica precedenti</Button>}
-      </DialogContent>
-    </Dialog>
+  </>;
+  return <>
+    {embedded ? <div className="space-y-4 p-4 md:p-6">{content}</div>:<><Button variant="outline" size="sm" onClick={()=>setOpen(true)}><Phone className="mr-2 h-4 w-4"/>Chiamate</Button><Dialog open={open} onOpenChange={value=>{setOpen(value);if(!value)setConfirmation(null)}}><DialogContent className="max-w-4xl max-h-[85dvh] overflow-y-auto"><DialogHeader><DialogTitle>Chiamate di Bruno</DialogTitle><DialogDescription>Numero UK · Inglese</DialogDescription></DialogHeader>{content}</DialogContent></Dialog></>}
     <BrunoCallDetail callId={detail} onClose={()=>setDetail(null)} />
   </>;
 }
