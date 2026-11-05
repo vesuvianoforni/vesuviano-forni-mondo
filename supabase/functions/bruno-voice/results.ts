@@ -42,6 +42,16 @@ async function storeAudio(db: SupabaseClient, callId: string, address: string) {
   check(await db.storage.from('bruno-call-recordings').upload(path, bytes, { contentType: wav ? 'audio/wav' : 'audio/mpeg', upsert: true }));
   return path;
 }
+async function finishWithoutConversation(db: SupabaseClient, callId: string, token: string, call: Record<string, any>) {
+  check(await db.from('bruno_voice_calls').update({
+    ...(call.transcript_status !== 'ready' ? { transcript_status: 'unavailable' } : {}),
+    ...(call.summary_status !== 'ready' ? { summary_status: 'unavailable' } : {}),
+    ...(call.recording_status !== 'ready' ? { recording_status: 'unavailable' } : {}),
+    ...(!call.error_code ? { error_code: 'no_conversation' } : {}),
+  }).eq('id', callId));
+  check(await db.from('bruno_voice_result_jobs').update({ status: 'done', lease_until: null, error_code: 'no_conversation' }).eq('call_id', callId).eq('token', token));
+  return { processed: true, ready: true, no_conversation: true };
+}
 export async function processResults(db: SupabaseClient, callId: string, token: string, assistantId: string, provider: Provider) {
   const rows = check(await db.rpc('claim_bruno_voice_result', { p_call: callId, p_token: token }));
   const job = rows?.[0]; if (!job) return { ignored: true };
@@ -60,8 +70,13 @@ export async function processResults(db: SupabaseClient, callId: string, token: 
       const found = await provider(`/ai/conversations?${query}`);
       if (found.data?.length === 1) { check(await db.from('bruno_voice_calls').update({ conversation_id: found.data[0].id }).eq('id',callId)); call = { ...call, conversation_id: found.data[0].id }; }
     }
+    // No conversation ever happened (unanswered, rejected or hung up within seconds): stop polling Telnyx.
+    const noConversation = ['no_answer','busy','unreachable','no_conversation'].includes(call.error_code ?? '') || call.status === 'failed';
+    if (noConversation && !job.recording_url && !call.recording_path && (!call.conversation_id || job.attempts >= 2)) return await finishWithoutConversation(db, callId, token, call);
     if (call.conversation_id && call.transcript_status !== 'ready') {
-      const conversation = (await provider(`/ai/conversations/${encodeURIComponent(call.conversation_id)}`)).data;
+      let conversation;
+      try { conversation = (await provider(`/ai/conversations/${encodeURIComponent(call.conversation_id)}`)).data; }
+      catch (e) { if ((e as { status?: number })?.status === 404) return await finishWithoutConversation(db, callId, token, call); throw e; }
       if (conversation?.metadata?.call_control_id !== call.provider_call_id || conversation?.metadata?.assistant_id !== assistantId) throw new Error('conversation_binding_invalid');
       const messages: unknown[] = [];
       for (let page = 1; page <= 20; page++) {

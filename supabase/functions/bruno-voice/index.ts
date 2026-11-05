@@ -1,7 +1,7 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
-import { assistantConfig, callAllowed, timezoneFromPhone, e164, FROM_NUMBER, nextCallStatus, Proposal, ToolRequest, verifyTelnyx, voiceTools } from './domain.ts';
+import { assistantConfig, callAllowed, timezoneFromPhone, e164, FROM_NUMBER, nextCallStatus, callOutcomeCode, Proposal, ToolRequest, verifyTelnyx, voiceTools } from './domain.ts';
 import { AnalyzedEvent, analyzedMatches, RecordingCallback, spokenTranscript } from './results-domain.ts';
 import { processResults, queueResults } from './results.ts';
 
@@ -88,7 +88,11 @@ Deno.serve(async req => {
         if (!parsed.success) return json({ ok: true, ignored: true });
         if (!call?.approved_at || (call.provider_call_id && call.provider_call_id !== parsed.data.CallSid)) return json({ error: 'Chiamata non riconosciuta' }, 403);
         const status = nextCallStatus(call.status, parsed.data.CallStatus);
+        const callDuration = Number((parsed.data as Record<string, unknown>).CallDuration);
+        const outcome = status !== call.status ? callOutcomeCode(parsed.data.CallStatus, Number.isFinite(callDuration) ? callDuration : call.duration_seconds) : null;
         checked(await admin.from('bruno_voice_calls').update({ status, provider_call_id: parsed.data.CallSid,
+          ...(outcome && !call.error_code ? { error_code: outcome } : {}),
+          ...(Number.isFinite(callDuration) && call.duration_seconds == null ? { duration_seconds: callDuration } : {}),
           ...(['completed','failed','cancelled'].includes(status) && !call.ended_at ? { ended_at: new Date().toISOString() } : {}),
         }).eq('id', call.id).eq('status', call.status));
         if (['completed','failed','cancelled'].includes(status)) await queueResults(admin,call.id);

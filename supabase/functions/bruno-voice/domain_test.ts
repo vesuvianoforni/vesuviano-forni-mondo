@@ -50,3 +50,13 @@ Deno.test('fuso orario dal prefisso del numero', () => {
   if (timezoneFromPhone('+33 6 12 34 56 78') !== 'Europe/Paris') throw new Error('+33');
   if (timezoneFromPhone('+999123') !== null) throw new Error('unknown');
 });
+
+Deno.test('callOutcomeCode distingue chiamate senza conversazione', async () => {
+  const { callOutcomeCode } = await import('./domain.ts');
+  const eq = (a: unknown, b: unknown) => { if (a !== b) throw new Error(`${a} !== ${b}`); };
+  eq(callOutcomeCode('completed', 2), 'no_conversation');
+  eq(callOutcomeCode('completed', 113), null);
+  eq(callOutcomeCode('no-answer'), 'no_answer');
+  eq(callOutcomeCode('busy'), 'busy');
+  eq(callOutcomeCode('failed'), 'unreachable');
+});
