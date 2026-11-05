@@ -337,7 +337,7 @@ Deno.serve(async (req) => {
           await tg('editMessageText', { chat_id: chatId, message_id: cb.message.message_id, text: `${cb.message.text ?? ''}\n\n${stamp}`.slice(0, 4000), disable_web_page_preview: true });
           if (pm[1] === 'no' || pm[1] === 'ed') {
             const ids=(p.actions as {action_id?:string}[]).map(a=>a.action_id).filter((id):id is string=>Boolean(id));
-            if(ids.length)await admin.from('bruno_actions').update({status:'cancelled',finished_at:new Date().toISOString()}).in('id',ids).eq('status','proposed');
+            for(const id of ids){const {error}=await admin.rpc('cancel_bruno_action',{p_id:id,p_user:userId});if(error)throw new Error('Cancellazione proposta non riuscita');}
           }
           if (pm[1] === 'no') { await admin.from('telegram_bruno_messages').insert({ chat_id: chatId, role: 'user', content: `[${who}] Proposta annullata.` }); return; }
           if (pm[1] === 'ed') {

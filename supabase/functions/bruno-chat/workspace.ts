@@ -13,21 +13,22 @@ const check=<T>(r:{data:T;error:{message:string}|null}):T=>{if(r.error)throw new
 export async function workspace(ctx:ActionContext,reader:SupabaseClient,input:z.infer<typeof WorkspaceRequest>,execute:(name:string,args:Record<string,unknown>,id:string)=>Promise<any>) {
   if(input.action==='action_approve')return executeAction(ctx,input.id,execute);
   if(input.action==='action_cancel') {
-    const row=check(await ctx.admin.from('bruno_actions').update({status:'cancelled',finished_at:new Date().toISOString()}).eq('id',input.id).eq('status','proposed').select('id').maybeSingle());
-    if(!row)return {error:'Azione già gestita'};
+    const cancelled=check(await ctx.admin.rpc('cancel_bruno_action',{p_id:input.id,p_user:ctx.userId}));
+    if(!cancelled)return {error:'Azione già gestita'};
     return {cancelled:true};
   }
   if(input.action==='action_detail')return {action:check(await reader.from('bruno_actions').select('*,leads(contact_name,company_name)').eq('id',input.id).single())};
   if(input.action==='actions') {
     let q=reader.from('bruno_actions').select('*,leads(contact_name,company_name)').order('created_at',{ascending:false}).order('id',{ascending:false}).limit(31);
-    if(input.view==='plan') q=q.in('status',['proposed','approved','running','blocked']); else q=q.in('status',['completed','failed','unknown','cancelled','expired']);
+    const now=new Date().toISOString();
+    if(input.view==='plan') q=q.or(`status.in.(approved,running,blocked),and(status.eq.proposed,expires_at.gt.${now})`); else q=q.or(`status.in.(completed,failed,unknown,cancelled,expired),and(status.eq.proposed,expires_at.lte.${now})`);
     if(input.before_at && input.before_id)q=q.or(`created_at.lt.${input.before_at},and(created_at.eq.${input.before_at},id.lt.${input.before_id})`);
     const data=check(await q)??[];
     return {actions:data.slice(0,30),has_more:data.length>30};
   }
   const [summary,upcoming,recent,issues,reminders]=await Promise.all([
     reader.rpc('bruno_workspace_summary',{p_days:input.days}),
-    reader.from('bruno_actions').select('*,leads(contact_name,company_name)').in('status',['proposed','approved','running','blocked']).order('created_at',{ascending:false}).limit(6),
+    reader.from('bruno_actions').select('*,leads(contact_name,company_name)').or(`status.in.(approved,running,blocked),and(status.eq.proposed,expires_at.gt.${new Date().toISOString()})`).order('created_at',{ascending:false}).limit(6),
     reader.from('bruno_actions').select('*,leads(contact_name,company_name)').eq('status','completed').order('finished_at',{ascending:false}).limit(6),
     reader.from('bruno_actions').select('*,leads(contact_name,company_name)').in('status',['failed','unknown','blocked']).order('created_at',{ascending:false}).limit(6),
     reader.from('leads').select('id,contact_name,company_name,next_activity_type,next_activity_date,next_activity_notes').eq('pipeline','Vesuviano').eq('archived',false).not('status','in','(vinto,perso)').not('next_activity_date','is',null).order('next_activity_date').limit(12),
