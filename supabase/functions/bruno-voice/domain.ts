@@ -13,8 +13,20 @@ const timezone = z.string().max(80).refine(value => {
 export const Proposal = z.object({
   lead_id: z.string().uuid(), objective: z.string().trim().min(10).max(1500),
   call_type: z.enum(['qualifica', 'trattativa']), instructions: z.string().trim().max(2000).optional(),
-  customer_timezone: timezone,
+  customer_timezone: timezone.optional(),
 }).strict();
+// Customer time zone always follows the phone prefix (+39 Italy, +44 UK...).
+const PREFIX_ZONES: [string, string][] = [
+  ['+353','Europe/Dublin'],['+351','Europe/Lisbon'],['+352','Europe/Luxembourg'],['+356','Europe/Malta'],['+357','Asia/Nicosia'],['+358','Europe/Helsinki'],['+359','Europe/Sofia'],
+  ['+370','Europe/Vilnius'],['+371','Europe/Riga'],['+372','Europe/Tallinn'],['+377','Europe/Monaco'],['+378','Europe/San_Marino'],['+380','Europe/Kyiv'],['+381','Europe/Belgrade'],['+382','Europe/Podgorica'],['+385','Europe/Zagreb'],['+386','Europe/Ljubljana'],['+387','Europe/Sarajevo'],['+389','Europe/Skopje'],
+  ['+420','Europe/Prague'],['+421','Europe/Bratislava'],['+423','Europe/Vaduz'],['+971','Asia/Dubai'],['+972','Asia/Jerusalem'],['+974','Asia/Qatar'],['+966','Asia/Riyadh'],
+  ['+30','Europe/Athens'],['+31','Europe/Amsterdam'],['+32','Europe/Brussels'],['+33','Europe/Paris'],['+34','Europe/Madrid'],['+36','Europe/Budapest'],['+39','Europe/Rome'],['+40','Europe/Bucharest'],['+41','Europe/Zurich'],['+43','Europe/Vienna'],['+44','Europe/London'],['+45','Europe/Copenhagen'],['+46','Europe/Stockholm'],['+47','Europe/Oslo'],['+48','Europe/Warsaw'],['+49','Europe/Berlin'],['+61','Australia/Sydney'],['+90','Europe/Istanbul'],
+  ['+1','America/New_York'],['+7','Europe/Moscow'],
+];
+export function timezoneFromPhone(phone: string): string | null {
+  const value = phone.replace(/[\s().-]/g, '').replace(/^00/, '+');
+  return PREFIX_ZONES.find(([prefix]) => value.startsWith(prefix))?.[1] ?? null;
+}
 export const ToolRequest = z.discriminatedUnion('action', [
   z.object({ action: z.literal('knowledge'), call_id: z.string().uuid(), query: z.string().trim().max(200) }).strict(),
   z.object({ action: z.literal('products'), call_id: z.string().uuid(), query: z.string().trim().max(200) }).strict(),

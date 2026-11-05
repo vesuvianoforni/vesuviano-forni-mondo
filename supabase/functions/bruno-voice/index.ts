@@ -1,7 +1,7 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
-import { assistantConfig, callAllowed, e164, FROM_NUMBER, nextCallStatus, Proposal, ToolRequest, verifyTelnyx, voiceTools } from './domain.ts';
+import { assistantConfig, callAllowed, timezoneFromPhone, e164, FROM_NUMBER, nextCallStatus, Proposal, ToolRequest, verifyTelnyx, voiceTools } from './domain.ts';
 import { AnalyzedEvent, analyzedMatches, RecordingCallback } from './results-domain.ts';
 import { processResults, queueResults } from './results.ts';
 
@@ -13,6 +13,8 @@ const Request = z.discriminatedUnion('action', [
   Proposal.extend({ action: z.literal('propose') }).strict(),
   z.object({ action: z.literal('approve'), call_id: z.string().uuid() }).strict(),
   z.object({ action: z.literal('cancel'), call_id: z.string().uuid() }).strict(),
+  z.object({ action: z.literal('live'), call_id: z.string().uuid() }).strict(),
+  z.object({ action: z.literal('hangup'), call_id: z.string().uuid() }).strict(),
 ]);
 class ProviderError extends Error {
   constructor(public status: number, public details: string) { super(`Telnyx [${status}]: ${details}`); }
@@ -144,6 +146,29 @@ Deno.serve(async req => {
       const {recording_path: _path, ...safeCall} = call;
       return json({call:{...safeCall,recording_url:recording?.signedUrl ?? null}});
     }
+    if (input.action === 'live' || input.action === 'hangup') {
+      const call = checked(await admin.from('bruno_voice_calls').select('id,status,provider_call_id,conversation_id,transcript').eq('id',input.call_id).single());
+      if (!call) return json({error:'Chiamata non trovata'},404);
+      const live = ['dialing','active'].includes(call.status);
+      if (input.action === 'hangup') {
+        if (!live || !call.provider_call_id) return json({ error: 'La chiamata non è in corso' }, 409);
+        await telnyx(`/calls/${encodeURIComponent(call.provider_call_id)}/actions/hangup`, 'POST', {});
+        return json({ ok: true });
+      }
+      if (!live || !call.provider_call_id) return json({ status: call.status, live: false, transcript: call.transcript ?? [] });
+      let conversationId = call.conversation_id;
+      try {
+        if (!conversationId && settings.assistant_id) {
+          const q = new URLSearchParams({ 'metadata->call_control_id': `eq.${call.provider_call_id}`, 'metadata->assistant_id': `eq.${settings.assistant_id}`, limit: '2' });
+          const found = await telnyx(`/ai/conversations?${q}`);
+          if (found.data?.length === 1) conversationId = found.data[0].id;
+        }
+        if (!conversationId) return json({ status: call.status, live: true, transcript: [] });
+        const result = await telnyx(`/ai/conversations/${encodeURIComponent(conversationId)}/messages?page%5Bsize%5D=100`);
+        const transcript = spokenTranscript(result.data ?? []).sort((a,b) => (a.at ?? '').localeCompare(b.at ?? ''));
+        return json({ status: call.status, live: true, transcript });
+      } catch { return json({ status: call.status, live: true, transcript: [], pending: true }); }
+    }
     if (input.action === 'configure') {
       if (!roles.some(r => r.role === 'admin')) return json({ error: 'Solo amministratore' }, 403);
       const publicKey = (await telnyx('/public_key')).data?.public;
@@ -180,9 +205,12 @@ Deno.serve(async req => {
     if (input.action === 'propose') {
       const lead = checked(await admin.from('leads').select('id,phone,archived,status,bruno_mode,bruno_paused_until,qualification').eq('id', input.lead_id).single());
       if (!lead) return json({ error: 'Cliente non trovato' }, 404);
-      const blocked = callAllowed(lead, input.customer_timezone);
+      const zone = timezoneFromPhone(lead.phone || '') ?? input.customer_timezone;
+      if (!zone) return json({ error: 'Prefisso telefonico non riconosciuto: indica il fuso orario del cliente.' }, 422);
+      const blocked = callAllowed(lead, zone);
       if (blocked) return json({ error: blocked }, 409);
       const { action: _action, ...scope } = input;
+      scope.customer_timezone = zone;
       const call = checked(await admin.from('bruno_voice_calls').insert({ ...scope, requested_by: user.user.id, destination: e164(lead.phone || '') }).select('id,destination,objective,status').single());
       return json({ proposal: call, from_number: FROM_NUMBER, language: 'en', approval_required: true });
     }
