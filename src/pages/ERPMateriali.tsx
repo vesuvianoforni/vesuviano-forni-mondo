@@ -12,14 +12,16 @@ import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
 import MaterialPreview from "@/components/erp/MaterialPreview";
+import MaterialProductPicker from "@/components/erp/MaterialProductPicker";
 import { materialUploadKind } from "@/lib/materialFiles";
+import { materialMatchesProduct, materialProductIds, materialProductNames, type LinkedMaterial } from "@/lib/materialProducts";
 
 const db = supabase as any;
 const BUCKET = "oven-gallery";
 const KINDS = [["foto", "Foto"], ["video", "Video"], ["scheda", "Scheda tecnica"], ["catalogo", "Catalogo"], ["certificazione", "Certificazione"], ["documento", "Documento"]] as const;
 const LANGS = [["all", "Universale"], ["it", "Italiano"], ["en", "Inglese"], ["fr", "Francese"], ["de", "Tedesco"], ["es", "Spagnolo"]] as const;
 const GENERAL = "general";
-interface Asset { id: string; kind: string; title: string; url: string; storage_path: string | null; language: string | null; tags: string[]; product_id: string | null; products?: { name: string } | null }
+interface Asset extends LinkedMaterial { id: string; kind: string; title: string; url: string; storage_path: string | null; language: string | null; tags: string[] }
 interface Product { id: string; name: string }
 
 /** Product picker with an inline search box, so many models stay easy to reach. */
@@ -63,52 +65,63 @@ export default function ERPMateriali() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
-  const [form, setForm] = useState({ product: GENERAL, kind: "foto", language: "all", title: "", tags: "" });
+  const [form, setForm] = useState({ productIds: [] as string[], kind: "foto", language: "all", title: "", tags: "" });
   const [filter, setFilter] = useState({ q: "", product: "any", kind: "any", lang: "any" });
 
   const load = async () => {
-    const { data } = await db.from("product_assets").select("id,kind,title,url,storage_path,language,tags,product_id,products(name)").order("created_at", { ascending: false }).limit(1000);
-    setRows(data ?? []); setLoading(false);
+    const { data, error } = await db.from("product_assets").select("id,kind,title,url,storage_path,language,tags,product_id,products(name),product_asset_links(product_id,products(id,name))").order("created_at", { ascending: false }).limit(1000);
+    if (error) toast.error("Impossibile caricare i materiali");
+    else setRows(data ?? []);
+    setLoading(false);
   };
   useEffect(() => {
     load();
-    db.from("products").select("id,name").order("name").then(({ data }: any) => setProducts(data ?? []));
+    db.from("products").select("id,name").order("name").then(({ data, error }: any) => {
+      if (error) toast.error("Impossibile caricare i prodotti");
+      else setProducts(data ?? []);
+    });
   }, []);
 
   const upload = async (files: File[]) => {
-    if (!files.length) return;
+    if (!files.length || busy) return;
     setBusy(true);
+    let uploaded = 0;
     for (const file of files) {
-      const folder = form.product === GENERAL ? "general" : form.product;
+      const folder = form.productIds[0] ?? "general";
       const path = `product-assets/${folder}/${Date.now()}-${file.name.replace(/[^\w.-]+/g, "_")}`;
       const { error } = await supabase.storage.from(BUCKET).upload(path, file, { contentType: file.type });
       if (error) { toast.error(`${file.name}: ${error.message}`); continue; }
       const url = supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
       const tags = form.tags.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean);
       const title = form.title.trim() ? (files.length > 1 ? `${form.title.trim()} · ${file.name}` : form.title.trim()) : file.name.replace(/\.[^.]+$/, "");
-      const { error: e2 } = await db.from("product_assets").insert({
-        product_id: form.product === GENERAL ? null : form.product, kind: materialUploadKind(file.name, file.type, form.kind), title, url, storage_path: path,
-        language: form.language === "all" ? null : form.language, tags,
+      const { error: e2 } = await db.rpc("save_product_material", {
+        _id: null, _product_ids: form.productIds,
+        _fields: { kind: materialUploadKind(file.name, file.type, form.kind), title, url, storage_path: path,
+          language: form.language === "all" ? null : form.language, tags },
       });
-      if (e2) toast.error(e2.message);
+      if (e2) {
+        toast.error(`${file.name}: ${e2.message}`);
+        await supabase.storage.from(BUCKET).remove([path]);
+      } else uploaded++;
     }
-    setBusy(false); setForm((f) => ({ ...f, title: "" })); load(); toast.success("Materiale caricato");
+    setBusy(false);
+    if (uploaded) { setForm((f) => ({ ...f, title: "" })); load(); toast.success("Materiale caricato"); }
   };
   const remove = async (a: Asset) => {
     if (!confirm(`Eliminare "${a.title}"?`)) return;
     if (a.storage_path) await supabase.storage.from(BUCKET).remove([a.storage_path]);
     await db.from("product_assets").delete().eq("id", a.id); load();
   };
-  const [edit, setEdit] = useState<{ id: string; url: string; title: string; kind: string; language: string; product: string; tags: string } | null>(null);
-  const openEdit = (a: Asset) => setEdit({ id: a.id, url: a.url, title: a.title, kind: a.kind, language: a.language ?? "all", product: a.product_id ?? GENERAL, tags: (a.tags || []).join(", ") });
+  const [edit, setEdit] = useState<{ id: string; url: string; title: string; kind: string; language: string; productIds: string[]; tags: string } | null>(null);
+  const openEdit = (a: Asset) => setEdit({ id: a.id, url: a.url, title: a.title, kind: a.kind, language: a.language ?? "all", productIds: materialProductIds(a), tags: (a.tags || []).join(", ") });
   const saveEdit = async () => {
     if (!edit) return;
     setBusy(true);
-    const { error } = await db.from("product_assets").update({
-      title: edit.title.trim(), kind: edit.kind, language: edit.language === "all" ? null : edit.language,
-      product_id: edit.product === GENERAL ? null : edit.product,
-      tags: edit.tags.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean),
-    }).eq("id", edit.id);
+    const { error } = await db.rpc("save_product_material", {
+      _id: edit.id, _product_ids: edit.productIds,
+      _fields: { title: edit.title.trim(), kind: edit.kind, language: edit.language === "all" ? null : edit.language,
+        tags: edit.tags.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean) },
+    });
     setBusy(false);
     if (error) return toast.error(error.message);
     setEdit(null); load(); toast.success("Materiale aggiornato");
@@ -119,8 +132,8 @@ export default function ERPMateriali() {
     return rows.filter((a) =>
       (filter.kind === "any" || a.kind === filter.kind) &&
       (filter.lang === "any" || (filter.lang === "all" ? !a.language : a.language === filter.lang)) &&
-      (filter.product === "any" || (filter.product === GENERAL ? !a.product_id : a.product_id === filter.product)) &&
-      (!q || [a.title, a.products?.name, ...(a.tags || [])].join(" ").toLowerCase().includes(q)));
+      materialMatchesProduct(a, filter.product) &&
+      (!q || [a.title, ...materialProductNames(a), ...(a.tags || [])].join(" ").toLowerCase().includes(q)));
   }, [rows, filter]);
 
   const productSelect = (value: string, onChange: (v: string) => void, withAny = false) => (
@@ -148,7 +161,7 @@ export default function ERPMateriali() {
       >
         <h2 className="font-medium">Carica nuovo materiale</h2>
         <div className="flex flex-wrap items-center gap-2">
-          {productSelect(form.product, (v) => setForm({ ...form, product: v }))}
+          <div className="w-full min-w-0 sm:max-w-md"><MaterialProductPicker products={products} value={form.productIds} onChange={(productIds) => setForm({ ...form, productIds })} disabled={busy} /></div>
           <Select value={form.kind} onValueChange={(v) => setForm({ ...form, kind: v })}><SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
             <SelectContent>{KINDS.map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}</SelectContent></Select>
           <Select value={form.language} onValueChange={(v) => setForm({ ...form, language: v })}><SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
@@ -184,11 +197,11 @@ export default function ERPMateriali() {
                 </Button>
                 <div className="space-y-1 p-3">
                   <div className="flex items-start gap-2">
-                    <button type="button" onClick={() => openEdit(a)} className="min-w-0 flex-1 break-words text-left text-sm font-medium hover:underline">{a.title}</button>
+                    <Button type="button" variant="link" onClick={() => openEdit(a)} className="h-auto min-w-0 flex-1 justify-start whitespace-normal break-words p-0 text-left text-sm font-medium text-foreground">{a.title}</Button>
                     <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Modifica" onClick={() => openEdit(a)}><Pencil className="h-4 w-4" /></Button>
                     <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Elimina" onClick={() => remove(a)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
-                  <p className="text-xs text-muted-foreground">{a.products?.name ?? "Materiale aziendale"} · {KINDS.find(([k]) => k === a.kind)?.[1] ?? a.kind} · {LANGS.find(([k]) => k === (a.language ?? "all"))?.[1]}</p>
+                  <p className="break-words text-xs text-muted-foreground">{materialProductNames(a).join(", ") || "Materiale aziendale"} · {KINDS.find(([k]) => k === a.kind)?.[1] ?? a.kind} · {LANGS.find(([k]) => k === (a.language ?? "all"))?.[1]}</p>
                   {!!a.tags?.length && <div className="flex flex-wrap gap-1">{a.tags.map((t) => <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>)}</div>}
                 </div>
               </div>
@@ -199,7 +212,7 @@ export default function ERPMateriali() {
       </section>
 
       <Dialog open={!!edit} onOpenChange={(o) => !o && setEdit(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-h-[90dvh] w-[calc(100%-2rem)] max-w-lg overflow-y-auto">
           <DialogHeader><DialogTitle>Modifica materiale</DialogTitle></DialogHeader>
           {edit && (
             <div className="space-y-3">
@@ -208,7 +221,7 @@ export default function ERPMateriali() {
               </div>
               <a href={edit.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm text-primary hover:underline"><ExternalLink className="h-4 w-4" />Apri file</a>
               <div className="space-y-1"><Label>Titolo</Label><Input value={edit.title} onChange={(e) => setEdit({ ...edit, title: e.target.value })} /></div>
-              <div className="space-y-1"><Label>Prodotto collegato</Label>{productSelect(edit.product, (v) => setEdit({ ...edit, product: v }))}</div>
+              <div className="space-y-1"><Label>Prodotti collegati</Label><MaterialProductPicker products={products} value={edit.productIds} onChange={(productIds) => setEdit({ ...edit, productIds })} disabled={busy} /></div>
               <div className="flex flex-wrap gap-3">
                 <div className="space-y-1"><Label>Tipo</Label>
                   <Select value={edit.kind} onValueChange={(v) => setEdit({ ...edit, kind: v })}><SelectTrigger className="w-44"><SelectValue /></SelectTrigger>

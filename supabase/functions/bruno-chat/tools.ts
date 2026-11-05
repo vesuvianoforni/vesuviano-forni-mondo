@@ -1,6 +1,7 @@
 // Bruno ERP tools: CRM, messages (via bruno-agent), offers (via commercial-offers), orders.
 // Every write goes through existing validated paths or explicit field allowlists.
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
+import { linkedMaterialNames, materialSearchText } from './materials.ts';
 
 export const STAGES = ['nuovo', 'pre_qualificato', 'qualificato', 'trattativa', 'vinto', 'perso'];
 const ORDER_STATUSES = ['nuovo', 'confermato', 'in_produzione', 'pronto_spedizione', 'spedito', 'consegnato', 'annullato'];
@@ -207,14 +208,14 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       return rows.length ? rows : { empty: true, hint: 'Nessuna voce: non inventare, rispondi che verifichi e segnala al team.' };
     }
     case 'get_product_assets': {
-      let q = admin.from('product_assets').select('id,kind,title,url,language,tags,description,products(name,category)').eq('is_active', true).order('sort_order').order('created_at', { ascending: false }).limit(200);
+      let q = admin.from('product_assets').select('id,kind,title,url,language,tags,description,products(name,category),product_asset_links(products(name,category))').eq('is_active', true).order('sort_order').order('created_at', { ascending: false }).limit(200);
       if (a.kind) q = q.eq('kind', a.kind);
       const { data, error } = await q; if (error) throw error;
       const t = clean(a.query)?.toLowerCase();
       const words = t ? t.split(/\s+/).filter(Boolean) : [];
       const matched = (data ?? []).filter((x: any) => {
         if (!words.length) return true;
-        const hay = [x.title, x.description, x.products?.name, x.products?.category, ...(x.tags || [])].join(' ').toLowerCase();
+        const hay = materialSearchText(x);
         return words.some((w: string) => hay.includes(w));
       });
       // Lingua: prima quella del cliente, poi materiali universali, poi inglese; le altre lingue solo se non c'è altro.
@@ -223,7 +224,7 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       const best = matched.length ? Math.min(...matched.map(rank)) : 0;
       const rows = matched.filter((x: any) => rank(x) <= Math.max(best, 1)).sort((p: any, q: any) => rank(p) - rank(q)).slice(0, 40);
       if (!rows.length) return { empty: true, hint: 'Nessun materiale trovato: dillo all\'operatore, non inventare link.' };
-      const out = rows.map((x: any) => ({ id: x.id, kind: x.kind, title: x.title, url: x.url, language: x.language ?? 'universale', tags: x.tags, product: x.products?.name ?? 'Materiale aziendale' }));
+      const out = rows.map((x: any) => ({ id: x.id, kind: x.kind, title: x.title, url: x.url, language: x.language ?? 'universale', tags: x.tags, product: linkedMaterialNames(x).join(', ') || 'Materiale aziendale' }));
       return want && best > 1
         ? { items: out, language_note: `Nessun materiale in ${want.toUpperCase()}: questi sono in altra lingua. Avvisa l'operatore prima di inviarli al cliente.` }
         : out;
