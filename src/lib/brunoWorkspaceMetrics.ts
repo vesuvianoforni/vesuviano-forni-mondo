@@ -1,0 +1,3 @@
+export function attributableMessageCount(rows:{message_id:string|null;status:string;finished_at:string|null;channel:string;direction:string;source?:string;message_status:string}[],since:string){
+ return new Set(rows.filter(r=>r.message_id&&r.status==='completed'&&r.finished_at&&r.finished_at>=since&&r.direction==='outbound'&&r.source!=='zapper'&&['email','wasender','whatsapp_api'].includes(r.channel)&&['sent','delivered','read'].includes(r.message_status)).map(r=>r.message_id)).size;
+}
