@@ -68,9 +68,13 @@ Deno.serve(async (req) => {
   const signOut = (token: string) => createClient(url, anon, { global: { headers: { Authorization: `Bearer ${token}` } } }).auth.signOut().catch(() => {});
 
   const LABEL: Record<string, string> = { update_lead: 'Aggiornare CRM', create_lead: 'Creare cliente', send_message: 'Inviare messaggio', create_offer: 'Creare offerta', send_offer: 'Inviare offerta', create_order: 'Inserire ordine', update_order: 'Aggiornare ordine', send_attachment: 'Inviare file' };
+  LABEL.propose_call = 'Preparare chiamata in inglese';
+  LABEL.approve_call = 'Avviare chiamata approvata in inglese';
   // deno-lint-ignore no-explicit-any
   const describe = (a: { name: string; args: Record<string, any> }) => {
     const x = a.args;
+    if (a.name === 'propose_call') return `• Telefonata Bruno in inglese da +447457416033 · ${x.objective ?? ''} · ${x.customer_timezone ?? ''} · Base consenso: ${x.consent_basis ?? ''}. Questa approvazione salva la proposta; l’avvio richiede una conferma separata.`;
+    if (a.name === 'approve_call') return `• Avviare ora la telefonata in inglese da +447457416033 · Proposta ${x.call_id ?? ''}`;
     // deno-lint-ignore no-explicit-any
     const bits = [x.contact_name, x.customer_name, x.title, x.channel && (CHANNEL[x.channel] ?? x.channel), x.send_via && (CHANNEL[x.send_via] ?? x.send_via), x.status && (STAGE[x.status] ?? x.status), x.next_activity_type, x.next_activity_date && fmtDate(x.next_activity_date), x.total_amount && `${x.total_amount}`, x.subject, x.body && `«${cut(String(x.body), 500)}»`, x.notes_append || x.notes, Array.isArray(x.items) && x.items.map((i: any) => `${i.quantity}× ${i.product_name} ${i.unit_price ?? ''}`).join(', ')].filter(Boolean);
     return `• ${LABEL[a.name] ?? a.name}${bits.length ? ': ' + bits.join(' · ') : ''}`;

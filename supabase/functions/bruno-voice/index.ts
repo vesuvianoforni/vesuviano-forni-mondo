@@ -74,7 +74,8 @@ Deno.serve(async req => {
       const lead = checked(await admin.from('leads').select('id,status,qualification').eq('id', call.lead_id).single());
       if (input.action === 'knowledge') {
         const rows = checked(await admin.from('bruno_knowledge').select('category,title,content,stages').eq('is_active', true).order('sort_order').limit(100));
-        const eligible = rows.filter(row => !row.stages?.length || row.stages.includes(lead.status));
+        if (!lead) return json({ error: 'Cliente non trovato' }, 404);
+        const eligible = (rows ?? []).filter(row => !row.stages?.length || row.stages.includes(lead.status));
         const words = input.query.toLowerCase().split(/\s+/).filter(w => w.length > 2);
         const ranked = eligible.map(row => ({ ...row, score: words.filter(w => `${row.category} ${row.title} ${row.content}`.toLowerCase().includes(w)).length })).sort((a,b) => b.score-a.score);
         return json({ facts: ranked.slice(0, 25), instruction: 'Use only verified facts. A missing fact must be checked by the team; translate Italian facts to English. Prices are not authorized by this lookup.' });
@@ -83,8 +84,8 @@ Deno.serve(async req => {
         const query = input.query.replace(/[%_,()*]/g, ' ').trim().slice(0, 80);
         let request = admin.from('products').select('id,name,category,description,size_label,coating,component').eq('is_active', true).order('sort_order').limit(30);
         if (query) request = request.ilike('name', `%${query}%`);
-        const products = checked(await request);
-        const assets = products.length ? checked(await admin.from('product_assets').select('product_id,kind,title,language,description').eq('is_active', true).in('product_id', products.map(p => p.id)).limit(100)) : [];
+        const products = checked(await request) ?? [];
+        const assets = (products.length ? checked(await admin.from('product_assets').select('product_id,kind,title,language,description').eq('is_active', true).in('product_id', products.map(p => p.id)).limit(100)) : []) ?? [];
         return json({ products, materials: assets.filter(a => !a.language || a.language === 'en'), instruction: 'These are catalog records and material metadata, not parsed PDF contents. No prices/costs. Never infer unknown technical specifications or claim an attachment was sent.' });
       }
       // Atomic fact merge avoids losing progressive tool updates or manual CRM changes.
@@ -96,7 +97,7 @@ Deno.serve(async req => {
     if (!auth?.startsWith('Bearer ')) return json({ error: 'Non autenticato' }, 401);
     const { data: user, error } = await admin.auth.getUser(auth.slice(7));
     if (error || !user.user) return json({ error: 'Non autenticato' }, 401);
-    const roles = checked(await admin.from('user_roles').select('role').eq('user_id', user.user.id));
+    const roles = checked(await admin.from('user_roles').select('role').eq('user_id', user.user.id)) ?? [];
     if (!roles.some(r => r.role === 'admin' || r.role === 'commerciale')) return json({ error: 'Accesso negato' }, 403);
     const parsed = Request.safeParse(JSON.parse(raw));
     if (!parsed.success) return json({ error: 'Richiesta non valida', details: parsed.error.flatten().fieldErrors }, 400);
@@ -139,12 +140,15 @@ Deno.serve(async req => {
     }
     if (input.action === 'propose') {
       const lead = checked(await admin.from('leads').select('id,phone,archived,status,bruno_mode,bruno_paused_until,qualification').eq('id', input.lead_id).single());
+      if (!lead) return json({ error: 'Cliente non trovato' }, 404);
       const blocked = callAllowed(lead, input.customer_timezone);
       if (blocked) return json({ error: blocked }, 409);
-      const call = checked(await admin.from('bruno_voice_calls').insert({ ...input, action: undefined, requested_by: user.user.id, destination: e164(lead.phone || '') }).select('id,destination,objective,status').single());
+      const { action: _action, ...scope } = input;
+      const call = checked(await admin.from('bruno_voice_calls').insert({ ...scope, requested_by: user.user.id, destination: e164(lead.phone || '') }).select('id,destination,objective,status').single());
       return json({ proposal: call, from_number: FROM_NUMBER, language: 'en', approval_required: true });
     }
     const call = checked(await admin.from('bruno_voice_calls').select('*').eq('id', input.call_id).single());
+    if (!call) return json({ error: 'Chiamata non trovata' }, 404);
     if (input.action === 'cancel') {
       checked(await admin.from('bruno_voice_calls').update({ status: 'cancelled' }).eq('id', call.id).eq('status', 'proposed'));
       return json({ cancelled: true });
@@ -153,13 +157,14 @@ Deno.serve(async req => {
     if (new Date(call.expires_at).getTime() < Date.now()) return json({ error: 'Proposta scaduta' }, 409);
     if (!settings.assistant_id || !settings.application_id || !settings.public_key) return json({ error: 'Assistente telefonico non ancora configurato' }, 503);
     const lead = checked(await admin.from('leads').select('id,contact_name,company_name,phone,city,country,status,archived,qualification,bruno_mode,bruno_paused_until').eq('id', call.lead_id).single());
+    if (!lead) return json({ error: 'Cliente non trovato' }, 404);
     if (e164(lead.phone || '') !== call.destination) return json({ error: 'Telefono modificato: crea una nuova proposta' }, 409);
     const blocked = callAllowed(lead, call.customer_timezone);
     if (blocked) return json({ error: blocked }, 409);
     const claimed = checked(await admin.from('bruno_voice_calls').update({ status: 'starting', approved_by: user.user.id, approved_at: new Date().toISOString(), started_at: new Date().toISOString() }).eq('id', call.id).eq('status', 'proposed').select('id').maybeSingle());
     if (!claimed) return json({ error: 'Chiamata già approvata' }, 409);
     try {
-      const recent = checked(await admin.from('crm_messages').select('channel,direction,body,created_at').eq('lead_id', lead.id).order('created_at', { ascending: false }).limit(8));
+      const recent = checked(await admin.from('crm_messages').select('channel,direction,body,created_at').eq('lead_id', lead.id).order('created_at', { ascending: false }).limit(8)) ?? [];
       const callback = `${url}/functions/v1/bruno-voice?callback=1&call_id=${call.id}`;
       const result = await telnyx(`/texml/ai_calls/${settings.application_id}`, 'POST', {
         From: FROM_NUMBER, To: call.destination, AIAssistantId: settings.assistant_id,

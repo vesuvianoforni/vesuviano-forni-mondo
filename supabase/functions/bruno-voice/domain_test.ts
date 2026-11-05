@@ -1,4 +1,4 @@
-import { assertEquals, assertRejects } from 'https://deno.land/std@0.224.0/assert/mod.ts';
+import { assertEquals } from 'https://deno.land/std@0.224.0/assert/mod.ts';
 import { assistantConfig, callAllowed, e164, FROM_NUMBER, nextCallStatus, Proposal, Qualification, verifyTelnyx, VOICE_LANGUAGE } from './domain.ts';
 
 Deno.test('Bruno uses the specified UK caller number', () => assertEquals(FROM_NUMBER, '+447457416033'));
@@ -30,6 +30,7 @@ Deno.test('Destination requires international format', () => {
 });
 Deno.test('Telnyx signature binds raw payload and expires after five minutes', async () => {
   const pair = await crypto.subtle.generateKey('Ed25519', true, ['sign', 'verify']);
+  if (!('publicKey' in pair)) throw new Error('Ed25519 key pair required');
   const pub = btoa(String.fromCharCode(...new Uint8Array(await crypto.subtle.exportKey('raw', pair.publicKey))));
   const raw = '{"action":"knowledge"}', time = '1793874600';
   const bytes = await crypto.subtle.sign('Ed25519', pair.privateKey, new TextEncoder().encode(`${time}|${raw}`));

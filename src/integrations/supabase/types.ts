@@ -3859,6 +3859,10 @@ export type Database = {
         Args: { p_id: string; p_token: string }
         Returns: boolean
       }
+      save_bruno_voice_qualification: {
+        Args: { p_call: string; p_facts: Json; p_summary: string }
+        Returns: undefined
+      }
       save_email_signature: {
         Args: { _fields: Json; _id: string; _mailbox: string }
         Returns: {
