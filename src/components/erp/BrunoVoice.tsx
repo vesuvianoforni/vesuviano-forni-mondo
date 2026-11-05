@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BrunoCallDetail } from './BrunoCallDetail';
+import { BrunoLiveCall } from './BrunoLiveCall';
 import { callLabels, voiceRequest, type VoiceCall, type VoiceView } from '@/lib/brunoVoice';
 
 type State = { configured: boolean; from_number: string; language: string; calls: VoiceCall[]; has_more: boolean };
@@ -32,7 +33,7 @@ export function BrunoVoice({embedded=false}: {embedded?:boolean}) {
     generation.current++; setConfirmation(null); setState(null);
     if (!open) return;
     void refreshRef.current();
-    const timer = window.setInterval(() => { if (!document.hidden) void refreshRef.current(false,true); },15000);
+    const timer = window.setInterval(() => { if (!document.hidden) void refreshRef.current(false,true); },5000);
     return () => { window.clearInterval(timer); generation.current++; };
   },[open,view]);
   const act = async (action: string, call?: VoiceCall) => {
@@ -62,6 +63,7 @@ export function BrunoVoice({embedded=false}: {embedded?:boolean}) {
           <p className="text-sm text-muted-foreground">La chiamata sarà registrata e trascritta; Bruno si presenta come assistente AI e avvisa della registrazione all'inizio della conversazione.</p>
           <div className="flex flex-wrap gap-2"><Button disabled={busy} onClick={() => void act('approve', confirmation)}><Phone className="mr-2 h-4 w-4" />Conferma chiamata</Button><Button variant="outline" onClick={() => setConfirmation(null)}>Indietro</Button></div>
         </div>}
+        {state?.calls.filter(c => ['dialing','active'].includes(c.status)).map(c => <BrunoLiveCall key={c.id} call={c} onEnded={() => void refreshRef.current(false,true)} />)}
         {!busy && state?.calls.length === 0 && <p className="py-6 text-sm text-muted-foreground">{view === 'planned' ? 'Nessuna chiamata in programma.' : 'Nessuna chiamata eseguita.'}</p>}
         <div className="divide-y">
           {state?.calls.map(call => <div key={call.id} className="py-4 space-y-2">
