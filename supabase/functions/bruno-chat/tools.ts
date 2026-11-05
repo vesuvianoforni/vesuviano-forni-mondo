@@ -16,6 +16,10 @@ export const TOOLS = [
     parameters: obj({ query: str('testo libero, vuoto per tutti'), stage: str('fase opzionale') }) },
   { type: 'function', name: 'get_lead', description: 'Dettaglio cliente con ultime comunicazioni, offerte e ordini.',
     parameters: obj({ lead_id: str() }, ['lead_id']) },
+  { type: 'function', name: 'propose_call', description: 'Prepara una telefonata di Bruno in INGLESE dal numero UK +447457416033 per qualificare il cliente usando la knowledge base. NON telefona: crea una proposta da approvare in Bruno → Chiamate. Serve una base di consenso documentata e il fuso del cliente, mai inventati.',
+    parameters: obj({ lead_id: str(), objective: str('obiettivo concreto, qualificazione o risposta sui prodotti'), consent_basis: str('richiesta/consenso documentato alla chiamata AI'), customer_timezone: str('fuso IANA confermato, es. Europe/London') }, ['lead_id','objective','consent_basis','customer_timezone']) },
+  { type: 'function', name: 'approve_call', description: 'Avvia DAVVERO una proposta di chiamata esistente. Solo dopo che l’operatore ha approvato esplicitamente quella proposta. Non usare per un semplice invito a preparare una telefonata.',
+    parameters: obj({ call_id: str('id della proposta di chiamata già salvata') }, ['call_id']) },
   { type: 'function', name: 'update_lead', description: `Aggiorna fase (${STAGES.join(', ')}), note, prossima attività o dati contatto di un lead.`,
     parameters: obj({ lead_id: str(), status: str(), notes_append: str('testo da aggiungere alle note'),
       next_activity_type: str('es. chiamata, email, whatsapp, follow_up, riunione'), next_activity_date: str('ISO 8601'),
@@ -101,6 +105,11 @@ async function deliverOffer(ctx: Ctx, offer: any, lead: any, channel: 'wasender'
 export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): Promise<unknown> {
   const { admin } = ctx;
   switch (name) {
+    case 'propose_call': {
+      const r = await callFn(ctx, 'bruno-voice', { action: 'propose', lead_id: a.lead_id, objective: a.objective, consent_basis: a.consent_basis, customer_timezone: a.customer_timezone });
+      return { ...r, _link: '/erp/bruno', instruction: 'Proposta salvata, NON è partita alcuna chiamata. Mostra call_id e invita ad approvare in Bruno → Chiamate o a confermare su Telegram.' };
+    }
+    case 'approve_call': return await callFn(ctx, 'bruno-voice', { action: 'approve', call_id: a.call_id });
     case 'search_leads': {
       let q = admin.from('leads').select(LEAD).eq('pipeline', 'Vesuviano').eq('archived', false).order('updated_at', { ascending: false }).limit(15);
       const t = clean(a.query);
@@ -259,4 +268,5 @@ export const TOOL_LABELS: Record<string, string> = {
   update_lead: 'CRM aggiornato', create_lead: 'Cliente creato', send_message: 'Messaggio inviato',
   create_offer: 'Offerta creata', send_offer: 'Offerta inviata', create_order: 'Ordine inserito', update_order: 'Ordine aggiornato',
   send_attachment: 'File inviato',
+  propose_call: 'Proposta chiamata salvata', approve_call: 'Richiesta chiamata inoltrata',
 };

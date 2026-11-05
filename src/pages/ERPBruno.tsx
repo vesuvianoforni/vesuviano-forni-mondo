@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { MailboxSettings } from "@/components/erp/MailboxSettings";
 import { TelegramLink } from "@/components/erp/TelegramLink";
 import { BrunoKnowledge } from "@/components/erp/BrunoKnowledge";
+import { BrunoVoice } from "@/components/erp/BrunoVoice";
 import { Switch } from "@/components/ui/switch";
 import { interactionRelativeTime } from "@/lib/crmActivity";
 
@@ -123,9 +124,10 @@ export default function ERPBruno() {
           <h1 className="flex items-center gap-2 text-xl font-semibold"><Bot className="h-5 w-5 text-primary" />Bruno <span className="text-sm font-normal text-muted-foreground">Sales & Back-office</span></h1>
           <p className="mt-0.5 text-xs text-muted-foreground">{queued} clienti da contattare · {pausedCount} in pausa</p>
         </div>
-        <div className="flex shrink-0 items-center gap-4">
+        <div className="flex shrink-0 flex-wrap items-center gap-4">
           <label className="flex items-center gap-2 text-xs font-medium"><Switch checked={onlyQueue} onCheckedChange={setOnlyQueue} aria-label="Solo in coda" />Solo in coda</label>
           <BrunoKnowledge />
+          <BrunoVoice />
           <TelegramLink />
           <MailboxSettings />
         </div>
