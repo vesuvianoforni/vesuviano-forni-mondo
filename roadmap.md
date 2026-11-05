@@ -1,5 +1,11 @@
 # Roadmap
 
+## Bruno: pausa autonomia e incarichi del team (5 nov 2026)
+- [x] Contesto operatore derivato dai percorsi propose/approve dopo verifica token e ruolo; autonomia bloccata per default, incarichi del team consentiti durante pausa/off senza modificare il lead. Conservati approvazioni atomiche, opposizioni, archivio, telefono e orari.
+- [x] Prompt e letture cliente Bruno distinguono autonomia e incarichi; suggerimenti CRM disponibili in pausa con etichetta Autonomia in pausa. Email/WhatsApp già consentiti ai chiamanti staff, nessuna modifica a invii o deduplicazione. Sei nuovi test; 44 test funzioni e 9 frontend superati, bruno-voice/bruno-chat distribuite.
+- [x] UI isolata a 1280/1682/390: suggerimento richiesto in pausa, bozza visibile, nessun invio o azzeramento pausa. Endpoint senza sessione rifiutati 401; build OK.
+- [ ] Proposta e approvazione autenticata nel proprio ERP: sessione Supabase esterna non disponibile; nessuna chiamata reale o messaggio inviato per prova.
+
 ## Materiali: errore di caricamento (5 nov 2026)
 - [x] Riprodotto PGRST201 / HTTP 300: collegamento diretto products ambiguo dopo aggiunta product_asset_links. Foreign key esplicite nella libreria e in Bruno; bruno-chat distribuita, nessuna modifica a dati o permessi.
 - [x] Tre richieste reali ora HTTP 200 con accesso anon ancora negato; 149 materiali e 149 collegamenti intatti, zero collegamenti legacy mancanti. 10 test frontend e 16 test Bruno superati; UI isolata a 1280/1125/390 px con selezione multipla, salvataggio, riapertura e filtro verificati senza errori; build OK.

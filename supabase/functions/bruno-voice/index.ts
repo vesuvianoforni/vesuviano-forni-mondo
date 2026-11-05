@@ -211,7 +211,9 @@ Deno.serve(async req => {
       if (!lead) return json({ error: 'Cliente non trovato' }, 404);
       const zone = timezoneFromPhone(lead.phone || '') ?? input.customer_timezone;
       if (!zone) return json({ error: 'Prefisso telefonico non riconosciuto: indica il fuso orario del cliente.' }, 422);
-      const blocked = callAllowed(lead, zone);
+      // This branch is reachable only after validating the staff bearer and database role.
+      // Operator intent bypasses the autonomy pause, never consent/opt-out or hour guards.
+      const blocked = callAllowed(lead, zone, new Date(), 'operator');
       if (blocked) return json({ error: blocked }, 409);
       const { action: _action, ...scope } = input;
       scope.customer_timezone = zone;
@@ -230,7 +232,8 @@ Deno.serve(async req => {
     const lead = checked(await admin.from('leads').select('id,contact_name,company_name,phone,city,country,status,archived,qualification,bruno_mode,bruno_paused_until').eq('id', call.lead_id).single());
     if (!lead) return json({ error: 'Cliente non trovato' }, 404);
     if (e164(lead.phone || '') !== call.destination) return json({ error: 'Telefono modificato: crea una nuova proposta' }, 409);
-    const blocked = callAllowed(lead, call.customer_timezone);
+    // A staff approval executes the stored proposal without resuming lead automation.
+    const blocked = callAllowed(lead, call.customer_timezone, new Date(), 'operator');
     if (blocked) return json({ error: blocked }, 409);
     const claimed = checked(await admin.from('bruno_voice_calls').update({ status: 'starting', approved_by: user.user.id, approved_at: new Date().toISOString(), started_at: new Date().toISOString() }).eq('id', call.id).eq('status', 'proposed').select('id').maybeSingle());
     if (!claimed) return json({ error: 'Chiamata già approvata' }, 409);

@@ -196,17 +196,17 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
             <p className="flex items-center gap-1.5 text-sm font-semibold"><Bot className="h-4 w-4 text-primary" />Bruno · {objective.goal}</p>
             <p className="mt-0.5 text-xs text-muted-foreground">{objective.next}</p>
             {paused && <p className="mt-1 text-xs text-muted-foreground">
-              In pausa{pausedUntil && mode !== "paused" ? ` fino al ${new Date(pausedUntil).toLocaleString("it-IT", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })} (Gennaro ha scritto)` : ""}
+              Autonomia in pausa{pausedUntil && mode !== "paused" ? ` fino al ${new Date(pausedUntil).toLocaleString("it-IT", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })} (Gennaro ha scritto)` : ""}
             </p>}
           </div>
           <div className="flex shrink-0 items-center gap-1">
-          <Button size="sm" variant="outline" className="h-8 gap-2" onClick={suggest} disabled={thinking || paused || !brunoCanContact(stage)}>
+          <Button size="sm" variant="outline" className="h-8 gap-2" onClick={suggest} disabled={thinking || !brunoCanContact(stage)}>
             {thinking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4 text-primary" />}
             {brunoCanContact(stage) ? "Suggerisci risposta" : "Nessun follow-up"}
           </Button>
-          <Tooltip><TooltipTrigger asChild><Button size="icon" variant="ghost" className="h-8 w-8" onClick={togglePause} aria-label={paused ? "Riattiva Bruno" : "Metti in pausa Bruno"}>
+          <Tooltip><TooltipTrigger asChild><Button size="icon" variant="ghost" className="h-8 w-8" onClick={togglePause} aria-label={paused ? "Riattiva autonomia" : "Metti in pausa autonomia"}>
             {paused ? <PlayCircle className="h-4 w-4" /> : <PauseCircle className="h-4 w-4" />}
-          </Button></TooltipTrigger><TooltipContent>{paused ? "Riattiva Bruno" : "Metti in pausa Bruno"}</TooltipContent></Tooltip>
+          </Button></TooltipTrigger><TooltipContent>{paused ? "Riattiva autonomia" : "Metti in pausa autonomia"}</TooltipContent></Tooltip>
           </div>
         </div>
         {reasoning && <p className="mt-2 border-l-2 border-primary pl-3 text-xs leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">{reasoning}</p>}
