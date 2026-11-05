@@ -1,5 +1,10 @@
 # Roadmap
 
+## Bruno: panoramica e cabina operativa (5 nov 2026)
+- [ ] Registro condiviso azioni/proposte/esiti, approvazioni ERP/Telegram e KPI esatti senza attribuire gli import Zapper a Bruno.
+- [ ] Panoramica iniziale, Agente Piano/Storico/Chat/Chiamate, Comunicazioni e Impostazioni separate.
+- [ ] Test delle regole, verifica flussi e schermi, distribuzione e controllo permessi.
+
 ## Bruno: registrazioni e storico telefonico (5 nov 2026)
 - [x] Audio per-call TeXML dual/both, transcript retention Telnyx e avviso iniziale verificati, callback recording/analyzed firmati con binding chiamata/assistente; Zapper e SIP invariati.
 - [x] Transcript parlato (senza tool/costi), riepilogo italiano economico e audio privato; unica proiezione CRM alla data originale, URL audio firmati staff-only. Risultati recuperati da coda protetta con tentativi limitati e controllo ogni 5 min solo finché pendente, nessun cron attivo a coda vuota.
