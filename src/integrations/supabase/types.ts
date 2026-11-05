@@ -3869,6 +3869,10 @@ export type Database = {
         }[]
       }
       bruno_workspace_summary: { Args: { p_days?: number }; Returns: Json }
+      cancel_bruno_action: {
+        Args: { p_id: string; p_user: string }
+        Returns: boolean
+      }
       cancel_mario_research_plan: { Args: { p_id: string }; Returns: boolean }
       claim_bruno_action: {
         Args: { p_id: string; p_user: string }
