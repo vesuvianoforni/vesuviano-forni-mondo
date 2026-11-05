@@ -7,10 +7,12 @@ Deno.test('Voice qualification preserves real facts and rejects unrelated writes
   assertEquals(Qualification.parse({ uso: 'pizzeria', alimentazione: 'gas' }), { uso: 'pizzeria', alimentazione: 'gas' });
   assertEquals(Qualification.safeParse({ status: 'qualificato' }).success, false);
 });
-Deno.test('Call proposal needs a documented customer permission basis', () => {
-  const a = { lead_id: '3e429f10-5d54-4f5b-a8f7-00bf8e620ebb', objective: 'Qualificare progetto pizzeria', consent_basis: '', customer_timezone: 'Europe/London' };
-  assertEquals(Proposal.safeParse(a).success, false);
-  assertEquals(Proposal.safeParse({ ...a, consent_basis: 'Richiesta telefonica del cliente' }).success, true);
+Deno.test('Call proposal uses a call type and accepts team instructions without a documented consent field', () => {
+  const a = { lead_id: '3e429f10-5d54-4f5b-a8f7-00bf8e620ebb', objective: 'Qualificare progetto pizzeria', call_type: 'qualifica', customer_timezone: 'Europe/London' };
+  assertEquals(Proposal.safeParse(a).success, true);
+  assertEquals(Proposal.safeParse({ ...a, instructions: 'Chiedere volume pizze, accesso e tempi' }).success, true);
+  assertEquals(Proposal.safeParse({ ...a, call_type: 'trattativa' }).success, true);
+  assertEquals(Proposal.safeParse({ ...a, call_type: 'sconto' }).success, false);
 });
 Deno.test('Conversation transcript retention is enabled for CRM history', () => assertEquals(assistantConfig([]).privacy_settings.data_retention, true));
 Deno.test('Assistant keeps full post-call history for CRM transcript', () => assertEquals(assistantConfig([]).telephony_settings.conversation_ended_full_history, true));

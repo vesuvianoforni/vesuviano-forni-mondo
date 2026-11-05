@@ -47,7 +47,7 @@ export function BrunoVoice({embedded=false}: {embedded?:boolean}) {
   };
   const content=<>
     <h2 className="text-xl font-semibold">Chiamate di Bruno</h2>
-    <p className="text-sm text-muted-foreground">{state?.from_number || '+44 7457 416033'} · Inglese · Qualificazione cliente</p>
+    <p className="text-sm text-muted-foreground">{state?.from_number || '+44 7457 416033'} · Inglese · Qualifica / Trattativa</p>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <Badge variant="outline">{state?.configured ? 'Assistente configurato' : 'Configurazione da verificare'}</Badge>
           <Button variant="ghost" size="icon" disabled={busy} onClick={() => void refresh()} aria-label="Aggiorna chiamate">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}</Button>
@@ -56,14 +56,16 @@ export function BrunoVoice({embedded=false}: {embedded?:boolean}) {
         {error && <p role="alert" className="text-sm text-destructive break-words">{error}</p>}
         {confirmation && <div className="border-y py-4 space-y-3">
           <p className="font-medium">Chiamare ora {confirmation.destination}?</p>
+          <Badge variant="outline">{confirmation.call_type === 'trattativa' ? 'Trattativa' : 'Qualifica'}</Badge>
           <p className="text-sm break-words">{confirmation.objective}</p>
-          <p className="text-sm text-muted-foreground">La chiamata sarà registrata e trascritta. Conferma solo se il cliente è stato informato e hai il permesso necessario.</p>
+          {confirmation.instructions && <p className="text-sm text-muted-foreground break-words">Istruzioni: {confirmation.instructions}</p>}
+          <p className="text-sm text-muted-foreground">La chiamata sarà registrata e trascritta; Bruno si presenta come assistente AI e avvisa della registrazione all'inizio della conversazione.</p>
           <div className="flex flex-wrap gap-2"><Button disabled={busy} onClick={() => void act('approve', confirmation)}><Phone className="mr-2 h-4 w-4" />Conferma chiamata</Button><Button variant="outline" onClick={() => setConfirmation(null)}>Indietro</Button></div>
         </div>}
         {!busy && state?.calls.length === 0 && <p className="py-6 text-sm text-muted-foreground">{view === 'planned' ? 'Nessuna chiamata in programma.' : 'Nessuna chiamata eseguita.'}</p>}
         <div className="divide-y">
           {state?.calls.map(call => <div key={call.id} className="py-4 space-y-2">
-            <div className="flex flex-wrap items-center justify-between gap-2"><a className="text-sm font-medium text-primary underline break-words" href={`/erp/crm?lead=${call.lead_id}`}>{call.leads?.contact_name || call.leads?.company_name || call.destination}</a><Badge variant="outline">{call.status === 'proposed' && new Date(call.expires_at) < new Date() ? 'Proposta scaduta' : callLabels[call.status] || call.status}</Badge></div>
+            <div className="flex flex-wrap items-center justify-between gap-2"><a className="text-sm font-medium text-primary underline break-words" href={`/erp/crm?lead=${call.lead_id}`}>{call.leads?.contact_name || call.leads?.company_name || call.destination}</a><span className="flex flex-wrap items-center gap-1"><Badge variant="outline">{call.call_type === 'trattativa' ? 'Trattativa' : 'Qualifica'}</Badge><Badge variant="outline">{call.status === 'proposed' && new Date(call.expires_at) < new Date() ? 'Proposta scaduta' : callLabels[call.status] || call.status}</Badge></span></div>
             <p className="text-xs text-muted-foreground">{call.destination}</p>
             <p className="text-sm break-words">{call.objective}</p>
             <p className="text-xs text-muted-foreground">{call.started_at ? 'Chiamata' : 'Proposta'} · {new Date(call.started_at || call.created_at).toLocaleString('it-IT')}{call.duration_seconds != null && ` · ${Math.floor(call.duration_seconds/60)} min ${call.duration_seconds%60} sec`}</p>

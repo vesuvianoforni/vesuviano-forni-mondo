@@ -310,7 +310,7 @@ export type Database = {
         Row: {
           approved_at: string | null
           approved_by: string | null
-          consent_basis: string
+          call_type: string
           conversation_id: string | null
           created_at: string
           customer_timezone: string
@@ -321,6 +321,7 @@ export type Database = {
           expires_at: string
           from_number: string
           id: string
+          instructions: string | null
           language: string
           lead_id: string
           objective: string
@@ -340,7 +341,7 @@ export type Database = {
         Insert: {
           approved_at?: string | null
           approved_by?: string | null
-          consent_basis: string
+          call_type?: string
           conversation_id?: string | null
           created_at?: string
           customer_timezone: string
@@ -351,6 +352,7 @@ export type Database = {
           expires_at?: string
           from_number?: string
           id?: string
+          instructions?: string | null
           language?: string
           lead_id: string
           objective: string
@@ -370,7 +372,7 @@ export type Database = {
         Update: {
           approved_at?: string | null
           approved_by?: string | null
-          consent_basis?: string
+          call_type?: string
           conversation_id?: string | null
           created_at?: string
           customer_timezone?: string
@@ -381,6 +383,7 @@ export type Database = {
           expires_at?: string
           from_number?: string
           id?: string
+          instructions?: string | null
           language?: string
           lead_id?: string
           objective?: string
