@@ -21,6 +21,40 @@ Deno.test('Calling hours follow customer timezone', () => {
   assertEquals(callAllowed({}, 'Europe/London', new Date('2026-11-05T09:00:00Z')), null);
   assertEquals(Boolean(callAllowed({}, 'Europe/London', new Date('2026-11-05T20:00:00Z'))), true);
 });
+Deno.test('48-hour autonomy pause does not block an explicit team call or clear the pause', () => {
+  const now = new Date('2026-11-05T14:26:00Z');
+  const lead = { bruno_mode: 'draft', bruno_paused_until: '2026-11-07T14:26:00Z' };
+  assertEquals(callAllowed(lead, 'Europe/London', now, 'operator'), null);
+  assertEquals(lead.bruno_paused_until, '2026-11-07T14:26:00Z');
+  assertEquals(lead.bruno_mode, 'draft');
+});
+Deno.test('Autonomous calls remain blocked during the same 48-hour pause by default', () => {
+  const lead = { bruno_mode: 'draft', bruno_paused_until: '2026-11-07T14:26:00Z' };
+  assertEquals(callAllowed(lead, 'Europe/London', new Date('2026-11-05T14:26:00Z')), 'L’autonomia di Bruno è in pausa per questo cliente; gli incarichi espliciti del team restano disponibili.');
+});
+Deno.test('Paused or disabled autonomy still allows team tasks without reactivation', () => {
+  const now = new Date('2026-11-05T14:26:00Z');
+  for (const bruno_mode of ['paused', 'off']) {
+    const lead = { bruno_mode };
+    assertEquals(callAllowed(lead, 'Europe/London', now, 'operator'), null);
+    assertEquals(Boolean(callAllowed(lead, 'Europe/London', now)), true);
+    assertEquals(lead.bruno_mode, bruno_mode);
+  }
+});
+Deno.test('Team instructions do not bypass customer refusal or archived records', () => {
+  const now = new Date('2026-11-05T14:26:00Z');
+  assertEquals(callAllowed({ status: 'perso' }, 'Europe/London', now, 'operator'), 'Cliente archiviato o non interessato: chiamata bloccata.');
+  assertEquals(callAllowed({ archived: true }, 'Europe/London', now, 'operator'), 'Cliente archiviato o non interessato: chiamata bloccata.');
+});
+Deno.test('Team instructions retain the 09-20 customer calling window', () => {
+  assertEquals(callAllowed({ bruno_mode: 'paused' }, 'Europe/London', new Date('2026-11-05T20:00:00Z'), 'operator'), 'Chiamate consentite tra le 9 e le 20 nel fuso del cliente.');
+});
+Deno.test('Call requests cannot self-declare an operator override', () => {
+  const proposal = { lead_id: '3e429f10-5d54-4f5b-a8f7-00bf8e620ebb', objective: 'Qualificare progetto pizzeria', call_type: 'qualifica' };
+  assertEquals(Proposal.safeParse(proposal).success, true);
+  assertEquals(Proposal.safeParse({ ...proposal, execution: 'operator' }).success, false);
+  assertEquals(Proposal.safeParse({ ...proposal, override_pause: true }).success, false);
+});
 Deno.test('Terminal call events never regress', () => {
   assertEquals(nextCallStatus('completed', 'ringing'), 'completed');
   assertEquals(nextCallStatus('active', 'initiated'), 'active');

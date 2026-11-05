@@ -64,7 +64,7 @@ const pick = (a: Record<string, unknown>, keys: string[]) =>
 import { customerLanguage } from './language.ts';
 import { stageRule } from '../_shared/bruno/persona.ts';
 const QUAL_KEYS = ['uso', 'volume_pizze', 'misura', 'alimentazione', 'finitura', 'paese', 'citta', 'cap', 'accesso', 'tempi', 'modello_consigliato', 'note'];
-const LEAD = 'id,qualification,contact_name,company_name,email,phone,city,country,status,customer_type,next_activity_type,next_activity_date,next_activity_notes,value,notes';
+const LEAD = 'id,qualification,contact_name,company_name,email,phone,city,country,status,customer_type,next_activity_type,next_activity_date,next_activity_notes,value,notes,bruno_mode,bruno_paused_until';
 const clean = (q: unknown) => String(q ?? '').replace(/[%,()*]/g, ' ').trim().slice(0, 80);
 
 async function callFn(ctx: Ctx, name: string, body: unknown) {

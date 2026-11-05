@@ -35,9 +35,9 @@ export const ToolRequest = z.discriminatedUnion('action', [
 export function customerHour(now: Date, zone: string) {
   return Number(new Intl.DateTimeFormat('en-GB', { timeZone: zone, hour: '2-digit', hourCycle: 'h23' }).format(now));
 }
-export function callAllowed(lead: { archived?: boolean; status?: string; bruno_mode?: string; bruno_paused_until?: string | null }, zone: string, now = new Date()) {
+export function callAllowed(lead: { archived?: boolean; status?: string; bruno_mode?: string; bruno_paused_until?: string | null }, zone: string, now = new Date(), execution: 'autonomous' | 'operator' = 'autonomous') {
   if (lead.archived || lead.status === 'perso') return 'Cliente archiviato o non interessato: chiamata bloccata.';
-  if (lead.bruno_mode === 'off' || lead.bruno_mode === 'paused' || (lead.bruno_paused_until && new Date(lead.bruno_paused_until) > now)) return 'Bruno è in pausa per questo cliente.';
+  if (execution === 'autonomous' && (lead.bruno_mode === 'off' || lead.bruno_mode === 'paused' || (lead.bruno_paused_until && new Date(lead.bruno_paused_until) > now))) return 'L’autonomia di Bruno è in pausa per questo cliente; gli incarichi espliciti del team restano disponibili.';
   const hour = customerHour(now, zone);
   return hour < 9 || hour >= 20 ? 'Chiamate consentite tra le 9 e le 20 nel fuso del cliente.' : null;
 }
