@@ -1,0 +1,1 @@
+CREATE POLICY bruno_voice_jobs_service_only ON public.bruno_voice_result_jobs FOR ALL TO service_role USING (true) WITH CHECK (true);
