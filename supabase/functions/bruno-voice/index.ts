@@ -2,10 +2,13 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { assistantConfig, callAllowed, e164, FROM_NUMBER, nextCallStatus, Proposal, ToolRequest, verifyTelnyx, voiceTools } from './domain.ts';
+import { AnalyzedEvent, analyzedMatches, RecordingCallback } from './results-domain.ts';
+import { processResults, queueResults } from './results.ts';
 
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 const Request = z.discriminatedUnion('action', [
-  z.object({ action: z.literal('status') }).strict(),
+  z.object({ action: z.literal('status'), view: z.enum(['planned','executed']).optional(), before_at: z.string().datetime().optional(), before_id: z.string().uuid().optional() }).strict(),
+  z.object({ action: z.literal('detail'), call_id: z.string().uuid() }).strict(),
   z.object({ action: z.literal('configure') }).strict(),
   Proposal.extend({ action: z.literal('propose') }).strict(),
   z.object({ action: z.literal('approve'), call_id: z.string().uuid() }).strict(),
@@ -46,23 +49,47 @@ Deno.serve(async req => {
     if (address.searchParams.has('texml')) return new Response('<Response><Say>This is Vesuviano Forni. Please contact our sales team by email or WhatsApp. Thank you.</Say><Hangup/></Response>', { headers: { ...corsHeaders, 'Content-Type': 'application/xml' } });
     if (req.method !== 'POST') return json({ error: 'Metodo non consentito' }, 405);
     const raw = await req.text();
-    if (raw.length > 65536) return json({ error: 'Richiesta troppo grande' }, 413);
+    if (raw.length > 512000) return json({ error: 'Richiesta troppo grande' }, 413);
     const settings = checked(await admin.from('bruno_voice_settings').select('*').eq('key', 'default').single());
 
-    if (address.searchParams.has('tool') || address.searchParams.has('callback')) {
+    if (!address.searchParams.has('tool') && !address.searchParams.has('callback') && !address.searchParams.has('recording') && req.headers.get('content-type')?.includes('application/json')) {
+      const job = z.object({ action: z.literal('result_job'), call_id: z.string().uuid(), token: z.string().uuid() }).strict().safeParse(JSON.parse(raw));
+      if (job.success) return json(await processResults(admin, job.data.call_id, job.data.token, settings.assistant_id || '', telnyx));
+    }
+    if (address.searchParams.has('tool') || address.searchParams.has('callback') || address.searchParams.has('recording')) {
       if (!settings.public_key || !await verifyTelnyx(raw, req.headers.get('telnyx-signature-ed25519'), req.headers.get('telnyx-timestamp'), settings.public_key)) return json({ error: 'Firma Telnyx non valida' }, 401);
-      if (address.searchParams.has('callback')) {
+      if (address.searchParams.has('callback') || address.searchParams.has('recording')) {
         const callId = z.string().uuid().safeParse(address.searchParams.get('call_id'));
         if (!callId.success) return json({ error: 'Riferimento chiamata non valido' }, 400);
         const data = req.headers.get('content-type')?.includes('application/json') ? JSON.parse(raw) : Object.fromEntries(new URLSearchParams(raw));
+        const call = checked(await admin.from('bruno_voice_calls').select('*').eq('id', callId.data).maybeSingle());
+        if (!call?.approved_at) return json({ error: 'Chiamata non riconosciuta' }, 403);
+        const analyzed = AnalyzedEvent.safeParse(data);
+        if (analyzed.success) {
+          if (!analyzedMatches(analyzed.data,call,settings.assistant_id || '')) return json({ error: 'Conversazione non riconosciuta' },403);
+          const payload = analyzed.data.data.payload;
+          checked(await admin.from('bruno_voice_calls').update({ conversation_id: payload.conversation_id, ...(payload.duration_sec != null ? { duration_seconds: payload.duration_sec } : {}) }).eq('id',call.id));
+          await queueResults(admin,call.id,payload.recordings?.[0]?.download_urls.mp3 || payload.recordings?.[0]?.download_urls.wav);
+          return json({ ok: true });
+        }
+        const recording = RecordingCallback.safeParse(data);
+        if (recording.success) {
+          if (!call.provider_call_id || call.provider_call_id !== recording.data.CallSid) return json({error:'Registrazione non riconosciuta'},403);
+          if (recording.data.RecordingStatus === 'absent') checked(await admin.from('bruno_voice_calls').update({recording_status:'unavailable'}).eq('id',call.id).is('recording_path',null));
+          if (recording.data.RecordingStatus === 'completed') {
+            if (recording.data.RecordingDuration != null) checked(await admin.from('bruno_voice_calls').update({duration_seconds:recording.data.RecordingDuration}).eq('id',call.id));
+            await queueResults(admin,call.id,recording.data.RecordingUrl);
+          }
+          return json({ok:true});
+        }
         const parsed = z.object({ CallSid: z.string().min(1).max(500), CallStatus: z.string().max(50) }).passthrough().safeParse(data);
         if (!parsed.success) return json({ ok: true, ignored: true });
-        const call = checked(await admin.from('bruno_voice_calls').select('*').eq('id', callId.data).maybeSingle());
         if (!call?.approved_at || (call.provider_call_id && call.provider_call_id !== parsed.data.CallSid)) return json({ error: 'Chiamata non riconosciuta' }, 403);
         const status = nextCallStatus(call.status, parsed.data.CallStatus);
         checked(await admin.from('bruno_voice_calls').update({ status, provider_call_id: parsed.data.CallSid,
           ...(['completed','failed','cancelled'].includes(status) ? { ended_at: new Date().toISOString() } : {}),
         }).eq('id', call.id).eq('status', call.status));
+        if (['completed','failed','cancelled'].includes(status)) await queueResults(admin,call.id);
         return json({ ok: true });
       }
       const parsed = ToolRequest.safeParse(JSON.parse(raw));
@@ -103,8 +130,19 @@ Deno.serve(async req => {
     if (!parsed.success) return json({ error: 'Richiesta non valida', details: parsed.error.flatten().fieldErrors }, 400);
     const input = parsed.data;
     if (input.action === 'status') {
-      const calls = checked(await admin.from('bruno_voice_calls').select('id,lead_id,destination,language,objective,status,summary,error_code,created_at').order('created_at', { ascending: false }).limit(30));
-      return json({ configured: Boolean(settings.assistant_id && settings.application_id && settings.public_key), from_number: FROM_NUMBER, language: 'en', calls });
+      let query = admin.from('bruno_voice_calls').select('id,lead_id,destination,language,objective,status,summary,error_code,created_at,started_at,ended_at,expires_at,duration_seconds,recording_status,transcript_status,summary_status,leads(contact_name,company_name)').order('created_at', { ascending: false }).order('id',{ascending:false}).limit(31);
+      if (input.view === 'planned') query = query.in('status',['proposed','starting','dialing','active']);
+      if (input.view === 'executed') query = query.in('status',['completed','failed','unknown','cancelled']);
+      if (input.before_at && input.before_id) query = query.or(`created_at.lt.${input.before_at},and(created_at.eq.${input.before_at},id.lt.${input.before_id})`);
+      const calls = checked(await query) ?? [];
+      return json({ configured: Boolean(settings.assistant_id && settings.application_id && settings.public_key), from_number: FROM_NUMBER, language: 'en', calls: calls.slice(0,30), has_more: calls.length > 30 });
+    }
+    if (input.action === 'detail') {
+      const call = checked(await admin.from('bruno_voice_calls').select('id,lead_id,destination,objective,status,summary,transcript,created_at,started_at,ended_at,expires_at,duration_seconds,recording_path,recording_status,transcript_status,summary_status,leads(contact_name,company_name)').eq('id',input.call_id).single());
+      if (!call) return json({error:'Chiamata non trovata'},404);
+      const recording = call.recording_path ? checked(await admin.storage.from('bruno-call-recordings').createSignedUrl(call.recording_path,3600)) : null;
+      const {recording_path: _path, ...safeCall} = call;
+      return json({call:{...safeCall,recording_url:recording?.signedUrl ?? null}});
     }
     if (input.action === 'configure') {
       if (!roles.some(r => r.role === 'admin')) return json({ error: 'Solo amministratore' }, 403);
@@ -170,8 +208,10 @@ Deno.serve(async req => {
       const result = await telnyx(`/texml/ai_calls/${settings.application_id}`, 'POST', {
         From: FROM_NUMBER, To: call.destination, AIAssistantId: settings.assistant_id,
         AIAssistantDynamicVariables: { vesuviano_call_id: call.id, call_objective: call.objective, customer_context: JSON.stringify({ ...lead, messages: recent.map(m => ({ ...m, body: m.body.slice(0, 800) })) }) },
-        StatusCallback: callback, StatusCallbackMethod: 'POST', StatusCallbackEvent: 'initiated ringing answered completed no-answer busy canceled failed',
-        Record: false, TimeLimit: 600, TimeoutSeconds: 30, MachineDetection: 'Enable', AsyncAmd: true,
+        StatusCallback: callback, StatusCallbackMethod: 'POST', StatusCallbackEvent: 'initiated ringing answered completed no-answer busy canceled failed analyzed',
+        Record: true, RecordingChannels: 'dual', RecordingTrack: 'both', SendRecordingUrl: true,
+        RecordingStatusCallback: `${url}/functions/v1/bruno-voice?recording=1&call_id=${call.id}`, RecordingStatusCallbackMethod: 'POST', RecordingStatusCallbackEvent: 'completed absent',
+        TimeLimit: 600, Timeout: 30, MachineDetection: 'Enable', AsyncAmd: true,
       });
       const providerId = result.call_sid ?? result.data?.call_sid;
       checked(await admin.from('bruno_voice_calls').update({ status: providerId ? 'dialing' : 'unknown', provider_call_id: providerId ?? null }).eq('id', call.id).eq('status', 'starting'));

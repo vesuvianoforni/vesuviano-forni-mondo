@@ -12,7 +12,8 @@ Deno.test('Call proposal needs a documented customer permission basis', () => {
   assertEquals(Proposal.safeParse(a).success, false);
   assertEquals(Proposal.safeParse({ ...a, consent_basis: 'Richiesta telefonica del cliente' }).success, true);
 });
-Deno.test('Voice capabilities exclude recordings', () => assertEquals(assistantConfig([]).telephony_settings.recording_settings.enabled, false));
+Deno.test('Conversation transcript retention is enabled for CRM history', () => assertEquals(assistantConfig([]).privacy_settings.data_retention, true));
+Deno.test('Assistant keeps full post-call history for CRM transcript', () => assertEquals(assistantConfig([]).telephony_settings.conversation_ended_full_history, true));
 Deno.test('Lost leads cannot be called', () => assertEquals(Boolean(callAllowed({ status: 'perso' }, 'Europe/London', new Date('2026-11-05T10:00:00Z'))), true));
 Deno.test('Calling hours follow customer timezone', () => {
   assertEquals(callAllowed({}, 'Europe/London', new Date('2026-11-05T09:00:00Z')), null);
