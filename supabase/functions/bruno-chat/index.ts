@@ -72,7 +72,7 @@ In qualificato/trattativa: ${JSON.stringify(open ?? [])}`;
         if (!TOOL_LABELS[a.name]) { lines.push(`- ❌ ${a.name}: azione non ammessa`); continue; }
         try {
           const r: any = await runTool(ctx, a.name, a.args);
-          lines.push(r?.error ? `- ❌ ${TOOL_LABELS[a.name]}: ${r.error}` : `- ✅ ${TOOL_LABELS[a.name]}${r?.public_url ? `\n  Link: ${r.public_url}\n  PDF: ${r.pdf_url}` : ''}${r?.sent_via ? `\n  Inviata via ${r.sent_via}` : ''}`);
+          lines.push(r?.error ? `- ❌ ${TOOL_LABELS[a.name]}: ${r.error}` : `- ✅ ${TOOL_LABELS[a.name]}${r?.public_url ? `\n  Link: ${r.public_url}\n  PDF: ${r.pdf_url}` : ''}${r?.sent_via ? `\n  Inviata via ${r.sent_via}` : ''}${r?.proposal?.id ? `\n  Proposta chiamata: ${r.proposal.id}\n  Destinatario: ${r.proposal.destination}\n  Lingua: inglese. Nessuna chiamata ancora avviata. Conferma l'avvio o apri Bruno → Chiamate.` : ''}${a.name === 'approve_call' ? `\n  Stato: ${r?.status === 'dialing' ? 'squillo avviato' : 'esito da verificare; non ripetere la chiamata'}` : ''}`);
         } catch (e) { lines.push(`- ❌ ${TOOL_LABELS[a.name]}: ${e instanceof Error ? e.message : 'errore'}`); }
       }
       return json({ text: lines.join('\n') });

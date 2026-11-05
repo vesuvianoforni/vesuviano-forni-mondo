@@ -1,0 +1,3 @@
+- Telnyx native voice calls use server-owned domain configuration and the `udc_telnyx` gateway; keep the voice provider model separate from Lovable AI chat models because Telnyx handles real-time audio.
+- Persist immutable call intent before staff approval; use an atomic state claim and never redial uncertain submissions. Verify Ed25519 over the raw body plus timestamp before accepting provider tools/statuses.
+- Voice tools expose only active knowledge/catalog projections and bounded atomic qualification merges, not sends, orders, stage changes or internal costs. Operational call results are distinct from Zapper-owned recordings/transcripts; do not change existing inbound SIP routing.
