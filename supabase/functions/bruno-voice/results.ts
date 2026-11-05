@@ -87,6 +87,7 @@ export async function processResults(db: SupabaseClient, callId: string, token: 
     check(await db.from('bruno_voice_result_jobs').update({ status: job.attempts >= 24 ? 'failed' : 'queued', lease_until: null, next_attempt_at: new Date(Date.now()+5*60000).toISOString(), error_code: 'result_retrieval_failed' }).eq('call_id',callId).eq('token',token));
     if (job.attempts >= 24) {
       const call = check(await db.from('bruno_voice_calls').select('transcript_status,summary_status,recording_status').eq('id',callId).single());
+      if (!call) return { processed: true, ready: false };
       check(await db.from('bruno_voice_calls').update({ ...(call.transcript_status !== 'ready' ? {transcript_status:'unavailable'} : {}), ...(call.summary_status !== 'ready' ? {summary_status:'unavailable'} : {}), ...(call.recording_status !== 'ready' ? {recording_status:'unavailable'} : {}) }).eq('id',callId));
     }
     return { processed: true, ready: false };
