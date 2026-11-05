@@ -23,7 +23,8 @@ export function ProductAssets({ productId, productName }: { productId: string; p
   const [busy, setBusy] = useState(false);
 
   const load = async () => {
-    const { data } = await db.from("product_assets").select("id,kind,title,url,storage_path").eq("product_id", productId).order("created_at");
+    const { data, error } = await db.from("product_assets").select("id,kind,title,url,storage_path,product_asset_links!inner(product_id)").eq("product_asset_links.product_id", productId).order("created_at");
+    if (error) return toast.error("Impossibile caricare i materiali del prodotto");
     setRows(data ?? []);
   };
   useEffect(() => { if (open) load(); }, [open]);
@@ -40,6 +41,7 @@ export function ProductAssets({ productId, productName }: { productId: string; p
     setTitle(""); load(); toast.success("File caricato");
   };
   const remove = async (a: Asset) => {
+    if (!confirm(`Eliminare "${a.title}" dalla libreria e da tutti i prodotti collegati?`)) return;
     if (a.storage_path) await supabase.storage.from(BUCKET).remove([a.storage_path]);
     await db.from("product_assets").delete().eq("id", a.id); load();
   };
