@@ -30,11 +30,14 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
   const [instructions, setInstructions] = useState(() => localStorage.getItem(INSTR_KEY) || "");
   const abortRef = useRef<AbortController | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const followingRef = useRef(true);
+  const mountedRef = useRef(true);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => { inputRef.current?.focus(); }, [thread.id, busy]);
-  useEffect(() => { endRef.current?.scrollIntoView({ block: "end" }); }, [thread.messages]);
-  useEffect(() => () => abortRef.current?.abort(), []);
+  useEffect(() => { const timeline=timelineRef.current;if(timeline&&followingRef.current)timeline.scrollTop=timeline.scrollHeight; }, [thread.messages]);
+  useEffect(() => {mountedRef.current=true;return()=>{mountedRef.current=false;abortRef.current?.abort()}}, []);
 
   const send = async (text: string) => {
     const content = text.trim();
@@ -47,6 +50,7 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
     const ctrl = new AbortController(); abortRef.current = ctrl;
     try {
       const { data: { session } } = await supabase.auth.getSession();
+      if(!mountedRef.current||ctrl.signal.aborted)return;
       const res = await fetch(FN_URL, {
         method: "POST", signal: ctrl.signal,
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${session?.access_token ?? ""}` },
@@ -58,12 +62,14 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
       }
       if(agent.fn==='bruno-chat'&&res.headers.get('content-type')?.includes('application/json')){
         const out=await res.json();
+        if(!mountedRef.current||ctrl.signal.aborted)return;
         const suffix=out.proposals?.length?'\n\n[Apri il piano per approvare le azioni](/erp/bruno?view=plan)':'';
         current={...current,messages:[...history,{role:'assistant',content:(out.text||'Proposta salvata nel piano.')+suffix}]};onChange(current);return;
       }
       const reader = res.body.getReader(); const dec = new TextDecoder(); let acc = "";
       for (;;) {
         const { done, value } = await reader.read();
+        if(!mountedRef.current||ctrl.signal.aborted)return;
         if (done) break;
         acc += dec.decode(value, { stream: true });
         current = { ...current, messages: [...history, { role: "assistant", content: acc }] };
@@ -71,10 +77,11 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
       }
       if (!acc) throw new Error("Nessuna risposta dall'agente");
     } catch (e) {
+      if(!mountedRef.current)return;
       if ((e as Error).name !== "AbortError") setError((e as Error).message);
       const last = current.messages[current.messages.length - 1];
       if (!last?.content) onChange({ ...current, messages: history });
-    } finally { setBusy(false); abortRef.current = null; agent.onComplete?.(); }
+    } finally { if(mountedRef.current){setBusy(false);abortRef.current=null;if(!ctrl.signal.aborted)agent.onComplete?.();} }
   };
 
   const empty = thread.messages.length === 0;
@@ -83,7 +90,7 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
       <div className="flex shrink-0 justify-end p-3">
         <Button variant="outline" size="sm" onClick={() => agent.onInstructions ? agent.onInstructions() : setInstrOpen(true)}><SlidersHorizontal className="mr-2 h-4 w-4" />Istruisci l'agente</Button>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto px-4">
+      <div ref={timelineRef} onScroll={()=>{const t=timelineRef.current;if(t)followingRef.current=t.scrollHeight-t.scrollTop-t.clientHeight<96;}} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4">
         {empty ? (
           <div className="mx-auto flex max-w-2xl flex-col items-center pt-6 text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary"><Icon className="h-9 w-9" /></div>
