@@ -28,9 +28,10 @@ i18n
   });
 
 // Detect language from URL path
-const detectLangFromPath = (): string => {
-  const match = window.location.pathname.match(/^\/(it|en|fr|de|es)/);
-  return match ? match[1] : 'it';
+export const detectLangFromPath = (pathname?: string): string => {
+  const path = pathname ?? (typeof window !== 'undefined' ? window.location.pathname : '/');
+  const match = path.match(/^\/(it|en|fr|de|es)/);
+  return match?.[1] ?? 'it';
 };
 
 // Load language dynamically
@@ -51,8 +52,10 @@ export const loadLanguage = async (lang: string) => {
   }
 };
 
-// Auto-load language from URL on init
-const detectedLang = detectLangFromPath();
-loadLanguage(detectedLang);
+// Auto-load language from URL on init (browser only; the root route also
+// awaits loadLanguage before rendering so SSR output is translated).
+if (typeof window !== 'undefined') {
+  void loadLanguage(detectLangFromPath());
+}
 
 export default i18n;
