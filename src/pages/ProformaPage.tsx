@@ -706,6 +706,7 @@ const ProformaPage = () => {
 
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-white">
+      <SEOHead title="Pro-Forma | Vesuviano" description="Pro-forma cliente Vesuviano." lang="it" noIndex />
       {/* Header */}
       <div className="bg-gradient-to-r from-[#2a1810] to-[#1a1a1a] border-b border-amber-900/30">
         <div className="container mx-auto px-4 py-6 sm:py-8 max-w-4xl">

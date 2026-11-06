@@ -49,6 +49,7 @@ const ReadyToShip = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-50 to-stone-100">
+      <SEOHead title="Forni Pronti alla Consegna | Vesuviano" description="Forni napoletani disponibili immediatamente. Spedizione inclusa." lang="it" />
       <Header />
       
       

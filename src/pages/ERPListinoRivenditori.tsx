@@ -330,6 +330,7 @@ const ERPListinoRivenditori = () => {
 
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
+      <SEOHead title="ERP Listino Rivenditori | Vesuviano" description="Listino dedicato ai rivenditori." lang="it" noIndex />
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <DollarSign className="w-7 h-7 text-primary" />

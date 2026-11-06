@@ -108,6 +108,7 @@ const ERPForni = () => {
 
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
+      <SEOHead title="ERP Forni | Vesuviano" description="Gestione forni ERP." lang="it" noIndex />
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <Flame className="w-7 h-7 text-primary" />
@@ -256,6 +257,7 @@ const ERPForni = () => {
                                           <td className="text-right py-1.5 px-2 text-foreground">{formatPrice(p.electric)}</td>
                                           {size.can_be_built_on_site && <td className="text-right py-1.5 px-2 text-foreground">{formatPrice(p.onSite)}</td>}
                                         </tr>
+);
 
                                     })}
                                   </tbody>

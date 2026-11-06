@@ -861,6 +861,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
   return (
     <div className="min-h-screen bg-background py-4 sm:py-6 md:py-12 px-3 sm:px-4 pb-24 md:pb-12">
+      <SEOHead title="Configuratore Forno | Vesuviano" description="Configura il tuo forno Vesuviano personalizzato." lang="it" noIndex />
       <div className="max-w-7xl mx-auto">
         {/* Language Selector */}
         <div className="flex justify-end mb-4">

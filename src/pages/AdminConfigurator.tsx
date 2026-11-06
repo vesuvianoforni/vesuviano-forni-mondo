@@ -145,6 +145,7 @@ const AdminConfigurator = () => {
 
   return (
     <div className="min-h-screen bg-stone-50 p-8">
+      <SEOHead title="Admin Configurator | Vesuviano" description="Area amministrativa configuratore." lang="it" noIndex />
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Gestione Configuratore</h1>

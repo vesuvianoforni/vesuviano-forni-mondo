@@ -198,6 +198,7 @@ const AdminBlog = () => {
 
   return (
     <div className="min-h-screen bg-background p-6">
+      <SEOHead title="Admin Blog | Vesuviano" description="Area amministrativa blog Vesuviano." lang="it" noIndex />
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">

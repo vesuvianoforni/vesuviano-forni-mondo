@@ -422,6 +422,7 @@ const AdminProforma = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="Admin Proforma | Vesuviano" description="Gestione proforma area admin." lang="it" noIndex />
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-7xl">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
@@ -818,6 +819,7 @@ const AdminProforma = () => {
                                       />
                                       Ø {s.diameter}cm
                                     </label>
+);
 
                                 })}
                               </div>
