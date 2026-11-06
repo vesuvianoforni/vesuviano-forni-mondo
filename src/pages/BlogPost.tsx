@@ -2,7 +2,7 @@ import { useParams, Link, useSearchParams } from '@/lib/router-compat';
 import { useTranslation } from 'react-i18next';
 import { Calendar, ArrowLeft, Tag, User, Clock, Share2, ChevronRight } from 'lucide-react';
 import Header from '@/components/Header';
-import { useBlogPost, getLocalizedField } from '@/hooks/useBlogPosts';
+import { useBlogPost, getLocalizedField, type BlogPost } from '@/hooks/useBlogPosts';
 import BlogSEO from '@/components/blog/BlogSEO';
 import LazyImage from '@/components/LazyImage';
 import NotFound from './NotFound';
@@ -10,6 +10,7 @@ import { sanitizeBlogHtml } from '@/lib/sanitizeBlogHtml';
 
 interface BlogPostProps {
   lang: string;
+  initialPost?: BlogPost | null | undefined;
 }
 
 const categoryLabels: Record<string, Record<string, string>> = {
@@ -39,11 +40,11 @@ const normalizeContentHeadings = (html: string): string =>
     .replace(/<h1(\s[^>]*)?>/gi, '<h2$1>')
     .replace(/<\/h1>/gi, '</h2>');
 
-const BlogPostPage = ({ lang }: BlogPostProps) => {
+const BlogPostPage = ({ lang, initialPost }: BlogPostProps) => {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
   const isPreview = searchParams.get('preview') === 'true';
-  const { data: post, isLoading, error } = useBlogPost(slug || '', lang, isPreview);
+  const { data: post, isLoading, error } = useBlogPost(slug || '', lang, isPreview, initialPost);
 
   if (isLoading) {
     return (

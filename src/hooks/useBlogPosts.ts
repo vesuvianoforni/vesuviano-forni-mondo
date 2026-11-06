@@ -64,11 +64,24 @@ export const useBlogPosts = (category?: string) => {
   });
 };
 
-export const useBlogPost = (slug: string, lang: string, preview = false) => {
+/** Published post by localized slug, or null. Used by route loaders so the article is in the SSR HTML. */
+export const fetchPublishedBlogPost = async (slug: string, lang: string): Promise<BlogPost | null> => {
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select('*')
+    .eq(getSlugField(lang), slug)
+    .eq('is_published', true)
+    .maybeSingle();
+  if (error) throw error;
+  return (data as BlogPost | null) ?? null;
+};
+
+export const useBlogPost = (slug: string, lang: string, preview = false, initialPost?: BlogPost | null) => {
   const slugField = getSlugField(lang);
   
   return useQuery({
     queryKey: ['blog-post', slug, lang, preview],
+    ...(initialPost && !preview ? { initialData: initialPost } : {}),
     queryFn: async () => {
       let query = supabase
         .from('blog_posts')
