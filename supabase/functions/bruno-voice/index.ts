@@ -47,7 +47,7 @@ async function dial(admin: any, settings: any, url: string, call: any, lead: any
     const claimed = checked(await admin.from('bruno_voice_calls').update({ status: 'starting', approved_by: approverId, approved_at: new Date().toISOString(), started_at: new Date().toISOString() }).eq('id', call.id).eq('status', 'proposed').select('id').maybeSingle());
   if (!claimed) return { error: 'Chiamata già approvata', status: 409 };
   try {
-    const recent = checked(await admin.from('crm_messages').select('channel,direction,body,created_at').eq('lead_id', lead.id).order('created_at', { ascending: false }).limit(8)) ?? [];
+    const recent: any[] = checked(await admin.from('crm_messages').select('channel,direction,body,created_at').eq('lead_id', lead.id).order('created_at', { ascending: false }).limit(8)) ?? [];
     const callback = `${url}/functions/v1/bruno-voice?callback=1&call_id=${call.id}`;
     const result = await telnyx(`/texml/ai_calls/${settings.application_id}`, 'POST', {
       From: FROM_NUMBER, To: call.destination, AIAssistantId: settings.assistant_id,
@@ -69,7 +69,7 @@ async function dial(admin: any, settings: any, url: string, call: any, lead: any
 
 // deno-lint-ignore no-explicit-any
 async function planTick(admin: any, settings: any, url: string, planId: string, token: string) {
-  const plan: any = checked(await admin.rpc('claim_bruno_call_plan', { p_id: planId, p_token: token }))?.[0];
+  const plan: any = (checked(await admin.rpc('claim_bruno_call_plan', { p_id: planId, p_token: token })) as any[] | null)?.[0];
   if (!plan) return { ignored: true };
   const release = (fields: Record<string, unknown> = {}) => admin.from('bruno_call_plans').update({ lease_until: null, ...fields }).eq('id', planId);
   try {
@@ -274,7 +274,7 @@ Deno.serve(async req => {
     }
     if (input.action === 'plan_propose') {
       const leads = checked(await admin.from('leads').select('id,contact_name,company_name,phone,archived,status').in('id', input.lead_ids)) ?? [];
-      const plan = checked(await admin.from('bruno_call_plans').insert({ title: input.title || `Piano chiamate di ${input.call_type} (${input.lead_ids.length})`, call_type: input.call_type, objective: input.objective, instructions: input.instructions, gap_minutes: input.gap_minutes ?? 3, requested_by: user.user.id }).select('id').single());
+      const plan: any = checked(await admin.from('bruno_call_plans').insert({ title: input.title || `Piano chiamate di ${input.call_type} (${input.lead_ids.length})`, call_type: input.call_type, objective: input.objective, instructions: input.instructions, gap_minutes: input.gap_minutes ?? 3, requested_by: user.user.id }).select('id').single());
       const skipped: { lead_id: string; name: string; reason: string }[] = []; let position = 0;
       for (const id of [...new Set(input.lead_ids)]) {
         const lead = leads.find(l => l.id === id); const name = lead?.contact_name || lead?.company_name || 'Cliente';
