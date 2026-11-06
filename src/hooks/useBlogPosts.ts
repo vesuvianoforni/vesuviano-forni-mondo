@@ -43,15 +43,22 @@ export const getSlugField = (lang: string): `slug_${LangKey}` => {
   return `slug_${lang as LangKey}` as `slug_${LangKey}`;
 };
 
-/** All published posts, newest first. Used by blog list loaders for SSR. */
+const LIST_FIELDS = [
+  'id', 'category', 'featured_image', 'published_at', 'author', 'is_published', 'created_at', 'updated_at',
+  ...(['it', 'en', 'fr', 'de', 'es'] as const).flatMap((l) => [`slug_${l}`, `title_${l}`, `meta_description_${l}`]),
+].join(',');
+
+/** Published posts for list pages (no article bodies, keeping the SSR payload small), newest first. */
 export const fetchPublishedBlogPosts = async (): Promise<BlogPost[]> => {
   const { data, error } = await supabase
     .from('blog_posts')
-    .select('*')
+    .select(LIST_FIELDS)
     .eq('is_published', true)
     .order('published_at', { ascending: false });
   if (error) throw error;
-  return (data as BlogPost[]) ?? [];
+  return ((data ?? []) as unknown as Array<Omit<BlogPost, `content_${LangKey}`>>).map((p) => ({
+    ...p, content_it: '', content_en: '', content_fr: '', content_de: '', content_es: '',
+  }));
 };
 
 export const useBlogPosts = (category?: string, initialPosts?: BlogPost[]) => {
