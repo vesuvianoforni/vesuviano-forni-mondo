@@ -106,3 +106,22 @@ Deno.test('call plan dials one customer at a time in order, with a pause between
   assertEquals(planNextStep([{ ...calls[1], status: 'unknown', ended_at: null }, calls[0]], 3, now), { kind: 'wait' });
   assertEquals(planNextStep([{ ...calls[1], status: 'completed', ended_at: '2026-11-06T11:00:00Z' }], 3, now), { kind: 'done' });
 });
+
+import { inboundLanguage, gennaroAvailable, inboundTexml } from './domain.ts';
+Deno.test('inbound language follows the caller prefix', () => {
+  if (inboundLanguage('+39 333 1234567').code !== 'it') throw new Error('it');
+  if (inboundLanguage('+447700900123').code !== 'en') throw new Error('en');
+  if (inboundLanguage('0033612345678').code !== 'fr') throw new Error('fr');
+  if (inboundLanguage('+4915112345678').code !== 'de') throw new Error('de');
+  if (inboundLanguage('+34612345678').code !== 'es') throw new Error('es');
+  if (inboundLanguage('+31612345678').code !== 'en') throw new Error('nl->en');
+});
+Deno.test('Gennaro takes transfers weekdays 9-18 Rome only', () => {
+  if (!gennaroAvailable(new Date('2026-11-06T10:00:00Z'))) throw new Error('fri 11 Rome');
+  if (gennaroAvailable(new Date('2026-11-06T17:30:00Z'))) throw new Error('fri 18:30 Rome');
+  if (gennaroAvailable(new Date('2026-11-07T10:00:00Z'))) throw new Error('saturday');
+});
+Deno.test('inbound TeXML records once and starts the inbound assistant', () => {
+  const x = inboundTexml('assistant-1', 'https://x.supabase.co');
+  if (!x.includes('<Recording') || !x.includes('AIAssistant id="assistant-1"') || x.includes('&inbound=1"') ) throw new Error(x);
+});

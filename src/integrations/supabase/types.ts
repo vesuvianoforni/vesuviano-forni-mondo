@@ -369,6 +369,7 @@ export type Database = {
           created_at: string
           customer_timezone: string
           destination: string
+          direction: string
           duration_seconds: number | null
           ended_at: string | null
           error_code: string | null
@@ -385,7 +386,7 @@ export type Database = {
           qualification: Json
           recording_path: string | null
           recording_status: string
-          requested_by: string
+          requested_by: string | null
           started_at: string | null
           status: string
           summary: string | null
@@ -402,6 +403,7 @@ export type Database = {
           created_at?: string
           customer_timezone: string
           destination: string
+          direction?: string
           duration_seconds?: number | null
           ended_at?: string | null
           error_code?: string | null
@@ -418,7 +420,7 @@ export type Database = {
           qualification?: Json
           recording_path?: string | null
           recording_status?: string
-          requested_by: string
+          requested_by?: string | null
           started_at?: string | null
           status?: string
           summary?: string | null
@@ -435,6 +437,7 @@ export type Database = {
           created_at?: string
           customer_timezone?: string
           destination?: string
+          direction?: string
           duration_seconds?: number | null
           ended_at?: string | null
           error_code?: string | null
@@ -451,7 +454,7 @@ export type Database = {
           qualification?: Json
           recording_path?: string | null
           recording_status?: string
-          requested_by?: string
+          requested_by?: string | null
           started_at?: string | null
           status?: string
           summary?: string | null
@@ -531,9 +534,12 @@ export type Database = {
           configured_at: string | null
           created_at: string
           from_number: string
+          inbound_assistant_id: string | null
+          inbound_configured_at: string | null
           key: string
           language: string
           public_key: string | null
+          transfer_number: string
           updated_at: string
         }
         Insert: {
@@ -542,9 +548,12 @@ export type Database = {
           configured_at?: string | null
           created_at?: string
           from_number?: string
+          inbound_assistant_id?: string | null
+          inbound_configured_at?: string | null
           key?: string
           language?: string
           public_key?: string | null
+          transfer_number?: string
           updated_at?: string
         }
         Update: {
@@ -553,9 +562,12 @@ export type Database = {
           configured_at?: string | null
           created_at?: string
           from_number?: string
+          inbound_assistant_id?: string | null
+          inbound_configured_at?: string | null
           key?: string
           language?: string
           public_key?: string | null
+          transfer_number?: string
           updated_at?: string
         }
         Relationships: []
@@ -4216,6 +4228,10 @@ export type Database = {
       reserve_mario_submission: {
         Args: { p_id: string; p_token: string }
         Returns: boolean
+      }
+      save_bruno_voice_callback: {
+        Args: { p_call: string; p_notes: string; p_when: string }
+        Returns: undefined
       }
       save_bruno_voice_qualification: {
         Args: { p_call: string; p_facts: Json; p_summary: string }
