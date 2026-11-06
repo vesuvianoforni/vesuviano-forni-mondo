@@ -29,7 +29,7 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [instrOpen, setInstrOpen] = useState(false);
-  const [instructions, setInstructions] = useState(() => localStorage.getItem(INSTR_KEY) || "");
+  const [instructions, setInstructions] = useState(() => (typeof window !== "undefined" ? localStorage.getItem(INSTR_KEY) : null) || "");
   const abortRef = useRef<AbortController | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
