@@ -122,15 +122,18 @@ Deno.test('Inbound handover is always on request, with no default unavailability
   assertEquals('gennaro_available' in variables, false);
 });
 Deno.test('Gennaro must explicitly accept in a private consult before connecting the caller', () => {
-  const tool = inboundExtraTools('https://x.supabase.co', '+3908119237684').find(t => t.type === 'transfer');
-  assertEquals(tool?.transfer?.targets, [{ name: 'Gennaro Caglione', to: '+3908119237684' }]);
+  const tool = inboundExtraTools('https://x.supabase.co', '+3908119231684').find(t => t.type === 'transfer');
+  assertEquals(tool?.transfer?.targets, [{ name: 'Gennaro Caglione', to: '+3908119231684' }]);
   assertEquals(tool?.transfer?.warm_transfer_acceptance, { enabled: true, end_user_target_context_mode: 'private', require_acceptance: true, timeout_secs: 60 });
 });
 Deno.test('Transfer stops on Gennaro voicemail instead of connecting the caller', () => {
-  const tool = inboundExtraTools('https://x.supabase.co', '+3908119237684').find(t => t.type === 'transfer');
+  const tool = inboundExtraTools('https://x.supabase.co', '+3908119231684').find(t => t.type === 'transfer');
   assertEquals(tool?.transfer?.voicemail_detection.on_voicemail_detected.action, 'stop_transfer');
 });
 Deno.test('inbound TeXML records once and starts the inbound assistant', () => {
   const x = inboundTexml('assistant-1', 'https://x.supabase.co');
   if (!x.includes('<Recording') || !x.includes('AIAssistant id="assistant-1"') || x.includes('&inbound=1"') ) throw new Error(x);
+});
+Deno.test('Gennaro transfer defaults to the company landline +39 081 1923 1684', () => {
+  assertEquals(DEFAULT_TRANSFER_NUMBER, '+3908119231684');
 });

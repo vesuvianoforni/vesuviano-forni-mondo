@@ -142,7 +142,7 @@ export function planNextStep(calls: PlanCall[], gapMinutes: number, now = new Da
 export const isHoursBlock = (reason: string | null) => !!reason && reason.startsWith('Chiamate consentite tra');
 
 // ---------- Inbound calls: Bruno answers the UK number and can hand over to Gennaro ----------
-export const DEFAULT_TRANSFER_NUMBER = '+3908119237684';
+export const DEFAULT_TRANSFER_NUMBER = '+3908119231684';
 type InboundLanguage = { code: 'en' | 'it' | 'fr' | 'de' | 'es'; name: string; greeting: string };
 const INBOUND_LANGUAGES: Record<InboundLanguage['code'], InboundLanguage> = {
   en: { code: 'en', name: 'English', greeting: 'Hello, Vesuviano Forni, this is Bruno speaking. How can I help you?' },
