@@ -180,7 +180,7 @@ export default function AIChatWidget() {
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "assistant",
-      content: isReturning
+      content!: isReturning
         ? savedName
           ? (WELCOME_BACK[lang] || WELCOME_BACK["en"])!.replace("!", ` ${savedName}!`)
           : (WELCOME_BACK[lang] || WELCOME_BACK["en"])

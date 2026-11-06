@@ -185,7 +185,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
                   <div className="flex flex-wrap gap-2">
                     <Select disabled={!!busy} value={sel.language} onValueChange={(v) => patch({ language: v })}>
                       <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
-                      <SelectContent>{LANGS.map(([v, l]) => <SelectItem key={v} value={v}>{l}</SelectItem>)}</SelectContent></Select>
+                      <SelectContent>{LANGS.map(([v, l]) => <SelectItem key={v} value!={v}>{l}</SelectItem>)}</SelectContent></Select>
                     <Button disabled={!!busy || (sel.prompt || '').length < 3} onClick={() => run('gen', async () => {
                       const { campaign } = await call({ action: 'generate', campaign_id: sel.id, prompt: sel.prompt, language: sel.language });
                       await finishGeneration(campaign);
@@ -215,7 +215,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
               <Card><CardHeader className="pb-2"><CardTitle className="text-base flex items-center gap-2"><Users className="h-4 w-4" />Destinatari</CardTitle></CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex flex-wrap gap-3">{STAGES.map(([v, l]) => (
-                    <label key={v} className="flex items-center gap-2 text-sm"><Checkbox disabled={!editable} checked={sel.audience.stages.includes(v)} onCheckedChange={() => toggleStage(v)} />{l}</label>))}</div>
+                    <label key={v} className="flex items-center gap-2 text-sm"><Checkbox disabled={!editable} checked={sel.audience.stages.includes(v!)} onCheckedChange={() => toggleStage(v!)} />{l}</label>))}</div>
                   <div><Label>Paesi (separati da virgola, vuoto = tutti)</Label>
                     <Input disabled={!editable} value={sel.audience.countries.join(', ')} onChange={(e) => patch({ audience: { ...sel.audience, countries: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) } })}
                       onBlur={() => refreshCount(sel.audience)} placeholder="Es: UK, France" /></div>
@@ -256,7 +256,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
                 {photosUnsaved && <Badge variant="outline">Modifiche non salvate</Badge>}
               </div>
               <div className="flex flex-wrap gap-1 pt-2">{LANGS.filter(([l]) => l === sel.language || (versionsCurrent && sel.translations?.[l!])).map(([l, name]) => (
-                <Button key={l} variant={viewLanguage === l ? 'secondary' : 'ghost'} size="sm" disabled={!!busy} onClick={() => { setViewLanguage(l); refreshPreview(sel, l); }}>{name}</Button>
+                <Button key={l} variant={viewLanguage === l ? 'secondary' : 'ghost'} size="sm" disabled={!!busy} onClick={() => { setViewLanguage(l!); refreshPreview(sel, l); }}>{name}</Button>
               ))}</div>
               {viewVersion?.subject && <p className="text-sm"><strong>{viewVersion.subject}</strong> <span className="text-muted-foreground">— {viewVersion.preheader}</span></p>}</CardHeader>
               <CardContent>{livePreview ? <iframe title="Anteprima" sandbox="" srcDoc={livePreview} className="w-full h-[75vh] rounded border bg-background" />
@@ -270,7 +270,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
             <div className="space-y-2"><Label htmlFor="roberta-brief">Di cosa vuoi parlare nella newsletter?</Label>
               <Textarea id="roberta-brief" rows={5} maxLength={2000} disabled={!!busy} value={brief} onChange={(e) => setBrief(e.target.value)} placeholder="Es: promuovi il Real Bosco 100 in pronta consegna, con le sue foto e un invito a chiedere informazioni" /></div>
             <div className="space-y-2"><Label>Lingua della bozza</Label><Select value={briefLanguage} disabled={!!busy} onValueChange={setBriefLanguage}>
-              <SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{LANGS.map(([l, name]) => <SelectItem key={l} value={l}>{name}</SelectItem>)}</SelectContent>
+              <SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{LANGS.map(([l, name]) => <SelectItem key={l} value!={l}>{name}</SelectItem>)}</SelectContent>
             </Select></div>
             <label className="flex items-center gap-2 text-sm"><Switch checked={autoTranslate} disabled={!!busy} onCheckedChange={setAutoTranslate} />Prepara anche le traduzioni</label>
           </div>

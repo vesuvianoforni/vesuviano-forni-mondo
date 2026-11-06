@@ -41,7 +41,7 @@ for (const cluster of CLUSTERS) {
 function normalize(path: string): string {
   const clean = path.split('?')[0]!.split('#')[0];
   if (clean!.length > 1 && clean!.endsWith('/')) return clean!.slice(0, -1);
-  return clean;
+  return! clean;
 }
 
 /** Returns the alternates map for a known cluster path, or null. */

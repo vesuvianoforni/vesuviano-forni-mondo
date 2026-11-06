@@ -716,7 +716,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, 
     } else if (e.touches.length === 2) {
       // Due dita - zoom pinch
       setIsDragging(false);
-      const distance = getTouchDistance(e.touches[0], e.touches[1]);
+      const distance = getTouchDistance(e.touches[0]!, e.touches[1]);
       setInitialPinchDistance(distance);
       setInitialScale(ovenScale);
     }
@@ -742,7 +742,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, 
       setTouchStartPos({ x: currentX, y: currentY });
     } else if (e.touches.length === 2) {
       // Due dita - zoom pinch
-      const currentDistance = getTouchDistance(e.touches[0], e.touches[1]);
+      const currentDistance = getTouchDistance(e.touches[0]!, e.touches[1]);
       if (initialPinchDistance > 0) {
         const scale = (currentDistance / initialPinchDistance) * initialScale;
         const clampedScale = Math.max(0.3, Math.min(3, scale));

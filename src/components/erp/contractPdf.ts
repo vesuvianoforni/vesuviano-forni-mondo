@@ -964,7 +964,7 @@ export async function generateContractPdf(
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9.5);
   doc.setTextColor(45, 45, 45);
-  const accept = doc.splitTextToSize(L["accept"], contentWidth);
+  const accept = doc.splitTextToSize(L["accept"]!, contentWidth);
   accept.forEach((ln: string) => { doc.text(ln, marginX, y); y += 4.5; });
   y += 4;
 
@@ -1080,7 +1080,7 @@ export async function generateContractPdf(
   ensureSpace(30);
   doc.setFontSize(8);
   doc.setTextColor(45);
-  const approvazione = doc.splitTextToSize(L["approval"], contentWidth);
+  const approvazione = doc.splitTextToSize(L["approval"]!, contentWidth);
   approvazione.forEach((ln: string) => { doc.text(ln, marginX, y); y += 4; });
   y += 6;
   if (data.client_signature) {

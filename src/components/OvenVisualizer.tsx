@@ -130,7 +130,7 @@ const OvenVisualizer = () => {
     try {
       console.log("🖼️ Conversione immagine principale...");
       const mainImage = selectedImages[0]; // Use first image as main
-      const base64Image = await convertFileToBase64(mainImage);
+      const base64Image = await convertFileToBase64(mainImage!);
       console.log("✅ Immagine convertita in base64, dimensione:", base64Image.length);
       
       // Get selected oven data from Supabase or fallback

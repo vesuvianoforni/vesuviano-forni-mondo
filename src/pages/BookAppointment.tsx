@@ -48,7 +48,7 @@ const BookAppointment = () => {
     const browserLang = navigator.language.split('-')[0];
     const supportedLanguages = ['it', 'en', 'fr', 'es', 'de'];
     
-    if (supportedLanguages.includes(browserLang) && i18n.language !== browserLang) {
+    if (supportedLanguages.includes(browserLang!) && i18n.language !== browserLang) {
       i18n.changeLanguage(browserLang);
     }
   }, [i18n]);
