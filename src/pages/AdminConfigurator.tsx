@@ -354,9 +354,6 @@ const AdminConfigurator = () => {
                     };
 
                     return (
-
-    <>
-      <SEOHead title="Admin Configurator | Vesuviano" description="Area amministrativa configuratore." lang="it" noIndex />
       <TableRow key={oven.id}>
                         <TableCell>
                           {oven.image_url && (
@@ -395,8 +392,7 @@ const AdminConfigurator = () => {
                           </div>
                         </TableCell>
                       </TableRow>
-    </>
-  );
+
                   })}
                 </TableBody>
               </Table>

@@ -994,17 +994,13 @@ const ProformaPage = () => {
                 const oven = getOvenForModel(item.model_name || '');
                 const price = oven && config ? getPrice(oven, config.fuelType, config.diameter || 0, config.coating, pl) : item.line_total;
                 return (
-
-    <>
-      <SEOHead title="Pro-Forma | Vesuviano" description="Pro-forma cliente Vesuviano." lang="it" noIndex />
       <div key={item.id} className="flex justify-between text-sm">
                     <span className="text-gray-300">
                       {item.model_name} — {config?.fuelType} Ø{config?.diameter}cm
                     </span>
                     <span className="text-amber-200 font-semibold">{formatPrice(price * item.quantity)}</span>
                   </div>
-    </>
-  );
+
               })}
               {shouldShowBurners && selectedBurnerId && (() => {
                 const burner = burners.find(b => b.id === selectedBurnerId);

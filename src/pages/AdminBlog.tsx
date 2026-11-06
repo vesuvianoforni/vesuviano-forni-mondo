@@ -475,9 +475,6 @@ const AdminBlog = () => {
                 {(() => {
                   const seo = calculateSEOScore(editingPost, activeLang);
                   return (
-
-    <>
-      <SEOHead title="Admin Blog | Vesuviano" description="Area amministrativa blog Vesuviano." lang="it" noIndex />
       <details className="border rounded-lg" open>
                       <summary className="px-4 py-3 cursor-pointer text-sm font-medium flex items-center gap-2">
                         <BarChart3 className="h-4 w-4" />
@@ -499,8 +496,7 @@ const AdminBlog = () => {
                         ))}
                       </div>
                     </details>
-    </>
-  );
+
                 })()}
 
                 {/* Inline Preview */}

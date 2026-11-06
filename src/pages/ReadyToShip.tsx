@@ -75,9 +75,6 @@ const ReadyToShip = () => {
             {products.map((product) => {
               const mainImage = product.images?.[0] || '/placeholder.svg';
               return (
-
-    <>
-      <SEOHead title="Forni Pronti alla Consegna | Vesuviano" description="Forni napoletani disponibili immediatamente. Spedizione inclusa." lang="it" />
       <Card key={product.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border-stone-200 hover:border-vesuviano-300">
                   <div className="relative h-80 overflow-hidden cursor-pointer" onClick={() => setSelectedImage({ url: mainImage, name: product.custom_title || product.model_name })}>
                     <img 
@@ -155,8 +152,7 @@ const ReadyToShip = () => {
                     )}
                   </CardContent>
                 </Card>
-    </>
-  );
+
             })}
           </section>
         )}

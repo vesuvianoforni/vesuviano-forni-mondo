@@ -793,9 +793,6 @@ const AdminProforma = () => {
                                 {config.sizes.map(s => {
                                   const isAllowed = allowedSizes.length === 0 || allowedSizes.includes(s.diameter);
                                   return (
-
-    <>
-      <SEOHead title="Admin Proforma | Vesuviano" description="Gestione proforma area admin." lang="it" noIndex />
       <label key={s.diameter} className="flex items-center gap-1.5 text-xs cursor-pointer">
                                       <Checkbox
                                         checked={isAllowed && allowedSizes.length > 0}
@@ -821,8 +818,7 @@ const AdminProforma = () => {
                                       />
                                       Ø {s.diameter}cm
                                     </label>
-    </>
-  );
+
                                 })}
                               </div>
                               {allowedSizes.length === 0 && (

@@ -1554,9 +1554,6 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 {['tooExpensive', 'tooLong', 'urgent', 'dontLike', 'noModel', 'otherSupplier'].map((key) => {
                   const reason = t(`configurator.feedback.reasons.${key}`);
                   return (
-
-    <>
-      <SEOHead title="Configuratore Forno | Vesuviano" description="Configura il tuo forno Vesuviano personalizzato." lang="it" noIndex />
       <div key={key} className="flex items-center space-x-2">
                       <Checkbox
                         id={key}
@@ -1570,8 +1567,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         {reason}
                       </label>
                     </div>
-    </>
-  );
+
                 })}
               </div>
               

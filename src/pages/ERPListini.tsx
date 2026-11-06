@@ -437,9 +437,6 @@ const ERPListini = () => {
                           ? editedBurnerPrices[b.id]![list]
                           : (b as any)[priceKey] || 0;
                         return (
-
-    <>
-      <SEOHead title="ERP Listini | Vesuviano" description="Gestione listini ERP." lang="it" noIndex />
       <td key={list} className="py-2 text-center">
                             <Input
                               type="number"
@@ -448,8 +445,7 @@ const ERPListini = () => {
                               className="h-7 text-xs text-center bg-card border-border text-foreground w-24 mx-auto [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             />
                           </td>
-    </>
-  );
+
                       })}
                       <td className="py-2 text-right">
                         {editedBurnerPrices[b.id] && Object.keys(editedBurnerPrices[b.id]!).length > 0 && (
