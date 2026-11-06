@@ -186,7 +186,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
   const startEditingCoating = (sizeIdx: number, coatingIdx: number) => {
     const coating = formData.sizes[sizeIdx]!.coatings[coatingIdx];
     setEditingCoating({ sizeIdx, coatingIdx });
-    setEditingCoatingData({ ...coating });
+    setEditingCoatingData({ ...coating } as Coating);
   };
 
   const cancelEditingCoating = () => {

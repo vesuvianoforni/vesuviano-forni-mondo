@@ -4,7 +4,7 @@ import defaultLogo from '@/assets/vesuviano-logo-bianco.png';
 export * from '../../supabase/functions/commercial-offers/domain';
 export { renderCommercialOffer } from './commercialOfferRenderer';
 export async function commercialOfferAction<T>(body: unknown): Promise<T> {
-  const { data, error } = await supabase.functions.invoke('commercial-offers', { body });
+  const { data, error } = await supabase.functions.invoke('commercial-offers', { body: body as Record<string, unknown> });
   if (error) {
     let message = 'Impossibile completare l’operazione';
     if (error.context instanceof Response) { try { const result = await error.context.json(); message = result.error || message; } catch { /* sanitized fallback */ } }

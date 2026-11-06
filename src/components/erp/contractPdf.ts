@@ -814,7 +814,7 @@ export async function generateContractPdf(
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(15);
   const titleText = orderConfirmation ? ocL.title : L["title"];
-  doc.text(titleText, pageWidth / 2, 46, { align: 'center' });
+  doc.text(titleText!, pageWidth / 2, 46, { align: 'center' });
 
   const today = data.created_at ? new Date(data.created_at) : new Date();
   const dateStr = today.toLocaleDateString(locale);
@@ -955,7 +955,7 @@ export async function generateContractPdf(
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(20, 20, 20);
-  doc.text(L["section20"], marginX, y);
+  doc.text(L["section20"]!, marginX, y);
   y += 5;
   doc.setDrawColor(245, 158, 11);
   doc.line(marginX, y, marginX + 30, y);
@@ -1063,7 +1063,7 @@ export async function generateContractPdf(
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
   doc.setTextColor(20, 20, 20);
-  doc.text(L["clientSig"], rightX, rightY);
+  doc.text(L["clientSig"]!, rightX, rightY);
   rightY += 4;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
@@ -1071,7 +1071,7 @@ export async function generateContractPdf(
   if (data.client_signed_at) {
     doc.text(`${L["signedOn"]} ${new Date(data.client_signed_at).toLocaleString(locale)}`, rightX, rightY);
   } else {
-    doc.text(L["stampSign"], rightX, rightY);
+    doc.text(L["stampSign"]!, rightX, rightY);
   }
 
   y = Math.max(leftY, rightY) + 8;
@@ -1089,7 +1089,7 @@ export async function generateContractPdf(
     } catch { /* ignore */ }
   }
   doc.line(marginX + contentWidth - 80, y, marginX + contentWidth, y);
-  doc.text(L["approvalSig"], marginX + contentWidth - 80, y + 4);
+  doc.text(L["approvalSig"]!, marginX + contentWidth - 80, y + 4);
   }
 
   // ===== Footer with page numbers =====
@@ -1099,7 +1099,7 @@ export async function generateContractPdf(
     doc.setFontSize(7);
     doc.setTextColor(150);
     doc.text(`${L["page"]} ${i} ${L["of"]} ${pageCount}`, pageWidth - marginX, pageHeight - 7, { align: 'right' });
-    doc.text(L["footer"], marginX, pageHeight - 7);
+    doc.text(L["footer"]!, marginX, pageHeight - 7);
   }
 
 

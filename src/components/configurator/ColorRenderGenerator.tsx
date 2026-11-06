@@ -270,7 +270,7 @@ const ColorRenderGenerator = ({ ovenName, ovenImageUrl, selectedCoating, onRende
             disabled={
               (!selectedColor && !customColor.trim()) || 
               isGenerating || 
-              (generatedImageUrl && (isCustomColor ? customColor.trim() : selectedColor) === lastGeneratedColor)
+              (!!generatedImageUrl && (isCustomColor ? customColor.trim() : selectedColor) === lastGeneratedColor)
             }
             className="w-full"
             size="lg"

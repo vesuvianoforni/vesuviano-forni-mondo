@@ -21,8 +21,9 @@ export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel) {
 
   const readPage = useCallback(async (before: MessageKey | null) => {
     const { data, error } = await supabase.rpc("bruno_message_page", {
-      p_lead_id: leadId, p_channel: filter === "all" ? undefined : filter,
-      p_before_at: before?.created_at, p_before_id: before?.id,
+      p_lead_id: leadId,
+      ...(filter === "all" ? {} : { p_channel: filter }),
+      ...(before ? { p_before_at: before.created_at, p_before_id: before.id } : {}),
       p_limit: BRUNO_MESSAGE_PAGE_SIZE + 1,
     });
     if (error) throw error;

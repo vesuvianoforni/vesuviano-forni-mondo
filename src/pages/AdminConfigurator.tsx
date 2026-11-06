@@ -367,7 +367,7 @@ const AdminConfigurator = () => {
                         <TableCell>
                           <div className="flex flex-wrap gap-1">
                             {Array.isArray(oven.fuel_type) ? (
-                              oven.fuel_type.filter(f => f).map((fuel, idx) => (
+                              oven.fuel_type.filter((f: string) => f).map((fuel: string, idx: number) => (
                                 <Badge key={idx} variant="outline" className="text-xs">
                                   {fuel}
                                 </Badge>
