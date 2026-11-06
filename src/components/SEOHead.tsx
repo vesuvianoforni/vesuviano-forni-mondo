@@ -83,13 +83,13 @@ const SEOHead = ({
       ) : (
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
       )}
-      <link rel="canonical" href={canonicalUrl} />
+      {!noIndex && <link rel="canonical" href={canonicalUrl} />}
 
-      {/* hreflang alternates (includes self-reference + x-default) */}
-      {resolvedAlternates && LANGS.map((l) => (
+      {/* hreflang alternates (includes self-reference + x-default); only on indexable pages */}
+      {!noIndex && resolvedAlternates && LANGS.map((l) => (
         <link key={`hreflang-${l}`} rel="alternate" hrefLang={l} href={`${BASE_URL}${resolvedAlternates[l]}`} />
       ))}
-      {resolvedAlternates && xDefaultPath && (
+      {!noIndex && resolvedAlternates && xDefaultPath && (
         <link rel="alternate" hrefLang="x-default" href={`${BASE_URL}${xDefaultPath}`} />
       )}
 

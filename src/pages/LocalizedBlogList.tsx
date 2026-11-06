@@ -1,13 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import type { BlogPost } from '@/hooks/useBlogPosts';
 import { useTranslation } from 'react-i18next';
 import { loadLanguage } from '@/i18n/config';
 import BlogList from './BlogList';
 
 interface Props {
   lang: string;
+  initialPosts?: BlogPost[] | undefined;
 }
 
-const LocalizedBlogList = ({ lang }: Props) => {
+const LocalizedBlogList = ({ lang, initialPosts }: Props) => {
   const { i18n } = useTranslation();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ const LocalizedBlogList = ({ lang }: Props) => {
     }
   }, [lang, i18n]);
 
-  return <BlogList lang={lang} />;
+  return <BlogList lang={lang} initialPosts={initialPosts} />;
 };
 
 export default LocalizedBlogList;

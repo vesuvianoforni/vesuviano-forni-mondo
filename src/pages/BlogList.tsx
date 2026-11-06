@@ -3,11 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { Link } from '@/lib/router-compat';
 import { Calendar, ArrowRight, Tag } from 'lucide-react';
 import Header from '@/components/Header';
-import { useBlogPosts, getLocalizedField } from '@/hooks/useBlogPosts';
+import { useBlogPosts, getLocalizedField, type BlogPost } from '@/hooks/useBlogPosts';
 import BlogSEO from '@/components/blog/BlogSEO';
 import LazyImage from '@/components/LazyImage';
 
 interface BlogListProps {
+  initialPosts?: BlogPost[] | undefined;
   lang: string;
 }
 
@@ -24,10 +25,10 @@ const getCategoryLabel = (cat: string, lang: string): string => {
   return labels[cat]?.[lang] || labels[cat]?.["it"] || cat;
 };
 
-const BlogList = ({ lang }: BlogListProps) => {
+const BlogList = ({ lang, initialPosts }: BlogListProps) => {
   const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const { data: posts, isLoading } = useBlogPosts(selectedCategory);
+  const { data: posts, isLoading } = useBlogPosts(selectedCategory, initialPosts);
 
   const blogTitle: Record<string, string> = {
     it: 'Il Blog di Vesuviano',

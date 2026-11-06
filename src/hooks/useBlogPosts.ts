@@ -43,9 +43,21 @@ export const getSlugField = (lang: string): `slug_${LangKey}` => {
   return `slug_${lang as LangKey}` as `slug_${LangKey}`;
 };
 
-export const useBlogPosts = (category?: string) => {
+/** All published posts, newest first. Used by blog list loaders for SSR. */
+export const fetchPublishedBlogPosts = async (): Promise<BlogPost[]> => {
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select('*')
+    .eq('is_published', true)
+    .order('published_at', { ascending: false });
+  if (error) throw error;
+  return (data as BlogPost[]) ?? [];
+};
+
+export const useBlogPosts = (category?: string, initialPosts?: BlogPost[]) => {
   return useQuery({
     queryKey: ['blog-posts', category],
+    ...(initialPosts && (!category || category === 'all') ? { initialData: initialPosts } : {}),
     queryFn: async () => {
       let query = supabase
         .from('blog_posts')
