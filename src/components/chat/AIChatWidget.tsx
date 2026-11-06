@@ -354,7 +354,7 @@ export default function AIChatWidget() {
     if (name) localStorage.setItem(VISITOR_NAME_KEY, name);
     localStorage.setItem(VISITOR_SUBMITTED_KEY, "true");
     const thankYou = THANK_YOU[lang] || THANK_YOU["en"];
-    const nameMsg = name ? thankYou!.replace("!", ` ${name}!`) : thankYou;
+    const nameMsg = name ? thankYou!.replace("!", ` ${name}!`) : thankYou!;
     setMessages((prev) => {
       const updated = [...prev, { role: "assistant" as const, content: nameMsg }];
       saveConversation(updated, { name, email, phone });
@@ -385,7 +385,7 @@ export default function AIChatWidget() {
       if (callbackMode) {
         if (callbackStep === "phone") {
           callbackDataRef.current.phone = text.trim();
-          const askName = CALLBACK_ASK_NAME[lang] || CALLBACK_ASK_NAME["en"];
+          const askName = (CALLBACK_ASK_NAME[lang] || CALLBACK_ASK_NAME["en"])!;
           setMessages((prev) => {
             const updated = [...prev, userMsg, { role: "assistant" as const, content: askName }];
             saveConversation(updated, { phone: text.trim() });
@@ -396,7 +396,7 @@ export default function AIChatWidget() {
         }
         if (callbackStep === "name") {
           callbackDataRef.current.name = text.trim();
-          const askCity = CALLBACK_ASK_CITY[lang] || CALLBACK_ASK_CITY["en"];
+          const askCity = (CALLBACK_ASK_CITY[lang] || CALLBACK_ASK_CITY["en"])!;
           setMessages((prev) => {
             const updated = [...prev, userMsg, { role: "assistant" as const, content: askCity }];
             saveConversation(updated, { name: text.trim(), phone: callbackDataRef.current.phone });
@@ -409,7 +409,7 @@ export default function AIChatWidget() {
         const city = text.trim();
         const { phone, name } = callbackDataRef.current;
         const confirmMsg = CALLBACK_CONFIRM[lang] || CALLBACK_CONFIRM["en"];
-        const personalized = name ? confirmMsg!.replace("!", ` ${name}!`) : confirmMsg;
+        const personalized = name ? confirmMsg!.replace("!", ` ${name}!`) : confirmMsg!;
         setMessages((prev) => {
           const updated = [...prev, userMsg, { role: "assistant" as const, content: personalized }];
           saveConversation(updated, { name, phone });
@@ -439,7 +439,7 @@ export default function AIChatWidget() {
       }
 
       if (!contactSubmitted) {
-        const introMsg = INTRO_MESSAGES[lang] || INTRO_MESSAGES["en"];
+        const introMsg = (INTRO_MESSAGES[lang] || INTRO_MESSAGES["en"])!;
         setMessages((prev) => {
           const updated = [...prev, userMsg, { role: "assistant" as const, content: introMsg }];
           saveConversation(updated);

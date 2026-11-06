@@ -130,21 +130,21 @@ const Header = () => {
     const paths: Record<string, string> = {
       it: '/it/collezioni', en: '/en/collections', fr: '/fr/collections', es: '/es/colecciones', de: '/de/kollektionen'
     };
-    return paths[currentLang!] || paths["it"];
+    return (paths[currentLang!] || paths["it"])!;
   };
 
   const getRivestimentiPath = () => {
     const paths: Record<string, string> = {
       it: '/it/rivestimenti', en: '/en/finishes', fr: '/fr/revetements', es: '/es/revestimientos', de: '/de/verkleidungen'
     };
-    return paths[currentLang!] || paths["it"];
+    return (paths[currentLang!] || paths["it"])!;
   };
 
   const getAboutPath = () => {
     const paths: Record<string, string> = {
       it: '/it/chi-siamo', en: '/en/about-us', fr: '/fr/qui-sommes-nous', es: '/es/quienes-somos', de: '/de/ueber-uns'
     };
-    return paths[currentLang!] || paths["it"];
+    return (paths[currentLang!] || paths["it"])!;
   };
 
   const aboutLabels: Record<string, string> = {
@@ -155,7 +155,7 @@ const Header = () => {
     const paths: Record<string, string> = {
       it: '/it/contatti', en: '/en/contact', fr: '/fr/contact', es: '/es/contacto', de: '/de/kontakt'
     };
-    return paths[currentLang!] || paths["it"];
+    return (paths[currentLang!] || paths["it"])!;
   };
 
   const navItems: Array<{ href: string; label: string; type: 'anchor' | 'link' }> = [
