@@ -126,9 +126,10 @@ Deno.test('Gennaro must explicitly accept in a private consult before connecting
   assertEquals(tool?.transfer?.targets, [{ name: 'Gennaro Caglione', to: '+3908119231684' }]);
   assertEquals(tool?.transfer?.warm_transfer_acceptance, { enabled: true, end_user_target_context_mode: 'private', require_acceptance: true, timeout_secs: 60 });
 });
-Deno.test('Transfer stops on Gennaro voicemail instead of connecting the caller', () => {
+Deno.test('Transfer keeps ringing Gennaro (no early voicemail cut-off) and still needs his explicit yes', () => {
   const tool = inboundExtraTools('https://x.supabase.co', '+3908119231684').find(t => t.type === 'transfer');
-  assertEquals(tool?.transfer?.voicemail_detection.on_voicemail_detected.action, 'stop_transfer');
+  assertEquals(tool?.transfer?.voicemail_detection, { detection_mode: 'disabled' });
+  assertEquals(tool?.transfer?.warm_transfer_acceptance.require_acceptance, true);
 });
 Deno.test('inbound TeXML records once and starts the inbound assistant', () => {
   const x = inboundTexml('assistant-1', 'https://x.supabase.co');
