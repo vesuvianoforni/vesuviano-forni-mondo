@@ -11,7 +11,6 @@ import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { Flame, Gauge, Settings } from 'lucide-react';
 import type { Json } from '@/integrations/supabase/types';
-import SEOHead from '@/components/SEOHead';
 
 interface BurnersPageProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
@@ -73,7 +72,6 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
 
   return (
     <div className="min-h-screen bg-white">
-      <SEOHead title="Bruciatori per Forni Pizza | Vesuviano" description="Catalogo bruciatori professionali per forni pizza Vesuviano: serie A, B e C." lang={lang} />
       <Header />
 
       {/* Hero Section */}
