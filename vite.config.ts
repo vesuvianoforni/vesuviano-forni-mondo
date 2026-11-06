@@ -14,5 +14,5 @@ export default defineConfig({
   },
   // Netlify builds (NETLIFY=true, set automatically by Netlify) get a
   // Netlify-compatible server bundle; Lovable's own publish keeps Cloudflare output.
-  ...(process.env.NETLIFY ? { nitro: { preset: "netlify" } } : {}),
+  ...(process.env["NETLIFY"] ? { nitro: { preset: "netlify" } } : {}),
 });
