@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
+import { BrunoPlanCard } from './BrunoPlanCard';
 import { BrunoInlineCard } from "./BrunoInlineCard";
 import type { LucideIcon } from "lucide-react";
 import { Bot, CornerDownLeft, Loader2, SlidersHorizontal, Square } from "lucide-react";
@@ -65,7 +66,7 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
       if(agent.fn==='bruno-chat'&&res.headers.get('content-type')?.includes('application/json')){
         const out=await res.json();
         if(ctrl.signal.aborted)return;
-        const cards=[...(out.calls??[]).map((id:string)=>({kind:'call' as const,id})),...(out.proposals??[]).map((p:{action_id:string})=>({kind:'action' as const,id:p.action_id}))];
+        const cards=[...(out.calls??[]).map((id:string)=>({kind:'call' as const,id})),...(out.proposals??[]).map((p:{action_id:string})=>({kind:'action' as const,id:p.action_id})),...(out.plans??[]).map((id:string)=>({kind:'plan' as const,id}))];
         current={...current,messages:[...history,{role:'assistant',content:out.text||'Ecco la proposta.',...(cards.length?{cards}:{})}]};onChange(current);return;
       }
       const reader = res.body.getReader(); const dec = new TextDecoder(); let acc = "";
@@ -113,7 +114,7 @@ export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTa
                 <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Icon className="h-4 w-4" /></div>
                 <div className="prose prose-sm min-w-0 max-w-none break-words text-foreground dark:prose-invert">
                   {m.content ? <ReactMarkdown>{m.content}</ReactMarkdown> : busy && i === thread.messages.length - 1 ? <Loader2 className="mt-1 h-4 w-4 animate-spin text-muted-foreground" /> : <p className="text-muted-foreground">Risposta interrotta: riscrivi la richiesta.</p>}
-                  {m.cards?.map(c => <BrunoInlineCard key={c.kind + c.id} kind={c.kind} id={c.id} />)}
+                  {m.cards?.map(c => c.kind === 'plan' ? <BrunoPlanCard key={c.kind + c.id} id={c.id} /> : <BrunoInlineCard key={c.kind + c.id} kind={c.kind} id={c.id} />)}
                 </div>
               </div>
             ))}

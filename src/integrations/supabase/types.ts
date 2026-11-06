@@ -270,6 +270,60 @@ export type Database = {
           },
         ]
       }
+      bruno_call_plans: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          call_type: string
+          created_at: string
+          gap_minutes: number
+          id: string
+          instructions: string | null
+          last_error: string | null
+          lease_until: string | null
+          objective: string
+          requested_by: string | null
+          status: string
+          tick_token: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          call_type?: string
+          created_at?: string
+          gap_minutes?: number
+          id?: string
+          instructions?: string | null
+          last_error?: string | null
+          lease_until?: string | null
+          objective: string
+          requested_by?: string | null
+          status?: string
+          tick_token?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          call_type?: string
+          created_at?: string
+          gap_minutes?: number
+          id?: string
+          instructions?: string | null
+          last_error?: string | null
+          lease_until?: string | null
+          objective?: string
+          requested_by?: string | null
+          status?: string
+          tick_token?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bruno_knowledge: {
         Row: {
           category: string
@@ -325,6 +379,8 @@ export type Database = {
           language: string
           lead_id: string
           objective: string
+          plan_id: string | null
+          plan_position: number | null
           provider_call_id: string | null
           qualification: Json
           recording_path: string | null
@@ -356,6 +412,8 @@ export type Database = {
           language?: string
           lead_id: string
           objective: string
+          plan_id?: string | null
+          plan_position?: number | null
           provider_call_id?: string | null
           qualification?: Json
           recording_path?: string | null
@@ -387,6 +445,8 @@ export type Database = {
           language?: string
           lead_id?: string
           objective?: string
+          plan_id?: string | null
+          plan_position?: number | null
           provider_call_id?: string | null
           qualification?: Json
           recording_path?: string | null
@@ -406,6 +466,13 @@ export type Database = {
             columns: ["lead_id"]
             isOneToOne: false
             referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bruno_voice_calls_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "bruno_call_plans"
             referencedColumns: ["id"]
           },
         ]
@@ -3946,6 +4013,32 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      claim_bruno_call_plan: {
+        Args: { p_id: string; p_token: string }
+        Returns: {
+          approved_at: string | null
+          approved_by: string | null
+          call_type: string
+          created_at: string
+          gap_minutes: number
+          id: string
+          instructions: string | null
+          last_error: string | null
+          lease_until: string | null
+          objective: string
+          requested_by: string | null
+          status: string
+          tick_token: string
+          title: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "bruno_call_plans"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       claim_bruno_voice_result: {
         Args: { p_call: string; p_token: string }
         Returns: {
@@ -4064,6 +4157,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      kick_bruno_call_plans: { Args: never; Returns: undefined }
       kick_bruno_voice_results: { Args: never; Returns: undefined }
       mario_crm_organization_summary: { Args: never; Returns: Json }
       mario_due_outbox: {

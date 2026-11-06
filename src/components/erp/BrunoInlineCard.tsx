@@ -39,7 +39,7 @@ export function BrunoInlineCard({ kind, id }: { kind: 'call' | 'action'; id: str
     {call && <>
       <p className="break-words">{call.leads?.contact_name || call.leads?.company_name} · {call.destination}</p>
       <p className="break-words text-muted-foreground">{call.objective}</p>
-      {pending && <p className="text-xs text-muted-foreground">Bruno chiama in inglese dal numero UK, avvisa che è un assistente AI e che la chiamata è registrata.</p>}
+      {pending && <p className="text-xs text-muted-foreground">Bruno chiama in inglese dal numero UK presentandosi come Bruno di Vesuviano Forni.</p>}
     </>}
     {action && <p className="break-words text-muted-foreground">{action.leads?.contact_name || action.leads?.company_name || ''} {String(action.args.body || action.args.objective || action.args.message || '').slice(0, 400)}</p>}
     {error && <p role="alert" className="text-destructive break-words">{error}</p>}
