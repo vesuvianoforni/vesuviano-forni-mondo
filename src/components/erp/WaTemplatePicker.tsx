@@ -9,11 +9,11 @@ export type WaTemplateChoice = { name: string; language: string; params: string[
 
 // Each country WhatsApp line has its own approved templates; cache per line (UK = +44, otherwise default).
 const cache = new Map<string, Promise<WaTemplate[]>>();
-function loadTemplates(line: "it" | "uk", leadId?: string) {
+function loadTemplates(line: "it" | "uk", _leadId?: string) {
   const k = line;
   if (k === "uk" && !cache.has(k)) cache.set(k, supabase.auth.getSession().then(({ data: s }) => listUkTemplates({ data: { token: s.session?.access_token ?? "" } }))
     .then((list) => list.filter((t) => t.status === "APPROVED")).catch((e) => { cache.delete(k); throw e; }));
-  if (!cache.has(k)) cache.set(k, supabase.functions.invoke("bruno-agent", { body: { action: "wa_templates", ...(leadId ? { lead_id: leadId } : {}) } }).then(({ data, error }) => {
+  if (!cache.has(k)) cache.set(k, supabase.functions.invoke("bruno-agent", { body: { action: "wa_templates" } }).then(({ data, error }) => {
     if (error) { cache.delete(k); throw error; }
     return (data?.templates ?? []) as WaTemplate[];
   }));
