@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { listUkTemplates } from "@/lib/whatsapp-uk.functions";
+import { WaUkTemplateDialog } from "./WaUkTemplateDialog";
 
 export type WaTemplate = { name: string; language: string; category: string; body: string; variables: number };
 export type WaTemplateChoice = { name: string; language: string; params: string[]; preview: string } | null;
@@ -45,6 +46,7 @@ export function WaTemplatePicker({ line = "it", leadId, phone, firstName, value,
           {templates.map((t) => <SelectItem key={`${t.name}|${t.language}`} value={`${t.name}|${t.language}`}>{t.name} · {t.language.toUpperCase()}</SelectItem>)}
         </SelectContent>
       </Select>
+      {line === "uk" && <div className="flex items-center gap-2"><WaUkTemplateDialog />{!error && templates.length === 0 && <span className="text-xs text-muted-foreground">Nessun modello approvato ancora</span>}</div>}
       {error && <p className="text-xs text-destructive">{error}</p>}
       {tpl && value && tpl.variables > 0 && <div className="flex flex-wrap gap-2">
         {value.params.map((p, i) => <Input key={i} aria-label={`Variabile ${i + 1}`} placeholder={`Variabile {{${i + 1}}}`} value={p} disabled={disabled} className="h-8 w-40 text-xs"
