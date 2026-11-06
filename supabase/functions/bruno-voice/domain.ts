@@ -217,3 +217,4 @@ export function inboundTexml(assistantId: string, url: string) {
   const esc = (v: string) => v.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
   return `<?xml version="1.0" encoding="UTF-8"?><Response><Start><Recording channels="dual" track="both" recordingStatusCallback="${esc(`${base}?recording=1&inbound=1`)}" recordingStatusCallbackEvent="completed absent"/></Start><Connect action="${esc(`${base}?inbound_end=1`)}" method="POST"><AIAssistant id="${esc(assistantId)}"></AIAssistant></Connect><Hangup/></Response>`;
 }
+export const AnyToolRequest = z.union([ToolRequest, CallbackRequest]);
