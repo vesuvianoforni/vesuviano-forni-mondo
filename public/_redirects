@@ -1,9 +1,4 @@
 /sitemap.xml  https://lgueucxznbqgvhpjzurf.supabase.co/functions/v1/generate-sitemap  200
-/it/blog/:slug  /.netlify/functions/blog-html-proxy?lang=it&slug=:slug&proxy=v2  200!
-/en/blog/:slug  /.netlify/functions/blog-html-proxy?lang=en&slug=:slug&proxy=v2  200!
-/fr/blog/:slug  /.netlify/functions/blog-html-proxy?lang=fr&slug=:slug&proxy=v2  200!
-/de/blog/:slug  /.netlify/functions/blog-html-proxy?lang=de&slug=:slug&proxy=v2  200!
-/es/blog/:slug  /.netlify/functions/blog-html-proxy?lang=es&slug=:slug&proxy=v2  200!
 
 # Phantom URLs -> canonical equivalents (SEO 301s)
 /en/oven-ranges/electric-ovens    /en/electric-ovens         301!
@@ -17,5 +12,3 @@
 
 # Email-safe media on our domain (Supabase public storage)
 /media/*  https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/:splat  200!
-
-/*    /index.html   200
