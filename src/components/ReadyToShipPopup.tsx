@@ -64,7 +64,7 @@ const ReadyToShipPopup = () => {
       'es': '/es/listo-para-enviar',
       'de': '/de/sofort-lieferbar'
     };
-    navigate(paths[currentLang] || paths['it']);
+    navigate((paths[currentLang] || paths['it'])!);
     setOpen(false);
   };
 

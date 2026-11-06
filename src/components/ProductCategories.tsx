@@ -221,7 +221,7 @@ const ProductCategories = () => {
                                 'es': '/es/listo-para-enviar',
                                 'de': '/de/sofort-lieferbar'
                               };
-                              navigate(readyToShipPaths[i18n.language] || readyToShipPaths['it']);
+                              navigate((readyToShipPaths[i18n.language] || readyToShipPaths['it'])!);
                             } else {
                               navigate('/built-on-place');
                             }

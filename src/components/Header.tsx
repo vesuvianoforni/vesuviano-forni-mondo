@@ -34,7 +34,7 @@ const Header = () => {
       'es': '/es/sistema-vesuviobuono',
       'de': '/de/vesuviobuono-system'
     };
-    return paths[currentLang!] || paths['it'];
+    return (paths[currentLang!] || paths['it'])!;
   };
 
   const getOvenPath = (ovenType: string) => {
@@ -93,7 +93,7 @@ const Header = () => {
       'es': '/es/listo-para-enviar',
       'de': '/de/sofort-lieferbar'
     };
-    return paths[currentLang!] || paths['it'];
+    return (paths[currentLang!] || paths['it'])!;
   };
 
   const getNeapolitanPath = (): string | null => {

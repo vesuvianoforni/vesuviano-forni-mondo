@@ -250,7 +250,7 @@ export default function AIChatWidget() {
       callbackDataRef.current = { phone: "", name: "" };
       setOpen(true);
       setShowMobileBubble(false);
-      const askPhone = CALLBACK_ASK_PHONE[lang] || CALLBACK_ASK_PHONE["en"];
+      const askPhone = (CALLBACK_ASK_PHONE[lang] || CALLBACK_ASK_PHONE["en"])!;
       setMessages((prev) => [...prev, { role: "assistant", content: askPhone }]);
     };
     const handleEngageChat = () => {
@@ -263,7 +263,7 @@ export default function AIChatWidget() {
         de: "Kann ich Ihnen helfen, den perfekten Ofen zu finden? 🔥 Fragen Sie mich!",
         es: "¿Puedo ayudarte a elegir el horno perfecto? 🔥 ¡Pregúntame lo que quieras!",
       };
-      const msg = engageMessages[lang] || engageMessages["en"];
+      const msg = (engageMessages[lang] || engageMessages["en"])!;
       setMessages((prev) => [...prev, { role: "assistant", content: msg }]);
     };
     window.addEventListener('vesuviano-callback-request', handleCallbackRequest);
