@@ -89,7 +89,7 @@ const LocalizedAboutUs = ({ lang }: LocalizedAboutUsProps) => {
               <h4 className="font-semibold mb-4">{t('header.contact')}</h4>
               <ul className="space-y-2 text-sm text-stone-400">
                 <li>info@vesuvianoforni.com</li>
-                <li>+39 350 928 6941</li>
+                <li>+39 081 1923 1684</li>
                 <li>{t('craftsmanship.laboratory.location')}</li>
               </ul>
             </div>

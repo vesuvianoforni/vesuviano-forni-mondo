@@ -13,7 +13,7 @@ import RivestimentiCompact from "@/components/RivestimentiCompact";
 import SEOHead from '@/components/SEOHead';
 import { getAttribution } from "@/lib/attribution";
 
-const WHATSAPP_LINK = "https://wa.me/393509286941?text=Ciao,%20vorrei%20informazioni%20sui%20vostri%20forni%20professionali";
+const WHATSAPP_LINK = "https://wa.me/3908119231684?text=Ciao,%20vorrei%20informazioni%20sui%20vostri%20forni%20professionali";
 
 const reviews = [
   {
@@ -343,7 +343,7 @@ const BuiltOnPlace = () => {
             </Button>
             <div className="flex items-center justify-center gap-4 pt-2">
               <a
-                href="https://wa.me/393509286941"
+                href="https://wa.me/3908119231684"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-sm text-green-600 hover:text-green-700 font-medium"
@@ -352,9 +352,9 @@ const BuiltOnPlace = () => {
                 Or WhatsApp us directly
               </a>
               <span className="text-stone-300">|</span>
-              <a href="tel:+393509286941" className="flex items-center gap-1 text-sm text-stone-500 hover:text-stone-700 transition-colors">
+              <a href="tel:+3908119231684" className="flex items-center gap-1 text-sm text-stone-500 hover:text-stone-700 transition-colors">
                 <Phone size={14} />
-                +39 350 928 6941
+                +39 081 1923 1684
               </a>
             </div>
           </form>

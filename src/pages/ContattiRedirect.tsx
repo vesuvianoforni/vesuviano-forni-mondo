@@ -11,7 +11,7 @@ const ContattiRedirect = () => {
     
     if (whatsapp === 'true') {
       // Redirect to WhatsApp
-      window.location.href = 'https://api.whatsapp.com/send?phone=393509286941&text=Ciao%20Vesuviano%20Forni%2C%20';
+      window.location.href = 'https://api.whatsapp.com/send?phone=3908119231684&text=Ciao%20Vesuviano%20Forni%2C%20';
     } else {
       // Redirect to homepage contact section
       navigate('/#consultation');

@@ -39,7 +39,7 @@ const ContactBar = () => {
           <span className="text-[10px] font-normal opacity-80">{t('cta.getQuoteSubtext')}</span>
         </button>
         <a
-          href="https://wa.me/393509286941"
+          href="https://wa.me/3908119231684"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center bg-[#25D366] hover:bg-[#20bd5a] text-white w-12 h-12 rounded-xl transition-all duration-300 shadow-lg flex-shrink-0"

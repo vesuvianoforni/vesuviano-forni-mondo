@@ -1271,7 +1271,7 @@ const ProformaPage = () => {
         {/* Footer */}
         <div className="text-center text-gray-500 text-xs sm:text-sm py-6 sm:py-8">
           <p>Vesuviano Forni — {t!["tagline"]}</p>
-          <p className="mt-1">info@vesuvianoforni.com | +39 350 928 6941</p>
+          <p className="mt-1">info@vesuvianoforni.com | +39 081 1923 1684</p>
         </div>
       </div>
 

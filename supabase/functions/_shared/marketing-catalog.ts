@@ -50,7 +50,7 @@ export async function loadCatalog(admin: SupabaseClient, lang: string) {
     return { titolo: b[`title_${L}`], descrizione: b[`meta_description_${L}`], link: `${SITE}/${L}/blog/${b[`slug_${L}`]}` };
   });
   const video = (videos.data || []).filter((v: any) => ok(v.public_url)).map((v: any) => ({ titolo: v.title, lingua: v.language, uso: v.purpose, link: v.public_url }));
-  const links: Record<string, string> = { whatsapp_gennaro: 'https://wa.me/393509286941' };
+  const links: Record<string, string> = { whatsapp_gennaro: 'https://wa.me/3908119231684' };
   for (const [k, v] of Object.entries(PAGES)) links[k] = `${SITE}${v[L]}`;
   for (const [k, v] of Object.entries(EXTRA)) links[k] = `${SITE}${v}`;
   video.forEach((v, i) => { links[`video_${i + 1}`] = v.link; });
