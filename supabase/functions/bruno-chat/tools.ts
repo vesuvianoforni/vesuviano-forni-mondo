@@ -19,6 +19,8 @@ export const TOOLS = [
     parameters: obj({ lead_id: str() }, ['lead_id']) },
   { type: 'function', name: 'propose_call', description: 'Prepara una telefonata di Bruno in INGLESE dal numero UK +447457416033. NON telefona: crea una proposta con pulsante di avvio mostrato direttamente in chat. call_type: "qualifica" (scoprire esigenze, capacità, alimentazione, consegna e tempi del progetto) oppure "trattativa" (feedback sull\'offerta ricevuta, obiezioni, prossimo passo; mai nuovi sconti). Usa "instructions" per le indicazioni operative del team, anche in italiano. Il fuso orario del cliente è ricavato automaticamente dal prefisso del numero (+39 Italia, +44 UK, ecc.): non chiederlo mai all\'operatore.',
     parameters: obj({ lead_id: str(), objective: str('obiettivo concreto della chiamata'), call_type: { type: 'string', enum: ['qualifica', 'trattativa'], description: 'tipologia della chiamata' }, instructions: str('istruzioni operative del team per questa chiamata, anche in italiano'), customer_timezone: str('solo se il prefisso non è riconosciuto, es. Europe/London') }, ['lead_id','objective','call_type']) },
+  { type: 'function', name: 'propose_call_plan', description: 'Prepara un PIANO OPERATIVO di telefonate a più clienti (max 30), in INGLESE dal numero UK. NON telefona: il team lo approva una sola volta in chat, poi il sistema chiama un cliente alla volta nell\'ordine dato, con pausa tra le chiamate e solo 9-20 ora locale del cliente. lead_ids in ordine di priorità.',
+    parameters: obj({ lead_ids: { type: 'array', items: { type: 'string' }, description: 'id dei lead in ordine di chiamata' }, objective: str('obiettivo comune delle chiamate'), call_type: { type: 'string', enum: ['qualifica', 'trattativa'] }, instructions: str('istruzioni operative del team, anche in italiano'), title: str('titolo breve del piano'), gap_minutes: { type: 'number', description: 'minuti di pausa tra una chiamata e la successiva (default 3)' } }, ['lead_ids','objective','call_type']) },
   { type: 'function', name: 'approve_call', description: 'Avvia DAVVERO una proposta di chiamata esistente. Solo dopo che l’operatore ha approvato esplicitamente quella proposta. Non usare per un semplice invito a preparare una telefonata.',
     parameters: obj({ call_id: str('id della proposta di chiamata già salvata') }, ['call_id']) },
   { type: 'function', name: 'update_lead', description: `Aggiorna fase (${STAGES.join(', ')}), note, prossima attività o dati contatto di un lead.`,
@@ -119,6 +121,15 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       const objective = opt(a.objective) && opt(a.objective)!.length >= 10 ? opt(a.objective) : `${type === 'trattativa' ? 'Trattativa' : 'Qualifica'} del cliente: ${opt(a.objective) || 'esigenze, progetto e tempi'}`;
       const r = await callFn(ctx, 'bruno-voice', { action: 'propose', lead_id: String(a.lead_id || '').trim(), objective, call_type: type, instructions: opt(a.instructions), customer_timezone: opt(a.customer_timezone) });
       return { ...r, _link: '/erp/bruno', instruction: 'Proposta salvata, NON è partita alcuna chiamata. Il pulsante Chiama ora compare direttamente sotto la tua risposta in chat: riassumi in 2 righe obiettivo e destinatario, non mostrare ID.' };
+    }
+    case 'propose_call_plan': {
+      const opt = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : undefined);
+      const type = String(a.call_type || '').trim().toLowerCase().startsWith('tratt') ? 'trattativa' : 'qualifica';
+      const objective = opt(a.objective) && opt(a.objective)!.length >= 10 ? opt(a.objective) : `${type === 'trattativa' ? 'Trattativa' : 'Qualifica'} del cliente: ${opt(a.objective) || 'esigenze, progetto e tempi'}`;
+      const ids = (Array.isArray(a.lead_ids) ? a.lead_ids : []).map((v: unknown) => String(v).trim()).filter(Boolean).slice(0, 30);
+      const gap = Number(a.gap_minutes); 
+      const r = await callFn(ctx, 'bruno-voice', { action: 'plan_propose', lead_ids: ids, objective, call_type: type, instructions: opt(a.instructions), title: opt(a.title), ...(Number.isInteger(gap) && gap >= 1 && gap <= 120 ? { gap_minutes: gap } : {}) });
+      return { ...r, instruction: 'Piano salvato, NESSUNA chiamata partita. Il pulsante Approva piano compare sotto la tua risposta: presenta elenco clienti, esclusi con motivo e ritmo. Non mostrare ID.' };
     }
     case 'approve_call': return await callFn(ctx, 'bruno-voice', { action: 'approve', call_id: a.call_id });
     case 'search_leads': {
@@ -279,5 +290,5 @@ export const TOOL_LABELS: Record<string, string> = {
   update_lead: 'CRM aggiornato', create_lead: 'Cliente creato', send_message: 'Messaggio inviato',
   create_offer: 'Offerta creata', send_offer: 'Offerta inviata', create_order: 'Ordine inserito', update_order: 'Ordine aggiornato',
   send_attachment: 'File inviato',
-  propose_call: 'Proposta chiamata salvata', approve_call: 'Richiesta chiamata inoltrata',
+  propose_call: 'Proposta chiamata salvata', propose_call_plan: 'Piano chiamate preparato', approve_call: 'Richiesta chiamata inoltrata',
 };
