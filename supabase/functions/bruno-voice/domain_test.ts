@@ -107,7 +107,7 @@ Deno.test('call plan dials one customer at a time in order, with a pause between
   assertEquals(planNextStep([{ ...calls[1], status: 'completed', ended_at: '2026-11-06T11:00:00Z' }], 3, now), { kind: 'done' });
 });
 
-import { inboundLanguage, inboundAssistantConfig, inboundExtraTools, inboundTexml } from './domain.ts';
+import { inboundLanguage, inboundAssistantConfig, inboundExtraTools, inboundTexml, DEFAULT_TRANSFER_NUMBER } from './domain.ts';
 Deno.test('inbound language follows the caller prefix', () => {
   if (inboundLanguage('+39 333 1234567').code !== 'it') throw new Error('it');
   if (inboundLanguage('+447700900123').code !== 'en') throw new Error('en');
