@@ -208,7 +208,9 @@ export function inboundExtraTools(url: string, transferNumber: string) {
       transfer: { targets: [{ name: 'Gennaro Caglione', to: transferNumber }], from: FROM_NUMBER,
         warm_transfer_instructions: 'Speak privately to Gennaro in Italian. Briefly introduce yourself as Bruno from Vesuviano Forni, state the caller name, country and request using only known facts, then ask: "Vuoi accettare la chiamata?" Wait for his explicit yes before completing the transfer. If he refuses, decline the transfer. Do not read internal CRM notes or invent caller details.',
         warm_transfer_acceptance: { enabled: true, end_user_target_context_mode: 'private', require_acceptance: true, timeout_secs: 60 },
-        voicemail_detection: { detection_mode: 'premium', on_voicemail_detected: { action: 'stop_transfer' } } } },
+        // Premium voicemail detection misread the office landline's ringing as voicemail after ~9s and cut the transfer.
+        // Required acceptance already prevents connecting a voicemail: only an explicit yes bridges the caller.
+        voicemail_detection: { detection_mode: 'disabled' } } },
   ];
 }
 export function inboundTexml(assistantId: string, url: string) {
