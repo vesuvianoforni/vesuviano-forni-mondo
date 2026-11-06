@@ -326,7 +326,7 @@ Deno.serve(async req => {
       // Keep tools added directly in the Telnyx portal (e.g. knowledge-base retrieval buckets).
       if (settings.assistant_id) {
         const current = await telnyx(`/ai/assistants/${settings.assistant_id}`);
-        for (const t of (current.data ?? current)?.tools ?? []) if (t.tool_id && t.type !== 'webhook' && t.type !== 'hangup' && !ids.includes(t.tool_id)) ids.push(t.tool_id);
+        for (const t of (current.data ?? current)?.tools ?? []) if (t.tool_id && t.type !== 'webhook' && t.type !== 'hangup' && t.type !== 'transfer' && library.some((l: any) => l.id === t.tool_id) && !ids.includes(t.tool_id)) ids.push(t.tool_id);
       }
       const config = assistantConfig(ids);
       const assistant = settings.assistant_id ? await telnyx(`/ai/assistants/${settings.assistant_id}`, 'POST', config) : await telnyx('/ai/assistants', 'POST', config);
@@ -339,13 +339,13 @@ Deno.serve(async req => {
       for (const definition of inboundExtraTools(url, transferNumber)) {
         const existing = library.find((t: { display_name: string; id: string }) => t.display_name === definition.display_name);
         // The transfer target can change: recreate that tool so the stored number is current.
-        if (existing && definition.type === 'transfer') await telnyx(`/ai/tools/${existing.id}`, 'DELETE').catch(() => null);
+        if (existing && definition.type === 'transfer') { await telnyx(`/ai/tools/${existing.id}`, 'DELETE').catch(() => null); const at = ids.indexOf(existing.id); if (at >= 0) ids.splice(at, 1); }
         const created = existing && definition.type !== 'transfer' ? null : await telnyx('/ai/tools', 'POST', definition);
         const result = existing && definition.type !== 'transfer' ? existing : created?.data ?? created;
         if (!result?.id) throw new Error('Strumento Telnyx in entrata non creato');
         extra.push(result.id);
       }
-      const inboundIds = [...ids.filter(id => library.find((t: any) => t.id === id)?.type !== 'transfer'), ...extra];
+      const inboundIds = [...ids.filter(id => library.find((t: any) => t.id === id)?.type !== 'transfer'), ...extra].filter((id, i, a) => a.indexOf(id) === i);
       const inboundConfig = inboundAssistantConfig(inboundIds, url);
       const inbound = settings.inbound_assistant_id ? await telnyx(`/ai/assistants/${settings.inbound_assistant_id}`, 'POST', inboundConfig) : await telnyx('/ai/assistants', 'POST', inboundConfig);
       const inboundId = inbound.data?.id ?? inbound.id;
