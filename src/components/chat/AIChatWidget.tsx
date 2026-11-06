@@ -180,11 +180,11 @@ export default function AIChatWidget() {
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "assistant",
-      content!: isReturning
+      content: (isReturning
         ? savedName
           ? (WELCOME_BACK[lang] || WELCOME_BACK["en"])!.replace("!", ` ${savedName}!`)
           : (WELCOME_BACK[lang] || WELCOME_BACK["en"])
-        : (WELCOME_MESSAGES[lang] || WELCOME_MESSAGES["en"]),
+        : (WELCOME_MESSAGES[lang] || WELCOME_MESSAGES["en"]))!,
     },
   ]);
   const [input, setInput] = useState("");

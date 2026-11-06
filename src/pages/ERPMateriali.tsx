@@ -125,7 +125,7 @@ export default function ERPMateriali() {
     setBusy(false);
     if (error) return toast.error(error.message);
     setEdit(null); load(); toast.success("Materiale aggiornato");
-  };
+   return undefined; };
 
   const visible = useMemo(() => {
     const q = filter.q.trim().toLowerCase();

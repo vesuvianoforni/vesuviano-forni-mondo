@@ -40,7 +40,7 @@ export function LeadQualificationCard({ leadId }: { leadId: string }) {
     setSaving(false);
     if (error) return toast({ title: "Salvataggio non riuscito", description: error.message, variant: "destructive" });
     setDirty(false); toast({ title: "Qualifica salvata" });
-  };
+   return undefined; };
 
   return (
     <Card className="sm:col-span-2">

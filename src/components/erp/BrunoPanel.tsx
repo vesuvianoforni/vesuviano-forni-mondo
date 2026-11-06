@@ -169,7 +169,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
     if (error) return toast({ title: "Errore", description: error.message, variant: "destructive" });
     setMode(next); setPausedUntil(null);
     onUpdated?.();
-  };
+   return undefined; };
 
   return (
     <div className={cn("bruno-workspace flex min-h-0 min-w-0 flex-1 overflow-hidden flex-col bg-background text-foreground", className)}>

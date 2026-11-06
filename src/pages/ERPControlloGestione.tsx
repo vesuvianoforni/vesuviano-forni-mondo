@@ -84,14 +84,14 @@ export default function ERPControlloGestione() {
     const { error } = await db.from("product_costs").upsert(rows, { onConflict: "product_id" });
     if (error) return toast.error(error.message);
     toast.success("Costi salvati"); setDirty(new Set());
-  };
+   return undefined; };
   const addEntry = async (orderId: string) => {
     const amount = num(newEntry.amount);
     if (amount == null) return toast.error("Inserisci un importo");
     const { error } = await db.from("order_cost_entries").insert({ order_id: orderId, category: newEntry.category, description: newEntry.description || null, amount });
     if (error) return toast.error(error.message);
     setNewEntry({ category: "produzione", description: "", amount: "" }); void load();
-  };
+   return undefined; };
   const delEntry = async (id: string) => { const { error } = await db.from("order_cost_entries").delete().eq("id", id); if (error) toast.error(error.message); else void load(); };
   const addExpense = async () => {
     const amount = num(newExp.amount);
@@ -99,7 +99,7 @@ export default function ERPControlloGestione() {
     const { error } = await db.from("operating_expenses").insert({ ...newExp, description: newExp.description || null, amount });
     if (error) return toast.error(error.message);
     setNewExp({ ...newExp, description: "", amount: "" }); void load();
-  };
+   return undefined; };
   const delExpense = async (id: string) => { const { error } = await db.from("operating_expenses").delete().eq("id", id); if (error) toast.error(error.message); else void load(); };
 
   if (loading) return <div className="flex h-[60vh] items-center justify-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;

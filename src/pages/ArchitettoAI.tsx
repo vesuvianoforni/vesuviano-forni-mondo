@@ -67,7 +67,7 @@ const ArchitettoAI = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to={(() => {
+                  <Link to={((() => {
                     const paths: Record<string, string> = {
                       it: '/it/informazioni-utili',
                       en: '/en/useful-information',
@@ -76,7 +76,7 @@ const ArchitettoAI = () => {
                       de: '/de/nuetzliche-informationen'
                     };
                     return paths[currentLang] || paths['it'];
-                  })()} className="text-gray-400 hover:text-white transition-colors">
+                  })())!} className="text-gray-400 hover:text-white transition-colors">
                     Informazioni Utili
                   </Link>
                 </li>

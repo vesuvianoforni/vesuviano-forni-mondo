@@ -34,7 +34,7 @@ export function BrunoKnowledge() {
     setBusy(false);
     if (error) return toast.error(error.message);
     setEdit(null); load(); toast.success("Knowledge salvata");
-  };
+   return undefined; };
   const remove = async (id: string) => {
     const { error } = await db.from("bruno_knowledge").delete().eq("id", id);
     if (error) toast.error(error.message); else load();

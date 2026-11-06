@@ -130,7 +130,7 @@ export default function ERPProdotti() {
     try { await savePrices([{ ...adding, product: { ...product, id: data.id } }]); } catch (e: any) { toast.error(e.message); }
     setAdding(null); setSaving(false); toast.success("Prodotto aggiunto");
     loadRows(listId);
-  };
+   return undefined; };
 
   const duplicate = async () => {
     const year = Math.max(...lists.map((l) => l.year), new Date().getFullYear()) + 1;
@@ -141,7 +141,7 @@ export default function ERPProdotti() {
     if (src?.length) await db.from("product_prices").insert(src.map((x: any) => ({ ...x, price_list_id: data.id })));
     toast.success(`Listino ${year} creato in bozza`);
     await loadLists(); setListId(data.id);
-  };
+   return undefined; };
 
   const activate = async () => {
     if (!confirm(`Attivare il listino ${list?.year}? Il listino attuale verrà archiviato e i nuovi prezzi useranno questo.`)) return;
@@ -149,7 +149,7 @@ export default function ERPProdotti() {
     if (error) return toast.error(error.message);
     toast.success(`Listino ${list?.year} attivo`); loadLists();
     setLists((ls) => ls.map((l) => ({ ...l, status: l.id === listId ? "active" : l.status === "active" ? "archived" : l.status })));
-  };
+   return undefined; };
 
   const saveTiers = async () => {
     setSaving(true);
