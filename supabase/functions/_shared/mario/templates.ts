@@ -1,6 +1,6 @@
 import { renderMailboxEmail } from '../email-layout.ts';
 export const MARIO_CONTACT_EMAIL = 'info@vesuvianoforni.com';
-export const MARIO_SIGNATURE = { id: 'mario', name: 'Gennaro Caglione', role: 'Sales & Export Manager', company: 'Vesuviano Forni', phone: '+39 081 19231684', whatsapp: '+39 350 928 6941', email: MARIO_CONTACT_EMAIL, website: 'https://vesuvianoforni.com', address: '', is_default: true };
+export const MARIO_SIGNATURE = { id: 'mario', name: 'Gennaro Caglione', role: 'Sales & Export Manager', company: 'Vesuviano Forni', phone: '+39 081 19231684', whatsapp: '+39 081 1923 1684', email: MARIO_CONTACT_EMAIL, website: 'https://vesuvianoforni.com', address: '', is_default: true };
 export function renderMarioEmail(body: string, language: string) {
   const optout = language === 'fr' ? 'Si vous ne souhaitez plus être contacté, répondez « stop » à cet email.' : 'If you prefer not to hear from us again, reply “stop” to this email.';
   return renderMailboxEmail(`${body.trim()}\n\n${optout}`, MARIO_SIGNATURE, { whatsappButton: language === 'fr'

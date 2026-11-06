@@ -74,7 +74,7 @@ CONDIZIONI DI VENDITA:
 
 CONTATTI:
 - Indirizzo: Via Santa Chiara, 80048 Sant'Anastasia (NA)
-- Telefono: +39 350 928 6941
+- Telefono: +39 081 1923 1684
 - Email: info@vesuvianoforni.com
 `;
 

@@ -4,7 +4,7 @@ export const NEWSLETTER_CONTACT = {
   role: 'Sales & Export Manager',
   company: 'Vesuviano Forni',
   phone: '+39 081 1923 1684',
-  whatsapp: '+39 350 928 6941',
+  whatsapp: '+39 081 1923 1684',
   email: 'info@vesuvianoforni.com',
   website: 'https://vesuvianoforni.com',
 } as const;

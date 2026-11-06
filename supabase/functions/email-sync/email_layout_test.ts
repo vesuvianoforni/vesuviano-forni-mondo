@@ -5,7 +5,7 @@ import { composeEmail } from '../_shared/email-transport.ts';
 import { simpleParser } from 'npm:mailparser@3.9.3';
 import { Buffer } from 'node:buffer';
 
-const first: EmailSignature = { id: 'cbad53c6-b078-4cd8-af57-fdab6e582c01', name: 'Gennaro Caglione', role: 'Sales & Export Manager', company: 'Vesuviano Forni', phone: '+39 081 1923 1684', whatsapp: '+39 350 928 6941', email: 'info@vesuvianoforni.com', website: 'https://vesuvianoforni.com', address: '', is_default: true };
+const first: EmailSignature = { id: 'cbad53c6-b078-4cd8-af57-fdab6e582c01', name: 'Gennaro Caglione', role: 'Sales & Export Manager', company: 'Vesuviano Forni', phone: '+39 081 1923 1684', whatsapp: '+39 081 1923 1684', email: 'info@vesuvianoforni.com', website: 'https://vesuvianoforni.com', address: '', is_default: true };
 const other: EmailSignature = { ...first, id: '6ac1ce57-eed3-4cbf-a570-d9b5ab85d081', is_default: false };
 Deno.test('Email selects the mailbox default signature when no choice is supplied', () => assertEquals(selectEmailSignature([other, first])?.id, first.id));
 Deno.test('An explicit signature choice overrides the mailbox default', () => assertEquals(selectEmailSignature([first, other], other.id)?.id, other.id));
