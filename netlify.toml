@@ -1,10 +1,12 @@
+# The site is server-rendered: Netlify builds it with the Netlify target
+# (see vite.config.ts, which switches on the NETLIFY env var Netlify sets)
+# and runs the pages as a function. No static index.html is produced.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
 [[redirects]]
   from = "/__l5e/*"
   to = "https://vesuviano-forni-mondo.lovable.app/__l5e/:splat"
   status = 200
   force = true
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
