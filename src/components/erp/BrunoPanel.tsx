@@ -39,7 +39,7 @@ async function invoke(body: Record<string, unknown>) {
 }
 
 /** Timeline, suggerimenti e composer di Bruno. Usato nel pannello lead e nella sezione Bruno. */
-export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; className?: string | undefined; onUpdated?: () => void }) {
+export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; className?: string | undefined; onUpdated?: (() => void) | undefined }) {
   const { toast } = useToast();
   const [channel, setChannel] = useState<BrunoChannel>("wasender");
   const [text, setText] = useState("");
