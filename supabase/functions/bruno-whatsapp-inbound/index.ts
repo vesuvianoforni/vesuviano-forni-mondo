@@ -25,7 +25,11 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers });
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
   const expected = Deno.env.get('ZAPPER_SYNC_KEY');
-  if (!expected || req.headers.get('x-api-key') !== expected) return json({ error: 'Unauthorized' }, 401);
+  // Also accepts the site's verified Lovable WhatsApp receiver, authenticated with the service key.
+  const internal = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+  const okZapper = !!expected && req.headers.get('x-api-key') === expected;
+  const okInternal = !!internal && req.headers.get('x-internal-key') === internal;
+  if (!okZapper && !okInternal) return json({ error: 'Unauthorized' }, 401);
 
   let payload: any;
   try { payload = await req.json(); } catch { return json({ error: 'Invalid JSON' }, 400); }
