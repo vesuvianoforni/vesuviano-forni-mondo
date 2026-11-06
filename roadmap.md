@@ -1,5 +1,9 @@
 # Roadmap
 
+## Bruno: filtro conversazioni per piattaforma (6 nov 2026)
+- [ ] Filtrare elenco clienti per Email, WhatsApp Gennaro, Bruno IT, Bruno UK, Chiamate e Note usando i conteggi completi già disponibili; applicare il filtro alla conversazione senza cambiare canale d’invio o bozza.
+- [ ] Verificare separazione IT/UK, combinazione con ricerca/fase/coda, stati vuoti e visualizzazione; accesso ERP reale non disponibile con Supabase esterno.
+
 ## Bruno: pausa autonomia e incarichi del team (5 nov 2026)
 - [x] Contesto operatore derivato dai percorsi propose/approve dopo verifica token e ruolo; autonomia bloccata per default, incarichi del team consentiti durante pausa/off senza modificare il lead. Conservati approvazioni atomiche, opposizioni, archivio, telefono e orari.
 - [x] Prompt e letture cliente Bruno distinguono autonomia e incarichi; suggerimenti CRM disponibili in pausa con etichetta Autonomia in pausa. Email/WhatsApp già consentiti ai chiamanti staff, nessuna modifica a invii o deduplicazione. Sei nuovi test; 44 test funzioni e 9 frontend superati, bruno-voice/bruno-chat distribuite.
