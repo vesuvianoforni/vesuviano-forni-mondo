@@ -813,7 +813,7 @@ const AdminProforma = () => {
                                           if (newAllowed.length === 0) return;
                                           const updated = [...items];
                                           updated[idx] = {
-                                            ...updated[idx],
+                                            ...updated[idx]!,
                                             specifications: { ...(updated[idx]!.specifications || {}), allowed_sizes: newAllowed },
                                           };
                                           setItems(updated);

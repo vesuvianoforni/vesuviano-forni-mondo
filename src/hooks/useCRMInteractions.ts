@@ -16,7 +16,7 @@ async function readAll<T extends InteractionTable>(table: T, columns: string) {
   }
 }
 
-export function useCRMInteractions(leads: LeadIdentity[], { includeMessages = true }: { includeMessages?: boolean } = {}) {
+export function useCRMInteractions(leads: LeadIdentity[], { includeMessages = true }: { includeMessages?: boolean | undefined} = {}) {
   const [events, setEvents] = useState<LeadInteraction[]>([]);
   const [state, setState] = useState<"loading" | "ready" | "partial">("loading");
   useEffect(() => {

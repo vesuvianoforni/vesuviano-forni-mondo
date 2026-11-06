@@ -33,7 +33,7 @@ export type Database = {
           is_active?: boolean
           sort_order?: number
           title: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           category?: string
@@ -43,7 +43,7 @@ export type Database = {
           is_active?: boolean
           sort_order?: number
           title?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -66,7 +66,7 @@ export type Database = {
           id?: string
           notes?: string | null
           phone_number: string
-          status?: string
+          status?: string | undefined
         }
         Update: {
           appointment_date?: string
@@ -76,7 +76,7 @@ export type Database = {
           id?: string
           notes?: string | null
           phone_number?: string
-          status?: string
+          status?: string | undefined
         }
         Relationships: []
       }
@@ -139,7 +139,7 @@ export type Database = {
           title_es: string
           title_fr: string
           title_it: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           author?: string | null
@@ -169,7 +169,7 @@ export type Database = {
           title_es?: string
           title_fr?: string
           title_it?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -220,7 +220,7 @@ export type Database = {
           status?: string
           tool_name: string
           updated_at?: string
-          voice_call_id?: string | null
+          voice_call_id?: string | null | undefined
         }
         Update: {
           approved_at?: string | null
@@ -244,7 +244,7 @@ export type Database = {
           status?: string
           tool_name?: string
           updated_at?: string
-          voice_call_id?: string | null
+          voice_call_id?: string | null | undefined
         }
         Relationships: [
           {
@@ -303,7 +303,7 @@ export type Database = {
           status?: string
           tick_token?: string
           title: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           approved_at?: string | null
@@ -320,7 +320,7 @@ export type Database = {
           status?: string
           tick_token?: string
           title?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -345,7 +345,7 @@ export type Database = {
           sort_order?: number
           stages?: string[]
           title: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           category?: string
@@ -356,7 +356,7 @@ export type Database = {
           sort_order?: number
           stages?: string[]
           title?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -427,7 +427,7 @@ export type Database = {
           summary_status?: string
           transcript?: Json
           transcript_status?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           approved_at?: string | null
@@ -461,7 +461,7 @@ export type Database = {
           summary_status?: string
           transcript?: Json
           transcript_status?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: [
           {
@@ -503,7 +503,7 @@ export type Database = {
           recording_url?: string | null
           status?: string
           token?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           attempts?: number
@@ -515,7 +515,7 @@ export type Database = {
           recording_url?: string | null
           status?: string
           token?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: [
           {
@@ -554,7 +554,7 @@ export type Database = {
           language?: string
           public_key?: string | null
           transfer_number?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           application_id?: string | null
@@ -568,7 +568,7 @@ export type Database = {
           language?: string
           public_key?: string | null
           transfer_number?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -597,7 +597,7 @@ export type Database = {
           price_b?: number | null
           price_c?: number | null
           specifications?: Json | null
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           created_at?: string
@@ -610,7 +610,7 @@ export type Database = {
           price_b?: number | null
           price_c?: number | null
           specifications?: Json | null
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -643,7 +643,7 @@ export type Database = {
           visitor_email?: string | null
           visitor_id: string
           visitor_name?: string | null
-          visitor_phone?: string | null
+          visitor_phone?: string | null | undefined
         }
         Update: {
           created_at?: string
@@ -658,7 +658,7 @@ export type Database = {
           visitor_email?: string | null
           visitor_id?: string
           visitor_name?: string | null
-          visitor_phone?: string | null
+          visitor_phone?: string | null | undefined
         }
         Relationships: [
           {
@@ -683,14 +683,14 @@ export type Database = {
           key?: string
           settings: Json
           updated_at?: string
-          updated_by?: string | null
+          updated_by?: string | null | undefined
         }
         Update: {
           created_at?: string
           key?: string
           settings?: Json
           updated_at?: string
-          updated_by?: string | null
+          updated_by?: string | null | undefined
         }
         Relationships: []
       }
@@ -727,7 +727,7 @@ export type Database = {
           public_enabled?: boolean
           status?: string
           title: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           amount?: number
@@ -744,7 +744,7 @@ export type Database = {
           public_enabled?: boolean
           status?: string
           title?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: [
           {
@@ -791,7 +791,7 @@ export type Database = {
           public_url?: string
           purpose?: string
           size_bytes?: number | null
-          title?: string
+          title?: string | undefined
         }
         Relationships: []
       }
@@ -816,7 +816,7 @@ export type Database = {
           name: string
           price: number
           type: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           created_at?: string
@@ -827,7 +827,7 @@ export type Database = {
           name?: string
           price?: number
           type?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -888,7 +888,7 @@ export type Database = {
           pizza_capacity: string
           sizes?: Json | null
           updated_at?: string
-          video_url_360?: string | null
+          video_url_360?: string | null | undefined
         }
         Update: {
           additional_images?: string[] | null
@@ -917,7 +917,7 @@ export type Database = {
           pizza_capacity?: string
           sizes?: Json | null
           updated_at?: string
-          video_url_360?: string | null
+          video_url_360?: string | null | undefined
         }
         Relationships: []
       }
@@ -962,7 +962,7 @@ export type Database = {
           status?: string
           stripe_session_id?: string | null
           total_price: number
-          vat_number?: string | null
+          vat_number?: string | null | undefined
         }
         Update: {
           billing_address?: string | null
@@ -983,7 +983,7 @@ export type Database = {
           status?: string
           stripe_session_id?: string | null
           total_price?: number
-          vat_number?: string | null
+          vat_number?: string | null | undefined
         }
         Relationships: [
           {
@@ -1069,7 +1069,7 @@ export type Database = {
           sent_via_email?: boolean | null
           sent_via_whatsapp?: boolean | null
           status?: string
-          token?: string
+          token?: string | undefined
         }
         Relationships: [
           {
@@ -1110,7 +1110,7 @@ export type Database = {
           label?: string
           sort_order?: number
           updated_at?: string
-          value?: string
+          value?: string | undefined
         }
         Relationships: []
       }
@@ -1177,7 +1177,7 @@ export type Database = {
           total_amount?: number | null
           updated_at?: string
           variable_fields?: Json
-          warranty_years?: number
+          warranty_years?: number | undefined
         }
         Update: {
           clauses?: Json
@@ -1209,7 +1209,7 @@ export type Database = {
           total_amount?: number | null
           updated_at?: string
           variable_fields?: Json
-          warranty_years?: number
+          warranty_years?: number | undefined
         }
         Relationships: []
       }
@@ -1244,7 +1244,7 @@ export type Database = {
           metadata?: Json | null
           sender?: string
           status?: string
-          subject?: string | null
+          subject?: string | null | undefined
         }
         Update: {
           ai_generated?: boolean
@@ -1260,7 +1260,7 @@ export type Database = {
           metadata?: Json | null
           sender?: string
           status?: string
-          subject?: string | null
+          subject?: string | null | undefined
         }
         Relationships: [
           {
@@ -1285,14 +1285,14 @@ export type Database = {
           label: string
           percentage?: number
           sort_order?: number
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           code?: string
           label?: string
           percentage?: number
           sort_order?: number
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -1315,7 +1315,7 @@ export type Database = {
           latest_uid?: number
           mailbox_id: string
           uid_validity: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           created_at?: string
@@ -1325,7 +1325,7 @@ export type Database = {
           latest_uid?: number
           mailbox_id?: string
           uid_validity?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: [
           {
@@ -1369,7 +1369,7 @@ export type Database = {
           sent_from?: string
           sent_to?: string
           session_id?: string
-          subject?: string
+          subject?: string | undefined
         }
         Relationships: [
           {
@@ -1426,7 +1426,7 @@ export type Database = {
           sent_at: string
           subject?: string
           uid_validity?: string | null
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           attachment_names?: Json
@@ -1449,7 +1449,7 @@ export type Database = {
           sent_at?: string
           subject?: string
           uid_validity?: string | null
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: [
           {
@@ -1498,7 +1498,7 @@ export type Database = {
           lease_token?: string | null
           lease_until?: string | null
           sent_folder?: string | null
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           address?: string
@@ -1510,7 +1510,7 @@ export type Database = {
           lease_token?: string | null
           lease_until?: string | null
           sent_folder?: string | null
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -1563,7 +1563,7 @@ export type Database = {
           smtp_accepted_at?: string | null
           smtp_status?: string
           subject: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           append_attempted_at?: string | null
@@ -1588,7 +1588,7 @@ export type Database = {
           smtp_accepted_at?: string | null
           smtp_status?: string
           subject?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: [
           {
@@ -1643,7 +1643,7 @@ export type Database = {
           role?: string
           updated_at?: string
           website?: string
-          whatsapp?: string
+          whatsapp?: string | undefined
         }
         Update: {
           address?: string
@@ -1658,7 +1658,7 @@ export type Database = {
           role?: string
           updated_at?: string
           website?: string
-          whatsapp?: string
+          whatsapp?: string | undefined
         }
         Relationships: [
           {
@@ -1697,7 +1697,7 @@ export type Database = {
           started_at?: string | null
           status?: string
           updated_at?: string
-          worker_token?: string
+          worker_token?: string | undefined
         }
         Update: {
           created_at?: string
@@ -1711,7 +1711,7 @@ export type Database = {
           started_at?: string | null
           status?: string
           updated_at?: string
-          worker_token?: string
+          worker_token?: string | undefined
         }
         Relationships: [
           {
@@ -1780,7 +1780,7 @@ export type Database = {
           status?: string
           updated_at?: string
           value?: number | null
-          website_lead_id?: string | null
+          website_lead_id?: string | null | undefined
         }
         Update: {
           archived?: boolean
@@ -1809,7 +1809,7 @@ export type Database = {
           status?: string
           updated_at?: string
           value?: number | null
-          website_lead_id?: string | null
+          website_lead_id?: string | null | undefined
         }
         Relationships: []
       }
@@ -1836,7 +1836,7 @@ export type Database = {
           period_key: string
           started_at?: string | null
           status?: string
-          worker_token?: string
+          worker_token?: string | undefined
         }
         Update: {
           campaign_id?: string | null
@@ -1848,7 +1848,7 @@ export type Database = {
           period_key?: string
           started_at?: string | null
           status?: string
-          worker_token?: string
+          worker_token?: string | undefined
         }
         Relationships: [
           {
@@ -1877,7 +1877,7 @@ export type Database = {
           enabled?: boolean
           month: number
           title: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           code?: string
@@ -1886,7 +1886,7 @@ export type Database = {
           enabled?: boolean
           month?: number
           title?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -1903,14 +1903,14 @@ export type Database = {
           key: string
           reason: string
           status: number
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           created_at?: string
           key?: string
           reason?: string
           status?: number
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -1967,7 +1967,7 @@ export type Database = {
           title?: string
           translation_source?: string | null
           translations?: Json
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           audience?: Json
@@ -1994,7 +1994,7 @@ export type Database = {
           title?: string
           translation_source?: string | null
           translations?: Json
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -2023,7 +2023,7 @@ export type Database = {
           recipient_name?: string | null
           resend_id?: string | null
           sent_at?: string | null
-          status?: string
+          status?: string | undefined
         }
         Update: {
           campaign_id?: string
@@ -2036,7 +2036,7 @@ export type Database = {
           recipient_name?: string | null
           resend_id?: string | null
           sent_at?: string | null
-          status?: string
+          status?: string | undefined
         }
         Relationships: [
           {
@@ -2064,12 +2064,12 @@ export type Database = {
         Insert: {
           created_at?: string
           email: string
-          reason?: string | null
+          reason?: string | null | undefined
         }
         Update: {
           created_at?: string
           email?: string
-          reason?: string | null
+          reason?: string | null | undefined
         }
         Relationships: []
       }
@@ -2094,7 +2094,7 @@ export type Database = {
           description?: string | null
           expense_date?: string
           id?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           amount?: number
@@ -2105,7 +2105,7 @@ export type Database = {
           description?: string | null
           expense_date?: string
           id?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -2130,7 +2130,7 @@ export type Database = {
           description?: string | null
           id?: string
           order_id: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           amount?: number
@@ -2141,7 +2141,7 @@ export type Database = {
           description?: string | null
           id?: string
           order_id?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: [
           {
@@ -2188,7 +2188,7 @@ export type Database = {
           oven_id?: string | null
           quantity?: number
           sort_order?: number
-          unit_price?: number
+          unit_price?: number | undefined
         }
         Update: {
           burner_id?: string | null
@@ -2206,7 +2206,7 @@ export type Database = {
           oven_id?: string | null
           quantity?: number
           sort_order?: number
-          unit_price?: number
+          unit_price?: number | undefined
         }
         Relationships: [
           {
@@ -2287,7 +2287,7 @@ export type Database = {
           total_amount?: number
           tracking_number?: string | null
           updated_at?: string
-          vat_number?: string | null
+          vat_number?: string | null | undefined
         }
         Update: {
           balance_due?: number
@@ -2315,7 +2315,7 @@ export type Database = {
           total_amount?: number
           tracking_number?: string | null
           updated_at?: string
-          vat_number?: string | null
+          vat_number?: string | null | undefined
         }
         Relationships: [
           {
@@ -2342,7 +2342,7 @@ export type Database = {
           created_at?: string
           instructions?: string
           key?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           ai_reason?: string | null
@@ -2350,7 +2350,7 @@ export type Database = {
           created_at?: string
           instructions?: string
           key?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -2381,7 +2381,7 @@ export type Database = {
           lease_until?: string | null
           owner_id?: string | null
           territory_cursor?: number
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           auto_paused_reason?: string | null
@@ -2395,7 +2395,7 @@ export type Database = {
           lease_until?: string | null
           owner_id?: string | null
           territory_cursor?: number
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -2428,7 +2428,7 @@ export type Database = {
           status?: string
           title?: string
           updated_at?: string
-          user_id?: string
+          user_id?: string | undefined
         }
         Relationships: []
       }
@@ -2457,7 +2457,7 @@ export type Database = {
           received_at: string
           sender: string
           subject: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           body?: string
@@ -2470,7 +2470,7 @@ export type Database = {
           received_at?: string
           sender?: string
           subject?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: [
           {
@@ -2501,7 +2501,7 @@ export type Database = {
           source_url?: string | null
           title: string
           updated_at?: string
-          updated_by?: string | null
+          updated_by?: string | null | undefined
         }
         Update: {
           active?: boolean
@@ -2511,7 +2511,7 @@ export type Database = {
           source_url?: string | null
           title?: string
           updated_at?: string
-          updated_by?: string | null
+          updated_by?: string | null | undefined
         }
         Relationships: []
       }
@@ -2554,7 +2554,7 @@ export type Database = {
           step: number
           subject?: string | null
           template_key?: string | null
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           approved_at?: string | null
@@ -2574,7 +2574,7 @@ export type Database = {
           step?: number
           subject?: string | null
           template_key?: string | null
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: [
           {
@@ -2625,7 +2625,7 @@ export type Database = {
           sent_folder?: string | null
           smtp_status?: string
           subject: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           accepted_at?: string | null
@@ -2645,7 +2645,7 @@ export type Database = {
           sent_folder?: string | null
           smtp_status?: string
           subject?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: [
           {
@@ -2727,7 +2727,7 @@ export type Database = {
           step?: number
           summary?: string | null
           updated_at?: string
-          website?: string | null
+          website?: string | null | undefined
         }
         Update: {
           city?: string | null
@@ -2759,7 +2759,7 @@ export type Database = {
           step?: number
           summary?: string | null
           updated_at?: string
-          website?: string | null
+          website?: string | null | undefined
         }
         Relationships: [
           {
@@ -2802,7 +2802,7 @@ export type Database = {
           result?: Json | null
           status?: string
           updated_at?: string
-          worker_token?: string
+          worker_token?: string | undefined
         }
         Update: {
           callback_claimed?: boolean
@@ -2818,7 +2818,7 @@ export type Database = {
           result?: Json | null
           status?: string
           updated_at?: string
-          worker_token?: string
+          worker_token?: string | undefined
         }
         Relationships: [
           {
@@ -2871,7 +2871,7 @@ export type Database = {
           thread_id: string
           updated_at?: string
           verification_attempts?: number
-          verified?: number
+          verified?: number | undefined
         }
         Update: {
           analysis?: Json
@@ -2892,7 +2892,7 @@ export type Database = {
           thread_id?: string
           updated_at?: string
           verification_attempts?: number
-          verified?: number
+          verified?: number | undefined
         }
         Relationships: []
       }
@@ -2927,7 +2927,7 @@ export type Database = {
           lease_until?: string
           result?: Json
           sent?: number
-          status?: string
+          status?: string | undefined
         }
         Update: {
           actor_run_id?: string | null
@@ -2943,7 +2943,7 @@ export type Database = {
           lease_until?: string
           result?: Json
           sent?: number
-          status?: string
+          status?: string | undefined
         }
         Relationships: []
       }
@@ -2994,7 +2994,7 @@ export type Database = {
           updated_at?: string
           weekdays?: number[]
           window_end?: number
-          window_start?: number
+          window_start?: number | undefined
         }
         Update: {
           cities?: Json
@@ -3018,7 +3018,7 @@ export type Database = {
           updated_at?: string
           weekdays?: number[]
           window_end?: number
-          window_start?: number
+          window_start?: number | undefined
         }
         Relationships: []
       }
@@ -3036,7 +3036,7 @@ export type Database = {
         Update: {
           created_at?: string
           reason?: string
-          value?: string
+          value?: string | undefined
         }
         Relationships: []
       }
@@ -3065,7 +3065,7 @@ export type Database = {
           subject: string
           title: string
           updated_at?: string
-          updated_by?: string | null
+          updated_by?: string | null | undefined
         }
         Update: {
           active?: boolean
@@ -3078,7 +3078,7 @@ export type Database = {
           subject?: string
           title?: string
           updated_at?: string
-          updated_by?: string | null
+          updated_by?: string | null | undefined
         }
         Relationships: []
       }
@@ -3107,7 +3107,7 @@ export type Database = {
           name: string
           specifications?: Json | null
           subcategory?: string | null
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           category?: string
@@ -3120,7 +3120,7 @@ export type Database = {
           name?: string
           specifications?: Json | null
           subcategory?: string | null
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: []
       }
@@ -3147,7 +3147,7 @@ export type Database = {
           notes?: string | null
           status?: string
           updated_at?: string
-          year?: number
+          year?: number | undefined
         }
         Relationships: []
       }
@@ -3162,13 +3162,13 @@ export type Database = {
           asset_id: string
           created_at?: string
           product_id: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           asset_id?: string
           created_at?: string
           product_id?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: [
           {
@@ -3228,7 +3228,7 @@ export type Database = {
           storage_path?: string | null
           tags?: string[]
           title?: string
-          url?: string
+          url?: string | undefined
         }
         Relationships: [
           {
@@ -3255,7 +3255,7 @@ export type Database = {
           currency?: string
           product_id: string
           updated_at?: string
-          updated_by?: string | null
+          updated_by?: string | null | undefined
         }
         Update: {
           cost?: number | null
@@ -3263,7 +3263,7 @@ export type Database = {
           currency?: string
           product_id?: string
           updated_at?: string
-          updated_by?: string | null
+          updated_by?: string | null | undefined
         }
         Relationships: [
           {
@@ -3294,7 +3294,7 @@ export type Database = {
           market: string
           price_list_id: string
           product_id: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           amount?: number | null
@@ -3304,7 +3304,7 @@ export type Database = {
           market?: string
           price_list_id?: string
           product_id?: string
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: [
           {
@@ -3360,7 +3360,7 @@ export type Database = {
           size_label?: string | null
           sort_order?: number
           source_key?: string | null
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           burner_id?: string | null
@@ -3379,7 +3379,7 @@ export type Database = {
           size_label?: string | null
           sort_order?: number
           source_key?: string | null
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: [
           {
@@ -3439,7 +3439,7 @@ export type Database = {
           quantity?: number
           sort_order?: number
           specifications?: Json | null
-          unit_price?: number
+          unit_price?: number | undefined
         }
         Update: {
           ai_render_url?: string | null
@@ -3460,7 +3460,7 @@ export type Database = {
           quantity?: number
           sort_order?: number
           specifications?: Json | null
-          unit_price?: number
+          unit_price?: number | undefined
         }
         Relationships: [
           {
@@ -3547,7 +3547,7 @@ export type Database = {
           total_price?: number
           updated_at?: string
           valid_until?: string | null
-          vat_number?: string | null
+          vat_number?: string | null | undefined
         }
         Update: {
           bank_account?: string
@@ -3578,7 +3578,7 @@ export type Database = {
           total_price?: number
           updated_at?: string
           valid_until?: string | null
-          vat_number?: string | null
+          vat_number?: string | null | undefined
         }
         Relationships: []
       }
@@ -3615,7 +3615,7 @@ export type Database = {
           sent_at?: string | null
           status?: string
           updated_at?: string
-          website_lead_id?: string | null
+          website_lead_id?: string | null | undefined
         }
         Update: {
           created_at?: string
@@ -3632,7 +3632,7 @@ export type Database = {
           sent_at?: string | null
           status?: string
           updated_at?: string
-          website_lead_id?: string | null
+          website_lead_id?: string | null | undefined
         }
         Relationships: []
       }
@@ -3673,7 +3673,7 @@ export type Database = {
           oven_id?: string | null
           sale_price?: number | null
           sold_at?: string | null
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Update: {
           coating?: string | null
@@ -3692,7 +3692,7 @@ export type Database = {
           oven_id?: string | null
           sale_price?: number | null
           sold_at?: string | null
-          updated_at?: string
+          updated_at?: string | undefined
         }
         Relationships: [
           {
@@ -3724,7 +3724,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: number
-          role?: string
+          role?: string | undefined
         }
         Relationships: []
       }
@@ -3754,7 +3754,7 @@ export type Database = {
           link_code?: string | null
           linked_at?: string | null
           telegram_username?: string | null
-          user_id?: string
+          user_id?: string | undefined
         }
         Relationships: []
       }
@@ -3787,7 +3787,7 @@ export type Database = {
           sent_at?: string | null
           snoozed_until?: string | null
           tg_messages?: Json
-          token?: string
+          token?: string | undefined
         }
         Update: {
           body?: string | null
@@ -3802,7 +3802,7 @@ export type Database = {
           sent_at?: string | null
           snoozed_until?: string | null
           tg_messages?: Json
-          token?: string
+          token?: string | undefined
         }
         Relationships: []
       }
@@ -3825,7 +3825,7 @@ export type Database = {
           decided_by?: string | null
           id?: string
           status?: string
-          summary?: string | null
+          summary?: string | null | undefined
         }
         Update: {
           actions?: Json
@@ -3835,7 +3835,7 @@ export type Database = {
           decided_by?: string | null
           id?: string
           status?: string
-          summary?: string | null
+          summary?: string | null | undefined
         }
         Relationships: []
       }
@@ -3850,7 +3850,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          update_id?: number
+          update_id?: number | undefined
         }
         Relationships: []
       }
@@ -3871,7 +3871,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
+          user_id?: string | undefined
         }
         Relationships: []
       }
@@ -3906,7 +3906,7 @@ export type Database = {
           oven_type?: string | null
           phone?: string | null
           status?: string
-          website?: string | null
+          website?: string | null | undefined
         }
         Update: {
           city?: string | null
@@ -3922,7 +3922,7 @@ export type Database = {
           oven_type?: string | null
           phone?: string | null
           status?: string
-          website?: string | null
+          website?: string | null | undefined
         }
         Relationships: []
       }
@@ -3949,7 +3949,7 @@ export type Database = {
           p_before_id?: string
           p_channel?: string
           p_lead_id: string
-          p_limit?: number
+          p_limit?: number | undefined
         }
         Returns: {
           ai_generated: boolean
@@ -3986,7 +3986,7 @@ export type Database = {
           preview: string
         }[]
       }
-      bruno_workspace_summary: { Args: { p_days?: number }; Returns: Json }
+      bruno_workspace_summary: { Args: { p_days?: number | undefined}; Returns: Json }
       cancel_bruno_action: {
         Args: { p_id: string; p_user: string }
         Returns: boolean

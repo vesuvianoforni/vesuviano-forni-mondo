@@ -95,7 +95,7 @@ export default function ERPLeads() {
           .order("id")
           .range(from, from + 999);
         if (error) throw error;
-        allLeads.push(...(data || []));
+        allLeads.push(...((data || []) as unknown as Lead[]));
         if (!data || data.length < 1000) break;
       }
       setLeads(allLeads);

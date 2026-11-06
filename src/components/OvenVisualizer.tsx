@@ -48,7 +48,7 @@ const OvenVisualizer = () => {
         
         if (error) throw error;
         
-        setOvens(data || []);
+        setOvens((data || []) as unknown as OvenData[]);
       } catch (error) {
         console.error('Error loading ovens:', error);
         toast.error(t('common.error'));

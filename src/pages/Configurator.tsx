@@ -54,9 +54,9 @@ interface ConfiguratorOven {
       video_url_360?: string | undefined;
       render_images?: string[] | undefined;
       prices: {
-        listA: { base: number; gas?: number; electric?: number; onSite?: number };
-        listB: { base: number; gas?: number; electric?: number; onSite?: number };
-        listC: { base: number; gas?: number; electric?: number; onSite?: number };
+        listA: { base: number; gas?: number | undefined; electric?: number | undefined; onSite?: number | undefined};
+        listB: { base: number; gas?: number | undefined; electric?: number | undefined; onSite?: number | undefined};
+        listC: { base: number; gas?: number | undefined; electric?: number | undefined; onSite?: number | undefined};
       };
     }>;
   }>;

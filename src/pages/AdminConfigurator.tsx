@@ -22,9 +22,9 @@ import SEOHead from '@/components/SEOHead';
 
 const AdminConfigurator = () => {
   const navigate = useNavigate();
-  const [ovens, setOvens] = useState([]);
-  const [options, setOptions] = useState([]);
-  const [quotes, setQuotes] = useState([]);
+  const [ovens, setOvens] = useState<any[]>([]);
+  const [options, setOptions] = useState<any[]>([]);
+  const [quotes, setQuotes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingOven, setEditingOven] = useState<any>(null);
   const [showAddOven, setShowAddOven] = useState(false);

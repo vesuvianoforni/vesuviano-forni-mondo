@@ -91,7 +91,7 @@ export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel) {
           const id = payload.old?.["id"];
           if (typeof id === "string") setMessages(current => current.filter(m => m.id !== id));
         } else {
-          const message = payload.new as BrunoMessageData & { lead_id?: string };
+          const message = payload.new as BrunoMessageData & { lead_id?: string | undefined};
           if (message.id && message.lead_id === leadId) {
             setMessages(current => {
               const belongs = filter === "all" || message.channel === filter;

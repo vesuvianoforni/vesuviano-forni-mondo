@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { EmailPreview } from './EmailPreview';
 
 const emptySignature = { name: '', role: '', company: 'Vesuviano Forni', phone: '+39 081 1923 1684', whatsapp: '+39 350 928 6941', email: 'info@vesuvianoforni.com', website: 'https://vesuvianoforni.com', address: '', is_default: false };
-type Draft = Omit<MailSignature, 'id'> & { id?: string };
+type Draft = Omit<MailSignature, 'id'> & { id?: string | undefined};
 const sample = 'Buongiorno,\n\ngrazie per averci contattato. Sarà un piacere aiutarla a scegliere il forno per il suo progetto.\n\nResto a disposizione.';
 export function EmailSignatures() {
   const { toast } = useToast();
@@ -67,7 +67,7 @@ export function EmailSignatures() {
   </div>;
 }
 
-export function EmailSignatureSelector({ value, onChange, disabled }: { value: string; onChange: (value: string) => void; disabled?: boolean }) {
+export function EmailSignatureSelector({ value, onChange, disabled }: { value: string; onChange: (value: string) => void; disabled?: boolean | undefined}) {
   const [signatures, setSignatures] = useState<MailSignature[]>([]);
   const [error, setError] = useState('');
   useEffect(() => { void mailboxRequest('signatures').then(result => setSignatures(result.signatures)).catch(() => setError('Firme non disponibili')); }, []);

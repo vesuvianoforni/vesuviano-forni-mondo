@@ -21,7 +21,7 @@ function loadTemplates(leadId?: string, phone?: string | null) {
 export const fillTemplate = (body: string, params: string[]) => body.replace(/\{\{(\d+)\}\}/g, (_, n) => params[Number(n) - 1] || `{{${n}}}`);
 
 /** Modelli WhatsApp approvati da Meta: necessari fuori dalla finestra di 24 ore. */
-export function WaTemplatePicker({ leadId, phone, firstName, value, onChange, disabled }: { leadId?: string; phone?: string | null; firstName: string; value: WaTemplateChoice; onChange: (v: WaTemplateChoice) => void; disabled?: boolean }) {
+export function WaTemplatePicker({ leadId, phone, firstName, value, onChange, disabled }: { leadId?: string | undefined; phone?: string | null | undefined; firstName: string; value: WaTemplateChoice; onChange: (v: WaTemplateChoice) => void; disabled?: boolean | undefined}) {
   const [templates, setTemplates] = useState<WaTemplate[]>([]);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => { setError(null); loadTemplates(leadId, phone).then(setTemplates).catch(() => setError("Modelli non disponibili")); }, [leadId, phone]);

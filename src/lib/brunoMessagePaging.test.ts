@@ -25,7 +25,7 @@ describe("Bruno history paging", () => {
   });
   it("deduplicates realtime and older page overlaps while retaining updated states", () => {
     const current = [{ id: 'b', created_at: '2026-02-01T00:00:00Z', status: 'sent' }];
-    const merged = mergeMessagePages<{ id: string; created_at: string; status?: string }>(current, [{ id: 'a', created_at: '2026-01-01T00:00:00Z', status: 'logged' }, { ...current[0], status: 'read' }]);
+    const merged = mergeMessagePages<{ id: string; created_at: string; status?: string }>(current, [{ id: 'a', created_at: '2026-01-01T00:00:00Z', status: 'logged' }, { ...current[0]!, status: 'read' }]);
     assert.deepEqual(merged.map(m => m.id), ['a', 'b']);
     assert.equal(merged[1]!.status, 'read');
   });

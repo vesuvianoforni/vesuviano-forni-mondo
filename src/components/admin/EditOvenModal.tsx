@@ -36,7 +36,7 @@ interface SizeOption {
   passage_space_cm: number | null;
   can_be_built_on_site: boolean;
   datasheet_url?: string | undefined;
-  datasheet_urls?: { it?: string; en?: string; fr?: string; de?: string; es?: string } | undefined;
+  datasheet_urls?: { it?: string | undefined; en?: string | undefined; fr?: string | undefined; de?: string | undefined; es?: string | undefined} | undefined;
 }
 
 const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) => {

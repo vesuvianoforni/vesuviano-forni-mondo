@@ -452,7 +452,7 @@ const ERPListini = () => {
   );
                       })}
                       <td className="py-2 text-right">
-                        {editedBurnerPrices[b.id] && Object.keys(editedBurnerPrices[b.id]).length > 0 && (
+                        {editedBurnerPrices[b.id] && Object.keys(editedBurnerPrices[b.id]!).length > 0 && (
                           <Button size="sm" onClick={() => saveBurnerPrice(b)} disabled={saving === b.id} className="bg-primary hover:bg-primary/90 text-xs h-7">
                             {saving === b.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
                           </Button>

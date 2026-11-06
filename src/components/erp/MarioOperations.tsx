@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { MarioRunSummary, MARIO_RUN_LABELS, MARIO_RUN_STATUS, type MarioRun } from './MarioRunSummary';
 
 type Knowledge = { id: string; title: string; content: string; source_url: string | null; active: boolean };
-type Draft = { id: string; prospect_id: string; step: number; subject: string; body: string; html: string; status: string; approved_at?:string|null };
+type Draft = { id: string; prospect_id: string; step: number; subject: string; body: string; html: string; status: string; approved_at?:string|null | undefined};
 interface Overview { config: { instructions: string; ai_status: number | null; ai_reason: string | null }; knowledge: Knowledge[]; runs: MarioRun[]; messages: Draft[]; is_admin: boolean; system_prompt: string; version: string }
 
 export async function marioAction(body: Record<string, unknown>) {
@@ -26,7 +26,7 @@ export async function marioAction(body: Record<string, unknown>) {
   return data;
 }
 
-export function MarioOperations({ prospectId, onUpdated, initialTab = 'research' }: { prospectId?: string; onUpdated: () => void; initialTab?: string }) {
+export function MarioOperations({ prospectId, onUpdated, initialTab = 'research' }: { prospectId?: string | undefined; onUpdated: () => void; initialTab?: string | undefined}) {
   const [data, setData] = useState<Overview | null>(null);
   const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [notice, setNotice] = useState('');
   const [tab, setTab] = useState(initialTab); const [city, setCity] = useState('London'); const [country, setCountry] = useState('UK'); const [kind, setKind] = useState('pizzeria'); const [provider, setProvider] = useState('firecrawl'); const [limit, setLimit] = useState(10);

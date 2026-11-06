@@ -12,7 +12,7 @@ import { callLabels, voiceRequest, type VoiceCall, type VoiceView } from '@/lib/
 type State = { configured: boolean; from_number: string; language: string; calls: VoiceCall[]; has_more: boolean };
 
 const outcomeLabels: Record<string,string> = { no_answer: 'Nessuna risposta', busy: 'Occupato', unreachable: 'Non raggiungibile', no_conversation: 'Riagganciata subito' };
-export function BrunoVoice({embedded=false}: {embedded?:boolean}) {
+export function BrunoVoice({embedded=false}: {embedded?:boolean | undefined}) {
   const [open, setOpen] = useState(embedded), [state, setState] = useState<State | null>(null);
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null);
   const [confirmation, setConfirmation] = useState<VoiceCall | null>(null);
