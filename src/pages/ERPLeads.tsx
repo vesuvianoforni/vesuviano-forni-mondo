@@ -55,9 +55,9 @@ export default function ERPLeads() {
   const selectedPipeline = "Vesuviano";
   const [selectedCountry, setSelectedCountry] = useState<string>("all");
   const [showClosed, setShowClosed] = useState(false);
-  const [view, setView] = useState<"board" | "list">(() => (localStorage.getItem("crm-view") === "list" ? "list" : "board"));
+  const [view, setView] = useState<"board" | "list">(() => (typeof window !== "undefined" && localStorage.getItem("crm-view") === "list" ? "list" : "board"));
   const [stageFilter, setStageFilter] = useState<string>("all");
-  const [sort, setSort] = useState<CRMLeadSort>(() => { const s = localStorage.getItem("crm-sort"); return s && s in crmLeadSortLabels ? (s as CRMLeadSort) : "last_contact"; });
+  const [sort, setSort] = useState<CRMLeadSort>(() => { const s = typeof window !== "undefined" ? localStorage.getItem("crm-sort") : null; return s && s in crmLeadSortLabels ? (s as CRMLeadSort) : "last_contact"; });
   useEffect(() => { localStorage.setItem("crm-view", view); localStorage.setItem("crm-sort", sort); }, [view, sort]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -95,7 +95,7 @@ export default function ERPLeads() {
           .order("id")
           .range(from, from + 999);
         if (error) throw error;
-        allLeads.push(...(data || []));
+        allLeads.push(...((data || []) as unknown as Lead[]));
         if (!data || data.length < 1000) break;
       }
       setLeads(allLeads);

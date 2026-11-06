@@ -330,6 +330,7 @@ const ERPListinoRivenditori = () => {
 
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
+      <SEOHead title="ERP Listino Rivenditori | Vesuviano" description="Listino dedicato ai rivenditori." lang="it" noIndex />
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <DollarSign className="w-7 h-7 text-primary" />
@@ -431,9 +432,6 @@ const ERPListinoRivenditori = () => {
                             {size.coatings.map((c: any, cIdx: number) => {
                               const listAPrice = c.prices?.listA?.base || 0;
                               return (
-
-    <>
-      <SEOHead title="ERP Listino Rivenditori | Vesuviano" description="Listino dedicato ai rivenditori." lang="it" noIndex />
       <tr key={cIdx} className="border-t border-border">
                                   <td className="py-2 pr-4 text-foreground flex items-center gap-2">
                                     {c.image_url && <img src={c.image_url} alt={c.name} className="w-8 h-8 rounded object-cover" />}
@@ -477,8 +475,7 @@ const ERPListinoRivenditori = () => {
                                     </td>
                                   )}
                                 </tr>
-    </>
-  );
+);
                             })}
                           </tbody>
                         </table>

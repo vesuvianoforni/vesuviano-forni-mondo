@@ -4,7 +4,7 @@ import defaultLogo from '@/assets/vesuviano-logo-bianco.png';
 export * from '../../supabase/functions/commercial-offers/domain';
 export { renderCommercialOffer } from './commercialOfferRenderer';
 export async function commercialOfferAction<T>(body: unknown): Promise<T> {
-  const { data, error } = await supabase.functions.invoke('commercial-offers', { body });
+  const { data, error } = await supabase.functions.invoke('commercial-offers', { body: body as Record<string, unknown> });
   if (error) {
     let message = 'Impossibile completare l’operazione';
     if (error.context instanceof Response) { try { const result = await error.context.json(); message = result.error || message; } catch { /* sanitized fallback */ } }
@@ -22,15 +22,15 @@ export async function fetchCommercialOffers() {
     if (!data || data.length < 1000) return rows;
   }
 }
-type PriceFields = { base?: number; electric?: number; rotating?: number; onSite?: number };
-export interface CatalogOven { id:string; model_name:string; fuel_type:string[]; image_url:string; description?:string|null; sizes: unknown; }
-export interface CatalogBurner { id:string; name:string; description?:string|null; image_url?:string|null; price:number; price_b:number|null; price_c:number|null; }
+type PriceFields = { base?: number | undefined; electric?: number | undefined; rotating?: number | undefined; onSite?: number | undefined};
+export interface CatalogOven { id:string; model_name:string; fuel_type:string[]; image_url:string; description?:string|null | undefined; sizes: unknown; }
+export interface CatalogBurner { id:string; name:string; description?:string|null | undefined; image_url?:string|null | undefined; price:number; price_b:number|null; price_c:number|null; }
 export interface OfferCatalogProduct { key:string; name:string; description:string; image_url:string; price:number|null; }
 export function offerCatalog(ovens: CatalogOven[], burners: CatalogBurner[], list: PriceList): OfferCatalogProduct[] {
   const products: OfferCatalogProduct[] = [];
   const key = list === 'Reseller' ? 'listReseller' : `list${list}`;
   for (const oven of ovens) {
-    const sizes = oven.sizes as { diameter:number; can_be_built_on_site?:boolean; coatings?:{name:string;image_url?:string;prices?:Record<string,PriceFields>}[] }[] | null;
+    const sizes = oven.sizes as { diameter:number; can_be_built_on_site?:boolean | undefined; coatings?:{name:string;image_url?:string | undefined;prices?:Record<string,PriceFields>}[] }[] | null;
     if (!Array.isArray(sizes)) continue;
     for (const size of sizes) for (const coating of size.coatings ?? []) {
       const prices = coating.prices?.[key];

@@ -202,6 +202,7 @@ const ERPListini = () => {
 
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto">
+      <SEOHead title="ERP Listini | Vesuviano" description="Gestione listini ERP." lang="it" noIndex />
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <DollarSign className="w-7 h-7 text-primary" />
@@ -437,9 +438,6 @@ const ERPListini = () => {
                           ? editedBurnerPrices[b.id]![list]
                           : (b as any)[priceKey] || 0;
                         return (
-
-    <>
-      <SEOHead title="ERP Listini | Vesuviano" description="Gestione listini ERP." lang="it" noIndex />
       <td key={list} className="py-2 text-center">
                             <Input
                               type="number"
@@ -448,11 +446,10 @@ const ERPListini = () => {
                               className="h-7 text-xs text-center bg-card border-border text-foreground w-24 mx-auto [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             />
                           </td>
-    </>
-  );
+);
                       })}
                       <td className="py-2 text-right">
-                        {editedBurnerPrices[b.id] && Object.keys(editedBurnerPrices[b.id]).length > 0 && (
+                        {editedBurnerPrices[b.id] && Object.keys(editedBurnerPrices[b.id]!).length > 0 && (
                           <Button size="sm" onClick={() => saveBurnerPrice(b)} disabled={saving === b.id} className="bg-primary hover:bg-primary/90 text-xs h-7">
                             {saving === b.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
                           </Button>

@@ -23,7 +23,7 @@ const ThankYou = ({ lang }: ThankYouProps) => {
   const [recommendation, setRecommendation] = useState<OvenRecommendation | null>(null);
 
   useEffect(() => {
-    i18n.changeLanguage(lang);
+    if (i18n.language !== lang) i18n.changeLanguage(lang);
   }, [lang, i18n]);
 
   useEffect(() => {

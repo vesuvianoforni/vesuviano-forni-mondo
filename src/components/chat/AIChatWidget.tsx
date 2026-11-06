@@ -203,7 +203,7 @@ export default function AIChatWidget() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Save conversation to DB
-  const saveConversation = useCallback(async (msgs: Msg[], contactInfo?: { name?: string; email?: string; phone?: string }) => {
+  const saveConversation = useCallback(async (msgs: Msg[], contactInfo?: { name?: string | undefined; email?: string | undefined; phone?: string | undefined}) => {
     const payload: Database['public']['Tables']['chat_conversations']['Insert'] = {
       visitor_id: visitorId,
       messages: msgs,

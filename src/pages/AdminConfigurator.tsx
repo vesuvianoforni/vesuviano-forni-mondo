@@ -22,9 +22,9 @@ import SEOHead from '@/components/SEOHead';
 
 const AdminConfigurator = () => {
   const navigate = useNavigate();
-  const [ovens, setOvens] = useState([]);
-  const [options, setOptions] = useState([]);
-  const [quotes, setQuotes] = useState([]);
+  const [ovens, setOvens] = useState<any[]>([]);
+  const [options, setOptions] = useState<any[]>([]);
+  const [quotes, setQuotes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingOven, setEditingOven] = useState<any>(null);
   const [showAddOven, setShowAddOven] = useState(false);
@@ -145,6 +145,7 @@ const AdminConfigurator = () => {
 
   return (
     <div className="min-h-screen bg-stone-50 p-8">
+      <SEOHead title="Admin Configurator | Vesuviano" description="Area amministrativa configuratore." lang="it" noIndex />
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Gestione Configuratore</h1>
@@ -354,9 +355,6 @@ const AdminConfigurator = () => {
                     };
 
                     return (
-
-    <>
-      <SEOHead title="Admin Configurator | Vesuviano" description="Area amministrativa configuratore." lang="it" noIndex />
       <TableRow key={oven.id}>
                         <TableCell>
                           {oven.image_url && (
@@ -367,7 +365,7 @@ const AdminConfigurator = () => {
                         <TableCell>
                           <div className="flex flex-wrap gap-1">
                             {Array.isArray(oven.fuel_type) ? (
-                              oven.fuel_type.filter(f => f).map((fuel, idx) => (
+                              oven.fuel_type.filter((f: string) => f).map((fuel: string, idx: number) => (
                                 <Badge key={idx} variant="outline" className="text-xs">
                                   {fuel}
                                 </Badge>
@@ -395,8 +393,7 @@ const AdminConfigurator = () => {
                           </div>
                         </TableCell>
                       </TableRow>
-    </>
-  );
+);
                   })}
                 </TableBody>
               </Table>

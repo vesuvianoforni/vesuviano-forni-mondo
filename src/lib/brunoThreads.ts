@@ -5,7 +5,7 @@ const KEY = "bruno-agent-threads";
 
 export function loadThreads(key = KEY): BrunoThread[] {
   if (typeof window === "undefined") return [];
-  try { return JSON.parse(localStorage.getItem(key) || "[]") as BrunoThread[]; } catch { return []; }
+  try { if (typeof window === "undefined") return []; return JSON.parse(localStorage.getItem(key) || "[]") as BrunoThread[]; } catch { return []; }
 }
 
 export function saveThreads(threads: BrunoThread[], key = KEY) {

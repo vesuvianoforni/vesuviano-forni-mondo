@@ -9,12 +9,12 @@ import { marioAction } from './MarioOperations';
 import { Tool, ToolContent } from '@/components/ai-elements/tool';
 import { CollapsibleTrigger } from '@/components/ui/collapsible';
 
-type Target = { provider: string; kind: string; country: string; city: string; query?: string; limit: number };
-type Plan = { id: string; request: string; status: string; approved_at: string | null; discovered: number; skipped: number; verified: number; examined?: number; verification_attempts?: number; error: string | null; created_at: string; proposal: { objective: string; rationale: string; criteria: string[]; exclusions: string[]; targets: Target[]; organization_goal?: number; verify_limit: number }; analysis: { organizations?: { total: number }[]; analyzed_at?: string } };
-type Job = { id: string; plan_id: string; kind: string; status: string; input: Target & { prospect_id?: string }; result: { prospect_ids?: string[]; qualified?: boolean } | null; error: string | null; lease_until: string | null };
+type Target = { provider: string; kind: string; country: string; city: string; query?: string | undefined; limit: number };
+type Plan = { id: string; request: string; status: string; approved_at: string | null; discovered: number; skipped: number; verified: number; examined?: number | undefined; verification_attempts?: number | undefined; error: string | null; created_at: string; proposal: { objective: string; rationale: string; criteria: string[]; exclusions: string[]; targets: Target[]; organization_goal?: number | undefined; verify_limit: number }; analysis: { organizations?: { total: number }[]; analyzed_at?: string | undefined} };
+type Job = { id: string; plan_id: string; kind: string; status: string; input: Target & { prospect_id?: string | undefined}; result: { prospect_ids?: string[] | undefined; qualified?: boolean | undefined} | null; error: string | null; lease_until: string | null };
 const STATES: Record<string, string> = { proposed: 'Da approvare', queued: 'Approvata · in avvio', running: 'Ricerca in corso', completed: 'Completata', cancelled: 'Arrestata', failed: 'Interrotta', superseded: 'Sostituita' };
 
-export function MarioResearch({ threadId, revision, onUpdated, onPlans, compact = false }: { threadId: string; revision: number; onUpdated: () => void; onPlans?: (count: number) => void; compact?: boolean }) {
+export function MarioResearch({ threadId, revision, onUpdated, onPlans, compact = false }: { threadId: string; revision: number; onUpdated: () => void; onPlans?: (count: number) => void; compact?: boolean | undefined}) {
   const [plans, setPlans] = useState<Plan[]>([]); const [jobs, setJobs] = useState<Job[]>([]);
   const [error, setError] = useState(''); const [busy, setBusy] = useState(false); const [loading, setLoading] = useState(true);
   const [confirm, setConfirm] = useState<Plan | null>(null); const [request, setRequest] = useState('');

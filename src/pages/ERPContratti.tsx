@@ -79,7 +79,7 @@ const DEFAULT_VF: ContractVariableFields = {
 
 type VFKey = keyof ContractVariableFields;
 
-type FieldDef = { key: VFKey; label: string; type?: 'text' | 'textarea' | 'date' | 'number'; presetKey?: string };
+type FieldDef = { key: VFKey; label: string; type?: 'text' | 'textarea' | 'date' | 'number' | undefined; presetKey?: string | undefined};
 const FIELD_GROUPS: { title: string; fields: FieldDef[] }[] = [
   {
     title: 'Riferimento & Cliente',
@@ -319,7 +319,7 @@ const ERPContratti = () => {
         toast.success('Contratto aggiornato');
       } else {
         const { data: userData } = await supabase.auth.getUser();
-        const { error } = await supabase.from('contracts').insert({ ...payload, created_by: userData.user?.id });
+        const { error } = await supabase.from('contracts').insert({ ...payload, created_by: userData.user?.id ?? null });
         if (error) throw error;
         toast.success('Contratto creato');
       }
@@ -564,7 +564,7 @@ const ERPContratti = () => {
                   const economicheDone = !!totalAmount;
                   const noteDone = !!notes;
 
-                  const NAV: { section: string; label: string; icon: any; done?: boolean }[][] = [
+                  const NAV: { section: string; label: string; icon: any; done?: boolean | undefined}[][] = [
                     [
                       { section: 'cliente', label: 'Dati Cliente', icon: User, done: clienteDone },
                       { section: 'economiche', label: 'Economiche', icon: Euro, done: economicheDone },

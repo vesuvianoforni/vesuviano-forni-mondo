@@ -422,6 +422,7 @@ const AdminProforma = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="Admin Proforma | Vesuviano" description="Gestione proforma area admin." lang="it" noIndex />
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-7xl">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
@@ -793,9 +794,6 @@ const AdminProforma = () => {
                                 {config.sizes.map(s => {
                                   const isAllowed = allowedSizes.length === 0 || allowedSizes.includes(s.diameter);
                                   return (
-
-    <>
-      <SEOHead title="Admin Proforma | Vesuviano" description="Gestione proforma area admin." lang="it" noIndex />
       <label key={s.diameter} className="flex items-center gap-1.5 text-xs cursor-pointer">
                                       <Checkbox
                                         checked={isAllowed && allowedSizes.length > 0}
@@ -813,7 +811,7 @@ const AdminProforma = () => {
                                           if (newAllowed.length === 0) return;
                                           const updated = [...items];
                                           updated[idx] = {
-                                            ...updated[idx],
+                                            ...updated[idx]!,
                                             specifications: { ...(updated[idx]!.specifications || {}), allowed_sizes: newAllowed },
                                           };
                                           setItems(updated);
@@ -821,8 +819,8 @@ const AdminProforma = () => {
                                       />
                                       Ø {s.diameter}cm
                                     </label>
-    </>
-  );
+);
+
                                 })}
                               </div>
                               {allowedSizes.length === 0 && (

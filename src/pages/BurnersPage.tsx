@@ -11,7 +11,6 @@ import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { Flame, Gauge, Settings } from 'lucide-react';
 import type { Json } from '@/integrations/supabase/types';
-import SEOHead from '@/components/SEOHead';
 
 interface BurnersPageProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
@@ -32,7 +31,7 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
   const { i18n, t } = useTranslation();
 
   useEffect(() => {
-    i18n.changeLanguage(lang);
+    if (i18n.language !== lang) i18n.changeLanguage(lang);
     document.documentElement.lang = lang;
     document.title = `${t('burners.pageTitle')} - Vesuviano`;
   }, [lang, i18n, t]);
@@ -152,8 +151,6 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
                 const specs = getSpecs(burner.specifications);
                 return (
 
-    <>
-      <SEOHead title="Bruciatori per Forni Pizza | Vesuviano" description="Catalogo bruciatori professionali per forni pizza Vesuviano: serie A, B e C." lang="it" />
       <Card key={burner.id} className="overflow-hidden border-stone-200 hover:shadow-xl transition-all duration-300 group">
                     <div className="relative h-56 bg-stone-100 overflow-hidden">
                       {burner.image_url ? (
@@ -210,8 +207,7 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
                       </div>
                     </CardContent>
                   </Card>
-    </>
-  );
+                );
               })}
             </div>
           )}

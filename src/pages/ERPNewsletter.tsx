@@ -26,7 +26,7 @@ const STATUS: Record<string, string> = { draft: 'Bozza', sending: 'In invio', se
 type Campaign = {
   id: string; title: string; prompt: string | null; language: string; subject: string; preheader: string; body: string;
   image_url: string | null; extra_images: string[]; cta_label: string | null; cta_url: string | null; audience: { stages: string[]; countries: string[] };
-  status: string; recipients_count: number; sent_count: number; failed_count: number; created_at: string; sent_at: string | null; last_error: string | null; author?: string;
+  status: string; recipients_count: number; sent_count: number; failed_count: number; created_at: string; sent_at: string | null; last_error: string | null; author?: string | undefined;
   translations?: Record<string, { subject: string; preheader: string; body: string; cta_label: string | null; cta_url: string | null }> | undefined;
   translation_source?: string | null | undefined;
 };
@@ -43,7 +43,7 @@ async function call(body: Record<string, unknown>) {
   return data;
 }
 
-export default function ERPNewsletter({ embedded = false }: { embedded?: boolean }) {
+export default function ERPNewsletter({ embedded = false }: { embedded?: boolean | undefined}) {
   const [list, setList] = useState<Campaign[]>([]);
   const [sel, setSel] = useState<Campaign | null>(null);
   const [busy, setBusy] = useState<string | null>(null);

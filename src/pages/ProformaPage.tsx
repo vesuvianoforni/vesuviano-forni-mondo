@@ -70,16 +70,16 @@ interface OvenModel {
     diameter: number;
     pizza_capacity: string;
     datasheet_url?: string | undefined;
-    datasheet_urls?: { it?: string; en?: string; fr?: string; de?: string; es?: string } | undefined;
+    datasheet_urls?: { it?: string | undefined; en?: string | undefined; fr?: string | undefined; de?: string | undefined; es?: string | undefined} | undefined;
     coatings: Array<{
       name: string;
       image_url: string;
       video_url_360?: string | undefined;
       render_images?: string[] | undefined;
       prices: {
-        listA: { base: number; gas?: number; electric?: number };
-        listB: { base: number; gas?: number; electric?: number };
-        listC: { base: number; gas?: number; electric?: number };
+        listA: { base: number; gas?: number | undefined; electric?: number | undefined};
+        listB: { base: number; gas?: number | undefined; electric?: number | undefined};
+        listC: { base: number; gas?: number | undefined; electric?: number | undefined};
       };
     }>;
   }>;
@@ -530,7 +530,7 @@ const ProformaPage = () => {
   const updateItemConfig = (itemId: string, updates: Partial<ItemConfig>) => {
     setItemConfigs(prev => ({
       ...prev,
-      [itemId]: { ...prev[itemId], ...updates },
+      [itemId]: { ...prev[itemId], ...updates } as ItemConfig,
     }));
   };
 
@@ -706,6 +706,7 @@ const ProformaPage = () => {
 
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-white">
+      <SEOHead title="Pro-Forma | Vesuviano" description="Pro-forma cliente Vesuviano." lang="it" noIndex />
       {/* Header */}
       <div className="bg-gradient-to-r from-[#2a1810] to-[#1a1a1a] border-b border-amber-900/30">
         <div className="container mx-auto px-4 py-6 sm:py-8 max-w-4xl">
@@ -994,17 +995,13 @@ const ProformaPage = () => {
                 const oven = getOvenForModel(item.model_name || '');
                 const price = oven && config ? getPrice(oven, config.fuelType, config.diameter || 0, config.coating, pl) : item.line_total;
                 return (
-
-    <>
-      <SEOHead title="Pro-Forma | Vesuviano" description="Pro-forma cliente Vesuviano." lang="it" noIndex />
       <div key={item.id} className="flex justify-between text-sm">
                     <span className="text-gray-300">
                       {item.model_name} — {config?.fuelType} Ø{config?.diameter}cm
                     </span>
                     <span className="text-amber-200 font-semibold">{formatPrice(price * item.quantity)}</span>
                   </div>
-    </>
-  );
+);
               })}
               {shouldShowBurners && selectedBurnerId && (() => {
                 const burner = burners.find(b => b.id === selectedBurnerId);

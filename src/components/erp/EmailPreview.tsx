@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { mailboxRequest, type MailSignature } from '@/lib/mailboxEmail';
 
-export function EmailPreview({ body, signatureId, signature }: { body: string; signatureId?: string | null; signature?: Partial<MailSignature> }) {
+export function EmailPreview({ body, signatureId, signature }: { body: string; signatureId?: string | null | undefined; signature?: Partial<MailSignature> | undefined }) {
   const [html, setHtml] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);

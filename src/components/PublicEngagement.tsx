@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { useLocation } from '@/lib/router-compat';
 
 const AIChatWidget = lazy(() => import('@/components/chat/AIChatWidget'));
@@ -6,6 +6,10 @@ const ReadyToShipPopup = lazy(() => import('@/components/ReadyToShipPopup'));
 
 const PublicEngagement = () => {
   const { pathname } = useLocation();
+  // Chat and popups read browser storage, so they mount only after hydration.
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
+  if (!hydrated) return null;
 
   // Keep conversion, administration and checkout screens free from promotional overlays.
   if (/^\/(erp|admin|configuratore|proforma|contratto|offerta)(\/|$)/.test(pathname) ||

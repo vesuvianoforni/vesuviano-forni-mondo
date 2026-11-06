@@ -6,7 +6,7 @@ const pizzoloLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/
 const ansumLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-ansum.png';
 const cuginiLogo = 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-cugini-pizza.png';
 
-type Client = { name: string; oven: 'sebastian' | 'realBoscoGas' | 'realBoscoWood'; img: string; ig?: string };
+type Client = { name: string; oven: 'sebastian' | 'realBoscoGas' | 'realBoscoWood'; img: string; ig?: string | undefined};
 
 const clients: Client[] = [
   { name: 'Pizzolo Bar', oven: 'sebastian', img: pizzoloLogo },
@@ -22,7 +22,7 @@ const ovenDescriptions = {
   es: { sebastian: 'Horno Sebastian, construido in situ por nuestros maestros artesanos.', realBoscoGas: 'Horno Real Bosco de gas.', realBoscoWood: 'Horno Real Bosco de leña.' },
 };
 
-type TrustedByPizzeriasProps = { children?: ReactNode };
+type TrustedByPizzeriasProps = { children?: ReactNode | undefined};
 
 const TrustedByPizzerias = ({ children }: TrustedByPizzeriasProps) => {
   const { i18n } = useTranslation();

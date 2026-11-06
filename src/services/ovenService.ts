@@ -1,3 +1,4 @@
+import type { TablesInsert, TablesUpdate } from '@/integrations/supabase/types';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface OvenData {
@@ -39,7 +40,7 @@ export const ovenService = {
   async create(ovenData: OvenData) {
     const { data, error } = await supabase
       .from('ovens')
-      .insert([ovenData])
+      .insert([ovenData as unknown as TablesInsert<'ovens'>])
       .select()
       .single();
     
@@ -51,7 +52,7 @@ export const ovenService = {
   async update(id: string, ovenData: Partial<OvenData>) {
     const { data, error } = await supabase
       .from('ovens')
-      .update(ovenData)
+      .update(ovenData as unknown as TablesUpdate<'ovens'>)
       .eq('id', id)
       .select()
       .single();

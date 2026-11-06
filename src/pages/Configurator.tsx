@@ -54,9 +54,9 @@ interface ConfiguratorOven {
       video_url_360?: string | undefined;
       render_images?: string[] | undefined;
       prices: {
-        listA: { base: number; gas?: number; electric?: number; onSite?: number };
-        listB: { base: number; gas?: number; electric?: number; onSite?: number };
-        listC: { base: number; gas?: number; electric?: number; onSite?: number };
+        listA: { base: number; gas?: number | undefined; electric?: number | undefined; onSite?: number | undefined};
+        listB: { base: number; gas?: number | undefined; electric?: number | undefined; onSite?: number | undefined};
+        listC: { base: number; gas?: number | undefined; electric?: number | undefined; onSite?: number | undefined};
       };
     }>;
   }>;
@@ -861,6 +861,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
   return (
     <div className="min-h-screen bg-background py-4 sm:py-6 md:py-12 px-3 sm:px-4 pb-24 md:pb-12">
+      <SEOHead title="Configuratore Forno | Vesuviano" description="Configura il tuo forno Vesuviano personalizzato." lang="it" noIndex />
       <div className="max-w-7xl mx-auto">
         {/* Language Selector */}
         <div className="flex justify-end mb-4">
@@ -1554,9 +1555,6 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 {['tooExpensive', 'tooLong', 'urgent', 'dontLike', 'noModel', 'otherSupplier'].map((key) => {
                   const reason = t(`configurator.feedback.reasons.${key}`);
                   return (
-
-    <>
-      <SEOHead title="Configuratore Forno | Vesuviano" description="Configura il tuo forno Vesuviano personalizzato." lang="it" noIndex />
       <div key={key} className="flex items-center space-x-2">
                       <Checkbox
                         id={key}
@@ -1570,8 +1568,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         {reason}
                       </label>
                     </div>
-    </>
-  );
+);
                 })}
               </div>
               

@@ -19,17 +19,17 @@ const SUGGESTIONS = [
   "Come rispondo a \"il prezzo è troppo alto\"?",
 ];
 
-export interface AgentConfig { fn: string; name: string; description: string; suggestions: string[]; instructionsKey: string; icon: LucideIcon; placeholder?: string; onInstructions?: () => void; onComplete?: () => void; disabled?: boolean }
+export interface AgentConfig { fn: string; name: string; description: string; suggestions: string[]; instructionsKey: string; icon: LucideIcon; placeholder?: string | undefined; onInstructions?: () => void; onComplete?: () => void; disabled?: boolean | undefined}
 
 const BRUNO: AgentConfig = { fn: "bruno-chat", name: "Bruno", description: "Conosce Vesuviano e il tuo CRM. Chiedi priorità, bozze di email e WhatsApp, risposte alle obiezioni.", suggestions: SUGGESTIONS, instructionsKey: "bruno-agent-instructions", icon: Bot };
 
-export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTail }: { thread: BrunoThread; onChange: (t: BrunoThread) => void; agent?: AgentConfig; conversationTail?: ReactNode }) {
+export function BrunoAgentChat({ thread, onChange, agent = BRUNO, conversationTail }: { thread: BrunoThread; onChange: (t: BrunoThread) => void; agent?: AgentConfig | undefined; conversationTail?: ReactNode | undefined}) {
   const INSTR_KEY = agent.instructionsKey; const FN_URL = FN_BASE + agent.fn; const Icon = agent.icon;
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [instrOpen, setInstrOpen] = useState(false);
-  const [instructions, setInstructions] = useState(() => localStorage.getItem(INSTR_KEY) || "");
+  const [instructions, setInstructions] = useState(() => (typeof window !== "undefined" ? localStorage.getItem(INSTR_KEY) : null) || "");
   const abortRef = useRef<AbortController | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);

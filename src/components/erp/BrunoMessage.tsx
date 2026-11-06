@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export interface BrunoMessageData {
   id: string; channel: BrunoChannel; direction: string; sender: string; subject: string | null;
   body: string; status: string; ai_generated: boolean; error: string | null; created_at: string;
-  metadata?: { voice_call_id?: string; recording_url?: string | null; duration_seconds?: number; message_type?: string | null; media_url?: string | null; file_name?: string | null; attachment_names?: string[] | null; whatsapp_line?: string | null } | null | undefined;
+  metadata?: { voice_call_id?: string | undefined; recording_url?: string | null | undefined; duration_seconds?: number | undefined; message_type?: string | null | undefined; media_url?: string | null | undefined; file_name?: string | null | undefined; attachment_names?: string[] | null | undefined; whatsapp_line?: string | null | undefined} | null | undefined;
 }
 
 const icons = { whatsapp_api: Bot, wasender: MessageCircle, email: Mail, note: StickyNote, call: Phone };

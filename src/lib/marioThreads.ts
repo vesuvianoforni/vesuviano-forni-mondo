@@ -1,6 +1,6 @@
 import type { BrunoChatMessage, BrunoThread } from './brunoThreads';
 
-export type MarioThread = BrunoThread & { status?: string };
+export type MarioThread = BrunoThread & { status?: string | undefined};
 
 export function decodeMarioMessages(value: unknown): BrunoChatMessage[] {
   if (!Array.isArray(value)) return [];

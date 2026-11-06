@@ -22,7 +22,7 @@ import { BrunoMessage } from "./BrunoMessage";
 import { useBrunoMessages } from "@/hooks/useBrunoMessages";
 import { WaTemplatePicker, type WaTemplateChoice } from "./WaTemplatePicker";
 
-export type BrunoLead = CRMLead & { bruno_mode?: string; bruno_paused_until?: string | null };
+export type BrunoLead = CRMLead & { bruno_mode?: string | undefined; bruno_paused_until?: string | null | undefined};
 
 const channelIcon = { whatsapp_api: Bot, wasender: MessageCircle, email: Mail, note: StickyNote, call: Phone };
 
@@ -39,7 +39,7 @@ async function invoke(body: Record<string, unknown>) {
 }
 
 /** Timeline, suggerimenti e composer di Bruno. Usato nel pannello lead e nella sezione Bruno. */
-export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; className?: string; onUpdated?: () => void }) {
+export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; className?: string | undefined; onUpdated?: (() => void) | undefined }) {
   const { toast } = useToast();
   const [channel, setChannel] = useState<BrunoChannel>("wasender");
   const [text, setText] = useState("");
@@ -59,7 +59,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
   const previousView = useRef("");
   const pendingAnchor = useRef<{ id: string; offset: number } | null>(null);
   const [awayFromLatest, setAwayFromLatest] = useState(false);
-  const emailOperation = useRef<{ key: string; draft: string; signatureId?: string | null } | null>(null);
+  const emailOperation = useRef<{ key: string; draft: string; signatureId?: string | null | undefined} | null>(null);
   const [signature, setSignature] = useState('default');
   const [previewOpen, setPreviewOpen] = useState(false);
   const signatureId = signature === 'none' ? null : signature === 'default' ? undefined : signature;
