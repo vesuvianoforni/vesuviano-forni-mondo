@@ -21,10 +21,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { BrunoMessage } from "./BrunoMessage";
 import { useBrunoMessages } from "@/hooks/useBrunoMessages";
 import { WaTemplatePicker, type WaTemplateChoice } from "./WaTemplatePicker";
+import { sendUkWhatsApp } from "@/lib/whatsapp-uk.functions";
 
 export type BrunoLead = CRMLead & { bruno_mode?: string | undefined; bruno_paused_until?: string | null | undefined};
 
-const channelIcon = { whatsapp_api: Bot, wasender: MessageCircle, email: Mail, note: StickyNote, call: Phone };
+const channelIcon = { whatsapp_api: Bot, whatsapp_uk: Bot, wasender: MessageCircle, email: Mail, note: StickyNote, call: Phone };
 
 async function invoke(body: Record<string, unknown>) {
   const { data, error } = await supabase.functions.invoke("bruno-agent", { body });
@@ -137,7 +138,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
     } finally { setThinking(false); }
   };
 
-  const useTemplate = channel === "whatsapp_api" && waTemplate;
+  const useTemplate = (channel === "whatsapp_api" || channel === "whatsapp_uk") && waTemplate;
   const send = async () => {
     if (useTemplate) {
       if (waTemplate.params.some((p) => !p.trim())) { toast({ title: "Compila tutte le variabili del modello", variant: "destructive" }); return; }
@@ -147,6 +148,14 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
       const draft = JSON.stringify([lead.id, subject || 'Vesuviano Forni', text.trim()]);
       if (channel === 'email' && emailOperation.current?.draft !== draft) emailOperation.current = { key: crypto.randomUUID(), draft, signatureId };
       if(channel==='email'&&emailOperation.current){try {sessionStorage.setItem(`crm-email-operation:${lead.id}`,JSON.stringify(emailOperation.current));}catch{/* optional storage */}}
+      if (channel === "whatsapp_uk") {
+        const { data: s } = await supabase.auth.getSession();
+        await sendUkWhatsApp({ data: { token: s.session?.access_token ?? "", lead_id: lead.id, body: useTemplate ? waTemplate.preview : text.trim(), ai_generated: aiDraft,
+          ...(useTemplate ? { template: { name: waTemplate.name, language: waTemplate.language, params: waTemplate.params.map((p) => p.trim()) } } : {}) } });
+        toast({ title: "Messaggio inviato con Bruno UK" });
+        setText(""); setWaTemplate(null); setAiDraft(false); followLatest.current = true;
+        return;
+      }
       const result = await invoke({ action: "send", lead_id: lead.id, channel, body: useTemplate ? waTemplate.preview : text.trim(),
         ...(useTemplate ? { template: { name: waTemplate.name, language: waTemplate.language, params: waTemplate.params.map((p) => p.trim()) } } : {}), subject: channel === "email" ? subject || undefined : undefined, ai_generated: aiDraft,
         ...(channel === 'email' ? { idempotency_key: emailOperation.current?.key, signature_id: emailOperation.current?.signatureId } : {}) });
@@ -214,7 +223,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
 
       {/* Channel filter */}
       <div className="flex shrink-0 flex-wrap gap-1 border-b px-3 py-2 sm:px-5" role="tablist" aria-label="Filtra per canale">
-        {([["all", "Tutte"], ["whatsapp_api", "WhatsApp Bruno"], ["wasender", "WhatsApp Gennaro"], ["email", "Email"], ["call", "Chiamate"], ["note", "Note"]] as const).map(([k, label]) => {
+        {([["all", "Tutte"], ["whatsapp_api", "WhatsApp Bruno IT"], ["whatsapp_uk", "WhatsApp Bruno UK"], ["wasender", "WhatsApp Gennaro"], ["email", "Email"], ["call", "Chiamate"], ["note", "Note"]] as const).map(([k, label]) => {
           const count = counts?.[k] ?? 0;
           const Icon = k === "all" ? null : channelIcon[k];
           return (
@@ -255,13 +264,13 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
           <span className="text-xs text-muted-foreground">Invia tramite</span>
           <DropdownMenu><DropdownMenuTrigger asChild><Button variant="outline" size="sm" disabled={sending} aria-label="Scegli canale di invio" className="h-8 gap-2 border-primary/30 text-xs font-semibold text-primary hover:bg-accent hover:text-accent-foreground"><ComposeIcon className="h-4 w-4" />{CHANNELS[channel].label}<ChevronDown className="h-3 w-3" /></Button></DropdownMenuTrigger>
             <DropdownMenuContent align="start"><DropdownMenuRadioGroup value={channel} onValueChange={(value) => { if (value in CHANNELS && value !== "call") setChannel(value as BrunoChannel); }}>
-              {(["whatsapp_api", "wasender", "email", "note"] as const).map((c) => { const Icon = channelIcon[c]; return <DropdownMenuRadioItem key={c} value={c}><Icon className="mr-2 h-4 w-4" />{CHANNELS[c].label}</DropdownMenuRadioItem>; })}
+              {(["wasender", "whatsapp_api", "whatsapp_uk", "email", "note"] as const).map((c) => { const Icon = channelIcon[c]; return <DropdownMenuRadioItem key={c} value={c}><Icon className="mr-2 h-4 w-4" />{CHANNELS[c].label}</DropdownMenuRadioItem>; })}
             </DropdownMenuRadioGroup></DropdownMenuContent>
           </DropdownMenu>
           <span className="min-w-0 break-words text-xs text-muted-foreground [overflow-wrap:anywhere]">{destination}</span>
           {aiDraft && <Badge variant="outline" className="text-[10px]">Bozza di Bruno</Badge>}
         </div>
-        {channel === "whatsapp_api" && <WaTemplatePicker leadId={lead.id} phone={lead.phone} firstName={(lead.contact_name || "").split(" ")[0] || name} value={waTemplate} onChange={setWaTemplate} disabled={sending} />}
+        {(channel === "whatsapp_api" || channel === "whatsapp_uk") && <WaTemplatePicker key={channel} line={channel === "whatsapp_uk" ? "uk" : "it"} leadId={lead.id} phone={lead.phone} firstName={(lead.contact_name || "").split(" ")[0] || name} value={waTemplate} onChange={setWaTemplate} disabled={sending} />}
         {channel === "email" && <>
           <Input aria-label="Oggetto email" placeholder="Oggetto" value={subject} maxLength={300} disabled={sending} onChange={(e) => setSubject(e.target.value)} />
           <div className="flex flex-wrap items-center gap-2"><EmailSignatureSelector value={signature} onChange={setSignature} disabled={sending}/><Button variant="outline" size="sm" disabled={sending} onClick={() => setPreviewOpen(true)}><Eye className="mr-2 h-4 w-4"/>Anteprima</Button></div>

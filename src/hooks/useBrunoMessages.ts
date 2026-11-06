@@ -94,7 +94,8 @@ export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel) {
           const message = payload.new as BrunoMessageData & { lead_id?: string | undefined};
           if (message.id && message.lead_id === leadId) {
             setMessages(current => {
-              const belongs = filter === "all" || message.channel === filter;
+              const uk = message.channel === "whatsapp_api" && (message.metadata as { whatsapp_line?: string } | null)?.whatsapp_line === "uk";
+              const belongs = filter === "all" || (filter === "whatsapp_uk" ? uk : filter === "whatsapp_api" ? message.channel === "whatsapp_api" && !uk : message.channel === filter);
               if (!belongs) return current.filter(m => m.id !== message.id);
               // Backfilled older events remain available through the history cursor.
               const alreadyLoaded = current.some(m => m.id === message.id);
