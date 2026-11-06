@@ -3,7 +3,7 @@ import React, { lazy, Suspense } from "react";
 import { useConsultationModal } from "@/contexts/ConsultationModalContext";
 import wiseLogo from '@/assets/wise-logo.png';
 import paypalLogo from '@/assets/paypal-logo.png';
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "@/lib/router-compat";
 import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";

@@ -1,4 +1,4 @@
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from '@/lib/router-compat';
 import { useTranslation } from 'react-i18next';
 import { Calendar, ArrowLeft, Tag, User, Clock, Share2, ChevronRight } from 'lucide-react';
 import Header from '@/components/Header';

@@ -6,7 +6,7 @@ import ConsultationForm from '@/components/ConsultationForm';
 import ProductVideoSection from '@/components/ProductVideoSection';
 import CtaButton from '@/components/CtaButton';
 import { Card, CardContent } from '@/components/ui/card';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 
 const PATH = '/fr/four-a-pizza-bois';
 

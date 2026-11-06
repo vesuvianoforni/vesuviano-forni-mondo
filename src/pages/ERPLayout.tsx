@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from '@/lib/router-compat';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { ERPSidebar } from '@/components/erp/ERPSidebar';
 import { supabase } from '@/integrations/supabase/client';

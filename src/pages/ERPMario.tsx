@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from '@/lib/router-compat';
 import { Radar, MessageSquarePlus, Trash2, Search, ShieldAlert, Store, Workflow, BookOpen, Mail, ChartNoAxesCombined, Settings2, Plus, X, ArrowLeft, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

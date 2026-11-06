@@ -14,7 +14,7 @@ import { CRM_STAGES } from "@/lib/crmPipeline";
 import { activityLabels, activityTiming, exactActivityDate, interactionLabels, interactionRelativeTime, type LeadInteraction } from "@/lib/crmActivity";
 import { BrunoPanel, type BrunoLead } from "./BrunoPanel";
 import type { CRMLead } from "./CRMLeadCard";
-import { Link } from "react-router-dom";
+import { Link } from "@/lib/router-compat";
 import { LeadQualificationCard } from "./LeadQualificationCard";
 
 const SITE = "https://vesuvianoforni.com";

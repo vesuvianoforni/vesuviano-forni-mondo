@@ -1,6 +1,6 @@
 import { useCallback,useState } from 'react';
 import { Bot,LayoutDashboard,ClipboardList,History,MessageSquare,Phone,Settings,MessagesSquare,Plus,Trash2 } from 'lucide-react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from '@/lib/router-compat';
 import { Button } from '@/components/ui/button';
 import { BrunoOperations } from '@/components/erp/BrunoOperations';
 import { BrunoCommunications } from '@/components/erp/BrunoCommunications';

@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import SEOHead from "@/components/SEOHead";
 import AboutUs from "@/components/AboutUs";
 import ConsultationForm from "@/components/ConsultationForm";
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 
 interface LocalizedAboutUsProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';

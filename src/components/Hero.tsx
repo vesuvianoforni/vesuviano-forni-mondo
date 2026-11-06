@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Flame, Zap, RotateCw, TreePine, Building2, Sparkles } from "lucide-react";
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import LazyImage from './LazyImage';
 import { useEffect, useState, useRef } from 'react';
 import OvenFinderQuizModal from './OvenFinderQuizModal';

@@ -1,4 +1,4 @@
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate } from "@/lib/router-compat";
 import { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { supabase } from "@/integrations/supabase/client";

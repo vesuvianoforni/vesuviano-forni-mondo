@@ -7,7 +7,7 @@ import ProductVideoSection from '@/components/ProductVideoSection';
 import TrustedByPizzerias from '@/components/TrustedByPizzerias';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 import Rivestimenti from '@/components/Rivestimenti';
 import woodOvensWorkshop from '@/assets/vesuviano-wood-ovens-workshop.jpg.asset.json';

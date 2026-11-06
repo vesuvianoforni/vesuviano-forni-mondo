@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';

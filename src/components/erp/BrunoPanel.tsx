@@ -15,7 +15,7 @@ import { mailErrorLabel } from "./MailboxSettings";
 import { EmailSignatureSelector } from './EmailSignatures';
 import { EmailPreview } from './EmailPreview';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Link } from "react-router-dom";
+import { Link } from "@/lib/router-compat";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { BrunoMessage } from "./BrunoMessage";

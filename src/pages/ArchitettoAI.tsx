@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import Header from '@/components/Header';
 import OvenVisualizer from '@/components/OvenVisualizer';
 import wiseLogo from '@/assets/wise-logo.png';

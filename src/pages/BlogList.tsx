@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { Calendar, ArrowRight, Tag } from 'lucide-react';
 import Header from '@/components/Header';
 import { useBlogPosts, getLocalizedField } from '@/hooks/useBlogPosts';
