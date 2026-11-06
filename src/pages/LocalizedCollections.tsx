@@ -22,7 +22,7 @@ const META: Record<string, { title: string; description: string }> = {
 const LocalizedCollections = ({ lang }: Props) => {
   const { i18n, t } = useTranslation();
   const [ready, setReady] = useState(i18n.language === lang);
-  const meta = META[lang] || META.it;
+  const meta = META[lang] || META["it"];
 
   useEffect(() => {
     if (i18n.language !== lang) {
@@ -38,7 +38,7 @@ const LocalizedCollections = ({ lang }: Props) => {
     <div className="min-h-screen w-full overflow-x-hidden bg-[#f7f3ec]">
       <OvenDataInitializer />
       <Header />
-      <SEOHead lang={lang} title={meta.title} description={meta.description} />
+      <SEOHead lang={lang} title={meta!.title} description={meta!.description} />
       <main className="pt-20">
         <Suspense fallback={null}>
           <ImmersiveOvenGallery />

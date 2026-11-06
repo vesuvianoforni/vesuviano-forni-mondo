@@ -22,7 +22,7 @@ describe('ERP dashboard read-only summaries', () => {
   it('excludes archived leads and other pipelines from Vesuviano summaries', () => {
     const summary = summarizeDashboardLeads([lead('1', 'nuovo'), lead('2', 'nuovo', { archived: true }), lead('3', 'nuovo', { pipeline: 'ZAPPER' })], now);
     assert.equal(summary.activeCount, 1);
-    assert.equal(summary.stages[0].count, 1);
+    assert.equal(summary.stages[0]!.count, 1);
   });
   it('lists only actual scheduled activities on active leads, oldest first', () => {
     const summary = summarizeDashboardLeads([

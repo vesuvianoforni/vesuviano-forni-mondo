@@ -162,7 +162,7 @@ const BlogPostPage = ({ lang }: BlogPostProps) => {
             )}
             <div className="flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5" />
-              <span>{readTime} {readTimeLabels[lang] || readTimeLabels.it}</span>
+              <span>{readTime} {readTimeLabels[lang] || readTimeLabels["it"]}</span>
             </div>
             <button
               onClick={shareArticle}

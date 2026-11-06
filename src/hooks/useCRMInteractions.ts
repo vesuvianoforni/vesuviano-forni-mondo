@@ -54,8 +54,8 @@ export function useCRMInteractions(leads: LeadIdentity[], { includeMessages = tr
         const customerEvents = new Set(["model_selected", "fuel_selected", "size_selected", "coating_selected", "quote_saved", "color_render_generated", "architect_ai_used", "payment_initiated", "contact_requested"]);
         if (Array.isArray(row.customer_actions)) for (const action of row.customer_actions) {
           if (action && typeof action === "object" && !Array.isArray(action)
-            && typeof action.type === "string" && customerEvents.has(action.type) && typeof action.timestamp === "string") {
-            collected.push({ ...identity, kind: "configurator", at: action.timestamp });
+            && typeof action["type"] === "string" && customerEvents.has(action["type"]) && typeof action["timestamp"] === "string") {
+            collected.push({ ...identity, kind: "configurator", at: action["timestamp"] });
           }
         }
       }

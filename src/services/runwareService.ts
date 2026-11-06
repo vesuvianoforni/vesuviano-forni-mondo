@@ -145,11 +145,11 @@ export class RunwareService {
       }];
 
       if (!params.seed) {
-        delete message[0].seed;
+        delete message[0]!.seed;
       }
 
-      if (message[0].model === "runware:100@1") {
-        delete message[0].promptWeighting;
+      if (message[0]!.model === "runware:100@1") {
+        delete message[0]!.promptWeighting;
       }
 
       console.log("Sending image generation message:", message);

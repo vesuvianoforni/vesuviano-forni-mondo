@@ -22,7 +22,7 @@ const CallbackPopup = () => {
   const [interacted, setInteracted] = useState(false);
   const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lang = getBrowserLang();
-  const t = CALLBACK_TEXTS[lang] || CALLBACK_TEXTS.en;
+  const t = CALLBACK_TEXTS[lang] || CALLBACK_TEXTS["en"];
 
   useEffect(() => {
     if (sessionStorage.getItem(DISMISSED_KEY)) return;
@@ -71,7 +71,7 @@ const CallbackPopup = () => {
 
         <div className="flex items-center gap-2 mb-3">
           <span className="text-2xl">📞</span>
-          <h3 className="font-semibold text-stone-800 text-base leading-tight">{t.question}</h3>
+          <h3 className="font-semibold text-stone-800 text-base leading-tight">{t!.question}</h3>
         </div>
 
         <hr className="border-stone-200 mb-3" />
@@ -81,13 +81,13 @@ const CallbackPopup = () => {
             onClick={handleYes}
             className="text-left text-vesuviano-600 font-semibold text-base hover:text-vesuviano-700 transition-colors px-1 py-1"
           >
-            {t.yes}
+            {t!.yes}
           </button>
           <button
             onClick={handleNo}
             className="text-left text-vesuviano-600 font-semibold text-base hover:text-vesuviano-700 transition-colors px-1 py-1"
           >
-            {t.no}
+            {t!.no}
           </button>
         </div>
       </div>

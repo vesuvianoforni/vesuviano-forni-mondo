@@ -88,7 +88,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
     }
     const anchor = pendingAnchor.current;
     if (anchor) {
-      const message = Array.from(timeline.querySelectorAll<HTMLElement>("[data-message-id]")).find(element => element.dataset.messageId === anchor.id);
+      const message = Array.from(timeline.querySelectorAll<HTMLElement>("[data-message-id]")).find(element => element.dataset["messageId"] === anchor.id);
       if (message) timeline.scrollTop += message.getBoundingClientRect().top - timeline.getBoundingClientRect().top - anchor.offset;
       pendingAnchor.current = null;
       return;
@@ -105,7 +105,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
       if (!timeline) return;
       const top = timeline.getBoundingClientRect().top;
       const element = Array.from(timeline.querySelectorAll<HTMLElement>("[data-message-id]")).find(message => message.getBoundingClientRect().bottom > top);
-      if (element?.dataset.messageId) pendingAnchor.current = { id: element.dataset.messageId, offset: element.getBoundingClientRect().top - top };
+      if (element?.dataset["messageId"]) pendingAnchor.current = { id: element.dataset["messageId"], offset: element.getBoundingClientRect().top - top };
       followLatest.current = false;
     });
   };
@@ -119,7 +119,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
   };
 
   const stage = lead.status || "nuovo";
-  const objective = BRUNO_OBJECTIVES[stage] || BRUNO_OBJECTIVES.nuovo;
+  const objective = BRUNO_OBJECTIVES[stage] || BRUNO_OBJECTIVES["nuovo"];
   const paused = isBrunoPaused(mode, pausedUntil);
   const name = lead.company_name || lead.contact_name || "Lead";
   const ComposeIcon = channelIcon[channel];
@@ -193,8 +193,8 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
       <div className="shrink-0 border-b bg-muted/50 p-3 sm:px-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
-            <p className="flex items-center gap-1.5 text-sm font-semibold"><Bot className="h-4 w-4 text-primary" />Bruno · {objective.goal}</p>
-            <p className="mt-0.5 text-xs text-muted-foreground">{objective.next}</p>
+            <p className="flex items-center gap-1.5 text-sm font-semibold"><Bot className="h-4 w-4 text-primary" />Bruno · {objective!.goal}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">{objective!.next}</p>
             {paused && <p className="mt-1 text-xs text-muted-foreground">
               Autonomia in pausa{pausedUntil && mode !== "paused" ? ` fino al ${new Date(pausedUntil).toLocaleString("it-IT", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })} (Gennaro ha scritto)` : ""}
             </p>}
@@ -244,7 +244,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
           {olderError && <p role="alert" className="text-xs text-destructive">{olderError}</p>}
         </div>}
         {!messagesLoading && !messagesError && visibleMessages.length === 0 && <p className="py-10 text-center text-sm text-muted-foreground">Nessuna comunicazione registrata.</p>}
-        {visibleMessages.map((m, index) => <div key={m.id} data-message-id={m.id}><BrunoMessage message={m} customerName={lead.contact_name || name} showDate={index === 0 || new Date(visibleMessages[index - 1].created_at).toDateString() !== new Date(m.created_at).toDateString()} /></div>)}
+        {visibleMessages.map((m, index) => <div key={m.id} data-message-id={m.id}><BrunoMessage message={m} customerName={lead.contact_name || name} showDate={index === 0 || new Date(visibleMessages[index - 1]!.created_at).toDateString() !== new Date(m.created_at).toDateString()} /></div>)}
       </div>
       {awayFromLatest && !messagesLoading && <Button type="button" size="icon" variant="secondary" className="absolute bottom-3 right-5 h-9 w-9 rounded-full" title="Vai agli ultimi messaggi" aria-label="Vai agli ultimi messaggi" onClick={scrollToLatest}><ArrowDown className="h-4 w-4" /></Button>}
       </div>

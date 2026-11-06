@@ -41,7 +41,7 @@ export function BrunoInlineCard({ kind, id }: { kind: 'call' | 'action'; id: str
       <p className="break-words text-muted-foreground">{call.objective}</p>
       {pending && <p className="text-xs text-muted-foreground">Bruno chiama in inglese dal numero UK presentandosi come Bruno di Vesuviano Forni.</p>}
     </>}
-    {action && <p className="break-words text-muted-foreground">{action.leads?.contact_name || action.leads?.company_name || ''} {String(action.args.body || action.args.objective || action.args.message || '').slice(0, 400)}</p>}
+    {action && <p className="break-words text-muted-foreground">{action.leads?.contact_name || action.leads?.company_name || ''} {String(action.args["body"] || action.args["objective"] || action.args["message"] || '').slice(0, 400)}</p>}
     {error && <p role="alert" className="text-destructive break-words">{error}</p>}
     {pending && <div className="flex flex-wrap gap-2">
       <Button size="sm" disabled={busy} onClick={() => void run(() => kind === 'call' ? voiceRequest({ action: 'approve', call_id: id }) : brunoRequest({ action: 'action_approve', id }))}>

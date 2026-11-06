@@ -45,10 +45,10 @@ const LocalizedIndex = ({ lang }: LocalizedIndexProps) => {
 
   if (!ready) return null;
 
-  const meta = TITLES[lang] || TITLES.it;
+  const meta = TITLES[lang] || TITLES["it"];
   return (
     <>
-      <SEOHead title={meta.title} description={meta.description} lang={lang} />
+      <SEOHead title={meta!.title} description={meta!.description} lang={lang} />
       <Index />
     </>
   );

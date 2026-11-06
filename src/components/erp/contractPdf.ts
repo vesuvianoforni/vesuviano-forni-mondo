@@ -813,7 +813,7 @@ export async function generateContractPdf(
   doc.setTextColor(20, 20, 20);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(15);
-  const titleText = orderConfirmation ? ocL.title : L.title;
+  const titleText = orderConfirmation ? ocL.title : L["title"];
   doc.text(titleText, pageWidth / 2, 46, { align: 'center' });
 
   const today = data.created_at ? new Date(data.created_at) : new Date();
@@ -822,9 +822,9 @@ export async function generateContractPdf(
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(90, 90, 90);
-  const meta = `${L.date}: ${dateStr}` +
-    ((vf.offer_number || data.offer_number) ? `  ·  ${L.offerRef}: ${vf.offer_number || data.offer_number}` : '') +
-    `  ·  ${L.client}: ${data.client_name}`;
+  const meta = `${L["date"]}: ${dateStr}` +
+    ((vf.offer_number || data.offer_number) ? `  ·  ${L["offerRef"]}: ${vf.offer_number || data.offer_number}` : '') +
+    `  ·  ${L["client"]}: ${data.client_name}`;
   doc.text(meta, pageWidth / 2, 52, { align: 'center' });
 
   // Body sections
@@ -955,7 +955,7 @@ export async function generateContractPdf(
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(20, 20, 20);
-  doc.text(L.section20, marginX, y);
+  doc.text(L["section20"], marginX, y);
   y += 5;
   doc.setDrawColor(245, 158, 11);
   doc.line(marginX, y, marginX + 30, y);
@@ -964,17 +964,17 @@ export async function generateContractPdf(
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9.5);
   doc.setTextColor(45, 45, 45);
-  const accept = doc.splitTextToSize(L.accept, contentWidth);
+  const accept = doc.splitTextToSize(L["accept"], contentWidth);
   accept.forEach((ln: string) => { doc.text(ln, marginX, y); y += 4.5; });
   y += 4;
 
   doc.setFont('helvetica', 'bold');
-  doc.text(L.placeDate + ' ', marginX, y);
+  doc.text(L["placeDate"] + ' ', marginX, y);
   doc.setFont('helvetica', 'normal');
   doc.text(`${V(vf.place_signed || data.place_signed)}  —  ${dateStr}`, marginX + 34, y);
   y += 6;
   doc.setFont('helvetica', 'bold');
-  doc.text(L.clientLabel + ' ', marginX, y);
+  doc.text(L["clientLabel"] + ' ', marginX, y);
   doc.setFont('helvetica', 'normal');
   doc.text(V(vf.client_name || data.client_name), marginX + 34, y);
   y += 12;
@@ -1063,15 +1063,15 @@ export async function generateContractPdf(
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
   doc.setTextColor(20, 20, 20);
-  doc.text(L.clientSig, rightX, rightY);
+  doc.text(L["clientSig"], rightX, rightY);
   rightY += 4;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(110);
   if (data.client_signed_at) {
-    doc.text(`${L.signedOn} ${new Date(data.client_signed_at).toLocaleString(locale)}`, rightX, rightY);
+    doc.text(`${L["signedOn"]} ${new Date(data.client_signed_at).toLocaleString(locale)}`, rightX, rightY);
   } else {
-    doc.text(L.stampSign, rightX, rightY);
+    doc.text(L["stampSign"], rightX, rightY);
   }
 
   y = Math.max(leftY, rightY) + 8;
@@ -1080,7 +1080,7 @@ export async function generateContractPdf(
   ensureSpace(30);
   doc.setFontSize(8);
   doc.setTextColor(45);
-  const approvazione = doc.splitTextToSize(L.approval, contentWidth);
+  const approvazione = doc.splitTextToSize(L["approval"], contentWidth);
   approvazione.forEach((ln: string) => { doc.text(ln, marginX, y); y += 4; });
   y += 6;
   if (data.client_signature) {
@@ -1089,7 +1089,7 @@ export async function generateContractPdf(
     } catch { /* ignore */ }
   }
   doc.line(marginX + contentWidth - 80, y, marginX + contentWidth, y);
-  doc.text(L.approvalSig, marginX + contentWidth - 80, y + 4);
+  doc.text(L["approvalSig"], marginX + contentWidth - 80, y + 4);
   }
 
   // ===== Footer with page numbers =====
@@ -1098,8 +1098,8 @@ export async function generateContractPdf(
     doc.setPage(i);
     doc.setFontSize(7);
     doc.setTextColor(150);
-    doc.text(`${L.page} ${i} ${L.of} ${pageCount}`, pageWidth - marginX, pageHeight - 7, { align: 'right' });
-    doc.text(L.footer, marginX, pageHeight - 7);
+    doc.text(`${L["page"]} ${i} ${L["of"]} ${pageCount}`, pageWidth - marginX, pageHeight - 7, { align: 'right' });
+    doc.text(L["footer"], marginX, pageHeight - 7);
   }
 
 

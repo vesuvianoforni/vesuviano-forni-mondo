@@ -25,10 +25,10 @@ const LocalizedReadyToShip = ({ lang }: LocalizedReadyToShipProps) => {
     }
   }, [lang, i18n]);
 
-  const meta = META[lang] || META.it;
+  const meta = META[lang] || META["it"];
   return (
     <>
-      <SEOHead lang={lang} title={meta.title} description={meta.description} />
+      <SEOHead lang={lang} title={meta!.title} description={meta!.description} />
       <ReadyToShip />
     </>
   );

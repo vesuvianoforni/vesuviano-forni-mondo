@@ -8,7 +8,7 @@ const SUPPORTED_LANGS = ['it', 'en', 'fr', 'de', 'es'];
 const detectBrowserLanguage = (): string => {
   const browserLangs = navigator.languages || [navigator.language];
   for (const bl of browserLangs) {
-    const short = bl.split('-')[0].toLowerCase();
+    const short = bl.split('-')[0]!.toLowerCase();
     if (SUPPORTED_LANGS.includes(short)) {
       return short;
     }

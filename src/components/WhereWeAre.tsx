@@ -37,7 +37,7 @@ const labels: Record<string, {
 const WhereWeAre = () => {
   const { i18n } = useTranslation();
   const lang = i18n.language?.substring(0, 2) || 'it';
-  const l = labels[lang] || labels.it;
+  const l = labels[lang] || labels["it"];
 
   return (
     <section className="py-12 md:py-16 bg-gradient-to-b from-stone-100 to-stone-50">
@@ -50,13 +50,13 @@ const WhereWeAre = () => {
               <span>Campania, Italia</span>
             </div>
             <h2 className="font-playfair text-2xl md:text-4xl font-bold text-stone-900 mb-2">
-              {l.title}
+              {l!.title}
             </h2>
             <p className="text-sm md:text-base text-vesuviano-600 font-medium mb-2">
-              {l.subtitle}
+              {l!.subtitle}
             </p>
             <p className="text-stone-600 max-w-2xl mx-auto leading-relaxed text-sm md:text-base">
-              {l.description}
+              {l!.description}
             </p>
           </div>
 

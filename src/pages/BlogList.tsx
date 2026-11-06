@@ -21,7 +21,7 @@ const getCategoryLabel = (cat: string, lang: string): string => {
     novita: { it: 'Novità', en: 'News', fr: 'Actualités', de: 'Neuigkeiten', es: 'Novedades' },
     tecnica: { it: 'Tecnica', en: 'Technical', fr: 'Technique', de: 'Technik', es: 'Técnica' },
   };
-  return labels[cat]?.[lang] || labels[cat]?.it || cat;
+  return labels[cat]?.[lang] || labels[cat]?.["it"] || cat;
 };
 
 const BlogList = ({ lang }: BlogListProps) => {
@@ -54,10 +54,10 @@ const BlogList = ({ lang }: BlogListProps) => {
       <section className="pt-28 pb-16 bg-gradient-to-b from-stone-100 to-background">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground font-playfair mb-4">
-            {blogTitle[lang] || blogTitle.it}
+            {blogTitle[lang] || blogTitle["it"]}
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            {blogSubtitle[lang] || blogSubtitle.it}
+            {blogSubtitle[lang] || blogSubtitle["it"]}
           </p>
         </div>
       </section>

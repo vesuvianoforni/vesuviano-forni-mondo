@@ -215,7 +215,7 @@ const LanguageSelector = () => {
         // Try static path mappings
         let mappingFound = false;
         for (const [key, mapping] of Object.entries(pathMappings)) {
-          if (mapping[currentLang] === pathWithoutLang) {
+          if (mapping[currentLang!] === pathWithoutLang) {
             newPath = `/${languageCode}${mapping[languageCode]}`;
             mappingFound = true;
             break;
@@ -236,8 +236,8 @@ const LanguageSelector = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="gap-2">
           <Globe size={16} />
-          <span className="hidden sm:inline">{currentLanguage.flag} {currentLanguage.name}</span>
-          <span className="sm:hidden">{currentLanguage.flag}</span>
+          <span className="hidden sm:inline">{currentLanguage!.flag} {currentLanguage!.name}</span>
+          <span className="sm:hidden">{currentLanguage!.flag}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

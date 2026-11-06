@@ -60,7 +60,7 @@ const AvanziniPartnerStrip = () => {
     },
   };
 
-  const t = copy[lang] || copy.it;
+  const t = copy[lang] || copy["it"];
 
   return (
     <section aria-label="Avanzini Bruciatori partnership" className="py-14 md:py-16 bg-white border-y border-stone-200">
@@ -71,7 +71,7 @@ const AvanziniPartnerStrip = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="shrink-0 justify-self-center md:justify-self-start"
-            aria-label={t.site}
+            aria-label={t!.site}
           >
             <img
               src={AVANZINI_LOGO_URL}
@@ -83,13 +83,13 @@ const AvanziniPartnerStrip = () => {
 
           <div className="text-center md:text-left">
             <p className="text-[10px] uppercase tracking-[0.25em] text-vesuviano-600 font-semibold mb-2">
-              {t.eyebrow}
+              {t!.eyebrow}
             </p>
             <h3 className="font-playfair text-2xl md:text-3xl font-bold text-charcoal-900 mb-2">
-              {t.title}
+              {t!.title}
             </h3>
             <p className="text-stone-600 leading-relaxed text-sm md:text-base max-w-2xl">
-              {t.body}
+              {t!.body}
             </p>
           </div>
 
@@ -98,7 +98,7 @@ const AvanziniPartnerStrip = () => {
               to={gasHref}
               className="inline-flex items-center gap-2 text-vesuviano-600 hover:text-vesuviano-700 font-semibold text-sm whitespace-nowrap"
             >
-              {t.cta} →
+              {t!.cta} →
             </Link>
             <a
               href={AVANZINI_URL}
@@ -106,7 +106,7 @@ const AvanziniPartnerStrip = () => {
               rel="noopener noreferrer"
               className="text-xs text-stone-500 hover:text-stone-700 underline underline-offset-4"
             >
-              {t.site}
+              {t!.site}
             </a>
           </div>
         </div>

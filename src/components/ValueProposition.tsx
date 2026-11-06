@@ -61,7 +61,7 @@ const labels: Record<string, {
 const ValueProposition = () => {
   const { i18n } = useTranslation();
   const lang = i18n.language?.substring(0, 2) || 'it';
-  const l = labels[lang] || labels.it;
+  const l = labels[lang] || labels["it"];
 
   return (
     <section className="relative bg-gradient-to-b from-stone-50 to-stone-100 overflow-hidden">
@@ -80,11 +80,11 @@ const ValueProposition = () => {
       <div className="container mx-auto px-4 md:px-6 pb-12 md:pb-20 -mt-8 relative z-10">
         <div className="max-w-3xl mx-auto">
           <h2 className="font-playfair text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-stone-900 mb-8 md:mb-12 text-center leading-snug">
-            {l.title}
+            {l!.title}
           </h2>
 
           <div className="space-y-5 md:space-y-6 mb-10 md:mb-12">
-            {l.points.map((point, i) => (
+            {l!.points.map((point, i) => (
               <div key={i} className="flex gap-3 md:gap-4">
                 <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6 text-vesuviano-500 flex-shrink-0 mt-0.5" />
                 <div>

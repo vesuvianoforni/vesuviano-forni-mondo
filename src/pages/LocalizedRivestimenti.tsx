@@ -20,7 +20,7 @@ const META: Record<string, { title: string; description: string }> = {
 
 const LocalizedRivestimenti = ({ lang }: Props) => {
   const { i18n } = useTranslation();
-  const meta = META[lang] || META.it;
+  const meta = META[lang] || META["it"];
 
   useEffect(() => {
     if (i18n.language !== lang) {
@@ -31,7 +31,7 @@ const LocalizedRivestimenti = ({ lang }: Props) => {
   return (
     <div className="min-h-screen bg-stone-50">
       <Header />
-      <SEOHead lang={lang} title={meta.title} description={meta.description} />
+      <SEOHead lang={lang} title={meta!.title} description={meta!.description} />
       <main className="pt-20">
         <Rivestimenti />
         <section id="consultation" aria-label="Consultation form">

@@ -87,7 +87,7 @@ export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel) {
       .on("postgres_changes", { event: "*", schema: "public", table: "crm_messages", filter: `lead_id=eq.${leadId}` }, (payload) => {
         if (!isCurrent()) return;
         if (payload.eventType === "DELETE") {
-          const id = payload.old?.id;
+          const id = payload.old?.["id"];
           if (typeof id === "string") setMessages(current => current.filter(m => m.id !== id));
         } else {
           const message = payload.new as BrunoMessageData & { lead_id?: string };

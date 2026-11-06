@@ -159,7 +159,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
     }
     
     const updatedSizes = [...formData.sizes];
-    updatedSizes[sizeIndex].coatings.push({ ...newCoating });
+    updatedSizes[sizeIndex]!.coatings.push({ ...newCoating });
     setFormData(prev => ({ ...prev, sizes: updatedSizes }));
     
     setNewCoating({
@@ -178,13 +178,13 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
 
   const removeCoatingFromSize = (sizeIndex: number, coatingIndex: number) => {
     const updatedSizes = [...formData.sizes];
-    updatedSizes[sizeIndex].coatings.splice(coatingIndex, 1);
+    updatedSizes[sizeIndex]!.coatings.splice(coatingIndex, 1);
     setFormData(prev => ({ ...prev, sizes: updatedSizes }));
     toast.success("Rivestimento rimosso");
   };
 
   const startEditingCoating = (sizeIdx: number, coatingIdx: number) => {
-    const coating = formData.sizes[sizeIdx].coatings[coatingIdx];
+    const coating = formData.sizes[sizeIdx]!.coatings[coatingIdx];
     setEditingCoating({ sizeIdx, coatingIdx });
     setEditingCoatingData({ ...coating });
   };
@@ -198,7 +198,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
     if (!editingCoating || !editingCoatingData) return;
     
     const updatedSizes = [...formData.sizes];
-    updatedSizes[editingCoating.sizeIdx].coatings[editingCoating.coatingIdx] = { ...editingCoatingData };
+    updatedSizes[editingCoating.sizeIdx]!.coatings[editingCoating.coatingIdx] = { ...editingCoatingData };
     setFormData(prev => ({ ...prev, sizes: updatedSizes }));
     
     toast.success("Rivestimento aggiornato");
@@ -478,7 +478,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                             value={size.passage_space_cm || ''} 
                             onChange={(e) => {
                               const newSizes = [...formData.sizes];
-                              newSizes[sizeIdx].passage_space_cm = e.target.value ? parseInt(e.target.value) : null;
+                              newSizes[sizeIdx]!.passage_space_cm = e.target.value ? parseInt(e.target.value) : null;
                               setFormData(prev => ({ ...prev, sizes: newSizes }));
                             }}
                             placeholder="es. 150"
@@ -490,7 +490,7 @@ export const AddOvenModal = ({ open, onClose, onSuccess }: AddOvenModalProps) =>
                             checked={size.can_be_built_on_site}
                             onCheckedChange={(checked) => {
                               const newSizes = [...formData.sizes];
-                              newSizes[sizeIdx].can_be_built_on_site = !!checked;
+                              newSizes[sizeIdx]!.can_be_built_on_site = !!checked;
                               setFormData(prev => ({ ...prev, sizes: newSizes }));
                             }}
                           />

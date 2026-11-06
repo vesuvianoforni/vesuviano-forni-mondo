@@ -20,8 +20,8 @@ const VideoPlayer = ({ src, poster, className = "" }: VideoPlayerProps) => {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsInView(entry.isIntersecting);
-        if (entry.isIntersecting) {
+        setIsInView(entry!.isIntersecting);
+        if (entry!.isIntersecting) {
           video.play().catch(console.error);
           setIsPlaying(true);
         } else {

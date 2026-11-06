@@ -160,7 +160,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     }
     
     const updatedSizes = [...formData.sizes];
-    updatedSizes[sizeIndex].coatings.push({ ...newCoating });
+    updatedSizes[sizeIndex]!.coatings.push({ ...newCoating });
     setFormData(prev => ({ ...prev, sizes: updatedSizes }));
     
     setNewCoating({
@@ -179,13 +179,13 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
 
   const removeCoatingFromSize = (sizeIndex: number, coatingIndex: number) => {
     const updatedSizes = [...formData.sizes];
-    updatedSizes[sizeIndex].coatings.splice(coatingIndex, 1);
+    updatedSizes[sizeIndex]!.coatings.splice(coatingIndex, 1);
     setFormData(prev => ({ ...prev, sizes: updatedSizes }));
     toast.success("Rivestimento rimosso");
   };
 
   const startEditingCoating = (sizeIdx: number, coatingIdx: number) => {
-    const coating = formData.sizes[sizeIdx].coatings[coatingIdx];
+    const coating = formData.sizes[sizeIdx]!.coatings[coatingIdx];
     setEditingCoating({ sizeIdx, coatingIdx });
     setEditingCoatingData({ ...coating });
   };
@@ -199,7 +199,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
     if (!editingCoating || !editingCoatingData) return;
     
     const updatedSizes = [...formData.sizes];
-    updatedSizes[editingCoating.sizeIdx].coatings[editingCoating.coatingIdx] = { ...editingCoatingData };
+    updatedSizes[editingCoating.sizeIdx]!.coatings[editingCoating.coatingIdx] = { ...editingCoatingData };
     setFormData(prev => ({ ...prev, sizes: updatedSizes }));
     
     toast.success("Rivestimento aggiornato");
@@ -442,7 +442,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                             value={size.passage_space_cm || ''} 
                             onChange={(e) => {
                               const newSizes = [...formData.sizes];
-                              newSizes[sizeIdx].passage_space_cm = e.target.value ? parseInt(e.target.value) : null;
+                              newSizes[sizeIdx]!.passage_space_cm = e.target.value ? parseInt(e.target.value) : null;
                               setFormData(prev => ({ ...prev, sizes: newSizes }));
                             }}
                             placeholder="es. 150"
@@ -454,7 +454,7 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                             checked={size.can_be_built_on_site}
                             onCheckedChange={(checked) => {
                               const newSizes = [...formData.sizes];
-                              newSizes[sizeIdx].can_be_built_on_site = !!checked;
+                              newSizes[sizeIdx]!.can_be_built_on_site = !!checked;
                               setFormData(prev => ({ ...prev, sizes: newSizes }));
                             }}
                           />
@@ -479,9 +479,9 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                                     </a>
                                     <Button type="button" variant="ghost" size="sm" className="h-5 px-1 text-red-400" onClick={() => {
                                       const newSizes = [...formData.sizes];
-                                      if (!newSizes[sizeIdx].datasheet_urls) newSizes[sizeIdx].datasheet_urls = {};
-                                      newSizes[sizeIdx].datasheet_urls![lang] = '';
-                                      if (lang === 'it') newSizes[sizeIdx].datasheet_url = '';
+                                      if (!newSizes[sizeIdx]!.datasheet_urls) newSizes[sizeIdx]!.datasheet_urls = {};
+                                      newSizes[sizeIdx]!.datasheet_urls![lang] = '';
+                                      if (lang === 'it') newSizes[sizeIdx]!.datasheet_url = '';
                                       setFormData(prev => ({ ...prev, sizes: newSizes }));
                                     }}>
                                       <Trash2 className="w-3 h-3" />
@@ -506,10 +506,10 @@ const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) =>
                                       try {
                                         const uploadedUrl = await uploadFile(file, 'datasheets');
                                         const newSizes = [...formData.sizes];
-                                        if (!newSizes[sizeIdx].datasheet_urls) newSizes[sizeIdx].datasheet_urls = {};
-                                        newSizes[sizeIdx].datasheet_urls![lang] = uploadedUrl;
+                                        if (!newSizes[sizeIdx]!.datasheet_urls) newSizes[sizeIdx]!.datasheet_urls = {};
+                                        newSizes[sizeIdx]!.datasheet_urls![lang] = uploadedUrl;
                                         // Keep backward compat: also set datasheet_url for IT
-                                        if (lang === 'it') newSizes[sizeIdx].datasheet_url = uploadedUrl;
+                                        if (lang === 'it') newSizes[sizeIdx]!.datasheet_url = uploadedUrl;
                                         setFormData(prev => ({ ...prev, sizes: newSizes }));
                                         toast.success(`Scheda tecnica ${lang.toUpperCase()} caricata!`);
                                       } catch (error) {

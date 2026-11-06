@@ -39,8 +39,8 @@ for (const cluster of CLUSTERS) {
 
 /** Normalize: drop trailing slash (except root), strip query/hash. */
 function normalize(path: string): string {
-  const clean = path.split('?')[0].split('#')[0];
-  if (clean.length > 1 && clean.endsWith('/')) return clean.slice(0, -1);
+  const clean = path.split('?')[0]!.split('#')[0];
+  if (clean!.length > 1 && clean!.endsWith('/')) return clean!.slice(0, -1);
   return clean;
 }
 

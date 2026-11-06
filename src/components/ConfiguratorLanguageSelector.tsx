@@ -28,7 +28,7 @@ const ConfiguratorLanguageSelector = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="gap-2">
           <Globe size={16} />
-          <span>{currentLanguage.flag}</span>
+          <span>{currentLanguage!.flag}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

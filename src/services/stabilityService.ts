@@ -51,8 +51,8 @@ export class StabilityService {
           }
         }
 
-        width = target.w;
-        height = target.h;
+        width = target!.w;
+        height = target!.h;
 
         canvas.width = width;
         canvas.height = height;

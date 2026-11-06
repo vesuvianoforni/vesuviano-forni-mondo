@@ -255,7 +255,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
                 <span>{(sel.image_url ? 1 : 0) + (sel.extra_images || []).length} foto selezionate</span>
                 {photosUnsaved && <Badge variant="outline">Modifiche non salvate</Badge>}
               </div>
-              <div className="flex flex-wrap gap-1 pt-2">{LANGS.filter(([l]) => l === sel.language || (versionsCurrent && sel.translations?.[l])).map(([l, name]) => (
+              <div className="flex flex-wrap gap-1 pt-2">{LANGS.filter(([l]) => l === sel.language || (versionsCurrent && sel.translations?.[l!])).map(([l, name]) => (
                 <Button key={l} variant={viewLanguage === l ? 'secondary' : 'ghost'} size="sm" disabled={!!busy} onClick={() => { setViewLanguage(l); refreshPreview(sel, l); }}>{name}</Button>
               ))}</div>
               {viewVersion?.subject && <p className="text-sm"><strong>{viewVersion.subject}</strong> <span className="text-muted-foreground">— {viewVersion.preheader}</span></p>}</CardHeader>

@@ -615,9 +615,9 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
           has_gas: selectedFuelType === 'Gas',
           total_price: total,
           delivery_time_weeks: selectedOven.delivery_time_weeks,
-          customer_name: customerData.name,
-          customer_email: customerData.email,
-          customer_phone: customerData.phone,
+          customer_name: customerData!.name,
+          customer_email: customerData!.email,
+          customer_phone: customerData!.phone,
           notes: `Metodo di contatto preferito: ${selectedContactMethod === 'whatsapp' ? 'WhatsApp' : 'Chiamata telefonica'}${notes ? '\n' + notes : ''}`,
           status: 'interested',
         },
@@ -635,9 +635,9 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
             status: 'interested',
             feedback_status: 'interested',
             customer_info: {
-              name: customerData.name,
-              email: customerData.email,
-              phone: customerData.phone,
+              name: customerData!.name,
+              email: customerData!.email,
+              phone: customerData!.phone,
               contact_method: selectedContactMethod
             }
           })
@@ -1105,7 +1105,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     <div className="flex items-center justify-between text-xs sm:text-sm mt-1">
                       <span className="text-muted-foreground">{t('configurator.price.shipping')}</span>
                       <span className="font-semibold">
-                        +€{getShippingPrice(selectedOvenData.size?.diameter || selectedOven.diameter).toFixed(2)}
+                        +€{getShippingPrice(selectedOvenData.size?.diameter || selectedOven!.diameter).toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -1132,7 +1132,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                           <Label className="cursor-pointer font-medium text-sm sm:text-base">{t('configurator.delivery.shippingEurope')}</Label>
                           <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">{t('configurator.delivery.shippingDescription')}</p>
                           <p className="text-base sm:text-lg font-bold mt-1 sm:mt-2 text-primary">
-                            +€{getShippingPrice(selectedOvenData.size?.diameter || selectedOven.diameter).toFixed(2)}
+                            +€{getShippingPrice(selectedOvenData.size?.diameter || selectedOven!.diameter).toFixed(2)}
                           </p>
                         </div>
                         <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${deliveryOption === 'shipping' ? 'border-primary' : 'border-border'}`}>
@@ -1150,7 +1150,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 <h3 className="font-semibold mb-4 text-base sm:text-lg">Il Tuo Forno</h3>
                 <div className="space-y-4">
                   {/* Media Toggle Buttons */}
-                  {(selectedOvenData.coating?.video_url_360 || selectedOven.video_url_360) && (
+                  {(selectedOvenData.coating?.video_url_360 || selectedOven!.video_url_360) && (
                     <div className="flex gap-2 justify-center">
                       <Button
                         variant={showPhotoGallery ? "default" : "outline"}
@@ -1175,7 +1175,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
                   {/* Main Display */}
                   <div className="aspect-[4/5] sm:aspect-[3/4] md:aspect-video relative overflow-hidden rounded-lg border bg-muted">
-                    {!showPhotoGallery && (selectedOvenData.coating?.video_url_360 || selectedOven.video_url_360) ? (
+                    {!showPhotoGallery && (selectedOvenData.coating?.video_url_360 || selectedOven!.video_url_360) ? (
                       <video 
                         autoPlay
                         loop
@@ -1183,14 +1183,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         playsInline
                         controls
                         className="w-full h-full object-contain"
-                      src={selectedOvenData.coating?.video_url_360 || selectedOven.video_url_360}
+                      src={selectedOvenData.coating?.video_url_360 || selectedOven!.video_url_360}
                     >
                       {t('configurator.media.videoNotSupported')}
                     </video>
                   ) : (
                     <img 
-                      src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
-                      alt={selectedOven.model_name}
+                      src={selectedOvenData.coating?.image_url || selectedOven!.image_url} 
+                      alt={selectedOven!.model_name}
                       className="w-full h-full object-contain p-2 sm:p-4"
                     />
                   )}
@@ -1198,20 +1198,20 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 
                 {/* Additional Images */}
                 {showPhotoGallery && ((selectedOvenData.coating?.render_images && selectedOvenData.coating.render_images.length > 0) ||
-                  (selectedOven.additional_images && selectedOven.additional_images.length > 0)) && (
+                  (selectedOven!.additional_images && selectedOven!.additional_images.length > 0)) && (
                   <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
-                    {(selectedOvenData.coating?.render_images || selectedOven.additional_images || []).map((img: string, index: number) => (
+                    {(selectedOvenData.coating?.render_images || selectedOven!.additional_images || []).map((img: string, index: number) => (
                       <div 
                         key={index} 
                         className="aspect-square relative overflow-hidden rounded border cursor-pointer hover:opacity-80 transition-opacity bg-muted"
                         onClick={() => setZoomedImage({ 
                           url: img, 
-                          alt: `${selectedOven.model_name} - ${t('configurator.media.viewAlt')} ${index + 1}` 
+                          alt: `${selectedOven!.model_name} - ${t('configurator.media.viewAlt')} ${index + 1}` 
                         })}
                       >
                         <img 
                           src={img} 
-                          alt={`${selectedOven.model_name} - ${t('configurator.media.viewAlt')} ${index + 1}`}
+                          alt={`${selectedOven!.model_name} - ${t('configurator.media.viewAlt')} ${index + 1}`}
                           className="w-full h-full object-contain p-1"
                         />
                       </div>
@@ -1223,8 +1223,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
             {/* Color Render Generator */}
             <ColorRenderGenerator
-              ovenName={selectedOven.model_name}
-              ovenImageUrl={selectedOvenData.coating?.image_url || selectedOven.image_url}
+              ovenName={selectedOven!.model_name}
+              ovenImageUrl={selectedOvenData.coating?.image_url || selectedOven!.image_url}
               selectedCoating={selectedCoating}
               onRenderGenerated={(imageUrl, color) => {
                 setColorRenderImageUrl(imageUrl);
@@ -1238,7 +1238,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     event_type: 'color_render_generated',
                     event_data: {
                       color,
-                      ovenModel: selectedOven.model_name
+                      ovenModel: selectedOven!.model_name
                     }
                   });
                 }
@@ -1247,8 +1247,8 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
 
             {/* Architetto AI */}
             <ArchitettoAI
-              ovenName={selectedOven.model_name}
-              ovenImageUrl={colorRenderImageUrl || selectedOvenData.coating?.image_url || selectedOven.image_url}
+              ovenName={selectedOven!.model_name}
+              ovenImageUrl={colorRenderImageUrl || selectedOvenData.coating?.image_url || selectedOven!.image_url}
               onSpaceImageSelected={setSpaceImageUrl}
               onRenderGenerated={(renderUrl) => {
                 setArchitectAIRenderUrl(renderUrl);
@@ -1260,7 +1260,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     session_id: sessionId,
                     event_type: 'architect_ai_used',
                     event_data: {
-                      ovenModel: selectedOven.model_name,
+                      ovenModel: selectedOven!.model_name,
                       hasCustomColor: !!colorRenderImageUrl
                     }
                   });
@@ -1280,13 +1280,13 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                     <div 
                       className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border cursor-pointer select-none active:scale-95 transition-transform"
                       onClick={() => setZoomedImage({ 
-                        url: selectedOvenData.coating?.image_url || selectedOven.image_url, 
-                        alt: selectedOven.model_name 
+                        url: selectedOvenData.coating?.image_url || selectedOven!.image_url, 
+                        alt: selectedOven!.model_name 
                       })}
                     >
                       <img 
-                        src={selectedOvenData.coating?.image_url || selectedOven.image_url} 
-                        alt={selectedOven.model_name} 
+                        src={selectedOvenData.coating?.image_url || selectedOven!.image_url} 
+                        alt={selectedOven!.model_name} 
                         className="w-full h-full object-contain p-2 pointer-events-none" 
                       />
                     </div>
@@ -1297,12 +1297,12 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border relative cursor-pointer select-none active:scale-95 transition-transform"
                         onClick={() => setZoomedImage({ 
                           url: colorRenderImageUrl, 
-                          alt: `${selectedOven.model_name} - ${selectedColorForRender}` 
+                          alt: `${selectedOven!.model_name} - ${selectedColorForRender}` 
                         })}
                       >
                         <img 
                           src={colorRenderImageUrl} 
-                          alt={`${selectedOven.model_name} - ${selectedColorForRender}`} 
+                          alt={`${selectedOven!.model_name} - ${selectedColorForRender}`} 
                           className="w-full h-full object-contain p-2 pointer-events-none" 
                         />
                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 pointer-events-none">
@@ -1319,12 +1319,12 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         className="aspect-square bg-background rounded-xl overflow-hidden shadow-md border border-border relative cursor-pointer select-none active:scale-95 transition-transform"
                         onClick={() => setZoomedImage({ 
                           url: architectAIRenderUrl, 
-                          alt: `${selectedOven.model_name} - Architetto AI` 
+                          alt: `${selectedOven!.model_name} - Architetto AI` 
                         })}
                       >
                         <img 
                           src={architectAIRenderUrl} 
-                          alt={`${selectedOven.model_name} - Architetto AI`} 
+                          alt={`${selectedOven!.model_name} - Architetto AI`} 
                           className="w-full h-full object-cover pointer-events-none" 
                         />
                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 pointer-events-none">
@@ -1338,9 +1338,9 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                   
                   {/* Informazioni modello */}
                   <div className="space-y-3">
-                    <h4 className="font-bold text-lg md:text-xl">{selectedOven.model_name}</h4>
+                    <h4 className="font-bold text-lg md:text-xl">{selectedOven!.model_name}</h4>
                     <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                      {selectedOven.description || t('configurator.configuration.description')}
+                      {selectedOven!.description || t('configurator.configuration.description')}
                     </p>
                     <div className="grid grid-cols-2 gap-2">
                       <div className="flex items-center gap-2 text-xs md:text-sm">
@@ -1350,7 +1350,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                       <div className="flex items-center gap-2 text-xs md:text-sm">
                         <Pizza className="w-4 h-4 text-primary" />
                         <span className="font-medium">
-                          {selectedOvenData.size?.diameter || selectedOven.diameter}cm
+                          {selectedOvenData.size?.diameter || selectedOven!.diameter}cm
                         </span>
                       </div>
                     </div>
@@ -1366,14 +1366,14 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                 <div className="bg-background/80 rounded-lg p-3 md:p-4 space-y-2 border border-border/50">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">{t('configurator.configuration.pizzas')}</span>
-                    <span className="font-semibold">{selectedOvenData.size?.pizza_capacity || selectedOven.pizza_capacity}</span>
+                    <span className="font-semibold">{selectedOvenData.size?.pizza_capacity || selectedOven!.pizza_capacity}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground flex items-center gap-2">
                       <Clock className="w-4 h-4" />
                       {t('configurator.configuration.deliveryTime')}
                     </span>
-                    <span className="font-semibold">{selectedOven.delivery_time_weeks} {t('configurator.summary.weeks')}</span>
+                    <span className="font-semibold">{selectedOven!.delivery_time_weeks} {t('configurator.summary.weeks')}</span>
                   </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">{t('configurator.summary.buildType')}</span>

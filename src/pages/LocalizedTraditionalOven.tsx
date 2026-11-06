@@ -24,7 +24,7 @@ const META: Record<string, { title: string; description: string }> = {
 
 const LocalizedTraditionalOven = ({ lang }: LocalizedTraditionalOvenProps) => {
   const { i18n, t } = useTranslation();
-  const meta = META[lang] || META.it;
+  const meta = META[lang] || META["it"];
 
   useEffect(() => {
     loadLanguage(lang);
@@ -35,7 +35,7 @@ const LocalizedTraditionalOven = ({ lang }: LocalizedTraditionalOvenProps) => {
   return (
     <div className="min-h-screen bg-white">
         <Header />
-        <SEOHead lang={lang} title={meta.title} description={meta.description} />
+        <SEOHead lang={lang} title={meta!.title} description={meta!.description} />
         
         {/* Hero Section */}
         <section className="relative h-[60vh] min-h-[500px] overflow-hidden">

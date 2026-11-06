@@ -191,7 +191,7 @@ const PILLAR_IMAGES: string[] = [pillarCraftsmanship, pillarEngineering, pillarI
 const AboutUs = () => {
   const { i18n } = useTranslation();
   const lang = i18n.language?.substring(0, 2) || 'it';
-  const l = copy[lang] || copy.it;
+  const l = copy[lang] || copy["it"];
 
   return (
     <section className="py-16 md:py-24 bg-stone-50">
@@ -204,10 +204,10 @@ const AboutUs = () => {
               <span>Est. 2025 · Napoli, Italia</span>
             </div>
             <h1 className="font-playfair text-4xl md:text-5xl font-bold text-charcoal-900 mb-5">
-              {l.sectionTitle}
+              {l!.sectionTitle}
             </h1>
             <p className="font-inter text-lg text-stone-600 max-w-3xl mx-auto leading-relaxed">
-              {l.intro}
+              {l!.intro}
             </p>
           </div>
 
@@ -215,18 +215,18 @@ const AboutUs = () => {
           <div className="grid lg:grid-cols-2 gap-6 md:gap-8 mb-10">
             <div className="bg-white rounded-xl p-6 md:p-8 shadow-lg">
               <h2 className="font-playfair text-2xl md:text-3xl font-semibold text-charcoal-900 mb-4">
-                {l.brandTitle}
+                {l!.brandTitle}
               </h2>
-              {l.brand.map((p, i) => (
+              {l!.brand.map((p, i) => (
                 <p key={i} className="text-stone-600 leading-relaxed mb-4 text-sm md:text-base last:mb-0">{p}</p>
               ))}
             </div>
             <div className="space-y-6">
               <div className="bg-white rounded-xl p-6 md:p-8 shadow-lg">
                 <h2 className="font-playfair text-2xl md:text-3xl font-semibold text-charcoal-900 mb-4">
-                  {l.missionTitle}
+                  {l!.missionTitle}
                 </h2>
-                {l.mission.map((p, i) => (
+                {l!.mission.map((p, i) => (
                   <p key={i} className="text-stone-600 leading-relaxed mb-4 text-sm md:text-base last:mb-0">{p}</p>
                 ))}
               </div>
@@ -240,7 +240,7 @@ const AboutUs = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                 <div className="absolute bottom-4 left-4 text-white">
                   <h4 className="font-playfair text-lg font-bold">Napoli, Italia</h4>
-                  <p className="text-xs opacity-90">{l.bornCaption}</p>
+                  <p className="text-xs opacity-90">{l!.bornCaption}</p>
                 </div>
               </div>
             </div>
@@ -250,24 +250,24 @@ const AboutUs = () => {
           <div className="grid md:grid-cols-3 gap-6 mb-10">
             <div className="bg-white rounded-xl p-6 shadow-lg">
               <Wrench className="w-6 h-6 text-vesuviano-600 mb-3" />
-              <h3 className="font-playfair text-xl font-semibold text-charcoal-900 mb-2">{l.traditionTitle}</h3>
-              <p className="text-stone-600 leading-relaxed text-sm">{l.tradition}</p>
+              <h3 className="font-playfair text-xl font-semibold text-charcoal-900 mb-2">{l!.traditionTitle}</h3>
+              <p className="text-stone-600 leading-relaxed text-sm">{l!.tradition}</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-lg">
               <Cpu className="w-6 h-6 text-vesuviano-600 mb-3" />
-              <h3 className="font-playfair text-xl font-semibold text-charcoal-900 mb-2">{l.rdTitle}</h3>
-              <p className="text-stone-600 leading-relaxed text-sm">{l.rd}</p>
+              <h3 className="font-playfair text-xl font-semibold text-charcoal-900 mb-2">{l!.rdTitle}</h3>
+              <p className="text-stone-600 leading-relaxed text-sm">{l!.rd}</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-lg">
               <Globe2 className="w-6 h-6 text-vesuviano-600 mb-3" />
-              <h3 className="font-playfair text-xl font-semibold text-charcoal-900 mb-2">{l.scopeTitle}</h3>
-              <p className="text-stone-600 leading-relaxed text-sm">{l.scope}</p>
+              <h3 className="font-playfair text-xl font-semibold text-charcoal-900 mb-2">{l!.scopeTitle}</h3>
+              <p className="text-stone-600 leading-relaxed text-sm">{l!.scope}</p>
             </div>
           </div>
 
           {/* Pillars */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10">
-            {l.pillars.map((p, i) => {
+            {l!.pillars.map((p, i) => {
               const isDrawing = i === 2;
               return (
                 <div key={p.title} className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
@@ -302,11 +302,11 @@ const AboutUs = () => {
               </div>
             </div>
             <h2 className="font-playfair text-2xl md:text-3xl font-semibold text-charcoal-900 mb-2">
-              {l.whereTitle}
+              {l!.whereTitle}
             </h2>
-            <p className="text-sm text-vesuviano-600 font-medium mb-2">{l.whereSubtitle}</p>
+            <p className="text-sm text-vesuviano-600 font-medium mb-2">{l!.whereSubtitle}</p>
             <p className="text-stone-600 leading-relaxed text-sm md:text-base mb-4">
-              {l.whereDescription}
+              {l!.whereDescription}
             </p>
             <div className="relative rounded-lg overflow-hidden">
               <img
@@ -325,10 +325,10 @@ const AboutUs = () => {
           {/* CTA */}
           <div className="text-center bg-vesuviano-50 rounded-xl p-6 md:p-8">
             <h2 className="font-playfair text-2xl md:text-3xl font-bold text-charcoal-900 mb-3">
-              {l.ctaTitle}
+              {l!.ctaTitle}
             </h2>
             <p className="text-stone-600 mb-5 max-w-2xl mx-auto text-sm md:text-base">
-              {l.ctaDesc}
+              {l!.ctaDesc}
             </p>
             <CtaButton className="px-8 py-3" />
           </div>

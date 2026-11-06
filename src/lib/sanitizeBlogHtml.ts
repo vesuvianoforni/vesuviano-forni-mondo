@@ -130,8 +130,8 @@ function fixHref(rawHref: string, lang: string): string {
 
   // Strip query/hash for validation
   const [pathOnly, ...rest] = pathname.split(/[?#]/);
-  const suffix = pathname.slice(pathOnly.length);
-  let normalized = pathOnly.replace(/\/+$/, "") || "/";
+  const suffix = pathname.slice(pathOnly!.length);
+  let normalized = pathOnly!.replace(/\/+$/, "") || "/";
 
   // If link uses another language prefix, remap prefix to current lang
   const langMatch = normalized.match(/^\/(it|en|fr|de|es)(\/|$)/);

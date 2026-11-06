@@ -14,7 +14,7 @@ const getBlogPath = (lang: string) => {
   const paths: Record<string, string> = {
     it: '/it/blog', en: '/en/blog', fr: '/fr/blog', de: '/de/blog', es: '/es/blog',
   };
-  return paths[lang] || paths.it;
+  return paths[lang] || paths["it"];
 };
 
 const BlogSEO = ({ post, lang, isList }: BlogSEOProps) => {

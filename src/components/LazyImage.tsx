@@ -20,7 +20,7 @@ const LazyImage = ({ src, alt, className, width, height, priority = false }: Laz
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry!.isIntersecting) {
           setInView(true);
           observer.disconnect();
         }

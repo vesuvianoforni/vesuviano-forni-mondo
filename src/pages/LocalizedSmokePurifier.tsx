@@ -14,10 +14,10 @@ const META: Record<string, { title: string; description: string }> = {
 };
 
 const LocalizedSmokePurifier = ({ lang }: LocalizedSmokePurifierProps) => {
-  const meta = META[lang] || META.it;
+  const meta = META[lang] || META["it"];
   return (
     <>
-      <SEOHead lang={lang} title={meta.title} description={meta.description} />
+      <SEOHead lang={lang} title={meta!.title} description={meta!.description} />
       <SmokePurifierPage lang={lang} />
     </>
   );

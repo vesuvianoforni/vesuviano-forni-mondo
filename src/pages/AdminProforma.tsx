@@ -237,38 +237,38 @@ const AdminProforma = () => {
     
     // If user manually changes unit_price, mark it as manually set
     if (field === 'unit_price') {
-      updated[index].price_manually_set = true;
+      updated[index]!.price_manually_set = true;
     }
     
     // Recalculate price when oven config changes, but ONLY if price was not manually set
-    if (updated[index].item_type === 'oven' && ['fuel_type', 'diameter', 'coating'].includes(field)) {
+    if (updated[index]!.item_type === 'oven' && ['fuel_type', 'diameter', 'coating'].includes(field)) {
       const item = updated[index];
-      const oven = ovens.find(o => o.model_name === item.model_name);
+      const oven = ovens.find(o => o.model_name === item!.model_name);
       if (oven) {
         // If diameter changed, update available coatings
         if (field === 'diameter') {
           const size = oven.sizes?.find((s: any) => s.diameter === value);
           if (size?.coatings?.[0]) {
-            item.coating = size.coatings[0].name;
-            item.image_url = size.coatings[0].image_url || oven.image_url;
+            item!.coating = size.coatings[0].name;
+            item!.image_url = size.coatings[0].image_url || oven.image_url;
           }
         }
         if (field === 'coating') {
-          const size = oven.sizes?.find((s: any) => s.diameter === item.diameter);
+          const size = oven.sizes?.find((s: any) => s.diameter === item!.diameter);
           const coat = size?.coatings?.find((c: any) => c.name === value);
-          if (coat?.image_url) item.image_url = coat.image_url;
+          if (coat?.image_url) item!.image_url = coat.image_url;
         }
         // Only auto-update price if not manually overridden
-        if (!item.price_manually_set) {
-          const price = getOvenPriceFromConfig(oven, item.fuel_type || '', item.diameter || 0, item.coating || '', priceList);
-          item.unit_price = price;
-          item.line_total = price * item.quantity;
+        if (!item!.price_manually_set) {
+          const price = getOvenPriceFromConfig(oven, item!.fuel_type || '', item!.diameter || 0, item!.coating || '', priceList);
+          item!.unit_price = price;
+          item!.line_total = price * item!.quantity;
         }
       }
     }
     
     if (field === 'unit_price' || field === 'quantity') {
-      updated[index].line_total = updated[index].unit_price * updated[index].quantity;
+      updated[index]!.line_total = updated[index]!.unit_price * updated[index]!.quantity;
     }
     setItems(updated);
   };
@@ -814,7 +814,7 @@ const AdminProforma = () => {
                                           const updated = [...items];
                                           updated[idx] = {
                                             ...updated[idx],
-                                            specifications: { ...(updated[idx].specifications || {}), allowed_sizes: newAllowed },
+                                            specifications: { ...(updated[idx]!.specifications || {}), allowed_sizes: newAllowed },
                                           };
                                           setItems(updated);
                                         }}
