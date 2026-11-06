@@ -12,7 +12,7 @@ export interface BrunoMessageData {
   metadata?: { voice_call_id?: string | undefined; recording_url?: string | null | undefined; duration_seconds?: number | undefined; message_type?: string | null | undefined; media_url?: string | null | undefined; file_name?: string | null | undefined; attachment_names?: string[] | null | undefined; whatsapp_line?: string | null | undefined} | null | undefined;
 }
 
-const icons = { whatsapp_api: Bot, wasender: MessageCircle, email: Mail, note: StickyNote, call: Phone };
+const icons = { whatsapp_api: Bot, whatsapp_uk: Bot, wasender: MessageCircle, email: Mail, note: StickyNote, call: Phone };
 
 const PLACEHOLDER = /^(📷 Immagine|🎬 Video|🎵 Audio|📄 Documento|🎨 Sticker)( · .*)?$/u;
 
@@ -33,7 +33,7 @@ export function BrunoMessage({ message, customerName, showDate }: { message: Bru
   const incoming = message.direction === "inbound";
   const internal = message.direction === "internal";
   const date = new Date(message.created_at);
-  const author = internal ? "Nota interna" : incoming ? customerName : message.channel === "wasender" ? "Gennaro" : message.channel === "whatsapp_api" ? "Bruno" : CHANNELS[message.channel]?.short;
+  const author = internal ? "Nota interna" : incoming ? customerName : message.channel === "wasender" ? "Gennaro" : message.channel === "whatsapp_api" ? (message.metadata?.whatsapp_line === "uk" ? "Bruno UK" : "Bruno IT") : CHANNELS[message.channel]?.short;
   return (
     <>
       {showDate && <div className="flex justify-center py-3"><span className="rounded-md border bg-background px-3 py-1 text-[11px] font-medium text-muted-foreground">{date.toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" })}</span></div>}

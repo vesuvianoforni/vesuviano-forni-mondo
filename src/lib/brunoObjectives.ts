@@ -9,7 +9,9 @@ export const BRUNO_OBJECTIVES: Record<string, { goal: string; next: string }> = 
 };
 
 export const CHANNELS = {
-  whatsapp_api: { label: "WhatsApp Bruno", short: "WA Bruno" },
+  whatsapp_api: { label: "WhatsApp Bruno IT", short: "WA Bruno IT" },
+  // Virtual channel: stored as whatsapp_api with metadata.whatsapp_line = "uk" (Lovable connector line).
+  whatsapp_uk: { label: "WhatsApp Bruno UK", short: "WA Bruno UK" },
   wasender: { label: "WhatsApp Gennaro", short: "WA Gennaro" },
   email: { label: "Email", short: "Email" },
   note: { label: "Nota interna", short: "Nota" },

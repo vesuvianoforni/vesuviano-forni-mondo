@@ -2,16 +2,18 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { listUkTemplates } from "@/lib/whatsapp-uk.functions";
 
 export type WaTemplate = { name: string; language: string; category: string; body: string; variables: number };
 export type WaTemplateChoice = { name: string; language: string; params: string[]; preview: string } | null;
 
 // Each country WhatsApp line has its own approved templates; cache per line (UK = +44, otherwise default).
 const cache = new Map<string, Promise<WaTemplate[]>>();
-const lineKey = (phone?: string | null) => (String(phone ?? "").replace(/\D/g, "").startsWith("44") ? "uk" : "default");
-function loadTemplates(leadId?: string, phone?: string | null) {
-  const k = lineKey(phone);
-  if (!cache.has(k)) cache.set(k, supabase.functions.invoke("bruno-agent", { body: { action: "wa_templates", ...(leadId ? { lead_id: leadId } : {}) } }).then(({ data, error }) => {
+function loadTemplates(line: "it" | "uk", _leadId?: string) {
+  const k = line;
+  if (k === "uk" && !cache.has(k)) cache.set(k, supabase.auth.getSession().then(({ data: s }) => listUkTemplates({ data: { token: s.session?.access_token ?? "" } }))
+    .then((list) => list.filter((t) => t.status === "APPROVED")).catch((e) => { cache.delete(k); throw e; }));
+  if (!cache.has(k)) cache.set(k, supabase.functions.invoke("bruno-agent", { body: { action: "wa_templates" } }).then(({ data, error }) => {
     if (error) { cache.delete(k); throw error; }
     return (data?.templates ?? []) as WaTemplate[];
   }));
@@ -21,10 +23,10 @@ function loadTemplates(leadId?: string, phone?: string | null) {
 export const fillTemplate = (body: string, params: string[]) => body.replace(/\{\{(\d+)\}\}/g, (_, n) => params[Number(n) - 1] || `{{${n}}}`);
 
 /** Modelli WhatsApp approvati da Meta: necessari fuori dalla finestra di 24 ore. */
-export function WaTemplatePicker({ leadId, phone, firstName, value, onChange, disabled }: { leadId?: string | undefined; phone?: string | null | undefined; firstName: string; value: WaTemplateChoice; onChange: (v: WaTemplateChoice) => void; disabled?: boolean | undefined}) {
+export function WaTemplatePicker({ line = "it", leadId, phone, firstName, value, onChange, disabled }: { line?: "it" | "uk"; leadId?: string | undefined; phone?: string | null | undefined; firstName: string; value: WaTemplateChoice; onChange: (v: WaTemplateChoice) => void; disabled?: boolean | undefined}) {
   const [templates, setTemplates] = useState<WaTemplate[]>([]);
   const [error, setError] = useState<string | null>(null);
-  useEffect(() => { setError(null); loadTemplates(leadId, phone).then(setTemplates).catch(() => setError("Modelli non disponibili")); }, [leadId, phone]);
+  useEffect(() => { setError(null); void phone; loadTemplates(line, leadId).then(setTemplates).catch(() => setError(line === "uk" ? "Modelli Bruno UK non disponibili" : "Modelli non disponibili")); }, [line, leadId, phone]);
 
   const key = value ? `${value.name}|${value.language}` : "free";
   const tpl = templates.find((t) => `${t.name}|${t.language}` === key);
