@@ -1,7 +1,7 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
-import { assistantConfig, callAllowed, timezoneFromPhone, e164, FROM_NUMBER, nextCallStatus, callOutcomeCode, Proposal, ToolRequest, verifyTelnyx, voiceTools } from './domain.ts';
+import { assistantConfig, callAllowed, timezoneFromPhone, e164, FROM_NUMBER, nextCallStatus, callOutcomeCode, Proposal, PlanProposal, planNextStep, isHoursBlock, ToolRequest, verifyTelnyx, voiceTools } from './domain.ts';
 import { AnalyzedEvent, analyzedMatches, RecordingCallback, spokenTranscript } from './results-domain.ts';
 import { processResults, queueResults } from './results.ts';
 
@@ -15,6 +15,8 @@ const Request = z.discriminatedUnion('action', [
   z.object({ action: z.literal('cancel'), call_id: z.string().uuid() }).strict(),
   z.object({ action: z.literal('live'), call_id: z.string().uuid() }).strict(),
   z.object({ action: z.literal('hangup'), call_id: z.string().uuid() }).strict(),
+  PlanProposal.extend({ action: z.literal('plan_propose') }).strict(),
+  z.object({ action: z.enum(['plan_detail','plan_approve','plan_pause','plan_resume','plan_cancel']), plan_id: z.string().uuid() }).strict(),
 ]);
 class ProviderError extends Error {
   constructor(public status: number, public details: string) { super(`Telnyx [${status}]: ${details}`); }
@@ -40,6 +42,62 @@ function checked<T>(r: { data: T; error: { message: string } | null }): T {
   return r.data;
 }
 
+// deno-lint-ignore no-explicit-any
+async function dial(admin: any, settings: any, url: string, call: any, lead: any, approverId: string) {
+    const claimed = checked(await admin.from('bruno_voice_calls').update({ status: 'starting', approved_by: approverId, approved_at: new Date().toISOString(), started_at: new Date().toISOString() }).eq('id', call.id).eq('status', 'proposed').select('id').maybeSingle());
+  if (!claimed) return { error: 'Chiamata già approvata', status: 409 };
+  try {
+    const recent = checked(await admin.from('crm_messages').select('channel,direction,body,created_at').eq('lead_id', lead.id).order('created_at', { ascending: false }).limit(8)) ?? [];
+    const callback = `${url}/functions/v1/bruno-voice?callback=1&call_id=${call.id}`;
+    const result = await telnyx(`/texml/ai_calls/${settings.application_id}`, 'POST', {
+      From: FROM_NUMBER, To: call.destination, AIAssistantId: settings.assistant_id,
+      AIAssistantDynamicVariables: { vesuviano_call_id: call.id, call_objective: call.objective, call_type: call.call_type, call_instructions: call.instructions || 'none', customer_context: JSON.stringify({ ...lead, messages: recent.map(m => ({ ...m, body: m.body.slice(0, 800) })) }) },
+      StatusCallback: callback, StatusCallbackMethod: 'POST', StatusCallbackEvent: 'initiated ringing answered completed no-answer busy canceled failed analyzed',
+      Record: true, RecordingChannels: 'dual', RecordingTrack: 'both', SendRecordingUrl: true,
+      RecordingStatusCallback: `${url}/functions/v1/bruno-voice?recording=1&call_id=${call.id}`, RecordingStatusCallbackMethod: 'POST', RecordingStatusCallbackEvent: 'completed absent',
+      TimeLimit: 600, Timeout: 30,
+    });
+    const providerId = result.call_sid ?? result.data?.call_sid;
+    checked(await admin.from('bruno_voice_calls').update({ status: providerId ? 'dialing' : 'unknown', provider_call_id: providerId ?? null }).eq('id', call.id).eq('status', 'starting'));
+    return { call_id: call.id, status: providerId ? 'dialing' : 'unknown', from_number: FROM_NUMBER, language: 'en' };
+  } catch (error) {
+    // Never automatically retry a submission that may already have reached the carrier.
+    checked(await admin.from('bruno_voice_calls').update({ status: error instanceof ProviderError && error.status < 500 ? 'failed' : 'unknown', error_code: error instanceof ProviderError ? `telnyx_${error.status}` : 'submission_uncertain' }).eq('id', call.id).eq('status', 'starting'));
+    throw error;
+  }
+}
+
+// deno-lint-ignore no-explicit-any
+async function planTick(admin: any, settings: any, url: string, planId: string, token: string) {
+  const plan = checked(await admin.rpc('claim_bruno_call_plan', { p_id: planId, p_token: token }))?.[0];
+  if (!plan) return { ignored: true };
+  const release = (fields: Record<string, unknown> = {}) => admin.from('bruno_call_plans').update({ lease_until: null, ...fields }).eq('id', planId);
+  try {
+    const calls = checked(await admin.from('bruno_voice_calls').select('*').eq('plan_id', planId)) ?? [];
+    // An uncertain submission is never repeated: stop the plan for a human check.
+    if (calls.some((c: any) => c.status === 'unknown')) { await release({ status: 'paused', last_error: 'Esito di una chiamata incerto: piano in pausa, verifica prima di riprendere.' }); return { paused: true }; }
+    const step = planNextStep(calls, plan.gap_minutes);
+    if (step.kind === 'done') { await release({ status: 'completed', last_error: null }); return { completed: true }; }
+    if (step.kind === 'wait') { await release(); return { waiting: true }; }
+    if (!settings.assistant_id || !settings.application_id || !settings.public_key) { await release({ last_error: 'Assistente telefonico non configurato' }); return { waiting: true }; }
+    const call = calls.find((c: any) => c.id === step.call_id);
+    const lead = checked(await admin.from('leads').select('id,contact_name,company_name,phone,city,country,status,archived,qualification,bruno_mode,bruno_paused_until').eq('id', call.lead_id).single());
+    let phone: string | null = null; try { phone = e164(lead?.phone || ''); } catch { /* invalid */ }
+    const blocked = !lead ? 'Cliente non trovato' : phone !== call.destination ? 'Telefono modificato' : callAllowed(lead, call.customer_timezone, new Date(), 'operator');
+    if (isHoursBlock(blocked)) {
+      // Outside 9-20 for this customer: try the next customer whose local time allows a call.
+      for (const other of calls.filter((c: any) => c.status === 'proposed' && c.id !== call.id).sort((a: any, b: any) => a.plan_position - b.plan_position)) {
+        if (!callAllowed({}, other.customer_timezone, new Date(), 'operator')) { await release(); return { waiting: true, reorder: other.id }; }
+      }
+      await release({ last_error: null }); return { waiting: true, hours: true };
+    }
+    if (blocked) { checked(await admin.from('bruno_voice_calls').update({ status: 'cancelled', error_code: 'plan_skipped' }).eq('id', call.id).eq('status', 'proposed')); await release({ last_error: `${lead?.contact_name || 'Cliente'}: ${blocked}` }); return { skipped: call.id }; }
+    try { await dial(admin, settings, url, call, lead, plan.approved_by); } catch { /* dial() already stored failed/unknown */ }
+    await release({ last_error: null });
+    return { dialed: call.id };
+  } catch (e) { await release({ last_error: e instanceof Error ? e.message.slice(0, 300) : 'Errore piano' }); return { error: true }; }
+}
+
 Deno.serve(async req => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   const url = Deno.env.get('SUPABASE_URL'), key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
@@ -57,6 +115,8 @@ Deno.serve(async req => {
     if (!address.searchParams.has('tool') && !address.searchParams.has('callback') && !address.searchParams.has('recording') && req.headers.get('content-type')?.includes('application/json')) {
       const job = z.object({ action: z.literal('result_job'), call_id: z.string().uuid(), token: z.string().uuid() }).strict().safeParse(JSON.parse(raw));
       if (job.success) return json(await processResults(admin, job.data.call_id, job.data.token, settings.assistant_id || '', telnyx));
+      const tick = z.object({ action: z.literal('plan_tick'), plan_id: z.string().uuid(), token: z.string().uuid() }).strict().safeParse(JSON.parse(raw));
+      if (tick.success) return json(await planTick(admin, settings, url, tick.data.plan_id, tick.data.token));
     }
     if (address.searchParams.has('tool') || address.searchParams.has('callback') || address.searchParams.has('recording')) {
       if (!settings.public_key || !await verifyTelnyx(raw, req.headers.get('telnyx-signature-ed25519'), req.headers.get('telnyx-timestamp'), settings.public_key)) return json({ error: 'Firma Telnyx non valida' }, 401);
@@ -216,6 +276,42 @@ Deno.serve(async req => {
       // Outbound From is owned; retain existing inbound SIP routing unless explicitly requested.
       return json({ configured: true, from_number: FROM_NUMBER, language: 'en' });
     }
+    if (input.action === 'plan_propose') {
+      const leads = checked(await admin.from('leads').select('id,contact_name,company_name,phone,archived,status').in('id', input.lead_ids)) ?? [];
+      const plan = checked(await admin.from('bruno_call_plans').insert({ title: input.title || `Piano chiamate di ${input.call_type} (${input.lead_ids.length})`, call_type: input.call_type, objective: input.objective, instructions: input.instructions, gap_minutes: input.gap_minutes ?? 3, requested_by: user.user.id }).select('id').single());
+      const skipped: { lead_id: string; name: string; reason: string }[] = []; let position = 0;
+      for (const id of [...new Set(input.lead_ids)]) {
+        const lead = leads.find(l => l.id === id); const name = lead?.contact_name || lead?.company_name || 'Cliente';
+        if (!lead) { skipped.push({ lead_id: id, name, reason: 'non trovato' }); continue; }
+        let destination: string; try { destination = e164(lead.phone || ''); } catch { skipped.push({ lead_id: id, name, reason: 'telefono mancante o senza prefisso' }); continue; }
+        const zone = timezoneFromPhone(destination); if (!zone) { skipped.push({ lead_id: id, name, reason: 'prefisso non riconosciuto' }); continue; }
+        if (lead.archived || lead.status === 'perso') { skipped.push({ lead_id: id, name, reason: 'archiviato o non interessato' }); continue; }
+        checked(await admin.from('bruno_voice_calls').insert({ lead_id: id, objective: input.objective, call_type: input.call_type, instructions: input.instructions, customer_timezone: zone, requested_by: user.user.id, destination, plan_id: plan.id, plan_position: ++position, expires_at: new Date(Date.now() + 7 * 86400000).toISOString() }));
+      }
+      if (!position) { checked(await admin.from('bruno_call_plans').update({ status: 'cancelled', last_error: 'Nessun cliente chiamabile' }).eq('id', plan.id)); }
+      return json({ plan_id: plan.id, calls: position, skipped, approval_required: position > 0 });
+    }
+    if (input.action === 'plan_detail' || input.action === 'plan_approve' || input.action === 'plan_pause' || input.action === 'plan_resume' || input.action === 'plan_cancel') {
+      const plan = checked(await admin.from('bruno_call_plans').select('id,title,call_type,objective,instructions,gap_minutes,status,approved_at,last_error,created_at').eq('id', input.plan_id).maybeSingle());
+      if (!plan) return json({ error: 'Piano non trovato' }, 404);
+      const move = async (from: string[], to: string, extra: Record<string, unknown> = {}) => {
+        const row = checked(await admin.from('bruno_call_plans').update({ status: to, ...extra }).eq('id', plan.id).in('status', from).select('id').maybeSingle());
+        if (!row) throw new Error('Stato del piano cambiato: ricarica');
+      };
+      if (input.action === 'plan_approve') {
+        await move(['proposed'], 'running', { approved_by: user.user.id, approved_at: new Date().toISOString(), last_error: null });
+        checked(await admin.from('bruno_voice_calls').update({ expires_at: new Date(Date.now() + 7 * 86400000).toISOString() }).eq('plan_id', plan.id).eq('status', 'proposed'));
+      }
+      if (input.action === 'plan_pause') await move(['running'], 'paused');
+      if (input.action === 'plan_resume') await move(['paused'], 'running', { last_error: null });
+      if (input.action === 'plan_cancel') {
+        await move(['proposed', 'running', 'paused'], 'cancelled');
+        checked(await admin.from('bruno_voice_calls').update({ status: 'cancelled' }).eq('plan_id', plan.id).eq('status', 'proposed'));
+      }
+      const fresh = checked(await admin.from('bruno_call_plans').select('id,title,call_type,objective,instructions,gap_minutes,status,approved_at,last_error,created_at').eq('id', plan.id).single());
+      const calls = checked(await admin.from('bruno_voice_calls').select('id,lead_id,destination,status,error_code,plan_position,started_at,ended_at,duration_seconds,summary,customer_timezone,leads(contact_name,company_name)').eq('plan_id', plan.id).order('plan_position')) ?? [];
+      return json({ plan: fresh, calls });
+    }
     if (input.action === 'propose') {
       const lead = checked(await admin.from('leads').select('id,phone,archived,status,bruno_mode,bruno_paused_until,qualification').eq('id', input.lead_id).single());
       if (!lead) return json({ error: 'Cliente non trovato' }, 404);
@@ -245,27 +341,8 @@ Deno.serve(async req => {
     // A staff approval executes the stored proposal without resuming lead automation.
     const blocked = callAllowed(lead, call.customer_timezone, new Date(), 'operator');
     if (blocked) return json({ error: blocked }, 409);
-    const claimed = checked(await admin.from('bruno_voice_calls').update({ status: 'starting', approved_by: user.user.id, approved_at: new Date().toISOString(), started_at: new Date().toISOString() }).eq('id', call.id).eq('status', 'proposed').select('id').maybeSingle());
-    if (!claimed) return json({ error: 'Chiamata già approvata' }, 409);
-    try {
-      const recent = checked(await admin.from('crm_messages').select('channel,direction,body,created_at').eq('lead_id', lead.id).order('created_at', { ascending: false }).limit(8)) ?? [];
-      const callback = `${url}/functions/v1/bruno-voice?callback=1&call_id=${call.id}`;
-      const result = await telnyx(`/texml/ai_calls/${settings.application_id}`, 'POST', {
-        From: FROM_NUMBER, To: call.destination, AIAssistantId: settings.assistant_id,
-        AIAssistantDynamicVariables: { vesuviano_call_id: call.id, call_objective: call.objective, call_type: call.call_type, call_instructions: call.instructions || 'none', customer_context: JSON.stringify({ ...lead, messages: recent.map(m => ({ ...m, body: m.body.slice(0, 800) })) }) },
-        StatusCallback: callback, StatusCallbackMethod: 'POST', StatusCallbackEvent: 'initiated ringing answered completed no-answer busy canceled failed analyzed',
-        Record: true, RecordingChannels: 'dual', RecordingTrack: 'both', SendRecordingUrl: true,
-        RecordingStatusCallback: `${url}/functions/v1/bruno-voice?recording=1&call_id=${call.id}`, RecordingStatusCallbackMethod: 'POST', RecordingStatusCallbackEvent: 'completed absent',
-        TimeLimit: 600, Timeout: 30,
-      });
-      const providerId = result.call_sid ?? result.data?.call_sid;
-      checked(await admin.from('bruno_voice_calls').update({ status: providerId ? 'dialing' : 'unknown', provider_call_id: providerId ?? null }).eq('id', call.id).eq('status', 'starting'));
-      return json({ call_id: call.id, status: providerId ? 'dialing' : 'unknown', from_number: FROM_NUMBER, language: 'en' });
-    } catch (error) {
-      // Never automatically retry a submission that may already have reached the carrier.
-      checked(await admin.from('bruno_voice_calls').update({ status: error instanceof ProviderError && error.status < 500 ? 'failed' : 'unknown', error_code: error instanceof ProviderError ? `telnyx_${error.status}` : 'submission_uncertain' }).eq('id', call.id).eq('status', 'starting'));
-      throw error;
-    }
+    if (call.plan_id) return json({ error: 'Questa chiamata fa parte di un piano: approva il piano.' }, 409);
+    return json(await dial(admin, settings, url, call, lead, user.user.id));
   } catch (error) {
     if (error instanceof ProviderError) return json({ error: 'Richiesta Telnyx non riuscita', status: error.status, details: error.details }, error.status);
     console.error('bruno-voice', error instanceof SyntaxError ? 'invalid_json' : 'operation_failed');
