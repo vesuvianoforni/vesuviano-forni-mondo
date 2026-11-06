@@ -3,18 +3,18 @@ import { it } from "date-fns/locale";
 
 export interface LeadIdentity {
   id: string;
-  email?: string | null;
-  phone?: string | null;
-  website_lead_id?: string | null;
+  email?: string | null | undefined;
+  phone?: string | null | undefined;
+  website_lead_id?: string | null | undefined;
 }
 
 export interface LeadInteraction {
   at: string;
   kind: "form" | "chat" | "email" | "configurator" | "feedback" | "whatsapp" | "call";
-  leadId?: string | null;
-  email?: string | null;
-  phone?: string | null;
-  websiteLeadId?: string | null;
+  leadId?: string | null | undefined;
+  email?: string | null | undefined;
+  phone?: string | null | undefined;
+  websiteLeadId?: string | null | undefined;
 }
 
 export const interactionLabels: Record<LeadInteraction["kind"], string> = {

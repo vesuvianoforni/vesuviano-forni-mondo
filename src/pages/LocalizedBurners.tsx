@@ -14,10 +14,10 @@ const META: Record<string, { title: string; description: string }> = {
 };
 
 const LocalizedBurners = ({ lang }: LocalizedBurnersProps) => {
-  const meta = META[lang] || META.it;
+  const meta = META[lang] || META["it"];
   return (
     <>
-      <SEOHead lang={lang} title={meta.title} description={meta.description} />
+      <SEOHead lang={lang} title={meta!.title} description={meta!.description} />
       <BurnersPage lang={lang} />
     </>
   );

@@ -76,14 +76,14 @@ const ERPListini = () => {
         if (!match) continue;
         const [, sIdx, cIdx, list, field] = match;
         const listKey = `list${list}`;
-        if (updatedSizes[+sIdx]?.coatings?.[+cIdx]) {
-          if (!updatedSizes[+sIdx].coatings[+cIdx].prices) {
-            updatedSizes[+sIdx].coatings[+cIdx].prices = {};
+        if (updatedSizes[+sIdx!]?.coatings?.[+cIdx!]) {
+          if (!updatedSizes[+sIdx!].coatings[+cIdx!].prices) {
+            updatedSizes[+sIdx!].coatings[+cIdx!].prices = {};
           }
-          if (!updatedSizes[+sIdx].coatings[+cIdx].prices[listKey]) {
-            updatedSizes[+sIdx].coatings[+cIdx].prices[listKey] = {};
+          if (!updatedSizes[+sIdx!].coatings[+cIdx!].prices[listKey]) {
+            updatedSizes[+sIdx!].coatings[+cIdx!].prices[listKey] = {};
           }
-          updatedSizes[+sIdx].coatings[+cIdx].prices[listKey][field] = value;
+          updatedSizes[+sIdx!].coatings[+cIdx!].prices[listKey][field!] = value;
         }
       }
 
@@ -114,9 +114,9 @@ const ERPListini = () => {
     setSaving(burner.id);
     try {
       const updateData: any = {};
-      if (changes.A !== undefined) updateData.price = changes.A;
-      if (changes.B !== undefined) updateData.price_b = changes.B;
-      if (changes.C !== undefined) updateData.price_c = changes.C;
+      if (changes["A"] !== undefined) updateData.price = changes["A"];
+      if (changes["B"] !== undefined) updateData.price_b = changes["B"];
+      if (changes["C"] !== undefined) updateData.price_c = changes["C"];
 
       const { error } = await supabase
         .from('burners')
@@ -125,9 +125,9 @@ const ERPListini = () => {
       if (error) throw error;
       setBurners(prev => prev.map(b => b.id === burner.id ? {
         ...b,
-        ...(changes.A !== undefined && { price: changes.A }),
-        ...(changes.B !== undefined && { price_b: changes.B }),
-        ...(changes.C !== undefined && { price_c: changes.C }),
+        ...(changes["A"] !== undefined && { price: changes["A"] }),
+        ...(changes["B"] !== undefined && { price_b: changes["B"] }),
+        ...(changes["C"] !== undefined && { price_c: changes["C"] }),
       } : b));
       setEditedBurnerPrices(prev => { const n = { ...prev }; delete n[burner.id]; return n; });
       toast.success(`Prezzi ${burner.name} salvati`);
@@ -434,7 +434,7 @@ const ERPListini = () => {
                       {(['A', 'B', 'C'] as const).map(list => {
                         const priceKey = list === 'A' ? 'price' : `price_${list.toLowerCase()}`;
                         const currentVal = editedBurnerPrices[b.id]?.[list] !== undefined
-                          ? editedBurnerPrices[b.id][list]
+                          ? editedBurnerPrices[b.id]![list]
                           : (b as any)[priceKey] || 0;
                         return (
 

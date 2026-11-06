@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from '@/lib/router-compat';
 import LanguageSelector from './LanguageSelector';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -34,7 +34,7 @@ const Header = () => {
       'es': '/es/sistema-vesuviobuono',
       'de': '/de/vesuviobuono-system'
     };
-    return paths[currentLang] || paths['it'];
+    return (paths[currentLang!] || paths['it'])!;
   };
 
   const getOvenPath = (ovenType: string) => {
@@ -82,7 +82,7 @@ const Header = () => {
         'de': '/de/rauchfilter'
       }
     };
-    return paths[ovenType]?.[currentLang] || paths[ovenType]?.['it'] || '/';
+    return paths[ovenType]?.[currentLang!] || paths[ovenType]?.['it'] || '/';
   };
 
   const getReadyToShipPath = () => {
@@ -93,7 +93,7 @@ const Header = () => {
       'es': '/es/listo-para-enviar',
       'de': '/de/sofort-lieferbar'
     };
-    return paths[currentLang] || paths['it'];
+    return (paths[currentLang!] || paths['it'])!;
   };
 
   const getNeapolitanPath = (): string | null => {
@@ -103,7 +103,7 @@ const Header = () => {
       'es': '/es/hornos-pizza-napolitana',
       'de': '/de/neapolitanische-pizzaoefen'
     };
-    return paths[currentLang] || null;
+    return paths[currentLang!] || null;
   };
 
   const neapolitanLabels: Record<string, string> = {
@@ -130,21 +130,21 @@ const Header = () => {
     const paths: Record<string, string> = {
       it: '/it/collezioni', en: '/en/collections', fr: '/fr/collections', es: '/es/colecciones', de: '/de/kollektionen'
     };
-    return paths[currentLang] || paths.it;
+    return (paths[currentLang!] || paths["it"])!;
   };
 
   const getRivestimentiPath = () => {
     const paths: Record<string, string> = {
       it: '/it/rivestimenti', en: '/en/finishes', fr: '/fr/revetements', es: '/es/revestimientos', de: '/de/verkleidungen'
     };
-    return paths[currentLang] || paths.it;
+    return (paths[currentLang!] || paths["it"])!;
   };
 
   const getAboutPath = () => {
     const paths: Record<string, string> = {
       it: '/it/chi-siamo', en: '/en/about-us', fr: '/fr/qui-sommes-nous', es: '/es/quienes-somos', de: '/de/ueber-uns'
     };
-    return paths[currentLang] || paths.it;
+    return (paths[currentLang!] || paths["it"])!;
   };
 
   const aboutLabels: Record<string, string> = {
@@ -155,16 +155,16 @@ const Header = () => {
     const paths: Record<string, string> = {
       it: '/it/contatti', en: '/en/contact', fr: '/fr/contact', es: '/es/contacto', de: '/de/kontakt'
     };
-    return paths[currentLang] || paths.it;
+    return (paths[currentLang!] || paths["it"])!;
   };
 
   const navItems: Array<{ href: string; label: string; type: 'anchor' | 'link' }> = [
     { href: `/${currentLang}/architettoai`, label: t('header.visualizer'), type: 'link' },
-    { href: getCollectionsPath(), label: t('header.gallery'), type: 'link' },
+    { href: (getCollectionsPath())!, label: t('header.gallery'), type: 'link' },
     
-    { href: getAboutPath(), label: aboutLabels[currentLang] || aboutLabels.it, type: 'link' },
+    { href: (getAboutPath())!, label: (aboutLabels[currentLang!] || aboutLabels["it"])!, type: 'link' },
     { href: `/${currentLang}/blog`, label: "Blog", type: 'link' },
-    { href: getContactPath(), label: t('header.contact'), type: 'link' }
+    { href: (getContactPath())!, label: t('header.contact'), type: 'link' }
   ];
 
   const handleNavClick = (href: string, type: 'anchor' | 'link' = 'anchor') => {

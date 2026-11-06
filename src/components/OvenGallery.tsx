@@ -12,12 +12,12 @@ interface Oven {
   id: string;
   name: string;
   category: string;
-  subcategory?: string | null;
+  subcategory?: string | null | undefined;
   image_url: string;
-  description?: string | null;
-  specifications?: any;
-  fuel_type?: string | null;
-  coating_type?: string | null;
+  description?: string | null | undefined;
+  specifications?: any | undefined;
+  fuel_type?: string | null | undefined;
+  coating_type?: string | null | undefined;
   created_at: string;
   updated_at: string;
 }

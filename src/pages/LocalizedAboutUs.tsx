@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import SEOHead from "@/components/SEOHead";
 import AboutUs from "@/components/AboutUs";
 import ConsultationForm from "@/components/ConsultationForm";
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 
 interface LocalizedAboutUsProps {
   lang: 'it' | 'en' | 'fr' | 'es' | 'de';
@@ -21,7 +21,7 @@ const META: Record<string, { title: string; description: string }> = {
 
 const LocalizedAboutUs = ({ lang }: LocalizedAboutUsProps) => {
   const { i18n, t } = useTranslation();
-  const meta = META[lang] || META.it;
+  const meta = META[lang] || META["it"];
 
   useEffect(() => {
     if (i18n.language !== lang) {
@@ -43,7 +43,7 @@ const LocalizedAboutUs = ({ lang }: LocalizedAboutUsProps) => {
   return (
     <div className="min-h-screen bg-stone-50">
       <Header />
-      <SEOHead lang={lang} title={meta.title} description={meta.description} />
+      <SEOHead lang={lang} title={meta!.title} description={meta!.description} />
       
       <main>
         <AboutUs />

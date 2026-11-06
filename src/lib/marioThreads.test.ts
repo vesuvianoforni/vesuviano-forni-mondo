@@ -14,7 +14,7 @@ describe('Mario persisted requests', () => {
     const remote = { ...thread, messages: [...thread.messages, { role: 'assistant' as const, content: 'Piano salvato' }] };
     const merged = mergeMarioThreads([remote], [thread]);
     assert.equal(merged.length, 1);
-    assert.equal(merged[0].messages[1].content, 'Piano salvato');
+    assert.equal(merged[0]!.messages[1]!.content, 'Piano salvato');
   });
   it('keeps more than fifty saved tasks without truncating history', () => {
     const history = Array.from({ length: 75 }, (_, i) => ({ ...thread, id: String(i) }));
@@ -22,6 +22,6 @@ describe('Mario persisted requests', () => {
   });
   it('does not open another conversation for an unavailable URL', () => {
     assert.equal(selectMarioThread([thread], 'another-user-thread'), undefined);
-    assert.equal(selectMarioThread([thread], 'london')?.messages[0].content, request);
+    assert.equal(selectMarioThread([thread], 'london')?.messages[0]!.content, request);
   });
 });

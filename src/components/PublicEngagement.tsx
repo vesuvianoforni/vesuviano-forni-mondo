@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from '@/lib/router-compat';
 
 const AIChatWidget = lazy(() => import('@/components/chat/AIChatWidget'));
 const ReadyToShipPopup = lazy(() => import('@/components/ReadyToShipPopup'));

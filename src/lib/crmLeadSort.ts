@@ -10,11 +10,11 @@ export const crmLeadSortLabels: Record<CRMLeadSort, string> = {
 
 interface SortableLead {
   id: string;
-  company_name?: string;
-  contact_name?: string;
-  value?: number;
+  company_name?: string | undefined;
+  contact_name?: string | undefined;
+  value?: number | undefined;
   created_at: string;
-  next_activity_date?: string;
+  next_activity_date?: string | undefined;
 }
 
 const time = (value?: string | null) => {

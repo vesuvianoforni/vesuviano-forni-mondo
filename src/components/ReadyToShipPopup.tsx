@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { useTranslation } from 'react-i18next';
 import { X, ArrowRight, Truck } from 'lucide-react';
 import { Dialog, DialogContent, DialogClose, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -64,7 +64,7 @@ const ReadyToShipPopup = () => {
       'es': '/es/listo-para-enviar',
       'de': '/de/sofort-lieferbar'
     };
-    navigate(paths[currentLang] || paths['it']);
+    navigate((paths[currentLang] || paths['it'])!);
     setOpen(false);
   };
 

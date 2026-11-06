@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useRef } from 'react';
@@ -23,8 +23,8 @@ const AutoPlayVideo = ({ src, poster, alt }: AutoPlayVideoProps) => {
     if (!video) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setInView(entry.isIntersecting);
-        if (entry.isIntersecting) {
+        setInView(entry!.isIntersecting);
+        if (entry!.isIntersecting) {
           video.play().catch(() => {});
         } else {
           video.pause();
@@ -97,7 +97,7 @@ const ProductCategories = () => {
   const [datasheetOven, setDatasheetOven] = useState<string | null>(null);
 
   const lang = ['it', 'en', 'fr', 'es', 'de'].includes(i18n.language) ? i18n.language : 'it';
-  const getLanding = (key: string) => LANDING_PATHS[key]?.[lang] || LANDING_PATHS[key]?.it;
+  const getLanding = (key: string) => LANDING_PATHS[key]?.[lang] || LANDING_PATHS[key]?.["it"];
 
 
 
@@ -221,7 +221,7 @@ const ProductCategories = () => {
                                 'es': '/es/listo-para-enviar',
                                 'de': '/de/sofort-lieferbar'
                               };
-                              navigate(readyToShipPaths[i18n.language] || readyToShipPaths['it']);
+                              navigate((readyToShipPaths[i18n.language] || readyToShipPaths['it'])!);
                             } else {
                               navigate('/built-on-place');
                             }

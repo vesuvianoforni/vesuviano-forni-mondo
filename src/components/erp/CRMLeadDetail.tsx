@@ -14,7 +14,7 @@ import { CRM_STAGES } from "@/lib/crmPipeline";
 import { activityLabels, activityTiming, exactActivityDate, interactionLabels, interactionRelativeTime, type LeadInteraction } from "@/lib/crmActivity";
 import { BrunoPanel, type BrunoLead } from "./BrunoPanel";
 import type { CRMLead } from "./CRMLeadCard";
-import { Link } from "react-router-dom";
+import { Link } from "@/lib/router-compat";
 import { LeadQualificationCard } from "./LeadQualificationCard";
 
 const SITE = "https://vesuvianoforni.com";
@@ -32,15 +32,15 @@ interface Session {
 interface Props {
   lead: BrunoLead | null;
   open: boolean;
-  defaultTab?: "riepilogo" | "comunicazioni" | "configuratore";
+  defaultTab?: "riepilogo" | "comunicazioni" | "configuratore" | undefined;
   onOpenChange: (open: boolean) => void;
   onEdit: (lead: CRMLead) => void;
   onSchedule: (lead: CRMLead) => void;
   onDelete: (id: string) => void;
   onSetStatus: (lead: CRMLead, status: "vinto" | "perso") => void;
   onUpdated?: () => void;
-  lastInteraction?: LeadInteraction | null;
-  activityAssignee?: string;
+  lastInteraction?: LeadInteraction | null | undefined;
+  activityAssignee?: string | undefined;
 }
 
 function Field({ label, value }: { label: string; value?: React.ReactNode }) {

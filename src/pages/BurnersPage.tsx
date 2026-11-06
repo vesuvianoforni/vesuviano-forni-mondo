@@ -18,14 +18,14 @@ interface BurnersPageProps {
 }
 
 interface BurnerSpecs {
-  series?: string;
-  control?: string;
-  oven_sizes?: string;
-  power_kw?: number;
-  power_kcal?: number;
-  lpg_consumption?: string;
-  methane_consumption?: string;
-  compatible_ovens?: string;
+  series?: string | undefined;
+  control?: string | undefined;
+  oven_sizes?: string | undefined;
+  power_kw?: number | undefined;
+  power_kcal?: number | undefined;
+  lpg_consumption?: string | undefined;
+  methane_consumption?: string | undefined;
+  compatible_ovens?: string | undefined;
 }
 
 const BurnersPage = ({ lang }: BurnersPageProps) => {

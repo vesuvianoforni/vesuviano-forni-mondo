@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export interface GenerateImageParams {
   positivePrompt: string;
-  imageFile?: File;
+  imageFile?: File | undefined;
 }
 
 export interface GeneratedImage {
@@ -51,8 +51,8 @@ export class StabilityService {
           }
         }
 
-        width = target.w;
-        height = target.h;
+        width = target!.w;
+        height = target!.h;
 
         canvas.width = width;
         canvas.height = height;

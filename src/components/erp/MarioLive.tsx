@@ -40,7 +40,7 @@ export function MarioLive({ onUpdated }: { onUpdated?: () => void }) {
           <Badge variant={d.settings.paused ? 'secondary' : 'default'}>{d.settings.paused ? 'Invii in pausa' : 'Invii attivi'}</Badge></div>
         <Button size="sm" variant="destructive" disabled={busy || (!running && d.settings.paused)} onClick={() => void stop()}><OctagonX className="mr-1.5 h-4 w-4" />Ferma autopilota</Button>
       </div>
-      <p className="text-xs text-muted-foreground">Aggiornato ogni 5 secondi · ultimo {time(d.at)} · ultimo controllo automatico {time(String(d.autopilot.last_result?.at ?? '') || null)}</p>
+      <p className="text-xs text-muted-foreground">Aggiornato ogni 5 secondi · ultimo {time(d.at)} · ultimo controllo automatico {time(String(d.autopilot.last_result?.["at"] ?? '') || null)}</p>
       {error && <p className="text-sm text-destructive">{error}</p>}
       {(d.autopilot.auto_paused_reason || (d.settings.paused && d.settings.pause_reason)) && <p className="text-sm text-muted-foreground">{d.autopilot.auto_paused_reason ?? d.settings.pause_reason}</p>}
 

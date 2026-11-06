@@ -40,7 +40,7 @@ export function LeadQualificationCard({ leadId }: { leadId: string }) {
     setSaving(false);
     if (error) return toast({ title: "Salvataggio non riuscito", description: error.message, variant: "destructive" });
     setDirty(false); toast({ title: "Qualifica salvata" });
-  };
+   return undefined; };
 
   return (
     <Card className="sm:col-span-2">
@@ -56,7 +56,7 @@ export function LeadQualificationCard({ leadId }: { leadId: string }) {
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1">
               <Label className="text-xs">Uso</Label>
-              <Select value={facts.uso?.toLowerCase().startsWith("prof") ? "professionale" : facts.uso?.toLowerCase().startsWith("dom") ? "domestico" : facts.uso || ""} onValueChange={(v) => set("uso", v)}>
+              <Select value={facts["uso"]?.toLowerCase().startsWith("prof") ? "professionale" : facts["uso"]?.toLowerCase().startsWith("dom") ? "domestico" : facts["uso"] || ""} onValueChange={(v) => set("uso", v)}>
                 <SelectTrigger><SelectValue placeholder="Da qualificare" /></SelectTrigger>
                 <SelectContent><SelectItem value="domestico">Domestico</SelectItem><SelectItem value="professionale">Professionale</SelectItem></SelectContent>
               </Select>

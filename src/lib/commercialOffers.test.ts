@@ -9,7 +9,7 @@ describe('Vesuviano commercial offer catalog', () => {
   it('reseller is independent and never invents a rotating price',()=>assert.deepEqual(offerCatalog(ovens,[],'Reseller').map(item=>item.price),[700,700,1400,null,2800]));
   it('burner B/C retain their own prices and fallback only when missing',()=>{
     const burners=[{id:'1',name:'Bruciatore',price:500,price_b:400,price_c:null}];
-    assert.equal(offerCatalog([],burners,'B')[0].price,400);assert.equal(offerCatalog([],burners,'C')[0].price,500);assert.equal(offerCatalog([],burners,'Reseller')[0].price,null);
+    assert.equal(offerCatalog([],burners,'B')[0]!.price,400);assert.equal(offerCatalog([],burners,'C')[0]!.price,500);assert.equal(offerCatalog([],burners,'Reseller')[0]!.price,null);
   });
   it('prezzi mancanti non diventano omaggi e valuta estera richiede prezzo concordato',()=>{
     const product={key:'oven:1',name:'Real Bosco',description:'',image_url:'',price:1000};

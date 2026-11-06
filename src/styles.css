@@ -1,0 +1,547 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design system definition.
+ *
+ * Vesuviano keeps its HSL channel tokens (e.g. --primary: 23 31% 34%) so that the
+ * local ERP / Bruno themes and existing hsl(var(--token)) usages keep working.
+ * The @theme inline block maps them to Tailwind utilities (bg-primary, text-muted...).
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-ring-offset-background: hsl(var(--background));
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --color-charcoal-50: hsl(var(--charcoal-50));
+  --color-charcoal-100: hsl(var(--charcoal-100));
+  --color-charcoal-200: hsl(var(--charcoal-200));
+  --color-charcoal-300: hsl(var(--charcoal-300));
+  --color-charcoal-400: hsl(var(--charcoal-400));
+  --color-charcoal-500: hsl(var(--charcoal-500));
+  --color-charcoal-600: hsl(var(--charcoal-600));
+  --color-charcoal-700: hsl(var(--charcoal-700));
+  --color-charcoal-800: hsl(var(--charcoal-800));
+  --color-charcoal-900: hsl(var(--charcoal-900));
+  --color-charcoal-950: hsl(var(--charcoal-950));
+}
+
+@theme {
+  --font-playfair: 'Playfair Display', serif;
+  --font-inter: 'Inter', sans-serif;
+
+  /* Vesuviano brand palette */
+  --color-vesuviano-50: #fafafa;
+  --color-vesuviano-100: #ffffff;
+  --color-vesuviano-200: #f5f5f5;
+  --color-vesuviano-300: #e5e5e5;
+  --color-vesuviano-400: #a3a3a3;
+  --color-vesuviano-500: #6a7f4d;
+  --color-vesuviano-600: #5a6d40;
+  --color-vesuviano-700: #4a5a35;
+  --color-vesuviano-800: #6e4b3a;
+  --color-vesuviano-900: #232323;
+  --color-vesuviano-950: #1a1a1a;
+
+  --color-stone-50: #fafafa;
+  --color-stone-100: #ffffff;
+  --color-stone-200: #e7e7e7;
+  --color-stone-300: #d1d1d1;
+  --color-stone-400: #a8a8a8;
+  --color-stone-500: #6e4b3a;
+  --color-stone-600: #5a3d2e;
+  --color-stone-700: #4a3125;
+  --color-stone-800: #232323;
+  --color-stone-900: #1a1a1a;
+  --color-stone-950: #0c0c0c;
+
+  --color-earth-50: #f9f7f4;
+  --color-earth-100: #f3efe8;
+  --color-earth-200: #e7ddd0;
+  --color-earth-300: #d8c7b0;
+  --color-earth-400: #c7ae8e;
+  --color-earth-500: #6e4b3a;
+  --color-earth-600: #5e3f30;
+  --color-earth-700: #4e3427;
+  --color-earth-800: #3e2a1f;
+  --color-earth-900: #2e2017;
+
+  --color-sage-50: #f6f8f4;
+  --color-sage-100: #edf1e8;
+  --color-sage-200: #dbe3d2;
+  --color-sage-300: #c3d0b3;
+  --color-sage-400: #a8bc8f;
+  --color-sage-500: #6a7f4d;
+  --color-sage-600: #5a6d42;
+  --color-sage-700: #4a5a37;
+  --color-sage-800: #3a472b;
+  --color-sage-900: #2a341f;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-fade-in: fade-in 0.6s ease-out;
+  --animate-slide-in-left: slide-in-left 0.6s ease-out;
+  --animate-slide-in-right: slide-in-right 0.6s ease-out;
+  --animate-scale-in: scale-in 0.4s ease-out;
+  --animate-bounce-in: bounce-in 0.6s ease-out;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
+  @keyframes fade-in {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slide-in-left {
+    0% { opacity: 0; transform: translateX(-50px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slide-in-right {
+    0% { opacity: 0; transform: translateX(50px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes scale-in {
+    0% { opacity: 0; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes bounce-in {
+    0% { opacity: 0; transform: scale(0.3); }
+    50% { opacity: 1; transform: scale(1.05); }
+    70% { transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+}
+
+/* v3 container config: centered, 2rem padding, max 1400px from the 1400px breakpoint. */
+@utility container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= 40rem) { max-width: none; }
+  @media (width >= 48rem) { max-width: none; }
+  @media (width >= 64rem) { max-width: none; }
+  @media (width >= 80rem) { max-width: none; }
+  @media (width >= 96rem) { max-width: 1400px; }
+  @media (width >= 1400px) { max-width: 1400px; }
+}
+
+/* Apple-style gradient animations */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.33) }
+  40%, 50% { opacity: 1 }
+  100% { opacity: 0; transform: scale(1) }
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.8) }
+  50% { transform: scale(1) }
+  100% { transform: scale(0.8) }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) }
+  100% { transform: translateX(100%) }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3) }
+  50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6), 0 0 60px rgba(59, 130, 246, 0.4) }
+}
+
+.gradient-bg {
+  background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+  background-size: 400% 400%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.apple-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.loading-dots::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #3b82f6;
+  animation: pulse-dot 1.5s ease-in-out infinite;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 14%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 14%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 14%;
+  --primary: 23 31% 34%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 83 22% 40%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 23 31% 34%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.5rem;
+  --vesuviano-50: 24 100% 97%;
+  --vesuviano-100: 24 100% 93%;
+  --vesuviano-200: 24 100% 87%;
+  --vesuviano-300: 24 100% 76%;
+  --vesuviano-400: 24 100% 63%;
+  --vesuviano-500: 24 100% 50%;
+  --vesuviano-600: 24 100% 40%;
+  --vesuviano-700: 24 84% 32%;
+  --vesuviano-800: 24 74% 26%;
+  --vesuviano-900: 24 65% 22%;
+  --vesuviano-950: 24 80% 11%;
+  --charcoal-50: 210 8% 97%;
+  --charcoal-100: 210 8% 93%;
+  --charcoal-200: 210 8% 87%;
+  --charcoal-300: 210 8% 76%;
+  --charcoal-400: 210 8% 63%;
+  --charcoal-500: 210 8% 50%;
+  --charcoal-600: 210 8% 40%;
+  --charcoal-700: 210 8% 32%;
+  --charcoal-800: 210 8% 26%;
+  --charcoal-900: 210 8% 22%;
+  --charcoal-950: 210 8% 11%;
+  --sidebar-background: 0 0% 98%;
+  --sidebar-foreground: 240 5.3% 26.1%;
+  --sidebar-primary: 240 5.9% 10%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 240 4.8% 95.9%;
+  --sidebar-accent-foreground: 240 5.9% 10%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
+}
+
+.dark {
+  --background: 0 0% 14%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 14%;
+  --card-foreground: 0 0% 100%;
+  --popover: 0 0% 14%;
+  --popover-foreground: 0 0% 100%;
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 14%;
+  --secondary: 83 22% 40%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 83 22% 40%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
+  --sidebar-background: 240 5.9% 10%;
+  --sidebar-foreground: 240 4.8% 95.9%;
+  --sidebar-primary: 224.3 76.3% 48%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 240 3.7% 15.9%;
+  --sidebar-accent-foreground: 240 4.8% 95.9%;
+  --sidebar-border: 240 3.7% 15.9%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  /* Tailwind v3 preflight kept pointer cursors on buttons */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  /* Mobile optimization and layout stability */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Prevent layout shifts */
+  img {
+    height: auto;
+    max-width: 100%;
+  }
+
+  /* Mobile-first responsive padding */
+  section {
+    @apply px-4 sm:px-6;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Prevent horizontal scroll */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 768px) {
+    section {
+      @apply px-3;
+    }
+
+    h1, h2, h3, h4, h5, h6, p {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+  }
+
+  button {
+    @apply transition-all duration-200;
+  }
+
+  .loading-placeholder {
+    @apply bg-stone-200 animate-pulse;
+    min-height: 200px;
+  }
+
+  .mapboxgl-canvas-container,
+  .mapboxgl-canvas {
+    position: relative !important;
+  }
+
+  .text-responsive {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+
+  .heading-responsive {
+    @apply text-lg sm:text-xl lg:text-2xl;
+  }
+
+  /* Local ERP dashboard theme: keep the public site and other ERP pages unchanged. */
+  .erp-dashboard {
+    --background: 220 20% 98%;
+    --foreground: 220 12% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 12% 16%;
+    --primary: 34 94% 43%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 155 47% 31%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 9% 43%;
+    --accent: 211 67% 41%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 3 65% 43%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 12% 88%;
+    --input: 220 12% 88%;
+    --ring: 34 94% 43%;
+  }
+
+  .dark .erp-dashboard {
+    --background: 220 6% 11%;
+    --foreground: 220 10% 94%;
+    --card: 220 5% 15%;
+    --card-foreground: 220 10% 94%;
+    --primary: 36 92% 57%;
+    --primary-foreground: 220 6% 11%;
+    --secondary: 155 43% 61%;
+    --secondary-foreground: 220 6% 11%;
+    --muted: 220 5% 20%;
+    --muted-foreground: 220 7% 66%;
+    --accent: 211 77% 67%;
+    --accent-foreground: 220 6% 11%;
+    --destructive: 3 76% 67%;
+    --destructive-foreground: 220 6% 11%;
+    --border: 220 5% 25%;
+    --input: 220 5% 25%;
+  }
+
+  /* Bruno's workspace uses a local communication theme, including the shared CRM pane. */
+  .bruno-workspace {
+    --background: 0 0% 100%;
+    --foreground: 200 10% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 200 10% 16%;
+    --primary: 160 42% 29%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 14% 94%;
+    --secondary-foreground: 200 10% 24%;
+    --muted: 210 14% 96%;
+    --muted-foreground: 210 8% 43%;
+    --accent: 160 24% 93%;
+    --accent-foreground: 160 42% 23%;
+    --border: 210 12% 88%;
+    --input: 210 12% 86%;
+    --ring: 160 42% 29%;
+  }
+  .dark .bruno-workspace {
+    --background: 200 6% 12%;
+    --foreground: 200 8% 94%;
+    --card: 200 6% 16%;
+    --card-foreground: 200 8% 94%;
+    --primary: 160 38% 62%;
+    --primary-foreground: 200 6% 12%;
+    --secondary: 200 6% 22%;
+    --secondary-foreground: 200 8% 90%;
+    --muted: 200 6% 14%;
+    --muted-foreground: 200 8% 68%;
+    --accent: 160 16% 23%;
+    --accent-foreground: 160 38% 78%;
+    --border: 200 6% 28%;
+    --input: 200 6% 30%;
+    --ring: 160 38% 62%;
+  }
+}
+
+@utility animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+}
+
+@utility animate-glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@utility animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+.flame-container {
+  position: relative;
+  border-radius: 2rem 2rem 4rem 4rem / 2rem 2rem 6rem 6rem;
+}
+
+.flame-border {
+  background: linear-gradient(45deg,
+    rgba(232, 130, 58, 0.3),
+    rgba(224, 100, 80, 0.2),
+    rgba(232, 130, 58, 0.3),
+    rgba(224, 100, 80, 0.2)
+  );
+  background-size: 400% 400%;
+  animation: flame-flicker 4s ease-in-out infinite;
+  border-radius: inherit;
+  filter: blur(1px);
+}
+
+.flame-container::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background: linear-gradient(45deg,
+    #e8823a,
+    #e06450,
+    #f2a76a,
+    #e8823a
+  );
+  border-radius: 2rem 2rem 4rem 4rem / 2rem 2rem 6rem 6rem;
+  z-index: -1;
+  animation: flame-pulse 3s ease-in-out infinite;
+}
+
+@keyframes flame-flicker {
+  0%, 100% { background-position: 0% 50%; transform: scale(1); }
+  25% { background-position: 100% 50%; transform: scale(1.02); }
+  50% { background-position: 100% 100%; transform: scale(0.98); }
+  75% { background-position: 0% 100%; transform: scale(1.01); }
+}
+
+@keyframes flame-pulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.05); }
+}
+
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.erp-pipeline-progress {
+  appearance: none;
+  height: 6px;
+  border: none;
+  border-radius: 4px;
+  overflow: hidden;
+  background: hsl(var(--muted));
+}
+.erp-pipeline-progress::-webkit-progress-bar { background: hsl(var(--muted)); }
+.erp-pipeline-progress::-webkit-progress-value { background: currentColor; border-radius: 4px; }
+.erp-pipeline-progress::-moz-progress-bar { background: currentColor; border-radius: 4px; }

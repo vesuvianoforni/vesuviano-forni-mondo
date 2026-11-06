@@ -1,0 +1,25 @@
+{
+  "customizations": [
+    { "token": "HSL channel tokens (--background..--ring, --radius) mapped via hsl()", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "--sidebar-* tokens", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "--charcoal-50..950 tokens + charcoal colors", "source": "src/index.css + tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "--vesuviano-50..950 CSS tokens", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": ".dark theme tokens", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "vesuviano color palette", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "stone color palette override", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "earth color palette", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "sage color palette", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "font-playfair / font-inter", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "animate-accordion-down/up, fade-in, slide-in-left/right, scale-in, bounce-in, float", "source": "tailwind.config.ts + src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "container (centered, 2rem padding, 1400px max)", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "animate-pulse-ring, animate-glow, animate-shimmer", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "scrollbar-hide", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": ".gradient-bg, .glass-effect, .apple-card, .loading-dots", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": ".flame-container, .flame-border + keyframes", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "base layout rules (img, section padding, overflow guards, responsive text)", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": ".erp-dashboard local theme", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": ".bruno-workspace local theme", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": ".erp-pipeline-progress", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "@tailwindcss/typography plugin", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" }
+  ]
+}

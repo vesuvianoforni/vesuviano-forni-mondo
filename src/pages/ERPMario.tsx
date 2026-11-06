@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from '@/lib/router-compat';
 import { Radar, MessageSquarePlus, Trash2, Search, ShieldAlert, Store, Workflow, BookOpen, Mail, ChartNoAxesCombined, Settings2, Plus, X, ArrowLeft, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -36,7 +36,7 @@ export default function ERPMario() {
   const activeThread=selectMarioThread(threads,params.get('chat'));
   const navigate=(next:Record<string,string|null>)=>setParams(prev=>{const p=new URLSearchParams(prev);for(const [k,v] of Object.entries(next)){if(v===null)p.delete(k);else p.set(k,v);}return p;});
   const refresh=useCallback(()=>setRevision(n=>n+1),[]);
-  useEffect(()=>{if(!loading&&!params.get('chat')&&threads[0])setParams(prev=>{const next=new URLSearchParams(prev);next.set('chat',threads[0].id);return next;},{replace:true});},[loading,params,setParams,threads]);
+  useEffect(()=>{if(!loading&&!params.get('chat')&&threads[0])setParams(prev=>{const next=new URLSearchParams(prev);next.set('chat',threads[0]!.id);return next;},{replace:true});},[loading,params,setParams,threads]);
   useEffect(()=>{let live=true;marioAction({action:'overview'}).then(d=>{if(live){setSettings(d.settings);setAdmin(d.is_admin);}}).catch(e=>{if(live)setError(e.message);});return()=>{live=false;};},[revision]);
   useEffect(()=>{if(!prospectId){setSelected(null);return;}const controller=new AbortController();supabase.from('outreach_prospects').select('*').eq('id',prospectId).abortSignal(controller.signal).single().then(({data,error})=>{if(controller.signal.aborted)return;if(error)setError('Impossibile caricare il contatto.');else{const p=data as unknown as MarioProspect;setSelected(p);setEligibility(p.recipient_eligibility);setNote(p.eligibility_note??'');}});return()=>controller.abort();},[prospectId,revision]);
   const createThread=()=>{const t=addThread();navigate({chat:t.id});setMobile(false);setHistoryOpen(false);};

@@ -1,6 +1,6 @@
 import { priceListLabel } from "@/lib/productPricing";
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -110,7 +110,7 @@ const SessionsCRM = () => {
                   payment_completed
                 )
               `)
-              .eq('id', payload.new.id)
+              .eq('id', payload.new["id"])
               .single();
 
             if (!error && newSession) {
@@ -130,7 +130,7 @@ const SessionsCRM = () => {
                   payment_completed
                 )
               `)
-              .eq('id', payload.new.id)
+              .eq('id', payload.new["id"])
               .single();
 
             if (!error && updatedSession) {
@@ -146,10 +146,10 @@ const SessionsCRM = () => {
               }
             }
           } else if (payload.eventType === 'DELETE') {
-            setSessions(prev => prev.filter(session => session.id !== payload.old.id));
+            setSessions(prev => prev.filter(session => session.id !== payload.old["id"]));
             
             // Close detail modal if the deleted session was being viewed
-            if (selectedSession?.id === payload.old.id) {
+            if (selectedSession?.id === payload.old["id"]) {
               setSelectedSession(null);
             }
             
@@ -363,8 +363,8 @@ const SessionsCRM = () => {
   const getStageBadge = (session: SessionData) => {
     const stage = getStageConfig(session.pipeline_stage || 'nuovo');
     return (
-      <Badge variant="outline" className={`${stage.bg} ${stage.border}`}>
-        {stage.label}
+      <Badge variant="outline" className={`${stage!.bg} ${stage!.border}`}>
+        {stage!.label}
       </Badge>
     );
   };
@@ -392,7 +392,7 @@ const SessionsCRM = () => {
         }).catch(err => console.error('ERP sync error:', err));
       }
 
-      toast.success(`Fase aggiornata: ${getStageConfig(newStage).label}`);
+      toast.success(`Fase aggiornata: ${getStageConfig(newStage)!.label}`);
       if (selectedSession?.id === session.id) {
         setSelectedSession({ ...selectedSession, pipeline_stage: newStage });
       }
@@ -650,7 +650,7 @@ const SessionsCRM = () => {
       return (
         <Card 
           key={session.id} 
-          className={`hover:shadow-lg transition-all border-l-4 cursor-pointer mb-4 ${getStageConfig(session.pipeline_stage || 'nuovo').border}`}
+          className={`hover:shadow-lg transition-all border-l-4 cursor-pointer mb-4 ${getStageConfig(session.pipeline_stage || 'nuovo')!.border}`}
           onClick={() => setSelectedSession(session)}>
           <CardContent className="p-4">
             <div className="space-y-4">

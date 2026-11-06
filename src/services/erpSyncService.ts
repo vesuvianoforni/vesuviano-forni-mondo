@@ -17,7 +17,7 @@ export type ERPEventType =
 interface SyncEventData {
   session_id: string;
   event_type: ERPEventType;
-  event_data?: any;
+  event_data?: any | undefined;
 }
 
 /**
@@ -55,7 +55,7 @@ export const syncEventToERP = async (data: SyncEventData): Promise<void> => {
 export const trackAndSyncAction = async (
   sessionId: string,
   eventType: ERPEventType,
-  eventData?: any
+  eventData?: any | undefined
 ): Promise<void> => {
   // Sync to ERP asynchronously
   await syncEventToERP({

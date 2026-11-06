@@ -39,7 +39,7 @@ export function renderCommercialOffer(doc: OfferDocument, number = 'BOZZA', crea
     oggetto_offerta: escapeOfferHtml(doc.title), descrizione: lines(doc.description), tabella_prodotti: table,
     totale_imponibile: money(totals.subtotal), totale_iva: money(totals.vat) + (doc.vat_regime !== 'standard' ? `<br><small>${escapeOfferHtml(doc.vat_regime === 'reverse_charge' ? 'N.6.7' : doc.vat_regime === 'intra_ue' ? 'N.3.2' : doc.vat_regime === 'extra_ue' ? 'N.3.1' : 'L. 190/2014')}</small>` : ''),
     totale_lordo: money(totals.total), validita_offerta: doc.valid_until ? date(doc.valid_until) : '—', timeline_section: timeline,
-    inclusions_section: section(l[20], included), exclusions_section: section(l[21], doc.exclusions),
+    inclusions_section: section(l[20]!, included), exclusions_section: section(l[21]!, doc.exclusions),
     metodi_pagamento: lines(`${doc.payment_method === 'bonifico' ? l[28] : l[29]}\n${terms}`),
     bank_holder: escapeOfferHtml(company?.bank_holder), bank_name: escapeOfferHtml(company?.bank_name), bank_iban: escapeOfferHtml(company?.bank_iban), bank_extra: escapeOfferHtml(company?.bank_extra),
     firma_commerciale: `${escapeOfferHtml(settings.signature_name)}<br>${escapeOfferHtml(settings.signature_role)}`,

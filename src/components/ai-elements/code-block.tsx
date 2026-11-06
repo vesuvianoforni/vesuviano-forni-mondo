@@ -111,7 +111,7 @@ const LineSpan = ({
 type CodeBlockProps = HTMLAttributes<HTMLDivElement> & {
   code: string;
   language: BundledLanguage;
-  showLineNumbers?: boolean;
+  showLineNumbers?: boolean | undefined;
 };
 
 interface TokenizedCode {
@@ -253,7 +253,7 @@ const CodeBlockBody = memo(
   }: {
     tokenized: TokenizedCode;
     showLineNumbers: boolean;
-    className?: string;
+    className?: string | undefined;
   }) => {
     const preStyle = useMemo(
       () => ({
@@ -378,7 +378,7 @@ export const CodeBlockContent = ({
 }: {
   code: string;
   language: BundledLanguage;
-  showLineNumbers?: boolean;
+  showLineNumbers?: boolean | undefined;
 }) => {
   // Memoized raw tokens for immediate display
   const rawTokens = useMemo(() => createRawTokens(code), [code]);
@@ -452,7 +452,7 @@ export const CodeBlock = ({
 export type CodeBlockCopyButtonProps = ComponentProps<typeof Button> & {
   onCopy?: () => void;
   onError?: (error: Error) => void;
-  timeout?: number;
+  timeout?: number | undefined;
 };
 
 export const CodeBlockCopyButton = ({

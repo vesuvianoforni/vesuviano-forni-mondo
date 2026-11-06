@@ -16,11 +16,11 @@ interface OvenData {
   id: string;
   name: string;
   category: string;
-  subcategory?: string;
-  coating_type?: string;
+  subcategory?: string | undefined;
+  coating_type?: string | undefined;
   image_url: string;
-  description?: string;
-  specifications?: any;
+  description?: string | undefined;
+  specifications?: any | undefined;
 }
 
 const OvenVisualizer = () => {
@@ -130,7 +130,7 @@ const OvenVisualizer = () => {
     try {
       console.log("🖼️ Conversione immagine principale...");
       const mainImage = selectedImages[0]; // Use first image as main
-      const base64Image = await convertFileToBase64(mainImage);
+      const base64Image = await convertFileToBase64(mainImage!);
       console.log("✅ Immagine convertita in base64, dimensione:", base64Image.length);
       
       // Get selected oven data from Supabase or fallback

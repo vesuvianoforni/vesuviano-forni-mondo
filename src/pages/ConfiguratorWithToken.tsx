@@ -1,4 +1,4 @@
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate } from "@/lib/router-compat";
 import { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { supabase } from "@/integrations/supabase/client";
@@ -30,7 +30,7 @@ export default function ConfiguratorWithToken() {
   useEffect(() => {
     const browserLang = navigator.language.split('-')[0];
     const supportedLangs = ['it', 'en', 'fr'];
-    if (supportedLangs.includes(browserLang) && i18n.language !== browserLang) {
+    if (supportedLangs.includes(browserLang!) && i18n.language !== browserLang) {
       i18n.changeLanguage(browserLang);
     }
   }, []);

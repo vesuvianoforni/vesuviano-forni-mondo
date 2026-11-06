@@ -6,7 +6,7 @@ import ConsultationForm from '@/components/ConsultationForm';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 import realBosco100 from '@/assets/real-bosco-100-gold-mosaic.jpg.asset.json';
 import realBosco120 from '@/assets/real-bosco-120-blue-mosaic.jpg.asset.json';

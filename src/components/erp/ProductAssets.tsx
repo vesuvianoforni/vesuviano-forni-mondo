@@ -26,7 +26,7 @@ export function ProductAssets({ productId, productName }: { productId: string; p
     const { data, error } = await db.from("product_assets").select("id,kind,title,url,storage_path,product_asset_links!inner(product_id)").eq("product_asset_links.product_id", productId).order("created_at");
     if (error) return toast.error("Impossibile caricare i materiali del prodotto");
     setRows(data ?? []);
-  };
+   return undefined; };
   useEffect(() => { if (open) load(); }, [open]);
 
   const upload = async (file: File) => {
@@ -39,7 +39,7 @@ export function ProductAssets({ productId, productName }: { productId: string; p
     setBusy(false);
     if (e2) return toast.error(e2.message);
     setTitle(""); load(); toast.success("File caricato");
-  };
+   return undefined; };
   const remove = async (a: Asset) => {
     if (!confirm(`Eliminare "${a.title}" dalla libreria e da tutti i prodotti collegati?`)) return;
     if (a.storage_path) await supabase.storage.from(BUCKET).remove([a.storage_path]);

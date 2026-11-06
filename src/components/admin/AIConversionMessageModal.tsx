@@ -14,7 +14,7 @@ interface AIConversionMessageModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   sessionId: string;
-  language?: string;
+  language?: string | undefined;
   onEmailSent?: () => void;
 }
 

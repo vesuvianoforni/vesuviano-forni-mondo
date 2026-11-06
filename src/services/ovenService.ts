@@ -3,12 +3,12 @@ import { supabase } from '@/integrations/supabase/client';
 export interface OvenData {
   name: string;
   category: 'mosaico' | 'misto' | 'legna';
-  subcategory?: string;
+  subcategory?: string | undefined;
   image_url: string;
-  description?: string;
-  specifications?: any;
-  fuel_type?: 'gas/legna' | 'gas/legna/elettrico';
-  coating_type?: 'mosaico' | 'verniciato' | 'metallico';
+  description?: string | undefined;
+  specifications?: any | undefined;
+  fuel_type?: 'gas/legna' | 'gas/legna/elettrico' | undefined;
+  coating_type?: 'mosaico' | 'verniciato' | 'metallico' | undefined;
 }
 
 export const ovenService = {

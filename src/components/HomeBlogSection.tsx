@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { useTranslation } from 'react-i18next';
 import { Calendar, ArrowRight } from 'lucide-react';
 import { useBlogPosts, getLocalizedField } from '@/hooks/useBlogPosts';
@@ -41,7 +41,7 @@ const HomeBlogSection = () => {
   const { i18n } = useTranslation();
   const lang = i18n.language?.substring(0, 2) || 'it';
   const { data: posts, isLoading } = useBlogPosts();
-  const l = labels[lang] || labels.it;
+  const l = labels[lang] || labels["it"];
 
   const latestPosts = posts?.slice(0, 3);
 
@@ -53,10 +53,10 @@ const HomeBlogSection = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground font-playfair mb-3">
-            {l.title}
+            {l!.title}
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            {l.subtitle}
+            {l!.subtitle}
           </p>
         </div>
 
@@ -110,7 +110,7 @@ const HomeBlogSection = () => {
                       {description}
                     </p>
                     <span className="inline-flex items-center text-vesuviano-600 font-medium text-sm gap-1 group-hover:gap-2 transition-all">
-                      {l.readMore}
+                      {l!.readMore}
                       <ArrowRight className="h-4 w-4" />
                     </span>
                   </div>
@@ -126,7 +126,7 @@ const HomeBlogSection = () => {
             to={`/${lang}/blog`}
             className="inline-flex items-center gap-2 bg-vesuviano-500 hover:bg-vesuviano-600 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 shadow-md"
           >
-            {l.cta}
+            {l!.cta}
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

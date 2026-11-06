@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -22,11 +22,11 @@ interface Oven {
   name: string;
   tagline: string;
   image_url: string;
-  description?: string | null;
+  description?: string | null | undefined;
   fuels: string[];
   diameters: number[];
   coatings: string[];
-  canBuiltOnPlace?: boolean;
+  canBuiltOnPlace?: boolean | undefined;
 }
 
 // The 3 model names we surface from configurator_ovens
@@ -40,7 +40,7 @@ const MODEL_META: Record<
     coatings: string[];
     diameters: number[];
     fuels: string[];
-    canBuiltOnPlace?: boolean;
+    canBuiltOnPlace?: boolean | undefined;
   }
 > = {
   'Anastasia': {

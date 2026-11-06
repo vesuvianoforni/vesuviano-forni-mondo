@@ -6,7 +6,7 @@ import ConsultationForm from '@/components/ConsultationForm';
 import ProductVideoSection from '@/components/ProductVideoSection';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { useConsultationModal } from '@/contexts/ConsultationModalContext';
 const ansumLogo = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-ansum.png' };
 const pizzoloLogo = { url: 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/client-logo-pizzolo.png' };

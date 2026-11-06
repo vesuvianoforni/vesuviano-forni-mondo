@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/lib/router-compat";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -48,7 +48,7 @@ const BookAppointment = () => {
     const browserLang = navigator.language.split('-')[0];
     const supportedLanguages = ['it', 'en', 'fr', 'es', 'de'];
     
-    if (supportedLanguages.includes(browserLang) && i18n.language !== browserLang) {
+    if (supportedLanguages.includes(browserLang!) && i18n.language !== browserLang) {
       i18n.changeLanguage(browserLang);
     }
   }, [i18n]);

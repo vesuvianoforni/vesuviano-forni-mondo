@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/lib/router-compat";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,10 +11,10 @@ interface ThankYouProps {
 }
 
 interface OvenRecommendation {
-  model_name?: string;
-  diameter?: number;
-  capacity?: string;
-  explanation?: string;
+  model_name?: string | undefined;
+  diameter?: number | undefined;
+  capacity?: string | undefined;
+  explanation?: string | undefined;
 }
 
 const ThankYou = ({ lang }: ThankYouProps) => {

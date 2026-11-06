@@ -3,7 +3,7 @@ import React, { lazy, Suspense } from "react";
 import { useConsultationModal } from "@/contexts/ConsultationModalContext";
 import wiseLogo from '@/assets/wise-logo.png';
 import paypalLogo from '@/assets/paypal-logo.png';
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "@/lib/router-compat";
 import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
@@ -192,7 +192,7 @@ const Index = () => {
                 </li>
                 <li>
                   <Link 
-                    to={getVesuvioBuonoPath()}
+                    to={(getVesuvioBuonoPath())!}
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                   >
                     VesuvioBuono
@@ -200,7 +200,7 @@ const Index = () => {
                 </li>
                 <li>
                   <Link 
-                    to={(() => {
+                    to={((() => {
                       const paths: Record<string, string> = {
                         'it': '/it/pronta-consegna',
                         'en': '/en/ready-to-ship',
@@ -209,7 +209,7 @@ const Index = () => {
                         'de': '/de/sofort-lieferbar'
                       };
                       return paths[currentLang] || paths['it'];
-                    })()}
+                    })())!}
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                   >
                     {t('readyToShip.menuTitle', 'Ready to Ship')}
@@ -217,7 +217,7 @@ const Index = () => {
                 </li>
                 <li>
                   <Link 
-                    to={(() => {
+                    to={((() => {
                       const paths: Record<string, string> = {
                         'it': '/it/informazioni-utili',
                         'en': '/en/useful-information',
@@ -226,7 +226,7 @@ const Index = () => {
                         'de': '/de/nuetzliche-informationen'
                       };
                       return paths[currentLang] || paths['it'];
-                    })()}
+                    })())!}
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                   >
                     {({

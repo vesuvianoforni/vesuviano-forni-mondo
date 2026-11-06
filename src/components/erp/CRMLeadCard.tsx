@@ -13,25 +13,25 @@ import { cn } from "@/lib/utils";
 
 export interface CRMLead {
   id: string;
-  company_name?: string;
-  contact_name?: string;
-  email?: string;
-  phone?: string;
-  value?: number;
-  source?: string;
+  company_name?: string | undefined;
+  contact_name?: string | undefined;
+  email?: string | undefined;
+  phone?: string | undefined;
+  value?: number | undefined;
+  source?: string | undefined;
   status: string;
-  pipeline?: string;
-  notes?: string;
-  assigned_to?: string;
-  next_activity_type?: string;
-  next_activity_date?: string;
-  next_activity_notes?: string;
-  next_activity_assigned_to?: string;
+  pipeline?: string | undefined;
+  notes?: string | undefined;
+  assigned_to?: string | undefined;
+  next_activity_type?: string | undefined;
+  next_activity_date?: string | undefined;
+  next_activity_notes?: string | undefined;
+  next_activity_assigned_to?: string | undefined;
   created_at: string;
   updated_at: string;
-  website_lead_id?: string | null;
-  city?: string | null;
-  country?: string | null;
+  website_lead_id?: string | null | undefined;
+  city?: string | null | undefined;
+  country?: string | null | undefined;
 }
 
 const sourceLabels: Record<string, string> = {
@@ -41,13 +41,13 @@ const sourceLabels: Record<string, string> = {
 
 interface CRMLeadCardProps {
   lead: CRMLead;
-  activityAssignee?: string;
-  draggableProps?: DraggableProvided["draggableProps"];
-  dragHandleProps?: DraggableProvided["dragHandleProps"];
-  isDragging?: boolean;
-  lastInteraction?: LeadInteraction | null;
-  interactionState?: "loading" | "ready" | "partial";
-  now?: Date;
+  activityAssignee?: string | undefined;
+  draggableProps?: DraggableProvided["draggableProps"] | undefined;
+  dragHandleProps?: DraggableProvided["dragHandleProps"] | undefined;
+  isDragging?: boolean | undefined;
+  lastInteraction?: LeadInteraction | null | undefined;
+  interactionState?: "loading" | "ready" | "partial" | undefined;
+  now?: Date | undefined;
   onSchedule: (lead: CRMLead) => void;
   onOpen?: (lead: CRMLead) => void;
   onConverse?: (lead: CRMLead) => void;

@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Flame, Zap, RotateCw, TreePine, Building2, Sparkles } from "lucide-react";
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import LazyImage from './LazyImage';
 import { useEffect, useState, useRef } from 'react';
 import OvenFinderQuizModal from './OvenFinderQuizModal';
@@ -90,8 +90,8 @@ const Hero = () => {
           <span className="text-white/80 text-[11px] sm:text-sm font-medium tracking-[0.25em] uppercase">
             {t('hero.subtitlePrefix', { defaultValue: 'For pizzerias and restaurants in' })}{' '}
             <span className="text-white normal-case tracking-normal font-semibold">
-              {(geo || fallbackByLang[i18n.language] || fallbackByLang.en).flag}{' '}
-              {(geo || fallbackByLang[i18n.language] || fallbackByLang.en).name}
+              {(geo || fallbackByLang[i18n.language] || fallbackByLang["en"])!.flag}{' '}
+              {(geo || fallbackByLang[i18n.language] || fallbackByLang["en"])!.name}
             </span>
           </span>
         </div>

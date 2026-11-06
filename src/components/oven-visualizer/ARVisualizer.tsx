@@ -20,7 +20,7 @@ interface ARVisualizerProps {
   ovenTypes: OvenType[];
   onClose: () => void;
   onOvenTypeChange: (value: string) => void;
-  uploadedModel?: {url: string, name: string} | null;
+  uploadedModel?: {url: string, name: string} | null | undefined;
 }
 
 // Funzioni utility per gestire URL di Google Drive
@@ -51,13 +51,13 @@ const getFileExtensionFromUrl = (url: string): string => {
   // Estrai l'estensione dall'URL originale o dal nome del file
   const extensionMatch = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
   if (extensionMatch) {
-    return extensionMatch[1].toLowerCase();
+    return extensionMatch[1]!.toLowerCase();
   }
   
   // Fallback: cerca nell'URL originale
   const urlParts = url.split('.');
   if (urlParts.length > 1) {
-    return urlParts[urlParts.length - 1].toLowerCase();
+    return urlParts[urlParts.length - 1]!.toLowerCase();
   }
   
   return '';
@@ -710,13 +710,13 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, 
       // Un dito - movimento
       setIsDragging(true);
       setTouchStartPos({
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY
+        x: e.touches[0]!.clientX,
+        y: e.touches[0]!.clientY
       });
     } else if (e.touches.length === 2) {
       // Due dita - zoom pinch
       setIsDragging(false);
-      const distance = getTouchDistance(e.touches[0], e.touches[1]);
+      const distance = getTouchDistance(e.touches[0]!, e.touches[1]);
       setInitialPinchDistance(distance);
       setInitialScale(ovenScale);
     }
@@ -727,8 +727,8 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, 
     
     if (e.touches.length === 1 && isDragging) {
       // Un dito - movimento
-      const currentX = e.touches[0].clientX;
-      const currentY = e.touches[0].clientY;
+      const currentX = e.touches[0]!.clientX;
+      const currentY = e.touches[0]!.clientY;
       
       const deltaX = (currentX - touchStartPos.x) * 0.01;
       const deltaY = (currentY - touchStartPos.y) * 0.01;
@@ -742,7 +742,7 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, 
       setTouchStartPos({ x: currentX, y: currentY });
     } else if (e.touches.length === 2) {
       // Due dita - zoom pinch
-      const currentDistance = getTouchDistance(e.touches[0], e.touches[1]);
+      const currentDistance = getTouchDistance(e.touches[0]!, e.touches[1]);
       if (initialPinchDistance > 0) {
         const scale = (currentDistance / initialPinchDistance) * initialScale;
         const clampedScale = Math.max(0.3, Math.min(3, scale));
@@ -760,8 +760,8 @@ const ARVisualizer = ({ selectedOvenType, ovenTypes, onClose, onOvenTypeChange, 
     } else if (e.touches.length === 1) {
       // Se rimane un dito, continua il movimento
       setTouchStartPos({
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY
+        x: e.touches[0]!.clientX,
+        y: e.touches[0]!.clientY
       });
       setIsDragging(true);
       setInitialPinchDistance(0);

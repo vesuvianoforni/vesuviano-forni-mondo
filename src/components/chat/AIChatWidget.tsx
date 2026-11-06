@@ -106,7 +106,7 @@ const CALLBACK_CONFIRM: Record<string, string> = {
 function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string, email?: string, phone?: string) => void; lang: string }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [submitting, setSubmitting] = useState(false);
-  const labels = FORM_LABELS[lang] || FORM_LABELS.en;
+  const labels = FORM_LABELS[lang] || FORM_LABELS["en"];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,9 +136,9 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string, email?
 
   return (
     <form onSubmit={handleSubmit} className="bg-vesuviano-50 border border-vesuviano-200 rounded-xl p-3 space-y-2 my-1">
-      <p className="text-xs font-medium text-stone-700">{labels.title}</p>
+      <p className="text-xs font-medium text-stone-700">{labels!.title}</p>
       <input
-        placeholder={labels.name}
+        placeholder={labels!.name}
         value={form.name}
         onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
         className="w-full text-base md:text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
@@ -146,7 +146,7 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string, email?
       />
       <input
         type="email"
-        placeholder={labels.email}
+        placeholder={labels!.email}
         value={form.email}
         onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
         className="w-full text-base md:text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
@@ -154,14 +154,14 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string, email?
       />
       <input
         type="tel"
-        placeholder={labels.phone}
+        placeholder={labels!.phone}
         value={form.phone}
         onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
         className="w-full text-base md:text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
         maxLength={20}
       />
       <Button type="submit" size="sm" className="w-full bg-vesuviano-500 hover:bg-vesuviano-600 text-white" disabled={submitting}>
-        {submitting ? labels.submitting : labels.submit}
+        {submitting ? labels!.submitting : labels!.submit}
       </Button>
     </form>
   );
@@ -180,11 +180,11 @@ export default function AIChatWidget() {
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "assistant",
-      content: isReturning
+      content: (isReturning
         ? savedName
-          ? (WELCOME_BACK[lang] || WELCOME_BACK.en).replace("!", ` ${savedName}!`)
-          : (WELCOME_BACK[lang] || WELCOME_BACK.en)
-        : (WELCOME_MESSAGES[lang] || WELCOME_MESSAGES.en),
+          ? (WELCOME_BACK[lang] || WELCOME_BACK["en"])!.replace("!", ` ${savedName}!`)
+          : (WELCOME_BACK[lang] || WELCOME_BACK["en"])
+        : (WELCOME_MESSAGES[lang] || WELCOME_MESSAGES["en"]))!,
     },
   ]);
   const [input, setInput] = useState("");
@@ -250,7 +250,7 @@ export default function AIChatWidget() {
       callbackDataRef.current = { phone: "", name: "" };
       setOpen(true);
       setShowMobileBubble(false);
-      const askPhone = CALLBACK_ASK_PHONE[lang] || CALLBACK_ASK_PHONE.en;
+      const askPhone = (CALLBACK_ASK_PHONE[lang] || CALLBACK_ASK_PHONE["en"])!;
       setMessages((prev) => [...prev, { role: "assistant", content: askPhone }]);
     };
     const handleEngageChat = () => {
@@ -263,7 +263,7 @@ export default function AIChatWidget() {
         de: "Kann ich Ihnen helfen, den perfekten Ofen zu finden? 🔥 Fragen Sie mich!",
         es: "¿Puedo ayudarte a elegir el horno perfecto? 🔥 ¡Pregúntame lo que quieras!",
       };
-      const msg = engageMessages[lang] || engageMessages.en;
+      const msg = (engageMessages[lang] || engageMessages["en"])!;
       setMessages((prev) => [...prev, { role: "assistant", content: msg }]);
     };
     window.addEventListener('vesuviano-callback-request', handleCallbackRequest);
@@ -353,8 +353,8 @@ export default function AIChatWidget() {
     // Remember the visitor
     if (name) localStorage.setItem(VISITOR_NAME_KEY, name);
     localStorage.setItem(VISITOR_SUBMITTED_KEY, "true");
-    const thankYou = THANK_YOU[lang] || THANK_YOU.en;
-    const nameMsg = name ? thankYou.replace("!", ` ${name}!`) : thankYou;
+    const thankYou = THANK_YOU[lang] || THANK_YOU["en"];
+    const nameMsg = name ? thankYou!.replace("!", ` ${name}!`) : thankYou!;
     setMessages((prev) => {
       const updated = [...prev, { role: "assistant" as const, content: nameMsg }];
       saveConversation(updated, { name, email, phone });
@@ -385,7 +385,7 @@ export default function AIChatWidget() {
       if (callbackMode) {
         if (callbackStep === "phone") {
           callbackDataRef.current.phone = text.trim();
-          const askName = CALLBACK_ASK_NAME[lang] || CALLBACK_ASK_NAME.en;
+          const askName = (CALLBACK_ASK_NAME[lang] || CALLBACK_ASK_NAME["en"])!;
           setMessages((prev) => {
             const updated = [...prev, userMsg, { role: "assistant" as const, content: askName }];
             saveConversation(updated, { phone: text.trim() });
@@ -396,7 +396,7 @@ export default function AIChatWidget() {
         }
         if (callbackStep === "name") {
           callbackDataRef.current.name = text.trim();
-          const askCity = CALLBACK_ASK_CITY[lang] || CALLBACK_ASK_CITY.en;
+          const askCity = (CALLBACK_ASK_CITY[lang] || CALLBACK_ASK_CITY["en"])!;
           setMessages((prev) => {
             const updated = [...prev, userMsg, { role: "assistant" as const, content: askCity }];
             saveConversation(updated, { name: text.trim(), phone: callbackDataRef.current.phone });
@@ -408,8 +408,8 @@ export default function AIChatWidget() {
         // Final step: city
         const city = text.trim();
         const { phone, name } = callbackDataRef.current;
-        const confirmMsg = CALLBACK_CONFIRM[lang] || CALLBACK_CONFIRM.en;
-        const personalized = name ? confirmMsg.replace("!", ` ${name}!`) : confirmMsg;
+        const confirmMsg = CALLBACK_CONFIRM[lang] || CALLBACK_CONFIRM["en"];
+        const personalized = name ? confirmMsg!.replace("!", ` ${name}!`) : confirmMsg!;
         setMessages((prev) => {
           const updated = [...prev, userMsg, { role: "assistant" as const, content: personalized }];
           saveConversation(updated, { name, phone });
@@ -439,7 +439,7 @@ export default function AIChatWidget() {
       }
 
       if (!contactSubmitted) {
-        const introMsg = INTRO_MESSAGES[lang] || INTRO_MESSAGES.en;
+        const introMsg = (INTRO_MESSAGES[lang] || INTRO_MESSAGES["en"])!;
         setMessages((prev) => {
           const updated = [...prev, userMsg, { role: "assistant" as const, content: introMsg }];
           saveConversation(updated);

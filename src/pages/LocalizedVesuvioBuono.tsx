@@ -21,7 +21,7 @@ const META: Record<string, { title: string; description: string }> = {
 
 const LocalizedVesuvioBuono = ({ lang }: LocalizedVesuvioBuonoProps) => {
   const { i18n, t } = useTranslation();
-  const meta = META[lang] || META.it;
+  const meta = META[lang] || META["it"];
 
   useEffect(() => {
     if (i18n.language !== lang) {
@@ -32,7 +32,7 @@ const LocalizedVesuvioBuono = ({ lang }: LocalizedVesuvioBuonoProps) => {
   return (
     <div className="min-h-screen bg-charcoal-900">
         <Header />
-        <SEOHead lang={lang} title={meta.title} description={meta.description} />
+        <SEOHead lang={lang} title={meta!.title} description={meta!.description} />
         
         <main>
           {/* VesuvioBuono Section */}

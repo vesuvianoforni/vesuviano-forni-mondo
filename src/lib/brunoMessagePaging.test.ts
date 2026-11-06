@@ -8,8 +8,8 @@ describe("Bruno history paging", () => {
     const page = unpackMessagePage(rows);
     assert.equal(BRUNO_MESSAGE_PAGE_SIZE, 50);
     assert.equal(page.messages.length, 50);
-    assert.equal(page.messages[0].id, "2");
-    assert.equal(page.messages[49].id, "51");
+    assert.equal(page.messages[0]!.id, "2");
+    assert.equal(page.messages[49]!.id, "51");
     assert.equal(page.cursor?.id, "2");
     assert.equal(page.hasMore, true);
   });
@@ -27,6 +27,6 @@ describe("Bruno history paging", () => {
     const current = [{ id: 'b', created_at: '2026-02-01T00:00:00Z', status: 'sent' }];
     const merged = mergeMessagePages(current, [{ id: 'a', created_at: '2026-01-01T00:00:00Z', status: 'logged' }, { ...current[0], status: 'read' }]);
     assert.deepEqual(merged.map(m => m.id), ['a', 'b']);
-    assert.equal(merged[1].status, 'read');
+    assert.equal(merged[1]!.status, 'read');
   });
 });

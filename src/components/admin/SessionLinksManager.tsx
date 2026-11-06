@@ -135,7 +135,7 @@ export const SessionLinksManager = ({ onGenerateAIMessage }: SessionLinksManager
     };
     
     return (
-      <span className={`px-2 py-1 rounded-full text-xs ${colors[status] || colors.draft}`}>
+      <span className={`px-2 py-1 rounded-full text-xs ${colors[status] || colors["draft"]}`}>
         {status}
       </span>
     );

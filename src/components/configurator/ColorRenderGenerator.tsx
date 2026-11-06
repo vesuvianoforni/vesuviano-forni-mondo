@@ -11,7 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 interface ColorRenderGeneratorProps {
   ovenName: string;
   ovenImageUrl: string;
-  selectedCoating?: string;
+  selectedCoating?: string | undefined;
   onRenderGenerated?: (imageUrl: string, color: string) => void;
 }
 

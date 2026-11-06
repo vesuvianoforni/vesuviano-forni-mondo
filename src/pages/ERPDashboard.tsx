@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowUpRight, ArrowRight, Bot, CalendarDays, CheckCheck, Clock3, FileText, Flame, Mail, Megaphone, Package, RefreshCw, TrendingUp, Truck, Users } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';

@@ -14,7 +14,7 @@ describe("Zapper CRM stages", () => {
     ["won", "vinto"], ["lost", "perso"],
   ]) {
     test(`preserves imported ${source} as ${expected}`, () => {
-      assert.equal(normalizeCRMStage(source), expected);
+      assert.equal(normalizeCRMStage(source!), expected);
     });
   }
 

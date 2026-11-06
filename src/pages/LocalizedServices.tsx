@@ -22,7 +22,7 @@ const META: Record<string, { title: string; description: string }> = {
 const LocalizedServices = ({ lang }: Props) => {
   const { i18n, t } = useTranslation();
   const [ready, setReady] = useState(i18n.language === lang);
-  const meta = META[lang] || META.it;
+  const meta = META[lang] || META["it"];
 
   useEffect(() => {
     if (i18n.language !== lang) {
@@ -37,7 +37,7 @@ const LocalizedServices = ({ lang }: Props) => {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-white">
       <Header />
-      <SEOHead lang={lang} title={meta.title} description={meta.description} />
+      <SEOHead lang={lang} title={meta!.title} description={meta!.description} />
       <main className="pt-20">
         <Services />
       </main>

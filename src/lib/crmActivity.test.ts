@@ -20,7 +20,7 @@ describe("CRM activity deadlines", () => {
   });
   test("interaction dates are relative and never invented from a lead edit", () => {
     assert.equal(interactionRelativeTime(at(27, 10), now), "Ieri · 10:00");
-    assert.equal(latestInteractions([{ id: "lead", email: "test@example.invalid" }], []).lead, null);
+    assert.equal(latestInteractions([{ id: "lead", email: "test@example.invalid" }], [])["lead"], null);
   });
   test("matches contact identity and selects the newest real interaction across channels", () => {
     const result = latestInteractions([{ id: "lead", email: "TEST@example.invalid", phone: "+39 350 1234567", website_lead_id: "form1" }], [
@@ -29,12 +29,12 @@ describe("CRM activity deadlines", () => {
       { kind: "chat", at: at(27, 10), phone: "00393501234567" },
       { kind: "email", at: "invalid", email: "test@example.invalid" },
     ]);
-    assert.equal(result.lead?.kind, "chat");
-    assert.equal(result.lead?.at, at(27, 10));
+    assert.equal(result["lead"]?.kind, "chat");
+    assert.equal(result["lead"]?.at, at(27, 10));
   });
   test("does not conflate numbers from different countries by their suffix", () => {
     const result = latestInteractions([{ id: "lead", phone: "+39 3501234567" }], [{ kind: "chat", at: at(27, 10), phone: "+44 3501234567" }]);
-    assert.equal(result.lead, null);
+    assert.equal(result["lead"], null);
   });
 });
 import { latestInteractions as latestByLead } from "./crmActivity";
@@ -43,5 +43,5 @@ test("recorded WhatsApp messages count as the lead's last interaction", () => {
     { kind: "form", at: "2026-10-01T10:00:00Z", email: "a@b.it" },
     { kind: "whatsapp", at: "2026-11-02T09:00:00Z", leadId: "L1" },
   ]);
-  assert.equal(result.L1?.kind, "whatsapp");
+  assert.equal(result["L1"]?.kind, "whatsapp");
 });

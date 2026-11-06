@@ -2,10 +2,10 @@ import { useEffect, useRef, useState, ReactNode } from 'react';
 
 interface LazySectionProps {
   children: ReactNode;
-  fallback?: ReactNode;
-  rootMargin?: string;
-  className?: string;
-  minHeight?: string;
+  fallback?: ReactNode | undefined;
+  rootMargin?: string | undefined;
+  className?: string | undefined;
+  minHeight?: string | undefined;
 }
 
 const LazySection = ({ 
@@ -21,7 +21,7 @@ const LazySection = ({
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry!.isIntersecting) {
           setIsVisible(true);
           observer.disconnect();
         }

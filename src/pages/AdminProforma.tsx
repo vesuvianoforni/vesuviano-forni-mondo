@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,23 +19,23 @@ import { it as itLocale } from 'date-fns/locale';
 import SEOHead from '@/components/SEOHead';
 
 interface ProformaItem {
-  id?: string;
+  id?: string | undefined;
   item_type: 'oven' | 'burner' | 'custom';
-  oven_id?: string;
-  burner_id?: string;
-  custom_name?: string;
-  custom_description?: string;
-  model_name?: string;
-  fuel_type?: string;
-  diameter?: number;
-  coating?: string;
-  image_url?: string;
+  oven_id?: string | undefined;
+  burner_id?: string | undefined;
+  custom_name?: string | undefined;
+  custom_description?: string | undefined;
+  model_name?: string | undefined;
+  fuel_type?: string | undefined;
+  diameter?: number | undefined;
+  coating?: string | undefined;
+  image_url?: string | undefined;
   unit_price: number;
   quantity: number;
   line_total: number;
-  specifications?: any;
+  specifications?: any | undefined;
   sort_order: number;
-  price_manually_set?: boolean;
+  price_manually_set?: boolean | undefined;
 }
 
 interface Proforma {
@@ -237,38 +237,38 @@ const AdminProforma = () => {
     
     // If user manually changes unit_price, mark it as manually set
     if (field === 'unit_price') {
-      updated[index].price_manually_set = true;
+      updated[index]!.price_manually_set = true;
     }
     
     // Recalculate price when oven config changes, but ONLY if price was not manually set
-    if (updated[index].item_type === 'oven' && ['fuel_type', 'diameter', 'coating'].includes(field)) {
+    if (updated[index]!.item_type === 'oven' && ['fuel_type', 'diameter', 'coating'].includes(field)) {
       const item = updated[index];
-      const oven = ovens.find(o => o.model_name === item.model_name);
+      const oven = ovens.find(o => o.model_name === item!.model_name);
       if (oven) {
         // If diameter changed, update available coatings
         if (field === 'diameter') {
           const size = oven.sizes?.find((s: any) => s.diameter === value);
           if (size?.coatings?.[0]) {
-            item.coating = size.coatings[0].name;
-            item.image_url = size.coatings[0].image_url || oven.image_url;
+            item!.coating = size.coatings[0].name;
+            item!.image_url = size.coatings[0].image_url || oven.image_url;
           }
         }
         if (field === 'coating') {
-          const size = oven.sizes?.find((s: any) => s.diameter === item.diameter);
+          const size = oven.sizes?.find((s: any) => s.diameter === item!.diameter);
           const coat = size?.coatings?.find((c: any) => c.name === value);
-          if (coat?.image_url) item.image_url = coat.image_url;
+          if (coat?.image_url) item!.image_url = coat.image_url;
         }
         // Only auto-update price if not manually overridden
-        if (!item.price_manually_set) {
-          const price = getOvenPriceFromConfig(oven, item.fuel_type || '', item.diameter || 0, item.coating || '', priceList);
-          item.unit_price = price;
-          item.line_total = price * item.quantity;
+        if (!item!.price_manually_set) {
+          const price = getOvenPriceFromConfig(oven, item!.fuel_type || '', item!.diameter || 0, item!.coating || '', priceList);
+          item!.unit_price = price;
+          item!.line_total = price * item!.quantity;
         }
       }
     }
     
     if (field === 'unit_price' || field === 'quantity') {
-      updated[index].line_total = updated[index].unit_price * updated[index].quantity;
+      updated[index]!.line_total = updated[index]!.unit_price * updated[index]!.quantity;
     }
     setItems(updated);
   };
@@ -814,7 +814,7 @@ const AdminProforma = () => {
                                           const updated = [...items];
                                           updated[idx] = {
                                             ...updated[idx],
-                                            specifications: { ...(updated[idx].specifications || {}), allowed_sizes: newAllowed },
+                                            specifications: { ...(updated[idx]!.specifications || {}), allowed_sizes: newAllowed },
                                           };
                                           setItems(updated);
                                         }}

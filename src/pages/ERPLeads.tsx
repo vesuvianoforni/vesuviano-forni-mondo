@@ -21,7 +21,7 @@ import { CRMLeadDetail } from "@/components/erp/CRMLeadDetail";
 import { useCRMInteractions } from "@/hooks/useCRMInteractions";
 import { activityLabels } from "@/lib/crmActivity";
 import { format } from "date-fns";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "@/lib/router-compat";
 
 const leadSources = ["website", "configuratore", "chat", "referral", "social_media", "cold_call", "trade_show", "zapier", "other"];
 const pipelines = ["Vesuviano"];

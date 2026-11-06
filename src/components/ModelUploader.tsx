@@ -36,7 +36,7 @@ export const ModelUploader = () => {
       console.error('Errore upload:', error);
       toast.error(`Errore caricamento ${modelName}`);
     }
-  };
+   return undefined; };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>, modelName: string) => {
     const file = event.target.files?.[0];

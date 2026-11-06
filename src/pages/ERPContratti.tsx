@@ -37,7 +37,7 @@ interface Contract {
   signature_token: string | null;
   client_signature: string | null;
   client_signed_at: string | null;
-  language?: string | null;
+  language?: string | null | undefined;
 }
 
 const LANGUAGES: { value: ContractLanguage; label: string; flag: string }[] = [
@@ -237,7 +237,7 @@ const ERPContratti = () => {
     const grouped: Record<string, Preset[]> = {};
     (data || []).forEach((row: any) => {
       grouped[row.field_key] = grouped[row.field_key] || [];
-      grouped[row.field_key].push({ id: row.id, value: row.value, label: row.label });
+      grouped[row.field_key]!.push({ id: row.id, value: row.value, label: row.label });
     });
     setPresets(grouped);
   };
@@ -435,7 +435,7 @@ const ERPContratti = () => {
       signed: 'bg-green-700/30 text-green-300',
     };
     const lbl: Record<string, string> = { draft: 'Bozza', sent: 'Inviato', signed: 'Firmato' };
-    return <Badge className={map[s] || map.draft}>{lbl[s] || s}</Badge>;
+    return <Badge className={map[s] || map["draft"]}>{lbl[s] || s}</Badge>;
   };
 
   if (loading) return <div className="flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;

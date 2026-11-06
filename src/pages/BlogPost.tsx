@@ -1,4 +1,4 @@
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from '@/lib/router-compat';
 import { useTranslation } from 'react-i18next';
 import { Calendar, ArrowLeft, Tag, User, Clock, Share2, ChevronRight } from 'lucide-react';
 import Header from '@/components/Header';
@@ -162,7 +162,7 @@ const BlogPostPage = ({ lang }: BlogPostProps) => {
             )}
             <div className="flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5" />
-              <span>{readTime} {readTimeLabels[lang] || readTimeLabels.it}</span>
+              <span>{readTime} {readTimeLabels[lang] || readTimeLabels["it"]}</span>
             </div>
             <button
               onClick={shareArticle}
