@@ -192,7 +192,7 @@ const Index = () => {
                 </li>
                 <li>
                   <Link 
-                    to!={getVesuvioBuonoPath()}
+                    to={getVesuvioBuonoPath()}
                     className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                   >
                     VesuvioBuono
@@ -200,7 +200,7 @@ const Index = () => {
                 </li>
                 <li>
                   <Link 
-                    to!={(() => {
+                    to={(() => {
                       const paths: Record<string, string> = {
                         'it': '/it/pronta-consegna',
                         'en': '/en/ready-to-ship',
@@ -217,7 +217,7 @@ const Index = () => {
                 </li>
                 <li>
                   <Link 
-                    to!={(() => {
+                    to={(() => {
                       const paths: Record<string, string> = {
                         'it': '/it/informazioni-utili',
                         'en': '/en/useful-information',

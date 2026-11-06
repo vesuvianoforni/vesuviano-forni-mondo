@@ -67,7 +67,7 @@ const ArchitettoAI = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to!={(() => {
+                  <Link to={(() => {
                     const paths: Record<string, string> = {
                       it: '/it/informazioni-utili',
                       en: '/en/useful-information',

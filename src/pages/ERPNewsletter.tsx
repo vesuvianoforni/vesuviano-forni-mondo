@@ -185,7 +185,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
                   <div className="flex flex-wrap gap-2">
                     <Select disabled={!!busy} value={sel.language} onValueChange={(v) => patch({ language: v })}>
                       <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
-                      <SelectContent>{LANGS.map(([v, l]) => <SelectItem key={v} value!={v}>{l}</SelectItem>)}</SelectContent></Select>
+                      <SelectContent>{LANGS.map(([v, l]) => <SelectItem key={v} value={v}>{l}</SelectItem>)}</SelectContent></Select>
                     <Button disabled={!!busy || (sel.prompt || '').length < 3} onClick={() => run('gen', async () => {
                       const { campaign } = await call({ action: 'generate', campaign_id: sel.id, prompt: sel.prompt, language: sel.language });
                       await finishGeneration(campaign);
@@ -270,7 +270,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
             <div className="space-y-2"><Label htmlFor="roberta-brief">Di cosa vuoi parlare nella newsletter?</Label>
               <Textarea id="roberta-brief" rows={5} maxLength={2000} disabled={!!busy} value={brief} onChange={(e) => setBrief(e.target.value)} placeholder="Es: promuovi il Real Bosco 100 in pronta consegna, con le sue foto e un invito a chiedere informazioni" /></div>
             <div className="space-y-2"><Label>Lingua della bozza</Label><Select value={briefLanguage} disabled={!!busy} onValueChange={setBriefLanguage}>
-              <SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{LANGS.map(([l, name]) => <SelectItem key={l} value!={l}>{name}</SelectItem>)}</SelectContent>
+              <SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{LANGS.map(([l, name]) => <SelectItem key={l} value={l}>{name}</SelectItem>)}</SelectContent>
             </Select></div>
             <label className="flex items-center gap-2 text-sm"><Switch checked={autoTranslate} disabled={!!busy} onCheckedChange={setAutoTranslate} />Prepara anche le traduzioni</label>
           </div>
