@@ -3,19 +3,23 @@ const GRAPH = 'https://graph.facebook.com/v21.0';
 
 export type WaTemplate = { name: string; language: string; category: string; body: string; variables: number };
 
-function creds() {
+import { lineFor } from '../_shared/bruno/whatsapp-lines.ts';
+export { COUNTRY_LINES, lineFor } from '../_shared/bruno/whatsapp-lines.ts';
+
+function creds(to?: string | null) {
   const token = Deno.env.get('META_WHATSAPP_ACCESS_TOKEN');
-  const phoneId = Deno.env.get('META_WHATSAPP_PHONE_NUMBER_ID');
-  const wabaId = Deno.env.get('META_WHATSAPP_WABA_ID');
+  const line = lineFor(to);
+  const phoneId = line?.phoneId ?? Deno.env.get('META_WHATSAPP_PHONE_NUMBER_ID');
+  const wabaId = line?.wabaId ?? Deno.env.get('META_WHATSAPP_WABA_ID');
   if (!token || !phoneId || !wabaId) throw new Error('WhatsApp API di Bruno non configurato');
-  return { token, phoneId, wabaId };
+  return { token, phoneId, wabaId, line: line?.key ?? 'default' };
 }
 
 const countVars = (s: string) => new Set([...s.matchAll(/\{\{(\d+)\}\}/g)].map((m) => m[1])).size;
 
 // Only approved templates Bruno can fill on his own: no media headers, no variable buttons.
-export async function listTemplates(): Promise<WaTemplate[]> {
-  const { token, wabaId } = creds();
+export async function listTemplates(to?: string | null): Promise<WaTemplate[]> {
+  const { token, wabaId } = creds(to);
   const out: WaTemplate[] = [];
   let next: string | null = `${GRAPH}/${wabaId}/message_templates?fields=name,status,language,category,components&limit=100`;
   while (next) {
@@ -43,7 +47,7 @@ export async function sendWhatsApp(
   to: string,
   msg: { text: string } | { template: { name: string; language: string; params: string[] } },
 ): Promise<string | null> {
-  const { token, phoneId } = creds();
+  const { token, phoneId } = creds(to);
   const payload = 'text' in msg
     ? { type: 'text', text: { body: msg.text } }
     : { type: 'template', template: { name: msg.template.name, language: { code: msg.template.language },

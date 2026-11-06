@@ -6,22 +6,25 @@ import { Input } from "@/components/ui/input";
 export type WaTemplate = { name: string; language: string; category: string; body: string; variables: number };
 export type WaTemplateChoice = { name: string; language: string; params: string[]; preview: string } | null;
 
-let cache: Promise<WaTemplate[]> | null = null;
-function loadTemplates() {
-  cache ??= supabase.functions.invoke("bruno-agent", { body: { action: "wa_templates" } }).then(({ data, error }) => {
-    if (error) { cache = null; throw error; }
+// Each country WhatsApp line has its own approved templates; cache per line (UK = +44, otherwise default).
+const cache = new Map<string, Promise<WaTemplate[]>>();
+const lineKey = (phone?: string | null) => (String(phone ?? "").replace(/\D/g, "").startsWith("44") ? "uk" : "default");
+function loadTemplates(leadId?: string, phone?: string | null) {
+  const k = lineKey(phone);
+  if (!cache.has(k)) cache.set(k, supabase.functions.invoke("bruno-agent", { body: { action: "wa_templates", ...(leadId ? { lead_id: leadId } : {}) } }).then(({ data, error }) => {
+    if (error) { cache.delete(k); throw error; }
     return (data?.templates ?? []) as WaTemplate[];
-  });
-  return cache;
+  }));
+  return cache.get(k)!;
 }
 
 export const fillTemplate = (body: string, params: string[]) => body.replace(/\{\{(\d+)\}\}/g, (_, n) => params[Number(n) - 1] || `{{${n}}}`);
 
 /** Modelli WhatsApp approvati da Meta: necessari fuori dalla finestra di 24 ore. */
-export function WaTemplatePicker({ firstName, value, onChange, disabled }: { firstName: string; value: WaTemplateChoice; onChange: (v: WaTemplateChoice) => void; disabled?: boolean }) {
+export function WaTemplatePicker({ leadId, phone, firstName, value, onChange, disabled }: { leadId?: string; phone?: string | null; firstName: string; value: WaTemplateChoice; onChange: (v: WaTemplateChoice) => void; disabled?: boolean }) {
   const [templates, setTemplates] = useState<WaTemplate[]>([]);
   const [error, setError] = useState<string | null>(null);
-  useEffect(() => { loadTemplates().then(setTemplates).catch(() => setError("Modelli non disponibili")); }, []);
+  useEffect(() => { setError(null); loadTemplates(leadId, phone).then(setTemplates).catch(() => setError("Modelli non disponibili")); }, [leadId, phone]);
 
   const key = value ? `${value.name}|${value.language}` : "free";
   const tpl = templates.find((t) => `${t.name}|${t.language}` === key);

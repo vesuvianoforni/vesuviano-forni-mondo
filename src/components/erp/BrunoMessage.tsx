@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export interface BrunoMessageData {
   id: string; channel: BrunoChannel; direction: string; sender: string; subject: string | null;
   body: string; status: string; ai_generated: boolean; error: string | null; created_at: string;
-  metadata?: { voice_call_id?: string; recording_url?: string | null; duration_seconds?: number; message_type?: string | null; media_url?: string | null; file_name?: string | null; attachment_names?: string[] | null } | null;
+  metadata?: { voice_call_id?: string; recording_url?: string | null; duration_seconds?: number; message_type?: string | null; media_url?: string | null; file_name?: string | null; attachment_names?: string[] | null; whatsapp_line?: string | null } | null;
 }
 
 const icons = { whatsapp_api: Bot, wasender: MessageCircle, email: Mail, note: StickyNote, call: Phone };
@@ -42,6 +42,7 @@ export function BrunoMessage({ message, customerName, showDate }: { message: Bru
           <div className="mb-1.5 flex flex-wrap items-center gap-1.5 text-[11px] text-muted-foreground">
             <Icon className="h-3 w-3 shrink-0" /><span className="font-semibold text-foreground">{author}</span>
             {message.channel !== "wasender" && !internal && <span>· {CHANNELS[message.channel]?.short}</span>}
+            {message.metadata?.whatsapp_line === "uk" && <Badge variant="outline" className="h-4 px-1 text-[10px]">UK</Badge>}
             {message.ai_generated && <Badge variant="outline" className="h-4 px-1 text-[10px]">AI</Badge>}
           </div>
           {message.subject && <p className="mb-1 font-semibold">{message.subject}</p>}

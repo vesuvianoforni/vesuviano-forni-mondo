@@ -261,7 +261,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
           <span className="min-w-0 break-words text-xs text-muted-foreground [overflow-wrap:anywhere]">{destination}</span>
           {aiDraft && <Badge variant="outline" className="text-[10px]">Bozza di Bruno</Badge>}
         </div>
-        {channel === "whatsapp_api" && <WaTemplatePicker firstName={(lead.contact_name || "").split(" ")[0] || name} value={waTemplate} onChange={setWaTemplate} disabled={sending} />}
+        {channel === "whatsapp_api" && <WaTemplatePicker leadId={lead.id} phone={lead.phone} firstName={(lead.contact_name || "").split(" ")[0] || name} value={waTemplate} onChange={setWaTemplate} disabled={sending} />}
         {channel === "email" && <>
           <Input aria-label="Oggetto email" placeholder="Oggetto" value={subject} maxLength={300} disabled={sending} onChange={(e) => setSubject(e.target.value)} />
           <div className="flex flex-wrap items-center gap-2"><EmailSignatureSelector value={signature} onChange={setSignature} disabled={sending}/><Button variant="outline" size="sm" disabled={sending} onClick={() => setPreviewOpen(true)}><Eye className="mr-2 h-4 w-4"/>Anteprima</Button></div>

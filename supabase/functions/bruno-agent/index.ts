@@ -1,4 +1,4 @@
-import { listTemplates, sendWhatsApp } from './meta-whatsapp.ts';
+import { lineFor, listTemplates, sendWhatsApp } from './meta-whatsapp.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { ECONOMIC_TEXT_MODEL } from '../_shared/ai-models.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2';
@@ -30,7 +30,7 @@ const SendSchema = z.object({
   media_url: z.string().url().max(1000).optional(),
   template: z.object({ name: z.string().min(1).max(200), language: z.string().min(2).max(10), params: z.array(z.string().min(1).max(1000)).max(10) }).optional(),
 });
-const TemplatesSchema = z.object({ action: z.literal('wa_templates') });
+const TemplatesSchema = z.object({ action: z.literal('wa_templates'), lead_id: z.string().uuid().optional() });
 const SuggestSchema = z.object({
   action: z.literal('suggest'),
   lead_id: z.string().uuid(),
@@ -60,7 +60,11 @@ Deno.serve(async (req) => {
     if (!parsed.success) return json({ error: parsed.error.flatten().fieldErrors }, 400);
     const input = parsed.data;
     if (input.action === 'wa_templates') {
-      try { return json({ templates: await listTemplates() }); }
+      try {
+        // Each country line has its own WhatsApp Business account, so templates follow the lead's line.
+        const phone = input.lead_id ? (await admin.from('leads').select('phone').eq('id', input.lead_id).maybeSingle()).data?.phone : null;
+        return json({ templates: await listTemplates(phone), line: lineFor(phone)?.label ?? 'WhatsApp Bruno' });
+      }
       catch (e) { return json({ error: e instanceof Error ? e.message : 'Errore Meta' }, 502); }
     }
 
@@ -179,7 +183,8 @@ ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
       sender: input.channel === 'whatsapp_api' ? 'bruno' : input.channel === 'wasender' ? 'gennaro' : 'operator',
       subject: input.subject ?? null, body: input.body, status, error, external_id: externalId,
       ai_generated: input.ai_generated ?? false, created_by: u.user.id,
-      ...(input.media_url ? { metadata: { media_url: input.media_url, message_type: Object.keys(mediaField(input.media_url))[0]?.replace('Url', '') || 'document', file_name: input.media_url.split('/').pop()?.split('?')[0] } } : {}),
+      ...(input.channel === 'whatsapp_api' && lineFor(phone) ? { metadata: { whatsapp_line: lineFor(phone)!.key } } : {}),
+      ...(input.media_url ? { metadata: { ...(input.channel === 'whatsapp_api' && lineFor(phone) ? { whatsapp_line: lineFor(phone)!.key } : {}), media_url: input.media_url, message_type: Object.keys(mediaField(input.media_url))[0]?.replace('Url', '') || 'document', file_name: input.media_url.split('/').pop()?.split('?')[0] } } : {}),
     }).select().single();
     if (dbErr) return json({ error: dbErr.message }, 500);
 
