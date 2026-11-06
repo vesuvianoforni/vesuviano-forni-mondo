@@ -42,6 +42,7 @@ export function BrunoMessage({ message, customerName, showDate }: { message: Bru
           <div className="mb-1.5 flex flex-wrap items-center gap-1.5 text-[11px] text-muted-foreground">
             <Icon className="h-3 w-3 shrink-0" /><span className="font-semibold text-foreground">{author}</span>
             {message.channel !== "wasender" && !internal && <span>· {CHANNELS[message.channel]?.short}</span>}
+            {message.metadata?.whatsapp_line === "uk" && <Badge variant="outline" className="h-4 px-1 text-[10px]">UK</Badge>}
             {message.ai_generated && <Badge variant="outline" className="h-4 px-1 text-[10px]">AI</Badge>}
           </div>
           {message.subject && <p className="mb-1 font-semibold">{message.subject}</p>}
