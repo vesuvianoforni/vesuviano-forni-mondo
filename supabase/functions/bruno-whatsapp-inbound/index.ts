@@ -1,6 +1,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
-import { COUNTRY_LINES } from '../bruno-agent/meta-whatsapp.ts';
+import { COUNTRY_LINES } from '../_shared/bruno/whatsapp-lines.ts';
 
 // Receives Meta WhatsApp webhook `value` objects for Bruno's country lines, forwarded by Zapper
 // (Zapper owns the Meta app webhook). Auth: x-api-key = ZAPPER_SYNC_KEY. Messages land in crm_messages
