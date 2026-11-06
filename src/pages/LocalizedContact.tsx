@@ -84,14 +84,14 @@ const LocalizedContact = ({ lang }: Props) => {
     {
       icon: Phone,
       title: c.call,
-      value: '+39 350 928 6941',
-      href: 'tel:+393509286941',
+      value: '+39 081 1923 1684',
+      href: 'tel:+3908119231684',
     },
     {
       icon: MessageCircle,
       title: c.whatsapp,
-      value: '+39 350 928 6941',
-      href: 'https://api.whatsapp.com/send?phone=393509286941&text=Ciao%20Vesuviano%20Forni%2C%20',
+      value: '+39 081 1923 1684',
+      href: 'https://api.whatsapp.com/send?phone=3908119231684&text=Ciao%20Vesuviano%20Forni%2C%20',
     },
     {
       icon: Mail,

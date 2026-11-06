@@ -337,7 +337,7 @@ export default function AIChatWidget() {
           }
         }
       } catch {
-        upsertAssistant("Mi dispiace, si è verificato un errore. Riprova o contattaci al +39 350 928 6941.");
+        upsertAssistant("Mi dispiace, si è verificato un errore. Riprova o contattaci al +39 081 1923 1684.");
       } finally {
         setIsLoading(false);
         // Save conversation after AI response

@@ -200,7 +200,7 @@ export const SITE_STRUCTURED_DATA: ReadonlyArray<Record<string, unknown>> = [
     "name": "Vesuviano Forni",
     "description": "Laboratorio artigianale di forni napoletani professionali a Napoli, dal 1950.",
     "url": "https://vesuvianoforni.com",
-    "telephone": "+39 350 928 6941",
+    "telephone": "+39 081 1923 1684",
     "email": "info@vesuvianoforni.com",
     "image": "https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-social-banner.jpg",
     "priceRange": "€€€",

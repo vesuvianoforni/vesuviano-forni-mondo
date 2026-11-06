@@ -89,7 +89,7 @@ export const AIConversionMessageModal = ({
               </tr>
               <tr>
                 <td style="padding: 12px 0; text-align: center;">
-                  <a href="https://wa.me/393509286941" 
+                  <a href="https://wa.me/3908119231684" 
                      style="display: inline-block; background: #6f8753; color: white; padding: 13px 24px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 15px;">
                     Message me on WhatsApp
                   </a>
@@ -97,7 +97,7 @@ export const AIConversionMessageModal = ({
               </tr>
               <tr>
                 <td style="padding: 8px 0; text-align: center; color: #666;">
-                  <a href="tel:+393509286941" style="color: #714b3d; text-decoration: none;">+39 350 928 6941</a>
+                  <a href="tel:+3908119231684" style="color: #714b3d; text-decoration: none;">+39 081 1923 1684</a>
                 </td>
               </tr>
               <tr>

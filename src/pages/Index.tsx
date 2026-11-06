@@ -293,16 +293,16 @@ const Index = () => {
                 </li>
                 <li>
                   <a 
-                    href="tel:+393509286941" 
+                    href="tel:+3908119231684" 
                     className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                   >
                     <span>📞</span>
-                    +39 350 928 6941
+                    +39 081 1923 1684
                   </a>
                 </li>
                 <li>
                   <a 
-                    href="https://wa.me/393509286941?text=Ciao,%20vorrei%20informazioni%20sui%20vostri%20forni%20professionali" 
+                    href="https://wa.me/3908119231684?text=Ciao,%20vorrei%20informazioni%20sui%20vostri%20forni%20professionali" 
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-green-400 hover:text-green-300 transition-colors flex items-center gap-2 font-medium"

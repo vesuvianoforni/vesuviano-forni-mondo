@@ -11,7 +11,7 @@ import { mailboxRequest, type MailSignature } from '@/lib/mailboxEmail';
 import { useToast } from '@/hooks/use-toast';
 import { EmailPreview } from './EmailPreview';
 
-const emptySignature = { name: '', role: '', company: 'Vesuviano Forni', phone: '+39 081 1923 1684', whatsapp: '+39 350 928 6941', email: 'info@vesuvianoforni.com', website: 'https://vesuvianoforni.com', address: '', is_default: false };
+const emptySignature = { name: '', role: '', company: 'Vesuviano Forni', phone: '+39 081 1923 1684', whatsapp: '+39 081 1923 1684', email: 'info@vesuvianoforni.com', website: 'https://vesuvianoforni.com', address: '', is_default: false };
 type Draft = Omit<MailSignature, "id"> & { id?: string };
 const sample = 'Buongiorno,\n\ngrazie per averci contattato. Sarà un piacere aiutarla a scegliere il forno per il suo progetto.\n\nResto a disposizione.';
 export function EmailSignatures() {
