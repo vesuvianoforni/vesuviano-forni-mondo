@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   createRootRouteWithContext,
+  type ErrorComponentProps,
   useRouter,
   useRouterState,
 } from "@tanstack/react-router";
@@ -73,6 +74,7 @@ const HREFLANGS = ["it", "en", "fr", "de", "es"] as const;
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   beforeLoad: async ({ location }) => {
     await loadLanguage(detectLangFromPath(location.pathname));
+    return {};
   },
   head: () => ({
     meta: [
@@ -181,7 +183,7 @@ function RootComponent() {
   );
 }
 
-function RootErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function RootErrorComponent({ error, reset }: ErrorComponentProps) {
   const router = useRouter();
 
   useEffect(() => {
