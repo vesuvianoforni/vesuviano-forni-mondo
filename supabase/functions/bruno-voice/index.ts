@@ -168,8 +168,13 @@ Deno.serve(async req => {
           if (found.data?.length === 1) conversationId = found.data[0].id;
         }
         if (!conversationId) return json({ status: call.status, live: true, transcript: [] });
-        const result = await telnyx(`/ai/conversations/${encodeURIComponent(conversationId)}/messages?page%5Bsize%5D=100`);
-        const transcript = spokenTranscript(result.data ?? []).sort((a,b) => (a.at ?? '').localeCompare(b.at ?? ''));
+        const messages: unknown[] = [];
+        for (let page = 1; page <= 20; page++) {
+          const result = await telnyx(`/ai/conversations/${encodeURIComponent(conversationId)}/messages?page%5Bsize%5D=100&page%5Bnumber%5D=${page}`);
+          messages.push(...(result.data ?? []));
+          if (!result.data?.length || page >= (result.meta?.total_pages ?? 1)) break;
+        }
+        const transcript = spokenTranscript(messages).sort((a,b) => (a.at ?? '').localeCompare(b.at ?? ''));
         return json({ status: call.status, live: true, transcript });
       } catch { return json({ status: call.status, live: true, transcript: [], pending: true }); }
     }
