@@ -124,3 +124,19 @@ export function voiceTools(url: string) {
     { type: 'hangup', display_name: 'hangup', hangup: { description: 'End the call politely when finished, declined, wrong number, voicemail, or human assistance is needed. Save qualification first when possible.' } },
   ];
 }
+// Operational call plans: one approval, then calls run one at a time with a pause between them.
+export const PlanProposal = z.object({
+  lead_ids: z.array(z.string().uuid()).min(1).max(30), objective: z.string().trim().min(10).max(1500),
+  call_type: z.enum(['qualifica', 'trattativa']), instructions: z.string().trim().max(2000).optional(),
+  title: z.string().trim().min(3).max(200).optional(), gap_minutes: z.number().int().min(1).max(120).optional(),
+}).strict();
+type PlanCall = { id: string; status: string; plan_position: number | null; ended_at: string | null };
+export function planNextStep(calls: PlanCall[], gapMinutes: number, now = new Date()): { kind: 'wait' | 'done' } | { kind: 'dial'; call_id: string } {
+  if (calls.some(c => ['starting', 'dialing', 'active', 'unknown'].includes(c.status))) return { kind: 'wait' };
+  const next = calls.filter(c => c.status === 'proposed').sort((a, b) => (a.plan_position ?? 0) - (b.plan_position ?? 0))[0];
+  if (!next) return { kind: 'done' };
+  const lastEnd = Math.max(0, ...calls.map(c => c.ended_at ? new Date(c.ended_at).getTime() : 0));
+  if (lastEnd && now.getTime() - lastEnd < gapMinutes * 60000) return { kind: 'wait' };
+  return { kind: 'dial', call_id: next.id };
+}
+export const isHoursBlock = (reason: string | null) => !!reason && reason.startsWith('Chiamate consentite tra');

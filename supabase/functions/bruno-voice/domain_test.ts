@@ -94,3 +94,15 @@ Deno.test('callOutcomeCode distingue chiamate senza conversazione', async () => 
   eq(callOutcomeCode('busy'), 'busy');
   eq(callOutcomeCode('failed'), 'unreachable');
 });
+
+import { planNextStep } from './domain.ts';
+Deno.test('call plan dials one customer at a time in order, with a pause between calls', () => {
+  const now = new Date('2026-11-06T12:00:00Z');
+  const calls = [{ id: 'b', status: 'proposed', plan_position: 2, ended_at: null }, { id: 'a', status: 'proposed', plan_position: 1, ended_at: null }];
+  assertEquals(planNextStep(calls, 3, now), { kind: 'dial', call_id: 'a' });
+  assertEquals(planNextStep([{ ...calls[1], status: 'dialing' }, calls[0]], 3, now), { kind: 'wait' });
+  assertEquals(planNextStep([{ ...calls[1], status: 'completed', ended_at: '2026-11-06T11:58:00Z' }, calls[0]], 3, now), { kind: 'wait' });
+  assertEquals(planNextStep([{ ...calls[1], status: 'completed', ended_at: '2026-11-06T11:56:00Z' }, calls[0]], 3, now), { kind: 'dial', call_id: 'b' });
+  assertEquals(planNextStep([{ ...calls[1], status: 'unknown', ended_at: null }, calls[0]], 3, now), { kind: 'wait' });
+  assertEquals(planNextStep([{ ...calls[1], status: 'completed', ended_at: '2026-11-06T11:00:00Z' }], 3, now), { kind: 'done' });
+});
