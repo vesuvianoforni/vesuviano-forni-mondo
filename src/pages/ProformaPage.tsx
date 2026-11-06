@@ -1000,7 +1000,7 @@ const ProformaPage = () => {
                     </span>
                     <span className="text-amber-200 font-semibold">{formatPrice(price * item.quantity)}</span>
                   </div>
-
+);
               })}
               {shouldShowBurners && selectedBurnerId && (() => {
                 const burner = burners.find(b => b.id === selectedBurnerId);

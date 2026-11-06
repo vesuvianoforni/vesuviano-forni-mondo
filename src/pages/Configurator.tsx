@@ -1567,7 +1567,7 @@ const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {
                         {reason}
                       </label>
                     </div>
-
+);
                 })}
               </div>
               

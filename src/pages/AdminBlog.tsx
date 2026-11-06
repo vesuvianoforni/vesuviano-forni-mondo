@@ -496,7 +496,7 @@ const AdminBlog = () => {
                         ))}
                       </div>
                     </details>
-
+);
                 })()}
 
                 {/* Inline Preview */}

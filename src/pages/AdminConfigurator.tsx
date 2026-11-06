@@ -392,7 +392,7 @@ const AdminConfigurator = () => {
                           </div>
                         </TableCell>
                       </TableRow>
-
+);
                   })}
                 </TableBody>
               </Table>

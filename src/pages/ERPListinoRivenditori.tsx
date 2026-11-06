@@ -474,7 +474,7 @@ const ERPListinoRivenditori = () => {
                                     </td>
                                   )}
                                 </tr>
-
+);
                             })}
                           </tbody>
                         </table>

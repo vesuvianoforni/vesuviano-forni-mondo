@@ -152,7 +152,7 @@ const ReadyToShip = () => {
                     )}
                   </CardContent>
                 </Card>
-
+);
             })}
           </section>
         )}
