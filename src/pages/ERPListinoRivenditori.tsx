@@ -220,7 +220,7 @@ const ERPListinoRivenditori = () => {
       }
 
       if (pdfData.length === 0) {
-        toast.error(t!["noData"]a);
+        toast.error(t!["noData"]);
         setGeneratingPdf(false);
         return;
       }
@@ -228,14 +228,14 @@ const ERPListinoRivenditori = () => {
       // Generate PDF using html2canvas approach with printable HTML
       const printWindow = window.open('', '_blank');
       if (!printWindow) {
-        toast.error(t!["popupBlocked"]d);
+        toast.error(t!["popupBlocked"]);
         setGeneratingPdf(false);
         return;
       }
 
       const today = new Date().toLocaleDateString(dateLocale, { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-      let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${t!["title"]e} - Vesuviano</title>
+      let html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${t!["title"]} - Vesuviano</title>
       <style>
         @media print { @page { size: A4 landscape; margin: 15mm; } }
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -255,23 +255,23 @@ const ERPListinoRivenditori = () => {
         td:not(:first-child):not(:nth-child(2)) { text-align: right; font-variant-numeric: tabular-nums; }
         tr:nth-child(even) { background: #fefce8; }
         .size-row { background: #f3f4f6 !important; font-weight: 600; }
-        .footer { margin-top!: 30px; text-align: center; color: #9ca3af; font-size: 11px; border-top: 1px solid #e5e7eb; padding-top: 10px; }
+        .footer { margin-top: 30px; text-align: center; color: #9ca3af; font-size: 11px; border-top: 1px solid #e5e7eb; padding-top: 10px; }
         .confidential { color: #dc2626; font-weight: 600; font-size: 12px; text-align: center; margin-bottom: 20px; }
         .no-print { margin-bottom: 20px; }
         @media print { .no-print { display: none; } }
       </style></head><body>
-      <div class="no-print"><button onclick="window.print()" style="padding:10px 24px;background:#d97706;color:white;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;">${t!["print"]t}</button></div>
+      <div class="no-print"><button onclick="window.print()" style="padding:10px 24px;background:#d97706;color:white;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;">${t!["print"]}</button></div>
       <div class="header">
         <div>
-          <h1>🔥 Vesuviano — ${t!["title"]e}</h1>
-          <p style="color:#666;font-size:13px;margin-top:4px;">${t!["subtitle"]e}</p>
+          <h1>🔥 Vesuviano — ${t!["title"]}</h1>
+          <p style="color:#666;font-size:13px;margin-top:4px;">${t!["subtitle"]}</p>
         </div>
         <div style="text-align:right;">
-          <span class="badge">${t!["badge"]e}</span>
-          <p class="date" style="margin-top:6px;">${t!["updated"]d} ${today}</p>
+          <span class="badge">${t!["badge"]}</span>
+          <p class="date" style="margin-top:6px;">${t!["updated"]} ${today}</p>
         </div>
       </div>
-      <p class="confidential">${t!["confidential"]l}</p>`;
+      <p class="confidential">${t!["confidential"]}</p>`;
 
       for (const oven of pdfData) {
         html += `<div class="model">
@@ -281,19 +281,19 @@ const ERPListinoRivenditori = () => {
           </div>
           <table>
             <thead><tr>
-              <th>${t!["size"]e}</th>
-              <th>${t!["coating"]g}</th>
-              <th>${t!["base"]e}</th>
-              <th>${t!["gas"]s}</th>
-              <th>${t!["electric"]c}</th>
-              <th>${t!["onSite"]e}</th>
+              <th>${t!["size"]}</th>
+              <th>${t!["coating"]}</th>
+              <th>${t!["base"]}</th>
+              <th>${t!["gas"]}</th>
+              <th>${t!["electric"]}</th>
+              <th>${t!["onSite"]}</th>
             </tr></thead><tbody>`;
 
         for (const size of oven.sizes) {
           for (let i = 0; i < size.coatings.length; i++) {
             const c = size.coatings[i];
             html += `<tr>
-              ${i === 0 ? `<td rowspan="${size.coatings.length}" style="font-weight:600;vertical-align:top;">Ø ${size.diameter}cm<br><span style="font-weight:400;font-size:11px;color:#666;">${size.pizza_capacity} ${t["pizzas"]s}</span></td>` : ''}
+              ${i === 0 ? `<td rowspan="${size.coatings.length}" style="font-weight:600;vertical-align:top;">Ø ${size.diameter}cm<br><span style="font-weight:400;font-size:11px;color:#666;">${size.pizza_capacity} ${t!["pizzas"]}</span></td>` : ''}
               <td>${c.name}</td>
               <td>${c.base ? `€${Number(c.base).toLocaleString(dateLocale)}` : '—'}</td>
               <td>${c.gas ? `€${Number(c.gas).toLocaleString(dateLocale)}` : '—'}</td>
@@ -307,13 +307,13 @@ const ERPListinoRivenditori = () => {
       }
 
       html += `<div class="footer">
-        <p>${t["footer1"]1}</p>
-        <p>${t["footer2"]2}</p>
+        <p>${t!["footer1"]}</p>
+        <p>${t!["footer2"]}</p>
       </div></body></html>`;
 
       printWindow.document.write(html);
       printWindow.document.close();
-      toast.success(t["success"]s);
+      toast.success(t!["success"]);
     } catch (e: any) {
       toast.error('Errore generazione: ' + e.message);
     }

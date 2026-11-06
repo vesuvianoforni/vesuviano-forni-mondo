@@ -117,7 +117,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     shippedIn: 'Il forno verrà spedito in',
     days: 'giorni',
     balanceAt: 'Il saldo di',
-    atDelivery: 'a merce pronta per la spedizione.',
+    atDelivery: 'alla consegna.',
     payDeposit: 'Paga Deposito',
     customizeColor: 'Personalizza Colore',
     pay: 'Paga',
@@ -176,7 +176,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     shippedIn: 'The oven will be shipped in',
     days: 'days',
     balanceAt: 'Balance of',
-    atDelivery: 'when the goods are ready for shipment.',
+    atDelivery: 'upon delivery.',
     payDeposit: 'Pay Deposit',
     customizeColor: 'Customize Color',
     pay: 'Pay',
@@ -237,7 +237,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     shippedIn: 'Le four sera expédié en',
     days: 'jours',
     balanceAt: 'Solde de',
-    atDelivery: 'lorsque la marchandise est prête à être expédiée.',
+    atDelivery: 'à la livraison.',
     payDeposit: "Payer l'Acompte",
     customizeColor: 'Personnaliser la Couleur',
     pay: 'Payer',
@@ -296,7 +296,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     shippedIn: 'Der Ofen wird versendet in',
     days: 'Tagen',
     balanceAt: 'Restbetrag von',
-    atDelivery: 'bei Versandbereitschaft der Ware.',
+    atDelivery: 'bei Lieferung.',
     payDeposit: 'Anzahlung Bezahlen',
     customizeColor: 'Farbe Anpassen',
     pay: 'Bezahlen',
@@ -355,7 +355,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     shippedIn: 'El horno se enviará en',
     days: 'días',
     balanceAt: 'Saldo de',
-    atDelivery: 'con la mercancía lista para el envío.',
+    atDelivery: 'en la entrega.',
     payDeposit: 'Pagar Depósito',
     customizeColor: 'Personalizar Color',
     pay: 'Pagar',
@@ -688,8 +688,8 @@ const ProformaPage = () => {
       <div className="min-h-screen bg-[#1a1a1a] flex items-center justify-center text-white px-4">
         <div className="text-center">
           <FileText className="w-16 h-16 mx-auto mb-4 text-amber-500/50" />
-          <h1 className="text-2xl font-bold mb-2">{t!["notFound"]d}</h1>
-          <p className="text-gray-400">{t!["notFoundDesc"]c}</p>
+          <h1 className="text-2xl font-bold mb-2">{t!["notFound"]}</h1>
+          <p className="text-gray-400">{t!["notFoundDesc"]}</p>
         </div>
       </div>
     );
@@ -715,7 +715,7 @@ const ProformaPage = () => {
               <span className="font-mono text-xs sm:text-sm text-amber-300/70">{proforma.proforma_number}</span>
             )}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-amber-100 mt-4">{t!["configureYourOven"]n}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-amber-100 mt-4">{t!["configureYourOven"]}</h1>
           {proforma.customer_name && (
             <p className="text-sm sm:text-lg text-amber-200/80 mt-1">
               {proforma.company_name ? `${proforma.company_name} — ` : ''}{proforma.customer_name}
@@ -723,7 +723,7 @@ const ProformaPage = () => {
           )}
           {isPaid && (
             <Badge className="mt-3 bg-green-600 text-white text-sm px-3 py-1">
-              <Check className="w-4 h-4 mr-1" /> {t!["depositPaid"]d}
+              <Check className="w-4 h-4 mr-1" /> {t!["depositPaid"]}
             </Badge>
           )}
         </div>
@@ -768,14 +768,14 @@ const ProformaPage = () => {
               {config.fuelType && (
                 <div className="flex items-center gap-2 bg-amber-900/20 rounded-lg px-4 py-2">
                   <Flame className="w-4 h-4 text-amber-400" />
-                  <span className="text-sm font-medium text-amber-100">{t!["selectFuel"]l}: <strong>{config.fuelType}</strong></span>
+                  <span className="text-sm font-medium text-amber-100">{t!["selectFuel"]}: <strong>{config.fuelType}</strong></span>
                 </div>
               )}
 
               {/* Size Selection */}
               {availableSizes.length > 0 && !isPaid && (
                 <div>
-                  <h3 className="text-sm font-semibold text-amber-200 mb-3">{t!["selectSize"]e}</h3>
+                  <h3 className="text-sm font-semibold text-amber-200 mb-3">{t!["selectSize"]}</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
                     {availableSizes.map(size => (
                       <button
@@ -807,7 +807,7 @@ const ProformaPage = () => {
               {/* Coating Selection */}
               {availableCoatings.length > 0 && config.diameter && !isPaid && (
                 <div>
-                  <h3 className="text-sm font-semibold text-amber-200 mb-3">{t!["selectCoating"]g}</h3>
+                  <h3 className="text-sm font-semibold text-amber-200 mb-3">{t!["selectCoating"]}</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {availableCoatings.map(coating => (
                       <button
@@ -839,7 +839,7 @@ const ProformaPage = () => {
               {selectedCoatingData && (
                 <Card className="bg-[#222] border-amber-900/20 overflow-hidden">
                   <CardContent className="p-4 sm:p-6 space-y-4">
-                    <h3 className="font-semibold text-amber-100 text-lg">{t!["yourOven"]n}</h3>
+                    <h3 className="font-semibold text-amber-100 text-lg">{t!["yourOven"]}</h3>
                     
                     {/* Media Toggle */}
                     {currentVideo && (
@@ -850,7 +850,7 @@ const ProformaPage = () => {
                           onClick={() => updateItemConfig(item.id, { showPhotoGallery: true })}
                           className={config.showPhotoGallery ? "bg-amber-600 hover:bg-amber-700" : "border-amber-700 text-amber-300"}
                         >
-                          <ImageIcon className="w-4 h-4 mr-1" /> {t!["photo"]o}
+                          <ImageIcon className="w-4 h-4 mr-1" /> {t!["photo"]}
                         </Button>
                         <Button
                           variant={!config.showPhotoGallery ? "default" : "outline"}
@@ -858,7 +858,7 @@ const ProformaPage = () => {
                           onClick={() => updateItemConfig(item.id, { showPhotoGallery: false })}
                           className={!config.showPhotoGallery ? "bg-amber-600 hover:bg-amber-700" : "border-amber-700 text-amber-300"}
                         >
-                          <PlayCircle className="w-4 h-4 mr-1" /> {t!["video360"]0}
+                          <PlayCircle className="w-4 h-4 mr-1" /> {t!["video360"]}
                         </Button>
                       </div>
                     )}
@@ -929,7 +929,7 @@ const ProformaPage = () => {
         {/* Burner Selection - only show for Gas/Elettrico fuel types */}
         {burners.length > 0 && !isPaid && shouldShowBurners && (
           <div>
-            <h3 className="text-lg font-semibold text-amber-100 mb-4">{t!["selectBurner"]r}</h3>
+            <h3 className="text-lg font-semibold text-amber-100 mb-4">{t!["selectBurner"]}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {/* No burner option */}
               <button
@@ -940,7 +940,7 @@ const ProformaPage = () => {
                     : 'border-gray-700 bg-[#222] hover:border-amber-700'
                 }`}
               >
-                <span className="text-sm font-medium text-gray-300">{t!["noBurner"]r}</span>
+                <span className="text-sm font-medium text-gray-300">{t!["noBurner"]}</span>
               </button>
 
               {burners.map(burner => (
@@ -1010,7 +1010,7 @@ const ProformaPage = () => {
                 const burner = burners.find(b => b.id === selectedBurnerId);
                 return burner ? (
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-300">{t!["burner"]r}: {burner.name}</span>
+                    <span className="text-gray-300">{t!["burner"]}: {burner.name}</span>
                     <span className="text-amber-200 font-semibold">{formatPrice(getBurnerPrice(burner, pl))}</span>
                   </div>
                 ) : null;
@@ -1028,11 +1028,11 @@ const ProformaPage = () => {
             {discountPct > 0 && (
               <>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">{t!["subtotal"]l}</span>
+                  <span className="text-gray-400">{t!["subtotal"]}</span>
                   <span className="text-gray-400">{formatPrice(currentSubtotal)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-green-400">
-                  <span>{t!["discount"]t} ({discountPct}%)</span>
+                  <span>{t!["discount"]} ({discountPct}%)</span>
                   <span>-{formatPrice(currentDiscount)}</span>
                 </div>
                 <Separator className="bg-amber-900/30" />
@@ -1040,7 +1040,7 @@ const ProformaPage = () => {
             )}
 
             <div className="flex justify-between text-lg">
-              <span className="text-gray-300">{t!["total"]l}</span>
+              <span className="text-gray-300">{t!["total"]}</span>
               <span className="font-bold text-xl sm:text-2xl text-amber-100">{formatPrice(currentTotal)}</span>
             </div>
 
@@ -1050,29 +1050,29 @@ const ProformaPage = () => {
               {proforma.payment_option === 'deposit_5' ? (
                 <div className="bg-amber-900/20 rounded-lg p-3 sm:p-4 space-y-2">
                   <h4 className="font-semibold text-amber-200 flex items-center gap-2 text-sm sm:text-base">
-                    <Shield className="w-4 h-4 sm:w-5 sm:h-5" /> {t!["lockOffer"]r} 5%
+                    <Shield className="w-4 h-4 sm:w-5 sm:h-5" /> {t!["lockOffer"]} 5%
                   </h4>
                   <p className="text-xs sm:text-sm text-gray-400">
-                    1️⃣ {t!["pay"]y} <span className="text-amber-300 font-bold">{formatPrice(currentDeposit)}</span> {t!["lockOfferDesc"]c}
+                    1️⃣ {t!["pay"]} <span className="text-amber-300 font-bold">{formatPrice(currentDeposit)}</span> {t!["lockOfferDesc"]}
                   </p>
                   <p className="text-xs sm:text-sm text-gray-400">
-                    2️⃣ {t!["lockOfferStep2"]2} <span className="text-amber-300 font-bold">{formatPrice(currentTotal * 0.45)}</span>
+                    2️⃣ {t!["lockOfferStep2"]} <span className="text-amber-300 font-bold">{formatPrice(currentTotal * 0.45)}</span>
                   </p>
                   <p className="text-xs sm:text-sm text-gray-400">
-                    3️⃣ {t!["lockOfferStep3"]3} <span className="text-amber-300 font-bold">{formatPrice(currentTotal * 0.50)}</span>
+                    3️⃣ {t!["lockOfferStep3"]} <span className="text-amber-300 font-bold">{formatPrice(currentTotal * 0.50)}</span>
                   </p>
                 </div>
               ) : (
                 <div className="bg-amber-900/20 rounded-lg p-3 sm:p-4">
                   <h4 className="font-semibold text-amber-200 flex items-center gap-2 text-sm sm:text-base">
-                    <Truck className="w-4 h-4 sm:w-5 sm:h-5" /> {t!["deposit50"]0}
+                    <Truck className="w-4 h-4 sm:w-5 sm:h-5" /> {t!["deposit50"]}
                   </h4>
                   <p className="text-xs sm:text-sm text-gray-400 mt-1">
-                    {t!["pay"]y} <span className="text-amber-300 font-bold">{formatPrice(currentDeposit)}</span> {t!["deposit50Desc"]c}
+                    {t!["pay"]} <span className="text-amber-300 font-bold">{formatPrice(currentDeposit)}</span> {t!["deposit50Desc"]}
                     {proforma.delivery_days && (
-                      <> {t!["shippedIn"]n} <span className="text-amber-300 font-bold">{proforma.delivery_days} {t!["days"]s}</span>.</>
+                      <> {t!["shippedIn"]} <span className="text-amber-300 font-bold">{proforma.delivery_days} {t!["days"]}</span>.</>
                     )}
-                    {' '}{t!["balanceAt"]t} {formatPrice(currentTotal - currentDeposit)} {t!["atDelivery"]y}
+                    {' '}{t!["balanceAt"]} {formatPrice(currentTotal - currentDeposit)} {t!["atDelivery"]}
                   </p>
                 </div>
               )}
@@ -1087,22 +1087,22 @@ const ProformaPage = () => {
             {/* Payment Methods */}
             <div className="bg-[#1a1a1a] rounded-lg p-3 sm:p-4 space-y-2">
               <h4 className="font-semibold text-amber-200 text-xs sm:text-sm flex items-center gap-2">
-                <CreditCard className="w-4 h-4" /> {t!["paymentMethodTitle"]e}
+                <CreditCard className="w-4 h-4" /> {t!["paymentMethodTitle"]}
               </h4>
               <ul className="space-y-1.5 text-[10px] sm:text-xs text-gray-400 list-disc list-inside">
-                <li>{t!["paymentMethodDeposit"]t}</li>
-                <li>{t!["paymentMethodBalance"]e}</li>
+                <li>{t!["paymentMethodDeposit"]}</li>
+                <li>{t!["paymentMethodBalance"]}</li>
               </ul>
             </div>
 
             {/* Terms and Conditions */}
             <div className="bg-[#1a1a1a] rounded-lg p-3 sm:p-4 space-y-3">
-              <h4 className="font-semibold text-amber-200 text-xs sm:text-sm">{t!["termsTitle"]e}</h4>
+              <h4 className="font-semibold text-amber-200 text-xs sm:text-sm">{t!["termsTitle"]}</h4>
               <ul className="space-y-2 text-[10px] sm:text-xs text-gray-500 list-disc list-inside">
-                <li>{t!["termsPallet"]t}</li>
-                <li>{t!["termsCourier"]r}</li>
-                <li>{t!["termsDelay"]y}</li>
-                <li>{t!["termsRefund"]d}</li>
+                <li>{t!["termsPallet"]}</li>
+                <li>{t!["termsCourier"]}</li>
+                <li>{t!["termsDelay"]}</li>
+                <li>{t!["termsRefund"]}</li>
               </ul>
             </div>
 
@@ -1119,13 +1119,13 @@ const ProformaPage = () => {
                   ) : (
                     <CreditCard className="w-5 h-5 mr-2" />
                   )}
-                  {t!["payByCard"]d} — {formatPrice(Math.round(currentDeposit * 1.035 * 100) / 100)}
+                  {t!["payByCard"]} — {formatPrice(Math.round(currentDeposit * 1.035 * 100) / 100)}
                 </Button>
-                <p className="text-center text-gray-400 text-xs -mt-2">{t!["cardFeeNote"]e}</p>
+                <p className="text-center text-gray-400 text-xs -mt-2">{t!["cardFeeNote"]}</p>
 
                 <div className="flex items-center gap-3">
                   <Separator className="flex-1 bg-gray-700" />
-                  <span className="text-xs text-gray-500 uppercase">{t!["orPayWith"]h}</span>
+                  <span className="text-xs text-gray-500 uppercase">{t!["orPayWith"]}</span>
                   <Separator className="flex-1 bg-gray-700" />
                 </div>
 
@@ -1136,19 +1136,19 @@ const ProformaPage = () => {
                   className="w-full border-gray-600 text-gray-300 hover:bg-gray-800 text-base sm:text-lg py-5 sm:py-6"
                 >
                   <Landmark className="w-5 h-5 mr-2" />
-                  {t!["payByBankTransfer"]r} — {formatPrice(currentDeposit)}
+                  {t!["payByBankTransfer"]} — {formatPrice(currentDeposit)}
                 </Button>
-                <p className="text-center text-green-400 text-xs -mt-2">✓ {t!["bankTransferNoFee"]e}</p>
+                <p className="text-center text-green-400 text-xs -mt-2">✓ {t!["bankTransferNoFee"]}</p>
 
                 {showBankDetails && (
                   <div className="bg-gray-800/80 border border-amber-600/30 rounded-lg p-4 sm:p-5 space-y-3 text-sm animate-in fade-in slide-in-from-top-2 duration-200">
-                    <h4 className="text-amber-400 font-semibold text-base">{t!["bankDetailsTitle"]e}</h4>
+                    <h4 className="text-amber-400 font-semibold text-base">{t!["bankDetailsTitle"]}</h4>
                     <div className="space-y-2 text-gray-300">
                       {(proforma?.bank_account === 'wise_uk' || (!proforma?.bank_account && lang === 'en')) ? (
                         <>
                           {/* UK Wise Account for English proformas */}
                           <div className="flex justify-between">
-                            <span className="text-gray-500">{t!["bankDetailsHolder"]r}:</span>
+                            <span className="text-gray-500">{t!["bankDetailsHolder"]}:</span>
                             <span className="font-medium text-right">Unita 1 di Stanislao Elefante</span>
                           </div>
                           <div className="flex justify-between items-center">
@@ -1156,7 +1156,7 @@ const ProformaPage = () => {
                             <div className="flex items-center gap-2">
                               <span className="font-mono font-medium">62531858</span>
                               <button
-                                onClick={() => { navigator.clipboard.writeText('62531858'); toast.success(t!["copied"]d); }}
+                                onClick={() => { navigator.clipboard.writeText('62531858'); toast.success(t!["copied"]); }}
                                 className="text-amber-400 hover:text-amber-300 p-1"
                               >
                                 <Copy className="w-3.5 h-3.5" />
@@ -1170,11 +1170,11 @@ const ProformaPage = () => {
                           <Separator className="bg-gray-700/50" />
                           <p className="text-gray-500 text-xs italic">For international Swift transfers:</p>
                           <div className="flex justify-between items-center">
-                            <span className="text-gray-500">{t!["bankDetailsIBAN"]N}:</span>
+                            <span className="text-gray-500">{t!["bankDetailsIBAN"]}:</span>
                             <div className="flex items-center gap-2">
                               <span className="font-mono font-medium text-right text-xs sm:text-sm">GB61 TRWI 6084 6462 5318 58</span>
                               <button
-                                onClick={() => { navigator.clipboard.writeText('GB61TRWI60846462531858'); toast.success(t!["copied"]d); }}
+                                onClick={() => { navigator.clipboard.writeText('GB61TRWI60846462531858'); toast.success(t!["copied"]); }}
                                 className="text-amber-400 hover:text-amber-300 p-1"
                               >
                                 <Copy className="w-3.5 h-3.5" />
@@ -1182,30 +1182,30 @@ const ProformaPage = () => {
                             </div>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-500">{t!["bankDetailsBIC"]C}:</span>
+                            <span className="text-gray-500">{t!["bankDetailsBIC"]}:</span>
                             <span className="font-mono font-medium">TRWIGB2LXXX</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-500">{t!["bankDetailsBank"]k}:</span>
+                            <span className="text-gray-500">{t!["bankDetailsBank"]}:</span>
                             <span className="font-medium text-right text-xs">Wise Payments Limited, London, UK</span>
                           </div>
                         </>
                       ) : proforma?.bank_account === 'intesa_climatel' ? (
                         <>
                           <div className="flex justify-between">
-                            <span className="text-gray-500">{t!["bankDetailsHolder"]r}:</span>
+                            <span className="text-gray-500">{t!["bankDetailsHolder"]}:</span>
                             <span className="font-medium text-right">CLIMATEL di Elefante Pasquale Elefante</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-500">{t!["bankDetailsBank"]k}:</span>
+                            <span className="text-gray-500">{t!["bankDetailsBank"]}:</span>
                             <span className="font-medium text-right text-xs">Intesa Sanpaolo SPA — Via SS. Martiri, 13, Sant'Egidio del Monte Albino (SA)</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-gray-500">{t!["bankDetailsIBAN"]N}:</span>
+                            <span className="text-gray-500">{t!["bankDetailsIBAN"]}:</span>
                             <div className="flex items-center gap-2">
                               <span className="font-mono font-medium text-right text-xs sm:text-sm">IT82 S030 6976 4511 0000 0003 441</span>
                               <button
-                                onClick={() => { navigator.clipboard.writeText('IT82S0306976451100000003441'); toast.success(t!["copied"]d); }}
+                                onClick={() => { navigator.clipboard.writeText('IT82S0306976451100000003441'); toast.success(t!["copied"]); }}
                                 className="text-amber-400 hover:text-amber-300 p-1"
                               >
                                 <Copy className="w-3.5 h-3.5" />
@@ -1213,26 +1213,26 @@ const ProformaPage = () => {
                             </div>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-500">{t!["bankDetailsBIC"]C}:</span>
+                            <span className="text-gray-500">{t!["bankDetailsBIC"]}:</span>
                             <span className="font-mono font-medium">BCITITMMXXX</span>
                           </div>
                         </>
                       ) : (
                         <>
                           <div className="flex justify-between">
-                            <span className="text-gray-500">{t!["bankDetailsHolder"]r}:</span>
+                            <span className="text-gray-500">{t!["bankDetailsHolder"]}:</span>
                             <span className="font-medium text-right">UNITA 1 di Stanislao Elefante</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-500">{t!["bankDetailsBank"]k}:</span>
+                            <span className="text-gray-500">{t!["bankDetailsBank"]}:</span>
                             <span className="font-medium">Intesa San Paolo</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-gray-500">{t!["bankDetailsIBAN"]N}:</span>
+                            <span className="text-gray-500">{t!["bankDetailsIBAN"]}:</span>
                             <div className="flex items-center gap-2">
                               <span className="font-mono font-medium text-right text-xs sm:text-sm">IT12P0306976451100000003224</span>
                               <button
-                                onClick={() => { navigator.clipboard.writeText('IT12P0306976451100000003224'); toast.success(t!["copied"]d); }}
+                                onClick={() => { navigator.clipboard.writeText('IT12P0306976451100000003224'); toast.success(t!["copied"]); }}
                                 className="text-amber-400 hover:text-amber-300 p-1"
                               >
                                 <Copy className="w-3.5 h-3.5" />
@@ -1240,27 +1240,27 @@ const ProformaPage = () => {
                             </div>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-500">{t!["bankDetailsBIC"]C}:</span>
+                            <span className="text-gray-500">{t!["bankDetailsBIC"]}:</span>
                             <span className="font-mono font-medium">BCITITMM</span>
                           </div>
                         </>
                       )}
                       <Separator className="bg-gray-700" />
                       <div>
-                        <span className="text-gray-500">{t!["bankDetailsCausale"]e}:</span>
+                        <span className="text-gray-500">{t!["bankDetailsCausale"]}:</span>
                         <p className="text-amber-300 mt-1 font-medium">
                           {proforma.proforma_number || proforma.id}
                         </p>
-                        <p className="text-gray-400 text-xs mt-1">{t!["bankDetailsCausaleValue"]e}</p>
+                        <p className="text-gray-400 text-xs mt-1">{t!["bankDetailsCausaleValue"]}</p>
                       </div>
                       <div className="mt-2 text-amber-400 font-semibold text-base">
-                        {t!["total"]l}: {formatPrice(currentDeposit)}
+                        {t!["total"]}: {formatPrice(currentDeposit)}
                       </div>
                       <Separator className="bg-gray-700" />
                       <div className="bg-blue-900/30 border border-blue-500/20 rounded-md p-3 flex items-start gap-2">
                         <span className="text-blue-400 text-lg mt-0.5">💡</span>
                         <p className="text-blue-300 text-xs leading-relaxed">
-                          {t!["bankDetailsWiseTip"]p}
+                          {t!["bankDetailsWiseTip"]}
                         </p>
                       </div>
                     </div>
@@ -1273,7 +1273,7 @@ const ProformaPage = () => {
 
         {/* Footer */}
         <div className="text-center text-gray-500 text-xs sm:text-sm py-6 sm:py-8">
-          <p>Vesuviano Forni — {t!["tagline"]e}</p>
+          <p>Vesuviano Forni — {t!["tagline"]}</p>
           <p className="mt-1">info@vesuvianoforni.com | +39 350 928 6941</p>
         </div>
       </div>
