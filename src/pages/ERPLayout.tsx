@@ -5,6 +5,7 @@ import { ERPSidebar } from '@/components/erp/ERPSidebar';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
+import { BrunoLiveCallFloat } from '@/components/erp/BrunoLiveCallFloat';
 
 const ERPLayout = () => {
   const navigate = useNavigate();
@@ -64,6 +65,7 @@ const ERPLayout = () => {
           <main className="erp-dashboard flex-1 min-w-0 w-full overflow-x-hidden bg-background text-foreground">
             <Outlet />
           </main>
+          <BrunoLiveCallFloat />
         </div>
       </div>
     </SidebarProvider>
