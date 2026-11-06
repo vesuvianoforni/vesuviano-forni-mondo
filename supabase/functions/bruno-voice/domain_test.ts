@@ -107,7 +107,7 @@ Deno.test('call plan dials one customer at a time in order, with a pause between
   assertEquals(planNextStep([{ ...calls[1], status: 'completed', ended_at: '2026-11-06T11:00:00Z' }], 3, now), { kind: 'done' });
 });
 
-import { inboundLanguage, gennaroAvailable, inboundTexml } from './domain.ts';
+import { inboundLanguage, inboundAssistantConfig, inboundExtraTools, inboundTexml } from './domain.ts';
 Deno.test('inbound language follows the caller prefix', () => {
   if (inboundLanguage('+39 333 1234567').code !== 'it') throw new Error('it');
   if (inboundLanguage('+447700900123').code !== 'en') throw new Error('en');
@@ -116,10 +116,19 @@ Deno.test('inbound language follows the caller prefix', () => {
   if (inboundLanguage('+34612345678').code !== 'es') throw new Error('es');
   if (inboundLanguage('+31612345678').code !== 'en') throw new Error('nl->en');
 });
-Deno.test('Gennaro takes transfers weekdays 9-18 Rome only', () => {
-  if (!gennaroAvailable(new Date('2026-11-06T10:00:00Z'))) throw new Error('fri 11 Rome');
-  if (gennaroAvailable(new Date('2026-11-06T17:30:00Z'))) throw new Error('fri 18:30 Rome');
-  if (gennaroAvailable(new Date('2026-11-07T10:00:00Z'))) throw new Error('saturday');
+Deno.test('Inbound handover is always on request, with no default unavailability or office-hours restriction', () => {
+  const variables = inboundAssistantConfig([], 'https://x.supabase.co').dynamic_variables;
+  assertEquals(variables.handover_policy, 'always_on_request');
+  assertEquals('gennaro_available' in variables, false);
+});
+Deno.test('Gennaro must explicitly accept in a private consult before connecting the caller', () => {
+  const tool = inboundExtraTools('https://x.supabase.co', '+3908119237684').find(t => t.type === 'transfer');
+  assertEquals(tool?.transfer?.targets, [{ name: 'Gennaro Caglione', to: '+3908119237684' }]);
+  assertEquals(tool?.transfer?.warm_transfer_acceptance, { enabled: true, end_user_target_context_mode: 'private', require_acceptance: true, timeout_secs: 60 });
+});
+Deno.test('Transfer stops on Gennaro voicemail instead of connecting the caller', () => {
+  const tool = inboundExtraTools('https://x.supabase.co', '+3908119237684').find(t => t.type === 'transfer');
+  assertEquals(tool?.transfer?.voicemail_detection.on_voicemail_detected.action, 'stop_transfer');
 });
 Deno.test('inbound TeXML records once and starts the inbound assistant', () => {
   const x = inboundTexml('assistant-1', 'https://x.supabase.co');
