@@ -351,6 +351,9 @@ Deno.serve(async req => {
       const inboundId = inbound.data?.id ?? inbound.id;
       if (!inboundId) throw new Error('Assistente in entrata non creato');
       await telnyx(`/texml_applications/${applicationId}`, 'PATCH', { voice_url: `${url}/functions/v1/bruno-voice?texml=1`, voice_method: 'post', status_callback: `${url}/functions/v1/bruno-voice?callback=1&inbound=1`, status_callback_method: 'post' });
+      // Automatic call forwarding set in the Telnyx portal bypasses Bruno and blocks TeXML routing: turn it off first.
+      const voice = (await telnyx(`/phone_numbers/${owned.id}/voice`)).data;
+      if (voice?.call_forwarding?.call_forwarding_enabled) await telnyx(`/phone_numbers/${owned.id}/voice`, 'PATCH', { call_forwarding: { call_forwarding_enabled: false, forwards_to: null, forwarding_type: null } });
       if (owned.connection_id !== applicationId) await telnyx(`/phone_numbers/${owned.id}`, 'PATCH', { connection_id: applicationId });
       checked(await admin.from('bruno_voice_settings').update({ inbound_assistant_id: inboundId, inbound_configured_at: new Date().toISOString() }).eq('key', 'default'));
       return json({ configured: true, inbound: true, from_number: FROM_NUMBER, transfer_number: transferNumber, language: 'en' });
