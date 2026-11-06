@@ -260,7 +260,7 @@ Deno.serve(async req => {
       if (input.view === 'executed') query = query.in('status',['completed','failed','unknown','cancelled']);
       if (input.before_at && input.before_id) query = query.or(`created_at.lt.${input.before_at},and(created_at.eq.${input.before_at},id.lt.${input.before_id})`);
       const calls = checked(await query) ?? [];
-      return json({ configured: Boolean(settings.assistant_id && settings.application_id && settings.public_key), from_number: FROM_NUMBER, language: 'en', calls: calls.slice(0,30), has_more: calls.length > 30 });
+      return json({ configured: Boolean(settings.assistant_id && settings.application_id && settings.public_key), inbound_configured: Boolean(settings.inbound_assistant_id), from_number: FROM_NUMBER, language: 'en', calls: calls.slice(0,30), has_more: calls.length > 30 });
     }
     if (input.action === 'detail') {
       const call = checked(await admin.from('bruno_voice_calls').select('id,lead_id,direction,destination,call_type,objective,instructions,status,summary,transcript,created_at,started_at,ended_at,expires_at,duration_seconds,recording_path,recording_status,transcript_status,summary_status,leads(contact_name,company_name)').eq('id',input.call_id).single());
