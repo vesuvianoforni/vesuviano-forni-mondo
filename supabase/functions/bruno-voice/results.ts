@@ -59,9 +59,14 @@ export async function processResults(db: SupabaseClient, callId: string, token: 
     let call = check(await db.from('bruno_voice_calls').select('*').eq('id',callId).single());
     if (!call.approved_at || !call.provider_call_id) throw new Error('call_not_bound');
     // Short-lived download URLs must be captured even when transcripts/AI are not ready.
-    if (!call.recording_path && job.recording_url) {
+    if (!call.recording_path) {
       try {
-        const path = await storeAudio(db,callId,job.recording_url);
+        // Callbacks are not always delivered: look the call-leg recording up directly and use a fresh signed URL.
+        const listed = await provider(`/recordings?filter%5Bcall_control_id%5D=${encodeURIComponent(call.provider_call_id)}&page%5Bsize%5D=5`).catch(() => null);
+        const rec = (listed?.data ?? []).find((r: any) => r.call_control_id === call.provider_call_id && r.status === 'completed');
+        const address = rec?.download_urls?.mp3 || rec?.download_urls?.wav || job.recording_url;
+        if (!address) throw new Error('recording_missing');
+        const path = await storeAudio(db,callId,address);
         check(await db.from('bruno_voice_calls').update({ recording_path: path, recording_status: 'ready' }).eq('id',callId)); call.recording_status = 'ready'; call.recording_path = path;
       } catch { /* Retry audio independently; persist any available transcript below. */ }
     }
@@ -72,7 +77,7 @@ export async function processResults(db: SupabaseClient, callId: string, token: 
     }
     // No conversation ever happened (unanswered, rejected or hung up within seconds): stop polling Telnyx.
     const noConversation = ['no_answer','busy','unreachable','no_conversation'].includes(call.error_code ?? '') || call.status === 'failed';
-    if (noConversation && !job.recording_url && !call.recording_path && (!call.conversation_id || job.attempts >= 2)) return await finishWithoutConversation(db, callId, token, call);
+    if (noConversation && !job.recording_url && !call.recording_path && job.attempts >= 2 && (!call.conversation_id || job.attempts >= 2)) return await finishWithoutConversation(db, callId, token, call);
     if (call.conversation_id && call.transcript_status !== 'ready') {
       let conversation;
       try { conversation = (await provider(`/ai/conversations/${encodeURIComponent(call.conversation_id)}`)).data; }

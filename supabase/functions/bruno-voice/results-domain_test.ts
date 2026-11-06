@@ -9,6 +9,8 @@ Deno.test('CRM transcript retains exactly what customer and Bruno said, not priv
 Deno.test('Recording download excludes arbitrary or non-secure hosts', () => {
   assertEquals(recordingAddress('https://us-central-1.telnyxcloudstorage.com/recordings/voice.mp3'),'https://us-central-1.telnyxcloudstorage.com/recordings/voice.mp3');
   assertThrows(()=>recordingAddress('https://telnyx.com.attacker.test/audio'));
+  assertEquals(recordingAddress('https://s3.amazonaws.com/telephony-recorder-prod/a/b.mp3'),'https://s3.amazonaws.com/telephony-recorder-prod/a/b.mp3');
+  assertThrows(()=>recordingAddress('https://s3.amazonaws.com/other-bucket/b.mp3'));
   assertThrows(()=>recordingAddress('http://telnyx.com/audio'));
   assertThrows(()=>recordingAddress('https://127.0.0.1/audio'));
 });
