@@ -69,11 +69,11 @@ async function dial(admin: any, settings: any, url: string, call: any, lead: any
 
 // deno-lint-ignore no-explicit-any
 async function planTick(admin: any, settings: any, url: string, planId: string, token: string) {
-  const plan = checked(await admin.rpc('claim_bruno_call_plan', { p_id: planId, p_token: token }))?.[0];
+  const plan: any = checked(await admin.rpc('claim_bruno_call_plan', { p_id: planId, p_token: token }))?.[0];
   if (!plan) return { ignored: true };
   const release = (fields: Record<string, unknown> = {}) => admin.from('bruno_call_plans').update({ lease_until: null, ...fields }).eq('id', planId);
   try {
-    const calls = checked(await admin.from('bruno_voice_calls').select('*').eq('plan_id', planId)) ?? [];
+    const calls: any[] = checked(await admin.from('bruno_voice_calls').select('*').eq('plan_id', planId)) ?? [];
     // An uncertain submission is never repeated: stop the plan for a human check.
     if (calls.some((c: any) => c.status === 'unknown')) { await release({ status: 'paused', last_error: 'Esito di una chiamata incerto: piano in pausa, verifica prima di riprendere.' }); return { paused: true }; }
     const step = planNextStep(calls, plan.gap_minutes);
@@ -81,10 +81,10 @@ async function planTick(admin: any, settings: any, url: string, planId: string, 
     if (step.kind === 'wait') { await release(); return { waiting: true }; }
     if (!settings.assistant_id || !settings.application_id || !settings.public_key) { await release({ last_error: 'Assistente telefonico non configurato' }); return { waiting: true }; }
     // Follow plan order, but if a customer is outside 9-20 local time, call the next one whose local time allows it.
-    const ordered = [calls.find((c: any) => c.id === step.call_id), ...calls.filter((c: any) => c.status === 'proposed' && c.id !== step.call_id).sort((a: any, b: any) => a.plan_position - b.plan_position)];
+    const ordered = [calls.find((c: any) => c.id === (step as { call_id: string }).call_id), ...calls.filter((c: any) => c.status === 'proposed' && c.id !== (step as { call_id: string }).call_id).sort((a: any, b: any) => a.plan_position - b.plan_position)];
     const call = ordered.find((c: any) => !isHoursBlock(callAllowed({}, c.customer_timezone, new Date(), 'operator')));
     if (!call) { await release({ last_error: null }); return { waiting: true, hours: true }; }
-    const lead = checked(await admin.from('leads').select('id,contact_name,company_name,phone,city,country,status,archived,qualification,bruno_mode,bruno_paused_until').eq('id', call.lead_id).single());
+    const lead: any = checked(await admin.from('leads').select('id,contact_name,company_name,phone,city,country,status,archived,qualification,bruno_mode,bruno_paused_until').eq('id', call.lead_id).single());
     let phone: string | null = null; try { phone = e164(lead?.phone || ''); } catch { /* invalid */ }
     const blocked = !lead ? 'Cliente non trovato' : phone !== call.destination ? 'Telefono modificato' : callAllowed(lead, call.customer_timezone, new Date(), 'operator');
     if (blocked) { checked(await admin.from('bruno_voice_calls').update({ status: 'cancelled', error_code: 'plan_skipped' }).eq('id', call.id).eq('status', 'proposed')); await release({ last_error: `${lead?.contact_name || 'Cliente'}: ${blocked}` }); return { skipped: call.id }; }
@@ -288,7 +288,7 @@ Deno.serve(async req => {
       return json({ plan_id: plan.id, calls: position, skipped, approval_required: position > 0 });
     }
     if (input.action === 'plan_detail' || input.action === 'plan_approve' || input.action === 'plan_pause' || input.action === 'plan_resume' || input.action === 'plan_cancel') {
-      const plan = checked(await admin.from('bruno_call_plans').select('id,title,call_type,objective,instructions,gap_minutes,status,approved_at,last_error,created_at').eq('id', input.plan_id).maybeSingle());
+      const plan: any = checked(await admin.from('bruno_call_plans').select('id,title,call_type,objective,instructions,gap_minutes,status,approved_at,last_error,created_at').eq('id', input.plan_id).maybeSingle());
       if (!plan) return json({ error: 'Piano non trovato' }, 404);
       const move = async (from: string[], to: string, extra: Record<string, unknown> = {}) => {
         const row = checked(await admin.from('bruno_call_plans').update({ status: to, ...extra }).eq('id', plan.id).in('status', from).select('id').maybeSingle());
@@ -322,7 +322,7 @@ Deno.serve(async req => {
       const call = checked(await admin.from('bruno_voice_calls').insert({ ...scope, requested_by: user.user.id, destination: e164(lead.phone || '') }).select('id,destination,objective,status').single());
       return json({ proposal: call, from_number: FROM_NUMBER, language: 'en', approval_required: true });
     }
-    const call = checked(await admin.from('bruno_voice_calls').select('*').eq('id', input.call_id).single());
+    const call = checked(await admin.from('bruno_voice_calls').select('*').eq('id', (input as { call_id: string }).call_id).single());
     if (!call) return json({ error: 'Chiamata non trovata' }, 404);
     if (input.action === 'cancel') {
       checked(await admin.from('bruno_voice_calls').update({ status: 'cancelled' }).eq('id', call.id).eq('status', 'proposed'));
