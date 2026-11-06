@@ -12,4 +12,7 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Netlify builds (NETLIFY=true, set automatically by Netlify) get a
+  // Netlify-compatible server bundle; Lovable's own publish keeps Cloudflare output.
+  ...(process.env.NETLIFY ? { nitro: { preset: "netlify" } } : {}),
 });
