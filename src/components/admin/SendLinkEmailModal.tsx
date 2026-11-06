@@ -13,8 +13,8 @@ interface SendLinkEmailModalProps {
   onClose: () => void;
   session: {
     token: string;
-    customer_name: string;
-    customer_email: string;
+    customer_name: string | null;
+    customer_email: string | null;
   };
 }
 
