@@ -137,3 +137,8 @@ Deno.test('inbound TeXML records once and starts the inbound assistant', () => {
 Deno.test('Gennaro transfer defaults to the company landline +39 081 1923 1684', () => {
   assertEquals(DEFAULT_TRANSFER_NUMBER, '+3908119231684');
 });
+
+Deno.test('direct request for Gennaro transfers without asking questions first', async () => {
+  const src = await Deno.readTextFile(new URL('./domain.ts', import.meta.url));
+  if (!src.includes('do NOT ask their name, reason, project or any other question first')) throw new Error('missing direct-transfer rule');
+});
