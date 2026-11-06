@@ -11,6 +11,7 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { HelmetProvider } from "react-helmet-async";
+import { SeoOwnerProvider } from "@/lib/seoOwner";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -80,7 +81,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1.0" },
-      { title: "Vesuviano Forni" },
       { name: "author", content: "Vesuviano Forni" },
       { name: "google-site-verification", content: "m2JEhd_gkm8hD14ME0U9AGRgWeF7xPG1RQY3zIpcnw8" },
       { name: "geo.region", content: "IT-NA" },
@@ -92,8 +92,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      ...HREFLANGS.map((l) => ({ rel: "alternate", hrefLang: l, href: `${SITE}/${l}` })),
-      { rel: "alternate", hrefLang: "x-default", href: `${SITE}/it` },
       { rel: "icon", href: "/favicon.ico", sizes: "any" },
       { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" },
       { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png" },
@@ -166,6 +164,7 @@ function RootComponent() {
 
   return (
     <HelmetProvider>
+      <SeoOwnerProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
@@ -179,6 +178,7 @@ function RootComponent() {
           </ConsultationModalProvider>
         </TooltipProvider>
       </QueryClientProvider>
+      </SeoOwnerProvider>
     </HelmetProvider>
   );
 }
