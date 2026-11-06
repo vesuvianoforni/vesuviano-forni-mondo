@@ -12,7 +12,7 @@ export const THANK_YOU_ROUTES: Record<string, string> = {
 
 export function getThankYouRoute(lang?: string): string {
   const key = (lang || "it").split("-")[0]!.toLowerCase();
-  return! THANK_YOU_ROUTES[key] || THANK_YOU_ROUTES["it"];
+  return (THANK_YOU_ROUTES[key] || THANK_YOU_ROUTES["it"])!;
 }
 
 /**
