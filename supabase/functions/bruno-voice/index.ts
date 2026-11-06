@@ -1,7 +1,7 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
-import { assistantConfig, callAllowed, timezoneFromPhone, e164, FROM_NUMBER, nextCallStatus, callOutcomeCode, Proposal, PlanProposal, planNextStep, isHoursBlock, AnyToolRequest, verifyTelnyx, voiceTools, inboundLanguage, gennaroAvailable, InboundVariables, inboundAssistantConfig, inboundExtraTools, inboundTexml, DEFAULT_TRANSFER_NUMBER } from './domain.ts';
+import { assistantConfig, callAllowed, timezoneFromPhone, e164, FROM_NUMBER, nextCallStatus, callOutcomeCode, Proposal, PlanProposal, planNextStep, isHoursBlock, AnyToolRequest, verifyTelnyx, voiceTools, inboundLanguage, INBOUND_HANDOVER_POLICY, InboundVariables, inboundAssistantConfig, inboundExtraTools, inboundTexml, DEFAULT_TRANSFER_NUMBER } from './domain.ts';
 import { AnalyzedEvent, analyzedMatches, RecordingCallback, spokenTranscript } from './results-domain.ts';
 import { processResults, queueResults } from './results.ts';
 
@@ -140,7 +140,7 @@ Deno.serve(async req => {
       const rome = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', dateStyle: 'full', timeStyle: 'short' }).format(new Date());
       return json({ dynamic_variables: {
         vesuviano_call_id: call.id, call_language: lang.name, inbound_greeting: lang.greeting, caller_timezone: zone, rome_time: rome,
-        gennaro_available: gennaroAvailable() ? 'yes' : 'no',
+        handover_policy: INBOUND_HANDOVER_POLICY,
         customer_context: JSON.stringify(known ? { existing_customer: true, name: lead.contact_name, company: lead.company_name, city: lead.city, country: lead.country, crm_stage: lead.status, qualification: lead.qualification } : { existing_customer: false, phone_prefix: caller.slice(0, 4) }).slice(0, 3000),
       } });
     }
