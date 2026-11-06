@@ -193,7 +193,7 @@ export function inboundAssistantConfig(toolIds: string[], url: string) {
     instructions: INBOUND_INSTRUCTIONS, greeting: '{{inbound_greeting}}',
     dynamic_variables: { inbound_greeting: INBOUND_LANGUAGES.en.greeting, call_language: 'English', customer_context: 'unknown caller', rome_time: 'unknown', caller_timezone: 'unknown', gennaro_available: 'no', vesuviano_call_id: '' },
     dynamic_variables_webhook_url: `${url}/functions/v1/bruno-voice?vars=1`, dynamic_variables_webhook_timeout_ms: 5000,
-    enabled_features: ['telephony'], transcription: { model: 'deepgram/nova-3', language: 'multi' },
+    enabled_features: ['telephony'], transcription: { model: 'deepgram/nova-3', language: 'auto' },
     voice_settings: { voice: VOICE, voice_speed: 0.9, background_audio: { type: 'predefined_media', value: 'office' } }, tool_ids: toolIds,
     telephony_settings: { time_limit_secs: 900, user_idle_timeout_secs: 30, user_idle_reply_secs: 10, recording_settings: { enabled: false }, send_message_history_updates: false, conversation_ended_full_history: true },
     // The caller leg is recorded once by the TeXML <Start><Recording>, never twice by the assistant.
