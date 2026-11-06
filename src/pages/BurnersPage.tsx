@@ -32,7 +32,7 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
   const { i18n, t } = useTranslation();
 
   useEffect(() => {
-    i18n.changeLanguage(lang);
+    if (i18n.language !== lang) i18n.changeLanguage(lang);
     document.documentElement.lang = lang;
     document.title = `${t('burners.pageTitle')} - Vesuviano`;
   }, [lang, i18n, t]);
