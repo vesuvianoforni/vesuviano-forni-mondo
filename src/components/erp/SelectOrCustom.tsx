@@ -8,7 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 export interface Preset {
-  id?: string;
+  id?: string | undefined;
   value: string;
   label: string;
 }
@@ -18,9 +18,9 @@ interface Props {
   value: string;
   onChange: (v: string) => void;
   presets: Preset[];
-  type?: 'text' | 'textarea' | 'date' | 'number';
+  type?: 'text' | 'textarea' | 'date' | 'number' | undefined;
   onPresetAdded?: (p: Preset) => void;
-  placeholder?: string;
+  placeholder?: string | undefined;
 }
 
 const CUSTOM = '__custom__';

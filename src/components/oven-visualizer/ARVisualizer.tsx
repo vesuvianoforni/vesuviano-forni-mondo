@@ -20,7 +20,7 @@ interface ARVisualizerProps {
   ovenTypes: OvenType[];
   onClose: () => void;
   onOvenTypeChange: (value: string) => void;
-  uploadedModel?: {url: string, name: string} | null;
+  uploadedModel?: {url: string, name: string} | null | undefined;
 }
 
 // Funzioni utility per gestire URL di Google Drive

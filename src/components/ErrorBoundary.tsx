@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface ErrorBoundaryProps {
-  fallback?: React.ReactNode;
+  fallback?: React.ReactNode | undefined;
   children: React.ReactNode;
 }
 

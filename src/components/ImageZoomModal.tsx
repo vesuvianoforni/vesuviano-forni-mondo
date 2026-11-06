@@ -7,7 +7,7 @@ interface ImageZoomModalProps {
   onClose: () => void;
   imageUrl: string;
   imageAlt: string;
-  title?: string;
+  title?: string | undefined;
 }
 
 const ImageZoomModal: React.FC<ImageZoomModalProps> = ({

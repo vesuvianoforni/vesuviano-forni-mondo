@@ -19,8 +19,8 @@ interface AddOvenModalProps {
 interface Coating {
   name: string;
   image_url: string;
-  video_url_360?: string;
-  render_images?: string[];
+  video_url_360?: string | undefined;
+  render_images?: string[] | undefined;
   prices: {
     listA: { base: number; gas: number; electric: number; onSite: number };
     listB: { base: number; gas: number; electric: number; onSite: number };

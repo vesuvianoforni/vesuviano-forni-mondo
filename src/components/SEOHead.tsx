@@ -9,19 +9,19 @@ export interface SEOHeadProps {
   /** Meta description, < 160 chars. */
   description: string;
   /** Canonical path or absolute URL. If a path, BASE_URL is prepended. */
-  canonical?: string;
+  canonical?: string | undefined;
   /** Absolute URL of social share image. */
-  ogImage?: string;
+  ogImage?: string | undefined;
   /** When true, emits a noindex,nofollow robots meta. */
-  noIndex?: boolean;
+  noIndex?: boolean | undefined;
   /** Optional JSON-LD object (or array of objects). Will be JSON.stringified. */
-  schemaJson?: Record<string, unknown> | Array<Record<string, unknown>>;
+  schemaJson?: Record<string, unknown> | Array<Record<string, unknown>> | undefined;
   /** Language code (it/en/fr/de/es). Defaults to it. */
-  lang?: string;
+  lang?: string | undefined;
   /** og:type, defaults to 'website'. */
-  ogType?: string;
+  ogType?: string | undefined;
   /** Optional explicit hreflang alternates map. If omitted, auto-derived from canonical path. */
-  alternates?: AlternatesMap;
+  alternates?: AlternatesMap | undefined;
 }
 
 const toAbsolute = (urlOrPath: string) => {

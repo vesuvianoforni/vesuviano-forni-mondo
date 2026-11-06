@@ -16,11 +16,11 @@ interface OvenData {
   id: string;
   name: string;
   category: string;
-  subcategory?: string;
-  coating_type?: string;
+  subcategory?: string | undefined;
+  coating_type?: string | undefined;
   image_url: string;
-  description?: string;
-  specifications?: any;
+  description?: string | undefined;
+  specifications?: any | undefined;
 }
 
 const OvenVisualizer = () => {

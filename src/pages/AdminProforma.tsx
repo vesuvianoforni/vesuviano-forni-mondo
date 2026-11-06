@@ -19,23 +19,23 @@ import { it as itLocale } from 'date-fns/locale';
 import SEOHead from '@/components/SEOHead';
 
 interface ProformaItem {
-  id?: string;
+  id?: string | undefined;
   item_type: 'oven' | 'burner' | 'custom';
-  oven_id?: string;
-  burner_id?: string;
-  custom_name?: string;
-  custom_description?: string;
-  model_name?: string;
-  fuel_type?: string;
-  diameter?: number;
-  coating?: string;
-  image_url?: string;
+  oven_id?: string | undefined;
+  burner_id?: string | undefined;
+  custom_name?: string | undefined;
+  custom_description?: string | undefined;
+  model_name?: string | undefined;
+  fuel_type?: string | undefined;
+  diameter?: number | undefined;
+  coating?: string | undefined;
+  image_url?: string | undefined;
   unit_price: number;
   quantity: number;
   line_total: number;
-  specifications?: any;
+  specifications?: any | undefined;
   sort_order: number;
-  price_manually_set?: boolean;
+  price_manually_set?: boolean | undefined;
 }
 
 interface Proforma {

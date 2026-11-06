@@ -90,7 +90,7 @@ export function useSearchParams(): [URLSearchParams, (init: URLSearchParams | Re
   const setParams = useCallback(
     (
       init: URLSearchParams | Record<string, string> | ((prev: URLSearchParams) => URLSearchParams),
-      opts?: { replace?: boolean },
+      opts?: { replace?: boolean } | undefined,
     ) => {
       // Functional updaters read the router's live location, not the render
       // snapshot — react-router passes call-time params, and chained updates
@@ -116,9 +116,9 @@ export function useSearchParams(): [URLSearchParams, (init: URLSearchParams | Re
 
 type LinkProps = Omit<ComponentProps<typeof TSLink>, "to"> & {
   to: string;
-  replace?: boolean;
-  state?: unknown;
-  children?: ReactNode;
+  replace?: boolean | undefined;
+  state?: unknown | undefined;
+  children?: ReactNode | undefined;
 };
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(

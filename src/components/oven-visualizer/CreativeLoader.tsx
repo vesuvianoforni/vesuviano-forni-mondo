@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Wand2, Sparkles, Cpu, Zap } from 'lucide-react';
 
 interface CreativeLoaderProps {
-  message?: string;
+  message?: string | undefined;
 }
 
 const CreativeLoader: React.FC<CreativeLoaderProps> = ({ 

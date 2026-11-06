@@ -11,10 +11,10 @@ interface ThankYouProps {
 }
 
 interface OvenRecommendation {
-  model_name?: string;
-  diameter?: number;
-  capacity?: string;
-  explanation?: string;
+  model_name?: string | undefined;
+  diameter?: number | undefined;
+  capacity?: string | undefined;
+  explanation?: string | undefined;
 }
 
 const ThankYou = ({ lang }: ThankYouProps) => {

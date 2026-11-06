@@ -30,8 +30,8 @@ interface Answers {
 interface Recommendation {
   model_name: string;
   explanation: string;
-  diameter?: number;
-  capacity?: string;
+  diameter?: number | undefined;
+  capacity?: string | undefined;
 }
 
 const OvenFinderQuizModal = ({ open, onOpenChange }: OvenFinderQuizModalProps) => {

@@ -51,7 +51,7 @@ interface ProformaData {
   price_list: string;
   valid_until: string | null;
   created_at: string;
-  bank_account?: string;
+  bank_account?: string | undefined;
 }
 
 interface OvenModel {
@@ -61,21 +61,21 @@ interface OvenModel {
   diameter: number;
   pizza_capacity: string;
   image_url: string;
-  video_url_360?: string;
-  additional_images?: string[];
+  video_url_360?: string | undefined;
+  additional_images?: string[] | undefined;
   base_price_a: number;
   delivery_time_weeks: number;
   description: string | null;
   sizes?: Array<{
     diameter: number;
     pizza_capacity: string;
-    datasheet_url?: string;
-    datasheet_urls?: { it?: string; en?: string; fr?: string; de?: string; es?: string };
+    datasheet_url?: string | undefined;
+    datasheet_urls?: { it?: string; en?: string; fr?: string; de?: string; es?: string } | undefined;
     coatings: Array<{
       name: string;
       image_url: string;
-      video_url_360?: string;
-      render_images?: string[];
+      video_url_360?: string | undefined;
+      render_images?: string[] | undefined;
       prices: {
         listA: { base: number; gas?: number; electric?: number };
         listB: { base: number; gas?: number; electric?: number };

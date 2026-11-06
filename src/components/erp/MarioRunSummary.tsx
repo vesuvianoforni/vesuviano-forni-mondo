@@ -5,7 +5,7 @@ export type MarioRun = {
   found: number | null;
   error: string | null;
   created_at: string;
-  result?: { email_verified?: boolean; qualified?: boolean; reason?: string; drafts?: number } | null;
+  result?: { email_verified?: boolean; qualified?: boolean; reason?: string; drafts?: number } | null | undefined;
 };
 
 export const MARIO_RUN_LABELS: Record<string, string> = {

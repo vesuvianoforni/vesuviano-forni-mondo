@@ -21,8 +21,8 @@ interface FormData {
   city: string;
   email: string;
   phone: string;
-  company?: string;
-  website?: string;
+  company?: string | undefined;
+  website?: string | undefined;
 }
 
 const DownloadModal: React.FC<DownloadModalProps> = ({

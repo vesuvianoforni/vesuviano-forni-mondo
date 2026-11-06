@@ -20,8 +20,8 @@ interface EditOvenModalProps {
 interface Coating {
   name: string;
   image_url: string;
-  video_url_360?: string;
-  render_images?: string[];
+  video_url_360?: string | undefined;
+  render_images?: string[] | undefined;
   prices: {
     listA: { base: number; gas: number; electric: number; onSite: number };
     listB: { base: number; gas: number; electric: number; onSite: number };
@@ -35,8 +35,8 @@ interface SizeOption {
   coatings: Coating[];
   passage_space_cm: number | null;
   can_be_built_on_site: boolean;
-  datasheet_url?: string;
-  datasheet_urls?: { it?: string; en?: string; fr?: string; de?: string; es?: string };
+  datasheet_url?: string | undefined;
+  datasheet_urls?: { it?: string; en?: string; fr?: string; de?: string; es?: string } | undefined;
 }
 
 const EditOvenModal = ({ oven, open, onClose, onUpdate }: EditOvenModalProps) => {

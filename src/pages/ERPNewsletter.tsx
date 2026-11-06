@@ -27,8 +27,8 @@ type Campaign = {
   id: string; title: string; prompt: string | null; language: string; subject: string; preheader: string; body: string;
   image_url: string | null; extra_images: string[]; cta_label: string | null; cta_url: string | null; audience: { stages: string[]; countries: string[] };
   status: string; recipients_count: number; sent_count: number; failed_count: number; created_at: string; sent_at: string | null; last_error: string | null; author?: string;
-  translations?: Record<string, { subject: string; preheader: string; body: string; cta_label: string | null; cta_url: string | null }>;
-  translation_source?: string | null;
+  translations?: Record<string, { subject: string; preheader: string; body: string; cta_label: string | null; cta_url: string | null }> | undefined;
+  translation_source?: string | null | undefined;
 };
 
 const source = (c: Campaign) => JSON.stringify([c.language, c.subject, c.preheader, c.body, c.cta_label, c.cta_url, c.image_url, c.extra_images || []]);

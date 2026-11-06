@@ -4,10 +4,10 @@ import { cn } from '@/lib/utils';
 interface LazyImageProps {
   src: string;
   alt: string;
-  className?: string;
-  width?: number;
-  height?: number;
-  priority?: boolean;
+  className?: string | undefined;
+  width?: number | undefined;
+  height?: number | undefined;
+  priority?: boolean | undefined;
 }
 
 const LazyImage = ({ src, alt, className, width, height, priority = false }: LazyImageProps) => {

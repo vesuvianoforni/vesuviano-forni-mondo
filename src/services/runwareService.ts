@@ -5,15 +5,15 @@ const API_ENDPOINT = "wss://ws-api.runware.ai/v1";
 
 export interface GenerateImageParams {
   positivePrompt: string;
-  model?: string;
-  numberResults?: number;
-  outputFormat?: string;
-  CFGScale?: number;
-  scheduler?: string;
-  strength?: number;
-  promptWeighting?: "compel" | "sdEmbeds";
-  seed?: number | null;
-  lora?: string[];
+  model?: string | undefined;
+  numberResults?: number | undefined;
+  outputFormat?: string | undefined;
+  CFGScale?: number | undefined;
+  scheduler?: string | undefined;
+  strength?: number | undefined;
+  promptWeighting?: "compel" | "sdEmbeds" | undefined;
+  seed?: number | null | undefined;
+  lora?: string[] | undefined;
 }
 
 export interface GeneratedImage {

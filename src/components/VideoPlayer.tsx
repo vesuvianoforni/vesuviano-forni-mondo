@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 
 interface VideoPlayerProps {
   src: string;
-  poster?: string;
-  className?: string;
+  poster?: string | undefined;
+  className?: string | undefined;
 }
 
 const VideoPlayer = ({ src, poster, className = "" }: VideoPlayerProps) => {

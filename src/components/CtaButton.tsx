@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 import { useConsultationModal } from "@/contexts/ConsultationModalContext";
 
 interface CtaButtonProps {
-  className?: string;
-  size?: "default" | "sm" | "lg" | "icon";
-  variant?: "default" | "outline" | "ghost" | "link" | "destructive" | "secondary";
+  className?: string | undefined;
+  size?: "default" | "sm" | "lg" | "icon" | undefined;
+  variant?: "default" | "outline" | "ghost" | "link" | "destructive" | "secondary" | undefined;
   onClick?: () => void;
-  showSubtext?: boolean;
-  dark?: boolean;
+  showSubtext?: boolean | undefined;
+  dark?: boolean | undefined;
 }
 
 const CtaButton = ({ className, size = "lg", variant, onClick, showSubtext = true, dark = false }: CtaButtonProps) => {

@@ -32,15 +32,15 @@ interface Session {
 interface Props {
   lead: BrunoLead | null;
   open: boolean;
-  defaultTab?: "riepilogo" | "comunicazioni" | "configuratore";
+  defaultTab?: "riepilogo" | "comunicazioni" | "configuratore" | undefined;
   onOpenChange: (open: boolean) => void;
   onEdit: (lead: CRMLead) => void;
   onSchedule: (lead: CRMLead) => void;
   onDelete: (id: string) => void;
   onSetStatus: (lead: CRMLead, status: "vinto" | "perso") => void;
   onUpdated?: () => void;
-  lastInteraction?: LeadInteraction | null;
-  activityAssignee?: string;
+  lastInteraction?: LeadInteraction | null | undefined;
+  activityAssignee?: string | undefined;
 }
 
 function Field({ label, value }: { label: string; value?: React.ReactNode }) {

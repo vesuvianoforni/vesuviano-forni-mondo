@@ -18,8 +18,8 @@ interface ReadyToShipContactModalProps {
   productCode: string;
   productDiameter: string;
   productCoating: string;
-  productId?: string;
-  productPrice?: number;
+  productId?: string | undefined;
+  productPrice?: number | undefined;
 }
 
 const ReadyToShipContactModal = ({ 

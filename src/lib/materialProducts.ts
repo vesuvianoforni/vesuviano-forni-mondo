@@ -2,8 +2,8 @@ export interface MaterialProduct { id: string; name: string }
 export interface MaterialProductLink { product_id: string; products?: MaterialProduct | null }
 export interface LinkedMaterial {
   product_id: string | null;
-  products?: { name: string } | null;
-  product_asset_links?: MaterialProductLink[];
+  products?: { name: string } | null | undefined;
+  product_asset_links?: MaterialProductLink[] | undefined;
 }
 
 export function materialProductIds(material: LinkedMaterial): string[] {

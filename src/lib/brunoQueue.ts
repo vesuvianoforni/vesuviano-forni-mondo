@@ -14,13 +14,13 @@ export const DEFAULT_FOLLOWUP_DAYS = 3;
 
 export interface BrunoQueueInput {
   stage: string;
-  brunoMode?: string | null;
-  brunoPausedUntil?: string | null;
+  brunoMode?: string | null | undefined;
+  brunoPausedUntil?: string | null | undefined;
   /** Ultimo contatto reale (sito, chat, email o messaggio registrato). */
-  lastContactAt?: string | null;
-  nextActivityAt?: string | null;
+  lastContactAt?: string | null | undefined;
+  nextActivityAt?: string | null | undefined;
   createdAt: string;
-  now?: Date;
+  now?: Date | undefined;
 }
 
 export interface BrunoQueueReason {

@@ -26,33 +26,33 @@ interface ConfiguratorOven {
   diameter: number;
   pizza_capacity: string;
   image_url: string;
-  additional_images?: string[];
-  video_url_360?: string;
+  additional_images?: string[] | undefined;
+  video_url_360?: string | undefined;
   base_price_a: number;
-  base_price_b?: number;
-  base_price_c?: number;
-  gas_price_a?: number;
-  gas_price_b?: number;
-  gas_price_c?: number;
-  electric_price_a?: number;
-  electric_price_b?: number;
-  electric_price_c?: number;
-  installation_price_a?: number;
-  installation_price_b?: number;
-  installation_price_c?: number;
+  base_price_b?: number | undefined;
+  base_price_c?: number | undefined;
+  gas_price_a?: number | undefined;
+  gas_price_b?: number | undefined;
+  gas_price_c?: number | undefined;
+  electric_price_a?: number | undefined;
+  electric_price_b?: number | undefined;
+  electric_price_c?: number | undefined;
+  installation_price_a?: number | undefined;
+  installation_price_b?: number | undefined;
+  installation_price_c?: number | undefined;
   delivery_time_weeks: number;
   description: string | null;
-  coatings?: Array<{type: string; name: string; image_url: string}>;
+  coatings?: Array<{type: string; name: string; image_url: string}> | undefined;
   sizes?: Array<{
     diameter: number;
     pizza_capacity: string;
-    passage_space_cm?: number | null;
-    can_be_built_on_site?: boolean;
+    passage_space_cm?: number | null | undefined;
+    can_be_built_on_site?: boolean | undefined;
     coatings: Array<{
       name: string;
       image_url: string;
-      video_url_360?: string;
-      render_images?: string[];
+      video_url_360?: string | undefined;
+      render_images?: string[] | undefined;
       prices: {
         listA: { base: number; gas?: number; electric?: number; onSite?: number };
         listB: { base: number; gas?: number; electric?: number; onSite?: number };
@@ -68,12 +68,12 @@ interface ConfiguratorOption {
   type: string;
   price: number;
   description: string | null;
-  diameter?: number | null;
+  diameter?: number | null | undefined;
   is_active: boolean;
 }
 
 interface ConfiguratorProps {
-  sessionId?: string;
+  sessionId?: string | undefined;
 }
 
 const Configurator = ({ sessionId }: ConfiguratorProps = {}) => {

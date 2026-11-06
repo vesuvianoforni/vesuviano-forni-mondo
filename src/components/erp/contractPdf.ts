@@ -136,73 +136,73 @@ export interface ContractClause {
 }
 
 export interface ContractVariableFields {
-  offer_number?: string;
-  offer_date?: string;
-  client_name?: string;
-  destination?: string;
-  payment_agreements?: string;
-  refund_days?: string;
-  work_time?: string;
-  production_time?: string;
-  delivery_estimate?: string;
-  ready_date?: string;
-  ship_date?: string;
-  balance_due_days?: string;
-  storage_cost?: string;
-  shipping_method?: string;
-  carrier?: string;
-  shipping_included?: string;
-  insurance_included?: string;
-  delivery_responsibility?: string;
-  incoterms?: string;
-  unloading_included?: string;
-  internal_handling_included?: string;
-  unloading_means?: string;
-  unloading_responsible?: string;
-  handling_responsible?: string;
-  logistics_notes?: string;
-  assembly_included?: string;
-  installation_included?: string;
-  startup_included?: string;
-  training_included?: string;
-  chimney_responsible?: string;
-  gas_responsible?: string;
-  electric_responsible?: string;
-  masonry_responsible?: string;
-  permits_responsible?: string;
-  dim_tolerance?: string;
-  color_tolerance?: string;
-  weight_tolerance?: string;
-  warranty_duration?: string;
-  warranty_coverage?: string;
-  warranty_exclusions?: string;
-  place_signed?: string;
-  production_days?: string;
-  shipping_days?: string;
-  bank_details?: string;
+  offer_number?: string | undefined;
+  offer_date?: string | undefined;
+  client_name?: string | undefined;
+  destination?: string | undefined;
+  payment_agreements?: string | undefined;
+  refund_days?: string | undefined;
+  work_time?: string | undefined;
+  production_time?: string | undefined;
+  delivery_estimate?: string | undefined;
+  ready_date?: string | undefined;
+  ship_date?: string | undefined;
+  balance_due_days?: string | undefined;
+  storage_cost?: string | undefined;
+  shipping_method?: string | undefined;
+  carrier?: string | undefined;
+  shipping_included?: string | undefined;
+  insurance_included?: string | undefined;
+  delivery_responsibility?: string | undefined;
+  incoterms?: string | undefined;
+  unloading_included?: string | undefined;
+  internal_handling_included?: string | undefined;
+  unloading_means?: string | undefined;
+  unloading_responsible?: string | undefined;
+  handling_responsible?: string | undefined;
+  logistics_notes?: string | undefined;
+  assembly_included?: string | undefined;
+  installation_included?: string | undefined;
+  startup_included?: string | undefined;
+  training_included?: string | undefined;
+  chimney_responsible?: string | undefined;
+  gas_responsible?: string | undefined;
+  electric_responsible?: string | undefined;
+  masonry_responsible?: string | undefined;
+  permits_responsible?: string | undefined;
+  dim_tolerance?: string | undefined;
+  color_tolerance?: string | undefined;
+  weight_tolerance?: string | undefined;
+  warranty_duration?: string | undefined;
+  warranty_coverage?: string | undefined;
+  warranty_exclusions?: string | undefined;
+  place_signed?: string | undefined;
+  production_days?: string | undefined;
+  shipping_days?: string | undefined;
+  bank_details?: string | undefined;
 }
 
 
 export interface ContractData {
-  id?: string;
+  id?: string | undefined;
   client_name: string;
-  client_email?: string | null;
-  client_address?: string | null;
-  client_vat?: string | null;
-  offer_number?: string | null;
-  offer_date?: string | null;
-  destination?: string | null;
-  place_signed?: string | null;
+  client_email?: string | null | undefined;
+  client_address?: string | null | undefined;
+  client_vat?: string | null | undefined;
+  offer_number?: string | null | undefined;
+  offer_date?: string | null | undefined;
+  destination?: string | null | undefined;
+  place_signed?: string | null | undefined;
   total_amount: number;
   currency: string;
   payment_terms: string;
   warranty_years: number;
-  clauses?: ContractClause[];
-  variable_fields?: ContractVariableFields;
-  created_at?: string;
-  client_signature?: string | null;
-  client_signed_at?: string | null;
-  language?: ContractLanguage;
+  clauses?: ContractClause[] | undefined;
+  variable_fields?: ContractVariableFields | undefined;
+  created_at?: string | undefined;
+  client_signature?: string | null | undefined;
+  client_signed_at?: string | null | undefined;
+  language?: ContractLanguage | undefined;
 }
 
 
@@ -743,8 +743,8 @@ export async function buildTermsSections(
 }
 
 export interface GenerateContractPdfOptions {
-  termsOnly?: boolean;
-  language?: ContractLanguage;
+  termsOnly?: boolean | undefined;
+  language?: ContractLanguage | undefined;
 }
 
 export async function generateContractPdf(

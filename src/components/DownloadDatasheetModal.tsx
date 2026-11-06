@@ -13,7 +13,7 @@ interface DownloadDatasheetModalProps {
   isOpen: boolean;
   onClose: () => void;
   ovenType: string;
-  datasheetUrl?: string;
+  datasheetUrl?: string | undefined;
 }
 
 interface FormData {

@@ -3,9 +3,9 @@ import SEOHead from '@/components/SEOHead';
 import { LANGS, type AlternatesMap, type Lang } from '@/lib/hreflang';
 
 interface BlogSEOProps {
-  post?: BlogPost;
+  post?: BlogPost | undefined;
   lang: string;
-  isList?: boolean;
+  isList?: boolean | undefined;
 }
 
 const BASE_URL = 'https://vesuvianoforni.com';

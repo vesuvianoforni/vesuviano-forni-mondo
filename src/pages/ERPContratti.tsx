@@ -37,7 +37,7 @@ interface Contract {
   signature_token: string | null;
   client_signature: string | null;
   client_signed_at: string | null;
-  language?: string | null;
+  language?: string | null | undefined;
 }
 
 const LANGUAGES: { value: ContractLanguage; label: string; flag: string }[] = [
