@@ -1,10 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import LocalizedBlogList from "@/pages/LocalizedBlogList";
+import { fetchPublishedBlogPosts } from "@/hooks/useBlogPosts";
 
 export const Route = createFileRoute("/en/blog/")({
+  loader: async () => ({ posts: await fetchPublishedBlogPosts() }),
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  return <LocalizedBlogList lang="en" />;
+  const { posts } = Route.useLoaderData();
+  return <LocalizedBlogList lang="en" initialPosts={posts} />;
 }

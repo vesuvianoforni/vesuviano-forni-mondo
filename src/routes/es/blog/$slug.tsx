@@ -1,10 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import LocalizedBlogPost from "@/pages/LocalizedBlogPost";
+import { loadBlogPostRoute } from "@/lib/blogRoute";
 
 export const Route = createFileRoute("/es/blog/$slug")({
+  loaderDeps: ({ search }) => ({ preview: (search as Record<string, unknown>)["preview"] === "true" || (search as Record<string, unknown>)["preview"] === true }),
+  loader: ({ params, deps }) => loadBlogPostRoute("es", params.slug, deps.preview),
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  return <LocalizedBlogPost lang="es" />;
+  const { post } = Route.useLoaderData();
+  return <LocalizedBlogPost lang="es" initialPost={post} />;
 }

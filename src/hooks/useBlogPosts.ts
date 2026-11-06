@@ -43,9 +43,28 @@ export const getSlugField = (lang: string): `slug_${LangKey}` => {
   return `slug_${lang as LangKey}` as `slug_${LangKey}`;
 };
 
-export const useBlogPosts = (category?: string) => {
+const LIST_FIELDS = [
+  'id', 'category', 'featured_image', 'published_at', 'author', 'is_published', 'created_at', 'updated_at',
+  ...(['it', 'en', 'fr', 'de', 'es'] as const).flatMap((l) => [`slug_${l}`, `title_${l}`, `meta_description_${l}`]),
+].join(',');
+
+/** Published posts for list pages (no article bodies, keeping the SSR payload small), newest first. */
+export const fetchPublishedBlogPosts = async (): Promise<BlogPost[]> => {
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select(LIST_FIELDS)
+    .eq('is_published', true)
+    .order('published_at', { ascending: false });
+  if (error) throw error;
+  return ((data ?? []) as unknown as Array<Omit<BlogPost, `content_${LangKey}`>>).map((p) => ({
+    ...p, content_it: '', content_en: '', content_fr: '', content_de: '', content_es: '',
+  }));
+};
+
+export const useBlogPosts = (category?: string, initialPosts?: BlogPost[]) => {
   return useQuery({
     queryKey: ['blog-posts', category],
+    ...(initialPosts && (!category || category === 'all') ? { initialData: initialPosts } : {}),
     queryFn: async () => {
       let query = supabase
         .from('blog_posts')
@@ -64,11 +83,24 @@ export const useBlogPosts = (category?: string) => {
   });
 };
 
-export const useBlogPost = (slug: string, lang: string, preview = false) => {
+/** Published post by localized slug, or null. Used by route loaders so the article is in the SSR HTML. */
+export const fetchPublishedBlogPost = async (slug: string, lang: string): Promise<BlogPost | null> => {
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select('*')
+    .eq(getSlugField(lang), slug)
+    .eq('is_published', true)
+    .maybeSingle();
+  if (error) throw error;
+  return (data as BlogPost | null) ?? null;
+};
+
+export const useBlogPost = (slug: string, lang: string, preview = false, initialPost?: BlogPost | null) => {
   const slugField = getSlugField(lang);
   
   return useQuery({
     queryKey: ['blog-post', slug, lang, preview],
+    ...(initialPost && !preview ? { initialData: initialPost } : {}),
     queryFn: async () => {
       let query = supabase
         .from('blog_posts')

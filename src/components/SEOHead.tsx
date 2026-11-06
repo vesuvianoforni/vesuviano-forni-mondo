@@ -1,5 +1,7 @@
 import { Helmet } from 'react-helmet-async';
+import { useRouterState } from '@tanstack/react-router';
 import { getAlternatesForPath, LANGS, type AlternatesMap } from '@/lib/hreflang';
+import { useSeoOwnership } from '@/lib/seoOwner';
 
 const BASE_URL = 'https://vesuvianoforni.com';
 
@@ -55,7 +57,12 @@ const SEOHead = ({
   ogType = 'website',
   alternates,
 }: SEOHeadProps) => {
-  const canonicalInput = canonical || (typeof window !== 'undefined' ? window.location.pathname : '/');
+  // Router pathname is available during SSR too (window is not), so the
+  // default canonical is always the page itself, never the homepage.
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isOwner = useSeoOwnership(pathname);
+  if (!isOwner) return null;
+  const canonicalInput = canonical || pathname || '/';
   const canonicalUrl = toAbsolute(canonicalInput);
   const canonicalPath = pathOf(canonicalInput);
   const image = ogImage ? toAbsolute(ogImage) : 'https://lgueucxznbqgvhpjzurf.supabase.co/storage/v1/object/public/oven-gallery/site/vesuviano-social-banner.jpg';
@@ -76,13 +83,13 @@ const SEOHead = ({
       ) : (
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
       )}
-      <link rel="canonical" href={canonicalUrl} />
+      {!noIndex && <link rel="canonical" href={canonicalUrl} />}
 
-      {/* hreflang alternates (includes self-reference + x-default) */}
-      {resolvedAlternates && LANGS.map((l) => (
+      {/* hreflang alternates (includes self-reference + x-default); only on indexable pages */}
+      {!noIndex && resolvedAlternates && LANGS.map((l) => (
         <link key={`hreflang-${l}`} rel="alternate" hrefLang={l} href={`${BASE_URL}${resolvedAlternates[l]}`} />
       ))}
-      {resolvedAlternates && xDefaultPath && (
+      {!noIndex && resolvedAlternates && xDefaultPath && (
         <link rel="alternate" hrefLang="x-default" href={`${BASE_URL}${xDefaultPath}`} />
       )}
 
