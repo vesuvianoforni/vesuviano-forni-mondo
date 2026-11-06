@@ -8,7 +8,6 @@ import ReadyToShipContactModal from '@/components/ReadyToShipContactModal';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
-import SEOHead from '@/components/SEOHead';
 
 interface ReadyToShipOven {
   id: string;
@@ -49,7 +48,6 @@ const ReadyToShip = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-50 to-stone-100">
-      <SEOHead title="Forni Pronti alla Consegna | Vesuviano" description="Forni napoletani disponibili immediatamente. Spedizione inclusa." lang="it" />
       <Header />
       
       
