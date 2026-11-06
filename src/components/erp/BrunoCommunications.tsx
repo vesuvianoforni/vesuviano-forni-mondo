@@ -15,10 +15,11 @@ import { BrunoPanel, type BrunoLead } from "@/components/erp/BrunoPanel";
 import { cn } from "@/lib/utils";
 import { Switch } from "@/components/ui/switch";
 import { interactionRelativeTime } from "@/lib/crmActivity";
+import { BRUNO_COMMUNICATION_FILTERS, communicationCount, matchesCommunicationFilter, parseBrunoCommunicationFilter } from "@/lib/brunoCommunicationFilters";
 
 const PAGE = 1000;
 
-interface Summary { count: number; lastAt: string; lastContactAt: string | null; preview: string; channel: string; }
+interface Summary { count: number; channelCounts: Record<string, number>; lastAt: string; lastContactAt: string | null; preview: string; channel: string; }
 
 export function BrunoCommunications() {
   const { toast } = useToast();
@@ -30,6 +31,13 @@ export function BrunoCommunications() {
   const [stageFilter, setStageFilter] = useState("all");
   const [onlyQueue, setOnlyQueue] = useState(false);
   const [params, setParams] = useSearchParams();
+  const platformFilter = parseBrunoCommunicationFilter(params.get("platform"));
+  const setPlatformFilter = (value: string) => setParams((p) => {
+    const n = new URLSearchParams(p);
+    const filter = parseBrunoCommunicationFilter(value);
+    if (filter === "all") n.delete("platform"); else n.set("platform", filter);
+    return n;
+  });
   const selectedId = params.get("lead");
   const setSelectedId = (id: string | null) => setParams((p) => { const n = new URLSearchParams(p); if (id) { n.set("lead", id); } else n.delete("lead"); return n; });
   const [now, setNow] = useState(() => new Date());
@@ -49,6 +57,7 @@ export function BrunoCommunications() {
         if (error) throw error;
         for (const summary of data ?? []) map[summary.lead_id] = {
           count: Number(summary.message_count), lastAt: summary.last_at, lastContactAt: summary.last_contact_at,
+          channelCounts: (summary.channel_counts ?? {}) as Record<string, number>,
           preview: summary.preview, channel: summary.last_channel,
         };
       }
@@ -88,6 +97,7 @@ export function BrunoCommunications() {
       };
     })
     .filter((row) => (stageFilter === "all" ? true : row.lead.status === stageFilter)
+      && matchesCommunicationFilter(row.summary?.channelCounts, platformFilter)
       && (!onlyQueue || row.reason !== null)
       && `${row.lead.company_name || ""} ${row.lead.contact_name || ""} ${row.lead.email || ""} ${row.lead.phone || ""}`
         .toLowerCase().includes(search.toLowerCase()))
@@ -97,9 +107,10 @@ export function BrunoCommunications() {
       const left = a.summary?.lastAt || a.lastContactAt || a.lead.created_at;
       const right = b.summary?.lastAt || b.lastContactAt || b.lead.created_at;
       return new Date(right).getTime() - new Date(left).getTime();
-    }), [leads, summaries, interactions, pipeline, stageFilter, onlyQueue, search, now]);
+    }), [leads, summaries, interactions, pipeline, stageFilter, platformFilter, onlyQueue, search, now]);
 
-  const selected = rows.find((row) => row.lead.id === selectedId)?.lead ?? leads.find((lead) => lead.id === selectedId) ?? null;
+  const selected = rows.find((row) => row.lead.id === selectedId)?.lead
+    ?? leads.find((lead) => lead.id === selectedId && matchesCommunicationFilter(summaries[lead.id]?.channelCounts, platformFilter)) ?? null;
   const queued = rows.filter((row) => row.reason).length;
   const pausedCount = rows.filter((row) => row.paused).length;
 
@@ -117,6 +128,12 @@ export function BrunoCommunications() {
               <Input aria-label="Cerca cliente" placeholder="Nome, email o telefono…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
             </div>
             <div className="grid grid-cols-1 gap-2">
+          <Select value={platformFilter} onValueChange={setPlatformFilter}>
+            <SelectTrigger aria-label="Piattaforma" className="h-9 min-w-0 text-xs"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {BRUNO_COMMUNICATION_FILTERS.map((filter) => <SelectItem key={filter} value={filter}>{filter === "all" ? "Tutte le piattaforme" : filter === "call" ? "Chiamate" : filter === "note" ? "Note interne" : CHANNELS[filter].label}</SelectItem>)}
+            </SelectContent>
+          </Select>
           <Select value={stageFilter} onValueChange={setStageFilter}>
             <SelectTrigger aria-label="Fase" className="h-9 min-w-0 text-xs"><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -138,7 +155,7 @@ export function BrunoCommunications() {
               </span>
               <span className="mt-1 flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">
                 {CRM_STAGES.find((s) => s.id === row.lead.status)?.title}
-                {row.summary && <span>· {row.summary.count} messaggi</span>}
+                {row.summary && <span>· {communicationCount(row.summary.channelCounts, platformFilter, row.summary.count)} messaggi</span>}
               </span>
               {row.summary && <span className="mt-1.5 line-clamp-2 block break-words text-xs leading-relaxed text-muted-foreground">{row.summary?.channel && <span className="font-medium">{CHANNELS[row.summary.channel as keyof typeof CHANNELS]?.short}: </span>}{row.summary.preview}</span>}
               {(row.reason || row.paused) && <span className="mt-2 flex flex-wrap gap-1.5">
@@ -156,7 +173,7 @@ export function BrunoCommunications() {
               <Button variant="ghost" size="sm" className="w-fit md:hidden" onClick={() => setSelectedId(null)}>
                 <ChevronLeft className="mr-1 h-4 w-4" />Elenco
               </Button>
-              <BrunoPanel key={selected.id} lead={selected} onUpdated={load} />
+              <BrunoPanel key={selected.id} lead={selected} communicationFilter={platformFilter} onUpdated={load} />
             </>
           ) : <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">Seleziona un cliente</div>}
         </div>

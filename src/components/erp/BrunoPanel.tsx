@@ -22,6 +22,7 @@ import { BrunoMessage } from "./BrunoMessage";
 import { useBrunoMessages } from "@/hooks/useBrunoMessages";
 import { WaTemplatePicker, type WaTemplateChoice } from "./WaTemplatePicker";
 import { sendUkWhatsApp } from "@/lib/whatsapp-uk.functions";
+import type { BrunoCommunicationFilter } from "@/lib/brunoCommunicationFilters";
 
 export type BrunoLead = CRMLead & { bruno_mode?: string | undefined; bruno_paused_until?: string | null | undefined};
 
@@ -40,7 +41,7 @@ async function invoke(body: Record<string, unknown>) {
 }
 
 /** Timeline, suggerimenti e composer di Bruno. Usato nel pannello lead e nella sezione Bruno. */
-export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; className?: string | undefined; onUpdated?: (() => void) | undefined }) {
+export function BrunoPanel({ lead, className, onUpdated, communicationFilter }: { lead: BrunoLead; className?: string | undefined; onUpdated?: (() => void) | undefined; communicationFilter?: BrunoCommunicationFilter | undefined }) {
   const { toast } = useToast();
   const [channel, setChannel] = useState<BrunoChannel>("wasender");
   const [text, setText] = useState("");
@@ -52,7 +53,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
   const [thinking, setThinking] = useState(false);
   const [mode, setMode] = useState("draft");
   const [pausedUntil, setPausedUntil] = useState<string | null>(null);
-  const [viewFilter, setViewFilter] = useState<"all" | BrunoChannel>("all");
+  const [viewFilter, setViewFilter] = useState<BrunoCommunicationFilter>(communicationFilter ?? "all");
   const { messages: visibleMessages, loading: messagesLoading, error: messagesError, counts,
     loadingOlder, hasMore, olderError, loadOlder, reload, refresh } = useBrunoMessages(lead.id, viewFilter);
   const timelineRef = useRef<HTMLDivElement>(null);
@@ -66,7 +67,7 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
   const signatureId = signature === 'none' ? null : signature === 'default' ? undefined : signature;
 
   useEffect(() => {
-    setViewFilter("all"); pendingAnchor.current = null;
+    pendingAnchor.current = null;
     followLatest.current = true; setAwayFromLatest(false);
     setText(""); setWaTemplate(null); setSubject(""); setReasoning(null); setAiDraft(false);
     setSignature('default'); setPreviewOpen(false);
@@ -77,6 +78,10 @@ export function BrunoPanel({ lead, className, onUpdated }: { lead: BrunoLead; cl
     } catch { /* storage is optional; server still owns delivery idempotency */ }
     setMode(lead.bruno_mode || "draft"); setPausedUntil(lead.bruno_paused_until ?? null);
   }, [lead.id]);
+
+  useEffect(() => {
+    setViewFilter(communicationFilter ?? "all");
+  }, [lead.id, communicationFilter]);
 
   useLayoutEffect(() => {
     const timeline = timelineRef.current;
