@@ -73,6 +73,7 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead title="Bruciatori per Forni Pizza | Vesuviano" description="Catalogo bruciatori professionali per forni pizza Vesuviano: serie A, B e C." lang={lang} />
       <Header />
 
       {/* Hero Section */}
@@ -152,8 +153,6 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
                 const specs = getSpecs(burner.specifications);
                 return (
 
-    <>
-      <SEOHead title="Bruciatori per Forni Pizza | Vesuviano" description="Catalogo bruciatori professionali per forni pizza Vesuviano: serie A, B e C." lang="it" />
       <Card key={burner.id} className="overflow-hidden border-stone-200 hover:shadow-xl transition-all duration-300 group">
                     <div className="relative h-56 bg-stone-100 overflow-hidden">
                       {burner.image_url ? (
@@ -210,8 +209,7 @@ const BurnersPage = ({ lang }: BurnersPageProps) => {
                       </div>
                     </CardContent>
                   </Card>
-    </>
-  );
+                );
               })}
             </div>
           )}
