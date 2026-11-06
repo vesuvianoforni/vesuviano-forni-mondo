@@ -51,7 +51,7 @@ async function dial(admin: any, settings: any, url: string, call: any, lead: any
     const callback = `${url}/functions/v1/bruno-voice?callback=1&call_id=${call.id}`;
     const result = await telnyx(`/texml/ai_calls/${settings.application_id}`, 'POST', {
       From: FROM_NUMBER, To: call.destination, AIAssistantId: settings.assistant_id,
-      AIAssistantDynamicVariables: { vesuviano_call_id: call.id, call_objective: call.objective, call_type: call.call_type, call_instructions: call.instructions || 'none', customer_context: JSON.stringify({ ...lead, messages: recent.map(m => ({ ...m, body: m.body.slice(0, 800) })) }) },
+      AIAssistantDynamicVariables: { vesuviano_call_id: call.id, call_objective: call.objective, call_type: call.call_type, call_instructions: call.instructions || 'none', customer_context: JSON.stringify({ ...lead, messages: recent.map((m: any) => ({ ...m, body: m.body.slice(0, 800) })) }) },
       StatusCallback: callback, StatusCallbackMethod: 'POST', StatusCallbackEvent: 'initiated ringing answered completed no-answer busy canceled failed analyzed',
       Record: true, RecordingChannels: 'dual', RecordingTrack: 'both', SendRecordingUrl: true,
       RecordingStatusCallback: `${url}/functions/v1/bruno-voice?recording=1&call_id=${call.id}`, RecordingStatusCallbackMethod: 'POST', RecordingStatusCallbackEvent: 'completed absent',
@@ -80,17 +80,13 @@ async function planTick(admin: any, settings: any, url: string, planId: string, 
     if (step.kind === 'done') { await release({ status: 'completed', last_error: null }); return { completed: true }; }
     if (step.kind === 'wait') { await release(); return { waiting: true }; }
     if (!settings.assistant_id || !settings.application_id || !settings.public_key) { await release({ last_error: 'Assistente telefonico non configurato' }); return { waiting: true }; }
-    const call = calls.find((c: any) => c.id === step.call_id);
+    // Follow plan order, but if a customer is outside 9-20 local time, call the next one whose local time allows it.
+    const ordered = [calls.find((c: any) => c.id === step.call_id), ...calls.filter((c: any) => c.status === 'proposed' && c.id !== step.call_id).sort((a: any, b: any) => a.plan_position - b.plan_position)];
+    const call = ordered.find((c: any) => !isHoursBlock(callAllowed({}, c.customer_timezone, new Date(), 'operator')));
+    if (!call) { await release({ last_error: null }); return { waiting: true, hours: true }; }
     const lead = checked(await admin.from('leads').select('id,contact_name,company_name,phone,city,country,status,archived,qualification,bruno_mode,bruno_paused_until').eq('id', call.lead_id).single());
     let phone: string | null = null; try { phone = e164(lead?.phone || ''); } catch { /* invalid */ }
     const blocked = !lead ? 'Cliente non trovato' : phone !== call.destination ? 'Telefono modificato' : callAllowed(lead, call.customer_timezone, new Date(), 'operator');
-    if (isHoursBlock(blocked)) {
-      // Outside 9-20 for this customer: try the next customer whose local time allows a call.
-      for (const other of calls.filter((c: any) => c.status === 'proposed' && c.id !== call.id).sort((a: any, b: any) => a.plan_position - b.plan_position)) {
-        if (!callAllowed({}, other.customer_timezone, new Date(), 'operator')) { await release(); return { waiting: true, reorder: other.id }; }
-      }
-      await release({ last_error: null }); return { waiting: true, hours: true };
-    }
     if (blocked) { checked(await admin.from('bruno_voice_calls').update({ status: 'cancelled', error_code: 'plan_skipped' }).eq('id', call.id).eq('status', 'proposed')); await release({ last_error: `${lead?.contact_name || 'Cliente'}: ${blocked}` }); return { skipped: call.id }; }
     try { await dial(admin, settings, url, call, lead, plan.approved_by); } catch { /* dial() already stored failed/unknown */ }
     await release({ last_error: null });
@@ -342,7 +338,8 @@ Deno.serve(async req => {
     const blocked = callAllowed(lead, call.customer_timezone, new Date(), 'operator');
     if (blocked) return json({ error: blocked }, 409);
     if (call.plan_id) return json({ error: 'Questa chiamata fa parte di un piano: approva il piano.' }, 409);
-    return json(await dial(admin, settings, url, call, lead, user.user.id));
+    const dialed = await dial(admin, settings, url, call, lead, user.user.id);
+    return 'error' in dialed ? json({ error: dialed.error }, 409) : json(dialed);
   } catch (error) {
     if (error instanceof ProviderError) return json({ error: 'Richiesta Telnyx non riuscita', status: error.status, details: error.details }, error.status);
     console.error('bruno-voice', error instanceof SyntaxError ? 'invalid_json' : 'operation_failed');
