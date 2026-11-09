@@ -29,7 +29,7 @@ export const directStatusLabels: Record<string, string> = {
 // readable). The same relative paths work on both.
 export type DialerCredentials = { direct: string } | { lovable: string; connection: string };
 
-export function dialerCredentials(env: { telnyx?: string; lovable?: string; connection?: string }): DialerCredentials | undefined {
+export function dialerCredentials(env: { telnyx?: string | undefined; lovable?: string | undefined; connection?: string | undefined }): DialerCredentials | undefined {
   if (env.telnyx) return { direct: env.telnyx };
   if (env.lovable && env.connection) return { lovable: env.lovable, connection: env.connection };
   return undefined;
