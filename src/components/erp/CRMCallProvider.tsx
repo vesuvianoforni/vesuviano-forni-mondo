@@ -107,6 +107,12 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
       client.on('telnyx.notification', event => {
         const call = event.call;
         if (!call || call.id !== callRef.current?.id || event.type !== 'callUpdate') return;
+        // Attach the remote stream explicitly: relying only on remoteElement can leave the speaker silent.
+        const remote = (call as unknown as { remoteStream?: MediaStream }).remoteStream;
+        if (remote && audioRef.current && audioRef.current.srcObject !== remote) {
+          audioRef.current.srcObject = remote; audioRef.current.muted = false; audioRef.current.volume = 1;
+          void audioRef.current.play().catch(() => setError('Audio bloccato dal browser: premi Attiva audio.'));
+        }
         if (call.state === 'active') {
           if (directRef.current?.answered) return;
           const answered = Date.now();
@@ -160,7 +166,7 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
   const live = direct && ['preparing', 'dialing', 'active'].includes(direct.status);
   return <CallContext.Provider value={{ openCall, occupied: Boolean(live || busy) }}>
     {children}
-    <audio ref={audioRef} autoPlay aria-label="Audio chiamata diretta" />
+    <audio ref={audioRef} autoPlay playsInline aria-label="Audio chiamata diretta" />
     <Dialog open={Boolean(lead)} onOpenChange={open => { if (!open) void dismiss(); }}>
       <DialogContent className="erp-dashboard max-h-[90dvh] w-[calc(100%-24px)] max-w-lg overflow-y-auto" onInteractOutside={e => { if (busy) e.preventDefault(); }} onEscapeKeyDown={e => { if (busy) e.preventDefault(); }}>
         <DialogHeader><DialogTitle>Chiama {lead?.company_name || lead?.contact_name || 'cliente'}</DialogTitle><DialogDescription>{lead?.phone} · Da {CRM_CALLER_NUMBER}</DialogDescription></DialogHeader>
