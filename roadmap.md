@@ -1,5 +1,10 @@
 # Roadmap
 
+## Linea UK: inoltro temporaneo e chiamate collaboratore (9 nov 2026)
+- [ ] Attivare e rileggere inoltro automatico +447457416033 → +3908119231684, senza alterare WhatsApp o chiamate AI outbound.
+- [ ] Evitare che Aggiorna voce annulli l’inoltro configurato; test delle regole interessate.
+- [ ] Verificare documentazione Telnyx per chiamate umane con identificativo UK e spiegare modalità/costi senza attivarle.
+
 ## Vettori: più aree servite (9 nov 2026)
 - [x] Una scheda per operatore, più aree modificabili e ricerca/filtro per Inghilterra e altri paesi; recapiti, note per tratta e stato non attivo conservati.
 - [x] 130 riferimenti consolidati in 21 operatori e 128 associazioni ad aree; tutti non attivi, quattro servono Inghilterra. Sei test superati e UI isolata verificata su desktop/mobile: ricerca, stato, modifica, salvataggio/rilettura e nessun overflow. Build OK, avvisi sicurezza preesistenti invariati.
