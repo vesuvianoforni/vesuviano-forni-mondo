@@ -1,8 +1,9 @@
 # Roadmap
 
 ## Vettori: più aree servite (9 nov 2026)
-- [ ] Una scheda per operatore, più aree modificabili e ricerca/filtro per Inghilterra e altri paesi, senza perdere recapiti, note o stato non attivo.
-- [ ] Consolidare i riferimenti importati, verificare aree e stati reali, testare ricerca e modifica; prova ERP autenticata non disponibile con Supabase esterno.
+- [x] Una scheda per operatore, più aree modificabili e ricerca/filtro per Inghilterra e altri paesi; recapiti, note per tratta e stato non attivo conservati.
+- [x] 130 riferimenti consolidati in 21 operatori e 128 associazioni ad aree; tutti non attivi, quattro servono Inghilterra. Sei test superati e UI isolata verificata su desktop/mobile: ricerca, stato, modifica, salvataggio/rilettura e nessun overflow. Build OK, avvisi sicurezza preesistenti invariati.
+- [ ] Verifica nell’ERP autenticato: Supabase esterno senza sessione gestita; i controlli UI usano dati isolati, quelli su dati reali sono SQL.
 
 ## Bruno: trasferimento in entrata su richiesta (6 nov 2026)
 - [x] Rimosso il limite provvisorio lun–ven 9–18; richiesta del cliente prioritaria, accettazione privata di Gennaro prima del collegamento (require_acceptance, 60s), ritorno a Bruno in caso di rifiuto/timeout/segreteria e richiamata concordata senza promesse prima del salvataggio.
