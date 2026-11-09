@@ -10,6 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { CRM_STAGES } from "@/lib/crmPipeline";
 import { activityLabels, activityTiming, exactActivityDate, interactionLabels, interactionRelativeTime, type LeadInteraction } from "@/lib/crmActivity";
 import { cn } from "@/lib/utils";
+import { CRMCallButton } from './CRMCallProvider';
 
 export interface CRMLead {
   id: string;
@@ -80,6 +81,7 @@ export const CRMLeadCard = forwardRef<HTMLDivElement, CRMLeadCardProps>(function
               {lead.company_name && lead.contact_name && lead.contact_name !== lead.company_name && <p className="truncate text-xs text-muted-foreground">{lead.contact_name}</p>}
             </div>
             <div className="flex shrink-0 items-center gap-0.5">
+              {lead.phone && <CRMCallButton lead={lead} compact />}
               {onConverse && <Tooltip>
                 <TooltipTrigger asChild>
                   <Button size="icon" variant="ghost" className="h-7 w-7 hover:bg-muted hover:text-foreground"
