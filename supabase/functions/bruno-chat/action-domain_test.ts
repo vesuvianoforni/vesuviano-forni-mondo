@@ -13,5 +13,9 @@ Deno.test('Messages require actual provider evidence, not invented sent true',()
  assertEquals(actionOutcome('send_message',{message:{status:'sent',id:'real'}}),'completed');
 });
 Deno.test('Queued email is not a completed operation',()=>assertEquals(actionOutcome('send_message',{result:'queued'}),'running'));
+Deno.test('UK acceptance is not delivery and an uncertain submission cannot replay', () => {
+ assertEquals(actionOutcome('send_message', { message: { status: 'queued', metadata: { submission_status: 'accepted' } } }), 'running');
+ assertEquals(actionOutcome('send_message', { message: { status: 'queued', metadata: { submission_status: 'unknown' } } }), 'unknown');
+});
 Deno.test('Creating a proposal is not placing a telephone call',()=>assertEquals(actionOutcome('propose_call',{proposal:{id:'saved'}}),'completed'));
 Deno.test('Saved ERP update is a verified completed action',()=>assertEquals(actionOutcome('update_lead',{updated:true}),'completed'));

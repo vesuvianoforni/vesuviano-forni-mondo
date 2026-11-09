@@ -156,6 +156,7 @@ async function linkItem(admin: SupabaseClient, item: any) {
     if (inserted.error?.code === '23505') msg = checked(await admin.from('crm_messages').select('id').eq('channel','email').eq('external_id', external).single());
     else msg = checked(inserted);
   }
+  if (!msg) throw new Error('MAIL_CRM_LINK_MISSING');
   checked(await admin.from('email_items').update({ lead_id: leadId, crm_message_id: msg.id }).eq('id', item.id));
   return true;
 }

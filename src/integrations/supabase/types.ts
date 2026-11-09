@@ -3831,6 +3831,7 @@ export type Database = {
         Row: {
           body: string | null
           created_at: string
+          direct_call_id: string | null
           handled_at: string | null
           handled_by: string | null
           id: number
@@ -3846,6 +3847,7 @@ export type Database = {
         Insert: {
           body?: string | null
           created_at?: string
+          direct_call_id?: string | null
           handled_at?: string | null
           handled_by?: string | null
           id?: number
@@ -3861,6 +3863,7 @@ export type Database = {
         Update: {
           body?: string | null
           created_at?: string
+          direct_call_id?: string | null
           handled_at?: string | null
           handled_by?: string | null
           id?: number
@@ -3873,7 +3876,15 @@ export type Database = {
           tg_messages?: Json
           token?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "telegram_notifications_direct_call_id_fkey"
+            columns: ["direct_call_id"]
+            isOneToOne: false
+            referencedRelation: "crm_direct_calls"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       telegram_pending: {
         Row: {
@@ -4372,6 +4383,10 @@ export type Database = {
       }
       project_mario_acceptance: { Args: { p_id: string }; Returns: undefined }
       queue_roberta_run: { Args: never; Returns: undefined }
+      reconcile_bruno_uk_status: {
+        Args: { p_external_id: string }
+        Returns: boolean
+      }
       reserve_mario_submission: {
         Args: { p_id: string; p_token: string }
         Returns: boolean

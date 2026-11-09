@@ -64,6 +64,7 @@ export function BrunoPanel({ lead, className, onUpdated, communicationFilter, se
   const pendingAnchor = useRef<{ id: string; offset: number } | null>(null);
   const [awayFromLatest, setAwayFromLatest] = useState(false);
   const emailOperation = useRef<{ key: string; draft: string; signatureId?: string | null | undefined} | null>(null);
+  const ukOperation = useRef<{ key: string; draft: string } | null>(null);
   const [signature, setSignature] = useState('default');
   const [previewOpen, setPreviewOpen] = useState(false);
   const signatureId = signature === 'none' ? null : signature === 'default' ? undefined : signature;
@@ -74,9 +75,12 @@ export function BrunoPanel({ lead, className, onUpdated, communicationFilter, se
     setText(""); setWaTemplate(null); setSubject(""); setReasoning(null); setAiDraft(false);
     setSignature('default'); setPreviewOpen(false);
     emailOperation.current=null;
+    ukOperation.current=null;
     try {
       const saved=sessionStorage.getItem(`crm-email-operation:${lead.id}`);
       if(saved){const operation=JSON.parse(saved);if(typeof operation.key==='string'&&typeof operation.draft==='string')emailOperation.current=operation;}
+      const ukSaved = sessionStorage.getItem(`crm-uk-operation:${lead.id}`);
+      if (ukSaved) { const operation = JSON.parse(ukSaved); if (typeof operation.key === 'string' && typeof operation.draft === 'string') ukOperation.current = operation; }
     } catch { /* storage is optional; server still owns delivery idempotency */ }
     setMode(lead.bruno_mode || "draft"); setPausedUntil(lead.bruno_paused_until ?? null);
   }, [lead.id]);
@@ -161,14 +165,25 @@ export function BrunoPanel({ lead, className, onUpdated, communicationFilter, se
       if (channel === 'email' && emailOperation.current?.draft !== draft) emailOperation.current = { key: crypto.randomUUID(), draft, signatureId };
       if(channel==='email'&&emailOperation.current){try {sessionStorage.setItem(`crm-email-operation:${lead.id}`,JSON.stringify(emailOperation.current));}catch{/* optional storage */}}
       if (channel === "whatsapp_uk") {
+        const body = useTemplate ? waTemplate.preview : text.trim();
+        const ukDraft = JSON.stringify([lead.id, body, useTemplate ? waTemplate : null]);
+        if (ukOperation.current?.draft !== ukDraft) ukOperation.current = { key: crypto.randomUUID(), draft: ukDraft };
+        try { sessionStorage.setItem(`crm-uk-operation:${lead.id}`, JSON.stringify(ukOperation.current)); } catch { /* optional storage */ }
         const { data: s } = await supabase.auth.getSession();
-        await sendUkWhatsApp({ data: { token: s.session?.access_token ?? "", lead_id: lead.id, body: useTemplate ? waTemplate.preview : text.trim(), ai_generated: aiDraft,
+        const result = await sendUkWhatsApp({ data: { token: s.session?.access_token ?? "", lead_id: lead.id, body, ai_generated: aiDraft, idempotency_key: ukOperation.current.key,
           ...(useTemplate ? { template: { name: waTemplate.name, language: waTemplate.language, params: waTemplate.params.map((p) => p.trim()) } } : {}) } });
-        toast({ title: "Messaggio inviato con Bruno UK" });
+        if (result.submission === 'unknown' || result.submission === 'sending') {
+          toast({ title: 'Invio UK da verificare', description: 'Controlla lo storico prima di inviare di nuovo.', variant: 'destructive' });
+          return;
+        }
+        toast({ title: ['sent', 'delivered', 'read'].includes(result.status) ? 'Messaggio inviato con Bruno UK' : 'Messaggio accettato da Bruno UK', description: result.status === 'queued' ? 'Consegna in attesa di conferma.' : undefined });
+        ukOperation.current = null;
+        try { sessionStorage.removeItem(`crm-uk-operation:${lead.id}`); } catch { /* optional storage */ }
         setText(""); setWaTemplate(null); setAiDraft(false); followLatest.current = true;
         return;
       }
       const result = await invoke({ action: "send", lead_id: lead.id, channel, body: useTemplate ? waTemplate.preview : text.trim(),
+        ...(channel === 'whatsapp_api' ? { whatsapp_line: 'it' } : {}),
         ...(useTemplate ? { template: { name: waTemplate.name, language: waTemplate.language, params: waTemplate.params.map((p) => p.trim()) } } : {}), subject: channel === "email" ? subject || undefined : undefined, ai_generated: aiDraft,
         ...(channel === 'email' ? { idempotency_key: emailOperation.current?.key, signature_id: emailOperation.current?.signatureId } : {}) });
       toast({ title: channel === "note" ? "Nota salvata" : "Messaggio inviato",

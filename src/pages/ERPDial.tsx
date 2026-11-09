@@ -9,11 +9,14 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CRMCallButton } from '@/components/erp/CRMCallProvider';
 import type { CRMLead } from '@/components/erp/CRMLeadCard';
 import { ACTIVE_CRM_STAGES, CRM_STAGES } from '@/lib/crmPipeline';
+import { useSearchParams } from '@/lib/router-compat';
 
 type Filter = 'oggi' | 'tutti' | string;
 const stageLabel = (id: string) => CRM_STAGES.find(s => s.id === id)?.title ?? id;
 
 export default function ERPDial() {
+  const [params] = useSearchParams();
+  const selectedLead = params.get('lead');
   const [leads, setLeads] = useState<CRMLead[]>([]);
   const [loading, setLoading] = useState(true), [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<'tastierino' | 'clienti'>('tastierino'), [query, setQuery] = useState(''), [filter, setFilter] = useState<Filter>('oggi');
@@ -36,6 +39,13 @@ export default function ERPDial() {
     return () => { cancelled = true; };
   }, []);
 
+  useEffect(() => {
+    if (!selectedLead || !leads.length) return;
+    const lead = leads.find(l => l.id === selectedLead);
+    if (!lead) return;
+    setTab('clienti'); setFilter('tutti'); setQuery(lead.phone || lead.contact_name || lead.company_name || '');
+  }, [selectedLead, leads]);
+
   const endOfToday = useMemo(() => { const d = new Date(); d.setHours(23, 59, 59, 999); return d.getTime(); }, []);
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -47,7 +57,7 @@ export default function ERPDial() {
       const text = [l.company_name, l.contact_name, l.city, l.country, l.email].join(' ').toLowerCase();
       return text.includes(q) || (digits.length >= 3 && (l.phone ?? '').replace(/\D/g, '').includes(digits));
     }).sort((a, b) => filter === 'oggi'
-      ? new Date(a.next_activity_date!).getTime() - new Date(b.next_activity_date!).getTime() : 0).slice(0, 200);
+      ? new Date(a.next_activity_date ?? 0).getTime() - new Date(b.next_activity_date ?? 0).getTime() : 0).slice(0, 200);
   }, [leads, query, filter, endOfToday]);
 
   const chips: { id: Filter; label: string }[] = [

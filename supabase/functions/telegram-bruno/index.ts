@@ -4,6 +4,8 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { card, CHANNEL, COMMANDS, cut, dueSummary, esc, fmtDate, HELP, leadContext, leadName, leadUrl, messageBody, priority, romeClock, STAGE, type LeadLite } from './cockpit.ts';
+import { communicationUrl, directCallLabel } from './cockpit.ts';
+import { communicationChannel, directCallEvidence } from '../_shared/bruno/coordination.ts';
 
 const GATEWAY = 'https://connector-gateway.lovable.dev/telegram';
 const BOT_USERNAME = 'Erp_vesuviano_bot';
@@ -170,8 +172,9 @@ Deno.serve(async (req) => {
     if (!data?.length) return `Nessun cliente trovato per «${esc(s)}».`;
     const out: string[] = [];
     for (const l of data as LeadLite[]) {
-      const { data: m } = await admin.from('crm_messages').select('channel,direction,body,subject,created_at').eq('lead_id', l.id).neq('direction', 'internal').order('created_at', { ascending: false }).limit(1).maybeSingle();
-      out.push(card({ icon: '👤', type: 'Scheda cliente', lead: l, body: [[l.phone, l.email].filter(Boolean).map(esc).join(' · ') || 'nessun contatto', m ? `Ultima interazione: ${esc(CHANNEL[m.channel] ?? m.channel)} ${m.direction === 'inbound' ? '⬅️' : '➡️'} ${fmtDate(m.created_at)}\n«${esc(cut(m.body ?? m.subject ?? '', 200))}»` : 'Nessuna interazione registrata'], context: leadContext(l) }));
+      const { data: m } = await admin.from('crm_messages').select('channel,direction,body,subject,created_at,metadata').eq('lead_id', l.id).neq('direction', 'internal').order('created_at', { ascending: false }).limit(1).maybeSingle();
+      const channel = m ? communicationChannel(m) : '';
+      out.push(card({ icon: '👤', type: 'Scheda cliente', lead: l, body: [[l.phone, l.email].filter(Boolean).map(esc).join(' · ') || 'nessun contatto', m ? `Ultima interazione: ${esc(CHANNEL[channel] ?? channel)} ${m.direction === 'inbound' ? '⬅️' : '➡️'} ${fmtDate(m.created_at)}\n«${esc(cut(m.body ?? m.subject ?? '', 200))}»` : 'Nessuna interazione registrata'], context: leadContext(l) }));
     }
     return out;
   }
@@ -208,22 +211,39 @@ Deno.serve(async (req) => {
   async function editAll(n: any, text: string, reply_markup: Kb) {
     for (const t of (n.tg_messages ?? []) as { chat_id: number; message_id: number }[]) await tg('editMessageText', { chat_id: t.chat_id, message_id: t.message_id, text, parse_mode: 'HTML', disable_web_page_preview: true, reply_markup });
   }
-  const msgKb = (id: number, leadId: string): Kb => ({ inline_keyboard: [[{ text: '💡 Suggerisci risposta', callback_data: `sug:${id}` }, openBtn(leadId)], [{ text: '⏰ Rimanda 2h', callback_data: `snz:${id}` }, { text: '✅ Gestito', callback_data: `done:${id}` }]] });
+  const msgKb = (id: number, leadId: string, channel = 'all'): Kb => ({ inline_keyboard: [[{ text: '💡 Suggerisci risposta', callback_data: `sug:${id}` }, openBtn(leadId)], [{ text: channel === 'email' ? '📧 Apri Mail' : '💬 Apri Chat', url: communicationUrl(leadId, channel) }], [{ text: '⏰ Rimanda 2h', callback_data: `snz:${id}` }, { text: '✅ Gestito', callback_data: `done:${id}` }]] });
   const leadKb = (id: number, leadId: string): Kb => ({ inline_keyboard: [[{ text: '🎯 Qualifica', callback_data: `q:${id}` }, { text: '✉️ Primo messaggio', callback_data: `f:${id}` }], [openBtn(leadId), { text: '✅ Gestito', callback_data: `done:${id}` }]] });
+  const callKb = (id: number, leadId: string): Kb => ({ inline_keyboard: [
+    [{ text: '💡 Proponi prossimo passo', callback_data: `next:${id}` }, openBtn(leadId)],
+    [{ text: '📞 Dial', url: `https://vesuvianoforni.com/erp/dial?lead=${leadId}` }, { text: '💬 Chat', url: communicationUrl(leadId, 'all') }, { text: '📧 Mail', url: communicationUrl(leadId, 'email') }],
+    [{ text: '✅ Gestito', callback_data: `done:${id}` }],
+  ] });
+  const notificationKb = (n: any, channel = 'all') => n.kind === 'direct_call' ? callKb(n.id, n.lead_id) : n.kind === 'lead' ? leadKb(n.id, n.lead_id) : msgKb(n.id, n.lead_id, channel);
 
   // deno-lint-ignore no-explicit-any
   async function buildCard(n: any, extraBody?: string) {
     const { data: lead } = await admin.from('leads').select(LEAD_COLS).eq('id', n.lead_id).maybeSingle();
     if (!lead) return null;
+    if (n.kind === 'direct_call') {
+      const { data: call, error } = await admin.from('crm_direct_calls').select('id,lead_id,operator_id,destination,from_number,status,created_at,answered_at,ended_at').eq('id', n.direct_call_id).maybeSingle();
+      if (error) throw error;
+      if (!call) return null;
+      const c = directCallEvidence(call);
+      return { lead, channel: 'call', text: card({ icon: '📞', type: 'Chiamata diretta del team', lead, channel: 'call', body: [
+        esc(directCallLabel(c.status, Boolean(c.answered_at))), `Da ${esc(c.from_number)} a ${esc(c.destination)}`,
+        ...(c.duration_seconds !== null ? [`Durata: ${Math.floor(c.duration_seconds / 60)} min ${c.duration_seconds % 60} sec`] : []),
+        `🕒 ${fmtDate(c.ended_at ?? c.created_at)}`, 'Stato riportato dal browser; nessuna trascrizione disponibile.'], context: leadContext(lead) }) };
+    }
     const { count: offers } = await admin.from('commercial_offers').select('id', { count: 'exact', head: true }).eq('lead_id', lead.id).in('status', OPEN_OFFERS);
     if (n.kind === 'lead') {
       const { data: src } = await admin.from('leads').select('source,notes').eq('id', lead.id).maybeSingle();
       return { lead, text: card({ icon: '🆕', type: 'Nuovo lead', pri: 'alta', lead, body: [[lead.phone, lead.email].filter(Boolean).map(esc).join(' · ') || 'nessun contatto', src?.source ? `Fonte: ${esc(src.source)}` : '', src?.notes ? `«${esc(cut(src.notes, 400))}»` : ''].filter(Boolean), context: leadContext(lead) }) };
     }
-    const { data: m } = await admin.from('crm_messages').select('channel,body,subject,sender,created_at').eq('id', n.message_id).maybeSingle();
+    const { data: m } = await admin.from('crm_messages').select('channel,body,subject,sender,created_at,metadata').eq('id', n.message_id).maybeSingle();
     if (!m) return null;
     const body = extraBody ?? messageBody(m);
-    return { lead, body, channel: m.channel, text: card({ icon: m.channel === 'call' ? '📞' : '📨', type: m.channel === 'call' ? 'Chiamata in arrivo' : 'Messaggio in arrivo', pri: priority(lead.status, 'message', (offers ?? 0) > 0), lead, channel: m.channel, body: [body], context: leadContext(lead, (offers ?? 0) > 0 ? [`${offers} offerta aperta`] : []) }) };
+    const channel = communicationChannel(m);
+    return { lead, body, channel, text: card({ icon: m.channel === 'call' ? '📞' : '📨', type: m.channel === 'call' ? 'Chiamata in arrivo' : 'Messaggio in arrivo', pri: priority(lead.status, 'message', (offers ?? 0) > 0), lead, channel, body: [body], context: leadContext(lead, (offers ?? 0) > 0 ? [`${offers} offerta aperta`] : []) }) };
   }
 
   // deno-lint-ignore no-explicit-any
@@ -234,11 +254,11 @@ Deno.serve(async (req) => {
     if (n.kind === 'message') {
       const { data: prev } = await admin.from('telegram_notifications').select('*').eq('lead_id', n.lead_id).eq('kind', 'message').is('handled_at', null).gte('sent_at', new Date(Date.now() - 5 * 60_000).toISOString()).neq('id', n.id).order('sent_at', { ascending: false }).limit(1).maybeSingle();
       if (prev?.tg_messages?.length && prev.body) {
-        const { data: m } = await admin.from('crm_messages').select('body,subject,created_at').eq('id', n.message_id).maybeSingle();
+        const { data: m } = await admin.from('crm_messages').select('body,subject,created_at,channel,metadata').eq('id', n.message_id).maybeSingle();
         const merged = `${prev.body}\n\n${messageBody(m ?? {})}`.slice(-2600);
         const c = await buildCard(prev, merged);
-        if (c) {
-          await editAll(prev, c.text, msgKb(prev.id, prev.lead_id));
+        if (c && m && c.channel === communicationChannel(m)) {
+          await editAll(prev, c.text, msgKb(prev.id, prev.lead_id, c.channel));
           await admin.from('telegram_notifications').update({ body: merged }).eq('id', prev.id);
           await admin.from('telegram_notifications').update({ sent_at: new Date().toISOString(), handled_at: new Date().toISOString(), handled_by: `raggruppato in #${prev.id}` }).eq('id', n.id);
           return;
@@ -247,14 +267,26 @@ Deno.serve(async (req) => {
     }
     const c = await buildCard(n);
     if (!c) return;
-    const kb = n.kind === 'lead' ? leadKb(n.id, n.lead_id) : msgKb(n.id, n.lead_id);
+    const kb = notificationKb(n, c.channel);
     const sent: { chat_id: number; message_id: number }[] = [];
-    for (const chat of chats) { const r = await html(chat, c.text, kb); if (r?.message_id) sent.push({ chat_id: chat, message_id: r.message_id }); }
+    const alreadySent = (n.tg_messages ?? []) as { chat_id: number; message_id: number }[];
+    sent.push(...alreadySent);
+    for (const chat of chats) {
+      if (sent.some(s => s.chat_id === chat)) continue;
+      const r = await html(chat, c.text, kb);
+      if (!r?.message_id) throw new Error('Notifica Telegram non confermata');
+      sent.push({ chat_id: chat, message_id: r.message_id });
+      const saved = await admin.from('telegram_notifications').update({ tg_messages: sent }).eq('id', n.id);
+      if (saved.error) throw saved.error;
+    }
     await admin.from('telegram_notifications').update({ sent_at: new Date().toISOString(), tg_messages: sent, body: c.body ?? null }).eq('id', n.id);
   }
 
   async function tick() {
     const chats = await groups();
+    const { data: pendingCalls, error: pendingError } = await admin.from('telegram_notifications').select('*').eq('kind', 'direct_call').is('sent_at', null).order('created_at').limit(20);
+    if (pendingError) throw pendingError;
+    for (const n of pendingCalls ?? []) await notify(n);
     await admin.from('telegram_pending').update({ status: 'expired' }).eq('status', 'pending').lt('created_at', new Date(Date.now() - 24 * 3600_000).toISOString());
     const which = dueSummary();
     if (which && chats.length) {
@@ -293,7 +325,7 @@ Deno.serve(async (req) => {
     if (!n) return json({ ok: true, skipped: true });
     try {
       if (n.kind === 'tick') { await admin.from('telegram_notifications').update({ sent_at: new Date().toISOString() }).eq('id', n.id); await tick(); }
-      else if (n.kind === 'lead' || n.kind === 'message') await notify(n);
+      else if (n.kind === 'lead' || n.kind === 'message' || n.kind === 'direct_call') await notify(n);
       return json({ ok: true });
     } catch (e) { console.error('telegram-bruno notify', e); return json({ error: 'notify failed' }, 500); }
   }
@@ -355,7 +387,7 @@ Deno.serve(async (req) => {
           } finally { await signOut(token); }
           return;
         }
-        const nm = cb.data.match(/^(sug|snz|done|q|f):(\d+)$/);
+        const nm = cb.data.match(/^(sug|snz|done|q|f|next):(\d+)$/);
         if (!nm) return answer('Pulsante non valido');
         const { data: n } = await admin.from('telegram_notifications').select('*').eq('id', Number(nm[2])).maybeSingle();
         if (!n?.lead_id) return answer('Avviso non trovato');
@@ -369,7 +401,7 @@ Deno.serve(async (req) => {
         }
         if (nm[1] === 'snz') {
           await admin.from('telegram_notifications').update({ snoozed_until: new Date(Date.now() + 2 * 3600_000).toISOString(), reminded_at: null }).eq('id', n.id);
-          if (c) await editAll(n, `${c.text}\n\n⏰ <i>Rimandato da ${esc(who)} alle ${at}</i>`, n.kind === 'lead' ? leadKb(n.id, n.lead_id) : msgKb(n.id, n.lead_id));
+          if (c) await editAll(n, `${c.text}\n\n⏰ <i>Rimandato da ${esc(who)} alle ${at}</i>`, notificationKb(n, c.channel));
           return answer('Ti ricordo tra circa 2 ore');
         }
         await answer('Bruno sta preparando la proposta…');
@@ -377,6 +409,8 @@ Deno.serve(async (req) => {
         const ref = `${name} (lead_id ${n.lead_id})`;
         const ask = nm[1] === 'sug'
           ? `Leggi la conversazione con ${ref} e proponi la risposta all'ultimo messaggio ricevuto, sullo stesso canale (${c?.channel ?? 'wasender'}), con send_message.`
+          : nm[1] === 'next'
+            ? `Leggi get_lead e get_call_history per ${ref}, inclusa la chiamata diretta del team. Proponi un prossimo passo CRM o un follow-up opportuno dopo aver controllato Chat e Mail; non avviare chiamate, non inventare contenuto della telefonata. Se manca l'esito commerciale chiedi al team una breve nota. Ogni modifica o invio resta una proposta da approvare.`
           : nm[1] === 'q'
             ? `Analizza il nuovo lead ${ref}: proponi con update_lead la fase CRM corretta, la prossima attività con data e una nota di qualificazione.`
             : `Prepara il primo messaggio di benvenuto per il nuovo lead ${ref} su WhatsApp Gennaro (wasender), o via email se manca il telefono, con send_message.`;

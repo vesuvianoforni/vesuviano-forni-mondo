@@ -81,34 +81,23 @@ export const sendUkWhatsApp = createServerFn({ method: "POST" })
     token: z.string().min(10),
     lead_id: z.string().uuid(),
     body: z.string().min(1).max(4096),
+    idempotency_key: z.string().uuid(),
     ai_generated: z.boolean().optional(),
     template: z.object({ name: z.string(), language: z.string(), params: z.array(z.string().max(500)).max(10) }).optional(),
   }).parse(d))
   .handler(async ({ data }) => {
-    const { admin, userId } = await staff(data.token);
-    const { data: lead } = await admin.from("leads").select("id, phone").eq("id", data.lead_id).maybeSingle();
-    if (!lead) throw new Error("Lead non trovato");
-    const to = String(lead.phone ?? "").replace(/\D/g, "").replace(/^00/, "");
-    let status = "sent", error: string | null = null, externalId: string | null = null;
-    if (!to) { status = "failed"; error = "Telefono mancante"; }
-    else {
-      const payload = data.template
-        ? { type: "template", template: { name: data.template.name, language: { code: data.template.language },
-            ...(data.template.params.length ? { components: [{ type: "body", parameters: data.template.params.map((p) => ({ type: "text", text: p })) }] } : {}) } }
-        : { type: "text", text: { body: data.body } };
-      try {
-        const r = await fetch(`${GATEWAY}/messages`, { method: "POST", headers: headers(), body: JSON.stringify({ messaging_product: "whatsapp", to, ...payload }) });
-        const t = await r.text();
-        if (!r.ok) { status = "failed"; error = `WhatsApp UK ${r.status}: ${t.slice(0, 300)}`; }
-        else { try { externalId = JSON.parse(t).messages?.[0]?.id ?? null; } catch { /* id unknown */ } }
-      } catch (e) { status = "failed"; error = (e as Error).message; }
-    }
-    const { error: dbErr } = await admin.from("crm_messages").insert({
-      lead_id: lead.id, channel: "whatsapp_api", direction: "outbound", sender: "bruno", body: data.body,
-      status, error, external_id: externalId, ai_generated: data.ai_generated ?? false, created_by: userId,
-      metadata: { whatsapp_line: "uk", ...(data.template ? { template: data.template.name } : {}) },
-    } as never);
-    if (dbErr) throw new Error(dbErr.message);
-    if (status === "failed") throw new Error(error ?? "Invio non riuscito");
-    return { ok: true };
+    // UI and approved Telegram actions share the same durable sender and status reconciliation.
+    // The receiving function verifies the user's token and sales role, never a service-key caller.
+    const url = process.env['SUPABASE_URL'];
+    const key = process.env['SUPABASE_PUBLISHABLE_KEY'];
+    if (!url || !key) throw new Error('Servizio WhatsApp UK non configurato');
+    const { token, ...input } = data;
+    const response = await fetch(`${url}/functions/v1/bruno-agent`, {
+      method: 'POST', headers: { Authorization: `Bearer ${token}`, apikey: key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...input, action: 'send', channel: 'whatsapp_api', whatsapp_line: 'uk' }), signal: AbortSignal.timeout(25000),
+    });
+    const result = await response.json();
+    if (!response.ok || result.error) throw new Error(result.error ?? `WhatsApp UK [${response.status}]`);
+    if (result.message?.status === 'failed') throw new Error(result.message.error ?? 'Invio non riuscito');
+    return { status: String(result.message?.status ?? 'queued'), submission: String(result.message?.metadata?.submission_status ?? 'unknown') };
   });
