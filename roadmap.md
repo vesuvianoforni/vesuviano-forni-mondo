@@ -1,5 +1,11 @@
 # Roadmap
 
+## Bruno Telegram: Dial, Chat e Mail (9 nov 2026)
+- [ ] Letture condivise di conversazioni, email e chiamate AI/dirette, con distinzione della linea e della fonte degli esiti.
+- [ ] Comandi e proposte Telegram sui canali espliciti Gennaro/Bruno IT/Bruno UK/email; mantenere approvazione e nessun reinvio incerto.
+- [ ] Notifica delle chiamate dirette concluse con collegamenti a Dial/Chat/Mail e scheda cliente; nessuna trascrizione umana inventata.
+- [ ] Test mirati, distribuzione e verifica con dati reali senza avviare chiamate o messaggi ai clienti.
+
 ## Chat e Mail separate (9 nov 2026)
 - [x] Email escluse da filtri, elenco, storico, realtime e compositore della Chat; Mail sotto Chat nel menu con email, oggetto, firme e anteprima esistenti. Scheda CRM completa invariata; link email precedenti instradati a Mail.
 - [x] Test filtri e regressioni superati; UI isolata a 1280×1800 e 390×844: clienti misti/email-only/WhatsApp-only, storico paginato e bozza preservata, nessun overflow o errore. Build OK, nessun invio reale.
