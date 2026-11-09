@@ -191,7 +191,7 @@ ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
       subject: input.subject ?? null, body: input.body, status, error, external_id: externalId,
       ai_generated: input.ai_generated ?? false, created_by: u.user.id,
       ...(input.channel === 'whatsapp_api' ? { metadata: { whatsapp_line: input.whatsapp_line ?? lineFor(phone)?.key ?? 'it' } } : {}),
-      ...(input.media_url ? { metadata: { ...(input.channel === 'whatsapp_api' && lineFor(phone) ? { whatsapp_line: lineFor(phone)!.key } : {}), media_url: input.media_url, message_type: Object.keys(mediaField(input.media_url))[0]?.replace('Url', '') || 'document', file_name: input.media_url.split('/').pop()?.split('?')[0] } } : {}),
+      ...(input.media_url ? { metadata: { ...(input.channel === 'whatsapp_api' ? { whatsapp_line: input.whatsapp_line ?? lineFor(phone)?.key ?? 'it' } : {}), media_url: input.media_url, message_type: Object.keys(mediaField(input.media_url))[0]?.replace('Url', '') || 'document', file_name: input.media_url.split('/').pop()?.split('?')[0] } } : {}),
     }).select().single();
     if (dbErr) return json({ error: dbErr.message }, 500);
 

@@ -131,14 +131,16 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       await assertNoHumanCall(reader, [String(a.lead_id)]);
       const opt = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : undefined);
       const type = String(a.call_type || '').trim().toLowerCase().startsWith('tratt') ? 'trattativa' : 'qualifica';
-      const objective = opt(a.objective) && opt(a.objective)!.length >= 10 ? opt(a.objective) : `${type === 'trattativa' ? 'Trattativa' : 'Qualifica'} del cliente: ${opt(a.objective) || 'esigenze, progetto e tempi'}`;
+      const suppliedObjective = opt(a.objective);
+      const objective = suppliedObjective && suppliedObjective.length >= 10 ? suppliedObjective : `${type === 'trattativa' ? 'Trattativa' : 'Qualifica'} del cliente: ${suppliedObjective || 'esigenze, progetto e tempi'}`;
       const r = await callFn(ctx, 'bruno-voice', { action: 'propose', lead_id: String(a.lead_id || '').trim(), objective, call_type: type, instructions: opt(a.instructions), customer_timezone: opt(a.customer_timezone) });
       return { ...r, _link: '/erp/bruno', instruction: 'Proposta salvata, NON è partita alcuna chiamata. Il pulsante Chiama ora compare direttamente sotto la tua risposta in chat: riassumi in 2 righe obiettivo e destinatario, non mostrare ID.' };
     }
     case 'propose_call_plan': {
       const opt = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : undefined);
       const type = String(a.call_type || '').trim().toLowerCase().startsWith('tratt') ? 'trattativa' : 'qualifica';
-      const objective = opt(a.objective) && opt(a.objective)!.length >= 10 ? opt(a.objective) : `${type === 'trattativa' ? 'Trattativa' : 'Qualifica'} del cliente: ${opt(a.objective) || 'esigenze, progetto e tempi'}`;
+      const suppliedObjective = opt(a.objective);
+      const objective = suppliedObjective && suppliedObjective.length >= 10 ? suppliedObjective : `${type === 'trattativa' ? 'Trattativa' : 'Qualifica'} del cliente: ${suppliedObjective || 'esigenze, progetto e tempi'}`;
       const ids = (Array.isArray(a.lead_ids) ? a.lead_ids : []).map((v: unknown) => String(v).trim()).filter(Boolean).slice(0, 30);
       await assertNoHumanCall(reader, ids);
       const gap = Number(a.gap_minutes); 

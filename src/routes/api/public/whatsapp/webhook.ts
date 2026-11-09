@@ -13,13 +13,23 @@ async function processRow(admin: Admin, row: { id: string; event: string; payloa
   let error: string | null = null;
   if (value && (row.event === "whatsapp.message" || row.event === "whatsapp.status")) {
     try {
+      if (row.event === 'whatsapp.status' && String(value.metadata?.phone_number_id) === '1487643001088299') {
+        for (const status of (value.statuses ?? []).slice(0, 100)) {
+          if (!status.id) continue;
+          const result = await admin.rpc('reconcile_bruno_uk_status', { p_external_id: String(status.id) });
+          if (result.error) throw result.error;
+          // No matching outbound yet is safe: the sender replays stored statuses after reserving its id.
+        }
+      } else {
       const res = await fetch(`${process.env["SUPABASE_URL"]}/functions/v1/bruno-whatsapp-inbound`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-internal-key": process.env["SUPABASE_SERVICE_ROLE_KEY"] ?? "" },
         body: JSON.stringify({ value }),
+        signal: AbortSignal.timeout(1800),
       });
       const text = await res.text();
       if (!res.ok || text.includes('"error"')) error = `[${res.status}] ${text.slice(0, 500)}`;
+      }
     } catch (e) {
       error = String((e as Error).message ?? e);
     }
@@ -41,6 +51,7 @@ export const Route = createFileRoute("/api/public/whatsapp/webhook")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const startedAt = Date.now();
         const secret = process.env["WHATSAPP_API_KEY"];
         if (!secret) return new Response("Not configured", { status: 500 });
         let verified;
@@ -78,7 +89,10 @@ export const Route = createFileRoute("/api/public/whatsapp/webhook")({
           .neq("id", row.id)
           .order("next_attempt_at")
           .limit(3);
-        for (const r of due ?? []) await processRow(admin, r as any).catch(() => {});
+        for (const r of due ?? []) {
+          if (Date.now() - startedAt > 2200) break;
+          await processRow(admin, r as any).catch(() => {});
+        }
 
         return ok ? new Response("ok") : new Response("Processing failed", { status: 500 });
       },
