@@ -1,0 +1,27 @@
+{
+  "name": "Vesuviano ERP",
+  "short_name": "Vesuviano ERP",
+  "description": "Gestionale Vesuviano Forni: CRM, offerte, ordini, agenti AI",
+  "lang": "it",
+  "id": "/erp",
+  "start_url": "/erp",
+  "scope": "/erp",
+  "display": "standalone",
+  "background_color": "#0f0f0f",
+  "theme_color": "#d4631a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
