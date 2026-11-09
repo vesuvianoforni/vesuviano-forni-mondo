@@ -5,7 +5,7 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { card, CHANNEL, COMMANDS, cut, dueSummary, esc, fmtDate, HELP, leadContext, leadName, leadUrl, messageBody, priority, romeClock, STAGE, type LeadLite } from './cockpit.ts';
 import { communicationUrl, directCallLabel } from './cockpit.ts';
-import { communicationChannel, directCallEvidence } from '../bruno-chat/coordination.ts';
+import { communicationChannel, directCallEvidence } from '../_shared/bruno/coordination.ts';
 
 const GATEWAY = 'https://connector-gateway.lovable.dev/telegram';
 const BOT_USERNAME = 'Erp_vesuviano_bot';

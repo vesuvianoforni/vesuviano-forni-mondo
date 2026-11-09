@@ -1,5 +1,5 @@
 import { assertEquals, assertRejects } from 'https://deno.land/std@0.224.0/assert/mod.ts';
-import { communicationChannel, directCallEvidence, assertNoHumanCall, communicationPage, callHistory } from './coordination.ts';
+import { communicationChannel, directCallEvidence, assertNoHumanCall, communicationPage, callHistory } from '../_shared/bruno/coordination.ts';
 Deno.test('UK e IT rimangono distinti anche nella chat Telegram', () => {
   assertEquals(communicationChannel({ channel: 'whatsapp_api', metadata: { whatsapp_line: 'uk' } }), 'whatsapp_uk');
   assertEquals(communicationChannel({ channel: 'whatsapp_api', metadata: { whatsapp_line: 'it' } }), 'whatsapp_api');

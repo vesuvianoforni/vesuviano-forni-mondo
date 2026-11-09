@@ -2,7 +2,7 @@
 // Every write goes through existing validated paths or explicit field allowlists.
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { linkedMaterialNames, materialSearchText } from './materials.ts';
-import { assertNoHumanCall, callHistory, communicationPage, COMMUNICATION_CHANNELS, customerLinks } from './coordination.ts';
+import { assertNoHumanCall, callHistory, communicationPage, COMMUNICATION_CHANNELS, customerLinks } from '../_shared/bruno/coordination.ts';
 
 export const STAGES = ['nuovo', 'pre_qualificato', 'qualificato', 'trattativa', 'vinto', 'perso'];
 const ORDER_STATUSES = ['nuovo', 'confermato', 'in_produzione', 'pronto_spedizione', 'spedito', 'consegnato', 'annullato'];
