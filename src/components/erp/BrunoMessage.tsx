@@ -33,7 +33,7 @@ export function BrunoMessage({ message, customerName, showDate }: { message: Bru
   const incoming = message.direction === "inbound";
   const internal = message.direction === "internal";
   const date = new Date(message.created_at);
-  const author = internal ? "Nota interna" : incoming ? customerName : message.channel === "wasender" ? "Gennaro" : message.channel === "whatsapp_api" ? (message.metadata?.whatsapp_line === "uk" ? "Bruno UK" : "Bruno IT") : CHANNELS[message.channel]?.short;
+  const author = internal ? "Nota interna" : incoming ? customerName : message.channel === 'call' && message.sender === 'operator' ? 'Operatore · UK' : message.channel === "wasender" ? "Gennaro" : message.channel === "whatsapp_api" ? (message.metadata?.whatsapp_line === "uk" ? "Bruno UK" : "Bruno IT") : CHANNELS[message.channel]?.short;
   return (
     <>
       {showDate && <div className="flex justify-center py-3"><span className="rounded-md border bg-background px-3 py-1 text-[11px] font-medium text-muted-foreground">{date.toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" })}</span></div>}

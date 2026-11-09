@@ -16,6 +16,7 @@ import { BrunoPanel, type BrunoLead } from "./BrunoPanel";
 import type { CRMLead } from "./CRMLeadCard";
 import { Link } from "@/lib/router-compat";
 import { LeadQualificationCard } from "./LeadQualificationCard";
+import { CRMCallButton } from './CRMCallProvider';
 
 const SITE = "https://vesuvianoforni.com";
 
@@ -106,6 +107,7 @@ export function CRMLeadDetail({ lead, open, defaultTab = "riepilogo", onOpenChan
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-1">
+            <CRMCallButton lead={lead} />
             <Button size="sm" variant="outline" onClick={() => onEdit(lead)}><Pencil className="mr-1 h-3.5 w-3.5" />Modifica</Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild><Button size="icon" variant="ghost" aria-label="Altre azioni"><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
@@ -134,7 +136,7 @@ export function CRMLeadDetail({ lead, open, defaultTab = "riepilogo", onOpenChan
                 <CardContent className="space-y-3 p-4">
                   <h3 className="text-sm font-semibold">Contatti</h3>
                   <Field label="Email" value={lead.email && <a className="inline-flex items-center gap-1 underline" href={`mailto:${lead.email}`}><Mail className="h-3 w-3" />{lead.email}</a>} />
-                  <Field label="Telefono" value={lead.phone && <a className="inline-flex items-center gap-1 underline" href={`tel:${lead.phone}`}><Phone className="h-3 w-3" />{lead.phone}</a>} />
+                  <Field label="Telefono" value={lead.phone && <CRMCallButton lead={lead} showNumber />} />
                   <Field label="Ultima interazione" value={lastInteraction ? `${interactionLabels[lastInteraction.kind]} · ${interactionRelativeTime(lastInteraction.at)}` : "Non registrata"} />
                 </CardContent>
               </Card>

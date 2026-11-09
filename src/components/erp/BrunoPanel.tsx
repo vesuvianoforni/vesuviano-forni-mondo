@@ -23,6 +23,7 @@ import { useBrunoMessages } from "@/hooks/useBrunoMessages";
 import { WaTemplatePicker, type WaTemplateChoice } from "./WaTemplatePicker";
 import { sendUkWhatsApp } from "@/lib/whatsapp-uk.functions";
 import type { BrunoCommunicationFilter } from "@/lib/brunoCommunicationFilters";
+import { CRMCallButton } from './CRMCallProvider';
 
 export type BrunoLead = CRMLead & { bruno_mode?: string | undefined; bruno_paused_until?: string | null | undefined};
 
@@ -195,7 +196,7 @@ export function BrunoPanel({ lead, className, onUpdated, communicationFilter }: 
             <Badge variant="outline" className="bg-muted font-normal text-muted-foreground">{CRM_STAGES.find((x) => x.id === stage)?.title ?? stage}</Badge>
           </div>
           <span className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground [overflow-wrap:anywhere]">
-            {lead.phone && <a className="inline-flex items-center gap-1.5 hover:text-foreground" href={`tel:${lead.phone}`}><Phone className="h-3 w-3 shrink-0" />{lead.phone}</a>}
+            {lead.phone && <CRMCallButton lead={lead} showNumber />}
             {lead.email && <a className="inline-flex min-w-0 items-center gap-1.5 hover:text-foreground" href={`mailto:${lead.email}`}><Mail className="h-3 w-3 shrink-0" />{lead.email}</a>}
             {!lead.phone && !lead.email && <span>Nessun contatto salvato</span>}
           </span>

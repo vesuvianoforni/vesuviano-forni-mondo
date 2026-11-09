@@ -8,6 +8,7 @@ import { activityLabels, activityTiming, exactActivityDate, interactionLabels, i
 import type { CRMLeadSort } from "@/lib/crmLeadSort";
 import type { CRMLead } from "@/components/erp/CRMLeadCard";
 import { cn } from "@/lib/utils";
+import { CRMCallButton } from './CRMCallProvider';
 
 const PAGE = 100;
 
@@ -73,7 +74,7 @@ export function CRMLeadList({ leads, interactions, interactionState, now, sort, 
                   </TableCell>
                   <TableCell className="py-2">{stage && <Badge variant="secondary" className={cn("whitespace-nowrap", stage.color)}>{stage.title}</Badge>}</TableCell>
                   <TableCell className="max-w-[220px] py-2 text-muted-foreground">
-                    {lead.phone && <span className="block truncate">{lead.phone}</span>}
+                    {lead.phone && <CRMCallButton lead={lead} showNumber />}
                     {lead.email && <span className="block truncate" title={lead.email}>{lead.email}</span>}
                   </TableCell>
                   <TableCell className="whitespace-nowrap py-2">

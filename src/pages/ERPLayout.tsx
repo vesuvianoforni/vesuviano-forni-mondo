@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { BrunoLiveCallFloat } from '@/components/erp/BrunoLiveCallFloat';
+import { CRMCallProvider } from '@/components/erp/CRMCallProvider';
 
 const ERPLayout = () => {
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ const ERPLayout = () => {
 
     <>
       <SEOHead title="ERP | Vesuviano" description="Layout principale ERP." lang="it" noIndex />
-      <SidebarProvider>
+      <CRMCallProvider><SidebarProvider>
       <div className="min-h-screen flex w-full min-w-0 max-w-full">
         <ERPSidebar />
         <div className="flex-1 flex flex-col min-w-0">
@@ -68,7 +69,7 @@ const ERPLayout = () => {
           <BrunoLiveCallFloat />
         </div>
       </div>
-    </SidebarProvider>
+    </SidebarProvider></CRMCallProvider>
     </>
   );
 };
