@@ -166,7 +166,7 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
   const live = direct && ['preparing', 'dialing', 'active'].includes(direct.status);
   return <CallContext.Provider value={{ openCall, occupied: Boolean(live || busy) }}>
     {children}
-    <audio ref={audioRef} autoPlay aria-label="Audio chiamata diretta" />
+    <audio ref={audioRef} autoPlay playsInline aria-label="Audio chiamata diretta" />
     <Dialog open={Boolean(lead)} onOpenChange={open => { if (!open) void dismiss(); }}>
       <DialogContent className="erp-dashboard max-h-[90dvh] w-[calc(100%-24px)] max-w-lg overflow-y-auto" onInteractOutside={e => { if (busy) e.preventDefault(); }} onEscapeKeyDown={e => { if (busy) e.preventDefault(); }}>
         <DialogHeader><DialogTitle>Chiama {lead?.company_name || lead?.contact_name || 'cliente'}</DialogTitle><DialogDescription>{lead?.phone} · Da {CRM_CALLER_NUMBER}</DialogDescription></DialogHeader>
