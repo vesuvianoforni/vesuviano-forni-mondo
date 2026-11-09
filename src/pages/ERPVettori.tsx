@@ -24,10 +24,10 @@ export default function ERPVettori() {
   useEffect(() => { load(); }, []);
 
   const save = async () => {
-    if (!edit?.country.trim() || !edit.name.trim()) return toast.error("Paese e nome sono obbligatori");
+    if (!edit?.country.trim() || !edit.name.trim()) { toast.error("Paese e nome sono obbligatori"); return; }
     const { id, ...fields } = edit;
     const res = id ? await db.from("transport_carriers").update(fields).eq("id", id) : await db.from("transport_carriers").insert(fields);
-    if (res.error) return toast.error("Salvataggio non riuscito");
+    if (res.error) { toast.error("Salvataggio non riuscito"); return; }
     toast.success("Vettore salvato"); setEdit(null); load();
   };
   const remove = async (id: string) => {
