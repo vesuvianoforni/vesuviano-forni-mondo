@@ -5,7 +5,7 @@ export const esc = (s: unknown) => String(s ?? '').replace(/&/g, '&amp;').replac
 export const cut = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s);
 
 export const CHANNEL: Record<string, string> = {
-  wasender: '💬 WhatsApp Gennaro', whatsapp_api: '🤖 WhatsApp Bruno', email: '📧 Email', call: '📞 Chiamata', note: '📝 Nota',
+  wasender: '💬 WhatsApp Gennaro', whatsapp_api: '🤖 Bruno IT', whatsapp_uk: '🤖 Bruno UK', email: '📧 Email', call: '📞 Chiamata', note: '📝 Nota',
 };
 export const STAGE: Record<string, string> = {
   nuovo: 'Nuovo', pre_qualificato: 'Pre-qualificato', qualificato: 'Qualificato', trattativa: 'Trattativa', vinto: 'Vinto', perso: 'Perso',
@@ -24,6 +24,12 @@ export interface LeadLite { id: string; contact_name?: string | null; company_na
 
 export const leadName = (l: LeadLite) => l.contact_name || l.company_name || l.email || l.phone || 'Cliente';
 export const leadUrl = (id: string) => `${ERP}/erp/crm?lead=${id}`;
+export const communicationUrl = (id: string, channel: string) => `${ERP}/erp/${channel === 'email' ? 'mail' : 'chat'}?lead=${encodeURIComponent(id)}${channel === 'email' ? '' : `&platform=${encodeURIComponent(channel)}`}`;
+export function directCallLabel(status: string, answered: boolean) {
+  if (status === 'unknown') return 'Esito da verificare';
+  if (status === 'failed') return 'Chiamata non riuscita';
+  return answered ? 'Chiamata conclusa' : 'Tentativo concluso senza risposta registrata';
+}
 
 export function fmtDate(iso?: string | null) {
   if (!iso) return '';
@@ -88,6 +94,8 @@ export const HELP = [
   '<b>Esempi</b>',
   '• scrivi a Mark su WhatsApp Gennaro che il forno parte venerdì',
   '• manda un\'email a Pierre con la scheda tecnica dell\'Anastasia',
+  '• dopo la nostra chiamata a Mark, prepara un follow-up su Bruno UK',
+  '• mostra le ultime chiamate dirette del team e le email di Pierre',
   '• crea un\'offerta per Stanislao con un Ottavio gas e mandala',
   '• sposta Luca in Trattativa, richiamo giovedì alle 10',
   '',

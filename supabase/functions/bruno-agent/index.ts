@@ -7,6 +7,7 @@ import { sendMailboxEmail } from '../_shared/email-service.ts';
 import { safeMailError } from '../_shared/email-rules.ts';
 import { mediaField, sendGennaroWhatsApp } from './wasender.ts';
 import { customerPersona, stageRule, TOOL_MAP } from '../_shared/bruno/persona.ts';
+import { sendUkApproved, ukTemplates } from './uk-whatsapp.ts';
 
 // Obiettivi di Bruno per fase pipeline (tenere allineato a src/lib/brunoObjectives.ts)
 const OBJECTIVES: Record<string, string> = {
@@ -22,6 +23,7 @@ const SendSchema = z.object({
   action: z.literal('send'),
   lead_id: z.string().uuid(),
   channel: z.enum(['whatsapp_api', 'wasender', 'email', 'note']),
+  whatsapp_line: z.enum(['it','uk']).optional(),
   body: z.string().min(1).max(4000),
   subject: z.string().max(300).optional(),
   ai_generated: z.boolean().optional(),
@@ -30,7 +32,7 @@ const SendSchema = z.object({
   media_url: z.string().url().max(1000).optional(),
   template: z.object({ name: z.string().min(1).max(200), language: z.string().min(2).max(10), params: z.array(z.string().min(1).max(1000)).max(10) }).optional(),
 });
-const TemplatesSchema = z.object({ action: z.literal('wa_templates'), lead_id: z.string().uuid().optional() });
+const TemplatesSchema = z.object({ action: z.literal('wa_templates'), lead_id: z.string().uuid().optional(), whatsapp_line: z.enum(['it','uk']).optional() });
 const SuggestSchema = z.object({
   action: z.literal('suggest'),
   lead_id: z.string().uuid(),
@@ -63,13 +65,18 @@ Deno.serve(async (req) => {
       try {
         // Each country line has its own WhatsApp Business account, so templates follow the lead's line.
         const phone = input.lead_id ? (await admin.from('leads').select('phone').eq('id', input.lead_id).maybeSingle()).data?.phone : null;
-        return json({ templates: await listTemplates(phone), line: lineFor(phone)?.label ?? 'WhatsApp Bruno' });
+        if (input.whatsapp_line === 'uk') return json({ templates: await ukTemplates(), line: 'Bruno UK' });
+        return json({ templates: await listTemplates(input.whatsapp_line === 'it' ? null : phone), line: input.whatsapp_line === 'it' ? 'Bruno IT' : lineFor(phone)?.label ?? 'Bruno IT' });
       }
       catch (e) { return json({ error: e instanceof Error ? e.message : 'Errore Meta' }, 502); }
     }
 
     const { data: lead } = await admin.from('leads').select('*').eq('id', input.lead_id).maybeSingle();
     if (!lead) return json({ error: 'Lead non trovato' }, 404);
+
+    if (input.action === 'send' && input.channel === 'whatsapp_api' && input.whatsapp_line === 'uk') {
+      return json(await sendUkApproved(admin, input, digits(lead.phone), u.user.id));
+    }
 
     if (input.action === 'suggest') {
       const apiKey = Deno.env.get('LOVABLE_API_KEY');
@@ -156,7 +163,7 @@ ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
     if (input.channel === 'whatsapp_api') {
       if (!phone) { status = 'failed'; error = 'Telefono mancante'; }
       else {
-        try { externalId = await sendWhatsApp(phone, input.template ? { template: input.template } : { text: input.body }); }
+        try { externalId = await sendWhatsApp(phone, input.template ? { template: input.template } : { text: input.body }, input.whatsapp_line); }
         catch (e) { status = 'failed'; error = e instanceof Error ? e.message : 'Errore WhatsApp'; }
       }
     } else if (input.channel === 'wasender') {
@@ -183,7 +190,7 @@ ${input.instruction ? `Istruzione dell'operatore: ${input.instruction}` : ''}`;
       sender: input.channel === 'whatsapp_api' ? 'bruno' : input.channel === 'wasender' ? 'gennaro' : 'operator',
       subject: input.subject ?? null, body: input.body, status, error, external_id: externalId,
       ai_generated: input.ai_generated ?? false, created_by: u.user.id,
-      ...(input.channel === 'whatsapp_api' && lineFor(phone) ? { metadata: { whatsapp_line: lineFor(phone)!.key } } : {}),
+      ...(input.channel === 'whatsapp_api' ? { metadata: { whatsapp_line: input.whatsapp_line ?? lineFor(phone)?.key ?? 'it' } } : {}),
       ...(input.media_url ? { metadata: { ...(input.channel === 'whatsapp_api' && lineFor(phone) ? { whatsapp_line: lineFor(phone)!.key } : {}), media_url: input.media_url, message_type: Object.keys(mediaField(input.media_url))[0]?.replace('Url', '') || 'document', file_name: input.media_url.split('/').pop()?.split('?')[0] } } : {}),
     }).select().single();
     if (dbErr) return json({ error: dbErr.message }, 500);

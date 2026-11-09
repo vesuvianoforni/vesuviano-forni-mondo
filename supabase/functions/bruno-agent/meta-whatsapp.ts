@@ -6,9 +6,9 @@ export type WaTemplate = { name: string; language: string; category: string; bod
 import { lineFor } from '../_shared/bruno/whatsapp-lines.ts';
 export { COUNTRY_LINES, lineFor } from '../_shared/bruno/whatsapp-lines.ts';
 
-function creds(to?: string | null) {
+function creds(to?: string | null, explicitLine?: 'it' | 'uk') {
   const token = Deno.env.get('META_WHATSAPP_ACCESS_TOKEN');
-  const line = lineFor(to);
+  const line = explicitLine === 'it' ? null : lineFor(to);
   const phoneId = line?.phoneId ?? Deno.env.get('META_WHATSAPP_PHONE_NUMBER_ID');
   const wabaId = line?.wabaId ?? Deno.env.get('META_WHATSAPP_WABA_ID');
   if (!token || !phoneId || !wabaId) throw new Error('WhatsApp API di Bruno non configurato');
@@ -46,8 +46,9 @@ export async function listTemplates(to?: string | null): Promise<WaTemplate[]> {
 export async function sendWhatsApp(
   to: string,
   msg: { text: string } | { template: { name: string; language: string; params: string[] } },
+  explicitLine?: 'it' | 'uk',
 ): Promise<string | null> {
-  const { token, phoneId } = creds(to);
+  const { token, phoneId } = creds(to, explicitLine);
   const payload = 'text' in msg
     ? { type: 'text', text: { body: msg.text } }
     : { type: 'template', template: { name: msg.template.name, language: { code: msg.template.language },

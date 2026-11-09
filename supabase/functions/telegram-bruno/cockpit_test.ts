@@ -1,5 +1,5 @@
 import { assertEquals } from 'https://deno.land/std@0.224.0/assert/mod.ts';
-import { dueSummary, priority } from './cockpit.ts';
+import { dueSummary, priority, directCallLabel, communicationUrl } from './cockpit.ts';
 
 Deno.test('briefing alle 8 e chiusura alle 20 ora di Roma, solo feriali', () => {
   assertEquals(dueSummary(new Date('2026-11-04T07:10:00Z')), 'mattina'); // mer 8:10 Roma
@@ -14,4 +14,13 @@ Deno.test('priorità alta per trattativa e nuovi lead', () => {
   assertEquals(priority('nuovo', 'lead'), 'alta');
   assertEquals(priority('qualificato', 'message'), 'normale');
   assertEquals(priority('perso', 'message'), 'bassa');
+});
+Deno.test('Esiti umani non confondono fine squillo con risposta', () => {
+  assertEquals(directCallLabel('ended', false), 'Tentativo concluso senza risposta registrata');
+  assertEquals(directCallLabel('ended', true), 'Chiamata conclusa');
+  assertEquals(directCallLabel('unknown', true), 'Esito da verificare');
+});
+Deno.test('Un messaggio email apre Mail e un UK apre la Chat UK', () => {
+  assertEquals(communicationUrl('lead', 'email'), 'https://vesuvianoforni.com/erp/mail?lead=lead');
+  assertEquals(communicationUrl('lead', 'whatsapp_uk'), 'https://vesuvianoforni.com/erp/chat?lead=lead&platform=whatsapp_uk');
 });
