@@ -1,5 +1,9 @@
 # Roadmap
 
+## Chat e Mail separate (9 nov 2026)
+- [ ] Togliere email da filtri, elenco, storico e compositore della Chat; nuova sezione Mail nel menu con conversazioni e invio email esistenti.
+- [ ] Verificare filtri, collegamenti, regressioni e visualizzazione desktop/mobile senza inviare messaggi.
+
 ## Netlify: deploy bloccato dal controllo chiavi (9 nov 2026)
 - [x] Log analizzato: segnalato solo l’indirizzo pubblico Supabase; esclusione limitata a quello, chiavi riservate ancora controllate.
 - [ ] Nuovo deploy Netlify dopo sincronizzazione: va avviato dall’utente in Netlify.
