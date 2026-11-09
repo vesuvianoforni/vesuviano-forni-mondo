@@ -107,6 +107,12 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
       client.on('telnyx.notification', event => {
         const call = event.call;
         if (!call || call.id !== callRef.current?.id || event.type !== 'callUpdate') return;
+        // Attach the remote stream explicitly: relying only on remoteElement can leave the speaker silent.
+        const remote = (call as unknown as { remoteStream?: MediaStream }).remoteStream;
+        if (remote && audioRef.current && audioRef.current.srcObject !== remote) {
+          audioRef.current.srcObject = remote; audioRef.current.muted = false; audioRef.current.volume = 1;
+          void audioRef.current.play().catch(() => setError('Audio bloccato dal browser: premi Attiva audio.'));
+        }
         if (call.state === 'active') {
           if (directRef.current?.answered) return;
           const answered = Date.now();
