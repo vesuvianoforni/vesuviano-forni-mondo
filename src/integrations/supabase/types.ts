@@ -1219,6 +1219,69 @@ export type Database = {
         }
         Relationships: []
       }
+      crm_direct_calls: {
+        Row: {
+          answered_at: string | null
+          created_at: string
+          credential_id: string | null
+          destination: string
+          ended_at: string | null
+          from_number: string
+          id: string
+          lead_id: string
+          message_id: string | null
+          operator_id: string
+          provider_call_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          answered_at?: string | null
+          created_at?: string
+          credential_id?: string | null
+          destination: string
+          ended_at?: string | null
+          from_number?: string
+          id?: string
+          lead_id: string
+          message_id?: string | null
+          operator_id: string
+          provider_call_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          answered_at?: string | null
+          created_at?: string
+          credential_id?: string | null
+          destination?: string
+          ended_at?: string | null
+          from_number?: string
+          id?: string
+          lead_id?: string
+          message_id?: string | null
+          operator_id?: string
+          provider_call_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_direct_calls_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_direct_calls_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "crm_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       crm_messages: {
         Row: {
           ai_generated: boolean
