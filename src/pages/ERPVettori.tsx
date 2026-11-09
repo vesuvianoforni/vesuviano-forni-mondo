@@ -102,7 +102,7 @@ export default function ERPVettori() {
       </div>
 
       <Dialog open={!!edit} onOpenChange={open => { if (!open && !saving) setEdit(null); }}>
-        <DialogContent className="max-h-[90dvh] w-[calc(100%-2rem)] max-w-2xl overflow-y-auto" aria-describedby={undefined}>
+        <DialogContent className="max-h-[90dvh] w-[calc(100%_-_2rem)] max-w-2xl overflow-y-auto" aria-describedby={undefined}>
           <DialogHeader><DialogTitle>{edit?.id ? "Modifica vettore" : "Nuovo vettore"}</DialogTitle></DialogHeader>
           {edit && <form className="grid gap-4 sm:grid-cols-2" onSubmit={e => { e.preventDefault(); void save(); }}>
             {field("name", "Nome vettore *")}{field("company", "Azienda / referente")}{field("phone", "Telefono")}{field("email", "Email")}
