@@ -77,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     await loadLanguage(detectLangFromPath(location.pathname));
     return {};
   },
-  head: ({ match, matches }) => ({
+  head: ({ matches }) => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1.0" },
@@ -89,11 +89,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "ICBM", content: "40.8518, 14.2681" },
       { name: "msapplication-TileColor", content: "#d4631a" },
       { name: "theme-color", content: "#d4631a" },
-      { name: "x-debug-path", content: String(match?.pathname ?? "none") },
-      {
-        name: "x-debug-last",
-        content: String(matches?.[matches.length - 1]?.pathname ?? "none"),
-      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -103,7 +98,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
       {
         rel: "manifest",
-        href: match.pathname.startsWith("/erp") ? "/erp-manifest.json" : "/manifest.json",
+        href: (matches[matches.length - 1]?.pathname ?? "").startsWith("/erp")
+          ? "/erp-manifest.json"
+          : "/manifest.json",
       },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
