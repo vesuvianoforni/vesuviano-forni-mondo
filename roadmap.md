@@ -1,8 +1,9 @@
 # Roadmap
 
 ## Chat e Mail separate (9 nov 2026)
-- [ ] Togliere email da filtri, elenco, storico e compositore della Chat; nuova sezione Mail nel menu con conversazioni e invio email esistenti.
-- [ ] Verificare filtri, collegamenti, regressioni e visualizzazione desktop/mobile senza inviare messaggi.
+- [x] Email escluse da filtri, elenco, storico, realtime e compositore della Chat; Mail sotto Chat nel menu con email, oggetto, firme e anteprima esistenti. Scheda CRM completa invariata; link email precedenti instradati a Mail.
+- [x] Test filtri e regressioni superati; UI isolata a 1280×1800 e 390×844: clienti misti/email-only/WhatsApp-only, storico paginato e bozza preservata, nessun overflow o errore. Build OK, nessun invio reale.
+- [ ] Verifica sul proprio account: Supabase esterno senza sessione gestita; le schermate sono state verificate con dati di prova, non sui clienti reali.
 
 ## Netlify: deploy bloccato dal controllo chiavi (9 nov 2026)
 - [x] Log analizzato: segnalato solo l’indirizzo pubblico Supabase; esclusione limitata a quello, chiavi riservate ancora controllate.

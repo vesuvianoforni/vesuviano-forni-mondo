@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { communicationCount, matchesCommunicationFilter, parseBrunoCommunicationFilter, composerChannels, matchesSection, messageMatchesSection, sectionCount, sectionFilter, sectionFilters, sectionMessageFilters } from "./brunoCommunicationFilters";
+import { compareMessageKeys, mergeMessagePages, unpackMessagePage } from "./brunoMessagePaging";
 
 describe("Bruno communication platform filters", () => {
   it("filters email conversations even when the latest message is on another platform", () => {
@@ -80,5 +81,25 @@ describe("ERP Chat and Mail separation", () => {
     const uk = { channel: "whatsapp_api", metadata: { whatsapp_line: "uk" } };
     expect(messageMatchesSection(uk, "chat", "whatsapp_uk")).toBe(true);
     expect(messageMatchesSection(uk, "chat", "whatsapp_api")).toBe(false);
+  });
+
+  it("pages mixed Chat channels with one shared cursor and no missing or repeated messages", () => {
+    const channels = sectionMessageFilters("chat", "all");
+    const rows = Array.from({ length: 120 }, (_, index) => ({
+      id: String(index).padStart(4, "0"), created_at: new Date(Date.UTC(2026, 10, 9, 10, 0, index)).toISOString(),
+      channel: channels[index % channels.length],
+    }));
+    const page = (before: { id: string; created_at: string } | null) => unpackMessagePage(mergeMessagePages([], channels.flatMap(channel => rows
+      .filter(row => row.channel === channel && (!before || compareMessageKeys(row, before) < 0))
+      .sort((a, b) => compareMessageKeys(b, a)).slice(0, 51))).reverse());
+    const first = page(null), second = page(first.cursor), third = page(second.cursor);
+    expect(first.messages).toHaveLength(50);
+    expect(second.messages).toHaveLength(50);
+    expect(third.messages).toHaveLength(20);
+    expect(first.hasMore).toBe(true);
+    expect(third.hasMore).toBe(false);
+    const combined = [...first.messages, ...second.messages, ...third.messages];
+    expect(new Set(combined.map(row => row.id)).size).toBe(120);
+    expect(mergeMessagePages([], combined).map(row => row.id)).toEqual(rows.map(row => row.id));
   });
 });
