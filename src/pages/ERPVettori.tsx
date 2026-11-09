@@ -46,7 +46,7 @@ export default function ERPVettori() {
 
   return (
     <div className="space-y-6 p-4 md:p-6">
-      <SEOHead title="Vettori trasporto | ERP Vesuviano" description="Riferimenti vettori per paese" noindex />
+      <SEOHead title="Vettori trasporto | ERP Vesuviano" description="Riferimenti vettori per paese" noIndex />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">Vettori trasporto</h1>
         <div className="flex gap-2">
