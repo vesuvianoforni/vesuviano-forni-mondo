@@ -1,4 +1,5 @@
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
+import { z } from 'npm:zod@3';
 
 export const COMMUNICATION_CHANNELS = ['email', 'wasender', 'whatsapp_api', 'whatsapp_uk', 'call', 'note'] as const;
 export function communicationChannel(m: { channel: string; metadata?: Record<string, unknown> | null }) {
@@ -19,13 +20,12 @@ export function directCallEvidence(c: Record<string, any>) {
 export async function communicationPage(reader: SupabaseClient, a: Record<string, any>) {
   const channel = a.channel ?? 'all';
   if (channel !== 'all' && !COMMUNICATION_CHANNELS.some(c => c === channel)) throw new Error('Canale non valido');
-  let q = reader.from('crm_messages').select('id,lead_id,channel,direction,sender,status,subject,body,metadata,created_at')
-    .eq('lead_id', a.lead_id).order('created_at', { ascending: false }).order('id', { ascending: false }).limit(21);
-  if (channel === 'whatsapp_uk') q = q.eq('channel', 'whatsapp_api').eq('metadata->>whatsapp_line', 'uk');
-  else if (channel === 'whatsapp_api') q = q.eq('channel', channel).or('metadata->>whatsapp_line.is.null,metadata->>whatsapp_line.neq.uk');
-  else if (channel !== 'all') q = q.eq('channel', channel);
-  if (a.before_at && a.before_id) q = q.or(`created_at.lt.${a.before_at},and(created_at.eq.${a.before_at},id.lt.${a.before_id})`);
-  const { data, error } = await q;
+  if (Boolean(a.before_at) !== Boolean(a.before_id)) throw new Error('Cursore incompleto');
+  const { data, error } = await reader.rpc('bruno_message_page', {
+    p_lead_id: z.string().uuid().parse(a.lead_id), p_channel: channel === 'all' ? null : channel,
+    p_before_at: a.before_at ? z.string().datetime({ offset: true }).parse(a.before_at) : null,
+    p_before_id: a.before_id ? z.string().uuid().parse(a.before_id) : null, p_limit: 21,
+  });
   if (error) throw error;
   const rows = (data ?? []).slice(0, 20);
   const last = rows.at(-1);
@@ -36,6 +36,9 @@ export async function communicationPage(reader: SupabaseClient, a: Record<string
     links: customerLinks(a.lead_id) };
 }
 export async function callHistory(reader: SupabaseClient, a: Record<string, any>) {
+  if (Boolean(a.before_at) !== Boolean(a.before_id)) throw new Error('Cursore incompleto');
+  if (a.lead_id) z.string().uuid().parse(a.lead_id);
+  if (a.before_at) { z.string().datetime({ offset: true }).parse(a.before_at); z.string().uuid().parse(a.before_id); }
   let direct = reader.from('crm_direct_calls').select('id,lead_id,operator_id,destination,from_number,status,created_at,answered_at,ended_at').order('created_at', { ascending: false }).order('id', { ascending: false }).limit(16);
   let ai = reader.from('bruno_voice_calls').select('id,lead_id,destination,from_number,status,direction,created_at,ended_at,summary,transcript_status,duration_seconds,call_type').order('created_at', { ascending: false }).order('id', { ascending: false }).limit(16);
   if (a.lead_id) { direct = direct.eq('lead_id', a.lead_id); ai = ai.eq('lead_id', a.lead_id); }

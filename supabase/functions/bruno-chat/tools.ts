@@ -172,7 +172,7 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       const lead = leadResult.data, offers = offerResult.data;
       if (!lead) return { error: 'Lead non trovato' };
       const { data: orders } = lead.email ? await admin.from('orders').select('id,order_number,status,payment_status,total_amount,created_at').eq('customer_email', lead.email).limit(5) : { data: [] };
-      return { stage_rule: stageRule(lead.status), lead: { ...lead, customer_language: customerLanguage(lead), notes: (lead.notes || '').slice(0, 1500) }, messages: communications.messages, calls: history.calls, offers, orders, links: customerLinks(lead.id) };
+      return { stage_rule: stageRule(lead.status), lead: { ...lead, customer_language: customerLanguage(lead), notes: (lead.notes || '').slice(0, 1500) }, messages: communications.messages, messages_cursor: communications.next_cursor, calls: history.calls, calls_cursor: history.next_cursor, offers, orders, links: customerLinks(lead.id) };
     }
     case 'update_lead': {
       if (a.status && !STAGES.includes(a.status)) return { error: 'Fase non valida' };
