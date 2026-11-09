@@ -1,10 +1,11 @@
 # Roadmap
 
 ## Bruno Telegram: Dial, Chat e Mail (9 nov 2026)
-- [ ] Letture condivise di conversazioni, email e chiamate AI/dirette, con distinzione della linea e della fonte degli esiti.
-- [ ] Comandi e proposte Telegram sui canali espliciti Gennaro/Bruno IT/Bruno UK/email; mantenere approvazione e nessun reinvio incerto.
-- [ ] Notifica delle chiamate dirette concluse con collegamenti a Dial/Chat/Mail e scheda cliente; nessuna trascrizione umana inventata.
-- [ ] Test mirati, distribuzione e verifica con dati reali senza avviare chiamate o messaggi ai clienti.
+- [x] Letture condivise e paginate di conversazioni, email e chiamate AI/dirette tramite RLS/invoker, canali IT/UK distinti e collegamenti CRM/Dial/Chat/Mail. Riletti 15 record telefonici reali, AI e diretti, e lo storico di un cliente già chiamato; nessuna trascrizione umana inventata.
+- [x] Proposte Telegram sui canali espliciti Gennaro/Bruno IT/Bruno UK/email; UK UI e Telegram condividono il percorso bruno-agent, prenotazione atomica CRM, approvazione ed esiti incerti non ripetibili. Otto template UK approvati riletti da Meta; fuori 24h richiesta di template verificato. Status UK dal webhook persistente ricalcolati senza regressioni e dopo la registrazione dell’id di invio.
+- [x] Notifica delle nuove chiamate dirette concluse, con collegamenti a Dial/Chat/Mail e scheda cliente, richiesta esito al team e proposta successiva; trigger unico per chiamata e recupero nell’orario feriale già esistente. Nessun avviso storico inviato e nessuna telefonata avviata.
+- [x] 58 test Deno, 21 Vitest e 8 Bun superati; controlli Deno dei tre servizi OK, bruno-agent/bruno-chat/telegram-bruno distribuiti. Anteprima build OK; Chat/Mail isolate desktop e mobile senza errori/overflow. Richieste senza accesso rifiutate. Nessun invio cliente. Dieci avvisi sicurezza preesistenti invariati.
+- [ ] Prova reale dal proprio account e gruppo Telegram: Supabase esterno senza sessione gestita, quindi proposta→approvazione→invio e avviso di una nuova telefonata non verificati end-to-end. Pubblicare le modifiche al sito (anche Netlify); inbox del connettore UK vuota, destinazione Incoming messages e callback firmato reali ancora da verificare.
 
 ## Chat e Mail separate (9 nov 2026)
 - [x] Email escluse da filtri, elenco, storico, realtime e compositore della Chat; Mail sotto Chat nel menu con email, oggetto, firme e anteprima esistenti. Scheda CRM completa invariata; link email precedenti instradati a Mail.
