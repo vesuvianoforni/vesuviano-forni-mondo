@@ -90,6 +90,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "msapplication-TileColor", content: "#d4631a" },
       { name: "theme-color", content: "#d4631a" },
       { name: "x-debug-path", content: String(match?.pathname ?? "none") },
+      {
+        name: "x-debug-last",
+        content: String(matches?.[matches.length - 1]?.pathname ?? "none"),
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
