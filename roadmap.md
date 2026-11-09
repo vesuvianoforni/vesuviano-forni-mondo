@@ -1,5 +1,9 @@
 # Roadmap
 
+## Vettori: più aree servite (9 nov 2026)
+- [ ] Una scheda per operatore, più aree modificabili e ricerca/filtro per Inghilterra e altri paesi, senza perdere recapiti, note o stato non attivo.
+- [ ] Consolidare i riferimenti importati, verificare aree e stati reali, testare ricerca e modifica; prova ERP autenticata non disponibile con Supabase esterno.
+
 ## Bruno: trasferimento in entrata su richiesta (6 nov 2026)
 - [x] Rimosso il limite provvisorio lun–ven 9–18; richiesta del cliente prioritaria, accettazione privata di Gennaro prima del collegamento (require_acceptance, 60s), ritorno a Bruno in caso di rifiuto/timeout/segreteria e richiamata concordata senza promesse prima del salvataggio.
 - [x] 29 test superati, bruno-voice distribuita; strumento e assistente aggiornati direttamente su Telnyx HTTP 200 e riletti: istruzioni identiche al progetto, policy always_on_request e accettazione privata obbligatoria salvate. Build OK, nessuna chiamata a clienti per prova.
