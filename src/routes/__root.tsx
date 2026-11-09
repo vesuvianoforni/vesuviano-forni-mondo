@@ -89,6 +89,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "ICBM", content: "40.8518, 14.2681" },
       { name: "msapplication-TileColor", content: "#d4631a" },
       { name: "theme-color", content: "#d4631a" },
+      { name: "x-debug-path", content: String(match?.pathname ?? "none") },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
