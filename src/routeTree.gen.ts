@@ -114,6 +114,7 @@ import { Route as ErpConfiguratoreRouteImport } from './routes/erp/configuratore
 import { Route as ErpContrattiRouteImport } from './routes/erp/contratti'
 import { Route as ErpControlloGestioneRouteImport } from './routes/erp/controllo-gestione'
 import { Route as ErpCrmRouteImport } from './routes/erp/crm'
+import { Route as ErpDialRouteImport } from './routes/erp/dial'
 import { Route as ErpForniRouteImport } from './routes/erp/forni'
 import { Route as ErpKnowledgeBaseRouteImport } from './routes/erp/knowledge-base'
 import { Route as ErpLeadsRouteImport } from './routes/erp/leads'
@@ -811,6 +812,11 @@ const ErpControlloGestioneRoute = ErpControlloGestioneRouteImport.update({
 const ErpCrmRoute = ErpCrmRouteImport.update({
   id: '/crm',
   path: '/crm',
+  getParentRoute: () => ErpRouteRoute,
+} as any)
+const ErpDialRoute = ErpDialRouteImport.update({
+  id: '/dial',
+  path: '/dial',
   getParentRoute: () => ErpRouteRoute,
 } as any)
 const ErpForniRoute = ErpForniRouteImport.update({
@@ -1759,6 +1765,7 @@ export interface FileRoutesByFullPath {
   '/erp/contratti': typeof ErpContrattiRoute
   '/erp/controllo-gestione': typeof ErpControlloGestioneRoute
   '/erp/crm': typeof ErpCrmRoute
+  '/erp/dial': typeof ErpDialRoute
   '/erp/forni': typeof ErpForniRoute
   '/erp/knowledge-base': typeof ErpKnowledgeBaseRoute
   '/erp/leads': typeof ErpLeadsRoute
@@ -2032,6 +2039,7 @@ export interface FileRoutesByTo {
   '/erp/contratti': typeof ErpContrattiRoute
   '/erp/controllo-gestione': typeof ErpControlloGestioneRoute
   '/erp/crm': typeof ErpCrmRoute
+  '/erp/dial': typeof ErpDialRoute
   '/erp/forni': typeof ErpForniRoute
   '/erp/knowledge-base': typeof ErpKnowledgeBaseRoute
   '/erp/leads': typeof ErpLeadsRoute
@@ -2307,6 +2315,7 @@ export interface FileRoutesById {
   '/erp/contratti': typeof ErpContrattiRoute
   '/erp/controllo-gestione': typeof ErpControlloGestioneRoute
   '/erp/crm': typeof ErpCrmRoute
+  '/erp/dial': typeof ErpDialRoute
   '/erp/forni': typeof ErpForniRoute
   '/erp/knowledge-base': typeof ErpKnowledgeBaseRoute
   '/erp/leads': typeof ErpLeadsRoute
@@ -2583,6 +2592,7 @@ export interface FileRouteTypes {
     | '/erp/contratti'
     | '/erp/controllo-gestione'
     | '/erp/crm'
+    | '/erp/dial'
     | '/erp/forni'
     | '/erp/knowledge-base'
     | '/erp/leads'
@@ -2856,6 +2866,7 @@ export interface FileRouteTypes {
     | '/erp/contratti'
     | '/erp/controllo-gestione'
     | '/erp/crm'
+    | '/erp/dial'
     | '/erp/forni'
     | '/erp/knowledge-base'
     | '/erp/leads'
@@ -3130,6 +3141,7 @@ export interface FileRouteTypes {
     | '/erp/contratti'
     | '/erp/controllo-gestione'
     | '/erp/crm'
+    | '/erp/dial'
     | '/erp/forni'
     | '/erp/knowledge-base'
     | '/erp/leads'
@@ -4285,6 +4297,13 @@ declare module '@tanstack/react-router' {
       path: '/crm'
       fullPath: '/erp/crm'
       preLoaderRoute: typeof ErpCrmRouteImport
+      parentRoute: typeof ErpRouteRoute
+    }
+    '/erp/dial': {
+      id: '/erp/dial'
+      path: '/dial'
+      fullPath: '/erp/dial'
+      preLoaderRoute: typeof ErpDialRouteImport
       parentRoute: typeof ErpRouteRoute
     }
     '/erp/forni': {
@@ -5468,6 +5487,7 @@ interface ErpRouteRouteChildren {
   ErpContrattiRoute: typeof ErpContrattiRoute
   ErpControlloGestioneRoute: typeof ErpControlloGestioneRoute
   ErpCrmRoute: typeof ErpCrmRoute
+  ErpDialRoute: typeof ErpDialRoute
   ErpForniRoute: typeof ErpForniRoute
   ErpKnowledgeBaseRoute: typeof ErpKnowledgeBaseRoute
   ErpLeadsRoute: typeof ErpLeadsRoute
@@ -5499,6 +5519,7 @@ const ErpRouteRouteChildren: ErpRouteRouteChildren = {
   ErpContrattiRoute: ErpContrattiRoute,
   ErpControlloGestioneRoute: ErpControlloGestioneRoute,
   ErpCrmRoute: ErpCrmRoute,
+  ErpDialRoute: ErpDialRoute,
   ErpForniRoute: ErpForniRoute,
   ErpKnowledgeBaseRoute: ErpKnowledgeBaseRoute,
   ErpLeadsRoute: ErpLeadsRoute,
