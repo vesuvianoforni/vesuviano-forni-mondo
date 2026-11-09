@@ -1,0 +1,4 @@
+ALTER TABLE public.bruno_voice_settings ADD COLUMN inbound_mode text NOT NULL DEFAULT 'assistant' CHECK (inbound_mode IN ('assistant', 'forward')), ADD COLUMN inbound_forward_number text NOT NULL DEFAULT '+3908119231684' CHECK (inbound_forward_number ~ '^\+[1-9][0-9]{7,14}$' AND inbound_forward_number <> '+447457416033');
+UPDATE public.bruno_voice_settings SET inbound_mode = 'forward', inbound_forward_number = '+3908119231684' WHERE key = 'default';
+COMMENT ON COLUMN public.bruno_voice_settings.inbound_mode IS 'Server-owned inbound routing: assistant or direct company forwarding. Voice sync must preserve this choice.';
+COMMENT ON COLUMN public.bruno_voice_settings.inbound_forward_number IS 'Validated company forwarding destination; never supplied by an inbound caller.';

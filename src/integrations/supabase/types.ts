@@ -536,6 +536,8 @@ export type Database = {
           from_number: string
           inbound_assistant_id: string | null
           inbound_configured_at: string | null
+          inbound_forward_number: string
+          inbound_mode: string
           key: string
           language: string
           public_key: string | null
@@ -550,6 +552,8 @@ export type Database = {
           from_number?: string
           inbound_assistant_id?: string | null
           inbound_configured_at?: string | null
+          inbound_forward_number?: string
+          inbound_mode?: string
           key?: string
           language?: string
           public_key?: string | null
@@ -564,6 +568,8 @@ export type Database = {
           from_number?: string
           inbound_assistant_id?: string | null
           inbound_configured_at?: string | null
+          inbound_forward_number?: string
+          inbound_mode?: string
           key?: string
           language?: string
           public_key?: string | null
