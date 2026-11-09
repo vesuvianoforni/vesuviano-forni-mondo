@@ -3,8 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 import type { BrunoMessageData } from "@/components/erp/BrunoMessage";
 import type { BrunoChannel } from "@/lib/brunoObjectives";
 import { BRUNO_MESSAGE_PAGE_SIZE, compareMessageKeys, mergeMessagePages, unpackMessagePage, type MessageKey } from "@/lib/brunoMessagePaging";
+import { messageMatchesSection, sectionMessageFilters, type CommunicationSection } from "@/lib/brunoCommunicationFilters";
 
-export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel) {
+export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel, section: CommunicationSection = "all") {
   const [messages, setMessages] = useState<BrunoMessageData[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingOlder, setLoadingOlder] = useState(false);
@@ -12,7 +13,7 @@ export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel) {
   const [error, setError] = useState<string | null>(null);
   const [olderError, setOlderError] = useState<string | null>(null);
   const [counts, setCounts] = useState<Record<string, number> | null>(null);
-  const scope = `${leadId}:${filter}`;
+  const scope = `${leadId}:${section}:${filter}`;
   const activeScope = useRef(scope);
   activeScope.current = scope;
   const generation = useRef(0);
@@ -20,15 +21,18 @@ export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel) {
   const olderBusy = useRef(false);
 
   const readPage = useCallback(async (before: MessageKey | null) => {
-    const { data, error } = await supabase.rpc("bruno_message_page", {
-      p_lead_id: leadId,
-      ...(filter === "all" ? {} : { p_channel: filter }),
-      ...(before ? { p_before_at: before.created_at, p_before_id: before.id } : {}),
-      p_limit: BRUNO_MESSAGE_PAGE_SIZE + 1,
-    });
-    if (error) throw error;
-    return unpackMessagePage((data ?? []) as BrunoMessageData[]);
-  }, [leadId, filter]);
+    const pages = await Promise.all(sectionMessageFilters(section, filter).map(async channel => {
+      const { data, error } = await supabase.rpc("bruno_message_page", {
+        p_lead_id: leadId,
+        ...(channel === "all" ? {} : { p_channel: channel }),
+        ...(before ? { p_before_at: before.created_at, p_before_id: before.id } : {}),
+        p_limit: BRUNO_MESSAGE_PAGE_SIZE + 1,
+      });
+      if (error) throw error;
+      return (data ?? []) as BrunoMessageData[];
+    }));
+    return unpackMessagePage(mergeMessagePages([], pages.flat()).reverse());
+  }, [leadId, filter, section]);
 
   const refreshCounts = useCallback(async (isCurrent: () => boolean) => {
     const { data, error } = await supabase.rpc("bruno_message_summaries", { p_lead_ids: [leadId] });
@@ -94,8 +98,7 @@ export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel) {
           const message = payload.new as BrunoMessageData & { lead_id?: string | undefined};
           if (message.id && message.lead_id === leadId) {
             setMessages(current => {
-              const uk = message.channel === "whatsapp_api" && (message.metadata as { whatsapp_line?: string } | null)?.whatsapp_line === "uk";
-              const belongs = filter === "all" || (filter === "whatsapp_uk" ? uk : filter === "whatsapp_api" ? message.channel === "whatsapp_api" && !uk : message.channel === filter);
+              const belongs = messageMatchesSection(message, section, filter);
               if (!belongs) return current.filter(m => m.id !== message.id);
               // Backfilled older events remain available through the history cursor.
               const alreadyLoaded = current.some(m => m.id === message.id);
@@ -108,7 +111,7 @@ export function useBrunoMessages(leadId: string, filter: "all" | BrunoChannel) {
         countTimer = setTimeout(() => { void refreshCounts(isCurrent); }, 250);
       }).subscribe();
     return () => { active = false; generation.current += 1; clearTimeout(countTimer); void supabase.removeChannel(subscription); };
-  }, [leadId, filter, scope, reload, refreshCounts]);
+  }, [leadId, filter, section, scope, reload, refreshCounts]);
 
-  return { messages, loading, loadingOlder, hasMore, error, olderError, counts, loadOlder, reload, refresh };
+  return { messages: messages.filter(message => messageMatchesSection(message, section, filter)), loading, loadingOlder, hasMore, error, olderError, counts, loadOlder, reload, refresh };
 }

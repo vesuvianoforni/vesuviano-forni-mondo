@@ -22,7 +22,7 @@ import { BrunoMessage } from "./BrunoMessage";
 import { useBrunoMessages } from "@/hooks/useBrunoMessages";
 import { WaTemplatePicker, type WaTemplateChoice } from "./WaTemplatePicker";
 import { sendUkWhatsApp } from "@/lib/whatsapp-uk.functions";
-import type { BrunoCommunicationFilter } from "@/lib/brunoCommunicationFilters";
+import { composerChannels, sectionCount, sectionFilter, sectionFilters, type BrunoCommunicationFilter, type CommunicationSection } from "@/lib/brunoCommunicationFilters";
 import { CRMCallButton } from './CRMCallProvider';
 
 export type BrunoLead = CRMLead & { bruno_mode?: string | undefined; bruno_paused_until?: string | null | undefined};
@@ -42,9 +42,10 @@ async function invoke(body: Record<string, unknown>) {
 }
 
 /** Timeline, suggerimenti e composer di Bruno. Usato nel pannello lead e nella sezione Bruno. */
-export function BrunoPanel({ lead, className, onUpdated, communicationFilter }: { lead: BrunoLead; className?: string | undefined; onUpdated?: (() => void) | undefined; communicationFilter?: BrunoCommunicationFilter | undefined }) {
+export function BrunoPanel({ lead, className, onUpdated, communicationFilter, section = "all" }: { lead: BrunoLead; className?: string | undefined; onUpdated?: (() => void) | undefined; communicationFilter?: BrunoCommunicationFilter | undefined; section?: CommunicationSection | undefined }) {
   const { toast } = useToast();
-  const [channel, setChannel] = useState<BrunoChannel>("wasender");
+  const [channel, setChannel] = useState<BrunoChannel>(section === "mail" ? "email" : "wasender");
+  const allowedChannels = composerChannels(section);
   const [text, setText] = useState("");
   const [waTemplate, setWaTemplate] = useState<WaTemplateChoice>(null);
   const [subject, setSubject] = useState("");
@@ -54,9 +55,9 @@ export function BrunoPanel({ lead, className, onUpdated, communicationFilter }: 
   const [thinking, setThinking] = useState(false);
   const [mode, setMode] = useState("draft");
   const [pausedUntil, setPausedUntil] = useState<string | null>(null);
-  const [viewFilter, setViewFilter] = useState<BrunoCommunicationFilter>(communicationFilter ?? "all");
+  const [viewFilter, setViewFilter] = useState<BrunoCommunicationFilter>(sectionFilter(section, communicationFilter ?? "all"));
   const { messages: visibleMessages, loading: messagesLoading, error: messagesError, counts,
-    loadingOlder, hasMore, olderError, loadOlder, reload, refresh } = useBrunoMessages(lead.id, viewFilter);
+    loadingOlder, hasMore, olderError, loadOlder, reload, refresh } = useBrunoMessages(lead.id, viewFilter, section);
   const timelineRef = useRef<HTMLDivElement>(null);
   const followLatest = useRef(true);
   const previousView = useRef("");
@@ -81,8 +82,8 @@ export function BrunoPanel({ lead, className, onUpdated, communicationFilter }: 
   }, [lead.id]);
 
   useEffect(() => {
-    setViewFilter(communicationFilter ?? "all");
-  }, [lead.id, communicationFilter]);
+    setViewFilter(sectionFilter(section, communicationFilter ?? "all"));
+  }, [lead.id, communicationFilter, section]);
 
   useLayoutEffect(() => {
     const timeline = timelineRef.current;
@@ -126,7 +127,7 @@ export function BrunoPanel({ lead, className, onUpdated, communicationFilter }: 
   };
 
   const stage = lead.status || "nuovo";
-  const objective = BRUNO_OBJECTIVES[stage] || BRUNO_OBJECTIVES["nuovo"];
+  const objective = BRUNO_OBJECTIVES[stage] ?? BRUNO_OBJECTIVES["nuovo"] ?? { goal: "Qualificare il lead", next: "Capire il progetto" };
   const paused = isBrunoPaused(mode, pausedUntil);
   const name = lead.company_name || lead.contact_name || "Lead";
   const ComposeIcon = channelIcon[channel];
@@ -136,7 +137,11 @@ export function BrunoPanel({ lead, className, onUpdated, communicationFilter }: 
     setThinking(true);
     try {
       const { suggestion } = await invoke({ action: "suggest", lead_id: lead.id });
-      if (suggestion?.channel && suggestion.channel in CHANNELS) setChannel(suggestion.channel);
+      if (suggestion?.channel && !allowedChannels.includes(suggestion.channel)) {
+        toast({ title: section === "mail" ? "Bruno propone un messaggio WhatsApp: apri Chat." : "Bruno propone un’email: apri Mail." });
+        return;
+      }
+      if (suggestion?.channel && allowedChannels.includes(suggestion.channel)) setChannel(suggestion.channel);
       setText(suggestion?.message || ""); setSubject(suggestion?.subject || "");
       setReasoning(suggestion?.reasoning || null); setAiDraft(true);
     } catch (e) {
@@ -146,6 +151,7 @@ export function BrunoPanel({ lead, className, onUpdated, communicationFilter }: 
 
   const useTemplate = (channel === "whatsapp_api" || channel === "whatsapp_uk") && waTemplate;
   const send = async () => {
+    if (!allowedChannels.includes(channel)) return;
     if (useTemplate) {
       if (waTemplate.params.some((p) => !p.trim())) { toast({ title: "Compila tutte le variabili del modello", variant: "destructive" }); return; }
     } else if (!text.trim()) return;
@@ -208,8 +214,8 @@ export function BrunoPanel({ lead, className, onUpdated, communicationFilter }: 
       <div className="shrink-0 border-b bg-muted/50 p-3 sm:px-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
-            <p className="flex items-center gap-1.5 text-sm font-semibold"><Bot className="h-4 w-4 text-primary" />Bruno · {objective!.goal}</p>
-            <p className="mt-0.5 text-xs text-muted-foreground">{objective!.next}</p>
+            <p className="flex items-center gap-1.5 text-sm font-semibold"><Bot className="h-4 w-4 text-primary" />Bruno · {objective.goal}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">{objective.next}</p>
             {paused && <p className="mt-1 text-xs text-muted-foreground">
               Autonomia in pausa{pausedUntil && mode !== "paused" ? ` fino al ${new Date(pausedUntil).toLocaleString("it-IT", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })} (Gennaro ha scritto)` : ""}
             </p>}
@@ -229,8 +235,8 @@ export function BrunoPanel({ lead, className, onUpdated, communicationFilter }: 
 
       {/* Channel filter */}
       <div className="flex shrink-0 flex-wrap gap-1 border-b px-3 py-2 sm:px-5" role="tablist" aria-label="Filtra per canale">
-        {([["all", "Tutte"], ["whatsapp_api", "WhatsApp Bruno IT"], ["whatsapp_uk", "WhatsApp Bruno UK"], ["wasender", "WhatsApp Gennaro"], ["email", "Email"], ["call", "Chiamate"], ["note", "Note"]] as const).map(([k, label]) => {
-          const count = counts?.[k] ?? 0;
+        {([["all", "Tutte"], ["whatsapp_api", "WhatsApp Bruno IT"], ["whatsapp_uk", "WhatsApp Bruno UK"], ["wasender", "WhatsApp Gennaro"], ["email", "Email"], ["call", "Chiamate"], ["note", "Note"]] as const).filter(([k]) => sectionFilters(section).includes(k)).map(([k, label]) => {
+          const count = sectionCount(counts ?? undefined, section, k, counts?.["all"] ?? 0);
           const Icon = k === "all" ? null : channelIcon[k];
           return (
             <Button key={k} type="button" role="tab" aria-selected={viewFilter === k} size="sm"
@@ -259,7 +265,7 @@ export function BrunoPanel({ lead, className, onUpdated, communicationFilter }: 
           {olderError && <p role="alert" className="text-xs text-destructive">{olderError}</p>}
         </div>}
         {!messagesLoading && !messagesError && visibleMessages.length === 0 && <p className="py-10 text-center text-sm text-muted-foreground">Nessuna comunicazione registrata.</p>}
-        {visibleMessages.map((m, index) => <div key={m.id} data-message-id={m.id}><BrunoMessage message={m} customerName={lead.contact_name || name} showDate={index === 0 || new Date(visibleMessages[index - 1]!.created_at).toDateString() !== new Date(m.created_at).toDateString()} /></div>)}
+        {visibleMessages.map((m, index) => <div key={m.id} data-message-id={m.id}><BrunoMessage message={m} customerName={lead.contact_name || name} showDate={index === 0 || new Date(visibleMessages[index - 1]?.created_at ?? m.created_at).toDateString() !== new Date(m.created_at).toDateString()} /></div>)}
       </div>
       {awayFromLatest && !messagesLoading && <Button type="button" size="icon" variant="secondary" className="absolute bottom-3 right-5 h-9 w-9 rounded-full" title="Vai agli ultimi messaggi" aria-label="Vai agli ultimi messaggi" onClick={scrollToLatest}><ArrowDown className="h-4 w-4" /></Button>}
       </div>
@@ -268,11 +274,11 @@ export function BrunoPanel({ lead, className, onUpdated, communicationFilter }: 
       <div className="shrink-0 space-y-2 border-t bg-background p-3 sm:px-5">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="text-xs text-muted-foreground">Invia tramite</span>
-          <DropdownMenu><DropdownMenuTrigger asChild><Button variant="outline" size="sm" disabled={sending} aria-label="Scegli canale di invio" className="h-8 gap-2 border-primary/30 text-xs font-semibold text-primary hover:bg-accent hover:text-accent-foreground"><ComposeIcon className="h-4 w-4" />{CHANNELS[channel].label}<ChevronDown className="h-3 w-3" /></Button></DropdownMenuTrigger>
-            <DropdownMenuContent align="start"><DropdownMenuRadioGroup value={channel} onValueChange={(value) => { if (value in CHANNELS && value !== "call") setChannel(value as BrunoChannel); }}>
-              {(["wasender", "whatsapp_api", "whatsapp_uk", "email", "note"] as const).map((c) => { const Icon = channelIcon[c]; return <DropdownMenuRadioItem key={c} value={c}><Icon className="mr-2 h-4 w-4" />{CHANNELS[c].label}</DropdownMenuRadioItem>; })}
+          {section === "mail" ? <span className="inline-flex items-center gap-2 text-xs font-semibold text-primary"><Mail className="h-4 w-4" />info@vesuvianoforni.com</span> : <DropdownMenu><DropdownMenuTrigger asChild><Button variant="outline" size="sm" disabled={sending} aria-label="Scegli canale di invio" className="h-8 gap-2 border-primary/30 text-xs font-semibold text-primary hover:bg-accent hover:text-accent-foreground"><ComposeIcon className="h-4 w-4" />{CHANNELS[channel].label}<ChevronDown className="h-3 w-3" /></Button></DropdownMenuTrigger>
+            <DropdownMenuContent align="start"><DropdownMenuRadioGroup value={channel} onValueChange={(value) => { if (allowedChannels.includes(value as BrunoChannel)) setChannel(value as BrunoChannel); }}>
+              {allowedChannels.map((c) => { const Icon = channelIcon[c]; return <DropdownMenuRadioItem key={c} value={c}><Icon className="mr-2 h-4 w-4" />{CHANNELS[c].label}</DropdownMenuRadioItem>; })}
             </DropdownMenuRadioGroup></DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu>}
           <span className="min-w-0 break-words text-xs text-muted-foreground [overflow-wrap:anywhere]">{destination}</span>
           {aiDraft && <Badge variant="outline" className="text-[10px]">Bozza di Bruno</Badge>}
         </div>

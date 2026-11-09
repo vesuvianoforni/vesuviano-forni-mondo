@@ -122,6 +122,7 @@ import { Route as ErpLeadsRouteImport } from './routes/erp/leads'
 import { Route as ErpListiniRouteImport } from './routes/erp/listini'
 import { Route as ErpListinoRouteImport } from './routes/erp/listino'
 import { Route as ErpListinoRivenditoriRouteImport } from './routes/erp/listino-rivenditori'
+import { Route as ErpMailRouteImport } from './routes/erp/mail'
 import { Route as ErpMarioRouteImport } from './routes/erp/mario'
 import { Route as ErpMaterialiRouteImport } from './routes/erp/materiali'
 import { Route as ErpNewsletterRouteImport } from './routes/erp/newsletter'
@@ -853,6 +854,11 @@ const ErpListinoRoute = ErpListinoRouteImport.update({
 const ErpListinoRivenditoriRoute = ErpListinoRivenditoriRouteImport.update({
   id: '/listino-rivenditori',
   path: '/listino-rivenditori',
+  getParentRoute: () => ErpRouteRoute,
+} as any)
+const ErpMailRoute = ErpMailRouteImport.update({
+  id: '/mail',
+  path: '/mail',
   getParentRoute: () => ErpRouteRoute,
 } as any)
 const ErpMarioRoute = ErpMarioRouteImport.update({
@@ -1779,6 +1785,7 @@ export interface FileRoutesByFullPath {
   '/erp/listini': typeof ErpListiniRoute
   '/erp/listino': typeof ErpListinoRoute
   '/erp/listino-rivenditori': typeof ErpListinoRivenditoriRoute
+  '/erp/mail': typeof ErpMailRoute
   '/erp/mario': typeof ErpMarioRoute
   '/erp/materiali': typeof ErpMaterialiRoute
   '/erp/newsletter': typeof ErpNewsletterRoute
@@ -2054,6 +2061,7 @@ export interface FileRoutesByTo {
   '/erp/listini': typeof ErpListiniRoute
   '/erp/listino': typeof ErpListinoRoute
   '/erp/listino-rivenditori': typeof ErpListinoRivenditoriRoute
+  '/erp/mail': typeof ErpMailRoute
   '/erp/mario': typeof ErpMarioRoute
   '/erp/materiali': typeof ErpMaterialiRoute
   '/erp/newsletter': typeof ErpNewsletterRoute
@@ -2331,6 +2339,7 @@ export interface FileRoutesById {
   '/erp/listini': typeof ErpListiniRoute
   '/erp/listino': typeof ErpListinoRoute
   '/erp/listino-rivenditori': typeof ErpListinoRivenditoriRoute
+  '/erp/mail': typeof ErpMailRoute
   '/erp/mario': typeof ErpMarioRoute
   '/erp/materiali': typeof ErpMaterialiRoute
   '/erp/newsletter': typeof ErpNewsletterRoute
@@ -2609,6 +2618,7 @@ export interface FileRouteTypes {
     | '/erp/listini'
     | '/erp/listino'
     | '/erp/listino-rivenditori'
+    | '/erp/mail'
     | '/erp/mario'
     | '/erp/materiali'
     | '/erp/newsletter'
@@ -2884,6 +2894,7 @@ export interface FileRouteTypes {
     | '/erp/listini'
     | '/erp/listino'
     | '/erp/listino-rivenditori'
+    | '/erp/mail'
     | '/erp/mario'
     | '/erp/materiali'
     | '/erp/newsletter'
@@ -3160,6 +3171,7 @@ export interface FileRouteTypes {
     | '/erp/listini'
     | '/erp/listino'
     | '/erp/listino-rivenditori'
+    | '/erp/mail'
     | '/erp/mario'
     | '/erp/materiali'
     | '/erp/newsletter'
@@ -4367,6 +4379,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ErpListinoRivenditoriRouteImport
       parentRoute: typeof ErpRouteRoute
     }
+    '/erp/mail': {
+      id: '/erp/mail'
+      path: '/mail'
+      fullPath: '/erp/mail'
+      preLoaderRoute: typeof ErpMailRouteImport
+      parentRoute: typeof ErpRouteRoute
+    }
     '/erp/mario': {
       id: '/erp/mario'
       path: '/mario'
@@ -5514,6 +5533,7 @@ interface ErpRouteRouteChildren {
   ErpListiniRoute: typeof ErpListiniRoute
   ErpListinoRoute: typeof ErpListinoRoute
   ErpListinoRivenditoriRoute: typeof ErpListinoRivenditoriRoute
+  ErpMailRoute: typeof ErpMailRoute
   ErpMarioRoute: typeof ErpMarioRoute
   ErpMaterialiRoute: typeof ErpMaterialiRoute
   ErpNewsletterRoute: typeof ErpNewsletterRoute
@@ -5547,6 +5567,7 @@ const ErpRouteRouteChildren: ErpRouteRouteChildren = {
   ErpListiniRoute: ErpListiniRoute,
   ErpListinoRoute: ErpListinoRoute,
   ErpListinoRivenditoriRoute: ErpListinoRivenditoriRoute,
+  ErpMailRoute: ErpMailRoute,
   ErpMarioRoute: ErpMarioRoute,
   ErpMaterialiRoute: ErpMaterialiRoute,
   ErpNewsletterRoute: ErpNewsletterRoute,
