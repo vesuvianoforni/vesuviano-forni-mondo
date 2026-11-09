@@ -143,6 +143,16 @@ export const isHoursBlock = (reason: string | null) => !!reason && reason.starts
 
 // ---------- Inbound calls: Bruno answers the UK number and can hand over to Gennaro ----------
 export const DEFAULT_TRANSFER_NUMBER = '+3908119231684';
+// Routing is server-owned. Direct forwarding keeps the existing TeXML application/outbound profile intact.
+export function inboundRoutingTexml(settings: { inbound_mode?: string; inbound_forward_number?: string; inbound_assistant_id?: string | null }, url: string) {
+  if (settings.inbound_mode === 'forward') {
+    const target = e164(settings.inbound_forward_number || DEFAULT_TRANSFER_NUMBER);
+    if (target === FROM_NUMBER) throw new Error('Inoltro circolare non consentito');
+    return `<?xml version="1.0" encoding="UTF-8"?><Response><Dial callerId="${FROM_NUMBER}" timeout="60"><Number>${target}</Number></Dial><Hangup/></Response>`;
+  }
+  if (settings.inbound_assistant_id) return inboundTexml(settings.inbound_assistant_id, url);
+  return '<Response><Say>This is Vesuviano Forni. Please contact our sales team by email or WhatsApp. Thank you.</Say><Hangup/></Response>';
+}
 type InboundLanguage = { code: 'en' | 'it' | 'fr' | 'de' | 'es'; name: string; greeting: string };
 const INBOUND_LANGUAGES: Record<InboundLanguage['code'], InboundLanguage> = {
   en: { code: 'en', name: 'English', greeting: 'Hello, Vesuviano Forni, this is Bruno speaking. How can I help you?' },

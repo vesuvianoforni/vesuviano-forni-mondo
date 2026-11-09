@@ -9,7 +9,7 @@ import { BrunoCallDetail } from './BrunoCallDetail';
 import { BrunoLiveCall } from './BrunoLiveCall';
 import { callLabels, voiceRequest, type VoiceCall, type VoiceView } from '@/lib/brunoVoice';
 
-type State = { configured: boolean; inbound_configured?: boolean; from_number: string; language: string; calls: VoiceCall[]; has_more: boolean };
+type State = { configured: boolean; inbound_configured?: boolean; inbound_mode?: 'assistant' | 'forward'; inbound_forward_number?: string | null; from_number: string; language: string; calls: VoiceCall[]; has_more: boolean };
 
 const outcomeLabels: Record<string,string> = { no_answer: 'Nessuna risposta', busy: 'Occupato', unreachable: 'Non raggiungibile', no_conversation: 'Riagganciata subito' };
 export function BrunoVoice({embedded=false}: {embedded?:boolean | undefined}) {
@@ -52,7 +52,7 @@ export function BrunoVoice({embedded=false}: {embedded?:boolean | undefined}) {
     <p className="text-sm text-muted-foreground">{state?.from_number || '+44 7457 416033'} · Inglese · Qualifica / Trattativa</p>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <Badge variant="outline">{state?.configured ? 'Assistente configurato' : 'Configurazione da verificare'}</Badge>
-          <Badge variant={state?.inbound_configured ? 'outline' : 'destructive'}>{state?.inbound_configured ? 'Risposta in entrata attiva' : 'Risposta in entrata non attiva: premi Aggiorna voce'}</Badge>
+          <Badge className="whitespace-normal" variant={state?.inbound_mode === 'forward' || state?.inbound_configured ? 'outline' : 'destructive'}>{state?.inbound_mode === 'forward' ? `Inoltro diretto → ${state.inbound_forward_number || '+3908119231684'}` : state?.inbound_configured ? 'Risposta in entrata attiva' : 'Risposta in entrata non attiva: premi Aggiorna voce'}</Badge>
           <Button variant="outline" size="sm" className="ml-auto" disabled={busy} onClick={() => void act('configure')}>Aggiorna voce</Button>
           <Button variant="ghost" size="icon" disabled={busy} onClick={() => void refresh()} aria-label="Aggiorna chiamate">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}</Button>
         </div>

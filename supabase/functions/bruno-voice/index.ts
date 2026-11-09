@@ -1,7 +1,7 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
-import { assistantConfig, callAllowed, timezoneFromPhone, e164, FROM_NUMBER, nextCallStatus, callOutcomeCode, Proposal, PlanProposal, planNextStep, isHoursBlock, AnyToolRequest, verifyTelnyx, voiceTools, inboundLanguage, INBOUND_HANDOVER_POLICY, InboundVariables, inboundAssistantConfig, inboundExtraTools, inboundTexml, DEFAULT_TRANSFER_NUMBER } from './domain.ts';
+import { assistantConfig, callAllowed, timezoneFromPhone, e164, FROM_NUMBER, nextCallStatus, callOutcomeCode, Proposal, PlanProposal, planNextStep, isHoursBlock, AnyToolRequest, verifyTelnyx, voiceTools, inboundLanguage, INBOUND_HANDOVER_POLICY, InboundVariables, inboundAssistantConfig, inboundExtraTools, inboundRoutingTexml, DEFAULT_TRANSFER_NUMBER } from './domain.ts';
 import { AnalyzedEvent, analyzedMatches, RecordingCallback, spokenTranscript } from './results-domain.ts';
 import { processResults, queueResults } from './results.ts';
 
@@ -103,10 +103,9 @@ Deno.serve(async req => {
   try {
     const xml = (body: string) => new Response(body, { headers: { ...corsHeaders, 'Content-Type': 'application/xml' } });
     if (address.searchParams.has('texml')) {
-      // Inbound calls reach Bruno's inbound assistant; the XML only names it and writes nothing.
-      const s = (await admin.from('bruno_voice_settings').select('inbound_assistant_id').eq('key', 'default').maybeSingle()).data;
-      if (s?.inbound_assistant_id) return xml(inboundTexml(s.inbound_assistant_id, url));
-      return xml('<Response><Say>This is Vesuviano Forni. Please contact our sales team by email or WhatsApp. Thank you.</Say><Hangup/></Response>');
+      // The caller cannot choose the destination or mode. Direct forwarding does not start Bruno or create an AI CRM call.
+      const s = checked(await admin.from('bruno_voice_settings').select('inbound_mode,inbound_forward_number,inbound_assistant_id').eq('key', 'default').single());
+      return xml(inboundRoutingTexml(s, url));
     }
     if (req.method !== 'POST') return json({ error: 'Metodo non consentito' }, 405);
     const raw = await req.text();
@@ -260,7 +259,7 @@ Deno.serve(async req => {
       if (input.view === 'executed') query = query.in('status',['completed','failed','unknown','cancelled']);
       if (input.before_at && input.before_id) query = query.or(`created_at.lt.${input.before_at},and(created_at.eq.${input.before_at},id.lt.${input.before_id})`);
       const calls = checked(await query) ?? [];
-      return json({ configured: Boolean(settings.assistant_id && settings.application_id && settings.public_key), inbound_configured: Boolean(settings.inbound_assistant_id), from_number: FROM_NUMBER, language: 'en', calls: calls.slice(0,30), has_more: calls.length > 30 });
+      return json({ configured: Boolean(settings.assistant_id && settings.application_id && settings.public_key), inbound_configured: Boolean(settings.inbound_assistant_id), inbound_mode: settings.inbound_mode, inbound_forward_number: settings.inbound_mode === 'forward' ? settings.inbound_forward_number : null, from_number: FROM_NUMBER, language: 'en', calls: calls.slice(0,30), has_more: calls.length > 30 });
     }
     if (input.action === 'detail') {
       const call = checked(await admin.from('bruno_voice_calls').select('id,lead_id,direction,destination,call_type,objective,instructions,status,summary,transcript,created_at,started_at,ended_at,expires_at,duration_seconds,recording_path,recording_status,transcript_status,summary_status,leads(contact_name,company_name)').eq('id',input.call_id).single());
@@ -351,12 +350,12 @@ Deno.serve(async req => {
       const inboundId = inbound.data?.id ?? inbound.id;
       if (!inboundId) throw new Error('Assistente in entrata non creato');
       await telnyx(`/texml_applications/${applicationId}`, 'PATCH', { voice_url: `${url}/functions/v1/bruno-voice?texml=1`, voice_method: 'post', status_callback: `${url}/functions/v1/bruno-voice?callback=1&inbound=1`, status_callback_method: 'post' });
-      // Automatic call forwarding set in the Telnyx portal bypasses Bruno and blocks TeXML routing: turn it off first.
+      // Portal-level forwarding blocks TeXML routing. Forwarding now lives in our TeXML response, selected by the saved mode.
       const voice = (await telnyx(`/phone_numbers/${owned.id}/voice`)).data;
       if (voice?.call_forwarding?.call_forwarding_enabled) await telnyx(`/phone_numbers/${owned.id}/voice`, 'PATCH', { call_forwarding: { call_forwarding_enabled: false, forwards_to: null, forwarding_type: null } });
       if (owned.connection_id !== applicationId) await telnyx(`/phone_numbers/${owned.id}`, 'PATCH', { connection_id: applicationId });
       checked(await admin.from('bruno_voice_settings').update({ inbound_assistant_id: inboundId, inbound_configured_at: new Date().toISOString() }).eq('key', 'default'));
-      return json({ configured: true, inbound: true, from_number: FROM_NUMBER, transfer_number: transferNumber, language: 'en' });
+      return json({ configured: true, inbound: true, inbound_mode: settings.inbound_mode, inbound_forward_number: settings.inbound_mode === 'forward' ? settings.inbound_forward_number : null, from_number: FROM_NUMBER, transfer_number: transferNumber, language: 'en' });
     }
     if (input.action === 'plan_propose') {
       const leads = checked(await admin.from('leads').select('id,contact_name,company_name,phone,archived,status').in('id', input.lead_ids)) ?? [];

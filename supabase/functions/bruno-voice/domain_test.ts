@@ -107,7 +107,25 @@ Deno.test('call plan dials one customer at a time in order, with a pause between
   assertEquals(planNextStep([{ ...calls[1], status: 'completed', ended_at: '2026-11-06T11:00:00Z' }], 3, now), { kind: 'done' });
 });
 
-import { inboundLanguage, inboundAssistantConfig, inboundExtraTools, inboundTexml, DEFAULT_TRANSFER_NUMBER } from './domain.ts';
+import { inboundLanguage, inboundAssistantConfig, inboundExtraTools, inboundTexml, inboundRoutingTexml, DEFAULT_TRANSFER_NUMBER } from './domain.ts';
+Deno.test('Temporary UK inbound forwarding dials only the company landline without Bruno', () => {
+  const xml = inboundRoutingTexml({ inbound_mode: 'forward', inbound_forward_number: '+3908119231684', inbound_assistant_id: 'assistant-1' }, 'https://x.supabase.co');
+  assertEquals(xml, '<?xml version="1.0" encoding="UTF-8"?><Response><Dial callerId="+447457416033" timeout="60"><Number>+3908119231684</Number></Dial><Hangup/></Response>');
+});
+Deno.test('Forwarding mode defaults to the correct office number, never the previous 7684 number', () => {
+  assertEquals(inboundRoutingTexml({ inbound_mode: 'forward' }, 'https://x.supabase.co').includes('<Number>+3908119231684</Number>'), true);
+});
+Deno.test('Assistant mode remains available without changing outbound caller ID', () => {
+  assertEquals(inboundRoutingTexml({ inbound_mode: 'assistant', inbound_assistant_id: 'assistant-1' }, 'https://x.supabase.co'), inboundTexml('assistant-1', 'https://x.supabase.co'));
+  assertEquals(FROM_NUMBER, '+447457416033');
+});
+Deno.test('Forwarding rejects self-loops and invalid destinations', () => {
+  for (const inbound_forward_number of ['+447457416033', '3908119231684', '+3908119231684</Number>']) {
+    let rejected = false;
+    try { inboundRoutingTexml({ inbound_mode: 'forward', inbound_forward_number }, 'https://x.supabase.co'); } catch { rejected = true; }
+    assertEquals(rejected, true);
+  }
+});
 Deno.test('inbound language follows the caller prefix', () => {
   if (inboundLanguage('+39 333 1234567').code !== 'it') throw new Error('it');
   if (inboundLanguage('+447700900123').code !== 'en') throw new Error('en');
