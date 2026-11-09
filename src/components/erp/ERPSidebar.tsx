@@ -21,6 +21,7 @@ import { Images,
   Mail,
   PieChart,
   PhoneCall,
+  MessageSquareText,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from '@/lib/router-compat';
@@ -43,6 +44,7 @@ const mainItems = [
   { title: 'Dashboard', url: '/erp', icon: LayoutDashboard },
   { title: 'CRM', url: '/erp/crm', icon: Users },
   { title: 'Dial', url: '/erp/dial', icon: PhoneCall },
+  { title: 'Chat', url: '/erp/chat', icon: MessageSquareText },
   { title: 'Bruno AI', url: '/erp/bruno', icon: Bot },
   { title: 'Roberta AI', url: '/erp/roberta', icon: Megaphone },
   { title: 'Mario AI', url: '/erp/mario', icon: Radar },

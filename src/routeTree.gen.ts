@@ -109,6 +109,7 @@ import { Route as ErpIndexRouteImport } from './routes/erp/index'
 import { Route as ErpBlogRouteImport } from './routes/erp/blog'
 import { Route as ErpBruciatoriRouteImport } from './routes/erp/bruciatori'
 import { Route as ErpBrunoRouteImport } from './routes/erp/bruno'
+import { Route as ErpChatRouteImport } from './routes/erp/chat'
 import { Route as ErpChatLogsRouteImport } from './routes/erp/chat-logs'
 import { Route as ErpConfiguratoreRouteImport } from './routes/erp/configuratore'
 import { Route as ErpContrattiRouteImport } from './routes/erp/contratti'
@@ -787,6 +788,11 @@ const ErpBruciatoriRoute = ErpBruciatoriRouteImport.update({
 const ErpBrunoRoute = ErpBrunoRouteImport.update({
   id: '/bruno',
   path: '/bruno',
+  getParentRoute: () => ErpRouteRoute,
+} as any)
+const ErpChatRoute = ErpChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
   getParentRoute: () => ErpRouteRoute,
 } as any)
 const ErpChatLogsRoute = ErpChatLogsRouteImport.update({
@@ -1760,6 +1766,7 @@ export interface FileRoutesByFullPath {
   '/erp/blog': typeof ErpBlogRoute
   '/erp/bruciatori': typeof ErpBruciatoriRoute
   '/erp/bruno': typeof ErpBrunoRoute
+  '/erp/chat': typeof ErpChatRoute
   '/erp/chat-logs': typeof ErpChatLogsRoute
   '/erp/configuratore': typeof ErpConfiguratoreRoute
   '/erp/contratti': typeof ErpContrattiRoute
@@ -2034,6 +2041,7 @@ export interface FileRoutesByTo {
   '/erp/blog': typeof ErpBlogRoute
   '/erp/bruciatori': typeof ErpBruciatoriRoute
   '/erp/bruno': typeof ErpBrunoRoute
+  '/erp/chat': typeof ErpChatRoute
   '/erp/chat-logs': typeof ErpChatLogsRoute
   '/erp/configuratore': typeof ErpConfiguratoreRoute
   '/erp/contratti': typeof ErpContrattiRoute
@@ -2310,6 +2318,7 @@ export interface FileRoutesById {
   '/erp/blog': typeof ErpBlogRoute
   '/erp/bruciatori': typeof ErpBruciatoriRoute
   '/erp/bruno': typeof ErpBrunoRoute
+  '/erp/chat': typeof ErpChatRoute
   '/erp/chat-logs': typeof ErpChatLogsRoute
   '/erp/configuratore': typeof ErpConfiguratoreRoute
   '/erp/contratti': typeof ErpContrattiRoute
@@ -2587,6 +2596,7 @@ export interface FileRouteTypes {
     | '/erp/blog'
     | '/erp/bruciatori'
     | '/erp/bruno'
+    | '/erp/chat'
     | '/erp/chat-logs'
     | '/erp/configuratore'
     | '/erp/contratti'
@@ -2861,6 +2871,7 @@ export interface FileRouteTypes {
     | '/erp/blog'
     | '/erp/bruciatori'
     | '/erp/bruno'
+    | '/erp/chat'
     | '/erp/chat-logs'
     | '/erp/configuratore'
     | '/erp/contratti'
@@ -3136,6 +3147,7 @@ export interface FileRouteTypes {
     | '/erp/blog'
     | '/erp/bruciatori'
     | '/erp/bruno'
+    | '/erp/chat'
     | '/erp/chat-logs'
     | '/erp/configuratore'
     | '/erp/contratti'
@@ -4262,6 +4274,13 @@ declare module '@tanstack/react-router' {
       path: '/bruno'
       fullPath: '/erp/bruno'
       preLoaderRoute: typeof ErpBrunoRouteImport
+      parentRoute: typeof ErpRouteRoute
+    }
+    '/erp/chat': {
+      id: '/erp/chat'
+      path: '/chat'
+      fullPath: '/erp/chat'
+      preLoaderRoute: typeof ErpChatRouteImport
       parentRoute: typeof ErpRouteRoute
     }
     '/erp/chat-logs': {
@@ -5482,6 +5501,7 @@ interface ErpRouteRouteChildren {
   ErpBlogRoute: typeof ErpBlogRoute
   ErpBruciatoriRoute: typeof ErpBruciatoriRoute
   ErpBrunoRoute: typeof ErpBrunoRoute
+  ErpChatRoute: typeof ErpChatRoute
   ErpChatLogsRoute: typeof ErpChatLogsRoute
   ErpConfiguratoreRoute: typeof ErpConfiguratoreRoute
   ErpContrattiRoute: typeof ErpContrattiRoute
@@ -5514,6 +5534,7 @@ const ErpRouteRouteChildren: ErpRouteRouteChildren = {
   ErpBlogRoute: ErpBlogRoute,
   ErpBruciatoriRoute: ErpBruciatoriRoute,
   ErpBrunoRoute: ErpBrunoRoute,
+  ErpChatRoute: ErpChatRoute,
   ErpChatLogsRoute: ErpChatLogsRoute,
   ErpConfiguratoreRoute: ErpConfiguratoreRoute,
   ErpContrattiRoute: ErpContrattiRoute,
