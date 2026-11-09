@@ -131,6 +131,7 @@ import { Route as ErpProntaConsegnaRouteImport } from './routes/erp/pronta-conse
 import { Route as ErpRobertaRouteImport } from './routes/erp/roberta'
 import { Route as ErpSessioniConfiguratoreRouteImport } from './routes/erp/sessioni-configuratore'
 import { Route as ErpUtentiRouteImport } from './routes/erp/utenti'
+import { Route as ErpVettoriRouteImport } from './routes/erp/vettori'
 import { Route as ErpVideoCommercialiRouteImport } from './routes/erp/video-commerciali'
 import { Route as ErpCreateRouteImport } from './routes/erp_.create'
 import { Route as ErpLoginRouteImport } from './routes/erp_.login'
@@ -896,6 +897,11 @@ const ErpSessioniConfiguratoreRoute =
 const ErpUtentiRoute = ErpUtentiRouteImport.update({
   id: '/utenti',
   path: '/utenti',
+  getParentRoute: () => ErpRouteRoute,
+} as any)
+const ErpVettoriRoute = ErpVettoriRouteImport.update({
+  id: '/vettori',
+  path: '/vettori',
   getParentRoute: () => ErpRouteRoute,
 } as any)
 const ErpVideoCommercialiRoute = ErpVideoCommercialiRouteImport.update({
@@ -1770,6 +1776,7 @@ export interface FileRoutesByFullPath {
   '/erp/roberta': typeof ErpRobertaRoute
   '/erp/sessioni-configuratore': typeof ErpSessioniConfiguratoreRoute
   '/erp/utenti': typeof ErpUtentiRoute
+  '/erp/vettori': typeof ErpVettoriRoute
   '/erp/video-commerciali': typeof ErpVideoCommercialiRoute
   '/erp/create': typeof ErpCreateRoute
   '/erp/login': typeof ErpLoginRoute
@@ -2042,6 +2049,7 @@ export interface FileRoutesByTo {
   '/erp/roberta': typeof ErpRobertaRoute
   '/erp/sessioni-configuratore': typeof ErpSessioniConfiguratoreRoute
   '/erp/utenti': typeof ErpUtentiRoute
+  '/erp/vettori': typeof ErpVettoriRoute
   '/erp/video-commerciali': typeof ErpVideoCommercialiRoute
   '/erp/create': typeof ErpCreateRoute
   '/erp/login': typeof ErpLoginRoute
@@ -2316,6 +2324,7 @@ export interface FileRoutesById {
   '/erp/roberta': typeof ErpRobertaRoute
   '/erp/sessioni-configuratore': typeof ErpSessioniConfiguratoreRoute
   '/erp/utenti': typeof ErpUtentiRoute
+  '/erp/vettori': typeof ErpVettoriRoute
   '/erp/video-commerciali': typeof ErpVideoCommercialiRoute
   '/erp_/create': typeof ErpCreateRoute
   '/erp_/login': typeof ErpLoginRoute
@@ -2591,6 +2600,7 @@ export interface FileRouteTypes {
     | '/erp/roberta'
     | '/erp/sessioni-configuratore'
     | '/erp/utenti'
+    | '/erp/vettori'
     | '/erp/video-commerciali'
     | '/erp/create'
     | '/erp/login'
@@ -2863,6 +2873,7 @@ export interface FileRouteTypes {
     | '/erp/roberta'
     | '/erp/sessioni-configuratore'
     | '/erp/utenti'
+    | '/erp/vettori'
     | '/erp/video-commerciali'
     | '/erp/create'
     | '/erp/login'
@@ -3136,6 +3147,7 @@ export interface FileRouteTypes {
     | '/erp/roberta'
     | '/erp/sessioni-configuratore'
     | '/erp/utenti'
+    | '/erp/vettori'
     | '/erp/video-commerciali'
     | '/erp_/create'
     | '/erp_/login'
@@ -4394,6 +4406,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ErpUtentiRouteImport
       parentRoute: typeof ErpRouteRoute
     }
+    '/erp/vettori': {
+      id: '/erp/vettori'
+      path: '/vettori'
+      fullPath: '/erp/vettori'
+      preLoaderRoute: typeof ErpVettoriRouteImport
+      parentRoute: typeof ErpRouteRoute
+    }
     '/erp/video-commerciali': {
       id: '/erp/video-commerciali'
       path: '/video-commerciali'
@@ -5466,6 +5485,7 @@ interface ErpRouteRouteChildren {
   ErpRobertaRoute: typeof ErpRobertaRoute
   ErpSessioniConfiguratoreRoute: typeof ErpSessioniConfiguratoreRoute
   ErpUtentiRoute: typeof ErpUtentiRoute
+  ErpVettoriRoute: typeof ErpVettoriRoute
   ErpVideoCommercialiRoute: typeof ErpVideoCommercialiRoute
   ErpIndexRoute: typeof ErpIndexRoute
 }
@@ -5496,6 +5516,7 @@ const ErpRouteRouteChildren: ErpRouteRouteChildren = {
   ErpRobertaRoute: ErpRobertaRoute,
   ErpSessioniConfiguratoreRoute: ErpSessioniConfiguratoreRoute,
   ErpUtentiRoute: ErpUtentiRoute,
+  ErpVettoriRoute: ErpVettoriRoute,
   ErpVideoCommercialiRoute: ErpVideoCommercialiRoute,
   ErpIndexRoute: ErpIndexRoute,
 }
