@@ -22,3 +22,25 @@ export const directStatusLabels: Record<string, string> = {
   preparing: 'Preparazione', dialing: 'Sta chiamando', active: 'In conversazione',
   ended: 'Chiamata terminata', failed: 'Chiamata non riuscita', unknown: 'Esito da verificare',
 };
+
+// Two ways to reach Telnyx: the Lovable connector gateway (used on the Lovable
+// host, where the connector key exists) or the provider API directly with the
+// owner's own Telnyx key (needed on Netlify, where that connector key is not
+// readable). The same relative paths work on both.
+export type DialerCredentials = { direct: string } | { lovable: string; connection: string };
+
+export function dialerCredentials(env: { telnyx?: string | undefined; lovable?: string | undefined; connection?: string | undefined }): DialerCredentials | undefined {
+  if (env.telnyx) return { direct: env.telnyx };
+  if (env.lovable && env.connection) return { lovable: env.lovable, connection: env.connection };
+  return undefined;
+}
+
+export function dialerRequest(path: string, credentials: DialerCredentials) {
+  if ('direct' in credentials) {
+    return { url: `https://api.telnyx.com/v2${path}`, headers: { Authorization: `Bearer ${credentials.direct}` } };
+  }
+  return {
+    url: `https://connector-gateway.lovable.dev/udc_telnyx${path}`,
+    headers: { Authorization: `Bearer ${credentials.lovable}`, 'X-Connection-Api-Key': credentials.connection },
+  };
+}

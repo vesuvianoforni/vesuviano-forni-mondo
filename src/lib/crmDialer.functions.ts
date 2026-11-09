@@ -2,16 +2,20 @@ import { createMiddleware, createServerFn } from '@tanstack/react-start';
 import { setResponseHeader } from '@tanstack/react-start/server';
 import { z } from 'zod';
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
-import { CRM_CALLER_NUMBER, CRM_DIALER_CONNECTION, dialerPhone, dialerStaff, directStatus, directStatusLabels } from './crmDialer';
+import { CRM_CALLER_NUMBER, CRM_DIALER_CONNECTION, dialerCredentials, dialerPhone, dialerStaff, directStatus, directStatusLabels } from './crmDialer';
 
 const dialerAccess = createMiddleware({ type: 'function' }).middleware([requireSupabaseAuth]).server(async ({ context, next }) => {
   const { data: roles, error } = await context.supabase.from('user_roles').select('role').eq('user_id', context.userId);
   if (error || !dialerStaff((roles ?? []).map(r => r.role))) throw new Error('Accesso alle chiamate negato.');
-  const lovable = process.env['LOVABLE_API_KEY'], connection = process.env['UDC_TELNYX_API_KEY'];
-  if (!lovable || !connection) throw new Error('Telnyx non collegato.');
+  const credentials = dialerCredentials({
+    telnyx: process.env['TELNYX_API_KEY'],
+    lovable: process.env['LOVABLE_API_KEY'],
+    connection: process.env['UDC_TELNYX_API_KEY'],
+  });
+  if (!credentials) throw new Error('Telnyx non collegato.');
   setResponseHeader('Cache-Control', 'no-store');
   const { supabaseAdmin: admin } = await import('@/integrations/supabase/client.server');
-  return next({ context: { admin, credentials: { lovable, connection } } });
+  return next({ context: { admin, credentials } });
 });
 
 export const prepareDirectCall = createServerFn({ method: 'POST' }).middleware([dialerAccess])
