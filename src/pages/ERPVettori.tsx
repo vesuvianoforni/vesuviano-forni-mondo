@@ -4,18 +4,32 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Plus, Save, Trash2, Phone, Mail } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 
 const db = supabase as any;
-interface Carrier { id?: string; country: string; name: string; company: string | null; phone: string | null; email: string | null; notes: string | null }
-const empty: Carrier = { country: "", name: "", company: "", phone: "", email: "", notes: "" };
+interface Carrier {
+  id?: string;
+  country: string;
+  name: string;
+  company: string | null;
+  phone: string | null;
+  email: string | null;
+  notes: string | null;
+  is_active: boolean;
+}
+const empty: Carrier = { country: "", name: "", company: "", phone: "", email: "", notes: "", is_active: true };
+type StatusFilter = "all" | "active" | "inactive";
 
 export default function ERPVettori() {
   const [rows, setRows] = useState<Carrier[]>([]);
   const [edit, setEdit] = useState<Carrier | null>(null);
   const [q, setQ] = useState("");
+  const [status, setStatus] = useState<StatusFilter>("all");
 
   const load = async () => {
     const { data, error } = await db.from("transport_carriers").select("*").order("country").order("name");
@@ -34,14 +48,26 @@ export default function ERPVettori() {
     if (!confirm("Eliminare questo vettore?")) return;
     await db.from("transport_carriers").delete().eq("id", id); load();
   };
+  const toggleActive = async (c: Carrier) => {
+    const { error } = await db.from("transport_carriers").update({ is_active: !c.is_active }).eq("id", c.id);
+    if (error) { toast.error("Cambio di stato non riuscito"); return; }
+    toast.success(!c.is_active ? "Vettore attivato" : "Vettore disattivato");
+    load();
+  };
 
   const groups = useMemo(() => {
-    const f = rows.filter(r => `${r.country} ${r.name} ${r.company ?? ""} ${r.notes ?? ""}`.toLowerCase().includes(q.toLowerCase()));
+    const f = rows
+      .filter(r => (status === "all" ? true : status === "active" ? r.is_active : !r.is_active))
+      .filter(r => `${r.country} ${r.name} ${r.company ?? ""} ${r.notes ?? ""}`.toLowerCase().includes(q.toLowerCase()));
     return f.reduce<Record<string, Carrier[]>>((a, r) => ((a[r.country] ||= []).push(r), a), {});
-  }, [rows, q]);
+  }, [rows, q, status]);
 
   const field = (k: keyof Carrier, label: string) => (
     <Input placeholder={label} value={(edit?.[k] as string) ?? ""} onChange={e => setEdit({ ...edit!, [k]: e.target.value })} />
+  );
+
+  const statusBtn = (value: StatusFilter, label: string) => (
+    <Button size="sm" variant={status === value ? "default" : "outline"} onClick={() => setStatus(value)}>{label}</Button>
   );
 
   return (
@@ -49,7 +75,12 @@ export default function ERPVettori() {
       <SEOHead title="Vettori trasporto | ERP Vesuviano" description="Riferimenti vettori per paese" noIndex />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">Vettori trasporto</h1>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex gap-1">
+            {statusBtn("all", "Tutti")}
+            {statusBtn("active", "Attivi")}
+            {statusBtn("inactive", "Non attivi")}
+          </div>
           <Input placeholder="Cerca…" value={q} onChange={e => setQ(e.target.value)} className="w-56" />
           <Button onClick={() => setEdit({ ...empty })}><Plus className="mr-1 h-4 w-4" />Nuovo vettore</Button>
         </div>
@@ -58,6 +89,12 @@ export default function ERPVettori() {
       {edit && (
         <Card><CardContent className="grid gap-3 pt-6 md:grid-cols-2">
           {field("country", "Paese *")}{field("name", "Referente *")}{field("company", "Azienda")}{field("phone", "Telefono")}{field("email", "Email")}
+          <div className="flex items-center gap-3 md:col-span-2">
+            <Switch id="carrier-active" checked={edit.is_active} onCheckedChange={v => setEdit({ ...edit, is_active: v })} />
+            <Label htmlFor="carrier-active" className="font-normal">
+              {edit.is_active ? "Vettore attivo" : "Vettore non attivo"}
+            </Label>
+          </div>
           <Textarea className="md:col-span-2" placeholder="Note" value={edit.notes ?? ""} onChange={e => setEdit({ ...edit, notes: e.target.value })} />
           <div className="flex gap-2 md:col-span-2"><Button onClick={save}><Save className="mr-1 h-4 w-4" />Salva</Button><Button variant="outline" onClick={() => setEdit(null)}>Annulla</Button></div>
         </CardContent></Card>
@@ -68,16 +105,20 @@ export default function ERPVettori() {
           <CardHeader><CardTitle>{country}</CardTitle></CardHeader>
           <CardContent className="space-y-3">
             {list.map(c => (
-              <div key={c.id} className="flex flex-wrap items-start justify-between gap-3 rounded-md border p-3">
+              <div key={c.id} className={`flex flex-wrap items-start justify-between gap-3 rounded-md border p-3 ${c.is_active ? "" : "opacity-70"}`}>
                 <div className="min-w-0 space-y-1">
-                  <div className="font-semibold">{c.name}{c.company && <span className="font-normal text-muted-foreground"> · {c.company}</span>}</div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-semibold">{c.name}{c.company && <span className="font-normal text-muted-foreground"> · {c.company}</span>}</span>
+                    <Badge variant={c.is_active ? "default" : "secondary"}>{c.is_active ? "Attivo" : "Non attivo"}</Badge>
+                  </div>
                   <div className="flex flex-wrap gap-4 text-sm">
                     {c.phone && <a className="flex items-center gap-1 text-primary" href={`tel:${c.phone.replace(/\s/g, "")}`}><Phone className="h-3 w-3" />{c.phone}</a>}
                     {c.email && <a className="flex items-center gap-1 text-primary" href={`mailto:${c.email}`}><Mail className="h-3 w-3" />{c.email}</a>}
                   </div>
                   {c.notes && <p className="whitespace-pre-line text-sm text-muted-foreground">{c.notes}</p>}
                 </div>
-                <div className="flex gap-1">
+                <div className="flex flex-wrap gap-1">
+                  <Button size="sm" variant="outline" onClick={() => toggleActive(c)}>{c.is_active ? "Disattiva" : "Attiva"}</Button>
                   <Button size="sm" variant="outline" onClick={() => setEdit(c)}>Modifica</Button>
                   <Button size="icon" variant="ghost" onClick={() => remove(c.id!)}><Trash2 className="h-4 w-4" /></Button>
                 </div>
