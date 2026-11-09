@@ -12,7 +12,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Plus, Save, Trash2, Phone, Mail, Search, MapPin, Pencil, Loader2 } from "lucide-react";
-import SEOHead from "@/components/SEOHead";
 import { areaMatches, carrierAreas, carrierSaveFields, filterCarriers, normalizeArea, toggleCarrierArea, uniqueAreas, type CarrierStatus, type TransportCarrier } from "@/lib/transportCarriers";
 
 const empty: TransportCarrier = { country: "Da definire", served_areas: [], name: "", company: "", phone: "", email: "", notes: "", is_active: true };
