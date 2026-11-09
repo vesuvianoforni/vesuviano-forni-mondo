@@ -15,7 +15,7 @@ export default function ERPBruno(){
  const [params,setParams]=useSearchParams();
  const requested=params.get('view');
  const view=requested&&['overview','plan','history','chat','calls','communications','settings'].includes(requested)?requested:params.get('lead')?'communications':params.get('chat')?'chat':'overview';
- useEffect(()=>{if(view!=='communications')return;const q=new URLSearchParams(params);q.delete('view');const qs=q.toString();window.location.replace(`/erp/chat${qs?`?${qs}`:''}`)},[view,params]);
+ useEffect(()=>{if(view!=='communications')return;const q=new URLSearchParams(params);q.delete('view');const qs=q.toString();const target=q.get('platform')==='email'?'/erp/mail':'/erp/chat';window.location.replace(`${target}${qs?`?${qs}`:''}`)},[view,params]);
  const agent=agentViews.some(v=>v.id===view);
  const navigate=(next:string)=>setParams(p=>{const n=new URLSearchParams(p);n.set('view',next);if(next!=='communications')n.delete('lead');return n});
  const [threads,setThreads]=useState<BrunoThread[]>(()=>{const existing=loadThreads();if(existing.length)return existing;const first=[newThread()];saveThreads(first);return first});

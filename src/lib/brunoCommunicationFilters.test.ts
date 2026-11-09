@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { communicationCount, matchesCommunicationFilter, parseBrunoCommunicationFilter } from "./brunoCommunicationFilters";
+import { communicationCount, matchesCommunicationFilter, parseBrunoCommunicationFilter, composerChannels, matchesSection, messageMatchesSection, sectionCount, sectionFilter, sectionFilters, sectionMessageFilters } from "./brunoCommunicationFilters";
 
 describe("Bruno communication platform filters", () => {
   it("filters email conversations even when the latest message is on another platform", () => {
@@ -39,5 +39,46 @@ describe("Bruno communication platform filters", () => {
     expect(parseBrunoCommunicationFilter("email")).toBe("email");
     expect(parseBrunoCommunicationFilter("invalid")).toBe("all");
     expect(parseBrunoCommunicationFilter(null)).toBe("all");
+  });
+});
+
+describe("ERP Chat and Mail separation", () => {
+  it("excludes email-only conversations from Chat but retains them in Mail", () => {
+    expect(matchesSection({ email: 6 }, "chat", "all", "cliente@example.com")).toBe(false);
+    expect(matchesSection({ email: 6 }, "mail", "email")).toBe(true);
+    expect(matchesSection({ email: 6, wasender: 2 }, "chat", "all")).toBe(true);
+  });
+
+  it("removes email from Chat filters and composer without changing the CRM panel", () => {
+    expect(sectionFilters("chat")).not.toContain("email");
+    expect(composerChannels("chat")).toEqual(["wasender", "whatsapp_api", "whatsapp_uk", "note"]);
+    expect(composerChannels("all")).toContain("email");
+    expect(sectionFilter("chat", "email")).toBe("all");
+  });
+
+  it("locks Mail reads and composition to email even with a WhatsApp URL filter", () => {
+    expect(sectionFilters("mail")).toEqual(["email"]);
+    expect(composerChannels("mail")).toEqual(["email"]);
+    expect(sectionFilter("mail", "whatsapp_uk")).toBe("email");
+    expect(sectionMessageFilters("mail", "all")).toEqual(["email"]);
+    expect(matchesSection(undefined, "mail", "email", "nuovo@example.com")).toBe(true);
+    expect(matchesSection({ wasender: 4 }, "mail", "email")).toBe(false);
+  });
+
+  it("counts only messages belonging to each section", () => {
+    const counts = { email: 12, wasender: 3, whatsapp_api: 1, whatsapp_uk: 2, call: 1, note: 1 };
+    expect(sectionCount(counts, "chat", "all", 20)).toBe(8);
+    expect(sectionCount(counts, "mail", "all", 20)).toBe(12);
+    expect(sectionCount(counts, "all", "all", 20)).toBe(20);
+  });
+
+  it("excludes emails from history and realtime in Chat, and excludes WhatsApp from Mail", () => {
+    expect(sectionMessageFilters("chat", "all")).toEqual(["wasender", "whatsapp_api", "whatsapp_uk", "call", "note"]);
+    expect(messageMatchesSection({ channel: "email" }, "chat", "all")).toBe(false);
+    expect(messageMatchesSection({ channel: "email" }, "mail", "all")).toBe(true);
+    expect(messageMatchesSection({ channel: "wasender" }, "mail", "all")).toBe(false);
+    const uk = { channel: "whatsapp_api", metadata: { whatsapp_line: "uk" } };
+    expect(messageMatchesSection(uk, "chat", "whatsapp_uk")).toBe(true);
+    expect(messageMatchesSection(uk, "chat", "whatsapp_api")).toBe(false);
   });
 });
