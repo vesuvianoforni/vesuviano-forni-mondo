@@ -68,6 +68,7 @@ const contentItems = [
 
 const operationsItems = [
   { title: 'Ordini', url: '/erp/ordini', icon: Truck },
+  { title: 'Vettori trasporto', url: '/erp/vettori', icon: Truck },
   { title: 'Utenti', url: '/erp/utenti', icon: ShieldCheck },
 ];
 
