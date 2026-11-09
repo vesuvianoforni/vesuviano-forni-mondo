@@ -1,5 +1,10 @@
 # Roadmap
 
+## CRM: scelta chiamata Bruno AI o diretta (9 nov 2026)
+- [ ] A ogni avvio dal CRM chiedere Bruno AI o chiamata diretta dal browser con il numero UK, senza preferenza salvata o avvii automatici.
+- [ ] Accesso telefonico dedicato allo staff, senza cambiare inoltro UK al fisso, AI outbound o WhatsApp; controlli microfono, stato e chiusura.
+- [ ] Test regole e controlli UI desktop/mobile; verifica servizi e prova reale secondo disponibilità accesso.
+
 ## Linea UK: inoltro temporaneo e chiamate collaboratore (9 nov 2026)
 - [x] Inoltro diretto salvato in impostazioni server e attivo tramite TeXML: +447457416033 → +3908119231684, attesa 60s, senza assistente. Risposta pubblicata verificata GET/POST anche con destinazione estranea nell’input; app/numero/profilo outbound Telnyx invariati, WhatsApp non modificato.
 - [x] Aggiorna voce preserva la modalità salvata e la pagina distingue inoltro da risposta AI. 35 test Deno superati; funzione distribuita e build OK.
