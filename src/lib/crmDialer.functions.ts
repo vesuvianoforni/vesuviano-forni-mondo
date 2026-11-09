@@ -15,7 +15,7 @@ const dialerAccess = createMiddleware({ type: 'function' }).middleware([requireS
   if (!credentials) throw new Error('Telnyx non collegato.');
   setResponseHeader('Cache-Control', 'no-store');
   const { supabaseAdmin: admin } = await import('@/integrations/supabase/client.server');
-  return next({ context: { admin, credentials: { lovable, connection } } });
+  return next({ context: { admin, credentials } });
 });
 
 export const prepareDirectCall = createServerFn({ method: 'POST' }).middleware([dialerAccess])
