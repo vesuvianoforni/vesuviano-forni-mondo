@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from '@tanstack/react-router';
 import { Loader2, PhoneCall, Search, UserRound } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
@@ -10,7 +9,7 @@ import type { CRMLead } from '@/components/erp/CRMLeadCard';
 import { ACTIVE_CRM_STAGES, CRM_STAGES } from '@/lib/crmPipeline';
 
 type Filter = 'oggi' | 'tutti' | string;
-const stageLabel = (id: string) => CRM_STAGES.find(s => s.id === id)?.label ?? id;
+const stageLabel = (id: string) => CRM_STAGES.find(s => s.id === id)?.title ?? id;
 
 export default function ERPDial() {
   const [leads, setLeads] = useState<CRMLead[]>([]);
@@ -51,7 +50,7 @@ export default function ERPDial() {
 
   const chips: { id: Filter; label: string }[] = [
     { id: 'oggi', label: 'Da chiamare oggi' }, { id: 'tutti', label: 'Tutti' },
-    ...ACTIVE_CRM_STAGES.map(s => ({ id: s.id, label: s.label })),
+    ...ACTIVE_CRM_STAGES.map(s => ({ id: s.id, label: s.title })),
   ];
 
   return <div className="mx-auto flex w-full max-w-3xl min-w-0 flex-col gap-4 p-3 sm:p-6">
@@ -88,7 +87,7 @@ export default function ERPDial() {
               </div>
             </div>
             <Button asChild size="icon" variant="ghost" className="h-11 w-11 shrink-0" aria-label={`Apri scheda ${name}`}>
-              <Link to={`/erp/crm?lead=${encodeURIComponent(l.id)}`}><UserRound className="h-5 w-5" /></Link></Button>
+              <a href={`/erp/crm?lead=${encodeURIComponent(l.id)}`}><UserRound className="h-5 w-5" /></a></Button>
             <div className="shrink-0 [&_button]:h-11 [&_button]:px-4"><CRMCallButton lead={l} /></div>
           </li>;
         })}

@@ -20,6 +20,7 @@ import { Images,
   Video,
   Mail,
   PieChart,
+  PhoneCall,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from '@/lib/router-compat';
