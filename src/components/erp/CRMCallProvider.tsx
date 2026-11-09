@@ -11,8 +11,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { prepareDirectCall, updateDirectCall, pendingDirectCalls } from '@/lib/crmDialer.functions';
 import { CRM_CALLER_NUMBER, canStartCRMCall, directStatusLabels, type CallMode } from '@/lib/crmDialer';
 import { voiceRequest } from '@/lib/brunoVoice';
-import { BrunoLiveCall } from './BrunoLiveCall';
-import type { VoiceCall } from '@/lib/brunoVoice';
 import type { CRMLead } from './CRMLeadCard';
 
 const CallContext = createContext<{ openCall: (lead: CRMLead) => void; occupied: boolean } | null>(null);
@@ -38,7 +36,7 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
   const [callType, setCallType] = useState<'qualifica' | 'trattativa'>('qualifica'), [instructions, setInstructions] = useState('');
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null);
   const [direct, setDirect] = useState<Direct | null>(null), [muted, setMuted] = useState(false), [elapsed, setElapsed] = useState(0);
-  const [aiProposal, setAiProposal] = useState<{ id: string; destination: string } | null>(null), [aiLive, setAiLive] = useState<VoiceCall | null>(null);
+  const [aiProposal, setAiProposal] = useState<{ id: string; destination: string } | null>(null);
   const [unresolved, setUnresolved] = useState<{ id: string; destination: string } | null>(null);
   const clientRef = useRef<TelnyxRTC | null>(null), callRef = useRef<Call | null>(null), streamRef = useRef<MediaStream | null>(null);
   const directRef = useRef<Direct | null>(null), audioRef = useRef<HTMLAudioElement | null>(null), version = useRef(0);
@@ -80,6 +78,7 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
   const startDirect = async () => {
     if (!lead) return;
     const current = ++version.current;
+    directRef.current = null; setDirect(null); setElapsed(0);
     setBusy(true); setError(null); terminalRef.current = false; endingRef.current = false;
     try {
       const previous = await pending();
@@ -143,7 +142,6 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
         setAiProposal(result.proposal);
       } else {
         await voiceRequest({ action: 'approve', call_id: aiProposal.id });
-        setAiLive({ id: aiProposal.id, lead_id: lead.id, destination: aiProposal.destination, status: 'dialing' } as VoiceCall);
         setLead(null); setAiProposal(null);
       }
     } catch (e) { setError(e instanceof Error ? e.message : 'Chiamata AI non avviata.'); }
@@ -160,7 +158,7 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
     setLead(null); setMode(null); setAiProposal(null);
   };
   const live = direct && ['preparing', 'dialing', 'active'].includes(direct.status);
-  return <CallContext.Provider value={{ openCall, occupied: Boolean(live || busy || aiLive) }}>
+  return <CallContext.Provider value={{ openCall, occupied: Boolean(live || busy) }}>
     {children}
     <audio ref={audioRef} autoPlay aria-label="Audio chiamata diretta" />
     <Dialog open={Boolean(lead)} onOpenChange={open => { if (!open) void dismiss(); }}>
@@ -195,7 +193,7 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
         </div>
       </DialogContent>
     </Dialog>
-    {(direct || aiLive) && <aside className="erp-dashboard fixed bottom-4 right-4 z-[60] w-[calc(100%-32px)] max-w-sm rounded-lg border bg-background p-4 text-foreground shadow-lg" aria-label="Chiamata CRM">
+    {direct && <aside className="erp-dashboard fixed bottom-4 right-4 z-[60] w-[calc(100%-32px)] max-w-sm rounded-lg border bg-background p-4 text-foreground shadow-lg" aria-label="Chiamata CRM">
       {direct && <div className="space-y-3">
         <div className="flex items-start justify-between gap-2"><div className="min-w-0"><p className="truncate font-semibold">{direct.name}</p><p className="text-xs text-muted-foreground">{direct.destination} · Chiamata diretta UK</p></div>
           {!live && <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Chiudi pannello chiamata" onClick={() => { setDirect(null); directRef.current = null; setError(null); }}><X className="h-4 w-4" /></Button>}
@@ -208,7 +206,6 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
           <Button variant="destructive" size="sm" className="ml-auto" disabled={busy || direct.status === 'preparing'} onClick={() => void end()}><PhoneOff className="mr-1 h-4 w-4" />Chiudi</Button>
         </div>}
       </div>}
-      {aiLive && <BrunoLiveCall call={aiLive} onEnded={() => setAiLive(null)} />}
     </aside>}
   </CallContext.Provider>;
 }
