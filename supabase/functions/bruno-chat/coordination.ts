@@ -29,7 +29,7 @@ export async function communicationPage(reader: SupabaseClient, a: Record<string
   if (error) throw error;
   const rows = (data ?? []).slice(0, 20);
   const last = rows.at(-1);
-  return { messages: rows.map((m: Record<string, any>) => ({ ...m, channel: communicationChannel(m), body: String(m.body ?? '').slice(0, 900),
+  return { messages: rows.map((m: { channel: string; metadata?: Record<string, any>; body?: string }) => ({ ...m, channel: communicationChannel(m), body: String(m.body ?? '').slice(0, 900),
     metadata: { whatsapp_line: m.metadata?.whatsapp_line, call_mode: m.metadata?.call_mode, source: m.metadata?.source,
       media_url: m.metadata?.media_url, message_type: m.metadata?.message_type } })),
     has_more: (data ?? []).length > 20, next_cursor: (data ?? []).length > 20 && last ? { before_at: last.created_at, before_id: last.id } : null,
