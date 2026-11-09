@@ -209,3 +209,6 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
     </aside>}
   </CallContext.Provider>;
 }
+export function useCRMCall() {
+  return useContext(CallContext);
+}
