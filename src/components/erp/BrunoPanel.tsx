@@ -137,6 +137,10 @@ export function BrunoPanel({ lead, className, onUpdated, communicationFilter, se
     setThinking(true);
     try {
       const { suggestion } = await invoke({ action: "suggest", lead_id: lead.id });
+      if (suggestion?.channel && !allowedChannels.includes(suggestion.channel)) {
+        toast({ title: section === "mail" ? "Bruno propone un messaggio WhatsApp: apri Chat." : "Bruno propone un’email: apri Mail." });
+        return;
+      }
       if (suggestion?.channel && allowedChannels.includes(suggestion.channel)) setChannel(suggestion.channel);
       setText(suggestion?.message || ""); setSubject(suggestion?.subject || "");
       setReasoning(suggestion?.reasoning || null); setAiDraft(true);
