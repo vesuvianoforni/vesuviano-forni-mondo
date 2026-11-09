@@ -5,6 +5,10 @@
   command = "npm run build"
   publish = "dist"
 
+[build.environment]
+  # Only the public project address is expected in pages; every private key stays scanned.
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_URL"
+
 [[redirects]]
   from = "/__l5e/*"
   to = "https://vesuviano-forni-mondo.lovable.app/__l5e/:splat"
