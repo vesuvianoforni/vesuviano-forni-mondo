@@ -107,7 +107,6 @@ export function CRMLeadDetail({ lead, open, defaultTab = "riepilogo", onOpenChan
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-1">
-            <CRMCallButton lead={lead} />
             <Button size="sm" variant="outline" onClick={() => onEdit(lead)}><Pencil className="mr-1 h-3.5 w-3.5" />Modifica</Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild><Button size="icon" variant="ghost" aria-label="Altre azioni"><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>

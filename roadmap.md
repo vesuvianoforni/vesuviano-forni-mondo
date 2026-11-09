@@ -1,9 +1,10 @@
 # Roadmap
 
 ## CRM: scelta chiamata Bruno AI o diretta (9 nov 2026)
-- [ ] A ogni avvio dal CRM chiedere Bruno AI o chiamata diretta dal browser con il numero UK, senza preferenza salvata o avvii automatici.
-- [ ] Accesso telefonico dedicato allo staff, senza cambiare inoltro UK al fisso, AI outbound o WhatsApp; controlli microfono, stato e chiusura.
-- [ ] Test regole e controlli UI desktop/mobile; verifica servizi e prova reale secondo disponibilità accesso.
+- [x] Pulsanti da card, lista, scheda cliente e comunicazioni: ogni apertura azzera la scelta AI/diretta; AI con Qualifica/Trattativa, istruzioni e proposta da confermare, diretta con conferma Chiama ora.
+- [x] Connessione Telnyx separata creata e riletta: identificativo +447457416033 imposto sempre; numero inbound e profilo condiviso invariati. Accesso admin/commerciale via bearer, credenziali expiring per-call solo in memoria browser; stato idempotente crm_direct_calls/crm_messages dichiarato browser-reported, microfono/audio/chiusura e recupero incerti senza redial.
+- [x] 13 test superati; UI isolata 1280×1800/390×844 verifica scelta azzerata, proposta/annullamento, chiamata simulata unica, mute/unmute, stati dialing→active→ended e assenza overflow/errori. Accesso RPC senza bearer negato, archivio anon 401, grants effettivi corretti e build OK; dieci avvisi sicurezza preesistenti invariati.
+- [ ] Prova autenticata reale CRM→Telnyx→telefonata→rilettura storico: Supabase esterno senza sessione gestita, quindi credenziali per-call e audio di una telefonata reale non ancora esercitati. Nessun cliente chiamato; pubblicare e provare dal proprio account ERP.
 
 ## Linea UK: inoltro temporaneo e chiamate collaboratore (9 nov 2026)
 - [x] Inoltro diretto salvato in impostazioni server e attivo tramite TeXML: +447457416033 → +3908119231684, attesa 60s, senza assistente. Risposta pubblicata verificata GET/POST anche con destinazione estranea nell’input; app/numero/profilo outbound Telnyx invariati, WhatsApp non modificato.
