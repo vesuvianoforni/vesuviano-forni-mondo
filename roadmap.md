@@ -1,5 +1,9 @@
 # Roadmap
 
+## Netlify: deploy bloccato dal controllo chiavi (9 nov 2026)
+- [x] Log analizzato: segnalato solo l’indirizzo pubblico Supabase; esclusione limitata a quello, chiavi riservate ancora controllate.
+- [ ] Nuovo deploy Netlify dopo sincronizzazione: va avviato dall’utente in Netlify.
+
 ## CRM: scelta chiamata Bruno AI o diretta (9 nov 2026)
 - [x] Pulsanti da card, lista, scheda cliente e comunicazioni: ogni apertura azzera la scelta AI/diretta; AI con Qualifica/Trattativa, istruzioni e proposta da confermare, diretta con conferma Chiama ora.
 - [x] Connessione Telnyx separata creata e riletta: identificativo +447457416033 imposto sempre; numero inbound e profilo condiviso invariati. Accesso admin/commerciale via bearer, credenziali expiring per-call solo in memoria browser; stato idempotente crm_direct_calls/crm_messages dichiarato browser-reported, microfono/audio/chiusura e recupero incerti senza redial.
