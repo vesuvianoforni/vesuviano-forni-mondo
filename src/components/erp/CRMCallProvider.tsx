@@ -165,8 +165,8 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
       <DialogContent className="erp-dashboard max-h-[90dvh] w-[calc(100%-24px)] max-w-lg overflow-y-auto" onInteractOutside={e => { if (busy) e.preventDefault(); }} onEscapeKeyDown={e => { if (busy) e.preventDefault(); }}>
         <DialogHeader><DialogTitle>Chiama {lead?.company_name || lead?.contact_name || 'cliente'}</DialogTitle><DialogDescription>{lead?.phone} · Da {CRM_CALLER_NUMBER}</DialogDescription></DialogHeader>
         <ToggleGroup type="single" value={mode ?? ''} disabled={busy || Boolean(aiProposal)} onValueChange={value => setMode(value === 'ai' || value === 'direct' ? value : null)} className="grid grid-cols-2 gap-2" aria-label="Chi effettua la chiamata">
-          <ToggleGroupItem value="ai" className="h-20 flex-col gap-2 border" aria-label="Bruno AI"><Bot className="h-5 w-5" />Bruno AI</ToggleGroupItem>
-          <ToggleGroupItem value="direct" className="h-20 flex-col gap-2 border" aria-label="Chiamata diretta"><Headset className="h-5 w-5" />Chiamata diretta</ToggleGroupItem>
+          <ToggleGroupItem value="ai" className="h-20 flex-col gap-2 border data-[state=on]:bg-muted data-[state=on]:text-foreground data-[state=on]:border-primary" aria-label="Bruno AI"><Bot className="h-5 w-5" />Bruno AI</ToggleGroupItem>
+          <ToggleGroupItem value="direct" className="h-20 flex-col gap-2 border data-[state=on]:bg-muted data-[state=on]:text-foreground data-[state=on]:border-primary" aria-label="Chiamata diretta"><Headset className="h-5 w-5" />Chiamata diretta</ToggleGroupItem>
         </ToggleGroup>
         {mode === 'ai' && <div className="space-y-3">
           <ToggleGroup type="single" value={callType} disabled={busy || Boolean(aiProposal)} onValueChange={value => { if (value === 'qualifica' || value === 'trattativa') setCallType(value); }} aria-label="Scopo chiamata AI">
