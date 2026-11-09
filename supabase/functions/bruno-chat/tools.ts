@@ -2,6 +2,7 @@
 // Every write goes through existing validated paths or explicit field allowlists.
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { linkedMaterialNames, materialSearchText } from './materials.ts';
+import { assertNoHumanCall, callHistory, communicationPage, COMMUNICATION_CHANNELS, customerLinks } from './coordination.ts';
 
 export const STAGES = ['nuovo', 'pre_qualificato', 'qualificato', 'trattativa', 'vinto', 'perso'];
 const ORDER_STATUSES = ['nuovo', 'confermato', 'in_produzione', 'pronto_spedizione', 'spedito', 'consegnato', 'annullato'];
@@ -17,6 +18,12 @@ export const TOOLS = [
     parameters: obj({ query: str('testo libero, vuoto per tutti'), stage: str('fase opzionale') }) },
   { type: 'function', name: 'get_lead', description: 'Dettaglio cliente con ultime comunicazioni, offerte e ordini.',
     parameters: obj({ lead_id: str() }, ['lead_id']) },
+  { type: 'function', name: 'get_communications', description: 'Legge lo storico condiviso di Chat e Mail: email, WhatsApp Gennaro, Bruno IT e UK, chiamate e note. Paginato: usa next_cursor per i precedenti; non invia nulla.',
+    parameters: obj({ lead_id: str(), channel: { type: 'string', enum: ['all', ...COMMUNICATION_CHANNELS] }, before_at: str('data dal next_cursor'), before_id: str('id dal next_cursor') }, ['lead_id']) },
+  { type: 'function', name: 'get_call_history', description: 'Legge le telefonate di Bruno AI e del team dal Dial, anche senza lead_id per le più recenti. Distingue operatore/AI ed esiti verificabili; chiamate dirette senza trascrizione: non inventare cosa si è detto.',
+    parameters: obj({ lead_id: str(), before_at: str('data dal next_cursor'), before_id: str('id dal next_cursor') }) },
+  { type: 'function', name: 'get_whatsapp_templates', description: 'Legge i template approvati della linea esplicita Bruno IT o Bruno UK. Prima di una proposta fuori dalla finestra 24h scegli un template reale, compila le variabili e mostra il testo esatto.',
+    parameters: obj({ lead_id: str(), channel: { type: 'string', enum: ['whatsapp_api', 'whatsapp_uk'] } }, ['lead_id', 'channel']) },
   { type: 'function', name: 'propose_call', description: 'Prepara una telefonata di Bruno in INGLESE dal numero UK +447457416033. NON telefona: crea una proposta con pulsante di avvio mostrato direttamente in chat. call_type: "qualifica" (scoprire esigenze, capacità, alimentazione, consegna e tempi del progetto) oppure "trattativa" (feedback sull\'offerta ricevuta, obiezioni, prossimo passo; mai nuovi sconti). Usa "instructions" per le indicazioni operative del team, anche in italiano. Il fuso orario del cliente è ricavato automaticamente dal prefisso del numero (+39 Italia, +44 UK, ecc.): non chiederlo mai all\'operatore.',
     parameters: obj({ lead_id: str(), objective: str('obiettivo concreto della chiamata'), call_type: { type: 'string', enum: ['qualifica', 'trattativa'], description: 'tipologia della chiamata' }, instructions: str('istruzioni operative del team per questa chiamata, anche in italiano'), customer_timezone: str('solo se il prefisso non è riconosciuto, es. Europe/London') }, ['lead_id','objective','call_type']) },
   { type: 'function', name: 'propose_call_plan', description: 'Prepara un PIANO OPERATIVO di telefonate a più clienti (max 30), in INGLESE dal numero UK. NON telefona: il team lo approva una sola volta in chat, poi il sistema chiama un cliente alla volta nell\'ordine dato, con pausa tra le chiamate e solo 9-20 ora locale del cliente. lead_ids in ordine di priorità.',
@@ -30,7 +37,8 @@ export const TOOLS = [
   { type: 'function', name: 'create_lead', description: 'Crea un nuovo cliente nella pipeline Vesuviano.',
     parameters: obj({ contact_name: str(), company_name: str(), email: str(), phone: str(), city: str(), country: str(), notes: str(), source: str() }, ['contact_name']) },
   { type: 'function', name: 'send_message', description: 'Invia DAVVERO un messaggio al cliente (email da info@, wasender = WhatsApp di Gennaro, whatsapp_api = linea Bruno) o salva una nota interna (note). Usalo solo se l\'operatore ha chiesto di inviare. body e subject vanno SEMPRE scritti nella lingua del cliente (customer_language da get_lead), anche se l\'istruzione è in italiano; le note interne restano in italiano.',
-    parameters: obj({ lead_id: str(), channel: { type: 'string', enum: ['email', 'wasender', 'whatsapp_api', 'note'] }, subject: str(), body: str() }, ['lead_id', 'channel', 'body']) },
+    parameters: obj({ lead_id: str(), channel: { type: 'string', enum: ['email', 'wasender', 'whatsapp_api', 'whatsapp_uk', 'note'] }, subject: str(), body: str(),
+      template: obj({ name: str(), language: str(), params: { type: 'array', items: str() } }, ['name', 'language', 'params']) }, ['lead_id', 'channel', 'body']) },
   { type: 'function', name: 'get_catalog', description: 'Prezzi di listino attivo per mercato (UK, FR, DE) e sconti per tipo cliente. Unica fonte di prezzi ammessa.',
     parameters: obj({ query: str('filtro nome prodotto'), market: { type: 'string', enum: ['UK', 'FR', 'DE'] } }) },
   { type: 'function', name: 'create_offer', description: 'Crea una bozza di offerta commerciale (stato offerta_pronta). I prezzi devono venire da get_catalog o dall\'operatore.',
@@ -60,7 +68,7 @@ export const TOOLS = [
       estimated_delivery: str('YYYY-MM-DD'), notes: str() }, ['order_id']) },
 ];
 
-type Ctx = { admin: SupabaseClient; userId: string; auth: string; url: string; anon: string; actionId?: string };
+type Ctx = { admin: SupabaseClient; reader?: SupabaseClient; userId: string; auth: string; url: string; anon: string; actionId?: string };
 const pick = (a: Record<string, unknown>, keys: string[]) =>
   Object.fromEntries(keys.filter((k) => a[k] !== undefined && a[k] !== null && a[k] !== '').map((k) => [k, a[k]]));
 import { customerLanguage } from './language.ts';
@@ -114,8 +122,13 @@ async function deliverOffer(ctx: Ctx, offer: any, lead: any, channel: 'wasender'
 
 export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): Promise<unknown> {
   const { admin } = ctx;
+  const reader = ctx.reader ?? admin;
   switch (name) {
+    case 'get_communications': return communicationPage(reader, a);
+    case 'get_call_history': return callHistory(reader, a);
+    case 'get_whatsapp_templates': return callFn(ctx, 'bruno-agent', { action: 'wa_templates', lead_id: a.lead_id, whatsapp_line: a.channel === 'whatsapp_uk' ? 'uk' : 'it' });
     case 'propose_call': {
+      await assertNoHumanCall(reader, [String(a.lead_id)]);
       const opt = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : undefined);
       const type = String(a.call_type || '').trim().toLowerCase().startsWith('tratt') ? 'trattativa' : 'qualifica';
       const objective = opt(a.objective) && opt(a.objective)!.length >= 10 ? opt(a.objective) : `${type === 'trattativa' ? 'Trattativa' : 'Qualifica'} del cliente: ${opt(a.objective) || 'esigenze, progetto e tempi'}`;
@@ -127,11 +140,17 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       const type = String(a.call_type || '').trim().toLowerCase().startsWith('tratt') ? 'trattativa' : 'qualifica';
       const objective = opt(a.objective) && opt(a.objective)!.length >= 10 ? opt(a.objective) : `${type === 'trattativa' ? 'Trattativa' : 'Qualifica'} del cliente: ${opt(a.objective) || 'esigenze, progetto e tempi'}`;
       const ids = (Array.isArray(a.lead_ids) ? a.lead_ids : []).map((v: unknown) => String(v).trim()).filter(Boolean).slice(0, 30);
+      await assertNoHumanCall(reader, ids);
       const gap = Number(a.gap_minutes); 
       const r = await callFn(ctx, 'bruno-voice', { action: 'plan_propose', lead_ids: ids, objective, call_type: type, instructions: opt(a.instructions), title: opt(a.title), ...(Number.isInteger(gap) && gap >= 1 && gap <= 120 ? { gap_minutes: gap } : {}) });
       return { ...r, instruction: 'Piano salvato, NESSUNA chiamata partita. Il pulsante Approva piano compare sotto la tua risposta: presenta elenco clienti, esclusi con motivo e ritmo. Non mostrare ID.' };
     }
-    case 'approve_call': return await callFn(ctx, 'bruno-voice', { action: 'approve', call_id: a.call_id });
+    case 'approve_call': {
+      const { data: call, error } = await reader.from('bruno_voice_calls').select('lead_id').eq('id', a.call_id).single();
+      if (error || !call) throw new Error('Proposta chiamata non trovata');
+      await assertNoHumanCall(reader, [call.lead_id]);
+      return await callFn(ctx, 'bruno-voice', { action: 'approve', call_id: a.call_id });
+    }
     case 'search_leads': {
       let q = admin.from('leads').select(LEAD).eq('pipeline', 'Vesuviano').eq('archived', false).order('updated_at', { ascending: false }).limit(15);
       const t = clean(a.query);
@@ -141,14 +160,17 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       return (data ?? []).map((l) => ({ ...l, customer_language: customerLanguage(l), notes: (l.notes || '').slice(0, 200) }));
     }
     case 'get_lead': {
-      const [{ data: lead }, { data: msgs }, { data: offers }] = await Promise.all([
-        admin.from('leads').select(LEAD).eq('id', a.lead_id).maybeSingle(),
-        admin.from('crm_messages').select('channel,direction,subject,body,created_at').eq('lead_id', a.lead_id).order('created_at', { ascending: false }).limit(12),
-        admin.from('commercial_offers').select('id,number,title,status,amount,currency,created_at').eq('lead_id', a.lead_id).order('created_at', { ascending: false }).limit(5),
+      const [leadResult, communications, history, offerResult] = await Promise.all([
+        reader.from('leads').select(LEAD).eq('id', a.lead_id).maybeSingle(),
+        communicationPage(reader, { lead_id: a.lead_id }), callHistory(reader, { lead_id: a.lead_id }),
+        reader.from('commercial_offers').select('id,number,title,status,amount,currency,created_at').eq('lead_id', a.lead_id).order('created_at', { ascending: false }).limit(5),
       ]);
+      if (leadResult.error) throw leadResult.error;
+      if (offerResult.error) throw offerResult.error;
+      const lead = leadResult.data, offers = offerResult.data;
       if (!lead) return { error: 'Lead non trovato' };
       const { data: orders } = lead.email ? await admin.from('orders').select('id,order_number,status,payment_status,total_amount,created_at').eq('customer_email', lead.email).limit(5) : { data: [] };
-      return { stage_rule: stageRule(lead.status), lead: { ...lead, customer_language: customerLanguage(lead), notes: (lead.notes || '').slice(0, 1500) }, messages: (msgs ?? []).map((m) => ({ ...m, body: m.body.slice(0, 400) })), offers, orders };
+      return { stage_rule: stageRule(lead.status), lead: { ...lead, customer_language: customerLanguage(lead), notes: (lead.notes || '').slice(0, 1500) }, messages: communications.messages, calls: history.calls, offers, orders, links: customerLinks(lead.id) };
     }
     case 'update_lead': {
       if (a.status && !STAGES.includes(a.status)) return { error: 'Fase non valida' };
@@ -167,8 +189,9 @@ export async function runTool(ctx: Ctx, name: string, a: Record<string, any>): P
       return { created: true, lead: data, _link: `/erp/crm?lead=${data.id}` };
     }
     case 'send_message': {
-      const r = await callFn(ctx, 'bruno-agent', { action: 'send', lead_id: a.lead_id, channel: a.channel, body: a.body,
-        subject: a.subject, ai_generated: true, idempotency_key: ctx.actionId || crypto.randomUUID() });
+      const r = await callFn(ctx, 'bruno-agent', { action: 'send', lead_id: a.lead_id, channel: a.channel === 'whatsapp_uk' ? 'whatsapp_api' : a.channel, body: a.body,
+        ...(['whatsapp_api','whatsapp_uk'].includes(a.channel) ? { whatsapp_line: a.channel === 'whatsapp_uk' ? 'uk' : 'it' } : {}),
+        ...(a.template ? { template: a.template } : {}), subject: a.subject, ai_generated: true, idempotency_key: ctx.actionId || crypto.randomUUID() });
       return { ...r, channel: a.channel, result: r?.message?.status ?? r?.smtp_status ?? r?.status ?? 'unknown' };
     }
     case 'get_catalog': {
