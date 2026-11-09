@@ -77,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     await loadLanguage(detectLangFromPath(location.pathname));
     return {};
   },
-  head: () => ({
+  head: ({ match }) => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1.0" },
