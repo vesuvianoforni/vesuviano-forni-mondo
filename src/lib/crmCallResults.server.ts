@@ -48,9 +48,20 @@ export async function processDirectResult(db: CallResultsDb, callId: string, tok
   try {
     let transcript: string | null = job.transcript;
     if (!transcript) {
-      const audio = await db.storage.from('bruno-call-recordings').download(job.recording_path); check(audio);
-      if (!audio.data || !job.recording_path?.startsWith(`direct/${callId}/`)) throw new Error('Registrazione non disponibile.');
-      transcript = await transcribeDirectAudio(new File([audio.data], 'conversation.mp3', { type: 'audio/mpeg' }), internalKey);
+      const parts = await db.from('crm_call_audio_parts').select('ordinal,storage_path,transcript').eq('call_id', callId).eq('uploaded', true).order('ordinal').limit(240); check(parts);
+      const texts: string[] = [];
+      for (const part of parts.data ?? []) {
+        let text = part.transcript;
+        if (!text) {
+          const audio = await db.storage.from('bruno-call-recordings').download(part.storage_path); check(audio);
+          if (!audio.data || !part.storage_path.startsWith(`direct/${callId}/`)) throw new Error('Registrazione non disponibile.');
+          text = await transcribeDirectAudio(new File([audio.data], 'conversation.wav', { type: 'audio/wav' }), internalKey);
+          check(await db.from('crm_call_audio_parts').update({ transcript: text }).eq('call_id', callId).eq('ordinal', part.ordinal));
+        }
+        texts.push(text);
+      }
+      if (!texts.length) throw new Error('Registrazione non disponibile.');
+      transcript = texts.join('\n\n');
       check(await db.from('crm_call_results').update({ transcript }).eq('call_id', callId).eq('lease_token', lease));
     }
     const summary = job.summary || await summarizeDirectTranscript(transcript, internalKey);

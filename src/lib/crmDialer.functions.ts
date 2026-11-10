@@ -28,7 +28,7 @@ export const prepareDirectCall = createServerFn({ method: 'POST' }).middleware([
     const { telnyxDialer, checkDialerConnection } = await import('./crmDialer.server');
     await checkDialerConnection(context.credentials);
     const id = crypto.randomUUID();
-    const inserted = await context.admin.from('crm_direct_calls').insert({ id, lead_id: lead.id, operator_id: context.userId, destination, from_number: CRM_CALLER_NUMBER, recording_status: 'pending' });
+    const inserted = await context.admin.from('crm_direct_calls').insert({ id, lead_id: lead.id, operator_id: context.userId, destination, from_number: CRM_CALLER_NUMBER, recording_status: 'pending', recording_source: 'browser_audio' });
     if (inserted.error) throw new Error(inserted.error.code === '23505' ? 'Hai già una chiamata aperta o da verificare. Chiudila prima di chiamare di nuovo.' : inserted.error.message);
     let credentialId: string | undefined;
     try {
@@ -92,12 +92,58 @@ export const getDirectCallResult = createServerFn({ method: 'POST' }).middleware
     const result = await context.supabase.from('crm_call_results').select('call_id,recording_path,transcript,summary,status,error').eq('call_id', data.id).maybeSingle();
     if (result.error) throw new Error(result.error.message);
     let audioUrl: string | null = null;
+    const audioParts: { ordinal: number; url: string }[] = [];
+    const parts = await context.supabase.from('crm_call_audio_parts').select('ordinal,storage_path').eq('call_id', data.id).eq('uploaded', true).order('ordinal');
+    if (parts.error) throw new Error(parts.error.message);
+    for (const part of parts.data ?? []) {
+      const signed = await context.admin.storage.from('bruno-call-recordings').createSignedUrl(part.storage_path, 600);
+      if (signed.error) throw new Error(signed.error.message); audioParts.push({ ordinal: part.ordinal, url: signed.data.signedUrl });
+    }
     if (result.data?.recording_path) {
       const signed = await context.admin.storage.from('bruno-call-recordings').createSignedUrl(result.data.recording_path, 600);
       if (signed.error) throw new Error(signed.error.message); audioUrl = signed.data.signedUrl;
     }
     return { ...call.data, transcript: result.data?.transcript ?? null, summary: result.data?.summary ?? call.data.summary,
-      processing_status: result.data?.status ?? call.data.recording_status, error: result.data?.error ?? call.data.recording_error, audioUrl };
+      processing_status: result.data?.status ?? call.data.recording_status, error: result.data?.error ?? call.data.recording_error, audioUrl, audioParts };
+  });
+
+export const reserveCallAudioPart = createServerFn({ method: 'POST' }).middleware([dialerAccess])
+  .inputValidator(d => z.object({ id: z.string().uuid(), ordinal: z.number().int().min(0).max(239), seconds: z.number().int().min(1).max(65) }).strict().parse(d))
+  .handler(async ({ data, context }) => {
+    const call = await context.supabase.from('crm_direct_calls').select('id,operator_id,created_at').eq('id', data.id).eq('operator_id', context.userId).single();
+    if (call.error || !call.data || Date.now() - Date.parse(call.data.created_at) > 5 * 3600000) throw new Error('Chiamata non disponibile per la registrazione.');
+    const path = `direct/${data.id}/part-${data.ordinal}.wav`;
+    const saved = await context.admin.from('crm_call_audio_parts').upsert({ call_id: data.id, ordinal: data.ordinal, storage_path: path, duration_seconds: data.seconds }, { onConflict: 'call_id,ordinal', ignoreDuplicates: true });
+    if (saved.error) throw new Error(saved.error.message);
+    const signed = await context.admin.storage.from('bruno-call-recordings').createSignedUploadUrl(path, { upsert: true });
+    if (signed.error) throw new Error(signed.error.message);
+    return { path, token: signed.data.token };
+  });
+
+export const completeCallAudio = createServerFn({ method: 'POST' }).middleware([dialerAccess])
+  .inputValidator(d => z.object({ id: z.string().uuid(), count: z.number().int().min(0).max(240), failure: z.string().max(300).optional() }).strict().parse(d))
+  .handler(async ({ data, context }) => {
+    const call = await context.supabase.from('crm_direct_calls').select('id,operator_id,status,recording_status').eq('id', data.id).eq('operator_id', context.userId).single();
+    if (call.error || !call.data || !['ended','failed','unknown'].includes(call.data.status)) throw new Error('Chiamata non conclusa.');
+    if (call.data.recording_status === 'ready' || call.data.recording_status === 'processing') return { queued: true };
+    if (!data.count || data.failure) {
+      await context.admin.from('crm_direct_calls').update({ recording_status: 'unavailable', recording_error: data.failure || 'Nessuna conversazione registrata.' }).eq('id', data.id);
+      return { queued: false };
+    }
+    const parts = await context.admin.from('crm_call_audio_parts').select('ordinal,storage_path').eq('call_id', data.id).order('ordinal');
+    if (parts.error || parts.data?.length !== data.count || parts.data.some((p, i) => p.ordinal !== i)) throw new Error('Registrazione incompleta: riprova il salvataggio.');
+    for (const part of parts.data) {
+      const info = await context.admin.storage.from('bruno-call-recordings').info(part.storage_path);
+      if (info.error || !info.data || !info.data.size || info.data.size > 24 * 1024 * 1024) throw new Error('Audio non salvato: riprova.');
+    }
+    const marked = await context.admin.from('crm_call_audio_parts').update({ uploaded: true }).eq('call_id', data.id); if (marked.error) throw new Error(marked.error.message);
+    const inserted = await context.admin.from('crm_call_results').upsert({ call_id: data.id, recording_id: `browser:${data.id}` }, { onConflict: 'call_id', ignoreDuplicates: true });
+    if (inserted.error) throw new Error(inserted.error.message);
+    await context.admin.from('crm_direct_calls').update({ recording_status: 'processing', recording_source: 'browser_audio' }).eq('id', data.id);
+    const wake = await fetch(`${process.env['SUPABASE_URL']}/functions/v1/telegram-bruno`, { method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-call-analysis-key': process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '' }, body: JSON.stringify({ action: 'call_analysis' }) });
+    if (!wake.ok) throw new Error('Audio salvato; elaborazione in attesa del prossimo controllo.');
+    return { queued: true };
   });
 
 export const pendingDirectCalls = createServerFn({ method: 'POST' }).middleware([dialerAccess]).handler(async ({ context }) => {
