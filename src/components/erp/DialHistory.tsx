@@ -3,6 +3,8 @@ import { ArrowDownLeft, ArrowUpRight, Bot, Loader2, PhoneCall, UserRound } from 
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { BrunoCallDetail } from '@/components/erp/BrunoCallDetail';
 import type { CRMLead } from '@/components/erp/CRMLeadCard';
 
 type CallRow = {
