@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DialPad } from '@/components/erp/DialPad';
+import { DialHistory } from '@/components/erp/DialHistory';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CRMCallButton } from '@/components/erp/CRMCallProvider';
 import type { CRMLead } from '@/components/erp/CRMLeadCard';
@@ -19,7 +20,7 @@ export default function ERPDial() {
   const selectedLead = params.get('lead');
   const [leads, setLeads] = useState<CRMLead[]>([]);
   const [loading, setLoading] = useState(true), [error, setError] = useState<string | null>(null);
-  const [tab, setTab] = useState<'tastierino' | 'clienti'>('tastierino'), [query, setQuery] = useState(''), [filter, setFilter] = useState<Filter>('oggi');
+  const [tab, setTab] = useState<'tastierino' | 'clienti' | 'storico'>('tastierino'), [query, setQuery] = useState(''), [filter, setFilter] = useState<Filter>('oggi');
 
   useEffect(() => {
     let cancelled = false;
