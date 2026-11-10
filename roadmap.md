@@ -1,5 +1,11 @@
 # Roadmap
 
+## Mail: solo conversazioni email e importazione (10 nov 2026)
+- [x] Mail Clienti mostra solo conversazioni email registrate, non contatti con il solo indirizzo email.
+- [x] Importa email riusa la sincronizzazione della casella, con aggiornamento stato e liste; Casella email mostra la posta già importata con filtri, ricerca, paginazione e dettaglio. Nessun nuovo invio o creazione automatica di lead, permessi invariati (posta non associata visibile agli admin).
+- [x] Verificati 2.573 record importati, 125 email CRM su 82 clienti e sincronizzazione attiva ogni 15 minuti, ultimo ciclo riuscito alle 10:15 UTC. 17 Vitest e 4 Bun superati; UI isolata desktop/mobile verifica apertura, paginazione e avanzamento importazione senza overflow/errori; build OK.
+- [ ] Verifica autenticata dal proprio account: Supabase esterno senza sessione gestita, quindi le prove a schermo usano dati isolati; nessuna nuova importazione manuale reale avviata.
+
 ## Bruno Telegram: Dial, Chat e Mail (9 nov 2026)
 - [x] Letture condivise e paginate di conversazioni, email e chiamate AI/dirette tramite RLS/invoker, canali IT/UK distinti e collegamenti CRM/Dial/Chat/Mail. Riletti 15 record telefonici reali, AI e diretti, e lo storico di un cliente già chiamato; nessuna trascrizione umana inventata.
 - [x] Proposte Telegram sui canali espliciti Gennaro/Bruno IT/Bruno UK/email; UK UI e Telegram condividono il percorso bruno-agent, prenotazione atomica CRM, approvazione ed esiti incerti non ripetibili. Otto template UK approvati riletti da Meta; fuori 24h richiesta di template verificato. Status UK dal webhook persistente ricalcolati senza regressioni e dopo la registrazione dell’id di invio.

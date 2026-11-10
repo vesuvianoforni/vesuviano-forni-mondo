@@ -21,7 +21,7 @@ const PAGE = 1000;
 
 interface Summary { count: number; channelCounts: Record<string, number>; lastAt: string; lastContactAt: string | null; preview: string; channel: string; }
 
-export function BrunoCommunications({ section = "all" }: { section?: CommunicationSection }) {
+export function BrunoCommunications({ section = "all", refreshKey = 0 }: { section?: CommunicationSection; refreshKey?: number }) {
   const { toast } = useToast();
   const [leads, setLeads] = useState<BrunoLead[]>([]);
   const [summaries, setSummaries] = useState<Record<string, Summary>>({});
@@ -70,7 +70,7 @@ export function BrunoCommunications({ section = "all" }: { section?: Communicati
     }
   }, [toast]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => { void load(); }, [load, refreshKey]);
   useEffect(() => {
     if (section !== "chat" || params.get("platform") !== "email") return;
     window.location.replace(`/erp/mail?${params.toString()}`);

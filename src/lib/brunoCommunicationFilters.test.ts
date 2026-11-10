@@ -62,8 +62,15 @@ describe("ERP Chat and Mail separation", () => {
     expect(composerChannels("mail")).toEqual(["email"]);
     expect(sectionFilter("mail", "whatsapp_uk")).toBe("email");
     expect(sectionMessageFilters("mail", "all")).toEqual(["email"]);
-    expect(matchesSection(undefined, "mail", "email", "nuovo@example.com")).toBe(true);
+    expect(matchesSection(undefined, "mail", "email", "nuovo@example.com")).toBe(false);
     expect(matchesSection({ wasender: 4 }, "mail", "email")).toBe(false);
+  });
+
+  it("shows only existing email conversations in Mail, not contacts with just an email address", () => {
+    expect(matchesSection(undefined, "mail", "all", "cliente@example.com")).toBe(false);
+    expect(matchesSection({ email: 0, wasender: 4 }, "mail", "email", "cliente@example.com")).toBe(false);
+    expect(matchesSection({ email: 3, whatsapp_uk: 1 }, "mail", "email", "cliente@example.com")).toBe(true);
+    expect(matchesSection({ email: 1 }, "mail", "email", null)).toBe(true);
   });
 
   it("counts only messages belonging to each section", () => {
