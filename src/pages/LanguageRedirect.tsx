@@ -1,39 +1,30 @@
 import { useEffect } from 'react';
-import { useNavigate } from '@/lib/router-compat';
 import SEOHead from '@/components/SEOHead';
-
-
-const SUPPORTED_LANGS = ['it', 'en', 'fr', 'de', 'es'];
-
-const detectBrowserLanguage = (): string => {
-  const browserLangs = navigator.languages || [navigator.language];
-  for (const bl of browserLangs) {
-    const short = bl.split('-')[0]!.toLowerCase();
-    if (SUPPORTED_LANGS.includes(short)) {
-      return short;
-    }
-  }
-  return 'it'; // fallback
-};
+import { selectBrowserLanguage } from '@/lib/browserLanguage';
+import { getAlternatesForPath } from '@/lib/hreflang';
+import LocalizedIndex from './LocalizedIndex';
 
 const LanguageRedirect = () => {
-  const navigate = useNavigate();
-
   useEffect(() => {
-    const lang = detectBrowserLanguage();
-    navigate(`/${lang}`, { replace: true });
-  }, [navigate]);
+    const preferences = navigator.languages?.length
+      ? navigator.languages
+      : [navigator.language];
+    const lang = selectBrowserLanguage(preferences);
+    // A document navigation retains the destination's server-rendered head.
+    // Preserve campaign attribution and any within-page anchor.
+    window.location.replace(`/${lang}${window.location.search}${window.location.hash}`);
+  }, []);
 
   return (
-
     <>
-      <SEOHead title="Vesuviano Forni" description="Vesuviano - forni napoletani professionali." lang="it" canonical="/it" noIndex />
-      <div className="min-h-screen flex items-center justify-center bg-stone-50">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-vesuviano-500 mx-auto"></div>
-        <p className="mt-4 text-stone-600">Loading...</p>
-      </div>
-    </div>
+      <SEOHead
+        title="Vesuviano | Forni Napoletani Professionali dal 1950"
+        description="Forni napoletani artigianali dal 1950: a legna, gas, elettrici e VesuvioBuono zero emissioni. Per pizzerie e ristoranti nel mondo."
+        lang="it"
+        canonical="/"
+        alternates={getAlternatesForPath('/it') ?? undefined}
+      />
+      <LocalizedIndex lang="it" />
     </>
   );
 };
