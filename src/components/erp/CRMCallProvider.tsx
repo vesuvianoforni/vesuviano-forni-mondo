@@ -122,6 +122,7 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
         } else if (call.state === 'hangup' || call.state === 'destroy') finish(directRef.current?.answered || endingRef.current ? 'ended' : 'failed');
       });
       callRef.current = client.newCall({ destinationNumber: session.destination, callerNumber: session.from_number, callerName: 'Vesuviano Forni',
+        customHeaders: [{ name: 'X-CRM-Call-ID', value: session.id }],
         localStream: stream, ...(audioRef.current ? { remoteElement: audioRef.current } : {}), audio: true, video: false });
       if (directRef.current) directRef.current = { ...directRef.current, status: 'dialing' };
       setDirect(previous => previous ? { ...previous, status: 'dialing' } : null); notify('dialing', callRef.current.id);
@@ -182,7 +183,7 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
           <Textarea id="call-instructions" placeholder="Indicazioni per questa chiamata…" rows={3} maxLength={2000} value={instructions} disabled={busy || Boolean(aiProposal)} onChange={e => setInstructions(e.target.value)} />
           {aiProposal && <p className="text-sm font-medium">Proposta pronta · Chiamare ora {aiProposal.destination} con Bruno?</p>}
         </div>}
-        {mode === 'direct' && <p className="flex items-center gap-2 text-sm text-muted-foreground"><Headset className="h-4 w-4 shrink-0" />Microfono e audio del browser · Operatore</p>}
+        {mode === 'direct' && <div className="space-y-2 text-sm text-muted-foreground"><p className="flex items-center gap-2"><Headset className="h-4 w-4 shrink-0" />Microfono e audio del browser · Operatore</p><p>Chiamata registrata. Informa il cliente prima di proseguire; all’avvio della registrazione sentirai un segnale.</p></div>}
         {error && <p role="alert" className="break-words text-sm text-destructive">{error}</p>}
         {unresolved && <Button variant="outline" disabled={busy} onClick={async () => {
           setBusy(true);
