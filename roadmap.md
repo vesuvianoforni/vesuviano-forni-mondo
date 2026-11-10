@@ -1,8 +1,8 @@
 # Roadmap
 
 ## Homepage: barra grigia al posto del logo (10 nov 2026)
-- [ ] Correggere il segnaposto del logo rimasto visibile per immagini già caricate prima dell'avvio della pagina.
-- [ ] Verificare primo accesso e aggiornamento della pagina su computer e telefono.
+- [x] Riprodotta barra: logo già caricato prima dell'idratazione, evento load perso e segnaposto a tutta larghezza. LazyImage verifica complete/naturalWidth, mostra subito immagini prioritarie senza segnaposto e limita il contenitore alla larghezza dell'immagine; errore e cambio sorgente gestiti senza stato precedente.
+- [x] Primo accesso e ricaricamento /en verificati a 1514×1046 e 390×844: logo desktop visibile (198,67px), barra assente, mobile conserva il solo logo nella navigazione, zero overflow/errori. Build OK; correzione disponibile in anteprima, pubblicazione Netlify necessaria sul dominio.
 
 ## Telegram: esclusione chiamate senza risposta (10 nov 2026)
 - [x] Filtro attivo prima dell'inserimento in telegram_notifications per chiamate dirette senza answered_at e chiamate CRM con esito senza risposta o durata zero; avvisi pendenti rimossi e promemoria esclusi ove presenti, senza modificare storico o altri canali. Nessun deploy del sito necessario.
