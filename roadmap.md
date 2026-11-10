@@ -1,5 +1,11 @@
 # Roadmap
 
+## SEO: controllo e correzioni approvate (10 nov 2026)
+- [x] Scansione aggiornata e controllo reale dominio Netlify, cinque lingue, blog, pagine prodotto, robots, sitemap e 404; Search Console dominio verificato, 310 clic/22.547 impression nei 28 giorni, confronto precedente e ispezioni EN/FR/root.
+- [ ] Correggere noindex e titoli/descrizioni duplicati della root preservando il reindirizzamento linguistico; verificare HTML iniziale e navigazione browser.
+- [ ] Verificare la segnalazione lang: attributo già presente in sorgente e nelle risposte reali, nessuna correzione artificiale del dato linguistico.
+- [ ] Pubblicare su Netlify per applicare le correzioni al dominio; www/canonical, dati strutturati prodotto e sitemap restano proposte non approvate.
+
 ## Dial: chiamate ricevute e inoltrate (10 nov 2026)
 - [x] Recuperate nove chiamate storiche reali dai 68 CDR Telnyx (due pagine), 23 record inbound → 16 telefonate distinte; sette già Bruno escluse, nove importate e rilette senza duplicati. Ingresso irlandese 10/11 11:29 UTC: inoltro al fisso riuscito, 31s reali. Conservate chiamate perse/SIP e vecchi inoltri da cld/cf_number; nessuna destinazione inventata.
 - [x] Recupero manuale Telnyx nello storico via funzione staff autenticata; paginazione CDR completa prima degli insert-only, deduplica sessioni e assenza modifiche a telefonia/invii. Diciotto test superati (incluse seconda pagina e nessun import se lettura interrotta) e UI isolata recupero→conferma→Ricevute→dettaglio a 1280×1800/390×844 senza errori/overflow; build OK. Fresh Dial non mostra l’errore temporaneo chunk segnalato, account esterno rinvia al login.
