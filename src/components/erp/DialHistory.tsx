@@ -36,6 +36,8 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
   const [calls, setCalls] = useState<CallRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [aiCallId, setAiCallId] = useState<string | null>(null);
+  const [directCall, setDirectCall] = useState<CallRow | null>(null);
 
   useEffect(() => {
     let cancelled = false;
