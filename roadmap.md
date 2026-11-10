@@ -1,5 +1,10 @@
 # Roadmap
 
+## Mail: solo conversazioni email e importazione (10 nov 2026)
+- [ ] Nascondere i clienti senza email registrate nella sezione Mail.
+- [ ] Rendere accessibile da Mail la sincronizzazione della posta già presente nella casella, senza reinvii o duplicazioni.
+- [ ] Verificare dati esistenti, test dei filtri e visualizzazione desktop/mobile.
+
 ## Bruno Telegram: Dial, Chat e Mail (9 nov 2026)
 - [x] Letture condivise e paginate di conversazioni, email e chiamate AI/dirette tramite RLS/invoker, canali IT/UK distinti e collegamenti CRM/Dial/Chat/Mail. Riletti 15 record telefonici reali, AI e diretti, e lo storico di un cliente già chiamato; nessuna trascrizione umana inventata.
 - [x] Proposte Telegram sui canali espliciti Gennaro/Bruno IT/Bruno UK/email; UK UI e Telegram condividono il percorso bruno-agent, prenotazione atomica CRM, approvazione ed esiti incerti non ripetibili. Otto template UK approvati riletti da Meta; fuori 24h richiesta di template verificato. Status UK dal webhook persistente ricalcolati senza regressioni e dopo la registrazione dell’id di invio.
