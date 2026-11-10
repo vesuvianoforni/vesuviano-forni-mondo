@@ -1,10 +1,9 @@
-// @vitest-environment node
 import { describe, it, expect } from 'vitest';
 import { encodeCallWav } from './crmCallRecorder';
 describe('Registrazione completa operatore', () => {
   it('ogni segmento conserva intestazione WAV, frequenza e tutti i campioni', async () => {
     const file = encodeCallWav([new Float32Array([0.5, -0.5]), new Float32Array([1, -1])], 16000);
-    const b = await file.arrayBuffer(), v = new DataView(b);
+    const b = await new Promise<ArrayBuffer>((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result as ArrayBuffer); reader.onerror = reject; reader.readAsArrayBuffer(file); }), v = new DataView(b);
     expect(new TextDecoder().decode(b.slice(0, 4))).toBe('RIFF');
     expect(new TextDecoder().decode(b.slice(8, 12))).toBe('WAVE');
     expect(v.getUint32(24, true)).toBe(16000); expect(v.getUint32(40, true)).toBe(8);
