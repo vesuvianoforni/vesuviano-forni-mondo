@@ -1445,11 +1445,12 @@ export type Database = {
           ended_at: string | null
           forward_call_id: string | null
           forward_status: string | null
-          forwarded_to: string
+          forwarded_to: string | null
           id: string
           lead_id: string | null
           provider_call_id: string
           received_number: string
+          source: string
           status: string
           updated_at: string
         }
@@ -1461,11 +1462,12 @@ export type Database = {
           ended_at?: string | null
           forward_call_id?: string | null
           forward_status?: string | null
-          forwarded_to: string
+          forwarded_to?: string | null
           id?: string
           lead_id?: string | null
           provider_call_id: string
           received_number: string
+          source?: string
           status?: string
           updated_at?: string
         }
@@ -1477,11 +1479,12 @@ export type Database = {
           ended_at?: string | null
           forward_call_id?: string | null
           forward_status?: string | null
-          forwarded_to?: string
+          forwarded_to?: string | null
           id?: string
           lead_id?: string | null
           provider_call_id?: string
           received_number?: string
+          source?: string
           status?: string
           updated_at?: string
         }

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowDownLeft, ArrowUpRight, Bot, Loader2, PhoneCall, PhoneForwarded, RefreshCw, UserRound } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Bot, Download, Loader2, PhoneCall, PhoneForwarded, RefreshCw, UserRound } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,8 @@ import type { CRMLead } from '@/components/erp/CRMLeadCard';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { fullPhoneIdentity, filterDialDirections, type DialDirectionFilter } from '@/lib/dialHistory';
+import { useServerFn } from '@tanstack/react-start';
+import { syncInboundCallHistory } from '@/lib/inboundCallHistory.functions';
 
 type CallRow = {
   id: string;
@@ -21,8 +23,9 @@ type CallRow = {
   durationSec: number | null;
   summary: string | null;
   objective: string | null;
-  forwardedTo?: string;
+  forwardedTo?: string | null;
   receivedNumber?: string;
+  source?: string;
 };
 
 const STATUS_LABEL: Record<string, string> = {
@@ -47,6 +50,18 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
   const [forwardCall, setForwardCall] = useState<CallRow | null>(null);
   const [filter, setFilter] = useState<DialDirectionFilter>('all');
   const [reload, setReload] = useState(0);
+  const [syncing, setSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState<string | null>(null);
+  const syncHistory = useServerFn(syncInboundCallHistory);
+  const recover = async () => {
+    setSyncing(true); setSyncMessage(null);
+    try {
+      const result = await syncHistory();
+      setSyncMessage(result.imported ? `${result.imported} chiamate ricevute recuperate.` : 'Storico ricevute già aggiornato.');
+      setReload(value => value + 1);
+    } catch (e) { setSyncMessage(e instanceof Error ? e.message : 'Recupero Telnyx non disponibile.'); }
+    finally { setSyncing(false); }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -60,7 +75,7 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
           .select('id,lead_id,destination,direction,status,objective,summary,created_at,started_at,ended_at')
           .order('created_at', { ascending: false }).limit(200),
         supabase.from('crm_inbound_calls')
-          .select('id,lead_id,caller_number,received_number,forwarded_to,status,created_at,duration_seconds')
+          .select('id,lead_id,caller_number,received_number,forwarded_to,status,created_at,duration_seconds,source')
           .order('created_at', { ascending: false }).limit(200),
       ]);
       if (cancelled) return;
@@ -86,10 +101,11 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
           id: `f-${c.id}`, kind: 'forward' as const, leadId: c.lead_id, destination: c.caller_number,
           direction: 'inbound' as const, status: c.status, at: c.created_at, durationSec: c.duration_seconds,
           summary: null, objective: null, forwardedTo: c.forwarded_to, receivedNumber: c.received_number,
+          source: c.source,
         })),
       ].sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime());
       setCalls(rows); setLoading(false);
-    })();
+    })().catch(() => { if (!cancelled) { setError('Connessione allo storico non disponibile.'); setLoading(false); } });
     return () => { cancelled = true; };
   }, [reload]);
 
@@ -106,8 +122,6 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
   const shown = filterDialDirections(calls, filter);
 
   if (loading) return <div className="flex justify-center py-10"><Loader2 className="h-6 w-6 animate-spin" /></div>;
-  if (error) return <p className="text-sm text-destructive">Impossibile caricare lo storico: {error}</p>;
-  if (calls.length === 0) return <p className="py-10 text-center text-sm text-muted-foreground">Nessuna chiamata registrata.</p>;
 
   return <>
     <div className="mb-3 flex items-center gap-2">
@@ -115,7 +129,10 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
         <TabsList className="grid w-full grid-cols-3"><TabsTrigger value="all">Tutte</TabsTrigger><TabsTrigger value="outbound">In uscita</TabsTrigger><TabsTrigger value="inbound">Ricevute</TabsTrigger></TabsList>
       </Tabs>
       <Button variant="ghost" size="icon" className="h-11 w-11 shrink-0" onClick={() => setReload(v => v + 1)} aria-label="Aggiorna storico" title="Aggiorna storico"><RefreshCw className="h-4 w-4" /></Button>
+      <Button variant="outline" size="icon" disabled={syncing} className="h-11 w-11 shrink-0" onClick={recover} aria-label="Recupera storico Telnyx" title="Recupera storico Telnyx">{syncing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}</Button>
     </div>
+    {syncMessage && <p role="status" className="mb-3 break-words text-sm text-muted-foreground">{syncMessage}</p>}
+    {error && <p role="alert" className="mb-3 text-sm text-destructive">Impossibile caricare lo storico: {error}</p>}
     {shown.length === 0 && <p className="py-10 text-center text-sm text-muted-foreground">Nessuna chiamata {filter === 'inbound' ? 'ricevuta' : 'in uscita'} registrata.</p>}
     <ul className="divide-y rounded-lg border">
     {shown.map(c => {
@@ -139,7 +156,7 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
             {dur ? ` · ${dur}` : ''}
           </p>
           <div className="mt-1 flex flex-wrap gap-1">
-            <Badge variant="outline">{c.kind === 'ai' ? 'Bruno AI' : c.kind === 'forward' ? 'Ricevuta · inoltro' : 'Diretta'}</Badge>
+            <Badge variant="outline">{c.kind === 'ai' ? 'Bruno AI' : c.kind === 'forward' ? (c.forwardedTo ? 'Ricevuta · inoltro' : 'Ricevuta') : 'Diretta'}</Badge>
             <Badge variant={['failed','missed','busy'].includes(c.status) ? 'destructive' : 'secondary'}>{c.kind === 'forward' && c.status === 'completed' ? 'Terminata · risposta dal fisso' : c.kind === 'forward' && c.status === 'unknown' ? 'Risposta non confermata' : STATUS_LABEL[c.status] ?? c.status}</Badge>
             {c.objective && <Badge variant="outline">{c.objective}</Badge>}
           </div>
@@ -161,10 +178,11 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
         {forwardCall && <dl className="space-y-4 text-sm">
           <div><dt className="text-muted-foreground">Chiamante</dt><dd className="break-words font-medium">{findLead(forwardCall)?.contact_name || findLead(forwardCall)?.company_name || forwardCall.destination}</dd><dd>{forwardCall.destination}</dd></div>
           <div><dt className="text-muted-foreground">Linea UK</dt><dd>{forwardCall.receivedNumber}</dd></div>
-          <div><dt className="text-muted-foreground">Inoltro al numero aziendale</dt><dd className="font-medium">{forwardCall.forwardedTo}</dd></div>
+          {forwardCall.forwardedTo && <div><dt className="text-muted-foreground">Inoltro al numero aziendale</dt><dd className="font-medium">{forwardCall.forwardedTo}</dd></div>}
           <div><dt className="text-muted-foreground">Esito</dt><dd>{forwardCall.status === 'completed' ? 'Terminata · risposta dal fisso' : forwardCall.status === 'unknown' ? 'Risposta non confermata' : STATUS_LABEL[forwardCall.status] ?? forwardCall.status}</dd></div>
           <div><dt className="text-muted-foreground">Data</dt><dd>{new Date(forwardCall.at).toLocaleString('it-IT')}</dd></div>
-          {forwardCall.durationSec != null && <div><dt className="text-muted-foreground">Durata al fisso</dt><dd>{fmtDuration(forwardCall.durationSec)}</dd></div>}
+          {forwardCall.durationSec != null && <div><dt className="text-muted-foreground">{forwardCall.forwardedTo ? 'Durata al fisso' : 'Durata linea UK'}</dt><dd>{fmtDuration(forwardCall.durationSec)}</dd></div>}
+          {forwardCall.source === 'telnyx_cdr' && <div><dt className="text-muted-foreground">Fonte</dt><dd>Storico Telnyx</dd></div>}
         </dl>}
       </DialogContent>
     </Dialog>
