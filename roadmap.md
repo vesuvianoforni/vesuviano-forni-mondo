@@ -1,5 +1,9 @@
 # Roadmap
 
+## Homepage: barra grigia al posto del logo (10 nov 2026)
+- [ ] Correggere il segnaposto del logo rimasto visibile per immagini già caricate prima dell'avvio della pagina.
+- [ ] Verificare primo accesso e aggiornamento della pagina su computer e telefono.
+
 ## Telegram: esclusione chiamate senza risposta (10 nov 2026)
 - [x] Filtro attivo prima dell'inserimento in telegram_notifications per chiamate dirette senza answered_at e chiamate CRM con esito senza risposta o durata zero; avvisi pendenti rimossi e promemoria esclusi ove presenti, senza modificare storico o altri canali. Nessun deploy del sito necessario.
 - [x] Quattro test di integrazione superati sul filtro SQL e sul rifiuto di due avvisi da chiamate reali (diretta e CRM), cinque regressioni Telegram passate; zero avvisi a vuoto aperti, 1.967 chiamate CRM/689 senza risposta e tre tentativi operatore conservati. Build OK; dieci segnalazioni sicurezza preesistenti invariate. Nessuna telefonata né notifica inviata per prova; AGENTS.md al limite, nota strutturale non aggiunta.
