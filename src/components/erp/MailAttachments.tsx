@@ -21,7 +21,7 @@ export function MailAttachments({ source, names }: { source: MailAttachmentSourc
   const storedNames = mailAttachmentNames(names);
   useEffect(() => {
     generation.current += 1;
-    setExpanded(false); setLoading(false); setError(null); setFiles(null); setItemId(null); setSelected(null); setBlob(null); setFileError(null);
+    setExpanded(false); setLoading(false); setError(null); setFiles(null); setItemId(null); setSelected(null); setBlob(null); setFileError(null); setFileLoading(false);
     return () => { generation.current += 1; };
   }, [sourceId]);
   useEffect(() => {
