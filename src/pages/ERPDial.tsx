@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DialPad } from '@/components/erp/DialPad';
+import { DialHistory } from '@/components/erp/DialHistory';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CRMCallButton } from '@/components/erp/CRMCallProvider';
 import type { CRMLead } from '@/components/erp/CRMLeadCard';
@@ -19,7 +20,7 @@ export default function ERPDial() {
   const selectedLead = params.get('lead');
   const [leads, setLeads] = useState<CRMLead[]>([]);
   const [loading, setLoading] = useState(true), [error, setError] = useState<string | null>(null);
-  const [tab, setTab] = useState<'tastierino' | 'clienti'>('tastierino'), [query, setQuery] = useState(''), [filter, setFilter] = useState<Filter>('oggi');
+  const [tab, setTab] = useState<'tastierino' | 'clienti' | 'storico'>('tastierino'), [query, setQuery] = useState(''), [filter, setFilter] = useState<Filter>('oggi');
 
   useEffect(() => {
     let cancelled = false;
@@ -71,10 +72,11 @@ export default function ERPDial() {
       <div><h1 className="text-xl font-semibold sm:text-2xl">Dial</h1>
         <p className="text-sm text-muted-foreground">Scegli il cliente e chiama con Bruno AI o direttamente dal numero UK.</p></div>
     </header>
-    <Tabs value={tab} onValueChange={v => setTab(v as 'tastierino' | 'clienti')}>
-      <TabsList className="grid w-full grid-cols-2"><TabsTrigger value="tastierino">Tastierino</TabsTrigger><TabsTrigger value="clienti">Clienti</TabsTrigger></TabsList>
+    <Tabs value={tab} onValueChange={v => setTab(v as 'tastierino' | 'clienti' | 'storico')}>
+      <TabsList className="grid w-full grid-cols-3"><TabsTrigger value="tastierino">Tastierino</TabsTrigger><TabsTrigger value="clienti">Clienti</TabsTrigger><TabsTrigger value="storico">Storico</TabsTrigger></TabsList>
     </Tabs>
-    {tab === 'tastierino' ? <DialPad leads={leads} onLeadCreated={l => setLeads(prev => [l, ...prev])} /> : <>
+    {tab === 'storico' ? <DialHistory leads={leads} />
+    : tab === 'tastierino' ? <DialPad leads={leads} onLeadCreated={l => setLeads(prev => [l, ...prev])} /> : <>
     <div className="sticky top-0 z-10 -mx-3 space-y-2 bg-background/95 px-3 py-2 backdrop-blur sm:mx-0 sm:px-0">
       <div className="relative"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca nome, azienda, città o numero"
