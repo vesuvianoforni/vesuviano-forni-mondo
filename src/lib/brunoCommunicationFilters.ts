@@ -50,7 +50,7 @@ export function sectionCount(counts: Record<string, number> | undefined, section
 }
 
 export function matchesSection(counts: Record<string, number> | undefined, section: CommunicationSection, filter: BrunoCommunicationFilter, email?: string | null) {
-  if (section === "mail") return Boolean(email) || communicationCount(counts, "email", 0) > 0;
+  if (section === "mail") return communicationCount(counts, "email", 0) > 0;
   if (section === "chat" && sectionFilter(section, filter) === "all") {
     return !counts || Object.values(counts).every(count => Number(count) === 0) || sectionCount(counts, section, filter, 0) > 0;
   }

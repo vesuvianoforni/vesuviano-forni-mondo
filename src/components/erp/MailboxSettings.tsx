@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Mail, RefreshCw, ShieldCheck, Loader2, AlertCircle } from 'lucide-react';
 import { FunctionsHttpError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -45,12 +45,26 @@ async function request(action:string,extra:Record<string,unknown>={}) {
 }
 const dateLabel=(value:string|null)=>value ? new Date(value).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : 'Mai';
 
-export function MailboxSettings() {
+export function MailboxSettings({ onSynced, importLabel = false }: { onSynced?: (() => void) | undefined; importLabel?: boolean }) {
   const {toast}=useToast();
+  const [open,setOpen]=useState(false);
   const [state,setState]=useState<State|null>(null);
   const [busy,setBusy]=useState(false);
   const [error,setError]=useState<string|null>(null);
   const refresh=async()=>{const data=await request('status');setState(data);};
+  const running=state?.runs.some(run=>run.status==='queued'||run.status==='running') ?? false;
+  useEffect(()=>{
+    if(!open||!running)return;
+    let active=true;
+    const timer=window.setInterval(()=>{
+      void request('status').then((data:State)=>{
+        if(!active)return;
+        setState(data);
+        if(!data.runs.some(run=>run.status==='queued'||run.status==='running'))onSynced?.();
+      }).catch(()=>{/* Retain last known state; manual refresh is available. */});
+    },3000);
+    return()=>{active=false;window.clearInterval(timer);};
+  },[open,running,onSynced]);
   const act=async(action:string,extra:Record<string,unknown>={})=>{
     setBusy(true);setError(null);
     try{
@@ -60,8 +74,8 @@ export function MailboxSettings() {
       await refresh();
     }catch(e){setError((e as Error).message);}finally{setBusy(false);}
   };
-  return <Dialog onOpenChange={open=>{if(open)void act('status');}}>
-    <DialogTrigger asChild><Button variant="outline" size="sm"><Mail className="mr-2 h-4 w-4"/>Casella email</Button></DialogTrigger>
+  return <Dialog onOpenChange={value=>{setOpen(value);if(value)void act('status');else onSynced?.();}}>
+    <DialogTrigger asChild><Button variant="outline" size="sm"><Mail className="mr-2 h-4 w-4"/>{importLabel?'Importa email':'Casella email'}</Button></DialogTrigger>
     <DialogContent className="max-h-[85vh] w-[calc(100%-24px)] max-w-5xl overflow-y-auto">
       <DialogHeader><DialogTitle>info@vesuvianoforni.com</DialogTitle></DialogHeader>
       <Tabs defaultValue="mailbox">
@@ -82,7 +96,7 @@ export function MailboxSettings() {
       </dl>
       <div className="flex flex-wrap gap-2 border-y py-3">
         <Button size="sm" variant="outline" disabled={busy} onClick={()=>void act('test')}>Verifica connessione</Button>
-        <Button size="sm" disabled={busy||!state?.mailbox.enabled} onClick={()=>void act('sync')}><RefreshCw className="mr-2 h-4 w-4"/>Sincronizza</Button>
+        <Button size="sm" disabled={busy||running||!state?.mailbox.enabled} onClick={()=>void act('sync')}><RefreshCw className={running?'mr-2 h-4 w-4 animate-spin':'mr-2 h-4 w-4'}/>{running?'Importazione in corso…':importLabel?'Importa e sincronizza':'Sincronizza'}</Button>
         <Button size="sm" variant="ghost" disabled={busy} aria-label="Aggiorna stato casella" onClick={()=>void act('status')}>{busy?<Loader2 className="h-4 w-4 animate-spin"/>:<RefreshCw className="h-4 w-4"/>}</Button>
         {state?.can_manage&&<Button size="sm" variant="outline" className="sm:ml-auto" disabled={busy||!state.config_ready||(!state.mailbox.enabled&&!state.mailbox.sent_folder)} onClick={()=>void act('enable',{enabled:!state.mailbox.enabled})}>{state.mailbox.enabled?'Disattiva':'Attiva'}</Button>}
       </div>
