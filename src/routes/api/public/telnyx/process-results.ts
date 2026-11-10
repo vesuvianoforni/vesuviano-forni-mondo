@@ -12,7 +12,7 @@ export const Route = createFileRoute('/api/public/telnyx/process-results')({ ser
   const stream = new ReadableStream<Uint8Array>({ async start(controller) {
     controller.enqueue(encoder.encode('processing\n'));
     const heartbeat = setInterval(() => { try { controller.enqueue(encoder.encode('pending\n')); } catch { clearInterval(heartbeat); } }, 10000);
-    try { await processDueDirectResults(admin as unknown as import('@supabase/supabase-js').SupabaseClient); controller.enqueue(encoder.encode('done\n')); }
+    try { await processDueDirectResults(admin as unknown as import('@supabase/supabase-js').SupabaseClient, request.headers.get('x-call-ai-key') ?? undefined); controller.enqueue(encoder.encode('done\n')); }
     catch { controller.enqueue(encoder.encode('failed\n')); }
     finally { clearInterval(heartbeat); controller.close(); }
   } });

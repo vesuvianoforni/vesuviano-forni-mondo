@@ -50,11 +50,11 @@ export const Route = createFileRoute('/api/public/telnyx/recordings')({
     }
     if (!call.provider_verified_at || call.telnyx_control_id !== p.call_control_id || call.telnyx_session_id !== p.call_session_id) return new Response('Binding rejected', { status: 403 });
     if (type === 'call.recording.saved') {
-      if (typeof p.recording_id !== 'string') return new Response('Missing recording', { status: 400 });
       const urls = p.recording_urls as { mp3?: string } | undefined;
       if (!urls?.mp3) return new Response('Missing audio', { status: 400 });
       const existing = await db.from('crm_call_results').select('call_id').eq('call_id', call.id).maybeSingle();
-      if (!existing.data) await captureDirectRecording(db, call.id, p.recording_id, urls.mp3);
+      if (existing.error) return new Response('Lookup failed', { status: 500 });
+      if (!existing.data) await captureDirectRecording(db, call.id, p.recording_id ?? p.call_control_id, urls.mp3);
       // Existing Telegram runtime holds the streaming worker request open, away from the provider's webhook deadline.
       const wake = await fetch(`${process.env['SUPABASE_URL']}/functions/v1/telegram-bruno`, {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'x-call-analysis-key': process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '' },

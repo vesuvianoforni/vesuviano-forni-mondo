@@ -54,8 +54,8 @@ Deno.serve(async (req) => {
     if (state?.paused) return;
     const { data: due } = await admin.from('crm_call_results').select('call_id').in('status', ['queued','running']).lte('next_attempt_at', new Date().toISOString()).limit(1);
     if (!due?.length) return;
-    const response = await fetch('https://vesuvianoforni.com/api/public/telnyx/process-results', {
-      method: 'POST', headers: { 'x-call-analysis-key': service },
+    const response = await fetch('https://www.vesuvianoforni.com/api/public/telnyx/process-results', {
+      method: 'POST', headers: { 'x-call-analysis-key': service, 'x-call-ai-key': Deno.env.get('LOVABLE_API_KEY') ?? '' }, redirect: 'error',
     });
     if (!response.ok || !response.body) throw new Error(`Analisi chiamata non disponibile (${response.status})`);
     const reader = response.body.getReader();
