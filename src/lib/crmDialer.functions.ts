@@ -28,7 +28,7 @@ export const prepareDirectCall = createServerFn({ method: 'POST' }).middleware([
     const { telnyxDialer, checkDialerConnection } = await import('./crmDialer.server');
     await checkDialerConnection(context.credentials);
     const id = crypto.randomUUID();
-    const inserted = await context.admin.from('crm_direct_calls').insert({ id, lead_id: lead.id, operator_id: context.userId, destination, from_number: CRM_CALLER_NUMBER });
+    const inserted = await context.admin.from('crm_direct_calls').insert({ id, lead_id: lead.id, operator_id: context.userId, destination, from_number: CRM_CALLER_NUMBER, recording_status: 'pending' });
     if (inserted.error) throw new Error(inserted.error.code === '23505' ? 'Hai già una chiamata aperta o da verificare. Chiudila prima di chiamare di nuovo.' : inserted.error.message);
     let credentialId: string | undefined;
     try {
@@ -67,7 +67,7 @@ export const updateDirectCall = createServerFn({ method: 'POST' }).middleware([d
     // Use the call UUID as the message UUID: duplicate SDK events cannot duplicate CRM history.
     if (call.provider_call_id || data.provider_id) {
       const seconds = answeredAt ? Math.max(0, Math.floor((Date.parse(call.ended_at ?? now) - Date.parse(answeredAt)) / 1000)) : 0;
-      const body = `Chiamata diretta dell’operatore dal numero UK ${call.from_number} a ${call.destination}. ${directStatusLabels[status] ?? status}${terminal && answeredAt ? ` · ${Math.floor(seconds / 60)} min ${seconds % 60} sec` : ''}. Stato riportato dal telefono del browser.`;
+      const body = call.summary || `Chiamata diretta dell’operatore dal numero UK ${call.from_number} a ${call.destination}. ${directStatusLabels[status] ?? status}${terminal && answeredAt ? ` · ${Math.floor(seconds / 60)} min ${seconds % 60} sec` : ''}. ${call.recording_status === 'legacy' ? 'Stato riportato dal telefono del browser.' : 'Riepilogo in preparazione dalla registrazione.'}`;
       const logged = await context.admin.from('crm_messages').upsert({ id: call.id, lead_id: call.lead_id, channel: 'call', direction: 'outbound', sender: 'operator',
         body, status: 'logged', ai_generated: false, created_by: call.operator_id, created_at: call.created_at,
         metadata: { direct_call_id: call.id, call_mode: 'direct', from_number: call.from_number, duration_seconds: seconds, source: 'browser_reported' },
@@ -78,7 +78,26 @@ export const updateDirectCall = createServerFn({ method: 'POST' }).middleware([d
       const { telnyxDialer } = await import('./crmDialer.server');
       await telnyxDialer(`/telephony_credentials/${call.credential_id}`, context.credentials, 'DELETE');
     }
+    if (terminal && !answeredAt && call.recording_status === 'pending') {
+      await context.admin.from('crm_direct_calls').update({ recording_status: 'unavailable', recording_error: 'Nessuna risposta registrata.' }).eq('id', call.id).eq('recording_status', 'pending');
+    }
     return { status };
+  });
+
+export const getDirectCallResult = createServerFn({ method: 'POST' }).middleware([dialerAccess])
+  .inputValidator(d => z.object({ id: z.string().uuid() }).strict().parse(d))
+  .handler(async ({ data, context }) => {
+    const call = await context.supabase.from('crm_direct_calls').select('id,summary,recording_status,recording_error').eq('id', data.id).single();
+    if (call.error || !call.data) throw new Error('Chiamata non trovata.');
+    const result = await context.supabase.from('crm_call_results').select('call_id,recording_path,transcript,summary,status,error').eq('call_id', data.id).maybeSingle();
+    if (result.error) throw new Error(result.error.message);
+    let audioUrl: string | null = null;
+    if (result.data?.recording_path) {
+      const signed = await context.admin.storage.from('bruno-call-recordings').createSignedUrl(result.data.recording_path, 600);
+      if (signed.error) throw new Error(signed.error.message); audioUrl = signed.data.signedUrl;
+    }
+    return { ...call.data, transcript: result.data?.transcript ?? null, summary: result.data?.summary ?? call.data.summary,
+      processing_status: result.data?.status ?? call.data.recording_status, error: result.data?.error ?? call.data.recording_error, audioUrl };
   });
 
 export const pendingDirectCalls = createServerFn({ method: 'POST' }).middleware([dialerAccess]).handler(async ({ context }) => {
