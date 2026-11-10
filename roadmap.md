@@ -1,11 +1,12 @@
 # Roadmap
 
 ## Dial: chiamate ricevute e inoltrate (10 nov 2026)
-- [ ] Recuperare ingressi storici Telnyx mancanti, deduplicare tentativi per sessione ed escludere quelli già registrati da Bruno; aggiungere sincronizzazione manuale dello storico senza chiamate/invii.
+- [x] Recuperate nove chiamate storiche reali dai 68 CDR Telnyx (due pagine), 23 record inbound → 16 telefonate distinte; sette già Bruno escluse, nove importate e rilette senza duplicati. Ingresso irlandese 10/11 11:29 UTC: inoltro al fisso riuscito, 31s reali. Conservate chiamate perse/SIP e vecchi inoltri da cld/cf_number; nessuna destinazione inventata.
+- [x] Recupero manuale Telnyx nello storico via funzione staff autenticata; paginazione CDR completa prima degli insert-only, deduplica sessioni e assenza modifiche a telefonia/invii. Test frontend 16 superati e UI isolata recupero→conferma→Ricevute→dettaglio a 1280×1800/390×844 senza errori/overflow; build OK. Fresh Dial non mostra l’errore temporaneo chunk segnalato, account esterno rinvia al login.
 - [x] Registro separato crm_inbound_calls: ingressi UK firmati, callback inoltro associati a parent/child e numeri reali, esito atomico senza regressioni terminali, nessun cliente/registrazione/assistente creato. Permessi effettivi riletti: anon negato, browser sola lettura admin/commerciale, aggiornamenti solo servizio.
 - [x] Storico Dial con cliente riconosciuto dal numero completo (corrispondenze ambigue non assegnate), chiamante, fisso destinazione, durata e risposta/persa/occupato/incerto; filtri Tutte/In uscita/Ricevute, aggiornamento manuale e dettaglio.
 - [x] 41 test Deno e 9 Vitest superati; UI isolata 1280×1800/390×844 con filtri e dettaglio senza overflow/errori. bruno-voice distribuita: TeXML reale 200 conserva +3908119231684 e timeout 60s, callback non firmato 401. Build OK; dieci avvisi sicurezza preesistenti invariati.
-- [ ] Pubblicazione Netlify e nuova telefonata UK → fisso → storico dal proprio account: accesso Supabase esterno non disponibile nel sandbox, nessuna chiamata reale avviata e archivio ingressi ancora vuoto. Lo storico parte dai nuovi eventi, nessun recupero storico Telnyx eseguito.
+- [ ] Pubblicazione Netlify del comando di recupero e prova autenticata dal proprio account: accesso Supabase esterno non disponibile nel sandbox; UI con risposte isolate, nove ingressi reali rilette separatamente. Nuova telefonata UK → fisso → callback → storico ancora da provare; nessuna telefonata avviata. Dieci avvisi sicurezza preesistenti invariati.
 
 ## Chiamate operatore: registrazione e riepilogo Telegram (10 nov 2026)
 - [x] Registrazione di entrambe le voci nel browser come WAV completi da un minuto, caricamento privato associato a chiamata/operatore, salvataggio finale e riprova senza richiamare; telefonia Telnyx invariata. CDR reali: WebRTC/SIP senza Call Control né registrazioni; configurazione temporaneamente verificata e ripristinata, nessun webhook nuovo mantenuto.
