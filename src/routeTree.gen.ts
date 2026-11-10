@@ -284,7 +284,6 @@ import { Route as FrBlogSlugRouteImport } from './routes/fr/blog/$slug'
 import { Route as ItBlogIndexRouteImport } from './routes/it/blog/index'
 import { Route as ItBlogSlugRouteImport } from './routes/it/blog/$slug'
 import { Route as ApiPublicTelnyxProcessResultsRouteImport } from './routes/api/public/telnyx/process-results'
-import { Route as ApiPublicTelnyxRecordingsRouteImport } from './routes/api/public/telnyx/recordings'
 import { Route as ApiPublicWhatsappWebhookRouteImport } from './routes/api/public/whatsapp/webhook'
 
 const IndexRoute = IndexRouteImport.update({
@@ -1676,12 +1675,6 @@ const ApiPublicTelnyxProcessResultsRoute =
     path: '/api/public/telnyx/process-results',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicTelnyxRecordingsRoute =
-  ApiPublicTelnyxRecordingsRouteImport.update({
-    id: '/api/public/telnyx/recordings',
-    path: '/api/public/telnyx/recordings',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const ApiPublicWhatsappWebhookRoute =
   ApiPublicWhatsappWebhookRouteImport.update({
     id: '/api/public/whatsapp/webhook',
@@ -1965,7 +1958,6 @@ export interface FileRoutesByFullPath {
   '/fr/blog/': typeof FrBlogIndexRoute
   '/it/blog/': typeof ItBlogIndexRoute
   '/api/public/telnyx/process-results': typeof ApiPublicTelnyxProcessResultsRoute
-  '/api/public/telnyx/recordings': typeof ApiPublicTelnyxRecordingsRoute
   '/api/public/whatsapp/webhook': typeof ApiPublicWhatsappWebhookRoute
 }
 export interface FileRoutesByTo {
@@ -2243,7 +2235,6 @@ export interface FileRoutesByTo {
   '/fr/blog': typeof FrBlogIndexRoute
   '/it/blog': typeof ItBlogIndexRoute
   '/api/public/telnyx/process-results': typeof ApiPublicTelnyxProcessResultsRoute
-  '/api/public/telnyx/recordings': typeof ApiPublicTelnyxRecordingsRoute
   '/api/public/whatsapp/webhook': typeof ApiPublicWhatsappWebhookRoute
 }
 export interface FileRoutesById {
@@ -2523,7 +2514,6 @@ export interface FileRoutesById {
   '/fr/blog/': typeof FrBlogIndexRoute
   '/it/blog/': typeof ItBlogIndexRoute
   '/api/public/telnyx/process-results': typeof ApiPublicTelnyxProcessResultsRoute
-  '/api/public/telnyx/recordings': typeof ApiPublicTelnyxRecordingsRoute
   '/api/public/whatsapp/webhook': typeof ApiPublicWhatsappWebhookRoute
 }
 export interface FileRouteTypes {
@@ -2804,7 +2794,6 @@ export interface FileRouteTypes {
     | '/fr/blog/'
     | '/it/blog/'
     | '/api/public/telnyx/process-results'
-    | '/api/public/telnyx/recordings'
     | '/api/public/whatsapp/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -3082,7 +3071,6 @@ export interface FileRouteTypes {
     | '/fr/blog'
     | '/it/blog'
     | '/api/public/telnyx/process-results'
-    | '/api/public/telnyx/recordings'
     | '/api/public/whatsapp/webhook'
   id:
     | '__root__'
@@ -3361,7 +3349,6 @@ export interface FileRouteTypes {
     | '/fr/blog/'
     | '/it/blog/'
     | '/api/public/telnyx/process-results'
-    | '/api/public/telnyx/recordings'
     | '/api/public/whatsapp/webhook'
   fileRoutesById: FileRoutesById
 }
@@ -3610,7 +3597,6 @@ export interface RootRouteChildren {
   FrBlogIndexRoute: typeof FrBlogIndexRoute
   ItBlogIndexRoute: typeof ItBlogIndexRoute
   ApiPublicTelnyxProcessResultsRoute: typeof ApiPublicTelnyxProcessResultsRoute
-  ApiPublicTelnyxRecordingsRoute: typeof ApiPublicTelnyxRecordingsRoute
   ApiPublicWhatsappWebhookRoute: typeof ApiPublicWhatsappWebhookRoute
 }
 
@@ -5541,13 +5527,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicTelnyxProcessResultsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/telnyx/recordings': {
-      id: '/api/public/telnyx/recordings'
-      path: '/api/public/telnyx/recordings'
-      fullPath: '/api/public/telnyx/recordings'
-      preLoaderRoute: typeof ApiPublicTelnyxRecordingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/public/whatsapp/webhook': {
       id: '/api/public/whatsapp/webhook'
       path: '/api/public/whatsapp/webhook'
@@ -5875,7 +5854,6 @@ const rootRouteChildren: RootRouteChildren = {
   FrBlogIndexRoute: FrBlogIndexRoute,
   ItBlogIndexRoute: ItBlogIndexRoute,
   ApiPublicTelnyxProcessResultsRoute: ApiPublicTelnyxProcessResultsRoute,
-  ApiPublicTelnyxRecordingsRoute: ApiPublicTelnyxRecordingsRoute,
   ApiPublicWhatsappWebhookRoute: ApiPublicWhatsappWebhookRoute,
 }
 export const routeTree = rootRouteImport
