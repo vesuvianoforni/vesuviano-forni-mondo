@@ -1252,6 +1252,47 @@ export type Database = {
         }
         Relationships: []
       }
+      crm_call_audio_parts: {
+        Row: {
+          call_id: string
+          created_at: string
+          duration_seconds: number
+          ordinal: number
+          storage_path: string
+          transcript: string | null
+          updated_at: string
+          uploaded: boolean
+        }
+        Insert: {
+          call_id: string
+          created_at?: string
+          duration_seconds: number
+          ordinal: number
+          storage_path: string
+          transcript?: string | null
+          updated_at?: string
+          uploaded?: boolean
+        }
+        Update: {
+          call_id?: string
+          created_at?: string
+          duration_seconds?: number
+          ordinal?: number
+          storage_path?: string
+          transcript?: string | null
+          updated_at?: string
+          uploaded?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_call_audio_parts_call_id_fkey"
+            columns: ["call_id"]
+            isOneToOne: false
+            referencedRelation: "crm_direct_calls"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       crm_call_results: {
         Row: {
           attempts: number
@@ -1326,6 +1367,7 @@ export type Database = {
           provider_call_id: string | null
           provider_verified_at: string | null
           recording_error: string | null
+          recording_source: string
           recording_status: string
           status: string
           summary: string | null
@@ -1347,6 +1389,7 @@ export type Database = {
           provider_call_id?: string | null
           provider_verified_at?: string | null
           recording_error?: string | null
+          recording_source?: string
           recording_status?: string
           status?: string
           summary?: string | null
@@ -1368,6 +1411,7 @@ export type Database = {
           provider_call_id?: string | null
           provider_verified_at?: string | null
           recording_error?: string | null
+          recording_source?: string
           recording_status?: string
           status?: string
           summary?: string | null
