@@ -4678,6 +4678,10 @@ export type Database = {
         Args: { _fields: Json; _id: string; _product_ids: string[] }
         Returns: string
       }
+      telegram_call_has_no_answer: {
+        Args: { p_metadata: Json }
+        Returns: boolean
+      }
       telegram_cron_kick: { Args: never; Returns: undefined }
     }
     Enums: {
