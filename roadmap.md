@@ -1,9 +1,10 @@
 # Roadmap
 
 ## Dial: chiamate ricevute e inoltrate (10 nov 2026)
-- [ ] Registrare gli ingressi UK e l’esito dell’inoltro al fisso aziendale con callback Telnyx verificati, senza avviare Bruno o creare clienti automaticamente.
-- [ ] Mostrare nello storico Dial chiamante, cliente riconosciuto, destinazione dell’inoltro, durata ed esito; filtri Tutte/In uscita/Ricevute.
-- [ ] Test delle regole, verifica desktop/mobile e distribuzione del ricevitore; prova telefonica reale subordinata a una nuova chiamata dell’utente.
+- [x] Registro separato crm_inbound_calls: ingressi UK firmati, callback inoltro associati a parent/child e numeri reali, esito atomico senza regressioni terminali, nessun cliente/registrazione/assistente creato. Permessi effettivi riletti: anon negato, browser sola lettura admin/commerciale, aggiornamenti solo servizio.
+- [x] Storico Dial con cliente riconosciuto dal numero completo (corrispondenze ambigue non assegnate), chiamante, fisso destinazione, durata e risposta/persa/occupato/incerto; filtri Tutte/In uscita/Ricevute, aggiornamento manuale e dettaglio.
+- [x] 41 test Deno e 9 Vitest superati; UI isolata 1280×1800/390×844 con filtri e dettaglio senza overflow/errori. bruno-voice distribuita: TeXML reale 200 conserva +3908119231684 e timeout 60s, callback non firmato 401. Build OK; dieci avvisi sicurezza preesistenti invariati.
+- [ ] Pubblicazione Netlify e nuova telefonata UK → fisso → storico dal proprio account: accesso Supabase esterno non disponibile nel sandbox, nessuna chiamata reale avviata e archivio ingressi ancora vuoto. Lo storico parte dai nuovi eventi, nessun recupero storico Telnyx eseguito.
 
 ## Chiamate operatore: registrazione e riepilogo Telegram (10 nov 2026)
 - [x] Registrazione di entrambe le voci nel browser come WAV completi da un minuto, caricamento privato associato a chiamata/operatore, salvataggio finale e riprova senza richiamare; telefonia Telnyx invariata. CDR reali: WebRTC/SIP senza Call Control né registrazioni; configurazione temporaneamente verificata e ripristinata, nessun webhook nuovo mantenuto.

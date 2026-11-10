@@ -133,7 +133,7 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
         </div>
         <div className="min-w-0 flex-1">
           <p className="truncate font-medium">{name}</p>
-          <p className="truncate text-sm text-muted-foreground">
+          <p className="break-words text-sm text-muted-foreground">
             <DirIcon className="mr-1 inline h-3.5 w-3.5" />
             {c.destination} · {new Date(c.at).toLocaleString('it-IT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
             {dur ? ` · ${dur}` : ''}
