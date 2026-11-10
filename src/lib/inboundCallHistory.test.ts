@@ -26,4 +26,11 @@ describe('Recupero storico chiamate ricevute Telnyx', () => {
   it('non associa un inoltro di un’altra sessione e non inventa destinazioni passate', () => {
     expect(historicalInboundCalls([incoming,{...office,telnyx_session_id:'other'}],[])[0]?.forwarded_to).toBeNull();
   });
+  it('legge cld come linea UK anche se dest_number è il fisso inoltrato o un utente SIP', () => {
+    const legacy={...incoming,dest_number:'+3908119231684',cf_number:'+3908119231684',call_control_id:''};
+    const leg={...legacy,id:'legacy-out',direction:'outbound'};
+    expect(historicalInboundCalls([legacy,leg],[])[0]?.caller_number).toBe('+353860217737');
+    const sip={...incoming,dest_number:'userselefante69620',caller_number:'07889375442',cli:'+447889375442',call_control_id:'',answered_at:null,call_sec:0,hangup_cause:'SUBSCRIBER_ABSENT'};
+    expect(historicalInboundCalls([sip],[])[0]).toMatchObject({caller_number:'+447889375442',status:'missed',forwarded_to:null});
+  });
 });

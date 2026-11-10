@@ -27,14 +27,14 @@ export function historicalInboundCalls(rows: TelnyxHistoryRow[], knownAiProvider
   const ai = new Set(knownAiProviderIds);
   const groups = new Map<string, TelnyxHistoryRow[]>();
   for (const row of rows) {
-    if (row.record_type !== 'sip-trunking' || row.direction !== 'inbound' || (row.dest_number || row.cld) !== CRM_CALLER_NUMBER) continue;
+    if (row.record_type !== 'sip-trunking' || row.direction !== 'inbound' || (international(row.cld) ?? international(row.dest_number)) !== CRM_CALLER_NUMBER) continue;
     const key = identity(row); groups.set(key, [...(groups.get(key) ?? []), row]);
   }
   const calls = [];
   for (const incoming of groups.values()) {
     if (incoming.some(row => row.call_control_id && ai.has(row.call_control_id))) continue;
     const parent = strongest(incoming); if (!parent) continue;
-    const caller = international(parent.caller_number || parent.cli) || 'Numero privato';
+    const caller = international(parent.cli) ?? international(parent.caller_number) ?? 'Numero privato';
     const sid = parent.telnyx_session_id;
     const leg = sid ? strongest(rows.filter(row => row.telnyx_session_id === sid && row.direction === 'outbound' &&
       (row.caller_number || row.cli) === CRM_CALLER_NUMBER && international(row.dest_number || row.cld) !== CRM_CALLER_NUMBER && international(row.dest_number || row.cld))) : undefined;
