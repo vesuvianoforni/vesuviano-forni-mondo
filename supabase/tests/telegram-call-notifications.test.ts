@@ -36,3 +36,32 @@ test('Telegram preserves answered calls and does not infer no-answer from missin
   expect(await hasNoAnswer({})).toBe(false);
   expect(await hasNoAnswer(null)).toBe(false);
 });
+
+test('The live queue rejects a real unanswered operator call and a failed CRM call', async () => {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) throw new Error('Server credentials required for integration tests');
+  const headers = { apikey: key, ...(key.split('.').length === 3 ? { Authorization: `Bearer ${key}` } : {}), 'Content-Type': 'application/json', Prefer: 'return=representation' };
+  const sources = [
+    { query: 'crm_direct_calls?select=id,lead_id&answered_at=is.null&status=eq.ended&limit=1', kind: 'direct_call', reference: 'direct_call_id' },
+    { query: 'crm_messages?select=id,lead_id&channel=eq.call&metadata->>call_status=eq.failed&limit=1', kind: 'message', reference: 'message_id' },
+  ];
+  for (const source of sources) {
+    const response = await fetch(`${url}/rest/v1/${source.query}`, { headers });
+    expect(response.status).toBe(200);
+    const calls = await response.json() as { id: string; lead_id: string }[];
+    expect(calls.length).toBe(1);
+    const call = calls[0];
+    if (!call) throw new Error('Real unanswered call required for integration test');
+    // No outbound HTTP trigger exists on this table: this tests only the insertion gate.
+    const inserted = await fetch(`${url}/rest/v1/telegram_notifications`, {
+      method: 'POST', headers,
+      body: JSON.stringify({ kind: source.kind, lead_id: call.lead_id, [source.reference]: call.id }),
+    });
+    expect(inserted.status).toBe(201);
+    expect(await inserted.json()).toEqual([]);
+    const readBack = await fetch(`${url}/rest/v1/telegram_notifications?select=id&kind=eq.${source.kind}&${source.reference}=eq.${call.id}&sent_at=is.null`, { headers });
+    expect(readBack.status).toBe(200);
+    expect(await readBack.json()).toEqual([]);
+  }
+});
