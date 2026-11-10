@@ -12,8 +12,8 @@ Deno.test('Una chiamata diretta non inventa trascrizioni o fatti cliente', () =>
   assertEquals('credential_id' in c, false);
 });
 Deno.test('Bruno legge il riepilogo della chiamata operatore solo quando registrato', () => {
-  const call = directCallEvidence({ id: 'call', provider_verified_at: '2026-11-10T11:00:00Z', recording_status: 'ready', summary: 'Cliente cerca Ottavio gas.' });
-  assertEquals(call.mode, 'direct'); assertEquals(call.evidence_source, 'telnyx_verified_recording');
+  const call = directCallEvidence({ id: 'call', recording_source: 'browser_audio', recording_status: 'ready', summary: 'Cliente cerca Ottavio gas.' });
+  assertEquals(call.mode, 'direct'); assertEquals(call.evidence_source, 'operator_recording');
   assertEquals(call.summary, 'Cliente cerca Ottavio gas.'); assertEquals(call.transcript_available, true);
 });
 Deno.test('Bruno non sovrappone telefonate a una chiamata umana', async () => {

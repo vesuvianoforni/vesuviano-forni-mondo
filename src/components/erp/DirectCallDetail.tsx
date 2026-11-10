@@ -25,6 +25,7 @@ export function DirectCallDetail({ callId, onClose }: { callId: string | null; o
       {error && <p role="alert" className="break-words text-sm text-destructive">{error}</p>}
       {result && <div className="min-w-0 space-y-5">
         {result.audioUrl && <audio controls preload="none" src={result.audioUrl} className="w-full" aria-label="Registrazione chiamata operatore" />}
+        {(result.audioParts ?? []).map(part => <div key={part.ordinal}><p className="mb-1 text-xs text-muted-foreground">Registrazione · Parte {part.ordinal + 1}</p><audio controls preload="none" src={part.url} className="w-full" aria-label={`Registrazione chiamata, parte ${part.ordinal + 1}`} /></div>)}
         <section><h3 className="mb-2 font-semibold">Riepilogo</h3><p className="whitespace-pre-wrap break-words text-sm">{result.summary || (['pending','starting','recording','processing','queued','running'].includes(result.processing_status) ? 'Riepilogo in preparazione…' : 'Riepilogo non disponibile per questa chiamata.')}</p></section>
         {result.transcript && <section><h3 className="mb-2 font-semibold">Trascrizione</h3><p className="whitespace-pre-wrap break-words text-sm text-muted-foreground">{result.transcript}</p></section>}
         {result.error && <p role="status" className="break-words text-sm text-destructive">{result.error}</p>}
