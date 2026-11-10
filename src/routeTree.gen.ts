@@ -283,6 +283,7 @@ import { Route as FrBlogIndexRouteImport } from './routes/fr/blog/index'
 import { Route as FrBlogSlugRouteImport } from './routes/fr/blog/$slug'
 import { Route as ItBlogIndexRouteImport } from './routes/it/blog/index'
 import { Route as ItBlogSlugRouteImport } from './routes/it/blog/$slug'
+import { Route as ApiPublicTelnyxRecordingsRouteImport } from './routes/api/public/telnyx/recordings'
 import { Route as ApiPublicWhatsappWebhookRouteImport } from './routes/api/public/whatsapp/webhook'
 
 const IndexRoute = IndexRouteImport.update({
@@ -1668,6 +1669,12 @@ const ItBlogSlugRoute = ItBlogSlugRouteImport.update({
   path: '/it/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicTelnyxRecordingsRoute =
+  ApiPublicTelnyxRecordingsRouteImport.update({
+    id: '/api/public/telnyx/recordings',
+    path: '/api/public/telnyx/recordings',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicWhatsappWebhookRoute =
   ApiPublicWhatsappWebhookRouteImport.update({
     id: '/api/public/whatsapp/webhook',
@@ -1950,6 +1957,7 @@ export interface FileRoutesByFullPath {
   '/es/blog/': typeof EsBlogIndexRoute
   '/fr/blog/': typeof FrBlogIndexRoute
   '/it/blog/': typeof ItBlogIndexRoute
+  '/api/public/telnyx/recordings': typeof ApiPublicTelnyxRecordingsRoute
   '/api/public/whatsapp/webhook': typeof ApiPublicWhatsappWebhookRoute
 }
 export interface FileRoutesByTo {
@@ -2226,6 +2234,7 @@ export interface FileRoutesByTo {
   '/es/blog': typeof EsBlogIndexRoute
   '/fr/blog': typeof FrBlogIndexRoute
   '/it/blog': typeof ItBlogIndexRoute
+  '/api/public/telnyx/recordings': typeof ApiPublicTelnyxRecordingsRoute
   '/api/public/whatsapp/webhook': typeof ApiPublicWhatsappWebhookRoute
 }
 export interface FileRoutesById {
@@ -2504,6 +2513,7 @@ export interface FileRoutesById {
   '/es/blog/': typeof EsBlogIndexRoute
   '/fr/blog/': typeof FrBlogIndexRoute
   '/it/blog/': typeof ItBlogIndexRoute
+  '/api/public/telnyx/recordings': typeof ApiPublicTelnyxRecordingsRoute
   '/api/public/whatsapp/webhook': typeof ApiPublicWhatsappWebhookRoute
 }
 export interface FileRouteTypes {
@@ -2783,6 +2793,7 @@ export interface FileRouteTypes {
     | '/es/blog/'
     | '/fr/blog/'
     | '/it/blog/'
+    | '/api/public/telnyx/recordings'
     | '/api/public/whatsapp/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -3059,6 +3070,7 @@ export interface FileRouteTypes {
     | '/es/blog'
     | '/fr/blog'
     | '/it/blog'
+    | '/api/public/telnyx/recordings'
     | '/api/public/whatsapp/webhook'
   id:
     | '__root__'
@@ -3336,6 +3348,7 @@ export interface FileRouteTypes {
     | '/es/blog/'
     | '/fr/blog/'
     | '/it/blog/'
+    | '/api/public/telnyx/recordings'
     | '/api/public/whatsapp/webhook'
   fileRoutesById: FileRoutesById
 }
@@ -3583,6 +3596,7 @@ export interface RootRouteChildren {
   EsBlogIndexRoute: typeof EsBlogIndexRoute
   FrBlogIndexRoute: typeof FrBlogIndexRoute
   ItBlogIndexRoute: typeof ItBlogIndexRoute
+  ApiPublicTelnyxRecordingsRoute: typeof ApiPublicTelnyxRecordingsRoute
   ApiPublicWhatsappWebhookRoute: typeof ApiPublicWhatsappWebhookRoute
 }
 
@@ -5506,6 +5520,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ItBlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/telnyx/recordings': {
+      id: '/api/public/telnyx/recordings'
+      path: '/api/public/telnyx/recordings'
+      fullPath: '/api/public/telnyx/recordings'
+      preLoaderRoute: typeof ApiPublicTelnyxRecordingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/whatsapp/webhook': {
       id: '/api/public/whatsapp/webhook'
       path: '/api/public/whatsapp/webhook'
@@ -5832,6 +5853,7 @@ const rootRouteChildren: RootRouteChildren = {
   EsBlogIndexRoute: EsBlogIndexRoute,
   FrBlogIndexRoute: FrBlogIndexRoute,
   ItBlogIndexRoute: ItBlogIndexRoute,
+  ApiPublicTelnyxRecordingsRoute: ApiPublicTelnyxRecordingsRoute,
   ApiPublicWhatsappWebhookRoute: ApiPublicWhatsappWebhookRoute,
 }
 export const routeTree = rootRouteImport
