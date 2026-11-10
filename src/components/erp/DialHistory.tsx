@@ -3,6 +3,8 @@ import { ArrowDownLeft, ArrowUpRight, Bot, Loader2, PhoneCall, UserRound } from 
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { BrunoCallDetail } from '@/components/erp/BrunoCallDetail';
 import type { CRMLead } from '@/components/erp/CRMLeadCard';
 
 type CallRow = {
@@ -34,6 +36,8 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
   const [calls, setCalls] = useState<CallRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [aiCallId, setAiCallId] = useState<string | null>(null);
+  const [directCall, setDirectCall] = useState<CallRow | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -77,13 +81,18 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
   if (error) return <p className="text-sm text-destructive">Impossibile caricare lo storico: {error}</p>;
   if (calls.length === 0) return <p className="py-10 text-center text-sm text-muted-foreground">Nessuna chiamata registrata.</p>;
 
-  return <ul className="divide-y rounded-lg border">
+  return <>
+    <ul className="divide-y rounded-lg border">
     {calls.map(c => {
       const lead = leadById.get(c.leadId);
       const name = lead?.contact_name || lead?.company_name || c.destination;
       const dur = fmtDuration(c.durationSec);
       const DirIcon = c.direction === 'inbound' ? ArrowDownLeft : ArrowUpRight;
-      return <li key={c.id} className="flex items-start gap-3 p-3">
+      const open = () => { if (c.kind === 'ai') setAiCallId(c.id.slice(2)); else setDirectCall(c); };
+      return <li key={c.id}>
+        <div role="button" tabIndex={0} onClick={open} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } }}
+          className="flex cursor-pointer items-start gap-3 p-3 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          aria-label={`Apri dettaglio chiamata con ${name}`}>
         <div className="mt-1 shrink-0 rounded-full bg-muted p-2">
           {c.kind === 'ai' ? <Bot className="h-4 w-4" /> : <PhoneCall className="h-4 w-4" />}
         </div>
@@ -101,9 +110,34 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
           </div>
           {c.summary && <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{c.summary}</p>}
         </div>
-        {lead && <Button asChild size="icon" variant="ghost" className="h-11 w-11 shrink-0" aria-label={`Apri scheda ${name}`}>
+        {lead && <Button asChild size="icon" variant="ghost" className="h-11 w-11 shrink-0" aria-label={`Apri scheda ${name}`}
+          onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
           <a href={`/erp/crm?lead=${encodeURIComponent(lead.id)}`}><UserRound className="h-5 w-5" /></a></Button>}
+        </div>
       </li>;
     })}
-  </ul>;
+    </ul>
+    <BrunoCallDetail callId={aiCallId} onClose={() => setAiCallId(null)} />
+    <Dialog open={Boolean(directCall)} onOpenChange={open => { if (!open) setDirectCall(null); }}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Chiamata diretta</DialogTitle>
+          <DialogDescription>
+            {directCall ? `${leadById.get(directCall.leadId)?.contact_name || leadById.get(directCall.leadId)?.company_name || directCall.destination} · ${directCall.destination}` : ''}
+          </DialogDescription>
+        </DialogHeader>
+        {directCall && <div className="space-y-3 text-sm">
+          <div className="flex flex-wrap gap-1">
+            <Badge variant="outline">Diretta</Badge>
+            <Badge variant={directCall.status === 'failed' ? 'destructive' : 'secondary'}>{STATUS_LABEL[directCall.status] ?? directCall.status}</Badge>
+          </div>
+          <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+            <span>{new Date(directCall.at).toLocaleString('it-IT')}</span>
+            {fmtDuration(directCall.durationSec) && <span>{fmtDuration(directCall.durationSec)}</span>}
+          </div>
+          <p className="text-muted-foreground">Le chiamate fatte direttamente dal dialer non hanno trascrizione né riepilogo: la conversazione avviene tra te e il cliente, senza Bruno.</p>
+        </div>}
+      </DialogContent>
+    </Dialog>
+  </>;
 }
