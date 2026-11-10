@@ -2,8 +2,8 @@
 
 ## SEO: controllo e correzioni approvate (10 nov 2026)
 - [x] Scansione aggiornata e controllo reale dominio Netlify, cinque lingue, blog, pagine prodotto, robots, sitemap e 404; Search Console dominio verificato, 310 clic/22.547 impression nei 28 giorni, confronto precedente e ispezioni EN/FR/root.
-- [ ] Correggere noindex e titoli/descrizioni duplicati della root preservando il reindirizzamento linguistico; verificare HTML iniziale e navigazione browser.
-- [ ] Verificare la segnalazione lang: attributo già presente in sorgente e nelle risposte reali, nessuna correzione artificiale del dato linguistico.
+- [x] Root indicizzabile con contenuto italiano reale e SEOHead unico: un solo titolo/descrizione/canonical, noindex assente. Nove test passati; SSR root/cinque lingue/404 verificati; browser EN/FR/fallback IT e mobile verificati senza errori. Reindirizzamento documentale conserva head e attribuzione; build OK.
+- [x] Segnalazione lang verificata: attributo già presente in sorgente e HTML reale in tutte le lingue; controllo statico non riconosce il valore dinamico, finding lasciato failing senza correzione artificiale. AGENTS.md già al limite, nuova nota architetturale non aggiunta.
 - [ ] Pubblicare su Netlify per applicare le correzioni al dominio; www/canonical, dati strutturati prodotto e sitemap restano proposte non approvate.
 
 ## Dial: chiamate ricevute e inoltrate (10 nov 2026)
