@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest';
 import { encodeCallWav } from './crmCallRecorder';
 describe('Registrazione completa operatore', () => {

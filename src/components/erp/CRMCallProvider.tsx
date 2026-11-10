@@ -81,7 +81,7 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
     terminalRef.current = true;
     notify(status, callRef.current?.id);
     const recorder = recorderRef.current, id = directRef.current?.id; recorderRef.current = null;
-    if (recorder && id) void recorder.stop().then(count => saveRecording(id, count));
+    if (recorder && id) { setSavingAudio(true); void recorder.stop().then(count => saveRecording(id, count)).catch(() => { setSavingAudio(false); setError('Registrazione non disponibile.'); }); }
     else if (id) void writes.current.then(() => completeAudio({ data: { id, count: 0, failure: 'La registrazione non è stata avviata.' } })).catch(() => setError('Esito registrazione non aggiornato.'));
     setDirect(previous => previous ? { ...previous, status } : null);
     dispose(); setBusy(false); setMuted(false);
@@ -91,7 +91,8 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
     void callRef.current?.hangup();
     streamRef.current?.getTracks().forEach(track => track.stop());
     void clientRef.current?.disconnect();
-    void recorderRef.current?.stop();
+    const recorder = recorderRef.current, id = directRef.current?.id;
+    if (recorder && id) void recorder.stop().then(count => saveRecording(id, count));
   }, []);
   useEffect(() => {
     if (!direct?.answered || direct.status !== 'active') return;
