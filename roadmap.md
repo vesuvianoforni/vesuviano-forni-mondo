@@ -1,10 +1,11 @@
 # Roadmap
 
 ## Chiamate operatore: registrazione e riepilogo Telegram (10 nov 2026)
-- [ ] Registrare entrambe le voci delle nuove chiamate dirette e associare gli eventi Telnyx verificati al cliente, senza cambiare inoltro o chiamate AI.
-- [ ] Salvare audio privato, trascrizione e riepilogo italiano con elaborazione persistente, limiti e blocco degli errori AI definitivi.
-- [ ] Telegram: solo riepilogo per chiamate AI e operatore; CRM/storico con audio e trascrizione, senza dialoghi inventati.
-- [ ] Verificare registrazioni già disponibili, test, sicurezza e flusso reale; segnalare eventuali limiti di recupero storico/pubblicazione.
+- [x] Registrazione di entrambe le voci nel browser come WAV completi da un minuto, caricamento privato associato a chiamata/operatore, salvataggio finale e riprova senza richiamare; telefonia Telnyx invariata. CDR reali: WebRTC/SIP senza Call Control né registrazioni; configurazione temporaneamente verificata e ripristinata, nessun webhook nuovo mantenuto.
+- [x] Audio privato, trascrizione per ogni segmento e riepilogo italiano con coda persistente, lease globale, checkpoint, tentativi limitati e stop su dinieghi/crediti. Avvio dal servizio Telegram esistente, recupero sul suo tick feriale senza nuovo cron.
+- [x] Telegram mostra solo riepilogo, sia chiamate AI sia operatore; audio/trascrizione nel dettaglio CRM e storico. Funzioni Telegram/Bruno distribuite; test di proiezione e lettura superati.
+- [x] Voce reale trascritta e riepilogo economico reali verificati; registratore browser provato con due sorgenti distinte presenti nel WAV. Dettaglio isolato desktop/mobile senza overflow; account esterno reindirizza al login. Endpoint interno autorizzato 200, anonimo 401; nessun nuovo avviso sicurezza, dieci preesistenti invariati.
+- [ ] Telefonata reale con nuova versione → upload → trascrizione → Telegram: richiede account ERP esterno e nuova chiamata dell’operatore. Riaprire/aggiornare l’app dopo pubblicazione; mantenere aperta fino a salvataggio. Chiamata screenshot senza audio anche sul vero session ID Telnyx: non recuperabile retroattivamente.
 
 ## Mail: allegati (10 nov 2026)
 - [x] Allegati condivisi nelle conversazioni email e nella posta importata: elenco su richiesta, anteprima PDF multipagina/immagini/video/audio e download pronto prima del click per iOS; conservati media email precedenti. RLS e identità fisica IMAP verificate prima della lettura; lease condivisa e singolo file limitato, nessun URL pubblico.

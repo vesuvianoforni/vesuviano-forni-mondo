@@ -30,6 +30,7 @@ export async function createCallRecorder(local: MediaStream, onPart: (file: File
   };
   processor.onaudioprocess = event => {
     if (!active || stopped) return;
+    if (ordinal >= 240) { active = false; throw new Error('Registrazione oltre quattro ore: termina la chiamata prima di proseguire.'); }
     const chunk = new Float32Array(event.inputBuffer.getChannelData(0)); chunks.push(chunk); frames += chunk.length;
     if (frames >= context.sampleRate * 60) flush();
   };

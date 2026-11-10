@@ -110,8 +110,8 @@ export const getDirectCallResult = createServerFn({ method: 'POST' }).middleware
 export const reserveCallAudioPart = createServerFn({ method: 'POST' }).middleware([dialerAccess])
   .inputValidator(d => z.object({ id: z.string().uuid(), ordinal: z.number().int().min(0).max(239), seconds: z.number().int().min(1).max(65) }).strict().parse(d))
   .handler(async ({ data, context }) => {
-    const call = await context.supabase.from('crm_direct_calls').select('id,operator_id,created_at').eq('id', data.id).eq('operator_id', context.userId).single();
-    if (call.error || !call.data || Date.now() - Date.parse(call.data.created_at) > 5 * 3600000) throw new Error('Chiamata non disponibile per la registrazione.');
+    const call = await context.supabase.from('crm_direct_calls').select('id,operator_id,created_at,recording_status').eq('id', data.id).eq('operator_id', context.userId).single();
+    if (call.error || !call.data || !['pending','unavailable'].includes(call.data.recording_status) || Date.now() - Date.parse(call.data.created_at) > 5 * 3600000) throw new Error('Chiamata non disponibile per la registrazione.');
     const path = `direct/${data.id}/part-${data.ordinal}.wav`;
     const saved = await context.admin.from('crm_call_audio_parts').upsert({ call_id: data.id, ordinal: data.ordinal, storage_path: path, duration_seconds: data.seconds }, { onConflict: 'call_id,ordinal', ignoreDuplicates: true });
     if (saved.error) throw new Error(saved.error.message);
