@@ -4,7 +4,7 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { card, CHANNEL, COMMANDS, cut, dueSummary, esc, fmtDate, HELP, leadContext, leadName, leadUrl, messageBody, priority, romeClock, STAGE, type LeadLite } from './cockpit.ts';
-import { communicationUrl, directCallLabel } from './cockpit.ts';
+import { communicationUrl, directCallLabel, telegramCallSummary } from './cockpit.ts';
 import { communicationChannel, directCallEvidence } from '../_shared/bruno/coordination.ts';
 
 const GATEWAY = 'https://connector-gateway.lovable.dev/telegram';
@@ -47,6 +47,28 @@ Deno.serve(async (req) => {
   if (!key || !service) return json({ error: 'Servizio non configurato' }, 503);
   const admin = createClient(url, service);
   const groups = async () => ((await admin.from('telegram_links').select('chat_id').lt('chat_id', 0)).data ?? []).map((r) => Number(r.chat_id));
+
+  async function callAnalysis() {
+    const { data: state, error } = await admin.from('crm_call_ai_state').select('paused').eq('key', 'calls').single();
+    if (error) throw error;
+    if (state?.paused) return;
+    const { data: due } = await admin.from('crm_call_results').select('call_id').in('status', ['queued','running']).lte('next_attempt_at', new Date().toISOString()).limit(1);
+    if (!due?.length) return;
+    const response = await fetch('https://www.vesuvianoforni.com/api/public/telnyx/process-results', {
+      method: 'POST', headers: { 'x-call-analysis-key': service, 'x-call-ai-key': Deno.env.get('LOVABLE_API_KEY') ?? '' }, redirect: 'error',
+    });
+    if (!response.ok || !response.body) throw new Error(`Analisi chiamata non disponibile (${response.status})`);
+    const reader = response.body.getReader();
+    while (true) { const chunk = await reader.read(); if (chunk.done) break; }
+  }
+  if (req.headers.has('x-call-analysis-key')) {
+    if (!safeEqual(req.headers.get('x-call-analysis-key'), service)) return json({ error: 'Non autorizzato' }, 401);
+    const body = await req.json().catch(() => ({}));
+    if (body.action !== 'call_analysis') return json({ error: 'Azione non valida' }, 400);
+    // @ts-ignore EdgeRuntime is provided by Supabase.
+    EdgeRuntime.waitUntil(callAnalysis().catch(error => console.error('call-analysis wake', String(error))));
+    return json({ ok: true });
+  }
 
   // ---------- Shared helpers ----------
   async function linked(chatId: number) {
@@ -225,14 +247,14 @@ Deno.serve(async (req) => {
     const { data: lead } = await admin.from('leads').select(LEAD_COLS).eq('id', n.lead_id).maybeSingle();
     if (!lead) return null;
     if (n.kind === 'direct_call') {
-      const { data: call, error } = await admin.from('crm_direct_calls').select('id,lead_id,operator_id,destination,from_number,status,created_at,answered_at,ended_at').eq('id', n.direct_call_id).maybeSingle();
+      const { data: call, error } = await admin.from('crm_direct_calls').select('id,lead_id,operator_id,destination,from_number,status,created_at,answered_at,ended_at,summary,recording_status,recording_error,provider_verified_at').eq('id', n.direct_call_id).maybeSingle();
       if (error) throw error;
       if (!call) return null;
       const c = directCallEvidence(call);
       return { lead, channel: 'call', text: card({ icon: '📞', type: 'Chiamata diretta del team', lead, channel: 'call', body: [
         esc(directCallLabel(c.status, Boolean(c.answered_at))), `Da ${esc(c.from_number)} a ${esc(c.destination)}`,
         ...(c.duration_seconds !== null ? [`Durata: ${Math.floor(c.duration_seconds / 60)} min ${c.duration_seconds % 60} sec`] : []),
-        `🕒 ${fmtDate(c.ended_at ?? c.created_at)}`, 'Stato riportato dal browser; nessuna trascrizione disponibile.'], context: leadContext(lead) }) };
+        `🕒 ${fmtDate(c.ended_at ?? c.created_at)}`, telegramCallSummary(call)] }) };
     }
     const { count: offers } = await admin.from('commercial_offers').select('id', { count: 'exact', head: true }).eq('lead_id', lead.id).in('status', OPEN_OFFERS);
     if (n.kind === 'lead') {
@@ -241,9 +263,9 @@ Deno.serve(async (req) => {
     }
     const { data: m } = await admin.from('crm_messages').select('channel,body,subject,sender,created_at,metadata').eq('id', n.message_id).maybeSingle();
     if (!m) return null;
-    const body = extraBody ?? messageBody(m);
+    const body = m.channel === 'call' ? telegramCallSummary({ summary: m.body }) : extraBody ?? messageBody(m);
     const channel = communicationChannel(m);
-    return { lead, body, channel, text: card({ icon: m.channel === 'call' ? '📞' : '📨', type: m.channel === 'call' ? 'Chiamata in arrivo' : 'Messaggio in arrivo', pri: priority(lead.status, 'message', (offers ?? 0) > 0), lead, channel, body: [body], context: leadContext(lead, (offers ?? 0) > 0 ? [`${offers} offerta aperta`] : []) }) };
+    return { lead, body, channel, text: card({ icon: m.channel === 'call' ? '📞' : '📨', type: m.channel === 'call' ? 'Riepilogo chiamata Bruno' : 'Messaggio in arrivo', pri: priority(lead.status, 'message', (offers ?? 0) > 0), lead, channel, body: [body], ...(m.channel !== 'call' ? { context: leadContext(lead, (offers ?? 0) > 0 ? [`${offers} offerta aperta`] : []) } : {}) }) };
   }
 
   // deno-lint-ignore no-explicit-any
@@ -251,7 +273,7 @@ Deno.serve(async (req) => {
     const chats = await groups();
     if (!chats.length) return;
     // Anti-noise: messages from the same customer within 5 minutes join the open alert.
-    if (n.kind === 'message') {
+    if (n.kind === 'message' && !(await admin.from('crm_messages').select('channel').eq('id', n.message_id).maybeSingle()).data?.channel?.includes('call')) {
       const { data: prev } = await admin.from('telegram_notifications').select('*').eq('lead_id', n.lead_id).eq('kind', 'message').is('handled_at', null).gte('sent_at', new Date(Date.now() - 5 * 60_000).toISOString()).neq('id', n.id).order('sent_at', { ascending: false }).limit(1).maybeSingle();
       if (prev?.tg_messages?.length && prev.body) {
         const { data: m } = await admin.from('crm_messages').select('body,subject,created_at,channel,metadata').eq('id', n.message_id).maybeSingle();
@@ -283,6 +305,7 @@ Deno.serve(async (req) => {
   }
 
   async function tick() {
+    await callAnalysis();
     const chats = await groups();
     const { data: pendingCalls, error: pendingError } = await admin.from('telegram_notifications').select('*').eq('kind', 'direct_call').is('sent_at', null).order('created_at').limit(20);
     if (pendingError) throw pendingError;

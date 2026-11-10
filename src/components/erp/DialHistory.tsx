@@ -3,8 +3,8 @@ import { ArrowDownLeft, ArrowUpRight, Bot, Loader2, PhoneCall, UserRound } from 
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { BrunoCallDetail } from '@/components/erp/BrunoCallDetail';
+import { DirectCallDetail } from '@/components/erp/DirectCallDetail';
 import type { CRMLead } from '@/components/erp/CRMLeadCard';
 
 type CallRow = {
@@ -44,7 +44,7 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
     (async () => {
       const [direct, voice] = await Promise.all([
         supabase.from('crm_direct_calls')
-          .select('id,lead_id,destination,status,created_at,answered_at,ended_at')
+          .select('id,lead_id,destination,status,created_at,answered_at,ended_at,summary')
           .order('created_at', { ascending: false }).limit(200),
         supabase.from('bruno_voice_calls')
           .select('id,lead_id,destination,direction,status,objective,summary,created_at,started_at,ended_at')
@@ -59,7 +59,7 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
           direction: 'outbound' as const, status: c.status, at: c.created_at,
           durationSec: c.answered_at && c.ended_at
             ? (new Date(c.ended_at).getTime() - new Date(c.answered_at).getTime()) / 1000 : null,
-          summary: null, objective: null,
+          summary: c.summary ?? null, objective: null,
         })),
         ...(voice.data ?? []).map(c => ({
           id: `v-${c.id}`, kind: 'ai' as const, leadId: c.lead_id, destination: c.destination,
@@ -118,26 +118,6 @@ export function DialHistory({ leads }: { leads: CRMLead[] }) {
     })}
     </ul>
     <BrunoCallDetail callId={aiCallId} onClose={() => setAiCallId(null)} />
-    <Dialog open={Boolean(directCall)} onOpenChange={open => { if (!open) setDirectCall(null); }}>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Chiamata diretta</DialogTitle>
-          <DialogDescription>
-            {directCall ? `${leadById.get(directCall.leadId)?.contact_name || leadById.get(directCall.leadId)?.company_name || directCall.destination} · ${directCall.destination}` : ''}
-          </DialogDescription>
-        </DialogHeader>
-        {directCall && <div className="space-y-3 text-sm">
-          <div className="flex flex-wrap gap-1">
-            <Badge variant="outline">Diretta</Badge>
-            <Badge variant={directCall.status === 'failed' ? 'destructive' : 'secondary'}>{STATUS_LABEL[directCall.status] ?? directCall.status}</Badge>
-          </div>
-          <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
-            <span>{new Date(directCall.at).toLocaleString('it-IT')}</span>
-            {fmtDuration(directCall.durationSec) && <span>{fmtDuration(directCall.durationSec)}</span>}
-          </div>
-          <p className="text-muted-foreground">Le chiamate fatte direttamente dal dialer non hanno trascrizione né riepilogo: la conversazione avviene tra te e il cliente, senza Bruno.</p>
-        </div>}
-      </DialogContent>
-    </Dialog>
+    <DirectCallDetail callId={directCall?.id.slice(2) ?? null} onClose={() => setDirectCall(null)} />
   </>;
 }
