@@ -33,6 +33,8 @@ function check(result: { error: { message: string } | null }) { if (result.error
 
 // Called only after Telnyx signature verification. Never creates a lead or starts an AI result job.
 export async function receiveForwardedCall(db: SupabaseClient, data: Record<string, unknown>, target: string) {
+  const parsed = InboundStatus.safeParse(data);
+  if (!parsed.success) return null;
   const caller = inboundCaller(data);
   if (!caller || typeof data.CallSid !== 'string' || !data.CallSid || data.CallSid.length > 500) return null;
   check(await db.from('crm_inbound_calls').upsert({
@@ -40,6 +42,12 @@ export async function receiveForwardedCall(db: SupabaseClient, data: Record<stri
   }, { onConflict: 'provider_call_id', ignoreDuplicates: true }));
   const row = await db.from('crm_inbound_calls').select('id').eq('provider_call_id', data.CallSid).single(); check(row);
   return row.data?.id ?? null;
+}
+
+export function forwardedEventMatches(call: { provider_call_id: string; forwarded_to: string; forward_call_id: string | null }, data: z.infer<typeof InboundStatus>, action: boolean) {
+  if (action) return data.CallSid === call.provider_call_id && Boolean(data.DialCallSid) && (!call.forward_call_id || data.DialCallSid === call.forward_call_id);
+  return data.To === call.forwarded_to && data.From === FROM_NUMBER &&
+    data.ParentCallSid === call.provider_call_id && (!call.forward_call_id || data.CallSid === call.forward_call_id);
 }
 
 export async function updateForwardedCall(db: SupabaseClient, raw: unknown, id?: string, action = false) {
@@ -51,12 +59,7 @@ export async function updateForwardedCall(db: SupabaseClient, raw: unknown, id?:
   const result = await query.maybeSingle(); check(result);
   const call = result.data; if (!call) return { ignored: true };
   const forwarded = Boolean(id);
-  if (forwarded) {
-    if (action) { if (data.CallSid !== call.provider_call_id) return { ignored: true }; }
-    else if (data.To !== call.forwarded_to || data.From !== FROM_NUMBER ||
-      (data.ParentCallSid && data.ParentCallSid !== call.provider_call_id) ||
-      (call.forward_call_id && data.CallSid !== call.forward_call_id)) return { ignored: true };
-  }
+  if (forwarded && !forwardedEventMatches(call, data, action)) return { ignored: true };
   const providerStatus = action ? data.DialCallStatus : data.CallStatus;
   const status = providerStatus ? inboundEventStatus(providerStatus, forwarded) : null;
   if (!status) return { ignored: true };
