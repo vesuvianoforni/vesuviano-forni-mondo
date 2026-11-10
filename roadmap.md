@@ -1,5 +1,10 @@
 # Roadmap
 
+## Dial: chiamate ricevute e inoltrate (10 nov 2026)
+- [ ] Registrare gli ingressi UK e l’esito dell’inoltro al fisso aziendale con callback Telnyx verificati, senza avviare Bruno o creare clienti automaticamente.
+- [ ] Mostrare nello storico Dial chiamante, cliente riconosciuto, destinazione dell’inoltro, durata ed esito; filtri Tutte/In uscita/Ricevute.
+- [ ] Test delle regole, verifica desktop/mobile e distribuzione del ricevitore; prova telefonica reale subordinata a una nuova chiamata dell’utente.
+
 ## Chiamate operatore: registrazione e riepilogo Telegram (10 nov 2026)
 - [x] Registrazione di entrambe le voci nel browser come WAV completi da un minuto, caricamento privato associato a chiamata/operatore, salvataggio finale e riprova senza richiamare; telefonia Telnyx invariata. CDR reali: WebRTC/SIP senza Call Control né registrazioni; configurazione temporaneamente verificata e ripristinata, nessun webhook nuovo mantenuto.
 - [x] Audio privato, trascrizione per ogni segmento e riepilogo italiano con coda persistente, lease globale, checkpoint, tentativi limitati e stop su dinieghi/crediti. Avvio dal servizio Telegram esistente, recupero sul suo tick feriale senza nuovo cron.
