@@ -1,5 +1,10 @@
 # Roadmap
 
+## Mail: allegati (10 nov 2026)
+- [ ] Mostrare gli allegati nelle conversazioni email e nella posta importata, con apertura e download protetti.
+- [ ] Recuperare gli allegati delle email già importate senza reinviare messaggi o duplicare record.
+- [ ] Verificare test, apertura/download e visualizzazione desktop/mobile; dichiarare eventuali limiti di accesso reale.
+
 ## Mail: solo conversazioni email e importazione (10 nov 2026)
 - [x] Mail Clienti mostra solo conversazioni email registrate, non contatti con il solo indirizzo email.
 - [x] Importa email riusa la sincronizzazione della casella, con aggiornamento stato e liste; Casella email mostra la posta già importata con filtri, ricerca, paginazione e dettaglio. Nessun nuovo invio o creazione automatica di lead, permessi invariati (posta non associata visibile agli admin).
