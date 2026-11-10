@@ -1,7 +1,7 @@
 import type { Database } from '@/integrations/supabase/types';
 
 export type MailInboxItem = Pick<Database['public']['Tables']['email_items']['Row'],
-  'id' | 'sender' | 'recipients' | 'subject' | 'body' | 'direction' | 'sent_at' | 'folder' | 'lead_id'>;
+  'id' | 'sender' | 'recipients' | 'subject' | 'body' | 'direction' | 'sent_at' | 'folder' | 'lead_id' | 'attachment_names'>;
 
 export function mailRecipients(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((address): address is string => typeof address === 'string') : [];

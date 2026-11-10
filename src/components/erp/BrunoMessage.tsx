@@ -5,6 +5,7 @@ import { BrunoCallDetail } from './BrunoCallDetail';
 import { Badge } from "@/components/ui/badge";
 import { CHANNELS, type BrunoChannel } from "@/lib/brunoObjectives";
 import { cn } from "@/lib/utils";
+import { MailAttachments } from './MailAttachments';
 
 export interface BrunoMessageData {
   id: string; channel: BrunoChannel; direction: string; sender: string; subject: string | null;
@@ -47,7 +48,7 @@ export function BrunoMessage({ message, customerName, showDate }: { message: Bru
           </div>
           {message.subject && <p className="mb-1 font-semibold">{message.subject}</p>}
           {!(message.metadata?.media_url && PLACEHOLDER.test(message.body.trim())) && <p className="whitespace-pre-wrap break-words leading-relaxed">{message.body}</p>}
-          {message.metadata && message.channel !== "call" && <MessageMedia meta={message.metadata} />}
+          {message.channel === 'email' ? <MailAttachments source={{ messageId: message.id }} names={message.metadata?.attachment_names} /> : message.metadata && message.channel !== "call" && <MessageMedia meta={message.metadata} />}
           {message.channel === "call" && message.metadata?.recording_url?.startsWith("http") && <audio controls preload="none" src={message.metadata.recording_url} className="mt-2 h-8 w-full" aria-label="Registrazione chiamata" />}
           {message.channel === 'call' && message.metadata?.voice_call_id && <><Button variant="outline" size="sm" className="mt-2" onClick={()=>setCallOpen(true)}><FileText className="mr-2 h-4 w-4" />Audio e conversazione</Button><BrunoCallDetail callId={callOpen ? message.metadata.voice_call_id : null} onClose={()=>setCallOpen(false)} /></>}
           <div className="mt-2 text-right text-[10px] text-muted-foreground"><time dateTime={message.created_at} title={date.toLocaleString("it-IT")}>{date.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}</time>{message.status === "failed" && <span className="ml-2 text-destructive">Non inviato</span>}</div>
