@@ -5,7 +5,8 @@
 - [x] Audio privato, trascrizione per ogni segmento e riepilogo italiano con coda persistente, lease globale, checkpoint, tentativi limitati e stop su dinieghi/crediti. Avvio dal servizio Telegram esistente, recupero sul suo tick feriale senza nuovo cron.
 - [x] Telegram mostra solo riepilogo, sia chiamate AI sia operatore; audio/trascrizione nel dettaglio CRM e storico. Funzioni Telegram/Bruno distribuite; test di proiezione e lettura superati.
 - [x] Voce reale trascritta e riepilogo economico reali verificati; registratore browser provato con due sorgenti distinte presenti nel WAV. Dettaglio isolato desktop/mobile senza overflow; account esterno reindirizza al login. Endpoint interno autorizzato 200, anonimo 401; nessun nuovo avviso sicurezza, dieci preesistenti invariati.
-- [x] Compatibilità tra chiave service_role del runtime Telegram e chiave Secret Netlify: autorizzazione su colonna accessibile solo al servizio, non confronto fra chiavi diverse; nessuna chiave esposta al browser.
+- [x] Compatibilità tra chiave service_role del runtime Telegram e chiave Secret Netlify implementata: autorizzazione su colonna accessibile solo al servizio, non confronto fra chiavi diverse; locale 200 e chiave invalida 401, nessuna chiave esposta al browser.
+- [ ] Pubblicazione Netlify della compatibilità chiavi e registratore: sito attuale respinge ancora il worker interno con 401, quindi elaborazione/Telegram non verificabili finché il deploy non incorpora questa versione.
 - [ ] Telefonata reale con nuova versione → upload → trascrizione → Telegram: richiede account ERP esterno e nuova chiamata dell’operatore. Riaprire/aggiornare l’app dopo pubblicazione; mantenere aperta fino a salvataggio. Chiamata screenshot senza audio anche sul vero session ID Telnyx: non recuperabile retroattivamente.
 
 ## Mail: allegati (10 nov 2026)
