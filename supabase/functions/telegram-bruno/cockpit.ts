@@ -31,6 +31,13 @@ export function directCallLabel(status: string, answered: boolean) {
   return answered ? 'Chiamata conclusa' : 'Tentativo concluso senza risposta registrata';
 }
 
+export function telegramCallSummary(call: { summary?: string | null; recording_status?: string | null; recording_error?: string | null }) {
+  const summary = call.summary?.trim();
+  if (summary) return `<b>Riepilogo</b>\n${esc(cut(summary, 2200))}`;
+  if (['pending','starting','recording','processing'].includes(call.recording_status ?? '')) return '<i>Riepilogo in preparazione.</i>';
+  return '<i>Riepilogo non disponibile: nessuna conversazione registrata ed elaborata.</i>';
+}
+
 export function fmtDate(iso?: string | null) {
   if (!iso) return '';
   return new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(iso));

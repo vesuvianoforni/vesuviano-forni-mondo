@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AlertCircle, Bot, FileText, Paperclip, Mail, MessageCircle, Phone, StickyNote } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { BrunoCallDetail } from './BrunoCallDetail';
+import { DirectCallDetail } from './DirectCallDetail';
 import { Badge } from "@/components/ui/badge";
 import { CHANNELS, type BrunoChannel } from "@/lib/brunoObjectives";
 import { cn } from "@/lib/utils";
@@ -10,7 +11,7 @@ import { MailAttachments } from './MailAttachments';
 export interface BrunoMessageData {
   id: string; channel: BrunoChannel; direction: string; sender: string; subject: string | null;
   body: string; status: string; ai_generated: boolean; error: string | null; created_at: string;
-  metadata?: { voice_call_id?: string | undefined; recording_url?: string | null | undefined; duration_seconds?: number | undefined; message_type?: string | null | undefined; media_url?: string | null | undefined; file_name?: string | null | undefined; attachment_names?: string[] | null | undefined; whatsapp_line?: string | null | undefined} | null | undefined;
+  metadata?: { direct_call_id?: string | undefined; voice_call_id?: string | undefined; recording_url?: string | null | undefined; duration_seconds?: number | undefined; message_type?: string | null | undefined; media_url?: string | null | undefined; file_name?: string | null | undefined; attachment_names?: string[] | null | undefined; whatsapp_line?: string | null | undefined} | null | undefined;
 }
 
 const icons = { whatsapp_api: Bot, whatsapp_uk: Bot, wasender: MessageCircle, email: Mail, note: StickyNote, call: Phone };
@@ -51,6 +52,7 @@ export function BrunoMessage({ message, customerName, showDate }: { message: Bru
           {message.channel === 'email' ? <>{message.metadata?.media_url && <MessageMedia meta={message.metadata} />}<MailAttachments source={{ messageId: message.id }} names={message.metadata?.attachment_names} /></> : message.metadata && message.channel !== "call" && <MessageMedia meta={message.metadata} />}
           {message.channel === "call" && message.metadata?.recording_url?.startsWith("http") && <audio controls preload="none" src={message.metadata.recording_url} className="mt-2 h-8 w-full" aria-label="Registrazione chiamata" />}
           {message.channel === 'call' && message.metadata?.voice_call_id && <><Button variant="outline" size="sm" className="mt-2" onClick={()=>setCallOpen(true)}><FileText className="mr-2 h-4 w-4" />Audio e conversazione</Button><BrunoCallDetail callId={callOpen ? message.metadata.voice_call_id : null} onClose={()=>setCallOpen(false)} /></>}
+          {message.channel === 'call' && message.metadata?.direct_call_id && <><Button variant="outline" size="sm" className="mt-2" onClick={()=>setCallOpen(true)}><FileText className="mr-2 h-4 w-4" />Audio e conversazione</Button><DirectCallDetail callId={callOpen ? message.metadata.direct_call_id : null} onClose={()=>setCallOpen(false)} /></>}
           <div className="mt-2 text-right text-[10px] text-muted-foreground"><time dateTime={message.created_at} title={date.toLocaleString("it-IT")}>{date.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}</time>{message.status === "failed" && <span className="ml-2 text-destructive">Non inviato</span>}</div>
           {message.error && <p className="mt-1 flex items-start gap-1 text-[11px] text-destructive"><AlertCircle className="mt-0.5 h-3 w-3 shrink-0" />{message.error}</p>}
         </article>
