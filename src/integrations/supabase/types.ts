@@ -1219,6 +1219,98 @@ export type Database = {
         }
         Relationships: []
       }
+      crm_call_ai_state: {
+        Row: {
+          created_at: string
+          key: string
+          lease_token: string | null
+          lease_until: string | null
+          paused: boolean
+          provider_denied: boolean
+          reason: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          key?: string
+          lease_token?: string | null
+          lease_until?: string | null
+          paused?: boolean
+          provider_denied?: boolean
+          reason?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          key?: string
+          lease_token?: string | null
+          lease_until?: string | null
+          paused?: boolean
+          provider_denied?: boolean
+          reason?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      crm_call_results: {
+        Row: {
+          attempts: number
+          call_id: string
+          created_at: string
+          error: string | null
+          lease_token: string | null
+          lease_until: string | null
+          next_attempt_at: string
+          recording_id: string
+          recording_path: string | null
+          status: string
+          summary: string | null
+          transcript: string | null
+          updated_at: string
+          worker_token: string
+        }
+        Insert: {
+          attempts?: number
+          call_id: string
+          created_at?: string
+          error?: string | null
+          lease_token?: string | null
+          lease_until?: string | null
+          next_attempt_at?: string
+          recording_id: string
+          recording_path?: string | null
+          status?: string
+          summary?: string | null
+          transcript?: string | null
+          updated_at?: string
+          worker_token?: string
+        }
+        Update: {
+          attempts?: number
+          call_id?: string
+          created_at?: string
+          error?: string | null
+          lease_token?: string | null
+          lease_until?: string | null
+          next_attempt_at?: string
+          recording_id?: string
+          recording_path?: string | null
+          status?: string
+          summary?: string | null
+          transcript?: string | null
+          updated_at?: string
+          worker_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_call_results_call_id_fkey"
+            columns: ["call_id"]
+            isOneToOne: true
+            referencedRelation: "crm_direct_calls"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       crm_direct_calls: {
         Row: {
           answered_at: string | null
@@ -1232,7 +1324,13 @@ export type Database = {
           message_id: string | null
           operator_id: string
           provider_call_id: string | null
+          provider_verified_at: string | null
+          recording_error: string | null
+          recording_status: string
           status: string
+          summary: string | null
+          telnyx_control_id: string | null
+          telnyx_session_id: string | null
           updated_at: string
         }
         Insert: {
@@ -1247,7 +1345,13 @@ export type Database = {
           message_id?: string | null
           operator_id: string
           provider_call_id?: string | null
+          provider_verified_at?: string | null
+          recording_error?: string | null
+          recording_status?: string
           status?: string
+          summary?: string | null
+          telnyx_control_id?: string | null
+          telnyx_session_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -1262,7 +1366,13 @@ export type Database = {
           message_id?: string | null
           operator_id?: string
           provider_call_id?: string | null
+          provider_verified_at?: string | null
+          recording_error?: string | null
+          recording_status?: string
           status?: string
+          summary?: string | null
+          telnyx_control_id?: string | null
+          telnyx_session_id?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -4226,6 +4336,31 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "bruno_voice_result_jobs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      claim_crm_call_result: {
+        Args: { p_call: string; p_lease: string; p_token: string }
+        Returns: {
+          attempts: number
+          call_id: string
+          created_at: string
+          error: string | null
+          lease_token: string | null
+          lease_until: string | null
+          next_attempt_at: string
+          recording_id: string
+          recording_path: string | null
+          status: string
+          summary: string | null
+          transcript: string | null
+          updated_at: string
+          worker_token: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "crm_call_results"
           isOneToOne: false
           isSetofReturn: true
         }
