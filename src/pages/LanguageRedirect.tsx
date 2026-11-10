@@ -1,20 +1,19 @@
 import { useEffect } from 'react';
-import { useNavigate } from '@/lib/router-compat';
 import SEOHead from '@/components/SEOHead';
 import { selectBrowserLanguage } from '@/lib/browserLanguage';
 import { getAlternatesForPath } from '@/lib/hreflang';
 import LocalizedIndex from './LocalizedIndex';
 
 const LanguageRedirect = () => {
-  const navigate = useNavigate();
-
   useEffect(() => {
     const preferences = navigator.languages?.length
       ? navigator.languages
       : [navigator.language];
     const lang = selectBrowserLanguage(preferences);
-    navigate(`/${lang}`, { replace: true });
-  }, [navigate]);
+    // A document navigation retains the destination's server-rendered head.
+    // Preserve campaign attribution and any within-page anchor.
+    window.location.replace(`/${lang}${window.location.search}${window.location.hash}`);
+  }, []);
 
   return (
     <>
