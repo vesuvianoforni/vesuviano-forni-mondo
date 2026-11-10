@@ -49,7 +49,7 @@ export async function processDirectResult(db: CallResultsDb, callId: string, tok
     let transcript: string | null = job.transcript;
     if (!transcript) {
       const audio = await db.storage.from('bruno-call-recordings').download(job.recording_path); check(audio);
-      if (!audio.data) throw new Error('Registrazione non disponibile.');
+      if (!audio.data || !job.recording_path?.startsWith(`direct/${callId}/`)) throw new Error('Registrazione non disponibile.');
       transcript = await transcribeDirectAudio(new File([audio.data], 'conversation.mp3', { type: 'audio/mpeg' }), internalKey);
       check(await db.from('crm_call_results').update({ transcript }).eq('call_id', callId).eq('lease_token', lease));
     }
@@ -68,7 +68,7 @@ export async function processDirectResult(db: CallResultsDb, callId: string, tok
     const retry = recovery === 'retry' && job.attempts < 4;
     check(await db.from('crm_call_results').update({ status: paused ? 'paused' : retry ? 'queued' : 'failed', error: failure.message,
       lease_token: null, lease_until: null, next_attempt_at: new Date(Date.now() + 60000 * 2 ** job.attempts).toISOString() }).eq('call_id', callId).eq('lease_token', lease));
-    if (!retry && !paused) check(await db.from('crm_direct_calls').update({ recording_status: 'failed', recording_error: failure.message }).eq('id', callId));
+    if (!retry) check(await db.from('crm_direct_calls').update({ recording_status: paused ? 'paused' : 'failed', recording_error: failure.message }).eq('id', callId));
     return { ready: false, status: failure.status, error: failure.message };
   } finally {
     check(await db.from('crm_call_ai_state').update({ lease_token: null, lease_until: null }).eq('key', 'calls').eq('lease_token', lease));
