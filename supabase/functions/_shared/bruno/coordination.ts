@@ -14,9 +14,9 @@ export function directCallEvidence(c: Record<string, any>) {
     destination: c.destination, from_number: c.from_number, status: c.status,
     created_at: c.created_at, answered_at: c.answered_at, ended_at: c.ended_at,
     duration_seconds: c.answered_at && c.ended_at ? Math.max(0, Math.floor((Date.parse(c.ended_at) - Date.parse(c.answered_at)) / 1000)) : null,
-    evidence_source: c.provider_verified_at ? 'telnyx_verified_recording' : 'browser_reported', transcript_available: c.recording_status === 'ready',
+    evidence_source: c.recording_source === 'browser_audio' ? 'operator_recording' : c.provider_verified_at ? 'telnyx_verified_recording' : 'browser_reported', transcript_available: c.recording_status === 'ready',
     summary: c.summary ? String(c.summary).slice(0, 2200) : null,
-    content_note: c.summary ? 'Chiamata del team: riepilogo dalla registrazione verificata; nessuna modifica CRM autorizzata dalla trascrizione.' : 'Chiamata del team: contenuto non ancora disponibile; non inventare dialogo o qualificazione.' };
+    content_note: c.summary ? 'Chiamata del team: riepilogo dalla registrazione; nessuna modifica CRM autorizzata dalla trascrizione.' : 'Chiamata del team: contenuto non ancora disponibile; non inventare dialogo o qualificazione.' };
 }
 export async function communicationPage(reader: SupabaseClient, a: Record<string, any>) {
   const channel = a.channel ?? 'all';
@@ -40,7 +40,7 @@ export async function callHistory(reader: SupabaseClient, a: Record<string, any>
   if (Boolean(a.before_at) !== Boolean(a.before_id)) throw new Error('Cursore incompleto');
   if (a.lead_id) z.string().uuid().parse(a.lead_id);
   if (a.before_at) { z.string().datetime({ offset: true }).parse(a.before_at); z.string().uuid().parse(a.before_id); }
-  let direct = reader.from('crm_direct_calls').select('id,lead_id,operator_id,destination,from_number,status,created_at,answered_at,ended_at,summary,recording_status,provider_verified_at').order('created_at', { ascending: false }).order('id', { ascending: false }).limit(16);
+  let direct = reader.from('crm_direct_calls').select('id,lead_id,operator_id,destination,from_number,status,created_at,answered_at,ended_at,summary,recording_status,recording_source,provider_verified_at').order('created_at', { ascending: false }).order('id', { ascending: false }).limit(16);
   let ai = reader.from('bruno_voice_calls').select('id,lead_id,destination,from_number,status,direction,created_at,ended_at,summary,transcript_status,duration_seconds,call_type').order('created_at', { ascending: false }).order('id', { ascending: false }).limit(16);
   if (a.lead_id) { direct = direct.eq('lead_id', a.lead_id); ai = ai.eq('lead_id', a.lead_id); }
   if (a.before_at && a.before_id) {

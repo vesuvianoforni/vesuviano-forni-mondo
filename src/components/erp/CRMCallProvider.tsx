@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { prepareDirectCall, updateDirectCall, pendingDirectCalls } from '@/lib/crmDialer.functions';
+import { prepareDirectCall, updateDirectCall, pendingDirectCalls, reserveCallAudioPart, completeCallAudio } from '@/lib/crmDialer.functions';
+import { supabase } from '@/integrations/supabase/client';
 import { CRM_CALLER_NUMBER, canStartCRMCall, directStatusLabels, type CallMode } from '@/lib/crmDialer';
 import { voiceRequest } from '@/lib/brunoVoice';
 import type { CRMLead } from './CRMLeadCard';
@@ -32,6 +33,11 @@ export function CRMCallButton({ lead, compact = false, showNumber = false }: { l
 type Direct = { id: string; name: string; destination: string; status: string; answered: number | null };
 export function CRMCallProvider({ children }: { children: ReactNode }) {
   const prepare = useServerFn(prepareDirectCall), update = useServerFn(updateDirectCall), pending = useServerFn(pendingDirectCalls);
+  const reserveAudio = useServerFn(reserveCallAudioPart), completeAudio = useServerFn(completeCallAudio);
+  const recorderRef = useRef<Awaited<ReturnType<typeof import('@/lib/crmCallRecorder').createCallRecorder>> | null>(null);
+  const audioWrites = useRef(Promise.resolve());
+  const filesRef = useRef<{ id: string; file: File; ordinal: number; seconds: number; uploaded: boolean }[]>([]);
+  const [savingAudio, setSavingAudio] = useState(false), [audioRetry, setAudioRetry] = useState<{ id: string; count: number } | null>(null);
   const [lead, setLead] = useState<CRMLead | null>(null), [mode, setMode] = useState<CallMode>(null);
   const [callType, setCallType] = useState<'qualifica' | 'trattativa'>('qualifica'), [instructions, setInstructions] = useState('');
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null);
@@ -53,10 +59,30 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
     const client = clientRef.current; clientRef.current = null; callRef.current = null;
     if (client) { client.off('telnyx.notification'); client.off('telnyx.error'); client.off('telnyx.socket.close'); void client.disconnect(); }
   };
+  const uploadPart = async (part: typeof filesRef.current[number]) => {
+    const signed = await reserveAudio({ data: { id: part.id, ordinal: part.ordinal, seconds: part.seconds } });
+    const result = await supabase.storage.from('bruno-call-recordings').uploadToSignedUrl(signed.path, signed.token, part.file, { contentType: 'audio/wav' });
+    if (result.error) throw new Error(result.error.message);
+    part.uploaded = true;
+  };
+  const saveRecording = async (id: string, count: number) => {
+    setSavingAudio(true);
+    try {
+      await audioWrites.current; await writes.current;
+      for (const part of filesRef.current) if (!part.uploaded) await uploadPart(part);
+      await completeAudio({ data: { id, count } });
+      filesRef.current = []; setAudioRetry(null);
+    } catch {
+      setAudioRetry({ id, count }); setError('Registrazione non ancora salvata: premi Salva registrazione senza chiudere l’app.');
+    } finally { setSavingAudio(false); }
+  };
   const finish = (status: 'ended' | 'failed' | 'unknown') => {
     if (terminalRef.current) return;
     terminalRef.current = true;
     notify(status, callRef.current?.id);
+    const recorder = recorderRef.current, id = directRef.current?.id; recorderRef.current = null;
+    if (recorder && id) void recorder.stop().then(count => saveRecording(id, count));
+    else if (id) void writes.current.then(() => completeAudio({ data: { id, count: 0, failure: 'La registrazione non è stata avviata.' } })).catch(() => setError('Esito registrazione non aggiornato.'));
     setDirect(previous => previous ? { ...previous, status } : null);
     dispose(); setBusy(false); setMuted(false);
   };
@@ -65,6 +91,7 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
     void callRef.current?.hangup();
     streamRef.current?.getTracks().forEach(track => track.stop());
     void clientRef.current?.disconnect();
+    void recorderRef.current?.stop();
   }, []);
   useEffect(() => {
     if (!direct?.answered || direct.status !== 'active') return;
@@ -78,7 +105,7 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
   const startDirect = async () => {
     if (!lead) return;
     const current = ++version.current;
-    directRef.current = null; setDirect(null); setElapsed(0);
+    directRef.current = null; setDirect(null); setElapsed(0); filesRef.current = []; audioWrites.current = Promise.resolve();
     setBusy(true); setError(null); terminalRef.current = false; endingRef.current = false;
     try {
       const previous = await pending();
@@ -91,6 +118,11 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
       const session = await prepare({ data: { lead_id: lead.id } });
       const value = { id: session.id, name: lead.company_name || lead.contact_name || 'Cliente', destination: session.destination, status: 'preparing', answered: null };
       directRef.current = value; setDirect(value);
+      const { createCallRecorder } = await import('@/lib/crmCallRecorder');
+      recorderRef.current = await createCallRecorder(stream, (file, ordinal, seconds) => {
+        const part = { id: session.id, file, ordinal, seconds, uploaded: false }; filesRef.current.push(part);
+        audioWrites.current = audioWrites.current.then(() => uploadPart(part)).catch(() => { setError('Audio non salvato: verrà richiesto di salvare la registrazione a fine chiamata.'); });
+      });
       const client = new sdk.TelnyxRTC({ login_token: session.token, debug: false, enableCallReports: false, hangupOnBeforeUnload: true });
       clientRef.current = client;
       await new Promise<void>((resolve, reject) => {
@@ -109,6 +141,7 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
         if (!call || call.id !== callRef.current?.id || event.type !== 'callUpdate') return;
         // Attach the remote stream explicitly: relying only on remoteElement can leave the speaker silent.
         const remote = (call as unknown as { remoteStream?: MediaStream }).remoteStream;
+        if (remote) recorderRef.current?.attachRemote(remote);
         if (remote && audioRef.current && audioRef.current.srcObject !== remote) {
           audioRef.current.srcObject = remote; audioRef.current.muted = false; audioRef.current.volume = 1;
           void audioRef.current.play().catch(() => setError('Audio bloccato dal browser: premi Attiva audio.'));
@@ -116,13 +149,13 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
         if (call.state === 'active') {
           if (directRef.current?.answered) return;
           const answered = Date.now();
+          recorderRef.current?.start();
           if (directRef.current) directRef.current = { ...directRef.current, status: 'active', answered };
           setDirect(previous => previous ? { ...previous, status: 'active', answered } : null); notify('active', call.id);
           void audioRef.current?.play().catch(() => setError('Audio bloccato dal browser: premi Attiva audio.'));
         } else if (call.state === 'hangup' || call.state === 'destroy') finish(directRef.current?.answered || endingRef.current ? 'ended' : 'failed');
       });
       callRef.current = client.newCall({ destinationNumber: session.destination, callerNumber: session.from_number, callerName: 'Vesuviano Forni',
-        customHeaders: [{ name: 'X-CRM-Call-ID', value: session.id }],
         localStream: stream, ...(audioRef.current ? { remoteElement: audioRef.current } : {}), audio: true, video: false });
       if (directRef.current) directRef.current = { ...directRef.current, status: 'dialing' };
       setDirect(previous => previous ? { ...previous, status: 'dialing' } : null); notify('dialing', callRef.current.id);
@@ -165,7 +198,7 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
     setLead(null); setMode(null); setAiProposal(null);
   };
   const live = direct && ['preparing', 'dialing', 'active'].includes(direct.status);
-  return <CallContext.Provider value={{ openCall, occupied: Boolean(live || busy) }}>
+  return <CallContext.Provider value={{ openCall, occupied: Boolean(live || busy || savingAudio || audioRetry) }}>
     {children}
     <audio ref={audioRef} autoPlay playsInline aria-label="Audio chiamata diretta" />
     <Dialog open={Boolean(lead)} onOpenChange={open => { if (!open) void dismiss(); }}>
@@ -183,7 +216,7 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
           <Textarea id="call-instructions" placeholder="Indicazioni per questa chiamata…" rows={3} maxLength={2000} value={instructions} disabled={busy || Boolean(aiProposal)} onChange={e => setInstructions(e.target.value)} />
           {aiProposal && <p className="text-sm font-medium">Proposta pronta · Chiamare ora {aiProposal.destination} con Bruno?</p>}
         </div>}
-        {mode === 'direct' && <div className="space-y-2 text-sm text-muted-foreground"><p className="flex items-center gap-2"><Headset className="h-4 w-4 shrink-0" />Microfono e audio del browser · Operatore</p><p>Chiamata registrata. Informa il cliente prima di proseguire; all’avvio della registrazione sentirai un segnale.</p></div>}
+        {mode === 'direct' && <div className="space-y-2 text-sm text-muted-foreground"><p className="flex items-center gap-2"><Headset className="h-4 w-4 shrink-0" />Microfono e audio del browser · Operatore</p><p>Chiamata registrata. Informa il cliente prima di proseguire e mantieni l’app aperta fino al salvataggio.</p></div>}
         {error && <p role="alert" className="break-words text-sm text-destructive">{error}</p>}
         {unresolved && <Button variant="outline" disabled={busy} onClick={async () => {
           setBusy(true);
@@ -203,10 +236,12 @@ export function CRMCallProvider({ children }: { children: ReactNode }) {
     {direct && <aside className="erp-dashboard fixed bottom-4 right-4 z-[60] w-[calc(100%-32px)] max-w-sm rounded-lg border bg-background p-4 text-foreground shadow-lg" aria-label="Chiamata CRM">
       {direct && <div className="space-y-3">
         <div className="flex items-start justify-between gap-2"><div className="min-w-0"><p className="truncate font-semibold">{direct.name}</p><p className="text-xs text-muted-foreground">{direct.destination} · Chiamata diretta UK</p></div>
-          {!live && <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Chiudi pannello chiamata" onClick={() => { setDirect(null); directRef.current = null; setError(null); }}><X className="h-4 w-4" /></Button>}
+          {!live && !savingAudio && !audioRetry && <Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Chiudi pannello chiamata" onClick={() => { setDirect(null); directRef.current = null; setError(null); }}><X className="h-4 w-4" /></Button>}
         </div>
         <p role="status" className="text-sm">{directStatusLabels[direct.status]}{direct.status === 'active' && ` · ${Math.floor(elapsed / 60)}:${String(elapsed % 60).padStart(2, '0')}`}</p>
         {error && <p role="alert" className="break-words text-xs text-destructive">{error}</p>}
+        {savingAudio && <p role="status" className="text-xs text-muted-foreground">Salvataggio registrazione…</p>}
+        {audioRetry && <Button variant="outline" disabled={savingAudio} onClick={() => void saveRecording(audioRetry.id, audioRetry.count)}>Salva registrazione</Button>}
         {live && <div className="flex items-center gap-2">
           <Tooltip><TooltipTrigger asChild><Button size="icon" variant="outline" disabled={direct.status !== 'active'} aria-label={muted ? 'Riattiva microfono' : 'Disattiva microfono'} onClick={() => { if (muted) callRef.current?.unmuteAudio(); else callRef.current?.muteAudio(); setMuted(!muted); }}>{muted ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}</Button></TooltipTrigger><TooltipContent>{muted ? 'Riattiva microfono' : 'Disattiva microfono'}</TooltipContent></Tooltip>
           <Button variant="outline" size="sm" onClick={() => { void audioRef.current?.play().then(() => setError(null)).catch(() => setError('Audio non disponibile.')); }}>Attiva audio</Button>
