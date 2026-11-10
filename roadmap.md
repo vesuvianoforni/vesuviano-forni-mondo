@@ -1,5 +1,11 @@
 # Roadmap
 
+## Chiamate operatore: registrazione e riepilogo Telegram (10 nov 2026)
+- [ ] Registrare entrambe le voci delle nuove chiamate dirette e associare gli eventi Telnyx verificati al cliente, senza cambiare inoltro o chiamate AI.
+- [ ] Salvare audio privato, trascrizione e riepilogo italiano con elaborazione persistente, limiti e blocco degli errori AI definitivi.
+- [ ] Telegram: solo riepilogo per chiamate AI e operatore; CRM/storico con audio e trascrizione, senza dialoghi inventati.
+- [ ] Verificare registrazioni già disponibili, test, sicurezza e flusso reale; segnalare eventuali limiti di recupero storico/pubblicazione.
+
 ## Mail: allegati (10 nov 2026)
 - [x] Allegati condivisi nelle conversazioni email e nella posta importata: elenco su richiesta, anteprima PDF multipagina/immagini/video/audio e download pronto prima del click per iOS; conservati media email precedenti. RLS e identità fisica IMAP verificate prima della lettura; lease condivisa e singolo file limitato, nessun URL pubblico.
 - [x] Email mostrata: trovati 8 allegati reali; nomi salvati sul record esistente e primo PDF di 442.622 byte recuperato e riconosciuto, senza invii, duplicazioni o modifica dei cursori. Nuovi import conservano i nomi da BODYSTRUCTURE.
