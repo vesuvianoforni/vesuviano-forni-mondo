@@ -144,11 +144,15 @@ export const isHoursBlock = (reason: string | null) => !!reason && reason.starts
 // ---------- Inbound calls: Bruno answers the UK number and can hand over to Gennaro ----------
 export const DEFAULT_TRANSFER_NUMBER = '+3908119231684';
 // Routing is server-owned. Direct forwarding keeps the existing TeXML application/outbound profile intact.
-export function inboundRoutingTexml(settings: { inbound_mode?: string; inbound_forward_number?: string; inbound_assistant_id?: string | null }, url: string) {
+export function inboundRoutingTexml(settings: { inbound_mode?: string; inbound_forward_number?: string; inbound_assistant_id?: string | null }, url: string, historyId?: string | null) {
   if (settings.inbound_mode === 'forward') {
     const target = e164(settings.inbound_forward_number || DEFAULT_TRANSFER_NUMBER);
     if (target === FROM_NUMBER) throw new Error('Inoltro circolare non consentito');
-    return `<?xml version="1.0" encoding="UTF-8"?><Response><Dial callerId="${FROM_NUMBER}" timeout="60"><Number>${target}</Number></Dial><Hangup/></Response>`;
+    const base = `${url}/functions/v1/bruno-voice?forward_status=1&amp;id=${historyId}`;
+    const tracking = historyId && z.string().uuid().safeParse(historyId).success;
+    const action = tracking ? ` action="${base}&amp;end=1" method="POST"` : '';
+    const events = tracking ? ` statusCallback="${base}" statusCallbackMethod="POST" statusCallbackEvent="initiated ringing answered completed"` : '';
+    return `<?xml version="1.0" encoding="UTF-8"?><Response><Dial callerId="${FROM_NUMBER}" timeout="60"${action}><Number${events}>${target}</Number></Dial><Hangup/></Response>`;
   }
   if (settings.inbound_assistant_id) return inboundTexml(settings.inbound_assistant_id, url);
   return '<Response><Say>This is Vesuviano Forni. Please contact our sales team by email or WhatsApp. Thank you.</Say><Hangup/></Response>';

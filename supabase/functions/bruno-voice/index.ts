@@ -4,6 +4,7 @@ import { z } from 'npm:zod@3';
 import { assistantConfig, callAllowed, timezoneFromPhone, e164, FROM_NUMBER, nextCallStatus, callOutcomeCode, Proposal, PlanProposal, planNextStep, isHoursBlock, AnyToolRequest, verifyTelnyx, voiceTools, inboundLanguage, INBOUND_HANDOVER_POLICY, InboundVariables, inboundAssistantConfig, inboundExtraTools, inboundRoutingTexml, DEFAULT_TRANSFER_NUMBER } from './domain.ts';
 import { AnalyzedEvent, analyzedMatches, RecordingCallback, spokenTranscript } from './results-domain.ts';
 import { processResults, queueResults } from './results.ts';
+import { receiveForwardedCall, updateForwardedCall } from './inbound-history.ts';
 
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 const Request = z.discriminatedUnion('action', [
@@ -103,15 +104,34 @@ Deno.serve(async req => {
   try {
     const xml = (body: string) => new Response(body, { headers: { ...corsHeaders, 'Content-Type': 'application/xml' } });
     if (address.searchParams.has('texml')) {
-      // The caller cannot choose the destination or mode. Direct forwarding does not start Bruno or create an AI CRM call.
-      const s = checked(await admin.from('bruno_voice_settings').select('inbound_mode,inbound_forward_number,inbound_assistant_id').eq('key', 'default').single());
-      return xml(inboundRoutingTexml(s, url));
+      // Keep the existing public TeXML routing fail-open; only signed provider requests can write history.
+      const s = checked(await admin.from('bruno_voice_settings').select('inbound_mode,inbound_forward_number,inbound_assistant_id,public_key').eq('key', 'default').single());
+      let historyId: string | null = null;
+      if (req.method === 'POST' && s.inbound_mode === 'forward') {
+        const body = await req.text();
+        if (body.length <= 512000 && s.public_key && await verifyTelnyx(body, req.headers.get('telnyx-signature-ed25519'), req.headers.get('telnyx-timestamp'), s.public_key)) {
+          try {
+            const data = req.headers.get('content-type')?.includes('application/json') ? JSON.parse(body) : Object.fromEntries(new URLSearchParams(body));
+            historyId = await receiveForwardedCall(admin, data, s.inbound_forward_number || DEFAULT_TRANSFER_NUMBER);
+          } catch { console.error('bruno-voice', 'inbound_history_unavailable'); }
+        }
+      }
+      return xml(inboundRoutingTexml(s, url, historyId));
     }
     if (req.method !== 'POST') return json({ error: 'Metodo non consentito' }, 405);
     const raw = await req.text();
     if (raw.length > 512000) return json({ error: 'Richiesta troppo grande' }, 413);
     const settings = checked(await admin.from('bruno_voice_settings').select('*').eq('key', 'default').single());
     const signed = async () => !!settings.public_key && await verifyTelnyx(raw, req.headers.get('telnyx-signature-ed25519'), req.headers.get('telnyx-timestamp'), settings.public_key);
+
+    if (address.searchParams.has('forward_status')) {
+      if (!await signed()) return json({ error: 'Firma Telnyx non valida' }, 401);
+      const id = z.string().uuid().safeParse(address.searchParams.get('id'));
+      if (!id.success) return json({ error: 'Riferimento chiamata non valido' }, 400);
+      const data = req.headers.get('content-type')?.includes('application/json') ? JSON.parse(raw) : Object.fromEntries(new URLSearchParams(raw));
+      const result = await updateForwardedCall(admin, data, id.data, address.searchParams.has('end'));
+      return address.searchParams.has('end') ? xml('<Response><Hangup/></Response>') : json(result);
+    }
 
     if (address.searchParams.has('vars')) {
       // Signed assistant initialization for an inbound call: bind the caller to a CRM lead and a call record.
@@ -171,6 +191,8 @@ Deno.serve(async req => {
           // Inbound callbacks carry no call_id: bind them through the provider call id stored at answer time.
           const sid = typeof data.CallSid === 'string' ? data.CallSid : '';
           if (!sid) return json({ ok: true, ignored: true });
+          const forwarded = checked(await admin.from('crm_inbound_calls').select('id').eq('provider_call_id', sid).maybeSingle());
+          if (forwarded) return json(await updateForwardedCall(admin, data));
           call = checked(await admin.from('bruno_voice_calls').select('*').eq('direction', 'inbound').eq('provider_call_id', sid).maybeSingle());
           if (!call) return json({ ok: true, ignored: true });
         } else {

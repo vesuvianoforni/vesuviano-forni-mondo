@@ -115,6 +115,14 @@ Deno.test('Temporary UK inbound forwarding dials only the company landline witho
 Deno.test('Forwarding mode defaults to the correct office number, never the previous 7684 number', () => {
   assertEquals(inboundRoutingTexml({ inbound_mode: 'forward' }, 'https://x.supabase.co').includes('<Number>+3908119231684</Number>'), true);
 });
+Deno.test('Tracked forwarding keeps the company target, timeout and no assistant or recording', () => {
+  const xml = inboundRoutingTexml({ inbound_mode: 'forward', inbound_forward_number: '+3908119231684' }, 'https://x.supabase.co', '3e429f10-5d54-4f5b-a8f7-00bf8e620ebb');
+  assertEquals(xml.includes('>+3908119231684</Number>'), true);
+  assertEquals(xml.includes('timeout="60"'), true);
+  assertEquals(xml.includes('statusCallbackEvent="initiated ringing answered completed"'), true);
+  assertEquals(xml.includes('<AIAssistant'), false);
+  assertEquals(xml.includes('<Recording'), false);
+});
 Deno.test('Assistant mode remains available without changing outbound caller ID', () => {
   assertEquals(inboundRoutingTexml({ inbound_mode: 'assistant', inbound_assistant_id: 'assistant-1' }, 'https://x.supabase.co'), inboundTexml('assistant-1', 'https://x.supabase.co'));
   assertEquals(FROM_NUMBER, '+447457416033');
