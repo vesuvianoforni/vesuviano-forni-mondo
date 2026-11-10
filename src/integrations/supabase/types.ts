@@ -1436,6 +1436,65 @@ export type Database = {
           },
         ]
       }
+      crm_inbound_calls: {
+        Row: {
+          answered_at: string | null
+          caller_number: string
+          created_at: string
+          duration_seconds: number | null
+          ended_at: string | null
+          forward_call_id: string | null
+          forward_status: string | null
+          forwarded_to: string
+          id: string
+          lead_id: string | null
+          provider_call_id: string
+          received_number: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          answered_at?: string | null
+          caller_number: string
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          forward_call_id?: string | null
+          forward_status?: string | null
+          forwarded_to: string
+          id?: string
+          lead_id?: string | null
+          provider_call_id: string
+          received_number: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          answered_at?: string | null
+          caller_number?: string
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          forward_call_id?: string | null
+          forward_status?: string | null
+          forwarded_to?: string
+          id?: string
+          lead_id?: string | null
+          provider_call_id?: string
+          received_number?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_inbound_calls_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       crm_messages: {
         Row: {
           ai_generated: boolean
@@ -4251,6 +4310,16 @@ export type Database = {
       acquire_mario_delivery: { Args: { p_token: string }; Returns: boolean }
       activate_price_list: { Args: { _id: string }; Returns: undefined }
       apply_active_price_list: { Args: never; Returns: undefined }
+      apply_crm_inbound_event: {
+        Args: {
+          p_duration?: number
+          p_forward_call_id?: string
+          p_forward_status?: string
+          p_id: string
+          p_status: string
+        }
+        Returns: undefined
+      }
       approve_mario_research_plan: {
         Args: { p_id: string; p_jobs: Json; p_user: string }
         Returns: boolean
