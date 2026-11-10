@@ -28,7 +28,7 @@ async function processRow(admin: Admin, row: { id: string; event: string; payloa
       } else {
         const res = await fetch(`${process.env["SUPABASE_URL"]}/functions/v1/bruno-whatsapp-inbound`, {
           method: "POST",
-          headers: { "Content-Type": "application/json", "x-internal-key": process.env["SUPABASE_SERVICE_ROLE_KEY"] ?? "" },
+          headers: { "Content-Type": "application/json", "x-internal-key": process.env["SUPABASE_SERVICE_ROLE_KEY"] ?? "", "x-api-key": process.env["ZAPPER_SYNC_KEY"] ?? "" },
           body: JSON.stringify({ value }),
           signal: AbortSignal.timeout(1800),
         });
