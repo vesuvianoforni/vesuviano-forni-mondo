@@ -48,6 +48,28 @@ Deno.serve(async (req) => {
   const admin = createClient(url, service);
   const groups = async () => ((await admin.from('telegram_links').select('chat_id').lt('chat_id', 0)).data ?? []).map((r) => Number(r.chat_id));
 
+  async function callAnalysis() {
+    const { data: state, error } = await admin.from('crm_call_ai_state').select('paused').eq('key', 'calls').single();
+    if (error) throw error;
+    if (state?.paused) return;
+    const { data: due } = await admin.from('crm_call_results').select('call_id').in('status', ['queued','running']).lte('next_attempt_at', new Date().toISOString()).limit(1);
+    if (!due?.length) return;
+    const response = await fetch('https://vesuvianoforni.com/api/public/telnyx/process-results', {
+      method: 'POST', headers: { 'x-call-analysis-key': service },
+    });
+    if (!response.ok || !response.body) throw new Error(`Analisi chiamata non disponibile (${response.status})`);
+    const reader = response.body.getReader();
+    while (true) { const chunk = await reader.read(); if (chunk.done) break; }
+  }
+  if (req.headers.has('x-call-analysis-key')) {
+    if (!safeEqual(req.headers.get('x-call-analysis-key'), service)) return json({ error: 'Non autorizzato' }, 401);
+    const body = await req.json().catch(() => ({}));
+    if (body.action !== 'call_analysis') return json({ error: 'Azione non valida' }, 400);
+    // @ts-ignore EdgeRuntime is provided by Supabase.
+    EdgeRuntime.waitUntil(callAnalysis().catch(error => console.error('call-analysis wake', String(error))));
+    return json({ ok: true });
+  }
+
   // ---------- Shared helpers ----------
   async function linked(chatId: number) {
     const { data: link } = await admin.from('telegram_links').select('user_id').eq('chat_id', chatId).maybeSingle();
@@ -283,6 +305,7 @@ Deno.serve(async (req) => {
   }
 
   async function tick() {
+    await callAnalysis();
     const chats = await groups();
     const { data: pendingCalls, error: pendingError } = await admin.from('telegram_notifications').select('*').eq('kind', 'direct_call').is('sent_at', null).order('created_at').limit(20);
     if (pendingError) throw pendingError;

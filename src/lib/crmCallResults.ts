@@ -7,7 +7,7 @@ export function directRecordingCommand(id: string) {
     command_id: id, custom_file_name: id, client_state: btoa(JSON.stringify({ crm_call_id: id })), transcription: false };
 }
 export function directEventMatches(payload: Record<string, unknown>, call: { destination: string; from_number: string }) {
-  return String(payload.connection_id) === CRM_DIALER_CONNECTION && payload.to === call.destination && call.from_number === CRM_CALLER_NUMBER;
+  return String(payload['connection_id']) === CRM_DIALER_CONNECTION && payload['to'] === call.destination && call.from_number === CRM_CALLER_NUMBER;
 }
 export function callRecordingUrl(value: string) {
   const url = new URL(value);

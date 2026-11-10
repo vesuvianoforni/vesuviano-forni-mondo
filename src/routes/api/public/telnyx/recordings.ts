@@ -2,7 +2,12 @@ import { createFileRoute } from '@tanstack/react-router';
 import { z } from 'zod';
 import { directEventMatches, verifyDirectCallSignature } from '@/lib/crmCallResults';
 
-const eventSchema = z.object({ data: z.object({ id: z.string(), event_type: z.string(), payload: z.record(z.string(), z.unknown()) }) });
+const eventSchema = z.object({ data: z.object({ id: z.string().uuid(), event_type: z.string(), payload: z.object({
+  client_state: z.string().optional().nullable(), custom_headers: z.array(z.object({ name: z.string(), value: z.string() })).optional(),
+  call_control_id: z.string().max(500), call_session_id: z.string().uuid(), connection_id: z.string().optional(),
+  to: z.string().optional(), from: z.string().optional(), recording_id: z.string().uuid().optional(),
+  recording_urls: z.object({ mp3: z.string().url().optional() }).optional(),
+}).passthrough() }) });
 export const Route = createFileRoute('/api/public/telnyx/recordings')({
   server: { handlers: { POST: async ({ request }) => {
     if (Number(request.headers.get('content-length')) > 256 * 1024) return new Response('Payload too large', { status: 413 });
@@ -12,11 +17,12 @@ export const Route = createFileRoute('/api/public/telnyx/recordings')({
       if (bytes > 256 * 1024) { await reader.cancel(); return new Response('Payload too large', { status: 413 }); } raw += decoder.decode(part.value, { stream: true }); }
     raw += decoder.decode();
     if (!await verifyDirectCallSignature(raw, request.headers.get('telnyx-signature-ed25519'), request.headers.get('telnyx-timestamp'))) return new Response('Invalid signature', { status: 401 });
-    const parsed = eventSchema.safeParse(JSON.parse(raw)); if (!parsed.success) return new Response('Invalid event', { status: 400 });
+    let decoded: unknown; try { decoded = JSON.parse(raw); } catch { return new Response('Invalid JSON', { status: 400 }); }
+    const parsed = eventSchema.safeParse(decoded); if (!parsed.success) return new Response('Invalid event', { status: 400 });
     const { event_type: type, payload: p } = parsed.data.data;
     if (!['call.initiated','call.answered','call.hangup','call.recording.saved','call.recording.error'].includes(type)) return new Response('ignored');
     const { supabaseAdmin: admin } = await import('@/integrations/supabase/client.server');
-    const { startVerifiedRecording, captureDirectRecording, processDueDirectResults } = await import('@/lib/crmCallResults.server');
+    const { startVerifiedRecording, captureDirectRecording } = await import('@/lib/crmCallResults.server');
     const db = admin as unknown as import('@supabase/supabase-js').SupabaseClient;
     let callId: string | undefined;
     if (typeof p.client_state === 'string') { try { callId = z.string().uuid().parse(JSON.parse(atob(p.client_state)).crm_call_id); } catch { /* Other Telnyx flows have different state. */ } }
@@ -49,8 +55,12 @@ export const Route = createFileRoute('/api/public/telnyx/recordings')({
       if (!urls?.mp3) return new Response('Missing audio', { status: 400 });
       const existing = await db.from('crm_call_results').select('call_id').eq('call_id', call.id).maybeSingle();
       if (!existing.data) await captureDirectRecording(db, call.id, p.recording_id, urls.mp3);
-      // One result at a time; durable claims/checkpoints protect repeated provider deliveries.
-      await processDueDirectResults(db);
+      // Existing Telegram runtime holds the streaming worker request open, away from the provider's webhook deadline.
+      const wake = await fetch(`${process.env['SUPABASE_URL']}/functions/v1/telegram-bruno`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'x-call-analysis-key': process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '' },
+        body: JSON.stringify({ action: 'call_analysis' }),
+      });
+      if (!wake.ok) return new Response('Analysis wake failed', { status: 502 });
     } else if (type === 'call.recording.error') {
       await db.from('crm_direct_calls').update({ recording_status: 'failed', recording_error: 'Telnyx non ha potuto salvare la registrazione.' }).eq('id', call.id);
     } else if (type === 'call.hangup' && ['pending','starting'].includes(call.recording_status)) {
