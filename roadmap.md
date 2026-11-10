@@ -1,5 +1,9 @@
 # Roadmap
 
+## Telegram: esclusione chiamate senza risposta (10 nov 2026)
+- [ ] Bloccare gli avvisi per tentativi senza risposta e i relativi promemoria già in coda, conservando storico, conversazioni reali e messaggi WhatsApp/email.
+- [ ] Verificare i filtri sui dati reali e con test di regressione.
+
 ## SEO: controllo e correzioni approvate (10 nov 2026)
 - [x] Scansione aggiornata e controllo reale dominio Netlify, cinque lingue, blog, pagine prodotto, robots, sitemap e 404; Search Console dominio verificato, 310 clic/22.547 impression nei 28 giorni, confronto precedente e ispezioni EN/FR/root.
 - [x] Root indicizzabile con contenuto italiano reale e SEOHead unico: un solo titolo/descrizione/canonical, noindex assente. Nove test passati; SSR root/cinque lingue/404 verificati; browser EN/FR/fallback IT e mobile verificati senza errori. Reindirizzamento documentale conserva head e attribuzione; build OK.
