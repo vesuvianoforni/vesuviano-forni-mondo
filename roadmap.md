@@ -1,8 +1,8 @@
 # Roadmap
 
 ## Telegram: esclusione chiamate senza risposta (10 nov 2026)
-- [ ] Bloccare gli avvisi per tentativi senza risposta e i relativi promemoria già in coda, conservando storico, conversazioni reali e messaggi WhatsApp/email.
-- [ ] Verificare i filtri sui dati reali e con test di regressione.
+- [x] Filtro attivo prima dell'inserimento in telegram_notifications per chiamate dirette senza answered_at e chiamate CRM con esito senza risposta o durata zero; avvisi pendenti rimossi e promemoria esclusi ove presenti, senza modificare storico o altri canali. Nessun deploy del sito necessario.
+- [x] Quattro test di integrazione superati sul filtro SQL e sul rifiuto di due avvisi da chiamate reali (diretta e CRM), cinque regressioni Telegram passate; zero avvisi a vuoto aperti, 1.967 chiamate CRM/689 senza risposta e tre tentativi operatore conservati. Build OK; dieci segnalazioni sicurezza preesistenti invariate. Nessuna telefonata né notifica inviata per prova; AGENTS.md al limite, nota strutturale non aggiunta.
 
 ## SEO: controllo e correzioni approvate (10 nov 2026)
 - [x] Scansione aggiornata e controllo reale dominio Netlify, cinque lingue, blog, pagine prodotto, robots, sitemap e 404; Search Console dominio verificato, 310 clic/22.547 impression nei 28 giorni, confronto precedente e ispezioni EN/FR/root.
