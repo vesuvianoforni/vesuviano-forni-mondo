@@ -5,10 +5,10 @@ import { emailAttachments, MAX_ATTACHMENT_BYTES, sameEmailIdentity } from './ema
 
 export async function readEmailAttachments(admin: SupabaseClient, item: { id: string; mailbox_id: string; folder: string | null; imap_uid: number | null; uid_validity: string | null; message_id: string | null }, part?: string) {
   if (!item.folder || !item.imap_uid || !item.uid_validity) throw new Error('MAIL_ATTACHMENT_UNAVAILABLE');
+  const client = imapClient();
   const token = crypto.randomUUID();
   const { data: acquired, error: acquireError } = await admin.rpc('acquire_email_mailbox', { _id: item.mailbox_id, _token: token });
-  if (acquireError || !acquired) throw new Error('MAILBOX_BUSY');
-  const client = imapClient();
+  if (acquireError || !acquired) { client.close(); throw new Error('MAILBOX_BUSY'); }
   const deadline = setTimeout(() => client.close(), 90000);
   try {
     await client.connect();

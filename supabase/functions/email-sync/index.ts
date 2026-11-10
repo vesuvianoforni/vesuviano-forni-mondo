@@ -17,7 +17,7 @@ const schema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('save_signature'), signature: SignatureSchema }),
   z.object({ action: z.literal('delete_signature'), id: z.string().uuid() }),
   z.object({ action: z.literal('preview'), body: z.string().max(4000), signature_id: z.string().uuid().nullable().optional(), signature: SignatureSchema.optional() }),
-  z.object({ action: z.literal('attachments'), item_id: z.string().uuid().optional(), crm_message_id: z.string().uuid().optional() }).refine(value => Boolean(value.item_id) !== Boolean(value.crm_message_id)),
+  z.object({ action: z.literal('attachments'), item_id: z.string().uuid().optional(), crm_message_id: z.string().uuid().optional() }),
   z.object({ action: z.literal('attachment'), item_id: z.string().uuid(), part: z.string().regex(/^\d+(\.\d+)*$/).max(80) }),
 ]);
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
@@ -32,7 +32,7 @@ Deno.serve(async req => {
     let raw;
     try { raw = await req.json(); } catch { return json({ error: 'Richiesta non valida' },400); }
     const parsed = schema.safeParse(raw);
-    if (!parsed.success) return json({ error: 'Richiesta non valida' },400);
+    if (!parsed.success || (parsed.data.action === 'attachments' && Boolean(parsed.data.item_id) === Boolean(parsed.data.crm_message_id))) return json({ error: 'Richiesta non valida' },400);
     const input = parsed.data;
     if (input.action === 'process') {
       // This endpoint can only consume an existing, recent queued run. It cannot create work, send SMTP,
