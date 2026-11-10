@@ -1,5 +1,11 @@
 # Roadmap
 
+## Mail: allegati (10 nov 2026)
+- [x] Allegati condivisi nelle conversazioni email e nella posta importata: elenco su richiesta, anteprima PDF multipagina/immagini/video/audio e download pronto prima del click per iOS; conservati media email precedenti. RLS e identità fisica IMAP verificate prima della lettura; lease condivisa e singolo file limitato, nessun URL pubblico.
+- [x] Email mostrata: trovati 8 allegati reali; nomi salvati sul record esistente e primo PDF di 442.622 byte recuperato e riconosciuto, senza invii, duplicazioni o modifica dei cursori. Nuovi import conservano i nomi da BODYSTRUCTURE.
+- [x] 32 test Deno, 20 Vitest e 7 Bun superati; servizio email-sync distribuito, richieste anonime 401 e input invalido 400. UI isolata desktop/mobile con il PDF reale: pagine 1/2, download identico di 442.622 byte, nomi lunghi e documento senza anteprima, nessun overflow/errori propri. Build OK; conflitto di dipendenze dei test ripristinato, pagina reale HTTP 200 al login (avviso Clarity esterno preesistente).
+- [ ] Prova completa dal proprio account Mail: Supabase esterno senza sessione gestita, quindi UI verificata con risposte isolate e IMAP reale separatamente; accesso autenticato all’endpoint non esercitato. Pubblicazione sito/Netlify da applicare per vedere i controlli sul dominio.
+
 ## Mail: solo conversazioni email e importazione (10 nov 2026)
 - [x] Mail Clienti mostra solo conversazioni email registrate, non contatti con il solo indirizzo email.
 - [x] Importa email riusa la sincronizzazione della casella, con aggiornamento stato e liste; Casella email mostra la posta già importata con filtri, ricerca, paginazione e dettaglio. Nessun nuovo invio o creazione automatica di lead, permessi invariati (posta non associata visibile agli admin).

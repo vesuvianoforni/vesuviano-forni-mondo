@@ -6,6 +6,8 @@ import { imapClient, smtpClient, findSent, closeIMAP, mailConfig } from '../_sha
 import { safeMailError } from '../_shared/email-rules.ts';
 import { SignatureSchema, listEmailSignatures, resolveEmailSignature } from '../_shared/email-signatures.ts';
 import { renderMailboxEmail } from '../_shared/email-layout.ts';
+import { readEmailAttachments } from '../_shared/email-attachment-service.ts';
+import { attachmentPreviewType } from '../_shared/email-attachments.ts';
 
 const schema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('status') }), z.object({ action: z.literal('test') }),
@@ -15,6 +17,8 @@ const schema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('save_signature'), signature: SignatureSchema }),
   z.object({ action: z.literal('delete_signature'), id: z.string().uuid() }),
   z.object({ action: z.literal('preview'), body: z.string().max(4000), signature_id: z.string().uuid().nullable().optional(), signature: SignatureSchema.optional() }),
+  z.object({ action: z.literal('attachments'), item_id: z.string().uuid().optional(), crm_message_id: z.string().uuid().optional() }),
+  z.object({ action: z.literal('attachment'), item_id: z.string().uuid(), part: z.string().regex(/^\d+(\.\d+)*$/).max(80) }),
 ]);
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
@@ -28,7 +32,7 @@ Deno.serve(async req => {
     let raw;
     try { raw = await req.json(); } catch { return json({ error: 'Richiesta non valida' },400); }
     const parsed = schema.safeParse(raw);
-    if (!parsed.success) return json({ error: 'Richiesta non valida' },400);
+    if (!parsed.success || (parsed.data.action === 'attachments' && Boolean(parsed.data.item_id) === Boolean(parsed.data.crm_message_id))) return json({ error: 'Richiesta non valida' },400);
     const input = parsed.data;
     if (input.action === 'process') {
       // This endpoint can only consume an existing, recent queued run. It cannot create work, send SMTP,
@@ -62,6 +66,26 @@ Deno.serve(async req => {
     const { data: roles, error: roleError } = await admin.from('user_roles').select('role').eq('user_id',auth.user.id);
     const isAdmin = roles?.some(r => r.role === 'admin');
     if (roleError || !roles?.some(r => ['admin','commerciale'].includes(r.role))) return json({ error: 'Accesso negato' },403);
+    if (input.action === 'attachments' || input.action === 'attachment') {
+      // Authorize the exact email through the caller's existing RLS before privileged IMAP access.
+      const publicKey = Deno.env.get('SUPABASE_ANON_KEY');
+      if (!publicKey) return json({ error: 'Servizio non configurato' },503);
+      const caller = createClient(url, publicKey, { global: { headers: { Authorization: `Bearer ${token}` } }, auth: { persistSession: false, autoRefreshToken: false } });
+      let query = caller.from('email_items').select('id,mailbox_id,folder,imap_uid,uid_validity,message_id');
+      if (input.item_id) query = query.eq('id', input.item_id);
+      else if (input.action === 'attachments' && input.crm_message_id) query = query.eq('crm_message_id', input.crm_message_id);
+      const { data: items, error } = await query.order('sent_at', { ascending: false }).limit(1);
+      if (error) return json({ error: 'Accesso negato' },403);
+      const item = items?.[0];
+      if (!item) return input.action === 'attachments' && !input.item_id ? json({ attachments: [], item_id: null }) : json({ error: 'MAIL_ATTACHMENT_UNAVAILABLE' },404);
+      const result = await readEmailAttachments(admin, item, input.action === 'attachment' ? input.part : undefined);
+      if (result.content && result.attachment) return new Response(new Uint8Array(result.content), { headers: {
+        ...corsHeaders, 'Content-Type': 'application/octet-stream', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff',
+        'Content-Disposition': `attachment; filename*=UTF-8''${encodeURIComponent(result.attachment.name)}`,
+        'X-Attachment-Type': attachmentPreviewType(result.attachment.type),
+      } });
+      return json({ attachments: result.attachments, item_id: item.id });
+    }
     const box = await mailbox(admin);
     if (input.action === 'signatures') return json({ signatures: await listEmailSignatures(admin, box.id) });
     if (input.action === 'save_signature') {

@@ -2,6 +2,7 @@ import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { renderMailboxEmail } from './email-layout.ts';
 import { resolveEmailSignature } from './email-signatures.ts';
 import { emailText, headerReferences } from './email-content.ts';
+import { emailAttachments } from './email-attachments.ts';
 import { canSubmitSMTP, canAppendSent, chooseLead, nextUIDBatch, nextExistingUIDs, recentUIDs, safeMailError } from './email-rules.ts';
 import { imapClient, smtpClient, composeEmail, rawMIME, findSent, hasExactMessage, closeIMAP, MAIL_ADDRESS } from './email-transport.ts';
 
@@ -233,7 +234,7 @@ export async function syncMailbox(admin: SupabaseClient, runId: string) {
               in_reply_to: envelope?.inReplyTo || null, reference_ids: headerReferences(entry.headers),
               sender, recipients, subject: envelope?.subject || '', body: text,
               direction: outbound ? 'outbound' : 'inbound', sent_at: new Date(envelope?.date || entry.internalDate || Date.now()).toISOString(),
-              attachment_names: [],
+              attachment_names: emailAttachments(entry.bodyStructure).map(file => file.name),
               lead_id: outgoing?.lead_id || null, crm_message_id: outgoing?.crm_message_id || null,
             }, { onConflict: 'mailbox_id,message_key' }).select().single());
           }

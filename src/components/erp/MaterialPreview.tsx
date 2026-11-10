@@ -73,10 +73,10 @@ function PdfPreview({ url, title, expanded }: { url: string; title: string; expa
   );
 }
 
-export default function MaterialPreview({ url, title, expanded = false }: { url: string; title: string; expanded?: boolean }) {
+export default function MaterialPreview({ url, title, expanded = false, mimeType = '' }: { url: string; title: string; expanded?: boolean; mimeType?: string }) {
   const [failed, setFailed] = useState(false);
   useEffect(() => setFailed(false), [url]);
-  const format = materialFormat(url);
+  const format = materialFormat(url, mimeType);
   if (format === "pdf") return <PdfPreview url={url} title={title} expanded={expanded} />;
   if (failed) return <span className="flex flex-col items-center gap-2 text-xs text-muted-foreground"><ImageOff className="h-8 w-8" />Anteprima non disponibile</span>;
   if (format === "image") return <img src={url} alt={title} className="h-full w-full object-contain" loading="lazy" onError={() => setFailed(true)} />;
