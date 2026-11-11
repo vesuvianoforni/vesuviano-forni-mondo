@@ -3,6 +3,7 @@ import { setResponseHeader } from '@tanstack/react-start/server';
 import { z } from 'zod';
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
 import { CRM_CALLER_NUMBER, CRM_DIALER_CONNECTION, dialerCredentials, dialerPhone, dialerStaff, directStatus, directStatusLabels } from './crmDialer';
+import { crmPhoneCountry, phoneKey } from './dialPad';
 
 const dialerAccess = createMiddleware({ type: 'function' }).middleware([requireSupabaseAuth]).server(async ({ context, next }) => {
   const { data: roles, error } = await context.supabase.from('user_roles').select('role').eq('user_id', context.userId);
@@ -21,10 +22,11 @@ const dialerAccess = createMiddleware({ type: 'function' }).middleware([requireS
 export const prepareDirectCall = createServerFn({ method: 'POST' }).middleware([dialerAccess])
   .inputValidator(d => z.object({ lead_id: z.string().uuid() }).strict().parse(d))
   .handler(async ({ data, context }) => {
-    const { data: lead, error } = await context.supabase.from('leads').select('id,phone,status,archived').eq('id', data.lead_id).single();
+    const { data: lead, error } = await context.supabase.from('leads').select('id,phone,country,status,archived').eq('id', data.lead_id).single();
     if (error || !lead) throw new Error('Cliente non trovato.');
     if (lead.archived || lead.status === 'perso') throw new Error('Cliente archiviato o non interessato: chiamata bloccata.');
-    const destination = dialerPhone(lead.phone ?? '');
+    const country = crmPhoneCountry(lead.country);
+    const destination = dialerPhone(country ? phoneKey(lead.phone, country) ?? lead.phone ?? '' : lead.phone ?? '');
     const { telnyxDialer, checkDialerConnection } = await import('./crmDialer.server');
     await checkDialerConnection(context.credentials);
     const id = crypto.randomUUID();

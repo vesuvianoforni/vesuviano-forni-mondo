@@ -14,7 +14,7 @@ export const resolveDialContact = createServerFn({ method: 'POST' })
     if (!dialled.e164) throw new Error('Numero non valido.');
     // A failed or partial read must never be treated as a missing customer.
     const contacts = await readPhoneContacts(async (from, to) => {
-      const result = await context.supabase.from('leads').select('*').not('phone', 'is', null).order('id').range(from, to);
+      const result = await context.supabase.from('leads').select('id,company_name,contact_name,phone,email,status,country,city,archived,created_at,updated_at').not('phone', 'is', null).order('id').range(from, to);
       if (result.error) throw new Error('Impossibile verificare i clienti: nessuna nuova scheda creata.');
       return result.data ?? [];
     });

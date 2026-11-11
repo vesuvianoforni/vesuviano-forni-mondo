@@ -28,7 +28,8 @@ export default function ERPDial() {
       const all: CRMLead[] = [];
       for (let from = 0; ; from += 1000) {
         const { data, error } = await supabase.from('leads')
-          .select('id,company_name,contact_name,phone,email,status,city,country,next_activity_type,next_activity_date,next_activity_notes,created_at,updated_at')
+          .select('id,company_name,contact_name,phone,email,status,city,country,next_activity_type,next_activity_date,next_activity_notes,created_at,updated_at,archived')
+          .eq('archived', false)
           .not('phone', 'is', null).neq('phone', '')
           .order('updated_at', { ascending: false }).order('id').range(from, from + 999);
         if (error) { if (!cancelled) setError(error.message); break; }
@@ -76,7 +77,7 @@ export default function ERPDial() {
       <TabsList className="grid w-full grid-cols-3"><TabsTrigger value="tastierino">Tastierino</TabsTrigger><TabsTrigger value="clienti">Clienti</TabsTrigger><TabsTrigger value="storico">Storico</TabsTrigger></TabsList>
     </Tabs>
     {tab === 'storico' ? <DialHistory leads={leads} />
-    : tab === 'tastierino' ? <DialPad leads={leads} onLeadCreated={l => setLeads(prev => [l, ...prev])} /> : <>
+    : tab === 'tastierino' ? <DialPad leads={leads} loading={loading} loadError={error} onLeadCreated={l => setLeads(prev => [l, ...prev.filter(existing => existing.id !== l.id)])} /> : <>
     <div className="sticky top-0 z-10 -mx-3 space-y-2 bg-background/95 px-3 py-2 backdrop-blur sm:mx-0 sm:px-0">
       <div className="relative"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca nome, azienda, città o numero"
