@@ -1,4 +1,4 @@
-import { AsYouType, parsePhoneNumberFromString, getCountryCallingCode, type CountryCode } from 'libphonenumber-js';
+import { AsYouType, parsePhoneNumberFromString, getCountryCallingCode, getCountries, type CountryCode } from 'libphonenumber-js';
 
 export const DIAL_COUNTRIES: { code: CountryCode; name: string; flag: string }[] = [
   { code: 'IT', name: 'Italia', flag: '🇮🇹' }, { code: 'GB', name: 'Regno Unito', flag: '🇬🇧' },
@@ -39,5 +39,44 @@ export function parseDial(raw: string, fallback: CountryCode) {
 export function phoneKey(raw: string | null | undefined, fallback: CountryCode = 'IT') {
   if (!raw) return null;
   const phone = parsePhoneNumberFromString(cleanDial(raw), fallback);
-  return phone ? phone.number : null;
+  return phone?.isValid() ? phone.number : null;
+}
+
+const countryAliases: Record<string, CountryCode> = {
+  uk: 'GB', 'united kingdom': 'GB', england: 'GB', inghilterra: 'GB', 'great britain': 'GB',
+  ireland: 'IE', eire: 'IE', italia: 'IT', italy: 'IT', france: 'FR', francia: 'FR',
+  germany: 'DE', germania: 'DE', deutschland: 'DE', spain: 'ES', spagna: 'ES',
+};
+export function crmPhoneCountry(raw: string | null | undefined): CountryCode | undefined {
+  const value = raw?.trim();
+  if (!value) return undefined;
+  const code = value.toUpperCase();
+  if (getCountries().includes(code as CountryCode)) return code as CountryCode;
+  return countryAliases[value.toLowerCase()] ?? DIAL_COUNTRIES.find(c => c.name.toLowerCase() === value.toLowerCase())?.code;
+}
+
+type PhoneContact = { id: string; phone?: string | null | undefined; country?: string | null | undefined };
+/** Compare complete valid numbers. A dialled country can resolve a local number only
+ * when its recorded country is missing or cannot produce a valid number. */
+export function matchingDialContacts<T extends PhoneContact>(leads: readonly T[], destination: string): T[] {
+  const dialled = parsePhoneNumberFromString(cleanDial(destination));
+  if (!dialled?.isValid()) return [];
+  return leads.filter(lead => {
+    if (!lead.phone) return false;
+    const input = cleanDial(lead.phone);
+    if (input.startsWith('+')) return phoneKey(input) === dialled.number;
+    const recordedCountry = crmPhoneCountry(lead.country);
+    const primary = recordedCountry ? phoneKey(input, recordedCountry) : null;
+    if (primary) return primary === dialled.number;
+    return dialled.country ? phoneKey(input, dialled.country) === dialled.number : false;
+  });
+}
+
+export async function readPhoneContacts<T>(readPage: (from: number, to: number) => Promise<T[]>): Promise<T[]> {
+  const all: T[] = [];
+  for (let from = 0; ; from += 1000) {
+    const page = await readPage(from, from + 999);
+    all.push(...page);
+    if (page.length < 1000) return all;
+  }
 }
