@@ -1,30 +1,29 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Delete, Loader2, Phone, UserPlus, UserRound } from 'lucide-react';
 import type { CountryCode } from 'libphonenumber-js';
-import { supabase } from '@/integrations/supabase/client';
+import { useServerFn } from '@tanstack/react-start';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useCRMCall } from '@/components/erp/CRMCallProvider';
 import type { CRMLead } from '@/components/erp/CRMLeadCard';
-import { DIAL_COUNTRIES, callingCode, countryName, flagOf, parseDial, phoneKey } from '@/lib/dialPad';
+import { DIAL_COUNTRIES, callingCode, countryName, flagOf, matchingDialContacts, parseDial } from '@/lib/dialPad';
+import { resolveDialContact } from '@/lib/dialContacts.functions';
 
 const KEYS: [string, string][] = [['1', ''], ['2', 'ABC'], ['3', 'DEF'], ['4', 'GHI'], ['5', 'JKL'], ['6', 'MNO'],
   ['7', 'PQRS'], ['8', 'TUV'], ['9', 'WXYZ'], ['*', ''], ['0', '+'], ['#', '']];
 
-export function DialPad({ leads, onLeadCreated }: { leads: CRMLead[]; onLeadCreated: (lead: CRMLead) => void }) {
+export function DialPad({ leads, onLeadCreated, loading = false, loadError = null }: { leads: CRMLead[]; onLeadCreated: (lead: CRMLead) => void; loading?: boolean; loadError?: string | null }) {
   const call = useCRMCall();
+  const resolveContact = useServerFn(resolveDialContact);
   const [value, setValue] = useState(''), [fallback, setFallback] = useState<CountryCode>('IT');
   const [name, setName] = useState(''), [saving, setSaving] = useState(false), [error, setError] = useState<string | null>(null);
   const press = useRef<number | null>(null), longPressed = useRef(false);
+  const resolving = useRef(false);
 
   const parsed = useMemo(() => parseDial(value, fallback), [value, fallback]);
-  const byKey = useMemo(() => {
-    const map = new Map<string, CRMLead>();
-    for (const l of leads) { const k = phoneKey(l.phone); if (k && !map.has(k)) map.set(k, l); }
-    return map;
-  }, [leads]);
-  const match = parsed.e164 ? byKey.get(parsed.e164) : undefined;
+  const matches = useMemo(() => parsed.e164 ? matchingDialContacts(leads, parsed.e164) : [], [leads, parsed.e164]);
+  const match = matches.length === 1 ? matches[0] : undefined;
   const suggestions = useMemo(() => {
     const digits = parsed.input.replace(/\D/g, '');
     if (match || digits.length < 4) return [];
@@ -54,17 +53,15 @@ export function DialPad({ leads, onLeadCreated }: { leads: CRMLead[]; onLeadCrea
   };
 
   async function startCall() {
-    if (!call || call.occupied || !parsed.e164) return;
-    if (match) return call.openCall(match);
-    setSaving(true);
-    const { data, error } = await supabase.from('leads').insert({
-      contact_name: name.trim() || null, phone: parsed.e164, status: 'nuovo', source: 'cold_call', pipeline: 'Vesuviano',
-      country: parsed.country ? countryName(parsed.country) : null,
-    }).select('*').single();
-    setSaving(false);
-    if (error || !data) return setError('Impossibile salvare il nuovo cliente: ' + (error?.message ?? 'errore'));
-    const lead = data as unknown as CRMLead;
-    onLeadCreated(lead); setName(''); call.openCall(lead);
+    if (!call || call.occupied || !parsed.e164 || loading || loadError || resolving.current) return;
+    resolving.current = true; setSaving(true); setError(null);
+    try {
+      const result = await resolveContact({ data: { destination: parsed.e164, name: name.trim() } });
+      const lead = result.lead as unknown as CRMLead;
+      onLeadCreated(lead); setName(''); call.openCall({ ...lead, phone: result.destination });
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Impossibile verificare il cliente. Nessuna chiamata avviata.');
+    } finally { resolving.current = false; setSaving(false); }
   }
 
   return <div className="mx-auto flex w-full max-w-sm flex-col gap-3">
@@ -90,11 +87,14 @@ export function DialPad({ leads, onLeadCreated }: { leads: CRMLead[]; onLeadCrea
     </div>
 
     {suggestions.length > 0 && <ul className="space-y-1">{suggestions.map(l => <li key={l.id}>
-      <button className="flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-sm hover:bg-muted" onClick={() => setValue(l.phone ?? '')}>
-        <span className="truncate">{l.contact_name || l.company_name}</span><span className="ml-2 shrink-0 text-muted-foreground">{l.phone}</span></button></li>)}</ul>}
+      <Button variant="outline" className="h-auto w-full justify-between px-3 py-2 text-left text-sm" disabled={!call || call.occupied || saving || loading || Boolean(loadError)} onClick={() => call?.openCall(l)}>
+        <span className="truncate">{l.contact_name || l.company_name}</span><span className="ml-2 shrink-0 text-muted-foreground">{l.phone}</span></Button></li>)}</ul>}
 
-    {parsed.valid && !match && <div className="space-y-1">
-      <p className="flex items-center gap-1 text-xs text-muted-foreground"><UserPlus className="h-3.5 w-3.5" />Numero non in CRM: verrà creato un nuovo cliente.</p>
+    {loading && <p role="status" className="text-center text-xs text-muted-foreground">Caricamento clienti…</p>}
+    {loadError && <p role="alert" className="text-center text-sm text-destructive">Impossibile verificare i clienti: {loadError}</p>}
+    {matches.length > 1 && <p role="alert" className="text-center text-sm text-destructive">Più clienti hanno questo numero: scegli la scheda dalla lista Clienti.</p>}
+    {parsed.valid && !matches.length && !loading && !loadError && <div className="space-y-1">
+      <p className="flex items-center gap-1 text-xs text-muted-foreground"><UserPlus className="h-3.5 w-3.5" />Nessuna corrispondenza nell’elenco caricato.</p>
       <Input value={name} onChange={e => setName(e.target.value)} placeholder="Nome (facoltativo)" className="h-10" />
     </div>}
 
@@ -108,7 +108,7 @@ export function DialPad({ leads, onLeadCreated }: { leads: CRMLead[]; onLeadCrea
     <div className="grid grid-cols-3 items-center gap-3">
       <span />
       <Button className="mx-auto h-[4.5rem] w-[4.5rem] rounded-full" aria-label="Chiama" onClick={startCall}
-        disabled={!parsed.valid || saving || !call || call.occupied}>
+        disabled={!parsed.valid || saving || loading || Boolean(loadError) || matches.length > 1 || !call || call.occupied}>
         {saving ? <Loader2 className="h-7 w-7 animate-spin" /> : <Phone className="h-7 w-7" />}</Button>
       {value ? <Button variant="ghost" className="mx-auto h-14 w-14 rounded-full" aria-label="Cancella"
         onClick={() => setValue(v => v.slice(0, -1))} onContextMenu={e => { e.preventDefault(); setValue(''); }}>

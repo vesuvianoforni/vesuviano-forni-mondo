@@ -1,5 +1,9 @@
 # Roadmap
 
+## CRM: clienti già presenti segnalati come nuovi durante le chiamate (11 nov 2026)
+- [ ] Verificare i due numeri nello screenshot e individuare il percorso che crea nuovi lead invece di riconoscere quelli esistenti.
+- [ ] Correggere il riconoscimento, aggiungere test di regressione e verificare le associazioni reali senza inviare chiamate o messaggi di prova.
+
 ## Homepage: barra grigia al posto del logo (10 nov 2026)
 - [x] Riprodotta barra: logo già caricato prima dell'idratazione, evento load perso e segnaposto a tutta larghezza. LazyImage verifica complete/naturalWidth, mostra subito immagini prioritarie senza segnaposto e limita il contenitore alla larghezza dell'immagine; errore e cambio sorgente gestiti senza stato precedente.
 - [x] Primo accesso e ricaricamento /en verificati a 1514×1046 e 390×844: logo desktop visibile (198,67px), barra assente, mobile conserva il solo logo nella navigazione, zero overflow/errori. Build OK; correzione disponibile in anteprima, pubblicazione Netlify necessaria sul dominio.
