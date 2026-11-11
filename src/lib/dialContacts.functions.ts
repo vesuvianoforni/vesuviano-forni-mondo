@@ -21,7 +21,16 @@ export const resolveDialContact = createServerFn({ method: 'POST' })
     const matches = matchingDialContacts(contacts, dialled.e164);
     if (matches.length > 1) throw new Error('Più clienti hanno questo numero: scegli la scheda dalla lista Clienti.');
     const existing = matches[0];
-    if (existing) return { lead: existing, created: false, destination: dialled.e164 };
+    if (existing) {
+      if (existing.phone === dialled.e164) return { lead: existing, created: false, destination: dialled.e164 };
+      // Keep the original customer ID for both AI and direct calls; the server
+      // call preparation reads this same record rather than the UI draft.
+      const normalized = await context.supabase.from('leads').update({ phone: dialled.e164,
+        ...(dialled.country ? { country: countryName(dialled.country) } : {}),
+      }).eq('id', existing.id).eq('phone', existing.phone).select('*').single();
+      if (normalized.error || !normalized.data) throw new Error('Telefono del cliente non aggiornato: nessuna nuova scheda creata.');
+      return { lead: normalized.data, created: false, destination: dialled.e164 };
+    }
     const saved = await context.supabase.from('leads').insert({
       phone: dialled.e164, contact_name: data.name.trim() || null, status: 'nuovo', source: 'cold_call', pipeline: 'Vesuviano',
       country: dialled.country ? countryName(dialled.country) : null,

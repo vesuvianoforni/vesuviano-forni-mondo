@@ -1,8 +1,11 @@
 # Roadmap
 
 ## CRM: clienti già presenti segnalati come nuovi durante le chiamate (11 nov 2026)
-- [ ] Verificare i due numeri nello screenshot e individuare il percorso che crea nuovi lead invece di riconoscere quelli esistenti.
-- [ ] Correggere il riconoscimento, aggiungere test di regressione e verificare le associazioni reali senza inviare chiamate o messaggi di prova.
+- [x] Riprodotto confronto errato: 07999488655 interpretato con prefisso Italia invece del paese UK registrato; tastierino creava cold_call e relativo avviso Nuovo lead. Andre Brincat e John O’Connor confermati; numero +447947888973 senza altra scheda corrispondente nei numeri registrati.
+- [x] Riconoscimento completo con paese registrato e fallback sul paese composto soltanto se il locale registrato non è valido; verifica server staff paginata prima di creare, errori/ambiguità bloccanti, normalizzazione sullo stesso ID per AI/diretta, blocco durante caricamento e doppio click. Test di regressione senza telefonate o invii.
+- [x] Due doppioni ricongiunti alle schede originali con migrazione controllata: chiamate e WhatsApp ricollegati, note/fonti/fasi preservate, numeri internazionali e Irlanda per John; avvisi Nuovo lead gestiti per evitare promemoria. Rilettura reale conferma 1 chiamata e 3 WhatsApp per cliente, doppioni rimossi; dieci avvisi sicurezza preesistenti invariati.
+- [ ] Pubblicazione Netlify della prevenzione futura e prova autenticata CRM → scelta chiamata: Supabase esterno senza sessione gestita; associazioni reali verificate via letture, nessun cliente chiamato.
+- [ ] Identificare il cliente +447947888973: serve il nome della scheda originale dall’utente; nessuna associazione inventata.
 
 ## Homepage: barra grigia al posto del logo (10 nov 2026)
 - [x] Riprodotta barra: logo già caricato prima dell'idratazione, evento load perso e segnaposto a tutta larghezza. LazyImage verifica complete/naturalWidth, mostra subito immagini prioritarie senza segnaposto e limita il contenitore alla larghezza dell'immagine; errore e cambio sorgente gestiti senza stato precedente.
