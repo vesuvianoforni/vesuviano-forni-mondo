@@ -80,7 +80,7 @@ async function resolveAudience(admin: SupabaseClient, audience: Audience, fallba
   return selectRecipients(leads as any, audience, new Set(unsub.map((u: any) => u.email)), fallback);
 }
 
-async function resendBatch(emails: CompanyEmail[]) {
+async function resendBatch<T extends CompanyEmail>(emails: T[]) {
   const key = Deno.env.get('RESEND_API_KEY');
   if (!key) throw new Error('RESEND_API_KEY mancante');
   const res = await fetch('https://api.resend.com/emails/batch', {
