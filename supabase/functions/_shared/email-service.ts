@@ -1,4 +1,5 @@
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
+import { companySMTPEnvelope } from './email-delivery-policy.ts';
 import { renderMailboxEmail } from './email-layout.ts';
 import { resolveEmailSignature } from './email-signatures.ts';
 import { emailText, headerReferences } from './email-content.ts';
@@ -89,7 +90,7 @@ export async function sendMailboxEmail(admin: SupabaseClient, input: { lead_id: 
       const claim = checked(await admin.from('email_outbox').update({ smtp_status: 'sending' }).eq('id', row.id).eq('smtp_status','pending').select('id').maybeSingle());
       if (!claim) throw new Error('SMTP_UNKNOWN');
       smtpStarted = true;
-      const result = await smtp.sendMail({ envelope: { from: MAIL_ADDRESS, to: [row.recipient] }, raw: rawMIME(row.mime) });
+      const result = await smtp.sendMail({ envelope: companySMTPEnvelope(MAIL_ADDRESS, row.recipient), raw: rawMIME(row.mime) });
       if (!result.accepted?.some((a: string) => String(a).toLowerCase() === row.recipient.toLowerCase()) || result.rejected?.length) throw new Error('SMTP_UNKNOWN');
       const acceptedAt = new Date().toISOString();
       checked(await admin.from('email_outbox').update({ smtp_status: 'accepted', smtp_accepted_at: acceptedAt, last_error: null }).eq('id', row.id));

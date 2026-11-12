@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { ECONOMIC_TEXT_MODEL } from '../_shared/ai-models.ts';
+import { withCompanyEmailCopy } from '../_shared/email-delivery-policy.ts';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -279,7 +280,7 @@ Pick the single best model and explain in 3-4 sentences why it's perfect for thi
           headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
           body: JSON.stringify({
             from: "Vesuviano Forni <info@vesuvianoforni.com>",
-            to: [to], subject, html,
+            ...withCompanyEmailCopy({ to: [to] }), subject, html,
           }),
         }).then(async (r) => {
           if (!r.ok) console.error(`Email to ${to} failed:`, r.status, await r.text());

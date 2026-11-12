@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "npm:resend@2.0.0"
+import { withCompanyEmailCopy } from '../_shared/email-delivery-policy.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8'
 
 const corsHeaders = {
@@ -478,7 +479,7 @@ ${JSON.stringify(data, null, 2)}
       // Inviare email all'utente con la scheda tecnica
       const userEmailResult = await resend.emails.send({
         from: 'Vesuviano Forni <info@vesuvianoforni.com>',
-        to: [data.email],
+        ...withCompanyEmailCopy({ to: [data.email] }),
         subject: `🔥 Scheda Tecnica ${data.ovenType} - Vesuviano Forni`,
         html: userHtmlTemplate,
       })
@@ -548,7 +549,7 @@ ${JSON.stringify(data, null, 2)}
       // Inviare email all'utente con l'immagine
       const userEmailResult = await resend.emails.send({
         from: 'Vesuviano Forni <system@vesuvianoforni.com>',
-        to: [data.email],
+        ...withCompanyEmailCopy({ to: [data.email] }),
         subject: `🔥 La tua immagine personalizzata è pronta - Vesuviano Forni`,
         html: userHtmlTemplate,
         attachments: [imageAttachment]
@@ -560,7 +561,7 @@ ${JSON.stringify(data, null, 2)}
     // Send notification email to company
     const companyEmailResult = await resend.emails.send({
       from: 'Sistema Notifiche <system@vesuvianoforni.com>',
-      to: ['stanislaoelefante@gmail.com', 'info@vesuvianoforni.com'],
+      ...withCompanyEmailCopy({ to: ['stanislaoelefante@gmail.com', 'info@vesuvianoforni.com'] }),
       subject: subject,
       html: companyHtmlTemplate,
     })

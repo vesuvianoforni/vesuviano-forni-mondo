@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "npm:resend@2.0.0"
+import { withCompanyEmailCopy } from '../_shared/email-delivery-policy.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8'
 
 const corsHeaders = {
@@ -304,7 +305,7 @@ serve(async (req) => {
       // Invia email al cliente
       const customerEmailResult = await resend.emails.send({
         from: 'Vesuviano Forni <noreply@vesuvianoforni.com>',
-        to: [requestData.customerEmail],
+        ...withCompanyEmailCopy({ to: [requestData.customerEmail] }),
         subject: '🔥 Grazie per il tuo interesse - Vesuviano Forni',
         html: customerEmailHtml,
       })
@@ -314,7 +315,7 @@ serve(async (req) => {
       // Invia email all'azienda
       const companyEmailResult = await resend.emails.send({
         from: 'Sistema Configuratore <system@vesuvianoforni.com>',
-        to: ['info@vesuvianoforni.com'],
+        ...withCompanyEmailCopy({ to: ['info@vesuvianoforni.com'] }),
         subject: `🎉 Nuovo Interesse Configuratore: ${requestData.customerName} - ${requestData.ovenModel}`,
         html: companyEmailHtml,
       })
@@ -610,7 +611,7 @@ serve(async (req) => {
     // Invia email al cliente
     const customerEmailResult = await resend.emails.send({
       from: 'Vesuviano Forni <noreply@vesuvianoforni.com>',
-      to: [formData.email],
+      ...withCompanyEmailCopy({ to: [formData.email] }),
       subject: '🔥 Conferma richiesta consulenza gratuita - Vesuviano Forni',
       html: customerEmailHtml,
     })
@@ -620,7 +621,7 @@ serve(async (req) => {
     // Invia email all'azienda
     const companyEmailResult = await resend.emails.send({
       from: 'Sistema Consulenze <system@vesuvianoforni.com>',
-      to: ['info@vesuvianoforni.com', 'info@abbattitorizapper.it'], // Email aziendale principale
+      ...withCompanyEmailCopy({ to: ['info@vesuvianoforni.com', 'info@abbattitorizapper.it'] }), // Email aziendale principale
       subject: `🔔 Nuova Consulenza: ${formData.name} - ${formData.ovenType || 'Tipo non specificato'}`,
       html: companyEmailHtml,
     })

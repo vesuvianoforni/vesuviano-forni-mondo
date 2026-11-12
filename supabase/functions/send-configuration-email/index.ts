@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
+import { withCompanyEmailCopy } from '../_shared/email-delivery-policy.ts';
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -150,7 +151,7 @@ const handler = async (req: Request): Promise<Response> => {
 
       const emailResponse = await resend.emails.send({
         from: "Bruno Nardello - Vesuviano Forni <info@vesuvianoforni.com>",
-        to: [data.to!],
+        ...withCompanyEmailCopy({ to: [data.to as string] }),
         subject: data.subject!,
         html: aiEmailHtml,
       });
@@ -382,7 +383,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailResponse = await resend.emails.send({
       from: "Vesuviano Configuratore <noreply@vesuvianoforni.com>",
-      to: ["info@vesuvianoforni.com"],
+      ...withCompanyEmailCopy({ to: ["info@vesuvianoforni.com"] }),
       subject: emailSubject,
       html: emailHtml,
     });

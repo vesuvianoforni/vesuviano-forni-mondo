@@ -1,4 +1,5 @@
 import { Resend } from "npm:resend@2.0.0"
+import { withCompanyEmailCopy } from '../_shared/email-delivery-policy.ts'
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { BOOKING_URL, followupDueAt, isWorkingTime } from '../_shared/ready-to-ship-followup.ts'
 import { DEFAULT_OFFER_SETTINGS, offerTotals, type OfferDocument, type OfferSettings } from '../_shared/commercial-offer-domain.ts'
@@ -140,7 +141,7 @@ Deno.serve(async (req) => {
   <tr><td style="padding:16px 28px;background:${C.header};color:#bdb6b0;font-size:12px;text-align:center">© ${new Date().getFullYear()} Vesuviano Forni · Made in Naples</td></tr>
 </table></td></tr></table></body></html>`
 
-    const sent = await resend.emails.send({ from: 'Vesuviano Forni <noreply@vesuvianoforni.com>', to: [email], reply_to: 'info@vesuvianoforni.com', subject: t.subject(model), html })
+    const sent = await resend.emails.send({ from: 'Vesuviano Forni <noreply@vesuvianoforni.com>', ...withCompanyEmailCopy({ to: [email] }), subject: t.subject(model), html })
     if (sent.error) console.error('Ready-to-ship offer email failed:', offer.number, JSON.stringify(sent.error))
 
     // Gennaro's WhatsApp follow-up (WaSender), only after the email was accepted
@@ -157,7 +158,7 @@ Deno.serve(async (req) => {
     }
 
     await resend.emails.send({
-      from: 'Sistema Pronta Consegna <system@vesuvianoforni.com>', to: ['info@vesuvianoforni.com', 'commerciale@vesuviano.it'],
+      from: 'Sistema Pronta Consegna <system@vesuvianoforni.com>', ...withCompanyEmailCopy({ to: ['info@vesuvianoforni.com', 'commerciale@vesuviano.it'] }),
       subject: `🏷️ Nuova Richiesta Pronta Consegna: ${customerName} - ${model}`,
       html: `<h2>Nuova richiesta Pronta Consegna</h2><p>Offerta inviata automaticamente: <a href="${offerUrl}">${esc(offer.number)}</a></p>
 <p><b>Nome:</b> ${esc(customerName)}<br><b>Email:</b> ${esc(email)}<br><b>Telefono:</b> ${esc(phone)}<br>${city ? `<b>Città:</b> ${esc(city)}<br>` : ''}
