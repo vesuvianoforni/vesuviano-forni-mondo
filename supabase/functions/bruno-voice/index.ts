@@ -4,6 +4,7 @@ import { z } from 'npm:zod@3';
 import { assistantConfig, callAllowed, timezoneFromPhone, e164, FROM_NUMBER, nextCallStatus, callOutcomeCode, Proposal, PlanProposal, planNextStep, isHoursBlock, AnyToolRequest, verifyTelnyx, voiceTools, inboundLanguage, INBOUND_HANDOVER_POLICY, InboundVariables, inboundAssistantConfig, inboundExtraTools, inboundRoutingTexml, DEFAULT_TRANSFER_NUMBER } from './domain.ts';
 import { AnalyzedEvent, analyzedMatches, RecordingCallback, spokenTranscript } from './results-domain.ts';
 import { processResults, queueResults } from './results.ts';
+import { welcomeTick } from './welcome.ts';
 import { receiveForwardedCall, updateForwardedCall } from './inbound-history.ts';
 
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
@@ -170,6 +171,8 @@ Deno.serve(async req => {
         const dir = checked(await admin.from('bruno_voice_calls').select('direction').eq('id', job.data.call_id).maybeSingle());
         return json(await processResults(admin, job.data.call_id, job.data.token, (dir?.direction === 'inbound' ? settings.inbound_assistant_id : settings.assistant_id) || '', telnyx));
       }
+      const welcome = z.object({ action: z.literal('welcome_tick'), job_id: z.string().uuid(), token: z.string().uuid() }).strict().safeParse(JSON.parse(raw));
+      if (welcome.success) return json(await welcomeTick(admin, settings, welcome.data.job_id, welcome.data.token, (call, lead, approver) => dial(admin, settings, url, call, lead, approver)));
       const tick = z.object({ action: z.literal('plan_tick'), plan_id: z.string().uuid(), token: z.string().uuid() }).strict().safeParse(JSON.parse(raw));
       if (tick.success) return json(await planTick(admin, settings, url, tick.data.plan_id, tick.data.token));
     }
