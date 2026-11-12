@@ -1,5 +1,6 @@
 import { assertEquals, assert } from 'https://deno.land/std@0.224.0/assert/mod.ts';
 import { followupDueAt, followupText, isWorkingTime, nextWorkingSlot } from './ready-to-ship-followup.ts';
+import { readyToShipBookingUrl } from './booking-link.ts';
 
 Deno.test('lun-sab 9-19 Roma: dentro orario parte subito', () => {
   // Wed 4 Nov 2026 15:15 UTC = 16:15 Rome
@@ -21,4 +22,11 @@ Deno.test('sabato è lavorativo, domenica no', () => {
 Deno.test('testo in lingua cliente con link prenotazione', () => {
   const t = followupText('fr', 'Marc', 'Real Bosco', 'm@x.fr');
   assert(t.includes('Bonjour Marc') && t.includes('book-a-slot-call') && t.includes('m@x.fr'));
+});
+
+Deno.test('WhatsApp preserves the request-specific booking capability', () => {
+  const link = readyToShipBookingUrl('7a5d009a-14d6-415d-9613-53e37d552da0', 'en');
+  const text = followupText('en', 'Mohammad', 'Real Bosco', 'mody-79@hotmail.com', link);
+  assert(text.includes(link));
+  assertEquals(new URL(link).searchParams.get('offer'), '7a5d009a-14d6-415d-9613-53e37d552da0');
 });

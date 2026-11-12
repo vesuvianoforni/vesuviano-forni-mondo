@@ -27,15 +27,24 @@ export const submitBookingAppointment = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     const contact = await resolveContact(data.offer);
     if (data.offer && !contact) throw new Error('Il collegamento della richiesta non è più disponibile.');
-    const url = process.env['SUPABASE_URL'];
-    const key = process.env['SUPABASE_SERVICE_ROLE_KEY'];
-    if (!url || !key) throw new Error('Prenotazione non disponibile.');
-    const response = await fetch(`${url}/functions/v1/send-form-data`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json', apikey: key, ...(!key.startsWith('sb_') ? { Authorization: `Bearer ${key}` } : {}) },
-      body: JSON.stringify({ formType: 'appointment', data: { ...data.attribution, name: data.name, email: data.email, phoneNumber: data.phoneNumber, date: data.date, time: data.time, contactMethod: data.contactMethod, ...(contact ? { readyToShipOfferId: contact.offerId, websiteLeadId: contact.websiteLeadId } : {}) } }),
-      signal: AbortSignal.timeout(25000),
-    });
-    const result = await response.json() as { success?: boolean; companyEmailId?: string };
-    if (!response.ok || !result.success) throw new Error('Impossibile completare la prenotazione.');
-    return { success: true, notificationId: result.companyEmailId };
+    const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
+    const saved = await supabaseAdmin.from('appointments').insert({
+      appointment_date: data.date, appointment_time: data.time, phone_number: data.phoneNumber, contact_method: data.contactMethod, status: 'pending',
+      notes: JSON.stringify({ name: data.name, email: data.email, ...(contact ? { ready_to_ship_offer_id: contact.offerId, website_lead_id: contact.websiteLeadId } : {}) }),
+    }).select('id').single();
+    if (saved.error || !saved.data) throw new Error('Impossibile salvare la prenotazione.');
+    const key = process.env['RESEND_API_KEY'];
+    if (!key) return { success: true, notificationId: undefined, notificationPending: true };
+    const escape = (value: string) => value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char] ?? char));
+    let notificationId: string | undefined;
+    try {
+      const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', 'Idempotency-Key': `appointment-${saved.data.id}` },
+        body: JSON.stringify({ from: 'Sistema Notifiche <system@vesuvianoforni.com>', to: ['stanislaoelefante@gmail.com', 'info@vesuvianoforni.com'], reply_to: 'info@vesuvianoforni.com',
+          subject: '📞 Nuova chiamata prenotata da Lead', html: `<h2>Nuova chiamata prenotata</h2><p>Nome: ${escape(data.name)}</p><p>Email: ${escape(data.email)}</p><p>Telefono: ${escape(data.phoneNumber)}</p><p>Data: ${escape(data.date)} · Ora: ${escape(data.time)}</p><p>Contatto: ${escape(data.contactMethod)}</p>${contact ? '<p>Richiesta Pronta Consegna</p>' : ''}` }),
+        signal: AbortSignal.timeout(15000),
+      });
+      if (response.ok) notificationId = ((await response.json()) as { id?: string }).id;
+    } catch { /* Keep the saved appointment; never encourage a duplicate form submission. */ }
+    return { success: true, notificationId, notificationPending: !notificationId };
   });
