@@ -3,6 +3,7 @@ import { ECONOMIC_TEXT_MODEL } from '../_shared/ai-models.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { COUNTRY_LINES } from '../_shared/bruno/whatsapp-lines.ts';
+import { welcomeChat } from '../_shared/bruno/welcome-chat.ts';
 
 // Receives Meta WhatsApp webhook `value` objects for Bruno's country lines, forwarded by Zapper
 // (Zapper owns the Meta app webhook). Auth: x-api-key = ZAPPER_SYNC_KEY. Messages land in crm_messages
@@ -74,7 +75,7 @@ Deno.serve(async (req) => {
         metadata: { source: 'meta_forwarded', whatsapp_line: line.key, message_type: b.type, customer_name: name || null, file_name: b.file_name ?? null, ...(b.type !== 'text' && m[b.type]?.id ? { meta_media_id: m[b.type].id } : {}) },
       });
       // Unique violations mean a concurrent delivery already stored it.
-      results.push(error ? { id: wamid, status: error.code === '23505' ? 'duplicate' : 'error', error: error.message } : { id: wamid, status: 'inserted', lead_id: lead!.id });
+      results.push(error ? { id: wamid, status: error.code === '23505' ? 'duplicate' : 'error', error: error.message } : { id: wamid, status: 'inserted', lead_id: lead!.id, line: line.key });
     }
 
     for (const s of (value.statuses ?? []).slice(0, 100)) {
@@ -94,6 +95,12 @@ Deno.serve(async (req) => {
   if (touched.length && aiKey) {
     const job = scheduleFromWhatsApp(admin, touched, { apiKey: aiKey, model: ECONOMIC_TEXT_MODEL }).catch(() => null);
     (globalThis as any).EdgeRuntime?.waitUntil?.(job);
+  }
+  // New-lead welcome: Bruno answers on the UK line when the customer replies to his welcome message.
+  const ukLeads = [...new Set(results.filter((r) => r.status === 'inserted' && r.line === 'uk').map((r) => r.lead_id as string))].slice(0, 10);
+  if (ukLeads.length && aiKey) {
+    const chat = Promise.all(ukLeads.map((id) => welcomeChat(admin, id, { apiKey: aiKey, model: ECONOMIC_TEXT_MODEL }).catch(() => null)));
+    (globalThis as any).EdgeRuntime?.waitUntil?.(chat);
   }
   const summary = results.reduce((a: Record<string, number>, r) => ((a[r.status] = (a[r.status] ?? 0) + 1), a), {});
   return json({ ok: true, summary });
