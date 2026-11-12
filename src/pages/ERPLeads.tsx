@@ -10,9 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Search, TrendingUp, Building2, Calendar, Trophy, ArrowUpDown, LayoutGrid, List } from "lucide-react";
+import { Plus, Search, TrendingUp, Building2, Calendar, Trophy, ArrowUpDown, LayoutGrid, List, CalendarDays } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { CRMLeadList } from "@/components/erp/CRMLeadList";
+import { CRMLeadCalendar } from "@/components/erp/CRMLeadCalendar";
 import { sortCRMLeads, crmLeadSortLabels, type CRMLeadSort } from "@/lib/crmLeadSort";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import { ACTIVE_CRM_STAGES, CRM_STAGES } from "@/lib/crmPipeline";
@@ -55,7 +56,7 @@ export default function ERPLeads() {
   const selectedPipeline = "Vesuviano";
   const [selectedCountry, setSelectedCountry] = useState<string>("all");
   const [showClosed, setShowClosed] = useState(false);
-  const [view, setView] = useState<"board" | "list">(() => (typeof window !== "undefined" && localStorage.getItem("crm-view") === "list" ? "list" : "board"));
+  const [view, setView] = useState<"board" | "list" | "calendar">(() => { const v = typeof window !== "undefined" ? localStorage.getItem("crm-view") : null; return v === "list" || v === "calendar" ? v : "board"; });
   const [stageFilter, setStageFilter] = useState<string>("all");
   const [sort, setSort] = useState<CRMLeadSort>(() => { const s = typeof window !== "undefined" ? localStorage.getItem("crm-sort") : null; return s && s in crmLeadSortLabels ? (s as CRMLeadSort) : "last_contact"; });
   useEffect(() => { localStorage.setItem("crm-view", view); localStorage.setItem("crm-sort", sort); }, [view, sort]);
@@ -460,13 +461,16 @@ export default function ERPLeads() {
         <Button size="sm" className="h-9" variant={showClosed ? "default" : "outline"} onClick={() => setShowClosed(!showClosed)}>
           {showClosed ? "Nascondi chiusi" : `Mostra chiusi (${closedLeads.length})`}
         </Button>
-        <ToggleGroup type="single" variant="outline" size="sm" value={view} onValueChange={v => v && setView(v as "board" | "list")} aria-label="Vista">
+        <ToggleGroup type="single" variant="outline" size="sm" value={view} onValueChange={v => v && setView(v as "board" | "list" | "calendar")} aria-label="Vista">
           <ToggleGroupItem value="board" aria-label="Vista board" className="h-9 gap-1.5"><LayoutGrid className="h-4 w-4" /><span className="hidden sm:inline">Board</span></ToggleGroupItem>
           <ToggleGroupItem value="list" aria-label="Vista elenco" className="h-9 gap-1.5"><List className="h-4 w-4" /><span className="hidden sm:inline">Elenco</span></ToggleGroupItem>
+          <ToggleGroupItem value="calendar" aria-label="Vista calendario" className="h-9 gap-1.5"><CalendarDays className="h-4 w-4" /><span className="hidden sm:inline">Calendario</span></ToggleGroupItem>
         </ToggleGroup>
       </div>
 
-      {view === "list" ? (
+      {view === "calendar" ? (
+        <CRMLeadCalendar leads={listLeads} now={now} onOpen={openLead} />
+      ) : view === "list" ? (
         <CRMLeadList leads={listLeads} interactions={interactions} interactionState={interactionState} now={now}
           sort={sort} onSort={setSort} onOpen={openLead} onConverse={lead => openLead(lead, "comunicazioni")} onSchedule={lead => handleEditLead(lead, true)} />
       ) : <>
