@@ -15,7 +15,7 @@ async function resolveContact(code?: string): Promise<BookingContact | null> {
   const customer = request.data[0];
   if (!customer) return null;
   const document = offer.data.document as Record<string, unknown>;
-  return { name: [customer.first_name, customer.last_name].filter(Boolean).join(' '), email: customer.email ?? '', phoneNumber: customer.phone ?? '', language: typeof document.language === 'string' ? document.language : 'it', offerId: offer.data.id, websiteLeadId: customer.id };
+  return { name: [customer.first_name, customer.last_name].filter(Boolean).join(' '), email: customer.email ?? '', phoneNumber: customer.phone ?? '', language: typeof document['language'] === 'string' ? document['language'] : 'it', offerId: offer.data.id, websiteLeadId: customer.id };
 }
 
 export const loadBookingContact = createServerFn({ method: 'POST' })

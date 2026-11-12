@@ -579,8 +579,8 @@ ${JSON.stringify(data, null, 2)}
       JSON.stringify({ 
         success: true, 
         message: 'Emails sent successfully',
-        companyEmailId: companyEmailResult.data?.id
-        , appointmentId
+        companyEmailId: companyEmailResult.data?.id,
+        appointmentId
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

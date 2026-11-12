@@ -8,6 +8,6 @@ export const appointmentInput = z.object({
 });
 export function availableBookingOffer(offer: { public_enabled: boolean; archived: boolean; document: unknown } | null, now = new Date()) {
   if (!offer?.public_enabled || offer.archived || !offer.document || typeof offer.document !== 'object') return false;
-  const validUntil = (offer.document as Record<string, unknown>).valid_until;
+  const validUntil = (offer.document as Record<string, unknown>)['valid_until'];
   return typeof validUntil === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(validUntil) && now.getTime() < Date.parse(`${validUntil}T23:59:59.999Z`);
 }

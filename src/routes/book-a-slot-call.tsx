@@ -9,7 +9,7 @@ const bookingQuery = (offer?: string) => queryOptions({
 });
 
 export const Route = createFileRoute("/book-a-slot-call")({
-  validateSearch: (search: Record<string, unknown>) => ({ offer: typeof search.offer === 'string' && /^[0-9a-f-]{36}$/i.test(search.offer) ? search.offer : undefined, lang: typeof search.lang === 'string' ? search.lang : undefined }),
+  validateSearch: (search: Record<string, unknown>) => ({ offer: typeof search['offer'] === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(search['offer']) ? search['offer'] : undefined, lang: typeof search['lang'] === 'string' ? search['lang'] : undefined }),
   loaderDeps: ({ search }) => ({ offer: search.offer }),
   loader: ({ context, deps }) => context.queryClient.ensureQueryData(bookingQuery(deps.offer)),
   head: () => ({ meta: [
