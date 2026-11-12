@@ -1,4 +1,6 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, it as test } from 'node:test';
+import { strict as assert } from 'node:assert';
+const expect = (v: unknown) => ({ toBe: (e: unknown) => assert.equal(v, e), toBeNull: () => assert.equal(v, null) });
 import { brunoMayReplace, nextActivityDue, workingDayAt } from './nextActivity';
 const rome = (d: Date | null) => d && new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', weekday: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(d);
 describe('prossima attività di Bruno', () => {
