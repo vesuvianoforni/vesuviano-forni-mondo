@@ -21,7 +21,7 @@ export function BrunoAutomations() {
     setState(Object.fromEntries((data ?? []).map((r: any) => [r.key, r.enabled])));
   }); }, []);
   const toggle = async (key: string, enabled: boolean) => {
-    const prev = state[key]; setState(s => ({ ...s, [key]: enabled }));
+    const prev = state[key] ?? true; setState(s => ({ ...s, [key]: enabled }));
     const { data: u } = await supabase.auth.getUser();
     const { error } = await db.from('bruno_automations').update({ enabled, updated_at: new Date().toISOString(), updated_by: u.user?.id ?? null }).eq('key', key);
     if (error) { setState(s => ({ ...s, [key]: prev })); toast.error('Modifica non salvata'); } else toast.success(enabled ? 'Automatismo attivato' : 'Automatismo spento');
