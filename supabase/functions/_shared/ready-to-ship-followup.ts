@@ -40,7 +40,7 @@ const TEXT: Record<string, (n: string, m: string, e: string) => string> = {
   es: (n, m, e) => `Hola ${n}, soy Gennaro Caglione, Export Manager de Vesuviano Forni.\nTe acabamos de enviar por email (${e}) la oferta con fotos y PDF del horno ${m} listo para envío.\n\n¿Nos avisas si no lo has recibido? Revisa también la carpeta de spam.\nSi te apetece, puedes reservar una llamada conmigo aquí: ${BOOKING_URL}\n\nGennaro`,
 };
 
-export function followupText(language: string, firstName: string, model: string, email: string): string {
+export function followupText(language: string, firstName: string, model: string, email: string, bookingUrl = BOOKING_URL): string {
   const lang = (language || 'it').slice(0, 2).toLowerCase();
-  return (TEXT[lang] ?? TEXT.en)(firstName.trim() || '', model, email);
+  return (TEXT[lang] ?? TEXT.en)(firstName.trim() || '', model, email).replace(BOOKING_URL, bookingUrl);
 }

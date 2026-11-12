@@ -1,0 +1,1 @@
+- Booking contact prefills resolve only active shared-offer capabilities matching one ready-to-ship request; keep personal data out of URLs, preserve editable contacts/source in appointment notes and save before notifying the owner.

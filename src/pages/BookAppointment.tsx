@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "@/lib/router-compat";
+import { useNavigate, useSearchParams } from "@/lib/router-compat";
+import { useServerFn } from '@tanstack/react-start';
+import { submitBookingAppointment } from '@/lib/booking.functions';
+import type { BookingContact } from '@/lib/booking';
+import { loadLanguage } from '@/i18n/config';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -7,7 +11,6 @@ import { format } from "date-fns";
 import { CalendarIcon, Clock, Phone, MessageCircle, Video, ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -35,23 +38,24 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import LanguageSelector from "@/components/LanguageSelector";
-import SEOHead from '@/components/SEOHead';
 import { getAttribution } from "@/lib/attribution";
 
-const BookAppointment = () => {
+const BookAppointment = ({ contact = null }: { contact?: BookingContact | null }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchParams] = useSearchParams();
+  const submitAppointment = useServerFn(submitBookingAppointment);
 
   // Detect browser language on mount
   useEffect(() => {
-    const browserLang = navigator.language.split('-')[0];
+    const browserLang = searchParams.get('lang') || contact?.language || navigator.language.split('-')[0] || 'it';
     const supportedLanguages = ['it', 'en', 'fr', 'es', 'de'];
     
-    if (supportedLanguages.includes(browserLang!) && i18n.language !== browserLang) {
-      i18n.changeLanguage(browserLang);
+    if (supportedLanguages.includes(browserLang) && i18n.language !== browserLang) {
+      void loadLanguage(browserLang);
     }
-  }, [i18n]);
+  }, [i18n, contact?.language, searchParams]);
 
   const formSchema = z.object({
     name: z.string().trim().min(2, t("bookSlot.validation.nameRequired", "Name is required")).max(100),
@@ -63,6 +67,7 @@ const BookAppointment = () => {
       required_error: t("bookSlot.validation.contactMethodRequired"),
     }),
     phoneNumber: z.string().min(8, t("bookSlot.validation.phoneInvalid")).max(20),
+    email: z.union([z.string().trim().email(), z.literal('')]),
   });
 
   type FormData = z.infer<typeof formSchema>;
@@ -70,7 +75,9 @@ const BookAppointment = () => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      name: contact?.name ?? '',
+      email: contact?.email ?? '',
+      phoneNumber: contact?.phoneNumber ?? '',
       contactMethod: "whatsapp",
     },
   });
@@ -84,23 +91,13 @@ const BookAppointment = () => {
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.functions.invoke("send-form-data", {
-        body: {
-          formType: "appointment",
-          data: {
-            name: data.name,
-            date: format(data.date, "dd/MM/yyyy"),
-            time: data.time,
-            contactMethod: data.contactMethod,
-            phoneNumber: data.phoneNumber,
-            ...getAttribution(),
-          },
-        },
-      });
-
-      if (error) throw error;
-
-      navigate('/thank-you');
+      await submitAppointment({ data: {
+        name: data.name, email: data.email, phoneNumber: data.phoneNumber,
+        date: format(data.date, 'dd/MM/yyyy'), time: data.time, contactMethod: data.contactMethod,
+        ...(contact && searchParams.get('offer') ? { offer: searchParams.get('offer') ?? undefined } : {}),
+        attribution: getAttribution(),
+      } });
+      window.location.assign('/thank-you');
     } catch (error) {
       console.error("Error submitting appointment:", error);
       toast.error(t("bookSlot.errorMessage"));
@@ -112,18 +109,17 @@ const BookAppointment = () => {
   return (
 
     <>
-      <SEOHead title="Prenota un Appuntamento | Vesuviano" description="Prenota una consulenza tecnica gratuita con il team Vesuviano per scegliere il forno giusto." lang="it" noIndex />
       <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Language Selector */}
         <div className="flex justify-between items-center mb-6">
-          <button
+          <Button variant="ghost" size="sm"
             onClick={() => navigate(-1)}
             className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             {t('bookSlot.back', 'Back')}
-          </button>
+          </Button>
           <LanguageSelector />
         </div>
 
@@ -161,6 +157,14 @@ const BookAppointment = () => {
               />
 
               {/* Date Picker */}
+              <FormField control={form.control} name="email" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-semibold">Email</FormLabel>
+                  <FormControl><Input type="email" autoComplete="email" {...field} className="h-12" /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
               <FormField
                 control={form.control}
                 name="date"

@@ -80,6 +80,7 @@ serve(async (req) => {
     // Create email content based on form type
     let subject = ''
     let emailContent = ''
+    let appointmentId: string | undefined
 
     switch (formType) {
       case 'callback_request':
@@ -219,6 +220,8 @@ serve(async (req) => {
           
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3>Dettagli Appuntamento:</h3>
+            <p><strong>Nome:</strong> ${String(data.name || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c] || c))}</p>
+            <p><strong>Email:</strong> ${String(data.email || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c] || c))}</p>
             <p><strong>📅 Data:</strong> ${data.date}</p>
             <p><strong>🕐 Ora:</strong> ${data.time}</p>
             <p><strong>📞 Telefono:</strong> <a href="tel:${data.phoneNumber}">${data.phoneNumber}</a></p>
@@ -234,23 +237,26 @@ serve(async (req) => {
         
         // Save appointment to database
         try {
-          const { error: dbError } = await supabase
+          const { data: savedAppointment, error: dbError } = await supabase
             .from('appointments')
             .insert({
               appointment_date: data.date,
               appointment_time: data.time,
               phone_number: data.phoneNumber,
               contact_method: data.contactMethod,
+              notes: JSON.stringify({ name: data.name || '', email: data.email || '', ...(data.readyToShipOfferId ? { ready_to_ship_offer_id: data.readyToShipOfferId, website_lead_id: data.websiteLeadId } : {}) }),
               status: 'pending'
             })
+            .select('id').single()
           
           if (dbError) {
-            console.error('Error saving appointment to database:', dbError)
+            throw new Error('APPOINTMENT_SAVE_FAILED')
           } else {
             console.log('Appointment saved successfully to database')
+            appointmentId = savedAppointment.id
           }
         } catch (dbError) {
-          console.error('Database error:', dbError)
+          throw dbError
         }
         
         break
@@ -564,7 +570,8 @@ ${JSON.stringify(data, null, 2)}
       ...withCompanyEmailCopy({ to: ['stanislaoelefante@gmail.com', 'info@vesuvianoforni.com'] }),
       subject: subject,
       html: companyHtmlTemplate,
-    })
+    }, appointmentId ? { idempotencyKey: `appointment-${appointmentId}` } : undefined)
+    if (appointmentId && companyEmailResult.error) throw new Error('APPOINTMENT_NOTIFICATION_FAILED')
 
     console.log('Company notification email sent:', companyEmailResult)
 
@@ -572,7 +579,8 @@ ${JSON.stringify(data, null, 2)}
       JSON.stringify({ 
         success: true, 
         message: 'Emails sent successfully',
-        companyEmailId: companyEmailResult.data?.id
+        companyEmailId: companyEmailResult.data?.id,
+        appointmentId
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
