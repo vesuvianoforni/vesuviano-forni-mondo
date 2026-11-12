@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 import { Resend } from "npm:resend@2.0.0";
+import { withCompanyEmailCopy } from '../_shared/email-delivery-policy.ts';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -56,7 +57,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send email to both sales team and info email
     const emailResponse = await resend.emails.send({
       from: "Vesuviano Configuratore <noreply@vesuvianoforni.com>",
-      to: ["info@vesuvianoforni.com"],
+      ...withCompanyEmailCopy({ to: ["info@vesuvianoforni.com"] }),
       subject: `Richiesta Rinnovo Link Configuratore - ${customerName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

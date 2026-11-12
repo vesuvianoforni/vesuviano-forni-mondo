@@ -1,4 +1,5 @@
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
+import { companySMTPEnvelope } from '../email-delivery-policy.ts';
 import { ImapFlow } from 'npm:imapflow@2.9.1';
 import nodemailer from 'npm:nodemailer@10.3.0';
 import { composeEmail, rawMIME, findSent, hasExactMessage, closeIMAP } from '../email-transport.ts';
@@ -98,7 +99,7 @@ export async function dispatchMarioOnce(db:SupabaseClient) {
       if(!row.mime){const mime=await composeEmail(row.recipient,row.subject,row.rendered_text,row.message_id,new Date(row.created_at),undefined,row.rendered_html,MARIO_SENDER);checked(await db.from('outreach_outbox').update({mime}).eq('id',row.id).is('mime',null));row.mime=mime;}
       if(!checked(await db.rpc('reserve_mario_submission',{p_id:row.id,p_token:token})))continue;
       claimedId=row.id;
-      const res=await c.smtp.sendMail({envelope:{from:MARIO_SENDER,to:[row.recipient]},raw:rawMIME(row.mime)});
+      const res=await c.smtp.sendMail({envelope:companySMTPEnvelope(MARIO_SENDER,row.recipient),raw:rawMIME(row.mime)});
       if(!res.accepted?.some((a:string)=>String(a).toLowerCase()===row.recipient)||res.rejected?.length)throw new Error('SMTP_UNKNOWN');
       const at=new Date().toISOString();checked(await db.from('outreach_outbox').update({smtp_status:'accepted',accepted_at:at,last_error:null,sent_folder:folder}).eq('id',row.id));claimedId=null;
       checked(await db.rpc('project_mario_acceptance',{p_id:row.id}));

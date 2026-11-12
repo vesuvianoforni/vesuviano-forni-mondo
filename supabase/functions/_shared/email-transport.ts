@@ -2,6 +2,7 @@ import { ImapFlow } from 'npm:imapflow@2.9.1';
 import nodemailer from 'npm:nodemailer@10.3.0';
 import { Buffer } from 'node:buffer';
 import { discoverSent } from './email-rules.ts';
+import { COMPANY_EMAIL, companySMTPEnvelope } from './email-delivery-policy.ts';
 
 export const MAIL_ADDRESS = 'info@vesuvianoforni.com';
 export function mailConfig() {
@@ -32,7 +33,7 @@ export function smtpClient() {
 export async function composeEmail(recipient: string, subject: string, text: string, messageId: string, date: Date, replyId?: string, html?: string, sender = MAIL_ADDRESS) {
   const composer = nodemailer.createTransport({ streamTransport: true, buffer: true, newline: 'windows', disableFileAccess: true, disableUrlAccess: true });
   const built = await composer.sendMail({ from: { name: 'Vesuviano Forni', address: sender }, to: recipient,
-    envelope: { from: sender, to: [recipient] }, subject, text, ...(html ? { html } : {}), messageId, date,
+    replyTo: COMPANY_EMAIL, envelope: companySMTPEnvelope(sender, recipient), subject, text, ...(html ? { html } : {}), messageId, date,
     ...(replyId ? { inReplyTo: replyId, references: [replyId] } : {}) });
   if (!Buffer.isBuffer(built.message)) throw new Error('MAIL_COMPOSE_FAILED');
   return built.message.toString('base64');

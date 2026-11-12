@@ -1,0 +1,1 @@
+- All outbound email boundaries use email-delivery-policy.ts for corporate copies and reply routing; SMTP BCC recipients belong only in the envelope, not the MIME headers, to preserve privacy and shared behavior across providers without replaying stored sends.

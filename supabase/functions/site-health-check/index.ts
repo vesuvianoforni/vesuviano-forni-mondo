@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "npm:resend@2.0.0"
+import { withCompanyEmailCopy } from '../_shared/email-delivery-policy.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8'
 
 const corsHeaders = {
@@ -146,7 +147,7 @@ serve(async (req) => {
     try {
       await resend.emails.send({
         from: 'Sistema Alert <system@vesuvianoforni.com>',
-        to: [ALERT_EMAIL],
+        ...withCompanyEmailCopy({ to: [ALERT_EMAIL] }),
         subject: `🚨 ALERT: ${issues.length} anomalia/e rilevate su Vesuviano Forni`,
         html: htmlContent,
       })
