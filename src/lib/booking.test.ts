@@ -1,8 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { appointmentInput, availableBookingOffer } from './booking';
+import { appointmentInput, availableBookingOffer, bookingThankYouUrl } from './booking';
 import { readyToShipBookingUrl } from '../../supabase/functions/_shared/booking-link';
 
 describe('Ready-to-ship booking', () => {
+  it('redirects completed bookings to existing localized thank-you pages', () => {
+    expect(bookingThankYouUrl('en')).toBe('/en/thank-you-en');
+    expect(bookingThankYouUrl('it')).toBe('/it/thank-you-it');
+    expect(bookingThankYouUrl('ar')).toBe('/it/thank-you-it');
+  });
   it('links only by opaque offer code, without personal data in the URL', () => {
     const url = new URL(readyToShipBookingUrl('7a5d009a-14d6-415d-9613-53e37d552da0', 'en'));
     expect(url.origin).toBe('https://vesuvianoforni.com');
