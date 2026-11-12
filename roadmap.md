@@ -1,8 +1,8 @@
 # Roadmap
 
 ## Email: copia nascosta aziendale (12 nov 2026)
-- [ ] Confermare l’orario dell’email a Mohammad e applicare info@vesuvianoforni.com in CCN e Reply-To a tutti i percorsi di invio, senza reinviare messaggi precedenti.
-- [ ] Testare destinatari SMTP/Resend, privacy della CCN e conservazione dei destinatari esistenti; distribuire i servizi email modificati.
+- [x] Email Mohammad ricostruita intorno alle 20:53 dell’11 novembre (offerta 20:53:48, follow-up creato solo dopo accettazione email alle 20:53:49; nessun log provider con secondo esatto). Applicata regola condivisa CCN/Reply-To a invii Resend, newsletter, casella ERP e Mario; notifiche già dirette a info non ricevono copie duplicate, nessun reinvio storico.
+- [x] 60 test passati, inclusi cinque su CCN/Reply-To, destinatari conservati, SMTP e assenza Bcc nel MIME; tredici servizi distribuiti e raggiungibili online (400 con richiesta vuota pronta consegna, 200 OPTIONS per altri). Nessuna email inviata per prova: ricezione reale della nuova CCN non ancora esercitata; sito/build OK.
 
 ## CRM: clienti già presenti segnalati come nuovi durante le chiamate (11 nov 2026)
 - [x] Riprodotto confronto errato: 07999488655 interpretato con prefisso Italia invece del paese UK registrato; tastierino creava cold_call e relativo avviso Nuovo lead. Andre Brincat e John O’Connor confermati; numero +447947888973 senza altra scheda corrispondente nei numeri registrati.
