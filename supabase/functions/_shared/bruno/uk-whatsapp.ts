@@ -6,18 +6,19 @@ function headers() {
   if (!lovable || !connection) throw new Error('WhatsApp Bruno UK non collegato');
   return { Authorization: `Bearer ${lovable}`, 'X-Connection-Api-Key': connection, 'Content-Type': 'application/json' };
 }
-export async function ukTemplates() {
-  const out: { name: string; language: string; body: string; variables: number; category: string }[] = [];
+export async function ukTemplates(all = false) {
+  const out: { name: string; language: string; body: string; variables: number; category: string; status?: string; reason?: string | null }[] = [];
   let after: string | undefined;
   for (let page = 0; page < 10; page++) {
     const url = new URL(`${GATEWAY}/message_templates`);
-    url.searchParams.set('fields', 'name,status,language,category,components'); url.searchParams.set('limit', '100');
+    url.searchParams.set('fields', 'name,status,language,category,components,rejected_reason'); url.searchParams.set('limit', '100');
     if (after) url.searchParams.set('after', after);
     const res = await fetch(url, { headers: headers(), signal: AbortSignal.timeout(15000) });
     const text = await res.text();
     if (!res.ok) throw new Error(`WhatsApp UK [${res.status}]: ${text}`);
     const data = JSON.parse(text);
     for (const t of data.data ?? []) {
+      if (all) { out.push({ name: t.name, language: t.language, category: t.category, status: t.status, reason: t.rejected_reason ?? null, body: t.components?.find((c: any) => c.type === "BODY")?.text ?? "", variables: 0 }); continue; }
       if (t.status !== 'APPROVED') continue;
       const header = t.components?.find((c: any) => c.type === 'HEADER');
       if (header && (header.format !== 'TEXT' || /\{\{\d+\}\}/.test(header.text ?? ''))) continue;

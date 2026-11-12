@@ -1,7 +1,7 @@
 // Bruno's official WhatsApp line, called directly on Meta Graph API with server-only credentials.
 const GRAPH = 'https://graph.facebook.com/v21.0';
 
-export type WaTemplate = { name: string; language: string; category: string; body: string; variables: number };
+export type WaTemplate = { name: string; language: string; category: string; body: string; variables: number; status?: string; reason?: string | null };
 
 import { lineFor } from './whatsapp-lines.ts';
 export { COUNTRY_LINES, lineFor } from './whatsapp-lines.ts';
@@ -18,16 +18,17 @@ function creds(to?: string | null, explicitLine?: 'it' | 'uk') {
 const countVars = (s: string) => new Set([...s.matchAll(/\{\{(\d+)\}\}/g)].map((m) => m[1])).size;
 
 // Only approved templates Bruno can fill on his own: no media headers, no variable buttons.
-export async function listTemplates(to?: string | null): Promise<WaTemplate[]> {
+export async function listTemplates(to?: string | null, all = false): Promise<WaTemplate[]> {
   const { token, wabaId } = creds(to);
   const out: WaTemplate[] = [];
-  let next: string | null = `${GRAPH}/${wabaId}/message_templates?fields=name,status,language,category,components&limit=100`;
+  let next: string | null = `${GRAPH}/${wabaId}/message_templates?fields=name,status,language,category,components,rejected_reason&limit=100`;
   while (next) {
     const r = await fetch(next, { headers: { Authorization: `Bearer ${token}` } });
     const t = await r.text();
     if (!r.ok) throw new Error(`Meta ${r.status}: ${t.slice(0, 300)}`);
     const d = JSON.parse(t);
     for (const tpl of d.data ?? []) {
+      if (all) { out.push({ name: tpl.name, language: tpl.language, category: tpl.category, status: tpl.status, reason: tpl.rejected_reason ?? null, body: (tpl.components ?? []).find((c: any) => c.type === "BODY")?.text ?? "", variables: 0 }); continue; }
       if (tpl.status !== 'APPROVED') continue;
       const comps = tpl.components ?? [];
       const header = comps.find((c: any) => c.type === 'HEADER');

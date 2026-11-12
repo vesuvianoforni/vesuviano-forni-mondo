@@ -32,7 +32,7 @@ const SendSchema = z.object({
   media_url: z.string().url().max(1000).optional(),
   template: z.object({ name: z.string().min(1).max(200), language: z.string().min(2).max(10), params: z.array(z.string().min(1).max(1000)).max(10) }).optional(),
 });
-const TemplatesSchema = z.object({ action: z.literal('wa_templates'), lead_id: z.string().uuid().optional(), whatsapp_line: z.enum(['it','uk']).optional() });
+const TemplatesSchema = z.object({ action: z.literal('wa_templates'), lead_id: z.string().uuid().optional(), whatsapp_line: z.enum(['it','uk']).optional(), all: z.boolean().optional() });
 const SuggestSchema = z.object({
   action: z.literal('suggest'),
   lead_id: z.string().uuid(),
@@ -65,8 +65,8 @@ Deno.serve(async (req) => {
       try {
         // Each country line has its own WhatsApp Business account, so templates follow the lead's line.
         const phone = input.lead_id ? (await admin.from('leads').select('phone').eq('id', input.lead_id).maybeSingle()).data?.phone : null;
-        if (input.whatsapp_line === 'uk') return json({ templates: await ukTemplates(), line: 'Bruno UK' });
-        return json({ templates: await listTemplates(input.whatsapp_line === 'it' ? null : phone), line: input.whatsapp_line === 'it' ? 'Bruno IT' : lineFor(phone)?.label ?? 'Bruno IT' });
+        if (input.whatsapp_line === 'uk') return json({ templates: await ukTemplates(input.all), line: 'Bruno UK' });
+        return json({ templates: await listTemplates(input.whatsapp_line === 'it' ? null : phone, input.all), line: input.whatsapp_line === 'it' ? 'Bruno IT' : lineFor(phone)?.label ?? 'Bruno IT' });
       }
       catch (e) { return json({ error: e instanceof Error ? e.message : 'Errore Meta' }, 502); }
     }
