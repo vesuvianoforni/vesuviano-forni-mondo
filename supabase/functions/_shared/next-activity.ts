@@ -9,7 +9,7 @@ type LeadActivity = { next_activity_date: string | null; next_activity_notes: st
 const ZONE = 'Europe/Rome';
 function romeParts(d: Date) {
   const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: ZONE, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', weekday: 'short', hourCycle: 'h23' }).formatToParts(d).map(x => [x.type, x.value]));
-  return { y: +p.year, m: +p.month, d: +p.day, h: +p.hour, min: +p.minute, wd: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(p.weekday) + 1 };
+  return { y: Number(p['year']), m: Number(p['month']), d: Number(p['day']), h: Number(p['hour']), min: Number(p['minute']), wd: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(String(p['weekday'])) + 1 };
 }
 function romeTime(y: number, m: number, d: number, h: number) {
   const guess = Date.UTC(y, m - 1, d, h);
@@ -29,7 +29,7 @@ export function workingDayAt(now: Date, workingDays: number, hour: number) {
 export function nextActivityDue(choice: NextActivityChoice, now: Date): Date | null {
   if (choice.action === 'nessuna') return null;
   if (choice.explicit_date && /^\d{4}-\d{2}-\d{2}$/.test(choice.explicit_date)) {
-    const [y, m, d] = choice.explicit_date.split('-').map(Number);
+    const [y = 0, m = 0, d = 0] = choice.explicit_date.split('-').map(Number);
     const at = romeTime(y, m, d, Math.min(Math.max(choice.hour, 9), 18));
     if (at.getTime() > now.getTime() && at.getTime() < now.getTime() + 180 * 86400000) return at;
   }
