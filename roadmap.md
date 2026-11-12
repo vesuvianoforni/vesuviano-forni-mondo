@@ -1,8 +1,10 @@
 # Roadmap
 
 ## Pronta consegna: prenotazione precompilata (12 nov 2026)
-- [ ] Collegare i pulsanti email/WhatsApp alla richiesta con un codice opaco, precompilare nome/email/telefono e conservare i dati nella prenotazione.
-- [ ] Verificare collegamento reale, dati modificabili, link invalido e invio con salvataggio/notifica; distribuire gli aggiornamenti necessari.
+- [x] Pulsanti delle nuove email/WhatsApp collegati all’offerta condivisa tramite codice opaco, senza nome/email/telefono nell’URL; lettura server limitata a offerte pubbliche valide e singola richiesta pronta consegna. Pagina con nome completo, email e telefono precompilati/modificabili e lingua della richiesta; dati e origine conservati nelle note dell’appuntamento.
+- [x] Dati reali Mohammad verificati desktop/mobile, quattro test Vitest e cinque Deno passati; link mancanti/invalidi mostrano campi vuoti. Prenotazione con contatto di test completata, record riletto con origine/offerta e email aziendale delivered; due appuntamenti di test rimossi per ID e assenza confermata. Conferma su pagina localizzata esistente, build OK; nessun invio a Mohammad.
+- [x] create-ready-to-ship-proforma, ready-to-ship-followup e send-form-data distribuite dopo interruzione temporanea del servizio; tre endpoint raggiungibili. Collegamenti nelle email/WhatsApp già inviati restano invariati.
+- [ ] Pubblicare la nuova pagina e funzione prenotazione su Netlify: le modifiche sono disponibili in anteprima, il dominio usa il deploy esterno GitHub/Netlify.
 
 ## Email: copia nascosta aziendale (12 nov 2026)
 - [x] Email Mohammad ricostruita intorno alle 20:53 dell’11 novembre (offerta 20:53:48, follow-up creato solo dopo accettazione email alle 20:53:49; nessun log provider con secondo esatto). Applicata regola condivisa CCN/Reply-To a invii Resend, newsletter, casella ERP e Mario; notifiche già dirette a info non ricevono copie duplicate, nessun reinvio storico.
