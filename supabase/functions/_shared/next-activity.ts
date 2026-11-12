@@ -58,14 +58,14 @@ export const NEXT_ACTIVITY_SCHEMA = { name: 'next_activity', strict: true, schem
 const LABELS: Record<string, string> = { chiamata: 'chiamata', whatsapp: 'whatsapp', email: 'email', offerta: 'offerta' };
 type Db = { from: (table: string) => any };
 // Best effort: a failure never blocks the call results pipeline; the outcome is only a CRM reminder.
-export async function scheduleFromCall(db: Db, leadId: string, summary: string, opts: { apiKey: string; model: string; now?: Date }) {
+export async function scheduleFromCall(db: Db, leadId: string, summary: string, opts: { apiKey: string; model: string; now?: Date; source?: 'call' | 'whatsapp' }) {
   const now = opts.now ?? new Date();
   const lead = await db.from('leads').select('next_activity_date,next_activity_notes,status,archived').eq('id', leadId).maybeSingle();
   if (lead.error || !lead.data || lead.data.archived || ['vinto', 'perso'].includes(lead.data.status) || !brunoMayReplace(lead.data, now)) return { skipped: true };
   const res = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', { method: 'POST', signal: AbortSignal.timeout(20000),
     headers: { Authorization: `Bearer ${opts.apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ model: opts.model, max_tokens: 300, response_format: { type: 'json_schema', json_schema: NEXT_ACTIVITY_SCHEMA },
-      messages: [{ role: 'system', content: `${NEXT_ACTIVITY_PROMPT}\nOggi (ora italiana): ${new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', dateStyle: 'full', timeStyle: 'short' }).format(now)}` }, { role: 'user', content: summary.slice(0, 6000) }] }) });
+      messages: [{ role: 'system', content: `${NEXT_ACTIVITY_PROMPT}${opts.source === 'whatsapp' ? WHATSAPP_NOTE : ''}\nOggi (ora italiana): ${new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', dateStyle: 'full', timeStyle: 'short' }).format(now)}` }, { role: 'user', content: summary.slice(0, 6000) }] }) });
   if (!res.ok) return { error: `next_activity_${res.status}` };
   let choice: NextActivityChoice;
   try { choice = JSON.parse((await res.json()).choices?.[0]?.message?.content ?? ''); } catch { return { error: 'next_activity_invalid' }; }
@@ -73,4 +73,20 @@ export async function scheduleFromCall(db: Db, leadId: string, summary: string, 
   if (!due || !LABELS[choice.action]) return { none: true };
   const saved = await db.from('leads').update({ next_activity_type: LABELS[choice.action], next_activity_date: due.toISOString(), next_activity_notes: `${BRUNO_ACTIVITY_PREFIX}${String(choice.notes || '').slice(0, 200)}` }).eq('id', leadId);
   return saved.error ? { error: 'next_activity_save' } : { scheduled: due.toISOString(), action: choice.action };
+}
+
+const WHATSAPP_NOTE = `\nQuesta volta il testo non è una telefonata ma la conversazione WhatsApp recente (più vecchio in alto). Valuta l'ultimo scambio: se il cliente ha appena scritto e attende risposta, action "whatsapp" working_days 0; se abbiamo scritto noi senza risposta, action "whatsapp" o "chiamata" di sollecito dopo 1-2 giorni lavorativi; applica le stesse regole sopra per offerte, richiami e non interesse.`;
+const WA_CHANNELS = ['whatsapp_api', 'wasender', 'whatsapp'];
+// WhatsApp conversations (Bruno lines and Gennaro) also drive the next CRM activity. Only recent traffic
+// is analysed, so history backfills never trigger AI work; at most 10 leads per batch.
+export async function scheduleFromWhatsApp(db: Db, leadIds: string[], opts: { apiKey: string; model: string; now?: Date }) {
+  const now = opts.now ?? new Date();
+  for (const leadId of [...new Set(leadIds)].slice(0, 10)) {
+    const { data } = await db.from('crm_messages').select('direction,sender,body,created_at').eq('lead_id', leadId).in('channel', WA_CHANNELS).order('created_at', { ascending: false }).limit(20);
+    const rows = (data ?? []) as { direction: string; sender: string | null; body: string | null; created_at: string }[];
+    if (!rows.length || now.getTime() - new Date(rows[0]!.created_at).getTime() > 24 * 3600e3) continue;
+    const fmt = new Intl.DateTimeFormat('it-IT', { timeZone: ZONE, dateStyle: 'short', timeStyle: 'short' });
+    const text = rows.reverse().map(r => `[${fmt.format(new Date(r.created_at))}] ${r.direction === 'inbound' ? 'Cliente' : (r.sender || 'Noi')}: ${String(r.body ?? '').slice(0, 500)}`).join('\n');
+    await scheduleFromCall(db, leadId, text, { ...opts, now, source: 'whatsapp' }).catch(() => null);
+  }
 }

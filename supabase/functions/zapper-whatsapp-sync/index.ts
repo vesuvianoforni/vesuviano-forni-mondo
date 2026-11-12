@@ -1,3 +1,5 @@
+import { scheduleFromWhatsApp } from '../_shared/next-activity.ts';
+import { ECONOMIC_TEXT_MODEL } from '../_shared/ai-models.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { externalId, isGennaro, local, messageBody, normalizeText, phoneKey } from './scope.ts';
@@ -84,6 +86,13 @@ Deno.serve(async (req) => {
     results.push({ id: ext, status: targetId ? 'updated' : 'inserted', lead_id: lead.id });
   }
 
+  // Bruno reads the updated WhatsApp conversation and plans the next CRM activity in the background.
+  const touched = results.filter((r) => r.status === 'inserted' && r.lead_id).map((r) => r.lead_id as string);
+  const aiKey = Deno.env.get('LOVABLE_API_KEY');
+  if (touched.length && aiKey) {
+    const job = scheduleFromWhatsApp(supabase, touched, { apiKey: aiKey, model: ECONOMIC_TEXT_MODEL }).catch(() => null);
+    (globalThis as any).EdgeRuntime?.waitUntil?.(job);
+  }
   const summary = results.reduce((a: Record<string, number>, r) => ((a[r.status] = (a[r.status] ?? 0) + 1), a), {});
   return json({ ok: true, summary, results });
 });
