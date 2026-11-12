@@ -1,4 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { scheduleFromCall } from './nextActivity';
+import { ECONOMIC_TEXT_MODEL } from '../../supabase/functions/_shared/ai-models';
 import { callAnalysisRecovery } from './crmCallResults';
 import { CallAnalysisError, transcribeDirectAudio, summarizeDirectTranscript } from './crmCallAi.server';
 
@@ -38,6 +40,11 @@ export async function processDirectResult(db: CallResultsDb, callId: string, tok
     // CRM message is updated before the call, whose trigger wakes the summary-only Telegram card.
     check(await db.from('crm_messages').update({ body: summary }).eq('id', callId).eq('sender', 'operator'));
     check(await db.from('crm_direct_calls').update({ summary, recording_status: 'ready', recording_error: null }).eq('id', callId));
+    if (!job.summary) {
+      const owner = await db.from('crm_direct_calls').select('lead_id').eq('id', callId).maybeSingle();
+      const key = process.env['LOVABLE_API_KEY'] || internalKey;
+      if (owner.data?.lead_id && key) await scheduleFromCall(db, owner.data.lead_id, summary, { apiKey: key, model: ECONOMIC_TEXT_MODEL }).catch(() => null);
+    }
     check(await db.from('crm_call_results').update({ status: 'ready', error: null, lease_token: null, lease_until: null }).eq('call_id', callId).eq('lease_token', lease));
     return { ready: true };
   } catch (error) {
