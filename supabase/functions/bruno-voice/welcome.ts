@@ -2,8 +2,8 @@
 // announces the call time and offers to continue on WhatsApp; Bruno UK then calls once at that time unless the
 // customer replied, the lead is paused or the switch is off. Every step is claimed before it runs and never repeated.
 import { lineFor } from '../_shared/bruno/whatsapp-lines.ts';
-import { sendUkApproved, renderTemplate } from '../bruno-agent/uk-whatsapp.ts';
-import { sendWhatsApp } from '../bruno-agent/meta-whatsapp.ts';
+import { sendUkApproved, renderTemplate } from '../_shared/bruno/uk-whatsapp.ts';
+import { sendWhatsApp } from '../_shared/bruno/meta-whatsapp.ts';
 import { welcomeCallAt, welcomeLabels } from './welcome-schedule.ts';
 import { callAllowed, e164, timezoneFromPhone } from './domain.ts';
 
