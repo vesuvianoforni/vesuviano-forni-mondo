@@ -1,5 +1,9 @@
 import { z } from 'zod';
 export type BookingContact = { name: string; email: string; phoneNumber: string; language: string; offerId: string; websiteLeadId: string };
+export function bookingThankYouUrl(language: string) {
+  const lang = language.slice(0, 2);
+  return `/${['it', 'en', 'fr', 'de', 'es'].includes(lang) ? lang : 'it'}/thank-you-${['it', 'en', 'fr', 'de', 'es'].includes(lang) ? lang : 'it'}`;
+}
 export const appointmentInput = z.object({
   name: z.string().trim().min(2).max(100), email: z.union([z.string().trim().email().max(254), z.literal('')]).default(''),
   phoneNumber: z.string().trim().min(8).max(20), date: z.string().regex(/^\d{2}\/\d{2}\/\d{4}$/),

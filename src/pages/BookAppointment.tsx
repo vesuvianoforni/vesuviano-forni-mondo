@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "@/lib/router-compat";
 import { useServerFn } from '@tanstack/react-start';
 import { submitBookingAppointment } from '@/lib/booking.functions';
 import type { BookingContact } from '@/lib/booking';
+import { bookingThankYouUrl } from '@/lib/booking';
 import { loadLanguage } from '@/i18n/config';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -97,7 +98,7 @@ const BookAppointment = ({ contact = null }: { contact?: BookingContact | null }
         ...(contact && searchParams.get('offer') ? { offer: searchParams.get('offer') ?? undefined } : {}),
         attribution: getAttribution(),
       } });
-      window.location.assign('/thank-you');
+      window.location.assign(bookingThankYouUrl(i18n.language));
     } catch (error) {
       console.error("Error submitting appointment:", error);
       toast.error(t("bookSlot.errorMessage"));
