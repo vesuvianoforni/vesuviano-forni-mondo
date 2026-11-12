@@ -10,7 +10,7 @@ export const BRUNO_AUTOMATIONS: Automation[] = [
   { key: 'ready_to_ship_offer', title: 'Offerta Pronta Consegna via email', what: 'Invia al cliente l’offerta con foto, prezzo, link PDF e prenotazione chiamata già compilata.', when: 'Subito, quando il cliente chiede un forno in pronta consegna dal sito.', toggle: false, status: 'always' },
   { key: 'ready_to_ship_followup', title: 'WhatsApp dopo l’offerta Pronta Consegna', what: 'Messaggio WhatsApp dalla linea di Gennaro per chiedere se l’offerta è arrivata e proporre una chiamata.', when: 'Dopo l’invio dell’offerta, in orario lavorativo (lun–sab).', toggle: true },
   { key: 'telegram_summaries', title: 'Riepiloghi Telegram mattina e sera', what: 'Riepilogo nel gruppo Ufficio AI di lead caldi, offerte e attività del giorno.', when: 'Ogni giorno lavorativo, mattina e sera.', toggle: true },
-  { key: 'new_lead_welcome', title: 'Benvenuto nuovo lead con qualificazione', what: 'Primo contatto automatico per qualificare un nuovo lead generico.', when: 'Non ancora creato.', toggle: false, status: 'missing' },
+  { key: 'new_lead_welcome', title: 'Benvenuto nuovo lead con chiamata', what: 'Bruno si presenta su WhatsApp dalla linea del paese, annuncia giorno e ora della chiamata e propone di proseguire su WhatsApp. Ai clienti UK telefona Bruno; per gli altri la chiamata va in agenda al team.', when: 'Nuova richiesta dal sito (non Pronta Consegna): chiamata 30–45 minuti dopo se tra 9:30 e 19:30 nei giorni feriali, altrimenti il giorno lavorativo dopo tra 9:30 e 10:00. Salta se il cliente risponde su WhatsApp.', toggle: true },
 ];
 
 export function BrunoAutomations() {
