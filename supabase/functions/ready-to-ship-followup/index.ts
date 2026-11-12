@@ -15,6 +15,8 @@ Deno.serve(async (req) => {
   const lovableKey = Deno.env.get('LOVABLE_API_KEY') ?? '';
   const connectionKey = Deno.env.get('UDC_WASENDER_API_KEY') ?? '';
 
+  const { data: automation } = await admin.from('bruno_automations').select('enabled').eq('key', 'ready_to_ship_followup').maybeSingle();
+  if (automation && !automation.enabled) return json({ skipped: 'automation_disabled' });
   const { data: due } = await admin.from('ready_to_ship_followups').select('id')
     .eq('status', 'pending').lte('due_at', new Date().toISOString()).order('due_at').limit(10);
   const results: unknown[] = [];

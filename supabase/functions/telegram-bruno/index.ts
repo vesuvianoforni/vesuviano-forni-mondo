@@ -312,7 +312,8 @@ Deno.serve(async (req) => {
     for (const n of pendingCalls ?? []) await notify(n);
     await admin.from('telegram_pending').update({ status: 'expired' }).eq('status', 'pending').lt('created_at', new Date(Date.now() - 24 * 3600_000).toISOString());
     const which = dueSummary();
-    if (which && chats.length) {
+    const summaries = which ? await admin.from('bruno_automations').select('enabled').eq('key', 'telegram_summaries').maybeSingle() : null;
+    if (which && chats.length && summaries?.data?.enabled !== false) {
       const tag = `summary:${which}:${romeClock().day}`;
       const { data: done } = await admin.from('telegram_notifications').select('id').eq('kind', tag).maybeSingle();
       if (!done) {
