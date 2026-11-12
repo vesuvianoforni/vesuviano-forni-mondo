@@ -599,6 +599,71 @@ export type Database = {
         }
         Relationships: []
       }
+      bruno_welcome_jobs: {
+        Row: {
+          call_at: string | null
+          call_id: string | null
+          created_at: string
+          form_type: string | null
+          id: string
+          language: string | null
+          lead_id: string
+          lease_until: string | null
+          message_id: string
+          reason: string | null
+          sent_at: string | null
+          status: string
+          tick_token: string
+          updated_at: string
+          website_lead_id: string | null
+          whatsapp_line: string | null
+        }
+        Insert: {
+          call_at?: string | null
+          call_id?: string | null
+          created_at?: string
+          form_type?: string | null
+          id?: string
+          language?: string | null
+          lead_id: string
+          lease_until?: string | null
+          message_id?: string
+          reason?: string | null
+          sent_at?: string | null
+          status?: string
+          tick_token?: string
+          updated_at?: string
+          website_lead_id?: string | null
+          whatsapp_line?: string | null
+        }
+        Update: {
+          call_at?: string | null
+          call_id?: string | null
+          created_at?: string
+          form_type?: string | null
+          id?: string
+          language?: string | null
+          lead_id?: string
+          lease_until?: string | null
+          message_id?: string
+          reason?: string | null
+          sent_at?: string | null
+          status?: string
+          tick_token?: string
+          updated_at?: string
+          website_lead_id?: string | null
+          whatsapp_line?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bruno_welcome_jobs_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: true
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       burners: {
         Row: {
           created_at: string
@@ -4477,6 +4542,33 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      claim_bruno_welcome_job: {
+        Args: { p_id: string; p_token: string }
+        Returns: {
+          call_at: string | null
+          call_id: string | null
+          created_at: string
+          form_type: string | null
+          id: string
+          language: string | null
+          lead_id: string
+          lease_until: string | null
+          message_id: string
+          reason: string | null
+          sent_at: string | null
+          status: string
+          tick_token: string
+          updated_at: string
+          website_lead_id: string | null
+          whatsapp_line: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "bruno_welcome_jobs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       claim_crm_call_result: {
         Args: { p_call: string; p_lease: string; p_token: string }
         Returns: {
@@ -4601,6 +4693,7 @@ export type Database = {
       }
       kick_bruno_call_plans: { Args: never; Returns: undefined }
       kick_bruno_voice_results: { Args: never; Returns: undefined }
+      kick_bruno_welcome: { Args: never; Returns: undefined }
       mario_crm_organization_summary: { Args: never; Returns: Json }
       mario_due_outbox: {
         Args: never
