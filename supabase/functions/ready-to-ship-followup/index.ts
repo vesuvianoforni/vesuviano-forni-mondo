@@ -4,6 +4,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { sendGennaroWhatsApp } from '../_shared/wasender.ts';
 import { followupText, isWorkingTime } from '../_shared/ready-to-ship-followup.ts';
+import { readyToShipBookingUrl } from '../_shared/booking-link.ts';
 
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
@@ -22,7 +23,16 @@ Deno.serve(async (req) => {
       .eq('id', id).eq('status', 'pending').select().maybeSingle();
     if (!row) continue;
     const phone = String(row.phone).replace(/\D/g, '').replace(/^00/, '');
-    const text = followupText(row.language, row.customer_name, row.model_name, row.email);
+    let bookingUrl = readyToShipBookingUrl();
+    if (row.website_lead_id) {
+      const request = await admin.from('website_leads').select('metadata').eq('id', row.website_lead_id).maybeSingle();
+      const offerId = request.data?.metadata?.offer_id;
+      if (typeof offerId === 'string') {
+        const offer = await admin.from('commercial_offers').select('public_code').eq('id', offerId).maybeSingle();
+        bookingUrl = readyToShipBookingUrl(offer.data?.public_code, row.language);
+      }
+    }
+    const text = followupText(row.language, row.customer_name, row.model_name, row.email, bookingUrl);
     let status = 'sent'; let error: string | null = null; let externalId: string | null = null;
     try { externalId = await sendGennaroWhatsApp({ lovableKey, connectionKey }, { phone, text }); }
     catch (e) { status = 'failed'; error = e instanceof Error ? e.message : 'Errore WaSender'; console.error('Follow-up failed', id, error); }

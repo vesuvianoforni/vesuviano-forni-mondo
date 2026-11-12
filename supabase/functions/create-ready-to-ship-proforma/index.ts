@@ -1,7 +1,8 @@
 import { Resend } from "npm:resend@2.0.0"
 import { withCompanyEmailCopy } from '../_shared/email-delivery-policy.ts'
 import { createClient } from 'npm:@supabase/supabase-js@2'
-import { BOOKING_URL, followupDueAt, isWorkingTime } from '../_shared/ready-to-ship-followup.ts'
+import { followupDueAt, isWorkingTime } from '../_shared/ready-to-ship-followup.ts'
+import { readyToShipBookingUrl } from '../_shared/booking-link.ts'
 import { DEFAULT_OFFER_SETTINGS, offerTotals, type OfferDocument, type OfferSettings } from '../_shared/commercial-offer-domain.ts'
 
 // Ready-to-ship request: builds a commercial offer with the shared offer tool (company/IBAN snapshot,
@@ -94,6 +95,7 @@ Deno.serve(async (req) => {
     if (offerErr) throw offerErr
     const offerUrl = `${SITE}/offerta/${offer.public_code}`
     const pdfUrl = `${offerUrl}?pdf=1`
+    const bookingUrl = readyToShipBookingUrl(offer.public_code, lang)
 
     await supabase.from('website_leads').insert({
       first_name: firstName, last_name: lastName, email, phone, city: city || null,
@@ -130,7 +132,7 @@ Deno.serve(async (req) => {
       <p style="margin:0"><a href="${offerUrl}" style="color:${C.brand};font-weight:bold">${t.view} &rarr;</a> &nbsp;&nbsp; <a href="${pdfUrl}" style="color:${C.brand};font-weight:bold">${t.pdf} &rarr;</a></p>
     </td></tr></table>
   </td></tr>
-  <tr><td style="padding:26px 28px 8px;text-align:center;font-size:15px;line-height:1.7"><p style="margin:0 0 16px">${t.ctaText}</p>${btn(BOOKING_URL, t.cta, C.brand)}</td></tr>
+  <tr><td style="padding:26px 28px 8px;text-align:center;font-size:15px;line-height:1.7"><p style="margin:0 0 16px">${t.ctaText}</p>${btn(bookingUrl, t.cta, C.brand)}</td></tr>
   <tr><td style="padding:24px 28px 28px;font-size:13px;line-height:1.7;color:${C.muted}">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid ${C.border}"><tr><td style="padding-top:18px">
       <p style="margin:0 0 4px;font-size:16px;font-weight:bold;color:${C.ink}">Gennaro Caglione</p>
