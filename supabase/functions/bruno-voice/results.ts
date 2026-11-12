@@ -1,5 +1,6 @@
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { ECONOMIC_TEXT_MODEL } from '../_shared/ai-models.ts';
+import { scheduleFromCall } from '../_shared/next-activity.ts';
 import { recordingAddress, spokenTranscript } from './results-domain.ts';
 
 type Provider = (path: string, method?: string, body?: unknown) => Promise<any>;
@@ -96,6 +97,7 @@ export async function processResults(db: SupabaseClient, callId: string, token: 
     if (call.transcript_status === 'ready' && call.summary_status !== 'ready') {
       const summary = await summarize(call.transcript);
       check(await db.from('bruno_voice_calls').update({ summary, summary_status: 'ready' }).eq('id',callId)); call.summary_status = 'ready';
+      if (call.lead_id) { const k = Deno.env.get('LOVABLE_API_KEY'); if (k) await scheduleFromCall(db, call.lead_id, summary, { apiKey: k, model: ECONOMIC_TEXT_MODEL }).catch(() => null); }
     }
     const done = call.transcript_status === 'ready' && call.summary_status === 'ready' && ['ready','unavailable'].includes(call.recording_status);
     if (!done && job.attempts >= 24) {

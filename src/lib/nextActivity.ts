@@ -54,3 +54,23 @@ hour tra 9 e 18 ora italiana. notes: istruzione breve e concreta in italiano per
 export const NEXT_ACTIVITY_SCHEMA = { name: 'next_activity', strict: true, schema: { type: 'object', additionalProperties: false, required: ['action', 'working_days', 'hour', 'explicit_date', 'notes'], properties: {
   action: { type: 'string', enum: ['chiamata', 'whatsapp', 'email', 'offerta', 'nessuna'] }, working_days: { type: 'integer', minimum: 0, maximum: 30 }, hour: { type: 'integer', minimum: 9, maximum: 18 },
   explicit_date: { type: ['string', 'null'] }, notes: { type: 'string', maxLength: 200 } } } };
+
+const LABELS: Record<string, string> = { chiamata: 'chiamata', whatsapp: 'whatsapp', email: 'email', offerta: 'offerta' };
+type Db = { from: (table: string) => any };
+// Best effort: a failure never blocks the call results pipeline; the outcome is only a CRM reminder.
+export async function scheduleFromCall(db: Db, leadId: string, summary: string, opts: { apiKey: string; model: string; now?: Date }) {
+  const now = opts.now ?? new Date();
+  const lead = await db.from('leads').select('next_activity_date,next_activity_notes,status,archived').eq('id', leadId).maybeSingle();
+  if (lead.error || !lead.data || lead.data.archived || ['vinto', 'perso'].includes(lead.data.status) || !brunoMayReplace(lead.data, now)) return { skipped: true };
+  const res = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', { method: 'POST', signal: AbortSignal.timeout(20000),
+    headers: { Authorization: `Bearer ${opts.apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: opts.model, max_tokens: 300, response_format: { type: 'json_schema', json_schema: NEXT_ACTIVITY_SCHEMA },
+      messages: [{ role: 'system', content: `${NEXT_ACTIVITY_PROMPT}\nOggi (ora italiana): ${new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', dateStyle: 'full', timeStyle: 'short' }).format(now)}` }, { role: 'user', content: summary.slice(0, 6000) }] }) });
+  if (!res.ok) return { error: `next_activity_${res.status}` };
+  let choice: NextActivityChoice;
+  try { choice = JSON.parse((await res.json()).choices?.[0]?.message?.content ?? ''); } catch { return { error: 'next_activity_invalid' }; }
+  const due = nextActivityDue(choice, now);
+  if (!due || !LABELS[choice.action]) return { none: true };
+  const saved = await db.from('leads').update({ next_activity_type: LABELS[choice.action], next_activity_date: due.toISOString(), next_activity_notes: `${BRUNO_ACTIVITY_PREFIX}${String(choice.notes || '').slice(0, 200)}` }).eq('id', leadId);
+  return saved.error ? { error: 'next_activity_save' } : { scheduled: due.toISOString(), action: choice.action };
+}
