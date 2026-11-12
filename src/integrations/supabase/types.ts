@@ -603,6 +603,7 @@ export type Database = {
         Row: {
           call_at: string | null
           call_id: string | null
+          channel_choice: string | null
           created_at: string
           form_type: string | null
           id: string
@@ -621,6 +622,7 @@ export type Database = {
         Insert: {
           call_at?: string | null
           call_id?: string | null
+          channel_choice?: string | null
           created_at?: string
           form_type?: string | null
           id?: string
@@ -639,6 +641,7 @@ export type Database = {
         Update: {
           call_at?: string | null
           call_id?: string | null
+          channel_choice?: string | null
           created_at?: string
           form_type?: string | null
           id?: string
@@ -4547,6 +4550,7 @@ export type Database = {
         Returns: {
           call_at: string | null
           call_id: string | null
+          channel_choice: string | null
           created_at: string
           form_type: string | null
           id: string

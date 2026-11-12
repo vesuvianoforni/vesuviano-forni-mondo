@@ -1,19 +1,25 @@
-// New-lead welcome (owner decision): Bruno introduces himself on WhatsApp from the customer's country line,
-// announces the call time and offers to continue on WhatsApp; Bruno UK then calls once at that time unless the
-// customer replied, the lead is paused or the switch is off. Every step is claimed before it runs and never repeated.
-import { lineFor } from '../_shared/bruno/whatsapp-lines.ts';
+// New-lead welcome (owner decision): within minutes Bruno writes on WhatsApp from the UK line, in the customer's
+// language, announcing that he will call in 15-20 minutes (next working day outside 9:30-19:30) to collect what
+// is needed for a quote, or that they can continue on WhatsApp instead. Bruno then calls once at that time unless
+// the customer chose WhatsApp (handled by _shared/bruno/welcome-chat.ts), the lead is paused or the switch is off.
+// Every step is claimed before it runs and never repeated.
 import { sendUkApproved, renderTemplate } from '../_shared/bruno/uk-whatsapp.ts';
-import { sendWhatsApp } from '../_shared/bruno/meta-whatsapp.ts';
-import { welcomeCallAt, welcomeLabels } from './welcome-schedule.ts';
-import { callAllowed, e164, timezoneFromPhone } from './domain.ts';
+import { welcomeCallAt, welcomeWhen, WELCOME_LANGUAGES, type WelcomeLanguage } from './welcome-schedule.ts';
+import { callAllowed, e164, timezoneFromPhone, inboundLanguage } from './domain.ts';
 
-export const WELCOME_TEMPLATE = 'bruno_welcome_call';
-export const WELCOME_BODIES = {
-  en: "Hi {{1}}, I'm Bruno from Vesuviano Forni, thank you for your request about our pizza ovens. I will call you {{2}} at {{3}} to understand your needs and share all the details. If you prefer, we can continue here on WhatsApp instead of a call: just reply to this message.",
-  it: 'Ciao {{1}}, sono Bruno di Vesuviano Forni, grazie per la tua richiesta sui nostri forni per pizza. Ti chiamerò {{2}} alle {{3}} per capire le tue esigenze e darti tutti i dettagli. Se preferisci, possiamo proseguire qui su WhatsApp invece della chiamata: rispondi pure a questo messaggio.',
-} as const;
-const EXAMPLES = { en: ['Marco', 'today', '11:30'], it: ['Marco', 'oggi', '11:30'] };
-const GRAPH = 'https://graph.facebook.com/v21.0';
+export const WELCOME_TEMPLATE = 'bruno_welcome_call_v2';
+export const WELCOME_BODIES: Record<WelcomeLanguage, string> = {
+  en: "Hi {{1}}, I'm Bruno from Vesuviano Forni, thank you for your pizza oven request. I will call you {{2}} to collect the details we need to prepare your quote. If you prefer, we can continue here on WhatsApp instead of a call: just reply to this message.",
+  it: 'Ciao {{1}}, sono Bruno di Vesuviano Forni, grazie per la tua richiesta sui nostri forni per pizza. Ti chiamerò {{2}} per raccogliere le informazioni utili a prepararti un preventivo. Se preferisci, possiamo proseguire qui su WhatsApp invece della chiamata: rispondi pure a questo messaggio.',
+  fr: "Bonjour {{1}}, je suis Bruno de Vesuviano Forni, merci pour votre demande de four à pizza. Je vous appellerai {{2}} pour recueillir les informations nécessaires à votre devis. Si vous préférez, nous pouvons continuer ici sur WhatsApp au lieu d'un appel : il suffit de répondre à ce message.",
+  de: 'Hallo {{1}}, hier ist Bruno von Vesuviano Forni, danke für Ihre Anfrage zu unseren Pizzaöfen. Ich rufe Sie {{2}} an, um die Informationen für Ihr Angebot zu sammeln. Wenn Sie möchten, können wir stattdessen hier auf WhatsApp weitermachen: Antworten Sie einfach auf diese Nachricht.',
+  es: 'Hola {{1}}, soy Bruno de Vesuviano Forni, gracias por su solicitud sobre nuestros hornos para pizza. Le llamaré {{2}} para recoger la información necesaria para preparar su presupuesto. Si lo prefiere, podemos seguir aquí por WhatsApp en lugar de llamar: basta con responder a este mensaje.',
+};
+const EXAMPLES: Record<WelcomeLanguage, string[]> = {
+  en: ['Marco', 'in about 15-20 minutes (around 11:30)'], it: ['Marco', 'tra circa 15-20 minuti (verso le 11:30)'],
+  fr: ['Marco', 'dans environ 15-20 minutes (vers 11:30)'], de: ['Marco', 'in etwa 15-20 Minuten (gegen 11:30 Uhr)'], es: ['Marco', 'en unos 15-20 minutos (hacia las 11:30)'],
+};
+const FALLBACK_NAME: Record<WelcomeLanguage, string> = { en: 'there', it: 'cliente', fr: 'Madame, Monsieur', de: 'zusammen', es: 'cliente' };
 const UK_GATEWAY = 'https://connector-gateway.lovable.dev/whatsapp';
 
 function ukHeaders() {
@@ -21,36 +27,31 @@ function ukHeaders() {
   if (!lovable || !connection) throw new Error('WhatsApp Bruno UK non collegato');
   return { Authorization: `Bearer ${lovable}`, 'X-Connection-Api-Key': connection, 'Content-Type': 'application/json' };
 }
-function itCreds() {
-  const token = Deno.env.get('META_WHATSAPP_ACCESS_TOKEN'), wabaId = Deno.env.get('META_WHATSAPP_WABA_ID');
-  if (!token || !wabaId) throw new Error('WhatsApp Bruno IT non configurato');
-  return { token, wabaId };
-}
-const templatePayload = (language: 'it' | 'en') => ({ name: WELCOME_TEMPLATE, language, category: 'UTILITY',
+const templatePayload = (language: WelcomeLanguage) => ({ name: WELCOME_TEMPLATE, language, category: 'UTILITY',
   components: [{ type: 'BODY', text: WELCOME_BODIES[language], example: { body_text: [EXAMPLES[language]] } }] });
 
-// Returns the template status on that line, creating it once when it does not exist yet.
-async function ensureTemplate(line: 'uk' | 'it', language: 'it' | 'en'): Promise<string> {
-  if (line === 'uk') {
-    const r = await fetch(`${UK_GATEWAY}/message_templates?name=${WELCOME_TEMPLATE}&fields=name,status,language&limit=50`, { headers: ukHeaders(), signal: AbortSignal.timeout(15000) });
-    const t = await r.text(); if (!r.ok) throw new Error(`WhatsApp UK [${r.status}]: ${t.slice(0, 300)}`);
-    const found = (JSON.parse(t).data ?? []).find((x: any) => x.name === WELCOME_TEMPLATE && x.language === language);
-    if (found) return found.status;
-    const c = await fetch(`${UK_GATEWAY}/message_templates`, { method: 'POST', headers: ukHeaders(), body: JSON.stringify(templatePayload(language)), signal: AbortSignal.timeout(15000) });
-    const ct = await c.text(); if (!c.ok) throw new Error(`Template UK [${c.status}]: ${ct.slice(0, 300)}`);
-    return JSON.parse(ct).status ?? 'PENDING';
-  }
-  const { token, wabaId } = itCreds();
-  const r = await fetch(`${GRAPH}/${wabaId}/message_templates?name=${WELCOME_TEMPLATE}&fields=name,status,language&limit=50`, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(15000) });
-  const t = await r.text(); if (!r.ok) throw new Error(`Meta [${r.status}]: ${t.slice(0, 300)}`);
+// Returns the template status on the UK line, creating it once when it does not exist yet.
+async function ensureTemplate(language: WelcomeLanguage): Promise<string> {
+  const r = await fetch(`${UK_GATEWAY}/message_templates?name=${WELCOME_TEMPLATE}&fields=name,status,language&limit=50`, { headers: ukHeaders(), signal: AbortSignal.timeout(15000) });
+  const t = await r.text(); if (!r.ok) throw new Error(`WhatsApp UK [${r.status}]: ${t.slice(0, 300)}`);
   const found = (JSON.parse(t).data ?? []).find((x: any) => x.name === WELCOME_TEMPLATE && x.language === language);
   if (found) return found.status;
-  const c = await fetch(`${GRAPH}/${wabaId}/message_templates`, { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(templatePayload(language)), signal: AbortSignal.timeout(15000) });
-  const ct = await c.text(); if (!c.ok) throw new Error(`Template IT [${c.status}]: ${ct.slice(0, 300)}`);
+  const c = await fetch(`${UK_GATEWAY}/message_templates`, { method: 'POST', headers: ukHeaders(), body: JSON.stringify(templatePayload(language)), signal: AbortSignal.timeout(15000) });
+  const ct = await c.text(); if (!c.ok) throw new Error(`Template UK [${c.status}]: ${ct.slice(0, 300)}`);
   return JSON.parse(ct).status ?? 'PENDING';
+}
+// Creates the five language versions up front so Meta reviews them all at once.
+export async function ensureWelcomeTemplates() {
+  const out: Record<string, string> = {};
+  for (const l of WELCOME_LANGUAGES) out[l] = await ensureTemplate(l).catch(e => `errore: ${e instanceof Error ? e.message.slice(0, 120) : ''}`);
+  return out;
 }
 
 function checked<T>(r: { data: T; error: { message: string } | null }): T { if (r.error) throw new Error(r.error.message); return r.data; }
+export function welcomeLanguage(jobLanguage: string | null | undefined, phone: string): WelcomeLanguage {
+  const l = String(jobLanguage || '').slice(0, 2).toLowerCase();
+  return (WELCOME_LANGUAGES as string[]).includes(l) ? l as WelcomeLanguage : inboundLanguage(phone).code;
+}
 
 // deno-lint-ignore no-explicit-any
 export async function welcomeTick(admin: any, settings: any, jobId: string, token: string, dial: (call: any, lead: any, approver: string) => Promise<unknown>) {
@@ -64,55 +65,40 @@ export async function welcomeTick(admin: any, settings: any, jobId: string, toke
     let phone: string; try { phone = e164(lead.phone || ''); } catch { await finish({ status: 'skipped', reason: 'Telefono senza prefisso internazionale' }); return { skipped: 'phone' }; }
     const zone = timezoneFromPhone(phone) ?? 'Europe/Rome';
     const blocked = lead.archived || lead.status === 'perso' || lead.bruno_mode === 'off' || lead.bruno_mode === 'paused' || (lead.bruno_paused_until && new Date(lead.bruno_paused_until) > new Date());
-    const ukLine = lineFor(phone)?.key === 'uk';
+    const language = welcomeLanguage(job.language, phone);
 
     if (job.status === 'pending' || job.status === 'waiting_template') {
       if (blocked) { await finish({ status: 'skipped', reason: 'Cliente archiviato o Bruno in pausa' }); return { skipped: 'paused' }; }
       if (Date.now() - new Date(job.created_at).getTime() > 24 * 3600000) { await finish({ status: 'skipped', reason: 'Modello WhatsApp non approvato entro 24 ore' }); return { skipped: 'stale' }; }
-      const language: 'it' | 'en' = ukLine ? 'en' : (job.language === 'it' || (!job.language && phone.startsWith('+39')) ? 'it' : 'en');
-      const line: 'uk' | 'it' = ukLine ? 'uk' : 'it';
-      const status = await ensureTemplate(line, language);
-      if (status !== 'APPROVED') { await finish({ status: 'waiting_template', whatsapp_line: line, language, reason: `Modello WhatsApp in revisione Meta (${status})` }); return { waiting: status }; }
+      const status = await ensureTemplate(language);
+      if (status !== 'APPROVED') { await finish({ status: 'waiting_template', whatsapp_line: 'uk', language, reason: `Modello WhatsApp in revisione Meta (${status})` }); return { waiting: status }; }
       const now = new Date();
       let callAt = welcomeCallAt(new Date(job.created_at));
-      if (callAt.getTime() < now.getTime() + 20 * 60000) callAt = welcomeCallAt(now);
-      const labels = welcomeLabels(callAt, now, zone, language);
-      const name = (lead.contact_name || '').trim().split(/\s+/)[0] || (language === 'it' ? 'cliente' : 'there');
-      const params = [name, labels.day, labels.time];
+      if (callAt.getTime() < now.getTime() + 12 * 60000) callAt = welcomeCallAt(now);
+      const name = (lead.contact_name || '').trim().split(/\s+/)[0] || FALLBACK_NAME[language];
+      const params = [name, welcomeWhen(callAt, now, zone, language)];
       const body = renderTemplate(WELCOME_BODIES[language], params);
       // Reserve the step before submitting: an uncertain send is never repeated.
-      checked(await admin.from('bruno_welcome_jobs').update({ status: 'sent', whatsapp_line: line, language, call_at: callAt.toISOString(), sent_at: now.toISOString(), reason: null }).eq('id', job.id));
-      const template = { name: WELCOME_TEMPLATE, language, params };
-      if (line === 'uk') {
-        const r: any = await sendUkApproved(admin, { lead_id: lead.id, body, ai_generated: true, idempotency_key: job.message_id, template }, phone.slice(1), sw.updated_by);
-        if (r?.error || r?.message?.status === 'failed') { await finish({ status: 'failed', reason: r?.error || r?.message?.error || 'Invio WhatsApp non riuscito' }); return { failed: true }; }
-      } else {
-        const claim = await admin.from('crm_messages').insert({ id: job.message_id, lead_id: lead.id, channel: 'whatsapp_api', direction: 'outbound', sender: 'bruno', body, status: 'queued', ai_generated: true, created_by: sw.updated_by, metadata: { whatsapp_line: 'it', template: WELCOME_TEMPLATE, submission_status: 'sending' } }).select('id').single();
-        if (claim.error) { await finish({ status: 'failed', reason: 'Invio già registrato: verifica lo storico' }); return { failed: true }; }
-        let externalId: string | null = null, error: string | null = null;
-        try { externalId = await sendWhatsApp(phone.slice(1), { template }, 'it'); } catch (e) { error = e instanceof Error ? e.message.slice(0, 300) : 'Esito invio incerto'; }
-        checked(await admin.from('crm_messages').update({ status: externalId ? 'sent' : 'failed', external_id: externalId, error, metadata: { whatsapp_line: 'it', template: WELCOME_TEMPLATE, submission_status: externalId ? 'accepted' : 'unknown' } }).eq('id', job.message_id));
-        if (!externalId) { await finish({ status: 'failed', reason: error }); return { failed: true }; }
-      }
-      if (!ukLine) {
-        // Bruno's voice line speaks English from the UK number: the team makes the announced call.
-        if (!lead.next_activity_date) checked(await admin.from('leads').update({ next_activity_type: 'chiamata', next_activity_date: callAt.toISOString(), next_activity_notes: 'Chiamata di benvenuto annunciata da Bruno su WhatsApp' }).eq('id', lead.id));
-        await finish({ status: 'done' }); return { sent: true, team_call: true };
-      }
+      checked(await admin.from('bruno_welcome_jobs').update({ status: 'sent', whatsapp_line: 'uk', language, call_at: callAt.toISOString(), sent_at: now.toISOString(), reason: null }).eq('id', job.id));
+      const r: any = await sendUkApproved(admin, { lead_id: lead.id, body, ai_generated: true, idempotency_key: job.message_id, template: { name: WELCOME_TEMPLATE, language, params } }, phone.slice(1), sw.updated_by);
+      if (r?.error || r?.message?.status === 'failed') { await finish({ status: 'failed', reason: r?.error || r?.message?.error || 'Invio WhatsApp non riuscito' }); return { failed: true }; }
       await finish({}); return { sent: true, call_at: callAt.toISOString() };
     }
 
-    // status === 'sent': the announced call is due.
-    const replied = checked(await admin.from('crm_messages').select('id').eq('lead_id', lead.id).eq('direction', 'inbound').gt('created_at', job.sent_at).limit(1)) as any[];
-    if (replied?.length) { await finish({ status: 'skipped', reason: 'Il cliente ha risposto: si prosegue in chat' }); return { skipped: 'replied' }; }
+    // status === 'sent': the announced call is due. The chat handler records the customer's choice.
+    if (job.channel_choice === 'whatsapp' || job.channel_choice === 'stop') { await finish({ status: 'skipped', reason: job.channel_choice === 'stop' ? 'Il cliente non è interessato' : 'Il cliente preferisce WhatsApp: Bruno qualifica in chat' }); return { skipped: 'chat' }; }
+    if (job.channel_choice !== 'call') {
+      const replied = checked(await admin.from('crm_messages').select('id').eq('lead_id', lead.id).eq('direction', 'inbound').gt('created_at', job.sent_at).limit(1)) as any[];
+      if (replied?.length) { await finish({ status: 'skipped', reason: 'Il cliente ha risposto: si prosegue in chat' }); return { skipped: 'replied' }; }
+    }
     const earlier = checked(await admin.from('bruno_voice_calls').select('id').eq('lead_id', lead.id).gte('created_at', job.created_at).limit(1)) as any[];
     if (earlier?.length) { await finish({ status: 'skipped', reason: 'Cliente già chiamato' }); return { skipped: 'called' }; }
     const why = callAllowed(lead, zone, new Date(), 'autonomous');
     if (why) { await finish({ status: 'skipped', reason: why }); return { skipped: why }; }
     if (!settings.assistant_id || !settings.application_id) { await finish({ status: 'failed', reason: 'Assistente telefonico non configurato' }); return { failed: true }; }
-    const call: any = checked(await admin.from('bruno_voice_calls').insert({ lead_id: lead.id, call_type: 'qualifica', customer_timezone: zone, requested_by: sw.updated_by, destination: phone,
-      objective: 'Welcome call announced on WhatsApp: introduce Vesuviano Forni, understand the customer needs (business type, oven type, fuel, timing, budget) and qualify the lead.',
-      instructions: 'The customer received a WhatsApp from Bruno announcing this call. If they prefer WhatsApp, agree and end politely.', expires_at: new Date(Date.now() + 3600000).toISOString() }).select('*').single());
+    const call: any = checked(await admin.from('bruno_voice_calls').insert({ lead_id: lead.id, call_type: 'qualifica', customer_timezone: zone, requested_by: sw.updated_by, destination: phone, language,
+      objective: 'Welcome call announced on WhatsApp: collect the information needed to prepare a quote (home or professional use, business type, fuel, size, finish, delivery place and access, timing) and qualify the lead.',
+      instructions: 'The customer received a WhatsApp from Bruno announcing this call to collect the details for a quote. If they prefer WhatsApp, agree and end politely.', expires_at: new Date(Date.now() + 3600000).toISOString() }).select('*').single());
     // Move out of 'sent' before dialing so the call can never be placed twice.
     checked(await admin.from('bruno_welcome_jobs').update({ status: 'called', call_id: call.id, lease_until: null }).eq('id', job.id).eq('status', 'sent'));
     try { await dial(call, lead, sw.updated_by); } catch { /* dial() stores failed/unknown; never redialed */ }

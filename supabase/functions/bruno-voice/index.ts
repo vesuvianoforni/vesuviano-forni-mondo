@@ -1,10 +1,10 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
-import { assistantConfig, callAllowed, timezoneFromPhone, e164, FROM_NUMBER, nextCallStatus, callOutcomeCode, Proposal, PlanProposal, planNextStep, isHoursBlock, AnyToolRequest, verifyTelnyx, voiceTools, inboundLanguage, INBOUND_HANDOVER_POLICY, InboundVariables, inboundAssistantConfig, inboundExtraTools, inboundRoutingTexml, DEFAULT_TRANSFER_NUMBER } from './domain.ts';
+import { outboundLanguage, assistantConfig, callAllowed, timezoneFromPhone, e164, FROM_NUMBER, nextCallStatus, callOutcomeCode, Proposal, PlanProposal, planNextStep, isHoursBlock, AnyToolRequest, verifyTelnyx, voiceTools, inboundLanguage, INBOUND_HANDOVER_POLICY, InboundVariables, inboundAssistantConfig, inboundExtraTools, inboundRoutingTexml, DEFAULT_TRANSFER_NUMBER } from './domain.ts';
 import { AnalyzedEvent, analyzedMatches, RecordingCallback, spokenTranscript } from './results-domain.ts';
 import { processResults, queueResults } from './results.ts';
-import { welcomeTick } from './welcome.ts';
+import { welcomeTick, ensureWelcomeTemplates } from './welcome.ts';
 import { receiveForwardedCall, updateForwardedCall } from './inbound-history.ts';
 
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
@@ -53,7 +53,7 @@ async function dial(admin: any, settings: any, url: string, call: any, lead: any
     const callback = `${url}/functions/v1/bruno-voice?callback=1&call_id=${call.id}`;
     const result = await telnyx(`/texml/ai_calls/${settings.application_id}`, 'POST', {
       From: FROM_NUMBER, To: call.destination, AIAssistantId: settings.assistant_id,
-      AIAssistantDynamicVariables: { vesuviano_call_id: call.id, call_objective: call.objective, call_type: call.call_type, call_instructions: call.instructions || 'none', customer_context: JSON.stringify({ ...lead, messages: recent.map((m: any) => ({ ...m, body: m.body.slice(0, 800) })) }) },
+      AIAssistantDynamicVariables: { call_language: outboundLanguage(call.language).name, call_greeting: outboundLanguage(call.language).greeting, vesuviano_call_id: call.id, call_objective: call.objective, call_type: call.call_type, call_instructions: call.instructions || 'none', customer_context: JSON.stringify({ ...lead, messages: recent.map((m: any) => ({ ...m, body: m.body.slice(0, 800) })) }) },
       StatusCallback: callback, StatusCallbackMethod: 'POST', StatusCallbackEvent: 'initiated ringing answered completed no-answer busy canceled failed analyzed',
       Record: true, RecordingChannels: 'dual', RecordingTrack: 'both', SendRecordingUrl: true,
       RecordingStatusCallback: `${url}/functions/v1/bruno-voice?recording=1&call_id=${call.id}`, RecordingStatusCallbackMethod: 'POST', RecordingStatusCallbackEvent: 'completed absent',
@@ -61,7 +61,7 @@ async function dial(admin: any, settings: any, url: string, call: any, lead: any
     });
     const providerId = result.call_sid ?? result.data?.call_sid;
     checked(await admin.from('bruno_voice_calls').update({ status: providerId ? 'dialing' : 'unknown', provider_call_id: providerId ?? null }).eq('id', call.id).eq('status', 'starting'));
-    return { call_id: call.id, status: providerId ? 'dialing' : 'unknown', from_number: FROM_NUMBER, language: 'en' };
+    return { call_id: call.id, status: providerId ? 'dialing' : 'unknown', from_number: FROM_NUMBER, language: call.language || 'en' };
   } catch (error) {
     // Never automatically retry a submission that may already have reached the carrier.
     checked(await admin.from('bruno_voice_calls').update({ status: error instanceof ProviderError && error.status < 500 ? 'failed' : 'unknown', error_code: error instanceof ProviderError ? `telnyx_${error.status}` : 'submission_uncertain' }).eq('id', call.id).eq('status', 'starting'));
@@ -380,7 +380,8 @@ Deno.serve(async req => {
       if (voice?.call_forwarding?.call_forwarding_enabled) await telnyx(`/phone_numbers/${owned.id}/voice`, 'PATCH', { call_forwarding: { call_forwarding_enabled: false, forwards_to: null, forwarding_type: null } });
       if (owned.connection_id !== applicationId) await telnyx(`/phone_numbers/${owned.id}`, 'PATCH', { connection_id: applicationId });
       checked(await admin.from('bruno_voice_settings').update({ inbound_assistant_id: inboundId, inbound_configured_at: new Date().toISOString() }).eq('key', 'default'));
-      return json({ configured: true, inbound: true, inbound_mode: settings.inbound_mode, inbound_forward_number: settings.inbound_mode === 'forward' ? settings.inbound_forward_number : null, from_number: FROM_NUMBER, transfer_number: transferNumber, language: 'en' });
+      const welcome_templates = await ensureWelcomeTemplates();
+      return json({ welcome_templates, configured: true, inbound: true, inbound_mode: settings.inbound_mode, inbound_forward_number: settings.inbound_mode === 'forward' ? settings.inbound_forward_number : null, from_number: FROM_NUMBER, transfer_number: transferNumber, language: 'en' });
     }
     if (input.action === 'plan_propose') {
       const leads = checked(await admin.from('leads').select('id,contact_name,company_name,phone,archived,status').in('id', input.lead_ids)) ?? [];

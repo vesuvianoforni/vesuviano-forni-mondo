@@ -1,0 +1,1 @@
+ALTER TABLE public.bruno_welcome_jobs ADD COLUMN IF NOT EXISTS channel_choice text CHECK (channel_choice IN ('call','whatsapp','stop','team'));
