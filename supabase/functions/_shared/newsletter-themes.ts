@@ -46,7 +46,7 @@ export function themeLabel(theme: EditorialTheme, language: string) {
   return theme.labels[language as EditorialLanguage] || theme.labels.it;
 }
 export function nextEditorialTheme(theme: EditorialTheme): EditorialTheme {
-  return NEWSLETTER_THEMES[(NEWSLETTER_THEMES.indexOf(theme) + 1) % NEWSLETTER_THEMES.length];
+  return NEWSLETTER_THEMES[(NEWSLETTER_THEMES.indexOf(theme) + 1) % NEWSLETTER_THEMES.length] ?? NEWSLETTER_THEMES[0];
 }
 
 function dateValue(raw: string): number | null {
@@ -60,7 +60,7 @@ export function weeklyEditorialTheme(periodKey: string): EditorialTheme | null {
   const value = dateValue(periodKey.slice(5));
   const start = Date.parse(`${EDITORIAL_START}T00:00:00Z`);
   if (value === null || value < start || (value - start) % WEEK_MS !== 0) return null;
-  return NEWSLETTER_THEMES[((value - start) / WEEK_MS) % NEWSLETTER_THEMES.length];
+  return NEWSLETTER_THEMES[((value - start) / WEEK_MS) % NEWSLETTER_THEMES.length] ?? null;
 }
 
 export function editorialCalendar(now: Date) {
@@ -70,7 +70,7 @@ export function editorialCalendar(now: Date) {
   const currentWeek = Math.max(0, Math.floor(((today ?? start) - start) / WEEK_MS));
   return Array.from({ length: 4 }, (_, offset) => {
     const date = new Date(start + (currentWeek + offset) * WEEK_MS).toISOString().slice(0, 10);
-    return { date, theme: NEWSLETTER_THEMES[(currentWeek + offset) % NEWSLETTER_THEMES.length] };
+    return { date, theme: NEWSLETTER_THEMES[(currentWeek + offset) % NEWSLETTER_THEMES.length] ?? NEWSLETTER_THEMES[0] };
   });
 }
 
@@ -83,5 +83,5 @@ export function themedSubject(subject: string, theme: EditorialTheme, language: 
 
 export function editorialTeaser(theme: EditorialTheme, language: string) {
   const labels: Record<string, string> = { it: 'Prossima rubrica', en: 'Next in the series', fr: 'Prochaine rubrique', de: 'Nächste Rubrik', es: 'Próxima sección' };
-  return `${labels[language] || labels.it}: ${themeLabel(nextEditorialTheme(theme), language)}.`;
+  return `${labels[language] || labels['it']}: ${themeLabel(nextEditorialTheme(theme), language)}.`;
 }
