@@ -1,3 +1,5 @@
+import { weeklyEditorialTheme } from './newsletter-themes.ts';
+
 export const OCCASIONS: Record<string, string> = {
   pizza: 'Giornata mondiale della pizza (17 gennaio): valorizzare mestiere del pizzaiolo e qualità della cottura, senza inventare eventi o promozioni.',
   spring: 'Preparazione alla stagione primaverile: pianificazione del lavoro e rinnovo delle attrezzature, senza supporre che il cliente debba sostituire il forno.',
@@ -50,6 +52,7 @@ export function scheduledBrief(periodKey: string, today: string, past: string[])
   const code = periodKey.startsWith('occasion-') ? periodKey.split('-').slice(2).join('-') : '';
   const occasion = OCCASIONS[code];
   if (periodKey.startsWith('occasion-') && !occasion) throw new Error('Occasione non riconosciuta');
-  return `Oggi è ${today}. ${occasion ? `Prepara una bozza aggiuntiva per questa occasione: ${occasion}` : 'Prepara la newsletter settimanale di notizie del settore food, pizzeria e ristorazione. Riassumi 2–4 notizie utili dalle fonti degli ultimi 7 giorni fornite, con brevi titoli e implicazioni pratiche. Indica il mercato a cui una notizia si riferisce senza renderla universale. Non inventare notizie, statistiche, date, citazioni, norme o fonti; non ricopiare articoli. Usa soltanto gli identificativi delle fonti effettivamente riassunte.'}
-Non inserire prezzi: questa è una proposta automatica, non una richiesta esplicita del titolare. Evita i temi recenti: ${JSON.stringify(past)}. Usa foto, modelli, articoli e video reali. Non inviare ai clienti.`;
+  const theme = weeklyEditorialTheme(periodKey);
+  return `Oggi è ${today}. ${occasion ? `Prepara una bozza aggiuntiva per questa occasione: ${occasion}` : `Prepara la newsletter settimanale di notizie del settore food, pizzeria e ristorazione.${theme ? ` Rubrica di questa settimana: ${theme.labels.it}. Ambito obbligatorio: ${theme.scope}` : ''} Riassumi 2–4 notizie utili dalle fonti degli ultimi 7 giorni fornite, con brevi titoli e implicazioni pratiche. Indica il mercato a cui una notizia si riferisce senza renderla universale. Non inventare notizie, statistiche, date, citazioni, norme o fonti; non ricopiare articoli. Usa soltanto gli identificativi delle fonti effettivamente riassunte.`}
+Non inserire prezzi: questa è una proposta automatica, non una richiesta esplicita del titolare. ${theme ? 'La rubrica si ripete ogni quattro settimane; evita di ripetere singole notizie e tagli editoriali recenti, senza cambiare la rubrica assegnata.' : 'Evita i temi recenti.'} Campagne recenti: ${JSON.stringify(past)}. ${occasion ? 'Usa foto, modelli, articoli e video reali.' : 'Non inserire foto promozionali.'} Non inviare ai clienti.`;
 }

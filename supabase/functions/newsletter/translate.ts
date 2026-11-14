@@ -7,6 +7,7 @@ import { createLovableAiGatewayRunIdFetch, getLovableAiGatewayRunId } from './ai
 import { LANGUAGES, contentSource, translationOriginal, sameNewsReferences, type LocalizedCampaign, type Version, type Language } from './localization.ts';
 import { loadCatalog } from './catalog.ts';
 import { containsPrices, enforcePricePolicy } from './policy.ts';
+import { editorialTheme, themedSubject, themeLabel } from '../_shared/newsletter-themes.ts';
 
 const Item = z.object({ language: z.string(), subject: z.string(), preheader: z.string(), body: z.string(), cta_label: z.string().nullable(), cta_url: z.string().nullable() });
 const Schema = z.object({ versions: z.array(Item) });
@@ -18,6 +19,7 @@ export async function translateCampaign(admin: SupabaseClient, campaign: Localiz
   const key = Deno.env.get('LOVABLE_API_KEY');
   if (!key) throw Object.assign(new Error('Configurazione AI mancante.'), { status: 401 });
   const targets = LANGUAGES.filter((l) => l !== campaign.language && required.includes(l));
+  const theme = editorialTheme(campaign.editorial_theme);
   if (!targets.length) return { translations: {}, translation_source: contentSource(campaign) };
   const catalogs = await Promise.all(targets.map(async (l) => ({ language: l, links: (await loadCatalog(admin, l)).links })));
   const correlation = createLovableAiGatewayRunIdFetch(getLovableAiGatewayRunId(request));
@@ -28,7 +30,7 @@ export async function translateCampaign(admin: SupabaseClient, campaign: Localiz
   const result = streamText({
     model: provider.responses(ECONOMIC_RESPONSES_MODEL), maxRetries: 0, abortSignal: request.signal,
     system: `Traduci fedelmente la newsletter Vesuviano nelle lingue richieste. Se l'originale non contiene prezzi, non aggiungerli mai, nemmeno se compaiono nei link o nel catalogo. Non creare nuove offerte o cambiare prezzi, valuta, numeri, modelli, caratteristiche o condizioni. Non aggiungere sconti o urgenza per una ricorrenza. Traduci oggetto, preheader, testo e pulsante. Conserva paragrafi e tono B2B. Le notizie devono restare le stesse: preserva fatti, date, ambito geografico e riferimenti [N1], [N2] senza inventare notizie locali. Le fonti originali sono aggiunte dal renderer, non ripeterle nel corpo. Non aggiungere informazioni. Per cta_url scegli l'equivalente nella lingua target tra i link forniti; conserva il link originale se non esiste un equivalente. Non scegliere un'altra sezione del sito. Restituisci esattamente una versione per ogni lingua richiesta.`,
-    prompt: JSON.stringify({ original: translationOriginal(campaign), languages: targets, catalogs }),
+    prompt: JSON.stringify({ original: translationOriginal(campaign), languages: targets, catalogs, ...(theme ? { editorial_theme: theme.id, subject_prefixes: targets.map((language) => ({ language, prefix: themeLabel(theme, language) })), rule: 'Il prefisso dell’oggetto identifica la stessa rubrica ricorrente: usa quello indicato nella lingua target. Non aggiungere la rubrica o anticipazioni al corpo.' } : {}) }),
     output: Output.object({ schema: Schema }),
     providerOptions: { openai: { forceReasoning: true, reasoningEffort: 'low', reasoningSummary: 'auto', store: false, include: ['reasoning.encrypted_content'] } },
   });
@@ -47,7 +49,7 @@ export async function translateCampaign(admin: SupabaseClient, campaign: Localiz
       enforcePricePolicy(version, [campaign.subject, campaign.preheader, campaign.body, campaign.cta_label || ''].some(containsPrices));
       const links = catalogs.find((c) => c.language === target)?.links || {};
       const cta = version.cta_url && (Object.values(links).includes(version.cta_url) || version.cta_url === campaign.cta_url) ? version.cta_url : campaign.cta_url;
-      translations[target] = { subject: version.subject, preheader: version.preheader, body: version.body, cta_label: version.cta_label, cta_url: cta };
+      translations[target] = { subject: theme ? themedSubject(version.subject, theme, target) : version.subject, preheader: version.preheader, body: version.body, cta_label: version.cta_label, cta_url: cta };
     }
     return { translations, translation_source: contentSource(campaign) };
   } catch (e: any) {
