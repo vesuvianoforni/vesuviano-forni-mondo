@@ -22,7 +22,7 @@ const ROBERTA: AgentConfig = {
 };
 
 const sections = [
-  { id: 'newsletter', icon: Mail, title: 'Campagne newsletter', desc: 'Notizie food e pizzeria · settimanali', ready: true },
+  { id: 'newsletter', icon: Mail, title: 'Campagne newsletter', desc: '4 rubriche · a rotazione settimanale', ready: true },
   { id: 'social', icon: Share2, title: 'Post social', desc: 'In arrivo', ready: false },
   { id: 'ads', icon: Target, title: 'Campagne Meta / Ads', desc: 'In arrivo', ready: false },
 ];
@@ -51,6 +51,7 @@ export default function ERPRoberta() {
         </div>
         <div className="flex flex-wrap gap-2 text-xs">
           <Badge variant="secondary" className="gap-1"><CalendarClock className="h-3 w-3" />Ogni 7 giorni + occasioni</Badge>
+          <Badge variant="secondary">4 rubriche editoriali</Badge>
           <Badge variant="secondary" className="gap-1"><ShieldCheck className="h-3 w-3" />Invio solo dopo approvazione</Badge>
         </div>
       </div>

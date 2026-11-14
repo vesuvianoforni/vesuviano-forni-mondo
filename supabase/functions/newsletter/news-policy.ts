@@ -1,3 +1,5 @@
+import type { EditorialTheme } from '../_shared/newsletter-themes.ts';
+
 export type NewsSource = { id: string; title: string; url: string; publisher: string; published_at: string; excerpt: string };
 export type NewsReference = Omit<NewsSource, 'excerpt'>;
 export const NEWS_WINDOW_DAYS = 7;
@@ -12,7 +14,7 @@ export function newsPublicationDate(raw: string, now: Date): Date | null {
   return Number.isNaN(value.getTime()) ? null : value;
 }
 
-export function selectNewsSources(rows: { title?: string; url?: string; date?: string; snippet?: string; markdown?: string }[], now = new Date()): NewsSource[] {
+export function selectNewsSources(rows: { title?: string; url?: string; date?: string; snippet?: string; markdown?: string }[], now = new Date(), theme?: EditorialTheme | null): NewsSource[] {
   const seen = new Set<string>();
   const selected: NewsSource[] = [];
   for (const row of rows) {
@@ -26,6 +28,7 @@ export function selectNewsSources(rows: { title?: string; url?: string; date?: s
     const href = url.toString();
     const excerpt = (row.markdown || row.snippet || '').trim();
     if (!row.title?.trim() || !excerpt || seen.has(href)) continue;
+    if (theme && !theme.relevance.test(`${row.title} ${row.snippet || excerpt.slice(0, 500)}`)) continue;
     seen.add(href);
     selected.push({ id: `N${selected.length + 1}`, title: row.title.trim().slice(0, 240), url: href, publisher: url.hostname.replace(/^www\./, ''), published_at: published.toISOString(), excerpt: excerpt.slice(0, 6000) });
     if (selected.length === 6) break;

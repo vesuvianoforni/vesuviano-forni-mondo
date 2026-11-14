@@ -17,6 +17,8 @@ import { Loader2, Plus, Sparkles, Send, FlaskConical, Trash2, Users, Mail } from
 import SEOHead from '@/components/SEOHead';
 import { updateNewsletterPreviewPhotos } from '@/lib/newsletterPreview';
 import NewsletterPhotoPicker from '@/components/NewsletterPhotoPicker';
+import NewsletterEditorialCalendar from '@/components/NewsletterEditorialCalendar';
+import { editorialTheme } from '@/lib/newsletterThemes';
 
 const db = supabase as any;
 const LANGS = [['it', 'Italiano'], ['en', 'Inglese'], ['fr', 'Francese'], ['de', 'Tedesco'], ['es', 'Spagnolo']];
@@ -30,11 +32,13 @@ type Campaign = {
   translations?: Record<string, { subject: string; preheader: string; body: string; cta_label: string | null; cta_url: string | null }> | undefined;
   translation_source?: string | null | undefined;
   news_sources?: { id: string; title: string; url: string; publisher: string; published_at: string }[];
+  editorial_theme?: string | null;
 };
 
 const source = (c: Campaign) => {
   const fields: unknown[] = [c.language, c.subject, c.preheader, c.body, c.cta_label, c.cta_url, c.image_url, c.extra_images || []];
   if (c.news_sources?.length) fields.push(c.news_sources.map((s) => [s.id, s.title, s.url, s.publisher, s.published_at]));
+  if (c.editorial_theme) fields.push(c.editorial_theme);
   return JSON.stringify(fields);
 };
 
@@ -160,24 +164,26 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
       <SEOHead title="Newsletter | ERP" description="Campagne newsletter" />
         <div className="flex flex-wrap items-center justify-between gap-2">
           {!embedded && <div><h1 className="text-2xl font-bold">Newsletter</h1>
-            <p className="text-sm text-muted-foreground">Notizie food e pizzeria · ogni 7 giorni · da approvare</p></div>}
+            <p className="text-sm text-muted-foreground">4 rubriche · ogni 7 giorni · da approvare</p></div>}
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" disabled={!!busy} onClick={() => setAskOpen(true)}><Sparkles className="h-4 w-4 mr-1" />Chiedi a Roberta</Button>
             <Button disabled={!!busy} onClick={create}><Plus className="h-4 w-4 mr-1" />Nuova campagna</Button>
           </div>
         </div>
       {busy === 'translate' && <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" />Roberta sta traducendo la bozza…</p>}
+      <NewsletterEditorialCalendar />
 
       <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
         <Card><CardContent className="p-2 space-y-1 max-h-[75vh] overflow-auto">
           {list.length === 0 && <p className="text-sm text-muted-foreground p-3">Nessuna campagna. Creane una.</p>}
           {list.map((c) => (
-            <button key={c.id} onClick={() => setSel(c)} className={`w-full text-left rounded-md p-3 transition-colors ${sel?.id === c.id ? 'bg-accent' : 'hover:bg-muted'}`}>
+            <Button key={c.id} variant="ghost" onClick={() => setSel(c)} className={`h-auto w-full flex-col items-stretch whitespace-normal rounded-md p-3 text-left ${sel?.id === c.id ? 'bg-accent' : ''}`}>
               <div className="flex items-center justify-between gap-2"><span className="font-medium truncate">{c.title}</span>
                 <Badge variant={c.status === 'sent' ? 'default' : c.status === 'failed' ? 'destructive' : 'secondary'}>{c.author === 'roberta' && c.status === 'draft' ? 'Da approvare' : STATUS[c.status]}</Badge></div>
+              {editorialTheme(c.editorial_theme) && <p className="mt-1 break-words text-xs font-medium text-primary">{editorialTheme(c.editorial_theme)?.labels.it}</p>}
               <p className="text-xs text-muted-foreground mt-1">{new Date(c.sent_at || c.created_at).toLocaleDateString('it-IT')} · {c.language.toUpperCase()}
                 {c.status !== 'draft' && ` · ${c.sent_count}/${c.recipients_count}`}</p>
-            </button>))}
+            </Button>))}
         </CardContent></Card>
 
         {!sel ? <Card><CardContent className="p-10 text-center text-muted-foreground"><Mail className="h-10 w-10 mx-auto mb-3 opacity-40" />Seleziona o crea una campagna</CardContent></Card> : (
@@ -190,7 +196,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
                   <div className="flex flex-wrap gap-2">
                     <Select disabled={!!busy} value={sel.language} onValueChange={(v) => patch({ language: v })}>
                       <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
-                      <SelectContent>{LANGS.map(([v, l]) => <SelectItem key={v} value={(v)!}>{l}</SelectItem>)}</SelectContent></Select>
+                      <SelectContent>{LANGS.map(([v = 'it', l]) => <SelectItem key={v} value={v}>{l}</SelectItem>)}</SelectContent></Select>
                     <Button disabled={!!busy || (sel.prompt || '').length < 3} onClick={() => run('gen', async () => {
                       const { campaign } = await call({ action: 'generate', campaign_id: sel.id, prompt: sel.prompt, language: sel.language });
                       await finishGeneration(campaign);
@@ -202,6 +208,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
               <Card><CardHeader className="pb-2"><CardTitle className="text-base">Contenuto</CardTitle></CardHeader>
                 <CardContent className="space-y-3">
                   {sel.last_error && editable && <p role="alert" className="text-sm text-destructive">{sel.last_error}</p>}
+                  {editorialTheme(sel.editorial_theme) && <div className="border-b pb-3"><Label>Rubrica settimanale</Label><p className="mt-1 text-sm font-semibold text-primary">{editorialTheme(sel.editorial_theme)?.labels.it}</p></div>}
                   <div><Label>Nome interno</Label><Input disabled={!editable} value={sel.title} onChange={(e) => patch({ title: e.target.value })} /></div>
                   <div><Label>Oggetto</Label><Input disabled={!editable} value={sel.subject} onChange={(e) => patch({ subject: e.target.value })} /></div>
                   <div><Label>Anteprima (preheader)</Label><Input disabled={!editable} value={sel.preheader} onChange={(e) => patch({ preheader: e.target.value })} /></div>
@@ -221,8 +228,8 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
 
               <Card><CardHeader className="pb-2"><CardTitle className="text-base flex items-center gap-2"><Users className="h-4 w-4" />Destinatari</CardTitle></CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="flex flex-wrap gap-3">{STAGES.map(([v, l]) => (
-                    <label key={v} className="flex items-center gap-2 text-sm"><Checkbox disabled={!editable} checked={sel.audience.stages.includes(v!)} onCheckedChange={() => toggleStage(v!)} />{l}</label>))}</div>
+                  <div className="flex flex-wrap gap-3">{STAGES.map(([v = 'nuovo', l]) => (
+                    <label key={v} className="flex items-center gap-2 text-sm"><Checkbox disabled={!editable} checked={sel.audience.stages.includes(v)} onCheckedChange={() => toggleStage(v)} />{l}</label>))}</div>
                   <div><Label>Paesi (separati da virgola, vuoto = tutti)</Label>
                     <Input disabled={!editable} value={sel.audience.countries.join(', ')} onChange={(e) => patch({ audience: { ...sel.audience, countries: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) } })}
                       onBlur={() => refreshCount(sel.audience)} placeholder="Es: UK, France" /></div>
@@ -262,8 +269,8 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
                 <span>{(sel.image_url ? 1 : 0) + (sel.extra_images || []).length} foto selezionate</span>
                 {photosUnsaved && <Badge variant="outline">Modifiche non salvate</Badge>}
               </div>
-              <div className="flex flex-wrap gap-1 pt-2">{LANGS.filter(([l]) => l === sel.language || (versionsCurrent && sel.translations?.[l!])).map(([l, name]) => (
-                <Button key={l} variant={viewLanguage === l ? 'secondary' : 'ghost'} size="sm" disabled={!!busy} onClick={() => { setViewLanguage(l!); refreshPreview(sel, l); }}>{name}</Button>
+              <div className="flex flex-wrap gap-1 pt-2">{LANGS.filter(([l = 'it']) => l === sel.language || (versionsCurrent && sel.translations?.[l])).map(([l = 'it', name]) => (
+                <Button key={l} variant={viewLanguage === l ? 'secondary' : 'ghost'} size="sm" disabled={!!busy} onClick={() => { setViewLanguage(l); refreshPreview(sel, l); }}>{name}</Button>
               ))}</div>
               {viewVersion?.subject && <p className="text-sm"><strong>{viewVersion.subject}</strong> <span className="text-muted-foreground">— {viewVersion.preheader}</span></p>}</CardHeader>
               <CardContent>{livePreview ? <iframe title="Anteprima" sandbox="" srcDoc={livePreview} className="w-full h-[75vh] rounded border bg-background" />
@@ -277,7 +284,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
             <div className="space-y-2"><Label htmlFor="roberta-brief">Di cosa vuoi parlare nella newsletter?</Label>
               <Textarea id="roberta-brief" rows={5} maxLength={2000} disabled={!!busy} value={brief} onChange={(e) => setBrief(e.target.value)} placeholder="Es: promuovi il Real Bosco 100 in pronta consegna, con le sue foto e un invito a chiedere informazioni" /></div>
             <div className="space-y-2"><Label>Lingua della bozza</Label><Select value={briefLanguage} disabled={!!busy} onValueChange={setBriefLanguage}>
-              <SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{LANGS.map(([l, name]) => <SelectItem key={l} value={(l)!}>{name}</SelectItem>)}</SelectContent>
+              <SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{LANGS.map(([l = 'it', name]) => <SelectItem key={l} value={l}>{name}</SelectItem>)}</SelectContent>
             </Select></div>
             <label className="flex items-center gap-2 text-sm"><Switch checked={autoTranslate} disabled={!!busy} onCheckedChange={setAutoTranslate} />Prepara anche le traduzioni</label>
           </div>

@@ -1,0 +1,2 @@
+ALTER TABLE public.newsletter_campaigns ADD COLUMN IF NOT EXISTS editorial_theme text CHECK (editorial_theme IS NULL OR editorial_theme IN ('ingredients','technology','management','trends'));
+COMMENT ON COLUMN public.newsletter_campaigns.editorial_theme IS 'Server-selected weekly editorial theme; null for manual campaigns, occasions and pre-cycle drafts.';

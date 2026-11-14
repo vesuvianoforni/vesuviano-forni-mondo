@@ -8,6 +8,7 @@ export type LocalizedCampaign = Version & {
   language: string; image_url: string | null; extra_images?: string[];
   translations?: Partial<Record<Language, Version>>; translation_source?: string | null;
   news_sources?: NewsReference[];
+  editorial_theme?: string | null;
 };
 
 const COUNTRY_LANGUAGE: Record<string, Language> = {
@@ -39,6 +40,7 @@ export function recipientLanguage(phone?: string | null, country?: string | null
 export function contentSource(c: LocalizedCampaign) {
   const fields: unknown[] = [c.language, c.subject, c.preheader, c.body, c.cta_label, c.cta_url, c.image_url, c.extra_images || []];
   if (c.news_sources?.length) fields.push(c.news_sources.map((s) => [s.id, s.title, s.url, s.publisher, s.published_at]));
+  if (c.editorial_theme) fields.push(c.editorial_theme);
   return JSON.stringify(fields);
 }
 

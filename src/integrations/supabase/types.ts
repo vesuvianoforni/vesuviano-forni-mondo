@@ -2297,6 +2297,7 @@ export type Database = {
           created_by: string | null
           cta_label: string | null
           cta_url: string | null
+          editorial_theme: string | null
           extra_images: Json
           failed_count: number
           id: string
@@ -2325,6 +2326,7 @@ export type Database = {
           created_by?: string | null
           cta_label?: string | null
           cta_url?: string | null
+          editorial_theme?: string | null
           extra_images?: Json
           failed_count?: number
           id?: string
@@ -2353,6 +2355,7 @@ export type Database = {
           created_by?: string | null
           cta_label?: string | null
           cta_url?: string | null
+          editorial_theme?: string | null
           extra_images?: Json
           failed_count?: number
           id?: string

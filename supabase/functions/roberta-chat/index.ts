@@ -2,6 +2,7 @@
 import { ECONOMIC_RESPONSES_MODEL } from '../_shared/ai-models.ts';
 import { loadCatalog } from '../_shared/marketing-catalog.ts';
 import { OCCASIONS, requestsPrices, catalogWithoutPrices } from '../_shared/marketing-policy.ts';
+import { NEWSLETTER_THEMES, editorialCalendar } from '../_shared/newsletter-themes.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
@@ -43,6 +44,7 @@ Deno.serve(async (req) => {
 ${pricesAllowed ? 'Il team ha chiesto esplicitamente i prezzi: puoi usare quelli del catalogo.' : 'Non includere MAI prezzi, importi o sconti: il team non li ha chiesti.'}
 Ogni contenuto è una bozza che richiede approvazione umana. Rispondi in italiano salvo richiesta diversa, in markdown conciso.
 Data attuale: ${nowIso}. Occasioni ricorrenti: ${JSON.stringify(OCCASIONS)}
+Newsletter di notizie ogni 7 giorni con quattro rubriche a rotazione: ${JSON.stringify(NEWSLETTER_THEMES.map(({ id, labels, scope }) => ({ id, name: labels.it, scope })))}. Calendario editoriale corrente: ${JSON.stringify(editorialCalendar(new Date()).map(({ date, theme }) => ({ date, theme: theme.labels.it })))}. Il tema guida ricerca e contenuti; ogni edizione presenta la rubrica e anticipa la successiva, nella lingua del destinatario. Richieste manuali e occasioni extra non modificano il ciclo. Notizie solo da fonti recenti verificate; se mancano, fermati senza inventarle. Questa chat non esegue ricerca o invii: proponi soltanto bozze e indicazioni.
 ${instructions ? `Istruzioni del team: ${instructions}\n` : ''}Ultime campagne: ${JSON.stringify(campaigns ?? [])}
 Catalogo: ${JSON.stringify({ modelli: safeCatalog.modelli, pronta_consegna: safeCatalog.pronta, articoli: safeCatalog.articoli, video: safeCatalog.video, links: safeCatalog.links, foto: safeCatalog.images.slice(0, 40) }).slice(0, 60000)}`;
 
