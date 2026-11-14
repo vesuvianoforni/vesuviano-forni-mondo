@@ -28,7 +28,7 @@ export function selectNewsSources(rows: { title?: string; url?: string; date?: s
     const href = url.toString();
     const excerpt = (row.markdown || row.snippet || '').trim();
     if (!row.title?.trim() || !excerpt || seen.has(href)) continue;
-    if (theme && !theme.relevance.test(`${row.title} ${row.snippet || ''} ${excerpt.slice(0, 2000)}`)) continue;
+    if (theme && !theme.relevance.test(`${row.title} ${row.snippet || excerpt.slice(0, 500)}`)) continue;
     seen.add(href);
     selected.push({ id: `N${selected.length + 1}`, title: row.title.trim().slice(0, 240), url: href, publisher: url.hostname.replace(/^www\./, ''), published_at: published.toISOString(), excerpt: excerpt.slice(0, 6000) });
     if (selected.length === 6) break;

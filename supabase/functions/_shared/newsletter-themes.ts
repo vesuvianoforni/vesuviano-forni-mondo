@@ -77,7 +77,11 @@ export function editorialCalendar(now: Date) {
 export function themedSubject(subject: string, theme: EditorialTheme, language: string) {
   const prefixes = Object.values(theme.labels);
   const content = subject.replace(/^\[[^\]]+\]\s*/, '').trim();
-  const withoutLabel = prefixes.reduce((value, label) => value.startsWith(`${label}:`) ? value.slice(label.length + 1).trim() : value, content);
+  const withoutLabel = prefixes.reduce((value, label) => {
+    if (!value.startsWith(label)) return value;
+    const rest = value.slice(label.length);
+    return /^\s*[:：]\s*/.test(rest) ? rest.replace(/^\s*[:：]\s*/, '').trim() : value;
+  }, content);
   return `${themeLabel(theme, language)}: ${withoutLabel}`;
 }
 
