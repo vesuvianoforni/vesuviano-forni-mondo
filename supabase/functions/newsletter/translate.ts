@@ -4,7 +4,7 @@ import { streamText, Output, NoObjectGeneratedError } from 'npm:ai@6';
 import { z } from 'npm:zod@3';
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { createLovableAiGatewayRunIdFetch, getLovableAiGatewayRunId } from './ai/run-id.ts';
-import { LANGUAGES, contentSource, type LocalizedCampaign, type Version, type Language } from './localization.ts';
+import { LANGUAGES, contentSource, translationOriginal, sameNewsReferences, type LocalizedCampaign, type Version, type Language } from './localization.ts';
 import { loadCatalog } from './catalog.ts';
 import { containsPrices, enforcePricePolicy } from './policy.ts';
 
@@ -28,7 +28,7 @@ export async function translateCampaign(admin: SupabaseClient, campaign: Localiz
   const result = streamText({
     model: provider.responses(ECONOMIC_RESPONSES_MODEL), maxRetries: 0, abortSignal: request.signal,
     system: `Traduci fedelmente la newsletter Vesuviano nelle lingue richieste. Se l'originale non contiene prezzi, non aggiungerli mai, nemmeno se compaiono nei link o nel catalogo. Non creare nuove offerte o cambiare prezzi, valuta, numeri, modelli, caratteristiche o condizioni. Non aggiungere sconti o urgenza per una ricorrenza. Traduci oggetto, preheader, testo e pulsante. Conserva paragrafi e tono B2B. Le notizie devono restare le stesse: preserva fatti, date, ambito geografico e riferimenti [N1], [N2] senza inventare notizie locali. Le fonti originali sono aggiunte dal renderer, non ripeterle nel corpo. Non aggiungere informazioni. Per cta_url scegli l'equivalente nella lingua target tra i link forniti; conserva il link originale se non esiste un equivalente. Non scegliere un'altra sezione del sito. Restituisci esattamente una versione per ogni lingua richiesta.`,
-    prompt: JSON.stringify({ original: campaign, languages: targets, catalogs }),
+    prompt: JSON.stringify({ original: translationOriginal(campaign), languages: targets, catalogs }),
     output: Output.object({ schema: Schema }),
     providerOptions: { openai: { forceReasoning: true, reasoningEffort: 'low', reasoningSummary: 'auto', store: false, include: ['reasoning.encrypted_content'] } },
   });
@@ -43,6 +43,7 @@ export async function translateCampaign(admin: SupabaseClient, campaign: Localiz
     for (const target of targets) {
       const version = output.versions.find((v) => v.language === target);
       if (!version?.subject.trim() || !version.body.trim()) throw new Error(`Traduzione ${target.toUpperCase()} non completata.`);
+      if (campaign.news_sources?.length && !sameNewsReferences(campaign.body, version.body)) throw Object.assign(new Error(`Traduzione ${target.toUpperCase()} non corrispondente alle notizie originali.`), { status: 422 });
       enforcePricePolicy(version, [campaign.subject, campaign.preheader, campaign.body, campaign.cta_label || ''].some(containsPrices));
       const links = catalogs.find((c) => c.language === target)?.links || {};
       const cta = version.cta_url && (Object.values(links).includes(version.cta_url) || version.cta_url === campaign.cta_url) ? version.cta_url : campaign.cta_url;

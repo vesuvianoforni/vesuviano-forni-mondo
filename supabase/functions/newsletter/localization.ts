@@ -42,10 +42,19 @@ export function contentSource(c: LocalizedCampaign) {
   return JSON.stringify(fields);
 }
 
+export function translationOriginal(c: LocalizedCampaign) {
+  return { language: c.language, subject: c.subject, preheader: c.preheader, body: c.body, cta_label: c.cta_label, cta_url: c.cta_url };
+}
+
+export function sameNewsReferences(source: string, translated: string) {
+  const refs = (body: string) => [...new Set(body.match(/\[N\d+\]/g) || [])].sort();
+  return JSON.stringify(refs(source)) === JSON.stringify(refs(translated));
+}
+
 export function campaignVersion(c: LocalizedCampaign, language: string): LocalizedCampaign {
   if (language === c.language) return c;
   const v = c.translations?.[language as Language];
-  if (c.translation_source !== contentSource(c) || !v?.subject?.trim() || !v.body?.trim()) {
+  if (c.translation_source !== contentSource(c) || !v?.subject?.trim() || !v.body?.trim() || (c.news_sources?.length && !sameNewsReferences(c.body, v.body))) {
     throw Object.assign(new Error(`Versione ${language.toUpperCase()} mancante o da aggiornare prima dell'invio.`), { status: 409 });
   }
   return { ...c, ...v, language };

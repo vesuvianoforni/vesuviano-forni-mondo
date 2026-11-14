@@ -1,6 +1,6 @@
 import { assertEquals, assert } from 'https://deno.land/std@0.224.0/assert/mod.ts';
 import { selectRecipients, unsubscribeToken, encodeEmail, decodeEmail, renderNewsletter, NEWSLETTER_REPLY_TO } from './rules.ts';
-import { recipientLanguage, contentSource, campaignVersion, languageCounts, requiredTranslationLanguages } from './localization.ts';
+import { recipientLanguage, contentSource, campaignVersion, languageCounts, requiredTranslationLanguages, translationOriginal, sameNewsReferences } from './localization.ts';
 
 const leads = [
   { id: '1', email: 'Mario@Pizza.it', status: 'qualificato', country: 'Italia' },
@@ -63,6 +63,12 @@ Deno.test('news references are preserved in localized versions and a source edit
   let blocked = false;
   try { campaignVersion({ ...c, news_sources: [{ ...sources[0], url: 'https://pmq.com/changed' }] }, 'en'); } catch { blocked = true; }
   assertEquals(blocked, true);
+});
+Deno.test('news translation excludes previous versions and preserves exact article references', () => {
+  const c = { language: 'it', subject: 'Nuove notizie', preheader: '', body: '[N1] e [N5]', image_url: null, cta_label: null, cta_url: null, translations: { en: { subject: 'Previous news', body: '[N1] [N6]', preheader: '', cta_label: null, cta_url: null } } };
+  assertEquals(translationOriginal(c), { language: 'it', subject: 'Nuove notizie', preheader: '', body: '[N1] e [N5]', cta_label: null, cta_url: null });
+  assertEquals(sameNewsReferences(c.body, '[N5] and [N1]'), true);
+  assertEquals(sameNewsReferences(c.body, '[N1] and [N6]'), false);
 });
 Deno.test('missing or incomplete number uses country, then draft language', () => {
   assertEquals(recipientLanguage('+44', 'France'), 'fr');
