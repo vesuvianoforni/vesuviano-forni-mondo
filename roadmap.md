@@ -1,5 +1,10 @@
 # Roadmap
 
+## Roberta: quattro rubriche editoriali a rotazione (14 nov 2026)
+- [ ] Rotazione settimanale deterministica: Prodotti e materie prime, Tecnologia e attrezzature, Gestione della pizzeria, Tendenze gastronomiche. Ricerca e contenuti centrati sulla rubrica, nome localizzato riconoscibile e anticipazione della successiva; manuali e occasioni extra non alterano il ciclo.
+- [ ] Mostrare rubrica della bozza e calendario editoriale in Roberta; mantenere fonti verificabili, lingue per destinatari e approvazione obbligatoria, senza invii cliente.
+- [ ] Test rotazione/retry/confini e regressioni newsletter, distribuzione e verifica su contenuto reale; verifica ERP autenticata limitata dalla disponibilità dell’account esterno.
+
 ## Roberta: notizie settimanali food e pizzeria (14 nov 2026)
 - [x] Cadenza ogni 7 giorni dal 14 novembre, controllo quotidiano esistente e callback invariato; occasioni extra conservate. Una ricerca Firecrawl limitata a 6 risultati degli ultimi 7 giorni, fonti datate e link salvati; nessuna notizia inventata in assenza di fonti, nessun invio automatico.
 - [x] Lingue IT/EN/FR/DE/ES dai numeri del pubblico, traduzioni per campagna con contenuto/fonti stabili dopo salvataggio; nomi, disiscrizioni, CCN/Reply-To e approvazione conservati. Prima bozza reale salvata con tre notizie e quattro traduzioni: stato draft, zero destinatari creati e zero invii cliente.
