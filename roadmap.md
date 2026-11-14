@@ -1,5 +1,10 @@
 # Roadmap
 
+## Roberta: notizie settimanali food e pizzeria (14 nov 2026)
+- [ ] Sostituire la cadenza quindicinale con una bozza ogni 7 giorni basata su notizie recenti e fonti verificabili, senza invii automatici.
+- [ ] Preparare le lingue necessarie dai numeri dei destinatari e conservare anteprime, approvazione e protezioni degli invii.
+- [ ] Verificare ricerca, bozza salvata, traduzioni, programmazione e test; distribuire l’aggiornamento disponibile.
+
 ## Pronta consegna: prenotazione precompilata (12 nov 2026)
 - [x] Pulsanti delle nuove email/WhatsApp collegati all’offerta condivisa tramite codice opaco, senza nome/email/telefono nell’URL; lettura server limitata a offerte pubbliche valide e singola richiesta pronta consegna. Pagina con nome completo, email e telefono precompilati/modificabili e lingua della richiesta; dati e origine conservati nelle note dell’appuntamento.
 - [x] Dati reali Mohammad verificati desktop/mobile, quattro test Vitest e cinque Deno passati; link mancanti/invalidi mostrano campi vuoti. Prenotazione con contatto di test completata, record riletto con origine/offerta e email aziendale delivered; due appuntamenti di test rimossi per ID e assenza confermata. Conferma su pagina localizzata esistente, build OK; nessun invio a Mohammad.
