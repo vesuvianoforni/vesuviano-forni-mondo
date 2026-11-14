@@ -58,6 +58,8 @@ Deno.test('news references are preserved in localized versions and a source edit
   const c = { language: 'it', subject: 'Notizie', preheader: '', body: 'Notizia [N1]', image_url: null, cta_label: null, cta_url: null, news_sources: sources, translations: { en: { subject: 'News', preheader: '', body: 'News [N1]', cta_label: null, cta_url: null } }, translation_source: '' };
   c.translation_source = contentSource(c);
   assertEquals(campaignVersion(c, 'en').news_sources, sources);
+  const roundtrip = sources.map((s) => ({ published_at: s.published_at, publisher: s.publisher, title: s.title, url: s.url, id: s.id }));
+  assertEquals(campaignVersion({ ...c, news_sources: roundtrip }, 'en').body, 'News [N1]');
   let blocked = false;
   try { campaignVersion({ ...c, news_sources: [{ ...sources[0], url: 'https://pmq.com/changed' }] }, 'en'); } catch { blocked = true; }
   assertEquals(blocked, true);

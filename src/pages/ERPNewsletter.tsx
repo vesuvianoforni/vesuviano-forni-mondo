@@ -34,7 +34,7 @@ type Campaign = {
 
 const source = (c: Campaign) => {
   const fields: unknown[] = [c.language, c.subject, c.preheader, c.body, c.cta_label, c.cta_url, c.image_url, c.extra_images || []];
-  if (c.news_sources?.length) fields.push(c.news_sources);
+  if (c.news_sources?.length) fields.push(c.news_sources.map((s) => [s.id, s.title, s.url, s.publisher, s.published_at]));
   return JSON.stringify(fields);
 };
 
