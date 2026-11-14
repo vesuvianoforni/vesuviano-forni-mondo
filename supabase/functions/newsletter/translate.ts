@@ -11,13 +11,14 @@ import { containsPrices, enforcePricePolicy } from './policy.ts';
 const Item = z.object({ language: z.string(), subject: z.string(), preheader: z.string(), body: z.string(), cta_label: z.string().nullable(), cta_url: z.string().nullable() });
 const Schema = z.object({ versions: z.array(Item) });
 
-export async function translateCampaign(admin: SupabaseClient, campaign: LocalizedCampaign, request: Request) {
+export async function translateCampaign(admin: SupabaseClient, campaign: LocalizedCampaign, request: Request, required: readonly Language[] = LANGUAGES) {
   const { data: paused, error: stateError } = await admin.from('newsletter_ai_state').select('reason,status').eq('key', 'newsletter').maybeSingle();
   if (stateError) throw stateError;
   if (paused) throw Object.assign(new Error(paused.reason), { status: paused.status });
   const key = Deno.env.get('LOVABLE_API_KEY');
   if (!key) throw Object.assign(new Error('Configurazione AI mancante.'), { status: 401 });
-  const targets = LANGUAGES.filter((l) => l !== campaign.language);
+  const targets = LANGUAGES.filter((l) => l !== campaign.language && required.includes(l));
+  if (!targets.length) return { translations: {}, translation_source: contentSource(campaign) };
   const catalogs = await Promise.all(targets.map(async (l) => ({ language: l, links: (await loadCatalog(admin, l)).links })));
   const correlation = createLovableAiGatewayRunIdFetch(getLovableAiGatewayRunId(request));
   const provider = createOpenAI({
@@ -26,7 +27,7 @@ export async function translateCampaign(admin: SupabaseClient, campaign: Localiz
   });
   const result = streamText({
     model: provider.responses(ECONOMIC_RESPONSES_MODEL), maxRetries: 0, abortSignal: request.signal,
-    system: `Traduci fedelmente la newsletter Vesuviano nelle lingue richieste. Se l'originale non contiene prezzi, non aggiungerli mai, nemmeno se compaiono nei link o nel catalogo. Non creare nuove offerte o cambiare prezzi, valuta, numeri, modelli, caratteristiche o condizioni. Non aggiungere sconti o urgenza per una ricorrenza. Traduci oggetto, preheader, testo e pulsante. Conserva paragrafi e tono B2B. Non aggiungere informazioni. Per cta_url scegli l'equivalente nella lingua target tra i link forniti; conserva il link originale se non esiste un equivalente. Non scegliere un'altra sezione del sito. Restituisci esattamente una versione per ogni lingua richiesta.`,
+    system: `Traduci fedelmente la newsletter Vesuviano nelle lingue richieste. Se l'originale non contiene prezzi, non aggiungerli mai, nemmeno se compaiono nei link o nel catalogo. Non creare nuove offerte o cambiare prezzi, valuta, numeri, modelli, caratteristiche o condizioni. Non aggiungere sconti o urgenza per una ricorrenza. Traduci oggetto, preheader, testo e pulsante. Conserva paragrafi e tono B2B. Le notizie devono restare le stesse: preserva fatti, date, ambito geografico e riferimenti [N1], [N2] senza inventare notizie locali. Le fonti originali sono aggiunte dal renderer, non ripeterle nel corpo. Non aggiungere informazioni. Per cta_url scegli l'equivalente nella lingua target tra i link forniti; conserva il link originale se non esiste un equivalente. Non scegliere un'altra sezione del sito. Restituisci esattamente una versione per ogni lingua richiesta.`,
     prompt: JSON.stringify({ original: campaign, languages: targets, catalogs }),
     output: Output.object({ schema: Schema }),
     providerOptions: { openai: { forceReasoning: true, reasoningEffort: 'low', reasoningSummary: 'auto', store: false, include: ['reasoning.encrypted_content'] } },

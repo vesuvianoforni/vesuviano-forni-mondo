@@ -1,6 +1,6 @@
 import { assertEquals, assert } from 'https://deno.land/std@0.224.0/assert/mod.ts';
 import { selectRecipients, unsubscribeToken, encodeEmail, decodeEmail, renderNewsletter, NEWSLETTER_REPLY_TO } from './rules.ts';
-import { recipientLanguage, contentSource, campaignVersion, languageCounts } from './localization.ts';
+import { recipientLanguage, contentSource, campaignVersion, languageCounts, requiredTranslationLanguages } from './localization.ts';
 
 const leads = [
   { id: '1', email: 'Mario@Pizza.it', status: 'qualificato', country: 'Italia' },
@@ -46,6 +46,22 @@ Deno.test('+39 selects Italian', () => assertEquals(recipientLanguage('+39 350 9
 Deno.test('+33 selects French', () => assertEquals(recipientLanguage('+33 6 12 34 56 78'), 'fr'));
 Deno.test('+49 selects German', () => assertEquals(recipientLanguage('+49 1512 3456789'), 'de'));
 Deno.test('+34 selects Spanish', () => assertEquals(recipientLanguage('+34 612 345 678'), 'es'));
+Deno.test('weekly translations include only languages selected from the recipients phone numbers', () => {
+  const phones = ['+442079460958', '+33612345678', '+4915123456789', '+34612345678', '+393509286941'];
+  const recipients = phones.map((phone) => ({ language: recipientLanguage(phone) }));
+  assertEquals(requiredTranslationLanguages(recipients, 'it'), ['en', 'fr', 'de', 'es']);
+  assertEquals(requiredTranslationLanguages(recipients.slice(0, 2), 'it'), ['en', 'fr']);
+  assertEquals(requiredTranslationLanguages([], 'it'), []);
+});
+Deno.test('news references are preserved in localized versions and a source edit invalidates approval', () => {
+  const sources = [{ id: 'N1', title: 'Pizza news', publisher: 'pmq.com', url: 'https://pmq.com/news', published_at: '2026-11-12T09:25:00Z' }];
+  const c = { language: 'it', subject: 'Notizie', preheader: '', body: 'Notizia [N1]', image_url: null, cta_label: null, cta_url: null, news_sources: sources, translations: { en: { subject: 'News', preheader: '', body: 'News [N1]', cta_label: null, cta_url: null } }, translation_source: '' };
+  c.translation_source = contentSource(c);
+  assertEquals(campaignVersion(c, 'en').news_sources, sources);
+  let blocked = false;
+  try { campaignVersion({ ...c, news_sources: [{ ...sources[0], url: 'https://pmq.com/changed' }] }, 'en'); } catch { blocked = true; }
+  assertEquals(blocked, true);
+});
 Deno.test('missing or incomplete number uses country, then draft language', () => {
   assertEquals(recipientLanguage('+44', 'France'), 'fr');
   assertEquals(recipientLanguage(null, 'UK'), 'en');

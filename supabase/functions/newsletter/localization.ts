@@ -1,4 +1,5 @@
 import { parsePhoneNumberFromString } from 'npm:libphonenumber-js@1.12.24';
+import type { NewsReference } from './news-policy.ts';
 
 export const LANGUAGES = ['it', 'en', 'fr', 'de', 'es'] as const;
 export type Language = typeof LANGUAGES[number];
@@ -6,6 +7,7 @@ export type Version = { subject: string; preheader: string; body: string; cta_la
 export type LocalizedCampaign = Version & {
   language: string; image_url: string | null; extra_images?: string[];
   translations?: Partial<Record<Language, Version>>; translation_source?: string | null;
+  news_sources?: NewsReference[];
 };
 
 const COUNTRY_LANGUAGE: Record<string, Language> = {
@@ -35,7 +37,9 @@ export function recipientLanguage(phone?: string | null, country?: string | null
 }
 
 export function contentSource(c: LocalizedCampaign) {
-  return JSON.stringify([c.language, c.subject, c.preheader, c.body, c.cta_label, c.cta_url, c.image_url, c.extra_images || []]);
+  const fields: unknown[] = [c.language, c.subject, c.preheader, c.body, c.cta_label, c.cta_url, c.image_url, c.extra_images || []];
+  if (c.news_sources?.length) fields.push(c.news_sources);
+  return JSON.stringify(fields);
 }
 
 export function campaignVersion(c: LocalizedCampaign, language: string): LocalizedCampaign {
@@ -52,4 +56,8 @@ export function languageCounts(recipients: { language: string }[]) {
     counts[r.language] = (counts[r.language] || 0) + 1;
     return counts;
   }, {});
+}
+
+export function requiredTranslationLanguages(recipients: { language: string }[], sourceLanguage: string): Language[] {
+  return LANGUAGES.filter((l) => l !== sourceLanguage && recipients.some((r) => r.language === l));
 }
