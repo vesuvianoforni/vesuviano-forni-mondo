@@ -9,7 +9,7 @@ export const NEWSLETTER_THEMES = [
     labels: { it: 'Prodotti e materie prime', en: 'Ingredients & produce', fr: 'Produits et matières premières', de: 'Produkte und Zutaten', es: 'Productos y materias primas' },
     description: 'Farine, impasti, pomodoro, mozzarella e ingredienti di stagione.',
     scope: 'Novità documentate su farine, impasti, pomodoro, mozzarella, altri ingredienti e filiere alimentari pertinenti alla pizza. Prodotti significa ingredienti alimentari, non forni Vesuviano. Non inventare ricette o valori nutrizionali.',
-    query: 'pizza pizzeria ingredients flour dough tomato mozzarella food sourcing industry news',
+    query: 'pizza (ingredients OR flour OR dough OR mozzarella) news',
     relevance: /flour|dough|ingredient|tomato|mozzarella|cheese|wheat|grain|topping|farin|impast|pomodor|latticin|mati[eè]re premi[eè]re|ingr[eé]dient|fromage|mehl|teig|zutat|harina|masa madre/iu,
   },
   {
@@ -17,7 +17,7 @@ export const NEWSLETTER_THEMES = [
     labels: { it: 'Tecnologia e attrezzature', en: 'Technology & equipment', fr: 'Technologie et équipements', de: 'Technologie und Ausstattung', es: 'Tecnología y equipamiento' },
     description: 'Cottura, attrezzature, efficienza energetica e strumenti digitali.',
     scope: 'Innovazioni verificate su cottura, attrezzature per pizzerie, efficienza energetica, software, automazione e strumenti digitali per la ristorazione. Distingui dati documentati e consigli; non promettere risparmi o promuovere il catalogo Vesuviano.',
-    query: 'pizza pizzeria restaurant technology equipment ovens automation energy efficiency industry news',
+    query: 'pizzeria (technology OR equipment OR automation) news',
     relevance: /technolog|equipment|oven|automat|software|digital|energy|robot|platform|\bAI\b|tecnolog|attrezz|forn[oi]|energia|[eé]quipement|[eé]nergie|of[eé]n|ausstattung|energ[ií]a|horno/iu,
   },
   {
@@ -25,7 +25,7 @@ export const NEWSLETTER_THEMES = [
     labels: { it: 'Gestione della pizzeria', en: 'Running a pizzeria', fr: 'Gestion de la pizzeria', de: 'Pizzeria-Management', es: 'Gestión de la pizzería' },
     description: 'Organizzazione, servizio, personale, ordini e fidelizzazione.',
     scope: 'Notizie utili sulla gestione operativa della pizzeria: organizzazione del servizio, personale, ordini, delivery, fidelizzazione e riduzione degli sprechi. Non inventare norme, benchmark, margini o cifre economiche.',
-    query: 'pizza pizzeria restaurant operations staffing service delivery customer loyalty food waste industry news',
+    query: 'pizzeria (staffing OR delivery OR management OR food waste) news',
     relevance: /operat|staff|service|delivery|loyalty|waste|workforce|labor|labour|order|management|gestione|personale|servizio|sprechi|ordini|gestion|personnel|livraison|fid[eé]lis|bestell|personal|liefer|gesti[oó]n|desperdici/iu,
   },
   {
@@ -33,7 +33,7 @@ export const NEWSLETTER_THEMES = [
     labels: { it: 'Tendenze gastronomiche', en: 'Food trends & pizza culture', fr: 'Tendances gastronomiques', de: 'Gastronomische Trends', es: 'Tendencias gastronómicas' },
     description: 'Stili di pizza, abitudini dei clienti e cultura gastronomica.',
     scope: 'Tendenze documentate su stili di pizza, abitudini di consumo, menu e cultura gastronomica. Preferisci sviluppi di settore a classifiche locali. Una tendenza locale non è universale; non inventare sondaggi o statistiche.',
-    query: 'pizza pizzeria food dining trends consumer preferences pizza styles menu culture industry news',
+    query: 'pizza (food trends OR consumer preferences OR pizza styles) news',
     relevance: /trend|consumer|dining|menu|style|culture|neapolitan|detroit|sicilian|preferenc|tendenz|gastronom|consum|stili|cultur|napoletan|tendance|pr[eé]f[eé]r|tendencia|estilo/iu,
   },
 ] as const;
