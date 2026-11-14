@@ -1,9 +1,10 @@
 # Roadmap
 
 ## Roberta: notizie settimanali food e pizzeria (14 nov 2026)
-- [ ] Sostituire la cadenza quindicinale con una bozza ogni 7 giorni basata su notizie recenti e fonti verificabili, senza invii automatici.
-- [ ] Preparare le lingue necessarie dai numeri dei destinatari e conservare anteprime, approvazione e protezioni degli invii.
-- [ ] Verificare ricerca, bozza salvata, traduzioni, programmazione e test; distribuire l’aggiornamento disponibile.
+- [x] Cadenza ogni 7 giorni dal 14 novembre, controllo quotidiano esistente e callback invariato; occasioni extra conservate. Una ricerca Firecrawl limitata a 6 risultati degli ultimi 7 giorni, fonti datate e link salvati; nessuna notizia inventata in assenza di fonti, nessun invio automatico.
+- [x] Lingue IT/EN/FR/DE/ES dai numeri del pubblico, traduzioni per campagna con contenuto/fonti stabili dopo salvataggio; nomi, disiscrizioni, CCN/Reply-To e approvazione conservati. Prima bozza reale salvata con tre notizie e quattro traduzioni: stato draft, zero destinatari creati e zero invii cliente.
+- [x] 42 test Deno, test integrativo della cadenza (14 verifiche) e regressione routing superati; generazione e traduzione AI reali HTTP 200, fonti cliccabili nelle cinque lingue e newsletter desktop/mobile senza overflow. Newsletter distribuita, richieste senza accesso o token invalido rifiutate; anteprima/build OK. Dieci avvisi sicurezza preesistenti invariati.
+- [ ] Verifica completa dal proprio account ERP: Supabase esterno senza sessione disponibile; bozza reale e renderer verificati separatamente. Pubblicazione Netlify per aggiornare etichette e lista delle fonti nel sito; programmazione e servizio newsletter già aggiornati.
 
 ## Pronta consegna: prenotazione precompilata (12 nov 2026)
 - [x] Pulsanti delle nuove email/WhatsApp collegati all’offerta condivisa tramite codice opaco, senza nome/email/telefono nell’URL; lettura server limitata a offerte pubbliche valide e singola richiesta pronta consegna. Pagina con nome completo, email e telefono precompilati/modificabili e lingua della richiesta; dati e origine conservati nelle note dell’appuntamento.
