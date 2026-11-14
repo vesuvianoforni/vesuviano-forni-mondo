@@ -1,4 +1,5 @@
 import { parsePhoneNumberFromString } from 'npm:libphonenumber-js@1.12.24';
+import type { NewsReference } from './news-policy.ts';
 
 export const LANGUAGES = ['it', 'en', 'fr', 'de', 'es'] as const;
 export type Language = typeof LANGUAGES[number];
@@ -6,6 +7,7 @@ export type Version = { subject: string; preheader: string; body: string; cta_la
 export type LocalizedCampaign = Version & {
   language: string; image_url: string | null; extra_images?: string[];
   translations?: Partial<Record<Language, Version>>; translation_source?: string | null;
+  news_sources?: NewsReference[];
 };
 
 const COUNTRY_LANGUAGE: Record<string, Language> = {
@@ -35,13 +37,24 @@ export function recipientLanguage(phone?: string | null, country?: string | null
 }
 
 export function contentSource(c: LocalizedCampaign) {
-  return JSON.stringify([c.language, c.subject, c.preheader, c.body, c.cta_label, c.cta_url, c.image_url, c.extra_images || []]);
+  const fields: unknown[] = [c.language, c.subject, c.preheader, c.body, c.cta_label, c.cta_url, c.image_url, c.extra_images || []];
+  if (c.news_sources?.length) fields.push(c.news_sources.map((s) => [s.id, s.title, s.url, s.publisher, s.published_at]));
+  return JSON.stringify(fields);
+}
+
+export function translationOriginal(c: LocalizedCampaign) {
+  return { language: c.language, subject: c.subject, preheader: c.preheader, body: c.body, cta_label: c.cta_label, cta_url: c.cta_url };
+}
+
+export function sameNewsReferences(source: string, translated: string) {
+  const refs = (body: string) => [...new Set(body.match(/\[N\d+\]/g) || [])].sort();
+  return JSON.stringify(refs(source)) === JSON.stringify(refs(translated));
 }
 
 export function campaignVersion(c: LocalizedCampaign, language: string): LocalizedCampaign {
   if (language === c.language) return c;
   const v = c.translations?.[language as Language];
-  if (c.translation_source !== contentSource(c) || !v?.subject?.trim() || !v.body?.trim()) {
+  if (c.translation_source !== contentSource(c) || !v?.subject?.trim() || !v.body?.trim() || (c.news_sources?.length && !sameNewsReferences(c.body, v.body))) {
     throw Object.assign(new Error(`Versione ${language.toUpperCase()} mancante o da aggiornare prima dell'invio.`), { status: 409 });
   }
   return { ...c, ...v, language };
@@ -52,4 +65,8 @@ export function languageCounts(recipients: { language: string }[]) {
     counts[r.language] = (counts[r.language] || 0) + 1;
     return counts;
   }, {});
+}
+
+export function requiredTranslationLanguages(recipients: { language: string }[], sourceLanguage: string): Language[] {
+  return LANGUAGES.filter((l) => l !== sourceLanguage && recipients.some((r) => r.language === l));
 }

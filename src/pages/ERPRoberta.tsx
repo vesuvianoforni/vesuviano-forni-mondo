@@ -22,7 +22,7 @@ const ROBERTA: AgentConfig = {
 };
 
 const sections = [
-  { id: 'newsletter', icon: Mail, title: 'Campagne newsletter', desc: 'Bozze quindicinali e occasioni speciali', ready: true },
+  { id: 'newsletter', icon: Mail, title: 'Campagne newsletter', desc: 'Notizie food e pizzeria · settimanali', ready: true },
   { id: 'social', icon: Share2, title: 'Post social', desc: 'In arrivo', ready: false },
   { id: 'ads', icon: Target, title: 'Campagne Meta / Ads', desc: 'In arrivo', ready: false },
 ];
@@ -50,7 +50,7 @@ export default function ERPRoberta() {
           <h1 className="flex items-center gap-2 text-xl font-semibold"><Megaphone className="h-5 w-5 text-primary" />Roberta <span className="text-sm font-normal text-muted-foreground">Marketing Manager</span></h1>
         </div>
         <div className="flex flex-wrap gap-2 text-xs">
-          <Badge variant="secondary" className="gap-1"><CalendarClock className="h-3 w-3" />Ogni 15 giorni + occasioni</Badge>
+          <Badge variant="secondary" className="gap-1"><CalendarClock className="h-3 w-3" />Ogni 7 giorni + occasioni</Badge>
           <Badge variant="secondary" className="gap-1"><ShieldCheck className="h-3 w-3" />Invio solo dopo approvazione</Badge>
         </div>
       </div>

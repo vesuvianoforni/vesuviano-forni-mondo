@@ -2303,6 +2303,7 @@ export type Database = {
           image_url: string | null
           language: string
           last_error: string | null
+          news_sources: Json
           period_key: string | null
           preheader: string
           prompt: string | null
@@ -2330,6 +2331,7 @@ export type Database = {
           image_url?: string | null
           language?: string
           last_error?: string | null
+          news_sources?: Json
           period_key?: string | null
           preheader?: string
           prompt?: string | null
@@ -2357,6 +2359,7 @@ export type Database = {
           image_url?: string | null
           language?: string
           last_error?: string | null
+          news_sources?: Json
           period_key?: string | null
           preheader?: string
           prompt?: string | null
@@ -4760,6 +4763,7 @@ export type Database = {
         Args: { p_id: string; p_token: string }
         Returns: boolean
       }
+      roberta_news_period: { Args: { p_date: string }; Returns: string }
       save_bruno_voice_callback: {
         Args: { p_call: string; p_notes: string; p_when: string }
         Returns: undefined

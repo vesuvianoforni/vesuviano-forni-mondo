@@ -29,9 +29,14 @@ type Campaign = {
   status: string; recipients_count: number; sent_count: number; failed_count: number; created_at: string; sent_at: string | null; last_error: string | null; author?: string | undefined;
   translations?: Record<string, { subject: string; preheader: string; body: string; cta_label: string | null; cta_url: string | null }> | undefined;
   translation_source?: string | null | undefined;
+  news_sources?: { id: string; title: string; url: string; publisher: string; published_at: string }[];
 };
 
-const source = (c: Campaign) => JSON.stringify([c.language, c.subject, c.preheader, c.body, c.cta_label, c.cta_url, c.image_url, c.extra_images || []]);
+const source = (c: Campaign) => {
+  const fields: unknown[] = [c.language, c.subject, c.preheader, c.body, c.cta_label, c.cta_url, c.image_url, c.extra_images || []];
+  if (c.news_sources?.length) fields.push(c.news_sources.map((s) => [s.id, s.title, s.url, s.publisher, s.published_at]));
+  return JSON.stringify(fields);
+};
 
 async function call(body: Record<string, unknown>) {
   const { data, error } = await supabase.functions.invoke('newsletter', { body });
@@ -155,7 +160,7 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
       <SEOHead title="Newsletter | ERP" description="Campagne newsletter" />
         <div className="flex flex-wrap items-center justify-between gap-2">
           {!embedded && <div><h1 className="text-2xl font-bold">Newsletter</h1>
-            <p className="text-sm text-muted-foreground">Bozze da approvare · Roberta prepara anche una proposta il 1° e il 16° del mese</p></div>}
+            <p className="text-sm text-muted-foreground">Notizie food e pizzeria · ogni 7 giorni · da approvare</p></div>}
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" disabled={!!busy} onClick={() => setAskOpen(true)}><Sparkles className="h-4 w-4 mr-1" />Chiedi a Roberta</Button>
             <Button disabled={!!busy} onClick={create}><Plus className="h-4 w-4 mr-1" />Nuova campagna</Button>
@@ -196,10 +201,12 @@ export default function ERPNewsletter({ embedded = false }: { embedded?: boolean
 
               <Card><CardHeader className="pb-2"><CardTitle className="text-base">Contenuto</CardTitle></CardHeader>
                 <CardContent className="space-y-3">
+                  {sel.last_error && editable && <p role="alert" className="text-sm text-destructive">{sel.last_error}</p>}
                   <div><Label>Nome interno</Label><Input disabled={!editable} value={sel.title} onChange={(e) => patch({ title: e.target.value })} /></div>
                   <div><Label>Oggetto</Label><Input disabled={!editable} value={sel.subject} onChange={(e) => patch({ subject: e.target.value })} /></div>
                   <div><Label>Anteprima (preheader)</Label><Input disabled={!editable} value={sel.preheader} onChange={(e) => patch({ preheader: e.target.value })} /></div>
                   <div><Label>Testo</Label><Textarea disabled={!editable} rows={9} value={sel.body} onChange={(e) => patch({ body: e.target.value })} /></div>
+                  {!!sel.news_sources?.length && <div className="space-y-2 border-t pt-3"><Label>Fonti delle notizie</Label>{sel.news_sources.map((s) => <div key={s.id} className="min-w-0 text-sm"><a href={s.url} target="_blank" rel="noopener noreferrer" className="break-words text-primary underline underline-offset-4">[{s.id}] {s.title}</a><p className="text-xs text-muted-foreground">{s.publisher} · {new Date(s.published_at).toLocaleDateString('it-IT')}</p></div>)}</div>}
                   <NewsletterPhotoPicker key={sel.id} assets={assets} imageUrl={sel.image_url} extraImages={sel.extra_images || []}
                     disabled={!editable || !!busy} unsaved={photosUnsaved} onChange={patch} />
                   <div className="grid grid-cols-2 gap-2">
