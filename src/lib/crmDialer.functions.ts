@@ -24,7 +24,6 @@ export const prepareDirectCall = createServerFn({ method: 'POST' }).middleware([
   .handler(async ({ data, context }) => {
     const { data: lead, error } = await context.supabase.from('leads').select('id,phone,country,status,archived').eq('id', data.lead_id).single();
     if (error || !lead) throw new Error('Cliente non trovato.');
-    if (lead.archived || lead.status === 'perso') throw new Error('Cliente archiviato o non interessato: chiamata bloccata.');
     const country = crmPhoneCountry(lead.country);
     const destination = dialerPhone(country ? phoneKey(lead.phone, country) ?? lead.phone ?? '' : lead.phone ?? '');
     const { telnyxDialer, checkDialerConnection } = await import('./crmDialer.server');
