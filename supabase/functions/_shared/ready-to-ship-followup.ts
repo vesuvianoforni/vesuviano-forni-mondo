@@ -1,6 +1,17 @@
 // Ready-to-ship WhatsApp follow-up rules: working hours (Rome, Mon–Sat 9–19) and localized text.
 export const BOOKING_URL = 'https://vesuvianoforni.com/book-a-slot-call';
 export const FOLLOWUP_DELAY_MIN = 0;
+
+/** Switch (bruno_automations.key) that gates the automatic offer email to ready-to-ship customers. */
+export const READY_TO_SHIP_OFFER_EMAIL_KEY = 'ready_to_ship_offer_email';
+
+/**
+ * The automatic offer email runs unless the switch row explicitly says it is off.
+ * A missing row keeps the historical behaviour; when it is off, Gennaro sends the offer himself.
+ */
+export function readyToShipOfferEmailEnabled(row: { enabled?: boolean | null } | null | undefined): boolean {
+  return row?.enabled !== false;
+}
 const OPEN_HOUR = 9;
 const CLOSE_HOUR = 19;
 

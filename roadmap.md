@@ -1,5 +1,8 @@
 # Roadmap
 
+## Pronta consegna: offerta email in stand by, la manda Gennaro (14 nov 2026)
+- [ ] Riattivare l'invio automatico quando il team lo chiede: `bruno_automations.ready_to_ship_offer_email` è spento; finché resta spento il cliente non riceve l'email e nessun WhatsApp parte.
+
 ## Roberta: quattro rubriche editoriali a rotazione (14 nov 2026)
 - [x] Rotazione settimanale deterministica dal 21 novembre: Prodotti e materie prime, Tecnologia e attrezzature, Gestione della pizzeria, Tendenze gastronomiche. Ricerca e contenuti centrati sulla rubrica, nome localizzato riconoscibile e anticipazione della successiva; manuali e occasioni extra non alterano il ciclo. Bozza del 14 novembre conservata senza nuova etichetta.
 - [x] Rubrica persistita sulla bozza, calendario editoriale in Roberta e catalogo condiviso con chat/generazione/rendering; fonti verificabili, lingue per destinatari e approvazione obbligatoria conservati. Nessun invio cliente o salvataggio di campagne di prova.

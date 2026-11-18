@@ -1,5 +1,5 @@
 import { assertEquals, assert } from 'https://deno.land/std@0.224.0/assert/mod.ts';
-import { followupDueAt, followupText, isWorkingTime, nextWorkingSlot } from './ready-to-ship-followup.ts';
+import { followupDueAt, followupText, isWorkingTime, nextWorkingSlot, READY_TO_SHIP_OFFER_EMAIL_KEY, readyToShipOfferEmailEnabled } from './ready-to-ship-followup.ts';
 import { readyToShipBookingUrl } from './booking-link.ts';
 
 Deno.test('lun-sab 9-19 Roma: dentro orario parte subito', () => {
@@ -29,4 +29,13 @@ Deno.test('WhatsApp preserves the request-specific booking capability', () => {
   const text = followupText('en', 'Mohammad', 'Real Bosco', 'mody-79@hotmail.com', link);
   assert(text.includes(link));
   assertEquals(new URL(link).searchParams.get('offer'), '7a5d009a-14d6-415d-9613-53e37d552da0');
+});
+
+Deno.test('offerta email pronta consegna in stand by quando lo switch è spento', () => {
+  assertEquals(READY_TO_SHIP_OFFER_EMAIL_KEY, 'ready_to_ship_offer_email');
+  assertEquals(readyToShipOfferEmailEnabled({ enabled: false }), false);
+  assertEquals(readyToShipOfferEmailEnabled({ enabled: true }), true);
+  // nessun record: si mantiene il comportamento storico (invio automatico)
+  assertEquals(readyToShipOfferEmailEnabled(null), true);
+  assertEquals(readyToShipOfferEmailEnabled(undefined), true);
 });

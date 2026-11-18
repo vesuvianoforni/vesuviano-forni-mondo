@@ -1,7 +1,7 @@
 import { Resend } from "npm:resend@2.0.0"
 import { withCompanyEmailCopy } from '../_shared/email-delivery-policy.ts'
 import { createClient } from 'npm:@supabase/supabase-js@2'
-import { followupDueAt, isWorkingTime } from '../_shared/ready-to-ship-followup.ts'
+import { followupDueAt, isWorkingTime, READY_TO_SHIP_OFFER_EMAIL_KEY, readyToShipOfferEmailEnabled } from '../_shared/ready-to-ship-followup.ts'
 import { readyToShipBookingUrl } from '../_shared/booking-link.ts'
 import { DEFAULT_OFFER_SETTINGS, offerTotals, type OfferDocument, type OfferSettings } from '../_shared/commercial-offer-domain.ts'
 
@@ -43,6 +43,10 @@ Deno.serve(async (req) => {
 
     const { data: rts } = await supabase.from('ready_to_ship_ovens').select('*').eq('id', readyToShipOvenId).maybeSingle()
     if (!rts) return json({ error: 'Oven not found' }, 404)
+
+    // The offer email to the customer has its own switch: when it is on hold, Gennaro sends the offer himself.
+    const { data: offerEmailSwitch } = await supabase.from('bruno_automations').select('enabled').eq('key', READY_TO_SHIP_OFFER_EMAIL_KEY).maybeSingle()
+    const sendOfferEmail = readyToShipOfferEmailEnabled(offerEmailSwitch)
 
     const lang = (String(language).slice(0, 2).toLowerCase() in T ? String(language).slice(0, 2).toLowerCase() : 'it') as keyof typeof T
     const t = T[lang]
@@ -143,11 +147,16 @@ Deno.serve(async (req) => {
   <tr><td style="padding:16px 28px;background:${C.header};color:#bdb6b0;font-size:12px;text-align:center">© ${new Date().getFullYear()} Vesuviano Forni · Made in Naples</td></tr>
 </table></td></tr></table></body></html>`
 
-    const sent = await resend.emails.send({ from: 'Vesuviano Forni <noreply@vesuvianoforni.com>', ...withCompanyEmailCopy({ to: [email] }), subject: t.subject(model), html })
-    if (sent.error) console.error('Ready-to-ship offer email failed:', offer.number, JSON.stringify(sent.error))
+    let sent: { id?: string; error?: { message: string } } | null = null
+    if (sendOfferEmail) {
+      sent = await resend.emails.send({ from: 'Vesuviano Forni <noreply@vesuvianoforni.com>', ...withCompanyEmailCopy({ to: [email] }), subject: t.subject(model), html })
+      if (sent.error) console.error('Ready-to-ship offer email failed:', offer.number, JSON.stringify(sent.error))
+    } else {
+      console.log('Ready-to-ship offer email on hold, Gennaro sends it manually:', offer.number)
+    }
 
     // Gennaro's WhatsApp follow-up (WaSender), only after the email was accepted
-    if (!sent.error && String(phone).replace(/\D/g, '').length >= 7) {
+    if (sendOfferEmail && sent && !sent.error && String(phone).replace(/\D/g, '').length >= 7) {
       const { data: wl } = await supabase.from('website_leads').select('id').eq('email', email).eq('form_type', 'ready_to_ship').order('created_at', { ascending: false }).limit(1).maybeSingle()
       const { error: fuErr } = await supabase.from('ready_to_ship_followups').insert({
         website_lead_id: wl?.id ?? null, customer_name: firstName, phone, email, language: lang, model_name: model, due_at: followupDueAt(new Date()).toISOString(),
@@ -159,10 +168,13 @@ Deno.serve(async (req) => {
       }
     }
 
+    const holdNote = sendOfferEmail
+      ? `Offerta inviata automaticamente al cliente: <a href="${offerUrl}">${esc(offer.number)}</a>`
+      : `<b style="color:#8B4513">Offerta NON inviata al cliente: invio email in stand by, la mandi Gennaro a mano.</b> Offerta pronta da inviare: <a href="${offerUrl}">${esc(offer.number)}</a> · <a href="${pdfUrl}">PDF</a>`
     await resend.emails.send({
       from: 'Sistema Pronta Consegna <system@vesuvianoforni.com>', ...withCompanyEmailCopy({ to: ['info@vesuvianoforni.com', 'commerciale@vesuviano.it'] }),
-      subject: `🏷️ Nuova Richiesta Pronta Consegna: ${customerName} - ${model}`,
-      html: `<h2>Nuova richiesta Pronta Consegna</h2><p>Offerta inviata automaticamente: <a href="${offerUrl}">${esc(offer.number)}</a></p>
+      subject: `🏷️ Nuova Richiesta Pronta Consegna${sendOfferEmail ? '' : ' (offerta da inviare)'}: ${customerName} - ${model}`,
+      html: `<h2>Nuova richiesta Pronta Consegna</h2><p>${holdNote}</p>
 <p><b>Nome:</b> ${esc(customerName)}<br><b>Email:</b> ${esc(email)}<br><b>Telefono:</b> ${esc(phone)}<br>${city ? `<b>Città:</b> ${esc(city)}<br>` : ''}
 <b>Forno:</b> ${esc(model)} Ø${esc(rts.diameter)}cm · ${esc(rts.coating || 'N/A')}<br><b>Prezzo:</b> ${priceTxt}${currency !== 'EUR' ? ` (da € ${priceEur})` : ''} · spedizione esclusa</p>`,
     })
@@ -179,7 +191,7 @@ Deno.serve(async (req) => {
       } catch (err) { console.error('ERP webhook error:', err instanceof Error ? err.message : err) }
     }
 
-    return json({ success: true, offerId: offer.id, offerNumber: offer.number, offerUrl })
+    return json({ success: true, offerId: offer.id, offerNumber: offer.number, offerUrl, offerEmailSent: Boolean(sent && !sent.error) })
   } catch (error) {
     console.error('Error creating ready-to-ship offer:', error instanceof Error ? error.message : error)
     return json({ error: 'Impossibile completare la richiesta' }, 500)

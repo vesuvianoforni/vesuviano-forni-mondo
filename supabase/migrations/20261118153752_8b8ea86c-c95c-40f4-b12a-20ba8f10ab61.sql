@@ -1,0 +1,1 @@
+INSERT INTO public.bruno_automations (key, enabled) VALUES ('ready_to_ship_offer_email', false) ON CONFLICT (key) DO NOTHING;
