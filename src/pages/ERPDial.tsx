@@ -29,7 +29,6 @@ export default function ERPDial() {
       for (let from = 0; ; from += 1000) {
         const { data, error } = await supabase.from('leads')
           .select('id,company_name,contact_name,phone,email,status,city,country,next_activity_type,next_activity_date,next_activity_notes,created_at,updated_at,archived')
-          .eq('archived', false)
           .not('phone', 'is', null).neq('phone', '')
           .order('updated_at', { ascending: false }).order('id').range(from, from + 999);
         if (error) { if (!cancelled) setError(error.message); break; }
