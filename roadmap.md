@@ -1,8 +1,8 @@
 # Roadmap
 
 ## Articolo dimensioni forni: tabella Vesuviano (20 nov 2026)
-- [ ] Sostituire tabella generica e paragrafi collegati in IT/EN/FR/DE/ES con diametri interni 80/100/120/130 cm e capacità per legna/gas/elettrico; mantenere URL, immagini e resto dell'articolo.
-- [ ] Verificare i valori salvati con quattro test sulle capacità e controllare l'articolo pubblicato da computer e telefono.
+- [x] Tabella generica e paragrafi collegati sostituiti in IT/EN/FR/DE/ES con diametri interni 80/100/120/130 cm e capacità per legna/gas/elettrico, riferite a pizze 30–33 cm; elettrico 80/130 non inventato. Rimossi ingombri/altezza generici soltanto nella sezione; URL, immagini e resto dell'articolo invariati.
+- [x] Quattro test sulle capacità salvate superati (20 confronti); articolo pubblico HTTP 200 e tabella corretta nelle cinque lingue, screenshot desktop/mobile confermati, nessun errore pagina. Contenuto già online senza deploy; redirect pubblico a www preesistente e non modificato.
 
 ## Pronta consegna: offerta email in stand by, la manda Gennaro (14 nov 2026)
 - [ ] Riattivare l'invio automatico quando il team lo chiede: `bruno_automations.ready_to_ship_offer_email` è spento; finché resta spento il cliente non riceve l'email e nessun WhatsApp parte.
