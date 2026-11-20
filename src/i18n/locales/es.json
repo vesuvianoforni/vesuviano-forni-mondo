@@ -786,7 +786,7 @@
         },
         "capacity": {
           "label": "Capacidad",
-          "value": "4-8 pizzas (según el modelo)"
+          "value": "2–6 pizzas a leña (según el diámetro)"
         },
         "fuel": {
           "label": "Combustible",
@@ -825,7 +825,7 @@
         },
         "capacity": {
           "label": "Capacidad",
-          "value": "4-10 pizzas (según el modelo)"
+          "value": "3–8 pizzas a gas (según el diámetro)"
         },
         "fuel": {
           "label": "Combustible",
@@ -864,7 +864,7 @@
         },
         "capacity": {
           "label": "Capacidad",
-          "value": "3-6 pizzas (según el modelo)"
+          "value": "5/6 pizzas (diámetro 100 cm)"
         },
         "power": {
           "label": "Alimentación",
@@ -903,7 +903,7 @@
         },
         "capacity": {
           "label": "Capacidad",
-          "value": "5/6 pizzas"
+          "value": "7/8 pizzas (diámetro 130 cm)"
         },
         "rotation": {
           "label": "Rotación",

@@ -702,7 +702,7 @@
         },
         "capacity": {
           "label": "Capacity",
-          "value": "4-8 pizzas (depending on model)"
+          "value": "2–6 wood-fired pizzas (depending on diameter)"
         },
         "fuel": {
           "label": "Fuel",
@@ -741,7 +741,7 @@
         },
         "capacity": {
           "label": "Capacity",
-          "value": "4-10 pizzas (depending on model)"
+          "value": "3–8 gas pizzas (depending on diameter)"
         },
         "fuel": {
           "label": "Fuel",
@@ -780,7 +780,7 @@
         },
         "capacity": {
           "label": "Capacity",
-          "value": "3-6 pizzas (depending on model)"
+          "value": "5/6 pizzas (100 cm diameter)"
         },
         "power": {
           "label": "Power Supply",
@@ -819,7 +819,7 @@
         },
         "capacity": {
           "label": "Capacity",
-          "value": "5/6 pizzas"
+          "value": "7/8 pizzas (130 cm diameter)"
         },
         "rotation": {
           "label": "Rotation",

@@ -725,7 +725,7 @@
         },
         "capacity": {
           "label": "Capacité",
-          "value": "4-8 pizzas (selon le modèle)"
+          "value": "2–6 pizzas au bois (selon le diamètre)"
         },
         "fuel": {
           "label": "Combustible",
@@ -764,7 +764,7 @@
         },
         "capacity": {
           "label": "Capacité",
-          "value": "4-10 pizzas (selon le modèle)"
+          "value": "3–8 pizzas au gaz (selon le diamètre)"
         },
         "fuel": {
           "label": "Combustible",
@@ -803,7 +803,7 @@
         },
         "capacity": {
           "label": "Capacité",
-          "value": "3-6 pizzas (selon le modèle)"
+          "value": "5/6 pizzas (diamètre 100 cm)"
         },
         "power": {
           "label": "Alimentation",
@@ -842,7 +842,7 @@
         },
         "capacity": {
           "label": "Capacité",
-          "value": "5/6 pizzas"
+          "value": "7/8 pizzas (diamètre 130 cm)"
         },
         "rotation": {
           "label": "Rotation",

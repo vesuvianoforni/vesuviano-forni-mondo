@@ -38,7 +38,7 @@ const CONTENT = {
     ],
     modelsTitle: 'Our Neapolitan models',
     models: [
-      { name: 'Anastasia', desc: 'The traditional dome — 5 to 9 pizzas per cycle.', href: '/en/traditional-ovens' },
+      { name: 'Anastasia', desc: 'The traditional dome — 4 wood-fired pizzas per cycle (100 cm diameter).', href: '/en/traditional-ovens' },
       { name: 'Ottavio', desc: 'Compact wood-fired Neapolitan, ideal for premium pizzerias.', href: '/en/traditional-ovens' },
       { name: 'Real Bosco', desc: 'Large-capacity production dome for high-volume kitchens.', href: '/en/traditional-ovens' },
       { name: 'VesuvioBuono', desc: 'Hybrid wood/gas Neapolitan with patented insulation.', href: '/en/vesuviobuono-system' },
@@ -63,7 +63,7 @@ const CONTENT = {
     ],
     modelsTitle: 'Nos modèles napolitains',
     models: [
-      { name: 'Anastasia', desc: 'Le dôme traditionnel — 5 à 9 pizzas par cycle.', href: '/fr/fours-traditionnels' },
+      { name: 'Anastasia', desc: 'Le dôme traditionnel — 4 pizzas au bois par cycle (diamètre 100 cm).', href: '/fr/fours-traditionnels' },
       { name: 'Ottavio', desc: 'Napolitain compact au bois, idéal pour les pizzerias premium.', href: '/fr/fours-traditionnels' },
       { name: 'Real Bosco', desc: 'Dôme grande capacité pour cuisines à fort volume.', href: '/fr/fours-traditionnels' },
       { name: 'VesuvioBuono', desc: 'Napolitain hybride bois/gaz avec isolation brevetée.', href: '/fr/systeme-vesuviobuono' },
@@ -88,7 +88,7 @@ const CONTENT = {
     ],
     modelsTitle: 'Unsere neapolitanischen Modelle',
     models: [
-      { name: 'Anastasia', desc: 'Die traditionelle Kuppel — 5 bis 9 Pizzen pro Zyklus.', href: '/de/traditionelle-oefen' },
+      { name: 'Anastasia', desc: 'Die traditionelle Kuppel — 4 Holzofen-Pizzen pro Zyklus (Durchmesser 100 cm).', href: '/de/traditionelle-oefen' },
       { name: 'Ottavio', desc: 'Kompakter neapolitanischer Holzofen, ideal für Premium-Pizzerien.', href: '/de/traditionelle-oefen' },
       { name: 'Real Bosco', desc: 'Großvolumige Produktionskuppel für Hochleistungsküchen.', href: '/de/traditionelle-oefen' },
       { name: 'VesuvioBuono', desc: 'Hybrid-Neapolitaner Holz/Gas mit patentierter Isolierung.', href: '/de/vesuviobuono-system' },
@@ -113,7 +113,7 @@ const CONTENT = {
     ],
     modelsTitle: 'Nuestros modelos napolitanos',
     models: [
-      { name: 'Anastasia', desc: 'La cúpula tradicional — de 5 a 9 pizzas por ciclo.', href: '/es/hornos-tradicionales' },
+      { name: 'Anastasia', desc: 'La cúpula tradicional — 4 pizzas a leña por ciclo (diámetro 100 cm).', href: '/es/hornos-tradicionales' },
       { name: 'Ottavio', desc: 'Napolitano compacto a leña, ideal para pizzerías premium.', href: '/es/hornos-tradicionales' },
       { name: 'Real Bosco', desc: 'Cúpula de gran capacidad para cocinas de alto volumen.', href: '/es/hornos-tradicionales' },
       { name: 'VesuvioBuono', desc: 'Napolitano híbrido leña/gas con aislamiento patentado.', href: '/es/sistema-vesuviobuono' },

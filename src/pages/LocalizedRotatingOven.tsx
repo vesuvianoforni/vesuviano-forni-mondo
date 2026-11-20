@@ -17,10 +17,10 @@ interface LocalizedRotatingOvenProps {
 
 const META: Record<string, { title: string; description: string }> = {
   it: { title: 'Forni Rotanti per Pizza | Vesuviano Forni', description: 'Forni rotanti per pizza: piano in pietra refrattaria, cottura uniforme di 5/6 pizze contemporanee senza palata continua. Per alta produzione in pizzeria.' },
-  en: { title: 'Rotating Pizza Ovens | Vesuviano Forni', description: 'Rotating pizza ovens: refractory stone deck baking 5–6 pizzas evenly at once with no constant peel work. Built for high-volume pizzerias and restaurants.' },
-  fr: { title: 'Fours Rotatifs à Pizza | Vesuviano Forni', description: 'Fours rotatifs à pizza : sole en pierre réfractaire, cuisson uniforme de 5–6 pizzas simultanément sans manipulation continue. Pour pizzerias à fort volume.' },
-  de: { title: 'Rotierende Pizzaöfen | Vesuviano Forni', description: 'Rotierende Pizzaöfen: Schamottplatte für 5–6 Pizzen gleichzeitig, gleichmäßige Backergebnisse ohne ständiges Drehen. Für Pizzerien mit hohem Durchsatz.' },
-  es: { title: 'Hornos Rotativos para Pizza | Vesuviano Forni', description: 'Hornos rotativos para pizza: suelo en piedra refractaria, cocción uniforme de 5–6 pizzas a la vez sin palada continua. Para pizzerías de alta producción.' },
+  en: { title: 'Rotating Pizza Ovens | Vesuviano Forni', description: 'Rotating pizza ovens: refractory stone deck baking 7/8 pizzas evenly at once with no constant peel work. Built for high-volume pizzerias and restaurants.' },
+  fr: { title: 'Fours Rotatifs à Pizza | Vesuviano Forni', description: 'Fours rotatifs à pizza : sole en pierre réfractaire, cuisson uniforme de 7/8 pizzas simultanément sans manipulation continue. Pour pizzerias à fort volume.' },
+  de: { title: 'Rotierende Pizzaöfen | Vesuviano Forni', description: 'Rotierende Pizzaöfen: Schamottplatte für 7/8 Pizzen gleichzeitig, gleichmäßige Backergebnisse ohne ständiges Drehen. Für Pizzerien mit hohem Durchsatz.' },
+  es: { title: 'Hornos Rotativos para Pizza | Vesuviano Forni', description: 'Hornos rotativos para pizza: suelo en piedra refractaria, cocción uniforme de 7/8 pizzas a la vez sin palada continua. Para pizzerías de alta producción.' },
 };
 
 const LocalizedRotatingOven = ({ lang }: LocalizedRotatingOvenProps) => {

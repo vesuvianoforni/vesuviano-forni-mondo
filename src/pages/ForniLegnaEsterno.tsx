@@ -28,14 +28,14 @@ const FAQS = [
   },
   {
     q: 'Quante pizze al cuoce un forno a legna da esterno Vesuviano?',
-    a: 'Dipende dal diametro. Un Ottavio 100cm cuoce 5–6 pizze contemporaneamente (180–200 pizze/ora a regime). Un Real Bosco 140cm arriva a 9–10 pizze per infornata (oltre 300 pizze/ora). Tutti i modelli rispettano il disciplinare AVPN per la cottura in 60–90 secondi.',
+    a: 'Dipende dal diametro interno della camera refrattaria. A legna: 2 pizze sul diametro 80 cm, 4 sul 100 cm, 5 sul 120 cm e 5/6 sul 130 cm. A gas la capacità sale: 3 pizze sull\'80 cm, 5/6 sul 100 cm, 6/7 sul 120 cm e 7/8 sul 130 cm. Tutti i modelli rispettano il disciplinare AVPN per la cottura in 60–90 secondi.',
   },
 ];
 
 const MODELS = [
-  { name: 'Ottavio', desc: 'Forno a legna da esterno compatto, 5–6 pizze per infornata. Perfetto per uso domestico premium o piccoli ristoranti.', href: '/it/forni-tradizionali' },
-  { name: 'Anastasia', desc: 'La cupola tradizionale napoletana, 7–8 pizze per ciclo. Il modello più richiesto dalle pizzerie.', href: '/it/forni-tradizionali' },
-  { name: 'Real Bosco', desc: 'Forno a legna da esterno di grande capacità, fino a 10 pizze per infornata. Per alti volumi e dehor.', href: '/it/forni-tradizionali' },
+  { name: 'Ottavio', desc: 'Forno a legna da esterno compatto, 4 pizze per infornata (diametro 100 cm). Perfetto per uso domestico premium o piccoli ristoranti.', href: '/it/forni-tradizionali' },
+  { name: 'Anastasia', desc: 'La cupola tradizionale napoletana, 4 pizze a legna per ciclo (diametro 100 cm). Il modello più richiesto dalle pizzerie.', href: '/it/forni-tradizionali' },
+  { name: 'Real Bosco', desc: 'Forno a legna da esterno compatto, 2 pizze per infornata (diametro 80 cm). Ideale per dehor e spazi ridotti.', href: '/it/forni-tradizionali' },
   { name: 'VesuvioBuono', desc: 'Sistema ibrido legna/gas con isolamento brevettato. Riduce i consumi di legna del 40%.', href: '/it/sistema-vesuviobuono' },
 ];
 

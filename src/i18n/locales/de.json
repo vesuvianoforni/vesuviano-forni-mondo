@@ -785,7 +785,7 @@
         },
         "capacity": {
           "label": "Kapazität",
-          "value": "4-8 Pizzen (je nach Modell)"
+          "value": "2–6 Holzofen-Pizzen (je nach Durchmesser)"
         },
         "fuel": {
           "label": "Brennstoff",
@@ -824,7 +824,7 @@
         },
         "capacity": {
           "label": "Kapazität",
-          "value": "4-10 Pizzen (je nach Modell)"
+          "value": "3–8 Gas-Pizzen (je nach Durchmesser)"
         },
         "fuel": {
           "label": "Brennstoff",
@@ -863,7 +863,7 @@
         },
         "capacity": {
           "label": "Kapazität",
-          "value": "3-6 Pizzen (je nach Modell)"
+          "value": "5/6 Pizzen (Durchmesser 100 cm)"
         },
         "power": {
           "label": "Stromversorgung",
@@ -902,7 +902,7 @@
         },
         "capacity": {
           "label": "Kapazität",
-          "value": "5/6 Pizzen"
+          "value": "7/8 Pizzen (Durchmesser 130 cm)"
         },
         "rotation": {
           "label": "Rotation",

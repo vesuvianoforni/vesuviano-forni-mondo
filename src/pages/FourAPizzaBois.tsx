@@ -29,14 +29,14 @@ const FAQS = [
   },
   {
     q: 'Combien de pizzas cuit un four à pizza bois Vesuviano ?',
-    a: 'Selon le diamètre. Un Ottavio 100cm cuit 5 à 6 pizzas simultanément (180–200 pizzas/h). Un Real Bosco 140cm atteint 9 à 10 pizzas par fournée (plus de 300 pizzas/h). Tous nos modèles respectent le cahier des charges AVPN pour la cuisson en 60–90 secondes.',
+    a: 'Selon le diamètre intérieur de la chambre réfractaire. Au bois : 2 pizzas sur le diamètre 80 cm, 4 sur le 100 cm, 5 sur le 120 cm et 5/6 sur le 130 cm. Au gaz, la capacité augmente : 3 pizzas sur le 80 cm, 5/6 sur le 100 cm, 6/7 sur le 120 cm et 7/8 sur le 130 cm. Tous nos modèles respectent le cahier des charges AVPN pour la cuisson en 60–90 secondes.',
   },
 ];
 
 const MODELS = [
-  { name: 'Ottavio', desc: 'Four à pizza bois compact, 5–6 pizzas par fournée. Idéal pour usage domestique premium ou petits restaurants.', href: '/fr/fours-traditionnels' },
-  { name: 'Anastasia', desc: 'La coupole napolitaine traditionnelle, 7–8 pizzas par cycle. Le modèle le plus demandé par les pizzerias.', href: '/fr/fours-traditionnels' },
-  { name: 'Real Bosco', desc: 'Four à pizza bois grande capacité, jusqu\'à 10 pizzas par fournée. Pour gros volumes et terrasses.', href: '/fr/fours-traditionnels' },
+  { name: 'Ottavio', desc: 'Four à pizza bois compact, 4 pizzas par fournée (diamètre 100 cm). Idéal pour usage domestique premium ou petits restaurants.', href: '/fr/fours-traditionnels' },
+  { name: 'Anastasia', desc: 'La coupole napolitaine traditionnelle, 4 pizzas au bois par cycle (diamètre 100 cm). Le modèle le plus demandé par les pizzerias.', href: '/fr/fours-traditionnels' },
+  { name: 'Real Bosco', desc: 'Four à pizza bois compact, 2 pizzas par fournée (diamètre 80 cm). Idéal pour terrasses et petits espaces.', href: '/fr/fours-traditionnels' },
   { name: 'VesuvioBuono', desc: 'Système hybride bois/gaz avec isolation brevetée. Réduit la consommation de bois de 40%.', href: '/fr/systeme-vesuviobuono' },
 ];
 
