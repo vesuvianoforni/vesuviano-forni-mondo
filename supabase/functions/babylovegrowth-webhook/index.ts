@@ -1,6 +1,52 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { ECONOMIC_TEXT_MODEL } from '../_shared/ai-models.ts';
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.8";
+import { generateEconomicImage } from '../_shared/economic-images.ts';
+import { buildPrompt, extractImages, pickReferences, replaceAll, shouldReplace, type OvenRef } from '../_shared/blog-oven-images.ts';
+
+const absolute = (u: string) => (u.startsWith('http') ? u : `https://vesuvianoforni.com${u.startsWith('/') ? '' : '/'}${u}`);
+
+// Replace provider stock/AI photos with AI photos built on real Vesuviano ovens.
+// Runs after publishing; any failure keeps the original image.
+async function replaceWithOvenImages(supabase: any, postId: string) {
+  const { data: post } = await supabase.from('blog_posts')
+    .select('title_en,content_en,content_it,content_fr,content_de,content_es,featured_image').eq('id', postId).single();
+  if (!post?.content_en) return;
+  const { data: rows } = await supabase.from('configurator_ovens').select('model_name,fuel_type,image_url').eq('is_active', true);
+  const ovens: OvenRef[] = (rows ?? []).filter((r: any) => r.image_url)
+    .map((r: any) => ({ model: r.model_name, fuels: r.fuel_type ?? [], url: absolute(r.image_url) }));
+  if (!ovens.length) return;
+  const ownHost = new URL(Deno.env.get('SUPABASE_URL')!).hostname;
+  const images = extractImages(post.content_en).filter(i => shouldReplace(i, [ownHost]));
+  if (post.featured_image && !images.some(i => i.src === post.featured_image) && shouldReplace({ src: post.featured_image, alt: '' }, [ownHost])) {
+    images.unshift({ src: post.featured_image, alt: post.title_en });
+  }
+  const update: Record<string, string | null> = {};
+  const fields = ['content_en', 'content_it', 'content_fr', 'content_de', 'content_es', 'featured_image'];
+  for (const f of fields) update[f] = post[f];
+  let changed = 0;
+  for (const [i, img] of images.slice(0, 6).entries()) {
+    try {
+      const refs = pickReferences(`${img.alt} ${post.title_en}`, ovens, i);
+      const dataUrl = await generateEconomicImage(buildPrompt(img.alt, post.title_en, refs), refs.map(r => r.url));
+      const type = dataUrl.slice(5, dataUrl.indexOf(';'));
+      const bin = atob(dataUrl.split(',')[1]);
+      const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+      const name = `blog-inline/${postId}-${i}-${Date.now()}.${type === 'image/jpeg' ? 'jpg' : type === 'image/webp' ? 'webp' : 'png'}`;
+      const up = await supabase.storage.from('oven-gallery').upload(name, bytes, { contentType: type, upsert: true });
+      if (up.error) throw up.error;
+      const url = supabase.storage.from('oven-gallery').getPublicUrl(name).data.publicUrl;
+      for (const f of fields) update[f] = f === 'featured_image' ? (update[f] === img.src ? url : update[f]) : replaceAll(update[f], img.src, url);
+      changed++;
+    } catch (e: any) {
+      console.error(`[babylovegrowth-webhook] Oven image ${i} kept original:`, e?.message || e);
+    }
+  }
+  if (!changed) return;
+  const { error } = await supabase.from('blog_posts').update(update).eq('id', postId);
+  if (error) throw error;
+  console.log(`[babylovegrowth-webhook] Replaced ${changed} images with Vesuviano ovens on ${postId}`);
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -206,6 +252,7 @@ async function publishArticleInBackground(body: BlogWebhookPayload) {
   }
 
   console.log(`[babylovegrowth-webhook] Published post ${data.id}`);
+  await replaceWithOvenImages(supabase, data.id);
 }
 
 serve(async (req) => {
