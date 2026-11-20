@@ -105,6 +105,35 @@ Deno.serve(async (req) => {
 
     console.log('Session created successfully:', session.id);
 
+    // Mirror into the CRM board (dedupe by email or last 9 phone digits).
+    // Inserting a new leads row fires the Bruno Telegram "new lead" notification.
+    let leadId: string | null = null;
+    try {
+      const digits = String(phone).replace(/\D/g, '').slice(-9);
+      const { data: existing } = await supabase
+        .from('leads')
+        .select('id, phone, email')
+        .or(`email.ilike.${String(email).replace(/[,()]/g, '')},phone.ilike.%${digits}%`)
+        .order('created_at', { ascending: true })
+        .limit(20);
+      const match = (existing ?? []).find((l: { email: string | null; phone: string | null }) =>
+        (l.email && l.email.toLowerCase() === String(email).toLowerCase()) ||
+        (digits.length >= 6 && String(l.phone ?? '').replace(/\D/g, '').slice(-9) === digits));
+      if (match) {
+        leadId = match.id;
+      } else {
+        const { data: lead, error: leadError } = await supabase
+          .from('leads')
+          .insert({ contact_name: name, email, phone, source: 'zapper_erp', status: 'nuovo', pipeline: 'Vesuviano' })
+          .select('id')
+          .single();
+        if (leadError) console.error('CRM lead insert failed:', leadError.message);
+        leadId = lead?.id ?? null;
+      }
+    } catch (e) {
+      console.error('CRM lead mirror failed:', e instanceof Error ? e.message : e);
+    }
+
     // Generate configurator link
     const configuratorLink = `https://vesuvianoforni.com/configuratore/${token}`;
 
@@ -112,6 +141,7 @@ Deno.serve(async (req) => {
       JSON.stringify({
         success: true,
         session_id: session.id,
+        lead_id: leadId,
         token,
         configurator_link: configuratorLink,
         expires_at: expiresAt.toISOString(),
