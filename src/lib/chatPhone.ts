@@ -1,0 +1,1 @@
+export { normalizeChatPhone, requiresChatPhone } from '../../supabase/functions/send-form-data/phone';

@@ -1,0 +1,1 @@
+delete from public.chat_conversations where id in ('38e5c445-99c7-4a58-9140-af6f534abd79','f6d7304b-5bac-4f41-9177-ca454a9d4854') and visitor_name='Prova callback';

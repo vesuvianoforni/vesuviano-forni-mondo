@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "npm:resend@2.0.0"
 import { withCompanyEmailCopy } from '../_shared/email-delivery-policy.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8'
+import { normalizeChatPhone, requiresChatPhone } from './phone.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -75,7 +76,17 @@ serve(async (req) => {
   try {
     const { formType, data, imageUrl }: FormData = await req.json()
 
-    console.log(`Processing ${formType} form submission:`, data)
+    if (requiresChatPhone(formType)) {
+      const phone = normalizeChatPhone(data?.phone)
+      if (!phone) {
+        return new Response(JSON.stringify({ success: false, error: 'VALID_PHONE_REQUIRED' }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400,
+        })
+      }
+      data.phone = phone
+    }
+
+    console.log(`Processing ${formType} form submission`)
 
     // Create email content based on form type
     let subject = ''
@@ -300,12 +311,14 @@ ${JSON.stringify(data, null, 2)}
         .single()
 
       if (leadError) {
+        if (requiresChatPhone(formType)) throw new Error('CHAT_LEAD_SAVE_FAILED')
         console.error('Error saving website lead:', leadError)
       } else {
         savedLeadId = insertedLead?.id || null
         console.log('Website lead saved successfully with id:', savedLeadId)
       }
     } catch (leadDbError) {
+      if (requiresChatPhone(formType)) throw leadDbError
       console.error('Database error saving lead:', leadDbError)
     }
 
@@ -580,6 +593,7 @@ ${JSON.stringify(data, null, 2)}
         success: true, 
         message: 'Emails sent successfully',
         companyEmailId: companyEmailResult.data?.id,
+        savedLeadId,
         appointmentId
       }),
       { 

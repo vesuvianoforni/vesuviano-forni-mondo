@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from '@/integrations/supabase/types';
 import { getAttribution } from "@/lib/attribution";
+import { normalizeChatPhone } from "@/lib/chatPhone";
 
 const SUPABASE_URL = "https://lgueucxznbqgvhpjzurf.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxndWV1Y3h6bmJxZ3ZocGp6dXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4MDE5ODEsImV4cCI6MjA2NDM3Nzk4MX0.JH9wcGcoyPKQqWT1ExYLRJyg1Jz_8iXezfmeZ9oyZzE";
@@ -103,32 +104,55 @@ const CALLBACK_CONFIRM: Record<string, string> = {
   es: "¡Perfecto! Te llamaremos lo antes posible 🤙",
 };
 
+const PHONE_REQUIRED: Record<string, string> = {
+  it: "Per richiamarti ci serve un numero di telefono valido, con prefisso internazionale (es. +39 333 1234567). Qual è il tuo numero?",
+  en: "To call you back, we need a valid phone number with country code (e.g. +44 7457 416033). What's your number?",
+  fr: "Pour vous rappeler, il nous faut un numéro valide avec l'indicatif du pays (ex. +33 6 12 34 56 78). Quel est votre numéro ?",
+  de: "Für den Rückruf benötigen wir eine gültige Telefonnummer mit Ländervorwahl (z. B. +49 151 12345678). Wie lautet Ihre Nummer?",
+  es: "Para llamarte necesitamos un número válido con prefijo internacional (ej. +34 612 345 678). ¿Cuál es tu número?",
+};
+const CONTACT_SAVE_ERROR: Record<string, string> = {
+  it: "Non siamo riusciti a registrare la richiesta. Riprova: i tuoi dati sono ancora qui.",
+  en: "We couldn't save your request. Please try again: your details are still here.",
+  fr: "Nous n'avons pas pu enregistrer votre demande. Réessayez : vos coordonnées sont toujours ici.",
+  de: "Ihre Anfrage konnte nicht gespeichert werden. Bitte versuchen Sie es erneut: Ihre Angaben sind noch vorhanden.",
+  es: "No pudimos guardar tu solicitud. Inténtalo de nuevo: tus datos siguen aquí.",
+};
+
 function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string, email?: string, phone?: string) => void; lang: string }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const labels = FORM_LABELS[lang] || FORM_LABELS["en"];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.email.trim() && !form.phone.trim()) return;
+    const phone = normalizeChatPhone(form.phone);
+    if (!phone) {
+      setError(PHONE_REQUIRED[lang] ?? PHONE_REQUIRED['en'] ?? 'Phone required');
+      return;
+    }
+    if (submitting) return;
+    setError(null);
     setSubmitting(true);
     try {
-      await supabase.functions.invoke("send-form-data", {
+      const { data, error: submitError } = await supabase.functions.invoke("send-form-data", {
         body: {
           formType: "ai_chat",
           data: {
             firstName: form.name.split(" ")[0] || "-",
             lastName: form.name.split(" ").slice(1).join(" ") || "-",
             email: form.email || null,
-            phone: form.phone || null,
+            phone,
             notes: "Contatto generato dall'assistente AI del sito.",
             ...getAttribution(),
           },
         },
       });
-      onSubmitted(form.name.split(" ")[0] || "", form.email || undefined, form.phone || undefined);
+      if (submitError || !data?.success || !data?.savedLeadId) throw new Error('CHAT_LEAD_SAVE_FAILED');
+      onSubmitted(form.name.split(" ")[0] || "", form.email || undefined, phone);
     } catch {
-      onSubmitted(form.name.split(" ")[0] || "", form.email || undefined, form.phone || undefined);
+      setError(CONTACT_SAVE_ERROR[lang] ?? CONTACT_SAVE_ERROR['en'] ?? 'Please retry');
     } finally {
       setSubmitting(false);
     }
@@ -154,12 +178,17 @@ function ContactForm({ onSubmitted, lang }: { onSubmitted: (name: string, email?
       />
       <input
         type="tel"
+        required
+        aria-label={labels?.phone ?? 'Phone'}
+        aria-invalid={Boolean(error)}
+        autoComplete="tel"
         placeholder={labels!.phone}
         value={form.phone}
         onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
         className="w-full text-base md:text-sm rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none focus:ring-1 focus:ring-vesuviano-500"
         maxLength={20}
       />
+      {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
       <Button type="submit" size="sm" className="w-full bg-vesuviano-500 hover:bg-vesuviano-600 text-white" disabled={submitting}>
         {submitting ? labels!.submitting : labels!.submit}
       </Button>
@@ -376,7 +405,7 @@ export default function AIChatWidget() {
   }, [lang, callAI, saveConversation]);
 
   const send = useCallback(
-    (text: string) => {
+    async (text: string) => {
       if (!text.trim() || isLoading) return;
       const userMsg: Msg = { role: "user", content: text.trim() };
       setInput("");
@@ -384,11 +413,21 @@ export default function AIChatWidget() {
       // Callback mode: collect phone -> name -> city
       if (callbackMode) {
         if (callbackStep === "phone") {
-          callbackDataRef.current.phone = text.trim();
+          const phone = normalizeChatPhone(text);
+          if (!phone) {
+            const prompt = PHONE_REQUIRED[lang] ?? PHONE_REQUIRED['en'] ?? '';
+            setMessages((prev) => {
+              const updated = [...prev, userMsg, { role: "assistant" as const, content: prompt }];
+              saveConversation(updated);
+              return updated;
+            });
+            return;
+          }
+          callbackDataRef.current.phone = phone;
           const askName = (CALLBACK_ASK_NAME[lang] || CALLBACK_ASK_NAME["en"])!;
           setMessages((prev) => {
             const updated = [...prev, userMsg, { role: "assistant" as const, content: askName }];
-            saveConversation(updated, { phone: text.trim() });
+            saveConversation(updated, { phone });
             return updated;
           });
           setCallbackStep("name");
@@ -408,16 +447,16 @@ export default function AIChatWidget() {
         // Final step: city
         const city = text.trim();
         const { phone, name } = callbackDataRef.current;
-        const confirmMsg = CALLBACK_CONFIRM[lang] || CALLBACK_CONFIRM["en"];
-        const personalized = name ? confirmMsg!.replace("!", ` ${name}!`) : confirmMsg!;
-        setMessages((prev) => {
-          const updated = [...prev, userMsg, { role: "assistant" as const, content: personalized }];
-          saveConversation(updated, { name, phone });
-          return updated;
-        });
+        if (!normalizeChatPhone(phone)) {
+          setCallbackStep("phone");
+          setMessages((prev) => [...prev, { role: "assistant", content: PHONE_REQUIRED[lang] ?? PHONE_REQUIRED['en'] ?? '' }]);
+          return;
+        }
         // Save as lead (with notification email to the team)
         const nameParts = name.split(/\s+/).filter(Boolean);
-        supabase.functions.invoke("send-form-data", {
+        setIsLoading(true);
+        try {
+        const { data, error } = await supabase.functions.invoke("send-form-data", {
           body: {
             formType: "callback_request",
             data: {
@@ -429,12 +468,26 @@ export default function AIChatWidget() {
               ...getAttribution(),
             },
           },
-        }).then(() => {});
+        });
+        if (error || !data?.success || !data?.savedLeadId) throw new Error('CHAT_LEAD_SAVE_FAILED');
+        const confirmMsg = CALLBACK_CONFIRM[lang] ?? CALLBACK_CONFIRM['en'] ?? '';
+        const personalized = name ? confirmMsg.replace("!", ` ${name}!`) : confirmMsg;
+        setMessages((prev) => {
+          const updated = [...prev, userMsg, { role: "assistant" as const, content: personalized }];
+          saveConversation(updated, { name, phone });
+          return updated;
+        });
         setCallbackMode(false);
         setCallbackStep("phone");
         callbackDataRef.current = { phone: "", name: "" };
         setContactSubmitted(true);
         localStorage.setItem(VISITOR_SUBMITTED_KEY, "true");
+        } catch {
+          setInput(city);
+          setMessages((prev) => [...prev, { role: "assistant", content: CONTACT_SAVE_ERROR[lang] ?? CONTACT_SAVE_ERROR['en'] ?? '' }]);
+        } finally {
+          setIsLoading(false);
+        }
         return;
       }
 

@@ -1,5 +1,11 @@
 # Roadmap
 
+## Chat AI: telefono obbligatorio callback (23 nov 2026)
+- [x] Individuata richiesta Ibrqhim/Chester delle 08:30 UTC: frase sul forno accettata come telefono; nessun numero recuperabile nella conversazione.
+- [x] Testo non telefonico bloccato nella raccolta chat e nell'invio; telefono obbligatorio anche nel modulo contatto; conferma soltanto dopo risposta positiva con ID della richiesta salvata, errori mantengono i dati per riprovare.
+- [x] Cinque test superati; chat desktop/mobile: frase originale respinta, numero valido avanza, errore di invio non confermato. send-form-data distribuita: callback_request/hero_callback/ai_chat invalidi rispondono 400 VALID_PHONE_REQUIRED. Due conversazioni di prova rimosse, originale conservata. Nessun invio valido o notifica di prova; controllo Deno completo non disponibile per dipendenza Resend del resolver locale, endpoint online verificato e build OK. Dieci rilievi sicurezza preesistenti invariati.
+- [ ] Pubblicazione Netlify per la nuova raccolta chat; protezione dell'invio già online. Numero di Ibrqhim non recuperabile dai dati ricevuti: necessario che il cliente lo fornisca.
+
 ## Articolo dimensioni forni: tabella Vesuviano (20 nov 2026)
 - [x] Tabella generica e paragrafi collegati sostituiti in IT/EN/FR/DE/ES con diametri interni 80/100/120/130 cm e capacità per legna/gas/elettrico, riferite a pizze 30–33 cm; elettrico 80/130 non inventato. Rimossi ingombri/altezza generici soltanto nella sezione; URL, immagini e resto dell'articolo invariati.
 - [x] Quattro test sulle capacità salvate superati (20 confronti); articolo pubblico HTTP 200 e tabella corretta nelle cinque lingue, screenshot desktop/mobile confermati, nessun errore pagina. Contenuto già online senza deploy; redirect pubblico a www preesistente e non modificato.
