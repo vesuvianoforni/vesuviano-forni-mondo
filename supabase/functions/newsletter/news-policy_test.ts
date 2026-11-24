@@ -19,3 +19,8 @@ Deno.test('generated news can cite only verified sources and retains their origi
   assertThrows(() => selectedReferences(['N1', 'invented'], sources));
   assertThrows(() => selectedReferences(['N1', 'N1'], sources));
 });
+Deno.test('parseRssItems reads Google News items with source and entities', async () => {
+  const { parseRssItems } = await import('./news-policy.ts');
+  const [item] = parseRssItems(`<rss><channel><item><title>Flour prices rise&#8217;s - PMQ</title><link>https://news.google.com/a</link><pubDate>Mon, 23 Nov 2026 10:00:00 GMT</pubDate><description>&lt;a&gt;Flour prices&lt;/a&gt;</description><source url="https://pmq.com">PMQ</source></item></channel></rss>`);
+  if (item?.title !== 'Flour prices rise’s' || item.publisher !== 'PMQ' || item.url !== 'https://news.google.com/a') throw new Error(JSON.stringify(item));
+});

@@ -14,7 +14,7 @@ export function newsPublicationDate(raw: string, now: Date): Date | null {
   return Number.isNaN(value.getTime()) ? null : value;
 }
 
-export function selectNewsSources(rows: { title?: string; url?: string; date?: string; snippet?: string; markdown?: string }[], now = new Date(), theme?: EditorialTheme | null): NewsSource[] {
+export function selectNewsSources(rows: { title?: string; url?: string; date?: string; snippet?: string; markdown?: string; publisher?: string }[], now = new Date(), theme?: EditorialTheme | null): NewsSource[] {
   const seen = new Set<string>();
   const selected: NewsSource[] = [];
   for (const row of rows) {
@@ -30,7 +30,7 @@ export function selectNewsSources(rows: { title?: string; url?: string; date?: s
     if (!row.title?.trim() || !excerpt || seen.has(href)) continue;
     if (theme && !theme.relevance.test(`${row.title} ${row.snippet || excerpt.slice(0, 500)}`)) continue;
     seen.add(href);
-    selected.push({ id: `N${selected.length + 1}`, title: row.title.trim().slice(0, 240), url: href, publisher: url.hostname.replace(/^www\./, ''), published_at: published.toISOString(), excerpt: excerpt.slice(0, 6000) });
+    selected.push({ id: `N${selected.length + 1}`, title: row.title.trim().slice(0, 240), url: href, publisher: (row.publisher?.trim() || url.hostname.replace(/^www\./, '')).slice(0, 120), published_at: published.toISOString(), excerpt: excerpt.slice(0, 6000) });
     if (selected.length === 6) break;
   }
   return selected;
@@ -51,3 +51,18 @@ export function selectedReferences(ids: string[], sources: NewsSource[]): NewsRe
 
 const LABELS: Record<string, string> = { it: 'Fonti delle notizie', en: 'News sources', fr: 'Sources des actualités', de: 'Nachrichtenquellen', es: 'Fuentes de las noticias' };
 export const newsSourcesLabel = (language: string) => LABELS[language] || LABELS.it;
+const decodeXml = (v: string) => v.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+  .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&nbsp;/g, ' ').replace(/&#(\d+);/g, (_m, n) => String.fromCodePoint(Number(n))).replace(/&amp;/g, '&');
+const stripTags = (v: string) => decodeXml(v).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+
+/** Parses RSS 2.0 items (Google News and trade-press feeds); text is evidence only. */
+export function parseRssItems(xml: string) {
+  return [...xml.matchAll(/<item\b[\s\S]*?<\/item>/gi)].slice(0, 60).map(([item]) => {
+    const tag = (name: string) => item.match(new RegExp(`<${name}\\b[^>]*>([\\s\\S]*?)<\\/${name}>`, 'i'))?.[1] || '';
+    const source = stripTags(tag('source'));
+    let title = stripTags(tag('title'));
+    if (source && title.endsWith(` - ${source}`)) title = title.slice(0, -source.length - 3).trim();
+    const snippet = stripTags(tag('description')).slice(0, 1500);
+    return { title, url: decodeXml(tag('link')).trim(), date: stripTags(tag('pubDate')), snippet: snippet && snippet !== title ? snippet : title, publisher: source || undefined };
+  });
+}
