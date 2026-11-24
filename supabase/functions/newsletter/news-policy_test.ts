@@ -24,3 +24,10 @@ Deno.test('parseRssItems reads Google News items with source and entities', asyn
   const [item] = parseRssItems(`<rss><channel><item><title>Flour prices rise&#8217;s - PMQ</title><link>https://news.google.com/a</link><pubDate>Mon, 23 Nov 2026 10:00:00 GMT</pubDate><description>&lt;a&gt;Flour prices&lt;/a&gt;</description><source url="https://pmq.com">PMQ</source></item></channel></rss>`);
   if (item?.title !== 'Flour prices rise’s' || item.publisher !== 'PMQ' || item.url !== 'https://news.google.com/a') throw new Error(JSON.stringify(item));
 });
+
+Deno.test('feed photos are kept only when the publisher supplies a safe https image', async () => {
+  const { parseRssItems } = await import('./news-policy.ts');
+  const [a, b] = parseRssItems(`<rss><item><title>A</title><link>https://www.pmq.com/a</link><pubDate>Mon, 23 Nov 2026 10:00:00 GMT</pubDate><description>x</description><media:content url="https://www.pmq.com/img/a.jpg" medium="image"/></item><item><title>B</title><link>https://www.pmq.com/b</link><pubDate>Mon, 23 Nov 2026 10:00:00 GMT</pubDate><description>y</description></item></rss>`);
+  const sel = selectNewsSources([{ ...a!, date: '1 day ago' }, { ...b!, date: '1 day ago' }, { ...row, url: 'https://pmq.com/c', image: 'http://pmq.com/c.jpg' }], now);
+  assertEquals(sel.map((s) => s.image_url), ['https://www.pmq.com/img/a.jpg', undefined, undefined]);
+});

@@ -1,6 +1,6 @@
 import type { EditorialTheme } from '../_shared/newsletter-themes.ts';
 
-export type NewsSource = { id: string; title: string; url: string; publisher: string; published_at: string; excerpt: string };
+export type NewsSource = { id: string; title: string; url: string; publisher: string; published_at: string; excerpt: string; image_url?: string };
 export type NewsReference = Omit<NewsSource, 'excerpt'>;
 export const NEWS_WINDOW_DAYS = 7;
 
@@ -14,7 +14,7 @@ export function newsPublicationDate(raw: string, now: Date): Date | null {
   return Number.isNaN(value.getTime()) ? null : value;
 }
 
-export function selectNewsSources(rows: { title?: string; url?: string; date?: string; snippet?: string; markdown?: string; publisher?: string }[], now = new Date(), theme?: EditorialTheme | null): NewsSource[] {
+export function selectNewsSources(rows: { title?: string; url?: string; date?: string; snippet?: string; markdown?: string; publisher?: string; image?: string }[], now = new Date(), theme?: EditorialTheme | null): NewsSource[] {
   const seen = new Set<string>();
   const selected: NewsSource[] = [];
   for (const row of rows) {
@@ -30,10 +30,21 @@ export function selectNewsSources(rows: { title?: string; url?: string; date?: s
     if (!row.title?.trim() || !excerpt || seen.has(href)) continue;
     if (theme && !theme.relevance.test(`${row.title} ${row.snippet || excerpt.slice(0, 500)}`)) continue;
     seen.add(href);
-    selected.push({ id: `N${selected.length + 1}`, title: row.title.trim().slice(0, 240), url: href, publisher: (row.publisher?.trim() || url.hostname.replace(/^www\./, '')).slice(0, 120), published_at: published.toISOString(), excerpt: excerpt.slice(0, 6000) });
+    selected.push({ id: `N${selected.length + 1}`, title: row.title.trim().slice(0, 240), url: href, publisher: (row.publisher?.trim() || url.hostname.replace(/^www\./, '')).slice(0, 120), published_at: published.toISOString(), excerpt: excerpt.slice(0, 6000), ...(safeImageUrl(row.image) ? { image_url: safeImageUrl(row.image) } : {}) });
     if (selected.length === 6) break;
   }
   return selected;
+}
+
+/** Publisher-supplied feed photo only: https, public host, no tracking pixels. */
+export function safeImageUrl(raw?: string): string | undefined {
+  if (!raw) return undefined;
+  try {
+    const u = new URL(raw.trim());
+    if (u.protocol !== 'https:' || u.username || u.password || !u.hostname.includes('.') || /^(localhost|127\.|10\.|192\.168\.|169\.254\.)/.test(u.hostname)) return undefined;
+    if (/news\.google\.com|googleusercontent|gravatar|pixel|1x1|spacer|feeds\.feedburner/i.test(u.href)) return undefined;
+    return u.href.slice(0, 1000);
+  } catch { return undefined; }
 }
 
 export function selectedReferences(ids: string[], sources: NewsSource[]): NewsReference[] {
@@ -63,6 +74,10 @@ export function parseRssItems(xml: string) {
     let title = stripTags(tag('title'));
     if (source && title.endsWith(` - ${source}`)) title = title.slice(0, -source.length - 3).trim();
     const snippet = stripTags(tag('description')).slice(0, 1500);
-    return { title, url: decodeXml(tag('link')).trim(), date: stripTags(tag('pubDate')), snippet: snippet && snippet !== title ? snippet : title, publisher: source || undefined };
+    const attr = (re: RegExp) => decodeXml(item.match(re)?.[1] || '');
+    const image = attr(/<media:content\b[^>]*\burl="([^"]+)"[^>]*(?:medium="image"|type="image\/)/i) || attr(/<media:content\b[^>]*(?:medium="image"|type="image\/)[^>]*\burl="([^"]+)"/i)
+      || attr(/<media:thumbnail\b[^>]*\burl="([^"]+)"/i) || attr(/<enclosure\b[^>]*\burl="([^"]+)"[^>]*type="image\//i) || attr(/<enclosure\b[^>]*type="image\/[^"]*"[^>]*\burl="([^"]+)"/i)
+      || (decodeXml(tag('content:encoded') || tag('description')).match(/<img\b[^>]*\bsrc="([^"]+)"/i)?.[1] || '');
+    return { image: image || undefined, title, url: decodeXml(tag('link')).trim(), date: stripTags(tag('pubDate')), snippet: snippet && snippet !== title ? snippet : title, publisher: source || undefined };
   });
 }

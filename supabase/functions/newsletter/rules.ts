@@ -52,6 +52,7 @@ const FOOTER: Record<string, { unsub: string; why: string }> = {
   es: { unsub: 'Darse de baja', why: 'Recibes este correo porque contactaste con Vesuviano Forni.' },
 };
 
+const PHOTO_CREDIT: Record<string, string> = { it: 'Foto:', en: 'Photo:', fr: 'Photo :', de: 'Foto:', es: 'Foto:' };
 export type Campaign = { subject: string; preheader: string; body: string; image_url: string | null; extra_images?: string[]; cta_label: string | null; cta_url: string | null; language: string; news_sources?: NewsReference[]; editorial_theme?: string | null };
 
 export function renderNewsletter(c: Campaign, unsubscribeUrl: string, recipientName?: string | null) {
@@ -73,7 +74,7 @@ export function renderNewsletter(c: Campaign, unsubscribeUrl: string, recipientN
   const sources = (c.news_sources || []).filter((s) => safeUrl(s.url));
   const sourceLabel = newsSourcesLabel(c.language);
   const sourceDate = (s: NewsReference) => new Date(s.published_at).toLocaleDateString(c.language, { timeZone: 'UTC' });
-  const sourcesHtml = sources.length ? `<div style="border-top:1px solid ${theme.border};padding-top:16px;font-size:12px;line-height:1.6;"><strong>${escapeEmail(sourceLabel)}</strong>${sources.map((s) => `<p style="margin:8px 0;"><a href="${escapeEmail(s.url)}" style="color:${theme.brand};">[${escapeEmail(s.id)}] ${escapeEmail(s.title)}</a><br>${escapeEmail(s.publisher)} · ${escapeEmail(sourceDate(s))}</p>`).join('')}</div>` : '';
+  const sourcesHtml = sources.length ? `<div style="border-top:1px solid ${theme.border};padding-top:16px;font-size:12px;line-height:1.6;"><strong>${escapeEmail(sourceLabel)}</strong>${sources.map((s) => `${s.image_url && safeUrl(s.image_url) ? `<a href="${escapeEmail(s.url)}"><img src="${escapeEmail(s.image_url)}" width="544" alt="${escapeEmail(s.title)}" style="display:block;width:100%;max-width:544px;height:auto;border:0;border-radius:4px;margin:12px 0 4px;"></a><span style="font-size:11px;color:${theme.muted};">${escapeEmail(PHOTO_CREDIT[c.language] || PHOTO_CREDIT.it)} ${escapeEmail(s.publisher)}</span>` : ''}<p style="margin:8px 0;"><a href="${escapeEmail(s.url)}" style="color:${theme.brand};">[${escapeEmail(s.id)}] ${escapeEmail(s.title)}</a><br>${escapeEmail(s.publisher)} · ${escapeEmail(sourceDate(s))}</p>`).join('')}</div>` : '';
   const paragraphs = body.split(/\n\n+/).map((p) => `<p style="margin:0 0 18px;line-height:1.7;">${escapeEmail(p).replace(/\n/g, '<br>')}</p>`).join('');
   const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light"></head>
 <body style="margin:0;padding:0;background:${theme.background};font-family:Arial,Helvetica,sans-serif;color:${theme.ink};">
