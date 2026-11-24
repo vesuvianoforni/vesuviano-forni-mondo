@@ -23,3 +23,7 @@ export function companySMTPEnvelope(sender: string, recipient: string) {
   const email = withCompanyEmailCopy({ to: recipient });
   return { from: sender, to: [recipient, ...email.bcc] };
 }
+/** Bulk newsletters: reply routing only, never a corporate BCC copy (would flood the inbox). */
+export function withNewsletterReplyTo<T extends CompanyEmail>(email: T) {
+  return { ...email, reply_to: COMPANY_EMAIL };
+}

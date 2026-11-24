@@ -1,5 +1,5 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
-import { withCompanyEmailCopy, type CompanyEmail } from '../_shared/email-delivery-policy.ts';
+import { withNewsletterReplyTo, type CompanyEmail } from '../_shared/email-delivery-policy.ts';
 import { ECONOMIC_TEXT_MODEL } from '../_shared/ai-models.ts';
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
@@ -107,7 +107,7 @@ async function resendBatch<T extends CompanyEmail>(emails: T[]) {
   const key = Deno.env.get('RESEND_API_KEY');
   if (!key) throw new Error('RESEND_API_KEY mancante');
   const res = await fetch('https://api.resend.com/emails/batch', {
-    method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' }, body: JSON.stringify(emails.map(email => withCompanyEmailCopy(email))),
+    method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' }, body: JSON.stringify(emails.map(email => withNewsletterReplyTo(email))),
   });
   const text = await res.text();
   if (!res.ok) throw new Error(`Resend ${res.status}: ${text.slice(0, 300)}`);
