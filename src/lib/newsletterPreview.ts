@@ -25,7 +25,7 @@ export function updateNewsletterPreviewPhotos(html: string, imageUrl: string | n
   // Target photo rows explicitly; never remove the image-bearing brand header.
   for (const row of Array.from(rows.children)) {
     if (row.hasAttribute('data-newsletter-header') || row.querySelector('img[alt="Vesuviano Forni"]')) continue;
-    if (row.hasAttribute('data-newsletter-extra-photos') || row.querySelector('td > table img')) row.remove();
+    if (row.hasAttribute('data-newsletter-extra-photos') || row.querySelector(':scope > td > table img')) row.remove();
   }
   const extras = extraImages.map(safe).filter((url): url is string => !!url && url !== main).slice(0, 3);
   if (extras.length) {
